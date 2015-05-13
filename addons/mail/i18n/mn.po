@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-04-12 05:53+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:54+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-13 05:58+0000\n"
+"X-Generator: Launchpad (build 17423)\n"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:384
@@ -49,6 +49,8 @@ msgstr "(эмэйл хаяг алга)"
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
 msgstr ""
+"<div><p>Сайн байна уу,</p><p>Таны %s %s баримтыг дагахаар урьсан байна: "
+"%s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
@@ -56,6 +58,8 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
+"<div><p>Сайн байна уу,</p><p>%s таны шинэ баримт дагахаар урьсан "
+"байна.</p></div>"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:134
@@ -67,6 +71,11 @@ msgid ""
 "                        </p>\n"
 "                        %(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>\n"
+"                            Энд дарж %(document)s баримтыг шинээр нэмэх юм "
+"уу эсвэл эмэйл илгээнэ: <a href='mailto:%(email)s'>%(email)s</a>\n"
+"                        </p>\n"
+"                        %(static_help)s"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:145
@@ -75,6 +84,8 @@ msgid ""
 "<p class='oe_view_nocontent_create'>Click here to add new "
 "%(document)s</p>%(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>Энд дарж %(document)s баримтыг шинээр "
+"нэмнэ</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -199,12 +210,12 @@ msgstr "Бүртгүүлэхэд анхныхаараа идэвхждэг"
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
 msgid "Active"
-msgstr ""
+msgstr "Идэвхитэй"
 
 #. module: mail
 #: field:mail.compose.message,active_domain:0
 msgid "Active domain"
-msgstr ""
+msgstr "Идэвхтэй дөмэйн"
 
 #. module: mail
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
@@ -216,7 +227,7 @@ msgstr "Дагагчид нэмэх"
 #: code:addons/mail/static/src/xml/mail.xml:161
 #, python-format
 msgid "Add an internal note that will not be sent to the followers"
-msgstr ""
+msgstr "Дагагчид руу илгээгдэхгүй дотоод тэмдэглэл нэмэх"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -234,7 +245,7 @@ msgstr "Бусдыг нэмэх"
 #. module: mail
 #: field:mail.compose.message,partner_ids:0
 msgid "Additional Contacts"
-msgstr ""
+msgstr "Нэмэлт холбох хаягууд"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -252,12 +263,12 @@ msgstr "Өөр нэр"
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Alias Accepts Emails From"
-msgstr ""
+msgstr "Эмэйл хүлээн авах хуурмаг нэр"
 
 #. module: mail
 #: field:mail.alias,alias_contact:0
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Хуурмаг холбох хаягийн нууцлал"
 
 #. module: mail
 #: field:base.config.settings,alias_domain:0
@@ -267,7 +278,7 @@ msgstr "Дөмэйний Өөр нэр"
 #. module: mail
 #: field:mail.alias,alias_name:0
 msgid "Alias Name"
-msgstr ""
+msgstr "Хуурмаг нэр"
 
 #. module: mail
 #: field:mail.alias,alias_domain:0
@@ -288,7 +299,7 @@ msgstr "Хуурмаг нэр"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr ""
+msgstr "Бүр зурвасууд"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -297,6 +308,9 @@ msgid ""
 "                                    not only the ids selected in the list "
 "view."
 msgstr ""
+"Таны одоогийн хайлтын нөхцлийг хангах бүх бүчлэг рүү эмэйл илгээгдэнэ,\n"
+"                                    зөвхөн жагсаалт харагдац дээр сонгосон "
+"дугааруудаар хязгаарлагдахгүй."
 
 #. module: mail
 #. openerp-web
@@ -312,13 +326,15 @@ msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"Хариу нь эх баримтын салбар хөөрөлдөөн рүү орохгүй. Энэ нь үүсгэгдсэн "
+"message-id-д нөлөөлнө."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:102
 #, python-format
 msgid "Apply"
-msgstr ""
+msgstr "Ашиглах"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_archives_feeds
@@ -336,7 +352,7 @@ msgstr "Файл хавсаргах"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr ""
+msgstr "Файл хавсаргах"
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
@@ -348,7 +364,7 @@ msgstr "Хавсралтууд"
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
-msgstr ""
+msgstr "Баталгаажсан Харилцагчид"
 
 #. module: mail
 #: field:mail.compose.message,author_id:0
@@ -371,7 +387,7 @@ msgstr ""
 #: field:mail.compose.message,author_avatar:0
 #: field:mail.message,author_avatar:0
 msgid "Author's Avatar"
-msgstr ""
+msgstr "Зохиогчийн хөрөг"
 
 #. module: mail
 #: field:mail.group,group_public_id:0
@@ -391,7 +407,7 @@ msgstr "Автомат Бүртгэл"
 #. module: mail
 #: view:mail.message.subtype:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr ""
+msgstr "Автомат бүртгэл"
 
 #. module: mail
 #: help:mail.compose.message,body:0
@@ -484,7 +500,7 @@ msgstr "Агуулга"
 #. module: mail
 #: field:ir.attachment,file_type:0
 msgid "Content Type"
-msgstr ""
+msgstr "Агуулгын төрөл"
 
 #. module: mail
 #: field:mail.compose.message,body:0
@@ -501,7 +517,7 @@ msgstr "Агуулга"
 #: field:mail.message.subtype,create_uid:0
 #: field:mail.wizard.invite,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: mail
 #: field:mail.alias,create_date:0
@@ -512,7 +528,7 @@ msgstr ""
 #: field:mail.message.subtype,create_date:0
 #: field:mail.wizard.invite,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -538,7 +554,7 @@ msgstr ""
 #: code:addons/mail/res_partner.py:31
 #, python-format
 msgid "Customers"
-msgstr ""
+msgstr "Захиалагчид"
 
 #. module: mail
 #: field:mail.compose.message,date:0
@@ -551,7 +567,7 @@ msgstr "Огноо"
 #: help:mail.thread,message_last_post:0
 #: help:res.partner,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
 
 #. module: mail
 #: field:mail.message.subtype,default:0
@@ -610,7 +626,7 @@ msgstr "Хөөрөлдөөн"
 #. module: mail
 #: field:res.users,display_groups_suggestions:0
 msgid "Display Groups Suggestions"
-msgstr ""
+msgstr "Группийн Зөвлөмжүүдийг Харуулах"
 
 #. module: mail
 #. openerp-web
@@ -636,14 +652,14 @@ msgstr "Хийгдсэн"
 #: code:addons/mail/static/src/js/mail_followers.js:100
 #, python-format
 msgid "Edit Subscription of "
-msgstr ""
+msgstr "Бүртгэлийг засварлах "
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:40
 #, python-format
 msgid "Edit subscription"
-msgstr ""
+msgstr "Бүртгэл засварлах"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
@@ -655,7 +671,7 @@ msgstr "Имэйл"
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Email Alias"
-msgstr ""
+msgstr "Хуурмаг эмэйл"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
@@ -694,7 +710,7 @@ msgstr ""
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr ""
+msgstr "Хариултыг чиглүүлэх эмэйл хаяг"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -704,7 +720,7 @@ msgstr "Имэйл үүсгэх харилцах цонх"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email mass mailing"
-msgstr ""
+msgstr "Масс мэйлээр эмэйлдэх"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -734,12 +750,12 @@ msgstr "Зохиогчийн Баталгааны сервертэй холбо�
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
+msgstr "Алдаа, харилцагч ижил обьектийг хоёр дахин дагах боломжгүй"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Everyone"
-msgstr ""
+msgstr "Бүгд"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -765,7 +781,7 @@ msgstr ""
 #. module: mail
 #: field:ir.attachment,file_type_icon:0
 msgid "File Type Icon"
-msgstr ""
+msgstr "Файлын Төрлийн Тэмдэг зураг"
 
 #. module: mail
 #. openerp-web
@@ -802,19 +818,19 @@ msgstr "дагагчид"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Followers of the document and"
-msgstr ""
+msgstr "Баримтын дагагчид болон"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:131
 #, python-format
 msgid "Followers of this document"
-msgstr ""
+msgstr "Энэ баримтын дагагчид"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
-msgstr ""
+msgstr "Зөвхөн дагагчид"
 
 #. module: mail
 #. openerp-web
@@ -833,7 +849,7 @@ msgstr "Хэнээс"
 #: code:addons/mail/res_users.py:75
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Тохиргооны самбар руу очно уу"
 
 #. module: mail
 #: view:mail.group:mail.view_group_search
@@ -845,7 +861,7 @@ msgstr "Бүлгэм"
 #: view:mail.mail:mail.view_mail_search
 #: view:mail.message:mail.view_message_search
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -877,17 +893,17 @@ msgstr "Хавсралттай"
 #: view:mail.mail:mail.view_mail_form
 #: field:mail.mail,headers:0
 msgid "Headers"
-msgstr ""
+msgstr "Толгой хэсэг"
 
 #. module: mail
 #: field:mail.message.subtype,hidden:0
 msgid "Hidden"
-msgstr ""
+msgstr "Нуугдсан"
 
 #. module: mail
 #: help:mail.message.subtype,hidden:0
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "Дагагчийн сонголтонд дэд төрөлийг нуух"
 
 #. module: mail
 #: help:mail.group,message_summary:0
@@ -913,7 +929,7 @@ msgstr ""
 #: field:mail.wizard.invite,id:0
 #: field:publisher_warranty.contract,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mail
 #: help:mail.alias,alias_parent_thread_id:0
@@ -921,6 +937,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
+"Хуурмаг нэрийг агуулж байгаа эх бичлэгийн ID (Ж: даалгавар үүсгэсэн хуурмаг "
+"нэрийг агуулж байгаа төсөл)"
 
 #. module: mail
 #: help:mail.followers,res_id:0
@@ -941,6 +959,8 @@ msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
 msgstr ""
+"Хэрэв сонгосон бол, баримтын дагагчидад нэмсэн баримтын тухай анхааруулгы "
+"эмэйлийг харилцагчид хүлээн авна."
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
@@ -948,6 +968,8 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
+"Хэрэв Odoo серверрүү чиглүүлсэн бүх эмэйлийг барьж авахаар тохируулсан бол "
+"дөмэйн нэрийг энд оруулна уу."
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -955,12 +977,14 @@ msgid ""
 "If you want to work only with selected ids, please uncheck the\n"
 "                                list header checkbox."
 msgstr ""
+"Хэрэв зөвхөн сонгосон хувийн дугааруудтай ажиллахаар бол \n"
+"                                жагсаалтын толгойны сонголтыг арилгана уу."
 
 #. module: mail
 #: code:addons/mail/mail_alias.py:144
 #, python-format
 msgid "Inactive Alias"
-msgstr ""
+msgstr "Идэвхгүй хуурмаг нэр"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_inbox_feeds
@@ -993,7 +1017,7 @@ msgstr ""
 #: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "Дагах урилга %s: %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -1031,7 +1055,7 @@ msgstr "Бүлгэмд нэгдэх"
 #: field:mail.thread,message_last_post:0
 #: field:res.partner,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Сүүлийн зурвасын огноо"
 
 #. module: mail
 #: field:mail.alias,write_uid:0
@@ -1042,7 +1066,7 @@ msgstr ""
 #: field:mail.message.subtype,write_uid:0
 #: field:mail.wizard.invite,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: mail
 #: field:mail.alias,write_date:0
@@ -1053,25 +1077,25 @@ msgstr ""
 #: field:mail.message.subtype,write_date:0
 #: field:mail.wizard.invite,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: mail
 #: help:mail.wizard.invite,partner_ids:0
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr ""
+msgstr "Одоогийн баримтын дагагчаар нэмэгдэх харилцагчдийн жагсаалт."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note for this document. No notification will be sent"
-msgstr ""
+msgstr "Энэ баримтанд тэмдэглэл хөтлөх. Ямар нэг мэдэгдэл илгээгдэхгүй"
 
 #. module: mail
 #: field:mail.compose.message,is_log:0
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "Дотоод тэмдэглэл хөтлөх"
 
 #. module: mail
 #. openerp-web
@@ -1079,13 +1103,13 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log an internal note"
-msgstr ""
+msgstr "Дотоод тэмдэглэл хөтлөх"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:340
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "Эмэйл хүргэлт бүтсэнгүй"
 
 #. module: mail
 #: field:ir.ui.menu,mail_group_id:0
@@ -1095,12 +1119,12 @@ msgstr "Мэйл Бүлгэм"
 #. module: mail
 #: model:ir.actions.server,name:mail.action_mail_redirect
 msgid "Mail Redirection (Document / Inbox)"
-msgstr ""
+msgstr "Эмэйл дамжуулалт (Баримт / Inbox)"
 
 #. module: mail
 #: help:mail.mail,notification:0
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
+msgstr "mail.message -н байгаа хүмүүст мэдэгдэхээр мэйл үүсгэгдлээ"
 
 #. module: mail
 #. openerp-web
@@ -1157,7 +1181,7 @@ msgstr "Зурвасын төрөл"
 #. module: mail
 #: help:mail.mail,email_to:0
 msgid "Message recipients (emails)"
-msgstr ""
+msgstr "Зурвас хүлээн авагчид (эмэйлүүд)"
 
 #. module: mail
 #: help:mail.mail,references:0
@@ -1244,7 +1268,7 @@ msgstr "Зурвас"
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Messaging Alias"
-msgstr ""
+msgstr "Зурвасдах хуурмаг нэр"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -1283,7 +1307,7 @@ msgstr "Inbox-руу зөөх"
 #: code:addons/mail/static/src/xml/mail.xml:130
 #, python-format
 msgid "My Followers"
-msgstr ""
+msgstr "Миний дагагчид"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
@@ -1330,7 +1354,7 @@ msgstr "Зурвас алга"
 #: field:mail.compose.message,no_auto_thread:0
 #: field:mail.message,no_auto_thread:0
 msgid "No threading for answers"
-msgstr ""
+msgstr "Хариултыг салбарлуулахгүй"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1356,12 +1380,12 @@ msgstr "Мэдэгдэл хүрсэн харилцагчид"
 #. module: mail
 #: field:mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr ""
+msgstr "Дагагчидад мэдэгдэх"
 
 #. module: mail
 #: help:mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Баримтын дагагчидад мэдэгдэх (зөвхөн массаар илгээхэд)"
 
 #. module: mail
 #. openerp-web
@@ -1376,21 +1400,23 @@ msgid ""
 "Only the invited followers can read the\n"
 "                                discussions on this group."
 msgstr ""
+"Зөвхөн уригдсан дагагчид энэ бүлгэмийн\n"
+"                                хөөрөлдөөнийг унших боломжтой."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Document"
-msgstr ""
+msgstr "Баримтыг Нээх"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_client_messaging_menu
 msgid "Open Messaging Menu"
-msgstr ""
+msgstr "Зурвасдах цэсийг нээх"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr ""
+msgstr "Эцэг баримтыг нээх"
 
 #. module: mail
 #. openerp-web
@@ -1451,12 +1477,12 @@ msgstr "Эцэг зурвас"
 #. module: mail
 #: field:mail.alias,alias_parent_model_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "Эцэг модель"
 
 #. module: mail
 #: field:mail.alias,alias_parent_thread_id:0
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Эцэг салбар бичлэгийн ID"
 
 #. module: mail
 #: help:mail.alias,alias_parent_model_id:0
@@ -1465,6 +1491,9 @@ msgid ""
 "is not necessarily the model given by alias_model_id\n"
 "(example: project (parent_model) and task (model))"
 msgstr ""
+"Хуурмаг нэрийг эзэмшиж байгаа эцэг модель. Хуурмаг нэрийн кодыг\n"
+"эзэмшиж байгаа модель нь alias_model_id-р өгөгдөх модель байх албагүй\n"
+"(ж: төсөл (parent_model) болон даалгавар (model))"
 
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
@@ -1529,6 +1558,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
 msgstr ""
+"mailgateway ашиглан баримтанд зурвас илгээх бодлого.\n"
+"- бүгд: бигд илгээж болно\n"
+"- харилцагчид: зөвхөн баталгаажсан харилцагчид\n"
+"- дагагчид: баримтын зөвхөн дагагчид\n"
 
 #. module: mail
 #: help:res.partner,notify_email:0
@@ -1537,6 +1570,9 @@ msgid ""
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
 msgstr ""
+"Inbox-доо орсон зурвасын эмэйлийг хүлээн авах бодлого:\n"
+"- Хэзээ ч үгүй: эмэйл илгээгдэхгүй\n"
+"- Бүх зурвас: Inbox-д хүлээн авч буй зурвас тутамд"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -1572,7 +1608,7 @@ msgstr "Унших"
 #. module: mail
 #: field:res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr ""
+msgstr "Inbox мэдэгдэлийг эмэйлээр хүлээн авах"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1650,6 +1686,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
+"Хариулах эмэйл хаяг. reply_to хаягийг тохируулснаар автомат салбар "
+"хэлэлцүүлэг үүснэ."
 
 #. module: mail
 #: field:mail.compose.message,reply_to:0
@@ -1699,7 +1737,7 @@ msgstr "Илгээх"
 #. module: mail
 #: field:mail.wizard.invite,send_mail:0
 msgid "Send Email"
-msgstr ""
+msgstr "Эмэйл илгээх"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -1719,7 +1757,7 @@ msgstr "Зурвас илгээх"
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message to all followers of the document"
-msgstr ""
+msgstr "Баримтын бүх дагагчидад зурвас илгээх"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1736,12 +1774,12 @@ msgstr "Илгээгдсэн"
 #: code:addons/mail/mail_followers.py:155
 #, python-format
 msgid "Sent by %(company)s using %(odoo)s"
-msgstr ""
+msgstr "%(company)s компаниас %(odoo)s-г ашиглан илгээгдсэн"
 
 #. module: mail
 #: field:mail.message.subtype,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Дараалал"
 
 #. module: mail
 #. openerp-web
@@ -1826,7 +1864,7 @@ msgstr "Дэд төрөлүүд"
 #: code:addons/mail/static/src/xml/suggestions.xml:16
 #, python-format
 msgid "Suggested Groups"
-msgstr ""
+msgstr "Зөвлөх бүлгэмүүд"
 
 #. module: mail
 #: field:mail.group,message_summary:0
@@ -1872,6 +1910,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
+"Хуурмаг нэрийн харгалзах модель (Odoo-н баримтын төрөл). Байгаа ямар нэг "
+"бичлэг рүү хариулж байгаа биш бүх эмэйл энэ моделийн шин бичлэгийг үүсгэнэ "
+"(Ж. Төслийн даалгавар)"
 
 #. module: mail
 #: help:mail.alias,alias_name:0
@@ -1879,6 +1920,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"эмэйл хуурмаг нэр, Ж. 'jobs' гэдэгээр <jobs@example.odoo.com> хаягийн "
+"эмэйлийг бүгдийг хүлээн авч байгаа бол"
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1923,6 +1966,9 @@ msgid ""
 "                                including your customers if you installed\n"
 "                                the portal module."
 msgstr ""
+"Энэ бүлгэм нь бүгдэд ил,\n"
+"                                хэрэв портал модуль суулгасан бол "
+"харилцагчидад ч ил."
 
 #. module: mail
 #: help:mail.group,public:0
@@ -1946,7 +1992,7 @@ msgstr "Хэнд"
 #. module: mail
 #: field:mail.mail,recipient_ids:0
 msgid "To (Partners)"
-msgstr ""
+msgstr "Хэнд (Харилцагчид)"
 
 #. module: mail
 #: view:mail.message:mail.view_message_search
@@ -2032,12 +2078,12 @@ msgstr "Хуулалтын алдаа"
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "Идэвхтэй домэйн хэрэглэ"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "Дэд төрөлийг захиалахад хэрэглэгддэг."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -2074,7 +2120,7 @@ msgstr "Саналууд"
 #: code:addons/mail/mail_group.py:174
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Анхааруулга!"
 
 #. module: mail
 #. openerp-web
@@ -2105,7 +2151,7 @@ msgstr ""
 #. module: mail
 #: help:mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "Зурвас нь дотоод тэмдэглэл байх нь хамаагүй (зөвхөн сэтгэгдэл горим)"
 
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
@@ -2121,6 +2167,9 @@ msgid ""
 "\n"
 "Are you sure you want to leave this page ?"
 msgstr ""
+"Та одоо зурвас үүсгэж байна, таны зурвас хэрэгцээгүй болно.\n"
+"\n"
+"Энэ хуудсыг орхихдоо итгэлтэй байна уу ?"
 
 #. module: mail
 #: code:addons/mail/res_users.py:74
@@ -2129,6 +2178,8 @@ msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
 msgstr ""
+"Та эндээс шинэ хэрэглэгч үүсгэж чадахгүй.\n"
+" Шинэ хэрэглэгч үүсгэхээр бол тохиргооны самбар руу очно уу."
 
 #. module: mail
 #: code:addons/mail/mail_group.py:174
@@ -2137,6 +2188,8 @@ msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
 msgstr ""
+"Эдгээр бүлгэмийг та устгаж чадахгүй, Компани бүхэлдээ бүлгэм бусад "
+"модулиудад шаардлагатай."
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:171
@@ -2154,13 +2207,13 @@ msgstr "Танд уншаагүй нэг зурвас байна"
 #: code:addons/mail/mail_mail.py:160
 #, python-format
 msgid "about"
-msgstr ""
+msgstr "тухай"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:160
 #, python-format
 msgid "access"
-msgstr ""
+msgstr "хандах"
 
 #. module: mail
 #. openerp-web
@@ -2179,7 +2232,7 @@ msgstr "аар"
 #: code:addons/mail/mail_thread.py:115
 #, python-format
 msgid "document"
-msgstr ""
+msgstr "баримт"
 
 #. module: mail
 #. openerp-web
@@ -2288,19 +2341,19 @@ msgstr "нэг юм уу хэд хэдэн зурвас харуулах"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "the current search filter"
-msgstr ""
+msgstr "одоогийн хайлтын шүүлтүүр"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "the selected records"
-msgstr ""
+msgstr "сонгосон бичлэгүүд"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:297
 #, python-format
 msgid "to"
-msgstr ""
+msgstr "хэнд"
 
 #. module: mail
 #. openerp-web
@@ -2328,4 +2381,4 @@ msgstr "хуулах"
 #: code:addons/mail/mail_mail.py:162
 #, python-format
 msgid "your messages"
-msgstr ""
+msgstr "таны зурвасууд"

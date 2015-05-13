@@ -51,19 +51,20 @@ $('.oe_website_sale').each(function () {
         var product_id = parseInt($input.data('product-id'),10);
         var product_ids = [product_id];
         $dom_optional.each(function(){
-            product_ids.push($(this).find('span[data-oe-model="product.product"]').data('oe-id'));
+            product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
         if (isNaN(value)) value = 0;
         openerp.jsonRpc("/shop/get_unit_price", 'call', {
             'product_ids': product_ids,
-            'add_qty': value})
+            'add_qty': value,
+            'use_order_pricelist': true})
         .then(function (res) {
             //basic case
             $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
             $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
             //optional case
             $dom_optional.each(function(){
-                var id = $(this).find('span[data-oe-model="product.product"]').data('oe-id');
+                var id = $(this).find('span[data-product-id]').data('product-id');
                 var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
                 $(this).find("span.oe_currency_value").last().text(res[id].toFixed(2));
                 $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));

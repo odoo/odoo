@@ -152,7 +152,22 @@
             <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
             <style type='text/css'><t t-raw="css"/></style>
             <t t-if="subst is True">
-                <script src='/report/static/src/js/subst.js'></script>
+                <script>
+                    function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                            var z = x[i].split('=', 2);
+                            vars[z[0]] = unescape(z[1]);
+                        }
+                        var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+                        for (var i in x) {
+                            var y = document.getElementsByClassName(x[i]);
+                            for (var j=0; j&lt;y.length; ++j)
+                                y[j].textContent = vars[x[i]];
+                        }
+                    }
+                </script>
             </t>
         </head>
         <body class="container" onload="subst()">

@@ -738,8 +738,15 @@ td.field-body {
       }
     }
     // separator above H2
-    .body > .section > .section {
-      border-top: 1px solid @color-right;
+    .body > .section > {
+      .section {
+        border-top: 1px solid @color-right;
+      }
+      // but not if subsection directly follows an h1 (no introductory
+      // document paragraph)
+      h1 + .section {
+        border-top: none;
+      }
     }
     .section:not(.force-right) > h1, .section:not(.force-right) > h2,
     .section:not(.force-right) > h3, .section:not(.force-right) > h4,

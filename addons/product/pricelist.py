@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from itertools import chain
 import time
 
 from openerp import tools
@@ -224,7 +225,9 @@ class product_pricelist(osv.osv):
         is_product_template = products[0]._name == "product.template"
         if is_product_template:
             prod_tmpl_ids = [tmpl.id for tmpl in products]
-            prod_ids = [product.id for product in tmpl.product_variant_ids for tmpl in products]
+            # all variants of all products
+            prod_ids = [p.id for p in
+                        list(chain.from_iterable([t.product_variant_ids for t in products]))]
         else:
             prod_ids = [product.id for product in products]
             prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
@@ -272,7 +275,9 @@ class product_pricelist(osv.osv):
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
                         continue
-                    if rule.product_id:
+                    if rule.product_id and \
+                            (product.product_variant_count > 1 or product.product_variant_ids[0].id != rule.product_id.id):
+                        # product rule acceptable on template if has only one variant
                         continue
                 else:
                     if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:

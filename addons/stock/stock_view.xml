@@ -102,7 +102,7 @@
                     <group>
                         <group>
                             <field name="location_id" domain="[('usage','not in', ['supplier','production'])]"/>
-                            <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}" on_change="onchange_filter(filter)"/>
                         </group>
                         <group>
                             <field name="date"/>
@@ -1113,7 +1113,7 @@
                     <filter icon="terp-stock" string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
                     <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                     <separator/>
-                    <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
+                    <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))), ('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Orders processed Today or planned for Today"/>
                     <field name="product_id"/>
                     <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                     <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','child_of',self)]"/>

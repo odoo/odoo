@@ -47,8 +47,8 @@ class account_statement_from_invoice_lines(osv.osv_memory):
         statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
         currency_obj = self.pool.get('res.currency')
-        line_date = time.strftime('%Y-%m-%d')
         statement = statement_obj.browse(cr, uid, statement_id, context=context)
+        line_date = statement.date
 
         # for each selected move lines
         for line in line_obj.browse(cr, uid, line_ids, context=context):
@@ -63,8 +63,12 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 amount = -line.credit
 
             if line.amount_currency:
-                amount = currency_obj.compute(cr, uid, line.currency_id.id,
-                    statement.currency.id, line.amount_currency, context=ctx)
+                if line.company_id.currency_id.id != statement.currency.id:
+                    # In the specific case where the company currency and the statement currency are the same
+                    # the debit/credit field already contains the amount in the right currency.
+                    # We therefore avoid to re-convert the amount in the currency, to prevent Gain/loss exchanges
+                    amount = currency_obj.compute(cr, uid, line.currency_id.id,
+                        statement.currency.id, line.amount_currency, context=ctx)
             elif (line.invoice and line.invoice.currency_id.id != statement.currency.id):
                 amount = currency_obj.compute(cr, uid, line.invoice.currency_id.id,
                     statement.currency.id, amount, context=ctx)

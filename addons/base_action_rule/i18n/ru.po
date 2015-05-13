@@ -6,16 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-04-25 16:24+0000\n"
+"Last-Translator: user3 <Unknown>\n"
+"Language-Team: Russian <http://translate.starlight-"
+"biz.com//projects/odoo/base_action_rule/ru/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:29+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-26 05:56+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
+"Language: ru\n"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -33,6 +35,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите чтобы установить новое автоматизированное правило "
+"действия. \n"
+"              </p><p>\n"
+"                Используйте автоматизированные действия для автоматического "
+"запуска действий для различных экранов. Пример: кандидат, созданный "
+"конкретным пользователем может \n"
+"                 автоматически устанавливаться на определенный отдел продаж, "
+"или \n"
+"                 возможность, которая до сих пор имеет статус ожидания после "
+"14 дней может \n"
+"                 осуществлять автоматическое напоминание по электронной "
+"почте.\n"
+"              </p>\n"
+"            "
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -43,7 +60,7 @@ msgstr "Правило действия"
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
 msgid "Action Rules"
-msgstr "Правила действий"
+msgstr "Правило действий"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -54,7 +71,7 @@ msgstr "Действия"
 #: field:base.action.rule,active:0
 #: field:base.action.rule.lead.test,active:0
 msgid "Active"
-msgstr "Активен"
+msgstr "Активный"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_followers:0
@@ -70,22 +87,22 @@ msgstr "Автоматизированные действия"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Timed Condition"
-msgstr ""
+msgstr "Основанный на временном условии"
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "Перед обновлением фильтра"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr "Отменен"
+msgstr "Отменено"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Closed"
-msgstr "Закрыт"
+msgstr "Закрыто"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -101,17 +118,17 @@ msgstr "Дата создания"
 #: field:base.action.rule,create_uid:0
 #: field:base.action.rule.lead.test,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Days"
-msgstr "Дней"
+msgstr "Дни"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -125,6 +142,9 @@ msgid ""
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Задержка после даты запуска.Вы можете поставить отрицательное число, если "
+"вам нужно задержать дату запуска, например отправить напоминание за 15 минут "
+"до встречи."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -139,7 +159,7 @@ msgstr "Тип задержки"
 #. module: base_action_rule
 #: help:base.action.rule,server_action_ids:0
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "Примеры: напоминания электронной почты, служба вызова объекта и т.д."
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -163,6 +183,9 @@ msgid ""
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
 msgstr ""
+"Перейдите на страницу \"Похожие модели документа\" и установите параметры "
+"фильтра в \"Поиске\" (Пример фильтра на основе Кандидаты/Возможности: Дата "
+"создания \"равна\" 01/01/2012)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -173,7 +196,7 @@ msgstr "Часы"
 #: field:base.action.rule,id:0
 #: field:base.action.rule.lead.test,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_id:0
@@ -181,22 +204,26 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
+"В случае присутствия, это условие должно быть удовлетворено до выполнения "
+"правила действия."
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
 "If present, this condition must be satisfied before the update of the record."
 msgstr ""
+"В случае присутствия, это условие должно быть удовлетворено до обновления "
+"записи."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "In Progress"
-msgstr "Выполняется"
+msgstr "В процессе"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid "In order to create a new filter:"
-msgstr ""
+msgstr "Чтобы создать новый фильтр:"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -205,6 +232,9 @@ msgid ""
 "the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
+"В этом же «Поиске» зрения, выберите меню \"Сохранить текущий фильтр\", "
+"введите имя (Напр: Создайте 01/01/2012), и добавьте параметр \"Разделить со "
+"всеми пользователями\""
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
@@ -220,13 +250,13 @@ msgstr "Последнее выполнение"
 #: field:base.action.rule,write_uid:0
 #: field:base.action.rule.lead.test,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: base_action_rule
 #: field:base.action.rule,write_date:0
 #: field:base.action.rule.lead.test,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -246,22 +276,22 @@ msgstr "Месяцы"
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "New"
-msgstr "Создать"
+msgstr "Новый"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation"
-msgstr ""
+msgstr "В процессе создания"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation & Update"
-msgstr ""
+msgstr "В процессе создания и обновления"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Update"
-msgstr ""
+msgstr "Обновляется"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,partner_id:0
@@ -293,6 +323,8 @@ msgstr "Название правила"
 msgid ""
 "Select when the action must be run, and add filters and/or timing conditions."
 msgstr ""
+"Выберите когда правило действия должно применяться и добавьте фильтры и/или "
+"временные условия."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -328,7 +360,7 @@ msgstr "Тема"
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "Поэтому данный фильтр должен быть доступен на этой странице."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_id:0
@@ -338,7 +370,7 @@ msgstr "Дата активации"
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_calendar_id:0
 msgid "Use Calendar"
-msgstr ""
+msgstr "Используйте календарь"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_calendar_id:0
@@ -346,6 +378,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"При расчете временного условия основанного на днях, можно использовать "
+"календарь, чтобы вычислить дату на основе рабочих дней."
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
@@ -353,13 +387,16 @@ msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Когда следует условие срабатывает. В случае присутствия, будет проверено "
+"планировщиком. В случае отсутствия, будет проверяться на создание и "
+"обновление."
 
 #. module: base_action_rule
 #: field:base.action.rule,kind:0
 msgid "When to Run"
-msgstr ""
+msgstr "Когда выполнить"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "При отсутствии проверки, правило скрыто и не будет выполняться."

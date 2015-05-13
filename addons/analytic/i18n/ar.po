@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-03-21 09:36+0000\n"
+"Last-Translator: yosra yasser <y.yasser@diamondvision.me>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:27+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-22 05:32+0000\n"
+"X-Generator: Launchpad (build 17405)\n"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:278
@@ -36,7 +36,7 @@ msgstr "مدير المحاسبة"
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account/Contract Name"
-msgstr ""
+msgstr "أسم حساب /عقد"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
@@ -69,7 +69,7 @@ msgstr "خط بياني"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Analytic View"
-msgstr ""
+msgstr "العرض التحليلى"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -114,43 +114,43 @@ msgstr ""
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid "Contract Information"
-msgstr ""
+msgstr "معلومات العقد"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_opened
 msgid "Contract Opened"
-msgstr ""
+msgstr "العقد مفتوح"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_closed
 msgid "Contract closed"
-msgstr ""
+msgstr "العقد مُغلق"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_opened
 msgid "Contract opened"
-msgstr ""
+msgstr "العقد مفتوح"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Contract or Project"
-msgstr ""
+msgstr "عقد أو مشروع"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_pending
 msgid "Contract pending"
-msgstr ""
+msgstr "في انتظار العقد"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "تجديد العقد"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:238
 #, python-format
 msgid "Contract: "
-msgstr ""
+msgstr "العقد: "
 
 #. module: analytic
 #: field:account.analytic.line,create_date:0
@@ -218,7 +218,7 @@ msgstr ""
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You cannot create recursive analytic accounts."
-msgstr ""
+msgstr "خطأ! لا يمكنك إنشاء حسابات تحليلية متكررة."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -265,6 +265,14 @@ msgid ""
 "The special type 'Template of Contract' allows you to define a template with "
 "default data that you can reuse easily."
 msgstr ""
+"إذا قمت بتحديد نوع الحساب، وهذا يعني أنك لن تسمح لإنشاء مدخالات دفتر اليومية "
+"باستخدام هذا الحساب.\n"
+"نوع 'الحساب التحليلي' يتوقف على الحسابات المعتادة التي كنت ترغب فقط بها "
+"لاستخدامها في المحاسبة.\n"
+"إذا قمت بتحديد العقد أو مشروع، فإنه يوفر لك إمكانية لإدارة المُصادقة وخيارات "
+"الفواتير لهذا الحساب.\n"
+"نوع خاص 'نموذج من العقد \"يسمح لك لتحديد نموذج يحتوي على البيانات الافتراضية "
+"التي يمكن إعادة استخدامها بسهولة."
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
@@ -332,6 +340,12 @@ msgid ""
 "the\n"
 "                                        customer."
 msgstr ""
+"بجرد انتهاء تاريخ التعاقد يكون \n"
+"قد تم تمريره أو يكون قد وصل الى الحد الأقصى لعدد وحدات الخدمة \n"
+"(على سبيل المثال عقد الدعم)\n"
+"، يتم إعلام مدير الحساب \n"
+"عن طريق البريد الإلكتروني لتجديد العقد مع \n"
+"العميل."
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
@@ -341,7 +355,7 @@ msgstr "الحساب التحليلي الرئيسي"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Prepaid Service Units"
-msgstr ""
+msgstr "وحدات الخدمة مسبقة الدفع"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
@@ -358,7 +372,7 @@ msgstr "الكمية"
 #: code:addons/analytic/analytic.py:272
 #, python-format
 msgid "Quick account creation disallowed."
-msgstr ""
+msgstr "غير مسموح بإنشاء حساب سريع ."
 
 #. module: analytic
 #: field:account.analytic.account,code:0
@@ -368,7 +382,7 @@ msgstr ""
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid "Renewal"
-msgstr ""
+msgstr "تجديد"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -376,6 +390,8 @@ msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
 msgstr ""
+"يحدد حد أعلى من الوقت للعمل على العقد، استنادا إلى الجدول الزمني. (على سبيل "
+"المثال، عدد الساعات في عقد دعم محدود)."
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
@@ -406,7 +422,7 @@ msgstr "قالب"
 #: field:account.analytic.account,template_id:0
 #: selection:account.analytic.account,type:0
 msgid "Template of Contract"
-msgstr ""
+msgstr "نموذج من العقد"
 
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
@@ -442,4 +458,4 @@ msgstr ""
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
-msgstr ""
+msgstr "لا يمكنك إنشاء خط التحليلية على حساب رئيسى."
