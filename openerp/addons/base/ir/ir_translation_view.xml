@@ -8,7 +8,7 @@
                 <search string="Translations">
                     <filter icon="terp-gdu-smart-failing"
                         string="Untranslated"
-                        domain="['|',('value', '=', False),('value','=','')]"/>
+                        domain="['|','|',('state','=','to_translate'),('value', '=', False),('value','=','')]"/>
                     <filter name="openerp-web"
                         string="Web-only translations"
                         domain="[('comments', 'like', 'openerp-web')]"/>
@@ -61,6 +61,7 @@
                     <field name="name"/>
                     <field name="lang"/>
                     <field name="type"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>

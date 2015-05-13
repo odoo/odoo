@@ -13,7 +13,8 @@
                       <button name="action_next" context="{'default_charts':charts}" type="object" string="Continue" class="oe_highlight"/>
                     </footer>
                 </footer>
-                <separator string="title" position="replace">
+                <!-- assumption: there is only one separator in the inherited view -->
+                <separator position="replace">
                     <p class="oe_grey">
                         Select a configuration package to setup automatically your
                         taxes and chart of accounts.

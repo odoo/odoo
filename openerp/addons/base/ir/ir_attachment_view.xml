@@ -79,7 +79,7 @@
                     <field name="create_uid"/>
                     <field name="type"/>
                     <group expand="0" string="Group By">
-                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter name="owner" string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
                         <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>

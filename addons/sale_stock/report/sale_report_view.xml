@@ -11,7 +11,7 @@
                     <separator/>
                     <filter icon="terp-accessories-archiver" string="Picked" domain="[('shipped','=',True)]"/>
                 </filter>
-                <xpath expr="//group/filter[@string='Status']" position="after">
+                <xpath expr="//group/filter[@name='status']" position="after">
                     <filter string="Warehouse" context="{'group_by':'warehouse_id'}"/>
                 </xpath>
             </field>

@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//notebook/page[@string='Lead']" position="after">
+                    <xpath expr="//notebook/page[@name='lead']" position="after">
                         <page string="Assigned Partner" groups="base.group_sale_salesman">
                             <group name="partner_assign_group">
                                 <group string="Partner Assignation" col="3" colspan="1">
@@ -59,7 +59,7 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="arch" type="xml">
-                <filter string="Stage" position="after">
+                <filter name="stage" position="after">
                     <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
                 <filter name="unassigned" position="after">
@@ -77,7 +77,7 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//notebook/page[@string='Extra Info']" position="after">
+                    <xpath expr="//notebook/page[@name='extra']" position="after">
                         <page string="Assigned Partner" groups="base.group_sale_salesman">
                             <group name="partner_assign_group">
                                 <group string="Partner Assignation" col="3">
@@ -128,7 +128,7 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="arch" type="xml">
-                <filter string="Customer" position="after">
+                <filter name="customer" position="after">
                     <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
                 <filter name="unassigned" position="after">

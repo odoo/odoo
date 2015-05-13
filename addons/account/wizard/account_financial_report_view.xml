@@ -12,7 +12,7 @@
                     <field name="enable_filter"/>
                     <field name="debit_credit" attrs="{'invisible': [('enable_filter','=',True)]}"/>
                 </xpath>
-                <xpath expr="//notebook/page[@string='Filters']" position="after">
+                <xpath expr="//notebook/page[@name='filters']" position="after">
                     <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
                         <group>
                             <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
@@ -29,7 +29,7 @@
                         </group>
                    </page>
                 </xpath>
-                <xpath expr="//notebook/page[@string='Journals']" position="replace">
+                <xpath expr="//notebook/page[@name='journal_ids']" position="replace">
                 </xpath>
             </field>
         </record>

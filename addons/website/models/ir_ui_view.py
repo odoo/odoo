@@ -116,7 +116,8 @@ class view(osv.osv):
 
         if value is not None:
             # TODO: batch writes?
-            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
+            ids = [int(el.get('data-oe-id'))]
+            Model.write(cr, uid, ids, {
                 field: value
             }, context=context)
 
@@ -298,4 +299,3 @@ class view(osv.osv):
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         return self.pool['ir.translation'].search_read(cr, uid, domain, field, context=context)
-

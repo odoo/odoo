@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="stock.view_partner_stock_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='warehouse']" position="before">
-                    <group name="point_of_sale" position="replace">
+                    <group name="point_of_sale">
                         <group string="Point of Sale">
                             <field name="barcode" />
                             <button name="%(action_edit_ean)d" type="action" string="Set a Custom EAN" />

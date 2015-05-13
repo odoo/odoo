@@ -20,7 +20,7 @@
 ##############################################################################
 
 import unittest
-from openerp.tools.translate import quote, unquote
+from openerp.tools.translate import quote, unquote, xml_translator
 
 class TranslationToolsTestCase(unittest.TestCase):
 
@@ -45,3 +45,113 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertRaises(AssertionError, quote, """test \nall kinds\n\no\r
          \\\\nope\n\n"
          """)
+
+    def test_translate_xml_00(self):
+        """ Test xml_translator() without formatting elements. """
+        translate = xml_translator()
+        terms = []
+        callback = lambda t: terms.append(t) or t
+
+        result = translate(callback, """<form string="Form stuff">
+                                            <h1>Blah blah blah</h1>
+                                            Put some more text here
+                                            <field name="foo"/>
+                                        </form>""")
+        self.assertEquals(result,
+            """<form string="Form stuff"><h1>Blah blah blah</h1>Put some more text here<field name="foo"/></form>""")
+        self.assertItemsEqual(terms,
+            ['Form stuff', 'Blah blah blah', 'Put some more text here'])
+
+    def test_translate_xml_10(self):
+        """ Test xml_translator() with formatting elements. """
+        translate = xml_translator()
+        terms = []
+        callback = lambda t: terms.append(t) or t
+
+        result = translate(callback, """<form string="Form stuff">
+                                            <h1>Blah <i>blah</i> blah</h1>
+                                            Put some <b>more text</b> here
+                                            <field name="foo"/>
+                                        </form>""")
+        self.assertEquals(result,
+            """<form string="Form stuff"><h1>Blah <i>blah</i> blah</h1>Put some <b>more text</b> here<field name="foo"/></form>""")
+        self.assertItemsEqual(terms,
+            ['Form stuff', 'Blah <i>blah</i> blah', 'Put some <b>more text</b> here'])
+
+    def test_translate_xml_20(self):
+        """ Test xml_translator() with formatting elements embedding other elements. """
+        translate = xml_translator()
+        terms = []
+        callback = lambda t: terms.append(t) or t
+
+        result = translate(callback, """<form string="Form stuff">
+                                            <b><h1>Blah <i>blah</i> blah</h1></b>
+                                            Put <em>some <b>more text</b></em> here
+                                            <field name="foo"/>
+                                        </form>""")
+        self.assertEquals(result,
+            """<form string="Form stuff"><b><h1>Blah <i>blah</i> blah</h1></b>Put <em>some <b>more text</b></em> here<field name="foo"/></form>""")
+        self.assertItemsEqual(terms,
+            ['Form stuff', 'Blah <i>blah</i> blah', 'Put <em>some <b>more text</b></em> here'])
+
+    def test_translate_xml_25(self):
+        """ Test xml_translator() with formatting elements without actual text. """
+        translate = xml_translator()
+        terms = []
+        callback = lambda t: terms.append(t) or t
+
+        result = translate(callback, """<form string="Form stuff">
+                                            <div>
+                                                <span class="before"/>
+                                                <h1>Blah blah blah</h1>
+                                                <span class="after">
+                                                    <i class="hack"/>
+                                                </span>
+                                            </div>
+                                        </form>""")
+        self.assertEquals(result,
+            """<form string="Form stuff"><div><span class="before"/><h1>Blah blah blah</h1><span class="after"><i class="hack"/></span></div></form>""")
+        self.assertItemsEqual(terms,
+            ['Form stuff', 'Blah blah blah'])
+
+    def test_translate_xml_30(self):
+        """ Test xml_translator() with t-* attributes. """
+        translate = xml_translator()
+        terms = []
+        callback = lambda t: terms.append(t) or t
+
+        result = translate(callback, """<t t-name="stuff">
+                                            stuff before
+                                            <span t-field="o.name"/>
+                                            stuff after
+                                        </t>""")
+        self.assertEquals(result,
+            """<t t-name="stuff">stuff before<span t-field="o.name"/>stuff after</t>""")
+        self.assertItemsEqual(terms,
+            ['stuff before', 'stuff after'])
+
+    def test_translate_xml_40(self):
+        """ Test xml_translator() with <a> elements. """
+        translate = xml_translator()
+        terms = []
+        callback = lambda t: terms.append(t) or t
+
+        source = """<t t-name="stuff">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="/web#menu_id=42&amp;action=54" class="oe_menu_leaf">
+                                    <span class="oe_menu_text">Blah</span>
+                                </a>
+                            </li>
+                            <li id="menu_more_container" class="dropdown" style="display: none;">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"/></a>
+                                <ul id="menu_more" class="dropdown-menu"/>
+                            </li>
+                        </ul>
+                    </t>"""
+        result = translate(callback, source)
+
+        self.assertEquals(result,
+            """<t t-name="stuff"><ul class="nav navbar-nav"><li><a href="/web#menu_id=42&amp;action=54" class="oe_menu_leaf"><span class="oe_menu_text">Blah</span></a></li><li id="menu_more_container" class="dropdown" style="display: none;"><a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"/></a><ul id="menu_more" class="dropdown-menu"/></li></ul></t>""")
+        self.assertItemsEqual(terms,
+            ['<span class="oe_menu_text">Blah</span>', 'More <b class="caret"/>'])

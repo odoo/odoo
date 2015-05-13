@@ -21,7 +21,6 @@
 import collections
 import copy
 import datetime
-import dateutil
 from dateutil.relativedelta import relativedelta
 import fnmatch
 import logging
@@ -45,7 +44,7 @@ from openerp.tools.parse_version import parse_version
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc
-from openerp.tools.translate import _
+from openerp.tools.translate import xml_translator, _
 
 _logger = logging.getLogger(__name__)
 
@@ -72,6 +71,12 @@ def keep_query(*keep_params, **additional_params):
             if param not in additional_params and param in qs_keys:
                 params[param] = ','.join(request.httprequest.args.getlist(param))
     return werkzeug.urls.url_encode(params)
+
+def encode(s):
+    if isinstance(s, unicode):
+        return s.encode('utf8')
+    return s
+
 
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
@@ -136,6 +141,7 @@ def get_view_arch_from_file(filename, xmlid):
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
+
 class view(osv.osv):
     _name = 'ir.ui.view'
 
@@ -199,7 +205,7 @@ class view(osv.osv):
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),
-        'arch_db': fields.text('Arch Blob', oldname='arch'),
+        'arch_db': fields.text('Arch Blob', translate=xml_translator(), oldname='arch'),
         'arch_fs': fields.char('Arch Filename'),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
@@ -479,7 +485,6 @@ class view(osv.osv):
                 self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
-                node.set('data-oe-source-id', str(root_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
@@ -653,11 +658,6 @@ class view(osv.osv):
             self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model),
                                   view_id, context)
 
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
-
         def check_group(node):
             """Apply group restrictions,  may be set at view level or model level::
                * at view level this means the element should be made invisible to
@@ -751,46 +751,6 @@ class view(osv.osv):
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
         orm.transfer_node_to_modifiers(node, modifiers, context, in_tree_view)
-
-        # TODO remove attrs counterpart in modifiers when invisible is true ?
-
-        # translate view
-        if 'lang' in context:
-            Translations = self.pool['ir.translation']
-            if node.text and node.text.strip():
-                term = node.text.strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans:
-                    node.text = node.text.replace(term, trans)
-            if node.tail and node.tail.strip():
-                term = node.tail.strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans:
-                    node.tail =  node.tail.replace(term, trans)
-
-            if node.get('string') and node.get('string').strip() and not result:
-                term = node.get('string').strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans == term:
-                    if 'base_model_name' in context:
-                        # If translation is same as source, perhaps we'd have more luck with the alternative model name
-                        # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                        trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
-                    else:
-                        inherit_model = self.browse(cr, user, view_id, context=context).inherit_id.model or model
-                        if inherit_model != model:
-                            # parent view has a different model, if the terms belongs to the parent view, the translation
-                            # should be checked on the parent model as well
-                            trans = Translations._get_source(cr, user, inherit_model, 'view', context['lang'], term)
-                if trans:
-                    node.set('string', trans)
-
-            for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
-                attr_value = node.get(attr_name)
-                if attr_value and attr_value.strip():
-                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value.strip())
-                    if trans:
-                        node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
