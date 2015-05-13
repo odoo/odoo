@@ -39,7 +39,7 @@ class product_pricelist(osv.Model):
 class product_public_category(osv.osv):
     _name = "product.public.category"
     _inherit = ["website.seo.metadata"]
-    _description = "Public Category"
+    _description = "Website Product Category"
     _order = "sequence, name"
 
     _constraints = [
@@ -129,7 +129,7 @@ class product_template(osv.Model):
         'website_size_y': fields.integer('Size Y'),
         'website_style_ids': fields.many2many('product.style', string='Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
-        'public_categ_ids': fields.many2many('product.public.category', string='Public Category', help="Those categories are used to group similar products for e-commerce."),
+        'public_categ_ids': fields.many2many('product.public.category', string='Website Product Category', help="Those categories are used to group similar products for e-commerce."),
     }
 
     def _defaults_website_sequence(self, cr, uid, *l, **kwargs):
