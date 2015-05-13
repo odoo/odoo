@@ -1302,10 +1302,12 @@
             class="field_boolean"/>
     </span>
 </t>
-<t t-name="FieldProgressBar">
-    <span class="oe_form_field oe_form_field_progressbar" t-att-style="widget.node.attrs.style">
-        <span></span>
-    </span>
+<t t-name="ProgressBar">
+    <div class="o_progressbar">
+        <div t-if="widget.title" class="o_progressbar_title"><t t-esc="widget.title"/></div><div class="o_progress">
+            <div class="o_progressbar_complete"/>
+        </div><div t-if="widget.readonly" class="o_progressbar_value"/><input t-if="!widget.readonly" class="o_progressbar_value"/>
+    </div>
 </t>
 <t t-name="FieldPercentPie">
     <div class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">

@@ -2697,3 +2697,35 @@ body
 
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
+
+// ProgresBar widget
+
+.o_progressbar
+    > div
+        display: inline-block
+
+    .o_progressbar_title
+        white-space: nowrap
+        padding-right: 10px
+
+    .o_progress
+        width: 100px
+        height: 15px
+        vertical-align: middle
+
+        border: 1px solid silver
+        border-radius: 10px
+        overflow: hidden
+
+        background-color: white
+        &.o_progress_overflow
+            background-color: gray
+
+        .o_progressbar_complete
+            background-color: #3071A9
+            height: 100%
+
+    .o_progressbar_value
+        width: 100px
+        white-space: nowrap
+        padding-left: 10px

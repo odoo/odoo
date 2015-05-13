@@ -5,6 +5,7 @@ var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var datepicker = require('web.datepicker');
+var ProgressBar = require('web.ProgressBar');
 var Dialog = require('web.Dialog');
 var common = require('web.form_common');
 var formats = require('web.formats');
@@ -689,15 +690,26 @@ var FieldBoolean = common.AbstractField.extend({
 /**
     The progressbar field expect a float from 0 to 100.
 */
-var FieldProgressBar = common.AbstractField.extend({
-    template: 'FieldProgressBar',
-    render_value: function() {
-        this.$el.progressbar({
+var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+    initialize_content: function() {
+        if(this.progressbar) {
+            this.progressbar.destroy();
+        }
+
+        this.progressbar = new ProgressBar(this, {
+            readonly: this.get('effective_readonly'),
             value: this.get('value') || 0,
-            disabled: this.get("effective_readonly")
         });
-        var formatted_value = formats.format_value(this.get('value') || 0, { type : 'float' });
-        this.$('span').html(formatted_value + '%');
+
+        var self = this;
+        this.progressbar.appendTo('<div>').done(function() {
+            self.progressbar.$el.addClass(self.$el.attr('class'));
+            self.replaceElement(self.progressbar.$el);
+
+            self.progressbar.on('change:value', self, function() {
+                self.set('value', self.progressbar.get('value'));
+            });
+        });
     }
 });
 
