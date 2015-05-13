@@ -267,6 +267,8 @@ class sale_quote_option(osv.osv):
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
+        if product_obj.description_sale:
+            vals['name'] += '\n'+product_obj.description_sale
         return {'value': vals}
 
 class sale_order_option(osv.osv):
@@ -299,6 +301,8 @@ class sale_order_option(osv.osv):
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
+        if product_obj.description_sale:
+            vals['name'] += '\n'+product_obj.description_sale
         return {'value': vals}
 
 class product_template(osv.Model):

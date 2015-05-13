@@ -2601,13 +2601,17 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
+        var domain = [];
+        if(this.get('effective_readonly')) {
+            domain = instance.web.pyeval.eval('domain', self.get_value());
+        }
         this.pop.select_element(
             model, {
                 title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
                 readonly: this.get('effective_readonly'),
                 disable_multiple_selection: this.get('effective_readonly'),
                 no_create: this.get('effective_readonly'),
-            }, [], this.build_context());
+            }, domain, this.build_context());
         this.pop.on("elements_selected", self, function(element_ids) {
             if (this.pop.$('input.oe_list_record_selector').prop('checked')) {
                 var search_data = this.pop.searchview.build_search_data();

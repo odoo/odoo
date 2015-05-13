@@ -927,6 +927,12 @@
         close: function () {
             this.$el.modal('hide');
         },
+        destroy: function () {
+            this.$el.modal('hide').remove();
+            if($(".modal.in").length>0){
+                $('body').addClass('modal-open');
+            }
+        },
     });
 
     website.editor.LinkDialog = website.editor.Dialog.extend({

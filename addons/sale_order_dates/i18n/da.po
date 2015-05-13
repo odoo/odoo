@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-03-31 21:57+0000\n"
+"Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:20+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-01 05:35+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #. module: sale_order_dates
 #: field:sale.order,commitment_date:0
@@ -33,6 +33,12 @@ msgid ""
 "default method: based on the Product Lead Times and the Company's Security "
 "Delay."
 msgstr ""
+"Kundens ønskede leverings dato.\n"
+"Når ordren bekræftes, vil leveringsdatoen blive beregnet ud fra denne dato "
+"og firmaets respit/sikkerheds margin dage.\n"
+"Efterlad feltet tomt hvis leveringer skal dannes hurtigst muligt. I så fald "
+"beregnes den forventede dato som: Leveringstid på varen og firmaets "
+"respit/sikkerhedsmargin dage."
 
 #. module: sale_order_dates
 #: help:sale.order,commitment_date:0
@@ -40,11 +46,13 @@ msgid ""
 "Date by which the products are sure to be delivered. This is a date that you "
 "can promise to the customer, based on the Product Lead Times."
 msgstr ""
+"Dato varerne med sikkerhed kan leveres. Dette er datoen, du kan bekræfte til "
+"dine kunder - baseret på leveringstid på varerne."
 
 #. module: sale_order_dates
 #: help:sale.order,effective_date:0
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "Dato den første levering blev oprettet."
 
 #. module: sale_order_dates
 #: view:sale.order:sale_order_dates.view_sale_orderfor
@@ -65,7 +73,7 @@ msgstr "Bestilt dato"
 #: code:addons/sale_order_dates/sale_order_dates.py:76
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "Ønsket dato er for tidlig!"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -79,3 +87,5 @@ msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
+"Kundens ønskede leveringsdato er tidligere end den bekræftede. Du kan måske "
+"ikke indfri dette ønske."

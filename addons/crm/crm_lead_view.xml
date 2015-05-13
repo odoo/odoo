@@ -372,8 +372,8 @@
             <field name="arch" type="xml">
                 <form string="Opportunities">
                     <header>
-                        <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"/>
-                        <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"/>
+                        <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
+                        <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
                             domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>

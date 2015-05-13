@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-04-16 13:02+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:05+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-17 05:42+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -43,6 +43,28 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Татан авалт үүсгэхдээ дарна уу.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Татан авалтын захиалга</b> нь бараа тодорхой тоо "
+"хэмжээгээр тодорхой байрлалд тухайн цаг үед шаардагдаж буйг илэрхийлдэг.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Борлуулалтын захиалга</b> нь татан авах захиалга үүсэх "
+"нэг шалтгаан байдаг (гэхдээ энэ нь тусдаа баримт юм). \n"
+"                <br/>Татан авалтын параметр болон барааны тохируулгаас "
+"хамаараад татан авалтын систем нь барааг нөөцийн агуулахаас дүүргэх, "
+"нийлүүлэгчээс захиалах, үйлдвэрлэлийн захиалгыг дамжуулах зэрэгээр "
+"автоматаар ханган нийлүүлэхээр ажилладаг.\n"
+"              </p>\n"
+"              <p>\n"
+"                A <b>Татан авалтын саатал</b> нь систем хэрхэн ханган "
+"нийлүүлэхээ мэдэхгүй тохиолдолд үүсдэг. Зарим саатал нь өөрөө аяндаа "
+"шийдэгддэг, гэхдээ заримыг нь гараараа шийдвэрлэх шаардлагатай болдог "
+"(эдгээр нь алдааны тодорхой зурвасаар танигддаг).\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -67,11 +89,30 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Татан авах захиалга үүсгэхдээ дарна уу.  \n"
+"              </p>\n"
+"              <p>\n"
+"               <b>Татан авах захиалга</b> нь тодорхой бараа тодорхой "
+"байрлалд\n"
+"                шаардлагатай болохыг хөтлөхөд хэрэглэгддэг. Татан авах "
+"захиалга нь \n"
+"                ихэнх тохиолдолд <i>борлуулалтын захиалга, татах логистикийн "
+"дүрэм, \n"
+"                хамгийн бага нөөцийн дүрэм зэрэгээс автоматаар үүсдэг.</i>\n"
+"              </p>\n"
+"              <p>\n"
+"                Татан авах захиалга батлагдсан бол энэ нь автоматаар "
+"хэрэгцээг хэрхэн хангахад\n"
+"                 шаардлагатай ажиллагааг үүсгэдэг: худалдан авах захиалга, "
+"үйлдвэрлэлийн захиалга, гм.\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
 msgid "Action"
-msgstr ""
+msgstr "Үйлдэл"
 
 #. module: procurement
 #: field:procurement.rule,active:0
@@ -81,7 +122,7 @@ msgstr "Идэвхитэй"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "All at once"
-msgstr ""
+msgstr "Нэг мөсөн"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -107,7 +148,7 @@ msgstr "%s төлөвтэй татан авалтын захиалгыг уст�
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "Татан авалт шалгах"
 
 #. module: procurement
 #: help:procurement.order,rule_id:0
@@ -115,6 +156,9 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but "
 "can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"Татан авалтыг шийдвэрлэхээр сонгогдсон дүрэм. Ихэнхдээ систем автоматаар "
+"сонгодог боловч зарим тохиолдолд татан авалтын менежер ялгаатай дүрмээр "
+"шийдэхээр гараар сонгосон байх боломжтой."
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -125,7 +169,7 @@ msgstr "Компани"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Бүх татан авалтыг далд тооцоолох."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -143,7 +187,7 @@ msgstr "Баталсан"
 #: field:procurement.order.compute.all,create_uid:0
 #: field:procurement.rule,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: procurement
 #: field:procurement.group,create_date:0
@@ -151,17 +195,17 @@ msgstr ""
 #: field:procurement.order.compute.all,create_date:0
 #: field:procurement.rule,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: procurement
 #: help:procurement.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
 
 #. module: procurement
 #: field:procurement.group,move_type:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "Хүргэх арга"
 
 #. module: procurement
 #: field:procurement.order,name:0
@@ -196,12 +240,12 @@ msgstr "Нэмэлт мэдээлэл"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Fixed"
-msgstr ""
+msgstr "Тогтмол"
 
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Тогтсон татан авалтын бүлэг"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -222,7 +266,7 @@ msgstr "Бүлэглэх"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Бүлэгийн татан авалт"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -239,7 +283,7 @@ msgstr ""
 #: field:procurement.order.compute.all,id:0
 #: field:procurement.rule,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: procurement
 #: help:procurement.order,message_unread:0
@@ -250,7 +294,7 @@ msgstr ""
 #. module: procurement
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "Хэрэв сонгоогүй бол дүрмийг устгалгүйгээр нуух боломжийг олгоно."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -266,7 +310,7 @@ msgstr "Дагагч эсэх"
 #. module: procurement
 #: field:procurement.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Сүүлчийн зурвасын огноо"
 
 #. module: procurement
 #: field:procurement.group,write_uid:0
@@ -274,7 +318,7 @@ msgstr ""
 #: field:procurement.order.compute.all,write_uid:0
 #: field:procurement.rule,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: procurement
 #: field:procurement.group,write_date:0
@@ -282,7 +326,7 @@ msgstr ""
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -292,7 +336,7 @@ msgstr "Хожимдсон"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "Хоосон үлдээ"
 
 #. module: procurement
 #: view:res.company:procurement.mrp_company
@@ -318,7 +362,7 @@ msgstr "Нэр"
 #: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Энэ татан авалтанд тохирох дүрэм алга"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -338,7 +382,7 @@ msgstr "Тэмдэглэл"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "Хэсэгчилсэн"
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -361,7 +405,7 @@ msgstr "Татан авалтын саатал"
 #. module: procurement
 #: field:procurement.order,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Татан авах бүлэг"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -376,17 +420,17 @@ msgstr "Татан авалтын захиалгууд"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Татан авалтын шаардах"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Татан авах дүрэм"
 
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Татан авалтын бүлэг"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -419,27 +463,27 @@ msgstr "Хоёрдогч х.нэгж"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Тараах"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Тараах Сонголт"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Татан авах бүлэгийн тараалт"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Pull Rule"
-msgstr ""
+msgstr "Татах Дүрэм"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_tree
 msgid "Pull Rules"
-msgstr ""
+msgstr "Татах Дүрэмүүд"
 
 #. module: procurement
 #: field:procurement.order,product_qty:0
@@ -449,12 +493,12 @@ msgstr "Тоо хэмжээ"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Татан авалтыг дахин батлах"
 
 #. module: procurement
 #: field:procurement.group,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Код"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -462,11 +506,13 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
 msgstr ""
+"Энэ татан авалтыг үүсгэсэн баримтын код.\n"
+"Үүнийг Odoo автоматаар бөглөдөг."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Дүрэм"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -492,7 +538,7 @@ msgstr "Товлогдсон огноо"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Товлосон сар"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -502,7 +548,7 @@ msgstr "Товлогчийн тохиргоо"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "Товлох"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -512,7 +558,7 @@ msgstr "Татан авалт хайх"
 #. module: procurement
 #: field:procurement.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Дараалал"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -534,6 +580,7 @@ msgstr "Хураангуй"
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
+"Энэ талбарт баглааны эх үүсвэр болон үүний хөдөлгөөний нэр бөглөгдсөн байдаг."
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view

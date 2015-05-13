@@ -8,25 +8,25 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-03-31 21:50+0000\n"
+"Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:20+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-01 05:35+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
 #, python-format
 msgid "(n/a)"
-msgstr ""
+msgstr "Ej til rådighed"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Tilføj forsendelses omkostninger"
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -35,27 +35,30 @@ msgid ""
 "You can define your own carrier and delivery grids for prices.\n"
 "-This installs the module delivery."
 msgstr ""
+"Her kan du oprette leveringsmåder på salgsordrer og følgesedler.\n"
+"Du kan oprette egne transportører og leveringsmatrixer med priser.\n"
+"- Dette installerer leveringsmodulet (Delivery)."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
-msgstr ""
+msgstr "Her kan du vælge leverings-rute på salgsordrelinier"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "Mulighed for at mærke salgsordre linier med egenskaber"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Cancel Order"
-msgstr ""
+msgstr "Annulér ordre"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:160
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Kan ikke annulere salgsordre!"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_route_so_lines:0
@@ -72,32 +75,32 @@ msgstr "Virksomheder"
 #: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Konfigurationsfejl!"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
 msgid "Contact Details"
-msgstr ""
+msgstr "Kontakt detaljer"
 
 #. module: sale_stock
 #: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
 msgid "Default Options"
-msgstr ""
+msgstr "Standard optioner"
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "Levér alt med det samme, når alle varer er på lager"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Levér alle varer med det samme"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Lever hver vare når de er på lager"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
@@ -108,27 +111,27 @@ msgstr "Leveret"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Leveringer der kan faktureres"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Aktivér fakturering af leveringer"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Aktivér rute på salgsordrelinier"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Dan fakturaer baseret på leveringer/følgesedler"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Ignore Exception"
-msgstr ""
+msgstr "Ignorer undtagelse"
 
 #. module: sale_stock
 #: field:sale.order,incoterm:0
@@ -141,21 +144,23 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Internationale leveringsbetingelser er en serie af foruddefinerede "
+"kommercielle vilkår, der anvendes i internationale transaktioner."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Lager ruter"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Faktura baseret på leveringer"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Faktura baseret på salgsordrer"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
@@ -166,6 +171,10 @@ msgid ""
 "creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
 msgstr ""
+"Lader sig overføre indtastninger på projekt opgaver til tidsskema linier på "
+"en bestemt dato og bruger for at oprette, redigere og slette projekt opgaver "
+"fra disponerings linier.\n"
+"- Dette installerer modulet \"projekt_timesheet\" og \"sale-service\"."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -174,40 +183,43 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised "
 "date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"Respitdage for levering. Antal dage før lovet levering, varer foreslås "
+"indkøbt - for at forebygge forsinkelse i leverings-kæden."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:347
 #, python-format
 msgid "Not enough stock ! : "
-msgstr ""
+msgstr "Utilstrækkelig beholdning "
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "Antal pakker"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:78
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Kun administratorer kan ændre opsætning"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "Pakning"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
 msgstr ""
+"Vælg \"levér hver vare når den er på lager\" hvis du tillader delleveringer."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:275
 #, python-format
 msgid "Picking Information ! : "
-msgstr ""
+msgstr "Plukke information  !: "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -217,67 +229,67 @@ msgstr "Plukkeliste"
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "Pluk i.f.m. dette salg"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Forbered fakturering baseret på opgave-aktiviteter"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Vare"
 
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Produktskabelon"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "Vare egenskaber på salgsordre linier"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "Projekt tidsskema"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "Genskab levering"
 
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "Rute"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Salgs ordre"
 
 #. module: sale_stock
 #: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "Salgsordre linier"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_sale_service:0
 msgid "Sale Service"
-msgstr ""
+msgstr "Salgs ydelse"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Salgsordre"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Salgsordre linie"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -291,16 +303,19 @@ msgid ""
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
 msgstr ""
+"Salgsordre sættes til default at levere alle varer med det samme i stedet "
+"for at levere hver varer når den er på lager. Kan påvirke "
+"fragtomkostningerne."
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr ""
+msgstr "Respit dage"
 
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Kan vælges på salgsordre linier"
 
 #. module: sale_stock
 #: field:sale.report,shipped:0
@@ -311,7 +326,7 @@ msgstr "Afsendt"
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Afsendelses måde"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -321,12 +336,12 @@ msgstr "Lager flytning"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "Standard faktureringsmåden er"
 
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr ""
+msgstr "Til fakturering"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -334,11 +349,13 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
+"Giver sælger mulighed for at fakturere leveringer via menuen \"Leveringer "
+"til fakturering\"."
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Vis levering"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0
@@ -350,14 +367,14 @@ msgstr "Lagersted"
 #: help:sale.config.settings,default_order_policy:0
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
-msgstr ""
+msgstr "Du kan danne fakturaer ud fra salgsordrer eller leveringer."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
+msgstr "Du må først annullere alle leveringer knyttet til denne salgsordre."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:343
@@ -366,6 +383,8 @@ msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
+"Du vil sælge %.2f %s men du har kun %.2f %s på lager !\n"
+"Beholdningen er %.2f %s. (uden reservationer)"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -376,11 +395,15 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Du har valgt et antal af  %d enheder.\n"
+"Dette er ikke kompatibelt med den valgte pakning.\n"
+"Her er et forslag til antal i pakningen:\n"
+"EAN: %s Quantity: %s Type of ul: %s"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
-msgstr ""
+msgstr "dage"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit

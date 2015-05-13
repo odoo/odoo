@@ -156,6 +156,10 @@ class stock_move(osv.osv):
                     return self.write(cr, uid, [move.id], {'price_unit': price}, context=context)
         super(stock_move, self).attribute_price(cr, uid, move, context=context)
 
+    def _get_taxes(self, cr, uid, move, context=None):
+        if move.origin_returned_move_id.purchase_line_id.taxes_id:
+            return [tax.id for tax in move.origin_returned_move_id.purchase_line_id.taxes_id]
+        return super(stock_move, self)._get_taxes(cr, uid, move, context=context)
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'

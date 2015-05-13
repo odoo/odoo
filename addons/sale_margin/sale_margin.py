@@ -49,11 +49,14 @@ class sale_order_line(osv.osv):
         return res
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
+        cur_obj = self.pool.get('res.currency')
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
+            cur = line.order_id.pricelist_id.currency_id
             res[line.id] = 0
             if line.product_id:
-                res[line.id] = line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uos_qty)
+                tmp_margin = line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uos_qty)
+                res[line.id] = cur_obj.round(cr, uid, cur, tmp_margin)
         return res
 
     _columns = {
