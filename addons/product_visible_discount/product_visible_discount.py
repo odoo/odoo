@@ -42,26 +42,34 @@ class sale_order_line(osv.osv):
             lang=False, update_tax=True, date_order=False, packaging=False,
             fiscal_position=False, flag=False, context=None):
 
-        def get_real_price(res_dict, product_id, qty, uom, pricelist):
+        def get_real_price_curency(res_dict, product_id, qty, uom, pricelist):
             """Retrieve the price before applying the pricelist"""
             item_obj = self.pool.get('product.pricelist.item')
             price_type_obj = self.pool.get('product.price.type')
             product_obj = self.pool.get('product.product')
             field_name = 'list_price'
             rule_id = res_dict.get(pricelist) and res_dict[pricelist][1] or False
+            currency_id = None
             if rule_id:
                 item_base = item_obj.read(cr, uid, [rule_id], ['base'])[0]['base']
                 if item_base > 0:
-                    field_name = price_type_obj.browse(cr, uid, item_base).field
+                    price_type = price_type_obj.browse(cr, uid, item_base)
+                    field_name = price_type.field
+                    currency_id = price_type.currency_id
 
             product = product_obj.browse(cr, uid, product_id, context)
             product_read = product_obj.read(cr, uid, [product_id], [field_name], context=context)[0]
 
+            if not currency_id:
+                currency_id = product.company_id.currency_id.id
             factor = 1.0
             if uom and uom != product.uom_id.id:
                 # the unit price is in a different uom
                 factor = self.pool['product.uom']._compute_qty(cr, uid, uom, 1.0, product.uom_id.id)
-            return product_read[field_name] * factor
+            return product_read[field_name] * factor, currency_id
+
+        def get_real_price(res_dict, product_id, qty, uom, pricelist):
+            return get_real_price_curency(res_dict, product_id, qty, uom, pricelist)[0]
 
 
         res=super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,
@@ -85,14 +93,14 @@ class sale_order_line(osv.osv):
 
             so_pricelist = pricelist_obj.browse(cr, uid, pricelist, context=context)
 
-            new_list_price = get_real_price(list_price, product.id, qty, uom, pricelist)
+            new_list_price, currency_id = get_real_price_curency(list_price, product.id, qty, uom, pricelist)
             if so_pricelist.visible_discount and list_price[pricelist][0] != 0 and new_list_price != 0:
                 if product.company_id and so_pricelist.currency_id.id != product.company_id.currency_id.id:
                     # new_list_price is in company's currency while price in pricelist currency
                     ctx = context.copy()
                     ctx['date'] = date_order
                     new_list_price = self.pool['res.currency'].compute(cr, uid,
-                        product.company_id.currency_id.id, so_pricelist.currency_id.id,
+                        currency_id.id, so_pricelist.currency_id.id,
                         new_list_price, context=ctx)
                 discount = (new_list_price - price) / new_list_price * 100
                 if discount > 0:
