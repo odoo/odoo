@@ -230,11 +230,11 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <data>
-                  <xpath expr="//page[@string='Additional Info']/group[last()]" position="after">
-                  <separator string="Carrier Information"/>
-                  <group>
-                      <group name='carrier_data'>
+              <data>
+                <xpath expr="//page[@name='extra']" position="inside">
+                <separator string="Carrier Information"/>
+                <group>
+                    <group name='carrier_data'>
                         <field name="carrier_id"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
@@ -243,27 +243,27 @@
                             <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','=','grid'),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
                         <field name="carrier_price"/>
-                      </group>
-                      <group>
-                          <label for="weight" string="Weight"/>
-                          <div>
-                              <field name="weight" class="oe_inline"/>
-                              <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                          </div>
-                          <field name="weight_net" groups="base.group_no_one"/>
-                          <field name="number_of_packages"/>
-                      </group>
-                  </group>
-                  </xpath>
-                  <xpath expr="//h1" position="before">
-                      <div class="oe_right oe_button_box">
-                          <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking" attrs="{'invisible': ['|',('carrier_tracking_ref','=',False),('delivery_type','=','grid')]}" />
-                      </div>
-                  </xpath>
-                  <xpath expr="//form[@string='Transfer']/header/button[last()]" position="after">
+                    </group>
+                    <group>
+                        <label for="weight" string="Weight"/>
+                        <div>
+                            <field name="weight" class="oe_inline"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <field name="weight_net" groups="base.group_no_one"/>
+                        <field name="number_of_packages"/>
+                    </group>
+                </group>
+                </xpath>
+                <xpath expr="//h1" position="before">
+                    <div class="oe_right oe_button_box">
+                        <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking" attrs="{'invisible': ['|',('carrier_tracking_ref','=',False),('delivery_type','=','grid')]}" />
+                    </div>
+                </xpath>
+                <xpath expr="/form/header/button[last()]" position="after">
                     <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','=','grid'),('delivery_type','=',False),('state','not in',('done'))]}"/>
-                  </xpath>
-                </data>
+                </xpath>
+              </data>
             </field>
         </record>
 

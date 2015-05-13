@@ -77,14 +77,14 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Configuration">
+                        <page name="configuration" string="Configuration">
                             <group>
                                 <group name="account_grp" string="Accounting">
                                     <field name="currency_id"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Report Configuration">
+                        <page name="report" string="Report Configuration">
                             <group string="Configuration">
                                 <field name="custom_footer" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
                                 <field name="rml_footer" attrs="{'invisible': [('custom_footer','=',False)]}"/>

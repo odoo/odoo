@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//notebook/page/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']" position="after">
+                    <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
                          <field name="sale_layout_cat_id"/>
                     </xpath>
                     <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
@@ -25,7 +25,7 @@
              <field name="inherit_id" ref="account.invoice_form"/>
              <field name="arch" type="xml">
                  <data>
-                    <xpath expr="//page[@string='Invoice Lines']/field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="after">
+                    <xpath expr="//page/field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="after">
                         <field name="sale_layout_cat_id"/>
                     </xpath>
 

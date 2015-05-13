@@ -7,7 +7,7 @@
             <field name="model">pos.config</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_config_form" />
             <field name="arch" type="xml">
-                <xpath expr="//group[@string='Receipt']" position="after">
+                <xpath expr="//group[@name='receipt']" position="after">
                     <group string="Loyalty Program" col="4" >
                         <field name="loyalty_id" />
                     </group>
@@ -33,7 +33,7 @@
             <field name="model">pos.order</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Extra Info']" position="inside">
+                <xpath expr="//page[@name='extra']" position="inside">
                     <group name="loyalty" string="Loyalty Programs">
                         <field name="loyalty_points" />
                     </group>

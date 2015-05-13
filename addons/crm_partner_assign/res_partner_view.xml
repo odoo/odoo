@@ -98,7 +98,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
-            <filter string="Salesperson" position="after">
+            <filter name="salesperson" position="after">
                 <filter string="Activation" context="{'group_by' : 'activation'}" domain="[]" icon="terp-personal" />
             </filter>
             <field name="category_id" position="after">

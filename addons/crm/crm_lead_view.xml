@@ -182,7 +182,7 @@
                     <page string="Internal Notes">
                         <field name="description"/>
                     </page>
-                    <page string="Extra Info">
+                    <page name="extra" string="Extra Info">
                         <group>
                             <group string="Mailings">
                                 <field name="opt_out"/>
@@ -196,7 +196,7 @@
                                 <field name="medium_id"/>
                                 <field name="source_id" />
                             </group>
-                            <group string="Misc">
+                            <group name="misc" string="Misc">
                                 <field name="probability" groups="base.group_no_one"/>
                                 <field name="active"/>
                                 <field name="referred"/>
@@ -373,7 +373,7 @@
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" domain="[]" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter name="customer" string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Source"  domain="[]" context="{'group_by':'source_id'}"/>
                         <filter string="Channel"  domain="[]" context="{'group_by':'medium_id'}"/>
@@ -472,7 +472,7 @@
                         <page string="Internal Notes">
                             <field name="description"/>
                         </page>
-                        <page string="Lead">
+                        <page name="lead" string="Lead">
                             <group>
                                 <group>
                                     <field name="partner_name"/>
@@ -512,7 +512,7 @@
                                     <field name="referred"/>
                                     <field name="type" invisible="1"/>
                                 </group>
-                                <group string="References">
+                                <group name="references" string="References">
                                     <field name="ref"/>
                                     <field name="ref2"/>
                                 </group>
@@ -601,7 +601,7 @@
                         <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Country" context="{'group_by':'country_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'medium_id'}"/>
                         <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>

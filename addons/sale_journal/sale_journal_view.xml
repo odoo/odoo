@@ -101,7 +101,7 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
-                <xpath expr="//group/filter[@string='Customer']" position="after">
+                <xpath expr="//group/filter[@name='customer']" position="after">
                     <filter string="Invoice Type" domain="[]" context="{'group_by':'invoice_type_id'}"/>
                 </xpath>
             </field>
@@ -114,7 +114,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//group/filter[@string='Picking Type']" position="after">
+                <xpath expr="//group/filter[@name='picking_type']" position="after">
                     <filter string="Invoice Type" domain="[]" context="{'group_by':'invoice_type_id'}"/>
                 </xpath>
             </field>
