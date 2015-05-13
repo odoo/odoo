@@ -536,23 +536,25 @@ class ir_translation(osv.osv):
         if not langs:
             raise UserError(_("Translation features are unavailable until you install an extra OpenERP translation."))
 
+        # determine domain for selecting translations
         record = self.env[model].with_context(lang=main_lang).browse(id)
         domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
 
-        # determine translatable fields
-        field_ids = []
+        # insert missing translations, and extend domain for inherited fields
         for name, fld in record._fields.items():
-            if getattr(fld, 'translate', False):
-                if fld.inherited:
-                    parent = record[fld.related[0]]
-                    domain.insert(0, '|')
-                    domain.extend(['&', ('res_id', '=', parent.id), ('name', '=', "%s,%s" % (fld.base_field.model_name, name))])
-                    field_ids.append((fld.base_field, parent.id))
-                else:
-                    field_ids.append((fld, id))
+            if not getattr(fld, 'translate', False):
+                continue
 
-        for fld, rid in field_ids:
-            src = record[fld.name] or None
+            rec = record
+            if fld.inherited:
+                while fld.inherited:
+                    rec = rec[fld.related[0]]
+                    fld = fld.related_field
+                domain.insert(0, '|')
+                domain.extend(['&', ('res_id', '=', rec.id), ('name', '=', "%s,%s" % (fld.model_name, fld.name))])
+            assert fld.translate and rec._name == fld.model_name
+
+            src = rec[fld.name] or None
             if not callable(fld.translate):
                 # insert missing translations for src
                 query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
@@ -567,11 +569,11 @@ class ir_translation(osv.osv):
                         """
                 self._cr.execute(query, {
                     'name': "%s,%s" % (fld.model_name, fld.name),
-                    'res_id': rid,
+                    'res_id': rec.id,
                     'src': src,
                 })
             elif src:
-                # insert missing translations for each term
+                # insert missing translations for each term in src
                 query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
                             SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
                             FROM res_lang l
@@ -583,7 +585,7 @@ class ir_translation(osv.osv):
                 for term in set(fld.get_trans_terms(src)):
                     self._cr.execute(query, {
                         'name': "%s,%s" % (fld.model_name, fld.name),
-                        'res_id': rid,
+                        'res_id': rec.id,
                         'src': term,
                     })
 
