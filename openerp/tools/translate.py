@@ -223,7 +223,7 @@ def serialize(tag, attrib, content):
     assert elem.endswith("/>")
     return "%s>%s</%s>" % (elem[:-2], content, tag) if content else elem
 
-class XMLTranslations(object):
+class XMLTranslator(object):
     """ A sequence of serialized xml items, with some of them to translate
         (todo) and others already translated (done). The purpose of this object
         is to simplify the handling of phrasing elements (like <b>) that must be
@@ -241,8 +241,10 @@ class XMLTranslations(object):
             </div>
 
     """
-    def __init__(self, callback):
+    def __init__(self, callback, elems=(), attrs=()):
         self.callback = callback        # callback function to translate terms
+        self._elems = elems             # tags of elements to translate
+        self._attrs = attrs             # attributes to translate
         self._done = []                 # translated strings
         self._todo = []                 # todo strings that come after _done
         self.needs_trans = False        # whether todo needs translation
@@ -285,20 +287,20 @@ class XMLTranslations(object):
             return
 
         # process children nodes locally in child_trans
-        child_trans = XMLTranslations(self.callback)
+        child_trans = XMLTranslator(self.callback, self._elems, self._attrs)
         child_trans.todo(escape(node.text or ""))
         for child in node:
             child_trans.process(child)
 
         if (child_trans.all_todo() and
-                node.tag in TRANSLATED_ELEMENTS and
+                node.tag in self._elems and
                 not any(attr.startswith("t-") for attr in node.attrib)):
             # serialize the node element as todo
             self.todo(serialize(node.tag, node.attrib, child_trans.get_todo()),
                       child_trans.needs_trans)
         else:
             # complete translations and serialize result as done
-            for attr in TRANSLATED_ATTRS:
+            for attr in self._attrs:
                 if node.get(attr):
                     node.set(attr, self.callback(node.get(attr)))
             self.done(serialize(node.tag, node.attrib, child_trans.get_done()))
@@ -307,13 +309,24 @@ class XMLTranslations(object):
         self.todo(escape(node.tail or ""))
 
 def xml_translator():
-    """ Return a `translate` function for translating xml fields. """
+    """ Return a `translate` function for translating XML fields. """
     def translate(callback, value):
         if not value:
             return value
-
         root = etree.fromstring(encode(value))
-        trans = XMLTranslations(callback)
+        trans = XMLTranslator(callback, TRANSLATED_ELEMENTS, TRANSLATED_ATTRS)
+        trans.process(root)
+        return trans.get_done()
+
+    return translate
+
+def html_translator():
+    """ Return a `translate` function for translating HTML fields. """
+    def translate(callback, value):
+        if not value:
+            return value
+        root = etree.fromstring(encode(value), etree.HTMLParser())
+        trans = XMLTranslator(callback, TRANSLATED_ELEMENTS)
         trans.process(root)
         return trans.get_done()
 
