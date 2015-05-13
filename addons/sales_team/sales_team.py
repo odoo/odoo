@@ -44,11 +44,7 @@ class crm_team(osv.Model):
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
-<<<<<<< HEAD
         'company_id': fields.many2one('res.company', 'Company'),
-        'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
-=======
->>>>>>> 7857b36... [IMP] sales_team : Remove the lead escalation feature
         'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids': fields.many2many('res.users', 'sale_member_rel', 'team_id', 'member_id', 'Team Members'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales team"),

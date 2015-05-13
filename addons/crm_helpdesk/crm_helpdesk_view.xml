@@ -51,8 +51,6 @@
             <field name="arch" type="xml">
                 <form string="Helpdesk Support">
                 <header>
-                    <button name="case_escalate" string="Escalate" type="object" 
-                            states="open,draft,pending"/>
                     <field name="state" nolabel="1" widget="statusbar" clickable="True"
                             statusbar_colors='{"pending":"blue"}'/>
                 </header>
