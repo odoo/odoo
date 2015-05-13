@@ -53,20 +53,30 @@ function getCashRegisterByJournalID (cashRegisters, journal_id) {
     return cashRegisterReturn;
 }
 
-function getXMLTagContent (xml, tagName) {
-    var re = new RegExp("&lt;" + tagName + "&gt;(.*)&lt;/" + tagName + "&gt;");
-    var match = xml.match(re);
-    var tagContents = match ? match[1] : "";
-
-    return tagContents;
-}
-
 function decodeMercuryResponse (data) {
+    // get rid of xml version declaration and just keep the RStream
+    // from the response because the xml contains two version
+    // declarations. One for the SOAP, and one for the content. Maybe
+    // we should unpack the SOAP layer in python?
+    data = data.replace(/.*<\?xml version="1.0"\?>/, "");
+    data = data.replace(/<\/CreditTransactionResult>.*/, "");
+
+    var xml = $($.parseXML(data));
+    var cmd_response = xml.find("CmdResponse");
+    var tran_response = xml.find("TranResponse");
+
     return {
-        status: getXMLTagContent(data, "CmdStatus"),
-        error: getXMLTagContent(data, "DSIXReturnCode"),
-        message: getXMLTagContent(data, "TextResponse"),
-        amount: parseFloat(getXMLTagContent(data, "Authorize")),
+        status: cmd_response.find("CmdStatus").text(),
+        message: cmd_response.find("TextResponse").text(),
+        error: cmd_response.find("DSIXReturnCode").text(),
+        auth_code: tran_response.find("AuthCode").text(),
+        acq_ref_data: tran_response.find("AcqRefData").text(),
+        process_data: tran_response.find("ProcessData").text(),
+        invoice_no: tran_response.find("InvoiceNo").text(),
+        ref_no: tran_response.find("RefNo").text(),
+        record_no: tran_response.find("RecordNo").text(),
+        purchase: parseFloat(tran_response.find("Purchase").text()),
+        authorize: parseFloat(tran_response.find("Authorize").text()),
     };
 }
 
@@ -91,13 +101,12 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
 });
 
 // Lookup table to store status and error messages
-
 var lookUpCodeTransaction = {
     'Approved': {
-        '000000': _t('Payment Approved'),
+        '000000': _t('Transaction approved'),
     },
     'Declined': {
-        '000000': _t('Payment Declined, insufficient balance on your card'),
+        '000000': _t('Transaction declined, insufficient balance on your card'),
     },
     'Error': {
         '-1':     _t('Impossible to contact the proxy'),
@@ -193,20 +202,19 @@ var PaymentTransactionPopupWidget = PopupWidget.extend({
             data.error = (data.error != '000000') ? ' ' + data.error : '';
             self.$el.find('p.body').html(data.status + ' ' + data.error + '<br /><br />' + data.message);
 
-            // If an error occured, allow user to close the popup
-            if (data.partial) {
+            if (data.status == 'Approved') {
+                if (data.partial) {
+                    self.close();
+                    self.$el.find('p.body').html('Partially approved');
+                    self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
+                } else {
+                    setTimeout(function () {
+                        self.gui.close_popup();
+                    }, 2000);
+                }
+            } else {
                 self.close();
-                self.$el.find('p.body').html(data.status + ' ' + data.error + '<br /><br />' + 'Partially approved');
                 self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
-            } else if(data.status != 'Approved') {
-                self.close();
-                self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
-            }
-            // Else autoclose the popup
-            else {
-                setTimeout(function () {
-                    self.gui.close_popup();
-                }, 2000);
             }
 
         }).progress(function (data) {
@@ -310,28 +318,30 @@ PaymentScreenWidget.include({
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
             'invoice_no'        : 'SLK423K', // todo don't hardcode
-            'amount'            : parsed_result.total,
-            'action'            : 'CreditTransaction',
+            'purchase'          : parsed_result.total,
             'journal_id'        : parsed_result.journal_id,
         });
 
         def.notify({
             error: 0,
             status: 'Waiting',
-            message: 'Sending transaction to payment support ...',
+            message: 'Handling transaction...',
         });
 
         session.rpc("/pos/send_payment_transaction", transaction)
             .done(function (data) {
                 console.log(data); // todo
                 var response = decodeMercuryResponse(data);
+                response.journal_id = parsed_result.journal_id;
                 
                 if (response.status === 'Approved') {
                     // If the payment is approved, add a payment line
                     var order = self.pos.get_order();
                     order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
                     order.selected_paymentline.paid = true;
-                    order.selected_paymentline.amount = response.amount;
+                    order.selected_paymentline.amount = response.authorize;
+                    order.selected_paymentline.mercury_data = response; // used to reverse transactions
+                    self.order_changes();
                     self.reset_input();
                     self.render_paymentlines();
                 }
@@ -340,7 +350,7 @@ PaymentScreenWidget.include({
                     status: response.status,
                     error: response.error,
                     message: response.message,
-                    partial: response.message === "PARTIAL AP" && response.amount < parsed_result.total
+                    partial: response.message === "PARTIAL AP" && response.authorize < response.purchase
                 });
 
 
@@ -361,20 +371,86 @@ PaymentScreenWidget.include({
         parsed_result.total = this.pos.get_order().get_due();
 
         if (parsed_result.total) {
-
-            this.gui.show_popup('selection',{
-                title:   'Pay ' + parsed_result.total.toFixed(2) + ' with : ',
-                list:    onlinePaymentJournal,
-                confirm: function (item) {
-                    parsed_result.journal_id = item;
-                    self.credit_code_transaction(parsed_result);
-                },
-                cancel:  self.credit_code_cancel,
-            });
+            if (onlinePaymentJournal.length === 1) {
+                parsed_result.journal_id = onlinePaymentJournal[0].item;
+                self.credit_code_transaction(parsed_result);
+            } else { // this is for supporting another payment system like mercury
+                this.gui.show_popup('selection',{
+                    title:   'Pay ' + parsed_result.total.toFixed(2) + ' with : ',
+                    list:    onlinePaymentJournal,
+                    confirm: function (item) {
+                        parsed_result.journal_id = item;
+                        self.credit_code_transaction(parsed_result);
+                    },
+                    cancel:  self.credit_code_cancel,
+                });
+            }
         }
         else {
             // display error popup
         }
+    },
+
+    do_reversal: function (mercury_data) {
+        var def = new $.Deferred();
+        var self = this;
+
+        // show the transaction popup.
+        // the transaction deferred is used to update transaction status
+        this.gui.show_popup('payment-transaction', {
+            transaction: def
+        });
+
+        var request_data = _.extend({
+            'transaction_type'  : 'Credit',
+            'transaction_code'  : 'VoidSaleByRecordNo',
+        }, mercury_data);
+
+        def.notify({
+            error: 0,
+            status: 'Waiting',
+            message: 'Sending reversal...',
+        });
+
+        session.rpc("/pos/send_reversal", request_data)
+            .done(function (data) {
+                console.log(data); // todo
+                var response = decodeMercuryResponse(data);
+
+                if (response.status === 'Approved') {
+                    // VoidSale was successful
+
+                    // todo: these need to become reversals. So this
+                    // should probably become != Approved to see if we
+                    // need to send voidsale
+                }
+
+                def.resolve({
+                    status: response.status,
+                    error: response.error,
+                    message: response.message,
+                });
+
+
+            })  .fail(function (data) {
+                def.reject({
+                    status: 'Odoo Error',
+                    error: '-1',
+                    message: 'Impossible to contact the proxy, please retry ...',
+                });
+            });
+    },
+
+    click_delete_paymentline: function (cid) {
+        var lines = this.pos.get_order().get_paymentlines();
+
+        for ( var i = 0; i < lines.length; i++ ) {
+            if (lines[i].cid === cid && lines[i].mercury_data) {
+                this.do_reversal(lines[i].mercury_data);
+            }
+        }
+
+        this._super(cid);
     },
 
     show: function () {
