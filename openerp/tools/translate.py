@@ -138,6 +138,7 @@ def encode(s):
         return s.encode('utf8')
     return s
 
+# which elements are translated inline
 TRANSLATED_ELEMENTS = {
     'a', 'abbr', 'audio', 'b', 'bdi', 'bdo', 'br', 'canvas', 'cite', 'code',
     'data', 'datalist', 'del', 'dfn', 'em', 'embed', 'font', 'i', 'iframe',
@@ -147,6 +148,7 @@ TRANSLATED_ELEMENTS = {
     'wbr', 'text',
 }
 
+# which attributes must be translated
 TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
 }
@@ -256,15 +258,23 @@ class XMLTranslator(object):
 
 def xml_translate(callback, value):
     """ Translate an XML value (string), using `callback` for translating text
-    appearing in `value`.
+    appearing in `value`. If `value` is not XML valid, it is parsed with an HTML
+    parser instead, and some element wrapping is done to make the parsing work.
     """
     if not value:
         return value
 
     trans = XMLTranslator(callback)
-    root = etree.fromstring(encode(value))
-    trans.process(root)
-    return trans.get_done()
+    try:
+        root = etree.fromstring(encode(value))
+        trans.process(root)
+        return trans.get_done()
+    except etree.ParseError:
+        wrapped = "<div>%s</div>" % value
+        root = etree.fromstring(wrapped, etree.HTMLParser())
+        # html > body > div
+        trans.process(root[0][0])
+        return trans.get_done()[5:-6]
 
 
 #
