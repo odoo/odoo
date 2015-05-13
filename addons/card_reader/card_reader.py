@@ -30,10 +30,9 @@ class card_reader_payment_data(models.Model):
 class account_bank_statement_line(models.Model):
     _inherit = "account.bank.statement.line"
 
-    card_reader_number = fields.Char(string='Card Number', size=20, help='The card number of the card used to paid')
-    card_reader_brand = fields.Char(string='Card Brand', size=60, help='The brand of the payment card (e.g. Visa, Maestro, ...)')
-    card_reader_name = fields.Char(string='Card Name', help='The name of the card owner')
-
+    card_number = fields.Char(string='Card Number', size=4, help='The last 4 numbers of the card used to pay')
+    card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, Maestro, ...)')
+    card_owner_name = fields.Char(string='Card Name', help='The name of the card owner')
 
 class account_journal(models.Model):
     _inherit = 'account.journal'
