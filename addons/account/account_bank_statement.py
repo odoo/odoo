@@ -588,7 +588,7 @@ class account_bank_statement_line(osv.osv):
             domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
         else:
             domain += [(amount_field, '>', 0), (amount_field, '<', (sign * amount))]
-        mv_lines = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain)
+        mv_lines = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain, context=context)
         ret = []
         total = 0
         for line in mv_lines:

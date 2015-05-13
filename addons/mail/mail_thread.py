@@ -182,9 +182,8 @@ class mail_thread(osv.AbstractModel):
 
     def read_followers_data(self, cr, uid, follower_ids, context=None):
         result = []
-        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one', context=context)
         for follower in self.pool.get('res.partner').browse(cr, uid, follower_ids, context=context):
-            is_editable = uid in map(lambda x: x.id, technical_group.users)
+            is_editable = self.pool['res.users'].has_group(cr, uid, 'base.group_no_one')
             is_uid = uid in map(lambda x: x.id, follower.user_ids)
             data = (follower.id,
                     follower.name,
@@ -340,9 +339,7 @@ class mail_thread(osv.AbstractModel):
         options = {
             'display_log_button': False
         }
-        group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
-        is_employee = group_user_id in [group.id for group in group_ids]
+        is_employee = self.pool['res.users'].has_group(cr, uid, 'base.group_user')
         if is_employee:
             options['display_log_button'] = True
         return options
