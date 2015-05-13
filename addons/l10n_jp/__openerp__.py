@@ -21,10 +21,20 @@
     'description': """
 
 Overview:
-=========
+---------
 
 * Chart of Accounts and Taxes template for companies in Japan.
-* This probably does not cover all the necessary accounts for a company.  You are expected to add/delete/modify accounts based on this template.
+* This probably does not cover all the necessary accounts for a company. \
+You are expected to add/delete/modify accounts based on this template.
+
+Note:
+-----
+
+* Fiscal positions '内税' and '外税' have been added to handle special \
+requirements which might arise from POS implementation. [1]  You may not \
+need to use these at all under normal circumstances.
+
+[1] See https://github.com/odoo/odoo/pull/6470 for detail.
 
     """,
     'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
