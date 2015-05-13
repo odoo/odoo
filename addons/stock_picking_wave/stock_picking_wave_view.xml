@@ -120,7 +120,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_internal_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@string='Picking Type']" position="after">
+            <xpath expr="//filter[@name='picking_type']" position="after">
                 <filter string="Wave" domain="[]" context="{'group_by':'wave_id'}"/>
             </xpath>
         </field>

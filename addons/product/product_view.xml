@@ -19,7 +19,7 @@
                     <field string="Product Variant" name="product_variant_ids" filter_domain="['|', ('product_variant_ids.name','ilike',self), ('product_variant_ids.attribute_value_ids.attribute_id.name','ilike',self)]"/>
                     <field name="company_id"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
-                    <group  expand='0' string='Group by...'>
+                    <group expand='0' name="group_by" string='Group by...'>
                        <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
@@ -161,7 +161,7 @@
                 <field name="name" position="after">
                    <field name="product_tmpl_id" string="Product Template"/>
                 </field>
-                <xpath expr="//group[@string='Group by...']" position="inside">
+                <xpath expr="//group[@name='group_by']" position="inside">
                     <filter string='Product Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
                 </xpath>
             </field>
@@ -255,7 +255,7 @@
                     <field name="barcode" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                     <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                 </field>
-                <xpath expr="//page[@string='Sales']" position="after">
+                <xpath expr="//page[@name='sales']" position="after">
                     <page name="variants" string="Variants">
                         <div class="oe_right">
                             <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(variants_template_action)d" type="action" icon="fa-strikethrough"/>

@@ -715,7 +715,7 @@
                             If there is no product but a source package, this means the source package was moved entirely.  If there is a product and a source package, the product was taken from the source package.  
                             </p>
                         </page>
-                        <page string="Additional Info">
+                        <page name="extra" string="Additional Info">
                             <group string="General Informations">
                                 <group>
                                     <field name="move_type"/>
@@ -766,7 +766,7 @@
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <filter string="Origin" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                        <filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
                         <filter string="Procurement Group" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                 </search>

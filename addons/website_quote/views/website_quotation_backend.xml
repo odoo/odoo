@@ -24,7 +24,7 @@
                         <div>View Online<br />Quotation</div>
                     </button>
                 </xpath>
-                <xpath expr="//page[@string='Order Lines']" position="after">
+                <xpath expr="//page/field[@name='order_line']/.." position="after">
                     <page string="Suggested Products">
                         <label string="Optional Products &amp; Services" for="options"/>
                         <field name="quote_viewed" invisible="1"/>

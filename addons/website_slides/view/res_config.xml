@@ -7,7 +7,7 @@
         <field name="model">website.config.settings</field>
         <field name="inherit_id" ref="website.view_website_config_settings"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@string='Social Media']" position="after">
+            <xpath expr="//group[@name='social']" position="after">
                 <group string="Website Slides">
                     <field name="website_slide_google_app_key" />
                 </group>
