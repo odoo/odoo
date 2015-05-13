@@ -1425,6 +1425,9 @@ class ExportFormat(object):
         context = dict(request.context or {}, **params.get('context', {}))
         ids = ids or Model.search(domain, 0, False, False, context)
 
+        if not request.env[model]._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
+
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])
 

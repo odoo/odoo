@@ -6,26 +6,28 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-04-26 08:13+0000\n"
+"Last-Translator: user3 <Unknown>\n"
+"Language-Team: Russian <http://translate.starlight-"
+"biz.com//projects/odoo/project_issue/ru/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:12+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-27 05:41+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
+"Language: ru\n"
 
 #. module: project_issue
 #: field:project.issue.report,email:0
 msgid "# Emails"
-msgstr ""
+msgstr "# Адреса электронной почты"
 
 #. module: project_issue
 #: field:res.partner,issue_count:0
 msgid "# Issues"
-msgstr ""
+msgstr "# Проблемные моменты"
 
 #. module: project_issue
 #: field:project.issue.report,nbr:0
@@ -36,7 +38,7 @@ msgstr "Кол-во инцидентов"
 #: code:addons/project_issue/project_issue.py:299
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (копия)"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_version_action
@@ -50,6 +52,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления нового варианта.\n"
+"              </p><p>\n"
+"                Определите здесь разные варианты ваших товаров, по которым\n"
+"                вы можете работать с проблемными моментами.\n"
+"              </p>\n"
+"            "
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
@@ -64,6 +73,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Сервис Odoo по проблемным моментам дает вам возможность "
+"эффективно решать такие \n"
+"                    вопросы, как внутренние запросы, ошибки в разработке ПО, "
+"жалобы\n"
+"                    клиентов, проблемы с проектом, порча материала и т.п.\n"
+"                </p>\n"
+"            "
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -76,6 +93,14 @@ msgid ""
 "            </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"                Сервис Odoo по проблемным моментам дает вам возможность "
+"эффективно решать \n"
+"                такие вопросы, как внутренние запросы, ошибки в разработке "
+"ПО, жалобы\n"
+"                клиентов, проблемы с проектом, порча материала и т.п.\n"
+"            </p>\n"
+"        "
 
 #. module: project_issue
 #: help:project.issue,kanban_state:0
@@ -86,6 +111,13 @@ msgid ""
 " * Ready for next stage indicates the issue is ready to be pulled to the "
 "next stage"
 msgstr ""
+"Состояние канбана проблемного момента указывает на определенные положения, "
+"влияющие на его:\n"
+" * Нормальный - положение по умолчанию\n"
+" * Заблокирован - указывает на то, что что-то мешает прогрессу данного "
+"проблемного момента\n"
+" * Готов к следующему этапу - указывает на то, что проблемный момент может "
+"быть выдвинут на следующий этап"
 
 #. module: project_issue
 #: field:project.issue,active:0
@@ -110,12 +142,12 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Аналитический счет"
+msgstr "Счёт аналитики"
 
 #. module: project_issue
 #: field:project.issue,date_open:0
 msgid "Assigned"
-msgstr ""
+msgstr "Назначен"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -128,7 +160,7 @@ msgstr "Назначено"
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
 msgid "Avg. Delay to Close"
-msgstr "Ср. задержка перед закрытием"
+msgstr "Сред. задержка при закрытии"
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -153,7 +185,7 @@ msgstr "Блокировано"
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Ответственным лицом"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
@@ -174,17 +206,17 @@ msgstr "Отметьте это поле, если этот проект упр�
 #. module: project_issue
 #: field:project.issue,date_closed:0
 msgid "Closed"
-msgstr "Закрыт"
+msgstr "Закрыто"
 
 #. module: project_issue
 #: field:project.issue,color:0
 msgid "Color Index"
-msgstr "Цветовой индекс"
+msgstr "Цветовая палитра"
 
 #. module: project_issue
 #: help:project.issue.report,channel:0
 msgid "Communication Channel."
-msgstr ""
+msgstr "Канал связи."
 
 #. module: project_issue
 #: help:project.issue,channel:0
@@ -197,7 +229,7 @@ msgstr "Канал общения"
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,company_id:0
 msgid "Company"
-msgstr "Организация"
+msgstr "Компания"
 
 #. module: project_issue
 #: help:project.issue,progress:0
@@ -220,7 +252,7 @@ msgstr "Контакт"
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Дата создания"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -237,12 +269,12 @@ msgstr "Создавать вопросы из входящей почты "
 #: field:project.issue,create_uid:0
 #: field:project.issue.version,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: project_issue
 #: field:project.issue.version,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: project_issue
 #: field:project.issue,create_date:0
@@ -253,7 +285,7 @@ msgstr "Дата создания"
 #: code:addons/project_issue/project_issue.py:424
 #, python-format
 msgid "Customer"
-msgstr "Заказчик"
+msgstr "Клиент"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:426
@@ -279,7 +311,7 @@ msgstr "Дата открытия"
 #. module: project_issue
 #: help:project.issue,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Дата последнего сообщения размещенного в отчете."
 
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
@@ -294,17 +326,17 @@ msgstr "Дней после последнего действия"
 #. module: project_issue
 #: field:project.issue,day_open:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "Дней до поручения"
 
 #. module: project_issue
 #: field:project.issue,day_close:0
 msgid "Days to Close"
-msgstr "Дней до закрытия"
+msgstr "Дни до закрытия"
 
 #. module: project_issue
 #: field:project.issue,date_deadline:0
 msgid "Deadline"
-msgstr "Крайний срок"
+msgstr "Последний срок"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -339,7 +371,7 @@ msgstr "Разница в днях между последним действи�
 #. module: project_issue
 #: field:project.issue,duration:0
 msgid "Duration"
-msgstr "Продолжительность"
+msgstr "Длительность"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
@@ -349,7 +381,7 @@ msgstr "Изменить..."
 #. module: project_issue
 #: field:project.issue,email_from:0
 msgid "Email"
-msgstr "Электронная почта"
+msgstr "Email"
 
 #. module: project_issue
 #: constraint:project.project:0
@@ -380,7 +412,7 @@ msgstr "Подписчики"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Group By"
-msgstr ""
+msgstr "Группировать по"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -394,13 +426,15 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Содержит обзор чата (количество сообщений, ...). Это краткое изложение "
+"непосредственно в HTML формате для того, чтобы вставить в виды kanban."
 
 #. module: project_issue
 #: field:project.issue,id:0
 #: field:project.issue.report,id:0
 #: field:project.issue.version,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -414,25 +448,25 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения требуют вашего внимания"
+msgstr "Если проверенные новые сообщения требуют вашего внимания."
 
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Подписчик"
+msgstr "Является подписчиком"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 #: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,name:0
 msgid "Issue"
-msgstr "Вопрос"
+msgstr "Проблема"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_assigned
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_assigned
 msgid "Issue Assigned"
-msgstr ""
+msgstr "Определена проблема"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
@@ -450,7 +484,7 @@ msgstr "Вопрос создан"
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 msgid "Issue Ready for Next Stage"
-msgstr ""
+msgstr "Проблема готова к следующему этапу"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -476,12 +510,12 @@ msgstr "Версия проблемы"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_assigned
 msgid "Issue assigned"
-msgstr ""
+msgstr "Проблема определена"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Проблема заблокирована"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -522,29 +556,29 @@ msgstr "Последнее действие"
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 msgid "Last Message"
-msgstr ""
+msgstr "Последнее сообщение"
 
 #. module: project_issue
 #: field:project.issue,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Дата последнего сообщения"
 
 #. module: project_issue
 #: field:project.issue,date_last_stage_update:0
 #: field:project.issue.report,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Обновление последнего этапа"
 
 #. module: project_issue
 #: field:project.issue,write_uid:0
 #: field:project.issue.version,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: project_issue
 #: field:project.issue.version,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
@@ -565,7 +599,7 @@ msgstr "Сообщения"
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr "Сообщения и история общения"
+msgstr "Сообщения и журнал обращений"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -582,7 +616,7 @@ msgstr "Новый"
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Новое письмо"
 
 #. module: project_issue
 #: field:project.issue,date_action_next:0
@@ -593,7 +627,7 @@ msgstr "Следующее действие"
 #: code:addons/project_issue/project_issue.py:440
 #, python-format
 msgid "No Subject"
-msgstr "Без темы"
+msgstr "Предмет отсутствует"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -605,22 +639,22 @@ msgstr "Обычный"
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr "Число дней, чтобы закрыть проблему проекта"
+msgstr "Количество дней до закрытия проекта"
 
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Количество дней до открытия проблемы по проекту."
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
 msgid "PBCK"
-msgstr ""
+msgstr "PBCK"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
-msgstr "Контрагент"
+msgstr "Партнер"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
@@ -654,7 +688,7 @@ msgstr "Проект"
 #. module: project_issue
 #: field:project.project,project_escalation_id:0
 msgid "Project Escalation"
-msgstr ""
+msgstr "Эскалация проекта"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
@@ -698,11 +732,14 @@ msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
 msgstr ""
+"Команда по продажам, которой принадлежит открытое дело.                      "
+"       Определите Ответственного пользователя и Адрес электронной почты для "
+"почтового шлюза."
 
 #. module: project_issue
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Search"
-msgstr "Поиск"
+msgstr "Искать"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -715,13 +752,13 @@ msgstr "Этап"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr "Стадия изменена"
+msgstr "Этап изменен"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr "Этап изменен"
+msgstr "Изменение этапа"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
@@ -731,12 +768,12 @@ msgstr "Статистика"
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "Status"
-msgstr "Состояние"
+msgstr "Статус"
 
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Резюме"
 
 #. module: project_issue
 #: field:project.issue,categ_ids:0
@@ -758,9 +795,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
-"Эти электронные адреса будут добавлены в поле \"Копия\" всех входящих и "
-"исходящих сообщений для этой записи перед отправкой. Разделяйте адреса "
-"запятыми."
+"Эти адреса электронной почты будут добавлены в поле Копия всех входящих и "
+"исходящих писем для этой записи перед отправкой. Разделите несколько адресов "
+"электронной почты с запятой"
 
 #. module: project_issue
 #: help:project.issue,email_from:0
@@ -775,12 +812,17 @@ msgid ""
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
 msgstr ""
+"Этот отчет по проблемам проекта позволяет Вам анализировать качество вашей "
+"службы поддержки или послепродажного обслуживания. Вы можете отследить "
+"проблемы по давности. Вы можете проанализировать время, необходимое для "
+"открытия или закрытия проблемы, количество адресов электронной почты для "
+"обмена и время, в среднем занятое проблемами."
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
-msgstr ""
+msgstr "Не назначенный"
 
 #. module: project_issue
 #: field:project.issue,message_unread:0
@@ -795,7 +837,7 @@ msgstr "Дата изменения"
 #. module: project_issue
 #: field:project.issue,user_email:0
 msgid "User Email"
-msgstr "Email пользователя"
+msgstr "Электронный адрес пользователя"
 
 #. module: project_issue
 #: field:project.issue,version_id:0
@@ -823,17 +865,17 @@ msgstr "Внимание!"
 #. module: project_issue
 #: field:project.issue,email_cc:0
 msgid "Watchers Emails"
-msgstr "Адреса наблюдателей"
+msgstr "Электронные адреса наблюдателей"
 
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to assign the Issue"
-msgstr ""
+msgstr "Рабочие часы до назначения проблемы"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to close the Issue"
-msgstr ""
+msgstr "Рабочие часы до закрытия проблемы"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:397
@@ -849,22 +891,23 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:348
 #, python-format
 msgid "issues"
-msgstr ""
+msgstr "проблемы"
 
 #. module: project_issue
 #: field:project.project,issue_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "неизвестно"
 
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
 msgid "{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}"
 msgstr ""
+"{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view

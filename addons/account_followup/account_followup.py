@@ -309,7 +309,7 @@ class res_partner(osv.osv):
                                                                    ('reconcile_id', '=', False),
                                                                    ('state', '!=', 'draft'),
                                                                    ('company_id', '=', company_id),
-                                                                   ('date_maturity', '<=', fields.date.context_today(self,cr,uid)),
+                                                                   '|', ('date_maturity', '=', False), ('date_maturity', '<=', fields.date.context_today(self, cr, uid)),
                                                                   ], context=context):
             raise osv.except_osv(_('Error!'),_("The partner does not have any accounting entries to print in the overdue report for the current company."))
         self.message_post(cr, uid, [ids[0]], body=_('Printed overdue payments report'), context=context)

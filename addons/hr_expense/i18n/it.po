@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-10-04 08:56+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <nicola.riolini@gmail.com>\n"
+"PO-Revision-Date: 2015-04-07 15:48+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:46+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-08 06:05+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
@@ -479,6 +479,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Gestisce il sommario (numero di messaggi, ...) del Chatter. Questo sommario "
+"è direttamente in html così da poter essere inserito nelle viste kanban."
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.hotel_rent_product_template
@@ -567,6 +569,8 @@ msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
 msgstr ""
+"Nessun Giornale per le spese è stato trovato. Assicurati di avere un "
+"Giornale di tipo \"Acquisto\" configurato."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:344
@@ -677,6 +681,8 @@ msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
 "Unit of Measure"
 msgstr ""
+"L'unità di misura selezionata non appartiene alla stessa categoria "
+"dell'unità di misura del prodotto."
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -692,6 +698,8 @@ msgstr "Imposta come Bozza"
 #: help:product.template,hr_expense_ok:0
 msgid "Specify if the product can be selected in an HR expense line."
 msgstr ""
+"Specifica se il prodotto può essere utilizzato all'interno di una riga di "
+"spesa."
 
 #. module: hr_expense
 #: field:hr.expense.expense,state:0
@@ -714,7 +722,7 @@ msgstr "Sommario"
 #: code:addons/hr_expense/hr_expense.py:230
 #, python-format
 msgid "The employee must have a home address."
-msgstr ""
+msgstr "L'impiegato deve avere un indirizzo di residenza."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:232
@@ -725,7 +733,7 @@ msgstr ""
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "Il Giornale utilizzato quando la spesa viene completata."
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -846,7 +854,7 @@ msgstr "Messaggio sito"
 #. module: hr_expense
 #: help:hr.expense.expense,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Storico comunicazione sito"
 
 #. module: hr_expense
 #: help:hr.expense.expense,state:0
@@ -858,6 +866,13 @@ msgid ""
 " If the accounting entries are made for the expense request, the status is "
 "'Waiting Payment'."
 msgstr ""
+"Quando la richiesta di spesa viene creata, il suo stato è impostato a "
+"'Bozza'.\n"
+" Viene confermata dall'utente e inviata all'admin, e impostata sullo stato "
+"'In attesa di conferma'.\n"
+"Se l'admin approva la richiesta, viene impostata a 'Accettata'.\n"
+" Se le voci contabili relative alla spesa vengono generate, lo stato viene "
+"impostato a 'in attesa di pagamento'."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:116

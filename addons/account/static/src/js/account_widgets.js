@@ -1289,13 +1289,13 @@ openerp.account = function (instance) {
             if (balance_type === "equal") {
                 displayValidState(true);
             } else if (balance_type === "greater") {
-                createOpenBalance("Create Write-off");
+                createOpenBalance(_t("Create Write-off"));
             } else if (balance_type === "lower") {
                 if (self.st_line.has_no_partner) {
-                    createOpenBalance("Choose counterpart");
+                    createOpenBalance(_t("Choose counterpart"));
                 } else {
                     displayValidState(false, "Keep open");
-                    createOpenBalance("Open balance");
+                    createOpenBalance(_t("Open balance"));
                 }
             }
 
@@ -1755,7 +1755,7 @@ openerp.account = function (instance) {
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model("account.move.line", context, domain);
-            return mod.call("list_partners_to_reconcile", []).then(function(result) {
+            return mod.call("list_partners_to_reconcile", [context, domain]).then(function(result) {
                 var current = self.current_partner !== null ? self.partners[self.current_partner][0] : null;
                 self.partners = result;
                 var index = _.find(_.range(self.partners.length), function(el) {

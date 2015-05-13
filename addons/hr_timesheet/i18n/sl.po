@@ -1,32 +1,34 @@
 # Slovenian translation for openobject-addons
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-03-24 16:09+0000\n"
+"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
+"Language-Team: Slovenian <translate@matmoz.si>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:50+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
+"Language: sl\n"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "(Keep empty for current time)"
-msgstr "(v tem trenutku pusti prazno)"
+msgstr "(za zdaj pusti prazno)"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 msgid "(local time on the server side)"
-msgstr "(lokalno na strežniku)"
+msgstr "(lokalni čas na strežniku)"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -50,8 +52,8 @@ msgstr ""
 "vsak\n"
 "                dan. Čas, porabljen na projektu bo postal strošek v "
 "analitičnem\n"
-"                knjigovodstvu/pogodbi in je lahko zaračunan (fakturiran)\n"
-"                kupcu, če se to zahteva.\n"
+"                knjigovodstvu/pogodbi in se lahko, če je to potrebno,\n"
+"                obračuna kupcu.\n"
 "              </p>\n"
 "            "
 
@@ -80,12 +82,30 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Na tej pogodbi še ni aktivnosti.\n"
+"              </p><p>\n"
+"                Pogodbe in projekti se vodijo preko analitičnega\n"
+"                konta. Tako se lahko sledi stroškom in prihodkom za analizo\n"
+"                razlik v ceni.\n"
+"              </p><p>\n"
+"                Stroški se samodejno ustvarijo ob knjiženju prejetih "
+"računov,\n"
+"                povračil stroškov ali časovnic.\n"
+"              </p><p>\n"
+"                Prihodki se samodejno ustvarijo, ko se ustvari izdani "
+"račun.\n"
+"                Izdani računi se lahko ustvarijo glede na prodajne naloge\n"
+"                (fiksna cena), časovnice (glede na opravljeno delo) ali\n"
+"                povračilo stroškov (npr. obračun potnih stroškov).\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0
 #: selection:hr.sign.out.project,state:0
 msgid "Absent"
-msgstr ""
+msgstr "Odsoten"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -106,7 +126,7 @@ msgstr "Analitični dnevnik"
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr "Analitična vrstica"
+msgstr "Analitična postavka"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -118,12 +138,12 @@ msgstr "Analitični konto"
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "Cancel"
-msgstr "Prekliči"
+msgstr "Preklic"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "Change Work"
-msgstr "Spremeni delo"
+msgstr "Sprememba dela"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:176
@@ -132,11 +152,12 @@ msgid ""
 "Changing the date will let this entry appear in the timesheet of the new "
 "date."
 msgstr ""
+"Sprememba datuma omogoči, da se ta vnos prikaže na časovnici novega datuma."
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "Označite, če ta projekt upravlja časovnice"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -147,48 +168,48 @@ msgstr "Zaključni datum"
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Družba"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Strošek"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Stroški/prihodki"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr "Stroški & Prihodki"
+msgstr "Stroški in prihodki"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,create_uid:0
 #: field:hr.sign.in.project,create_uid:0
 #: field:hr.sign.out.project,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,create_date:0
 #: field:hr.sign.in.project,create_date:0
 #: field:hr.sign.out.project,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
 #: field:hr.sign.out.project,server_date:0
 msgid "Current Date"
-msgstr "Trenutni datum"
+msgstr "Tekoči datum"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
 #: field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr "Trenutni status"
+msgstr "Trenutno stanje"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,date:0
@@ -198,12 +219,12 @@ msgstr "Datum"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr "Določite vašo analitično strukturo"
+msgstr "Določite svojo analitično strukturo"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,name:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -214,13 +235,13 @@ msgstr "Trajanje"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
-msgstr "Zaposleni"
+msgstr "Delojemalec"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
 #: field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr "Šifra zaposlenega"
+msgstr "Koda delojemalca"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:152
@@ -229,12 +250,14 @@ msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
 msgstr ""
+"Za tega uporabnika ni ustvarjenega delojemalca. Ustvarite ga preko "
+"nastavitev kadrovske službe."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Naziv delojemalca"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
@@ -244,6 +267,10 @@ msgid ""
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
 msgstr ""
+"Delojemalci lahko vpisujejo čas porabljen na različnih projektih, kjer so "
+"udeleženi. Projekt je analitični konto in porabljeni čas na projektu ustvari "
+"stroške na analitičnem kontu. Istočasno se lahko vodi evidenco prisotnosti "
+"in časovnice."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
@@ -253,16 +280,19 @@ msgid ""
 "analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
+"Delojemalci lahko vpisujejo čas porabljen na različnih projektih. Projekt je "
+"analitični konto in porabljeni čas na projektu ustvari stroške na "
+"analitičnem kontu. Istočasno se lahko vodi evidenca prisotnosti in časovnice."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Razširjeni filtri..."
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr ""
+msgstr "Splošni konto"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
@@ -273,18 +303,18 @@ msgstr "Splošne informacije"
 #: code:addons/hr_timesheet/hr_timesheet.py:153
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Pojdite na nastavitveno ploščo"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Združi po"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group by month of date"
-msgstr ""
+msgstr "Združi po mesecih datuma"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,id:0
@@ -292,7 +322,7 @@ msgstr ""
 #: field:hr.sign.out.project,id:0
 #: field:hr.timesheet.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -300,6 +330,8 @@ msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
 msgstr ""
+"Če želite obračunavati opravljeno delo kadrov, povežite delojemalca s "
+"storitvijo, da določite lastno ceno delovnega mesta."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -309,21 +341,21 @@ msgstr "Informacije"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Dnevnik"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_uid:0
 #: field:hr.sign.in.project,write_uid:0
 #: field:hr.sign.out.project,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnjič posodobil"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_date:0
 #: field:hr.sign.in.project,write_date:0
 #: field:hr.sign.out.project,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -333,7 +365,7 @@ msgstr "Minimalna analitična količina"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Month"
-msgstr "mesec"
+msgstr "Mesec"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:189
@@ -342,6 +374,9 @@ msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
+"Delojemalec %s nima določenega analitičnega dnevnika \n"
+"Povežite izbranega uporabnika z ustreznim delojemalcem in dodelite "
+"analitični dnevnik!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:191
@@ -350,9 +385,8 @@ msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
 msgstr ""
-"Na projektu ni določen analitični konto.\n"
-"Prosimo, nastavite enega, sicer ne moremo avtomatično izpolniti liste "
-"prisotnosti."
+"Za ta projekt ni določenega analitičnega konta.\n"
+"Če ga ne nastavite, se časovnica ne more samodejno izpolniti."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
@@ -361,8 +395,8 @@ msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
 msgstr ""
-"Za '%s' ni določen analitični dnevnik.\n"
-"Morate prirediti analitični dnevnik na formi zaposlenega."
+"Za '%s' ni določenega analitičnega dnevnika.\n"
+"Dodelite analitični dnevnik v obrazcu delojemalca."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -373,19 +407,19 @@ msgstr "Partner"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "Please define cost unit for this employee."
-msgstr ""
+msgstr "Ta kader nima določene enote stroška!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
 #, python-format
 msgid "Please define employee for your user."
-msgstr "Prosimo, določite zaposlenega za vašega uporabnika."
+msgstr "Prosimo, določite delojemalca za uporabnika."
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0
 #: selection:hr.sign.out.project,state:0
 msgid "Present"
-msgstr ""
+msgstr "Prisoten"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -410,7 +444,7 @@ msgstr "Prijava po projektu"
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "Sign In/Out by Project"
-msgstr "Prijava / Odjava po projektu"
+msgstr "Prijava/Odjava po projektu"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
@@ -427,13 +461,13 @@ msgstr "Prijavi"
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #, python-format
 msgid "Sign in / Sign out"
-msgstr "Prijava/Odjava"
+msgstr "Prijava / Odjava"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "Prijavi/odjavi se iz projekta"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -454,12 +488,12 @@ msgstr "Prenehaj z delom"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "This Month"
-msgstr ""
+msgstr "Ta mesec"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "Čas"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -474,7 +508,7 @@ msgstr "Časovnica"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr ""
+msgstr "Konti časovnic"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -482,28 +516,28 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Aktivnosti časovnice"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr ""
+msgstr "Analiza časovnic"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr "Linija časovne tabele"
+msgstr "Postavka časovnice"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "Mesec časovnice"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr ""
+msgstr "Časovnice po mesecih"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
@@ -535,8 +569,9 @@ msgstr "Uporabnik"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
+#| msgid "User Error!"
 msgid "User Alert!"
-msgstr ""
+msgstr "Opozorilo uporabniku!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -575,11 +610,14 @@ msgid ""
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"Ustvarite strukturo analitičnih kontov glede na vaše potrebe za analizo "
+"stroškov in prihodkov. Analitični konti služijo tudi spremljanju pogodb s "
+"kupci."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "month"
-msgstr ""
+msgstr "mesec"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in

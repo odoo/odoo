@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-02-03 11:54+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
+"PO-Revision-Date: 2015-04-24 15:46+0000\n"
+"Last-Translator: Jos De Graeve - http://www.apertoso.be/ "
+"<Jos.DeGraeve@apertoso.be>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-04 07:21+0000\n"
-"X-Generator: Launchpad (build 17331)\n"
+"X-Launchpad-Export-Date: 2015-04-25 05:39+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -101,10 +102,10 @@ msgstr ""
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
 "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
+"    <p>Hallo ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"    <p>Hierbij ontvangt u onze ${object.state in ('draft', 'sent') and "
+"'offerteaanvraag' or 'orderbevestiging'} van ${object.company_id.name}: "
 "</p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
@@ -257,10 +258,10 @@ msgstr ""
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
 "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
+"    <p>Hallo ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"    <p>Hierbij ontvangt u onze ${object.state in ('draft', 'sent') and "
+"'offerteaanvraag' or 'orderbevestiging'} van ${object.company_id.name}: "
 "</p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
@@ -1158,7 +1159,7 @@ msgstr "Concept"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr "Concept inkoopporder"
+msgstr "Concept inkooporder"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1384
@@ -2451,7 +2452,7 @@ msgstr "Niet mogelijk om de inkooporder te annuleren %s."
 #: code:addons/purchase/purchase.py:700
 #, python-format
 msgid "Unable to cancel this purchase order."
-msgstr "Niet mogelijk deze Inkoopporders te annuleren."
+msgstr "Niet mogelijk deze Inkooporders te annuleren."
 
 #. module: purchase
 #: help:purchase.order,name:0
@@ -2512,7 +2513,7 @@ msgstr "Gebruik meerdere kostenplaatsen per inkooporder"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr "Gebruik meerdere kostenplaatsen op Inkoopporders"
+msgstr "Gebruik meerdere kostenplaatsen op Inkooporders"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2586,7 +2587,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:538
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
-msgstr "Het is niet mogelijk een Inkoopporders zonder regels te bevestigen."
+msgstr "Het is niet mogelijk een Inkooporders zonder regels te bevestigen."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:695

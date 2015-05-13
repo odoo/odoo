@@ -6,16 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-04-26 03:05+0000\n"
+"Last-Translator: user3 <Unknown>\n"
+"Language-Team: Russian <http://translate.starlight-"
+"biz.com//projects/odoo/portal_sale/ru/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:05+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-27 05:40+0000\n"
+"X-Generator: Launchpad (build 17430)\n"
+"Language: ru\n"
 
 #. module: portal_sale
 #: model:email.template,body_html:portal_sale.email_template_edi_invoice
@@ -427,7 +429,7 @@ msgid ""
 "'draft' or ''}"
 msgstr ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'проект' or ''}"
+"'draft' or ''}"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_sale
@@ -435,12 +437,15 @@ msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') и "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
 
 #. module: portal_sale
 #: view:account.config.settings:portal_sale.portal_sale_payment_option_config
@@ -450,7 +455,7 @@ msgstr "Настроить методы получения платежей"
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
 msgid "Invoice"
-msgstr "Счёт"
+msgstr "Инвойс"
 
 #. module: portal_sale
 #: model:email.template,report_name:portal_sale.email_template_edi_invoice
@@ -483,7 +488,7 @@ msgstr ""
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Исходящая почта"
+msgstr "Исходящие письма"
 
 #. module: portal_sale
 #: field:account.invoice,portal_payment_options:0
@@ -505,7 +510,7 @@ msgstr "Заказы продаж"
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Заказ продаж"
+msgstr "Заказ на продажу"
 
 #. module: portal_sale
 #: model:ir.ui.menu,name:portal_sale.portal_sales_orders
@@ -540,7 +545,7 @@ msgstr "У Вас нет никаких счетов."
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr "У Вас нет никаких предложений цен"
+msgstr "Мы не отправляли вам какие либо запросы на цены."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
@@ -550,4 +555,4 @@ msgstr "У Вас нет никаких заказов."
 #. module: portal_sale
 #: view:account.invoice:portal_sale.view_account_invoice_filter_share
 msgid "[('share','=', False)]"
-msgstr ""
+msgstr "[('share','=', False)]"

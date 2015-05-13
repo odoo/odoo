@@ -22,8 +22,6 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-import time
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -203,9 +201,9 @@ class stock_quant(osv.osv):
             valuation_amount = context.get('force_valuation_amount')
         else:
             if move.product_id.cost_method == 'average':
-                valuation_amount = move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' and cost or move.product_id.standard_price
+                valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
             else:
-                valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
+                valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
@@ -251,7 +249,7 @@ class stock_quant(osv.osv):
             move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
                                       'period_id': period_id,
-                                      'date': time.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                                      'date': fields.date.context_today(self, cr, uid, context=context),
                                       'ref': move.picking_id.name}, context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
