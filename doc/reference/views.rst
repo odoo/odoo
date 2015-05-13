@@ -141,28 +141,24 @@ root can have the following attributes:
 
         <tree default_order="sequence,name desc">
 ``colors``
-    allows changing the color of a row's text based on the corresponding
+    .. deprecated:: 9.0
+        replaced by ``decoration-{$name}``
+``fonts``
+    .. deprecated:: 9.0
+        replaced by ``decoration-{$name}``
+``decoration-{$name}``
+    allow changing the style of a row's text based on the corresponding
     record's attributes.
 
-    Defined as a mapping of colors to Python expressions. Values are of the
-    form: :samp:`{color}:{expr}[;...]`. For each record, pairs are tested
-    in-order, the expression is evaluated for the record and if ``true`` the
-    corresponding color is applied to the row. If no color matches, uses the
-    default text color (black).
+    Values are Python expressions. For each record, the expression is evaluated
+    with the record's attributes as context values and if ``true``, the
+    corresponding style is applied to the row. Other context values are
+    ``uid`` (the id of the current user) and ``current_date`` (the current date
+    as a string of the form ``yyyy-MM-dd``).
 
-    * ``color`` can be any valid `CSS color unit`_.
-    * ``expr`` should be a Python expression evaluated with the current
-      record's attributes as context values. Other context values are ``uid``
-      (the id of the current user) and ``current_date`` (the current date as
-      a string of the form ``yyyy-MM-dd``)
-``fonts``
-    allows changing a row's font style based on the corresponding record's
-    attributes.
-
-    The format is the same as for ``color``, but the ``color`` of each pair
-    is replaced by ``bold``, ``italic`` or ``underline``, the expression
-    evaluating to ``true`` will apply the corresponding style to the row's
-    text. Contrary to ``colors``, multiple pairs can match each record
+    ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
+    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``

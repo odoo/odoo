@@ -729,7 +729,8 @@
 </t>
 <tr t-name="ListView.row"
         t-att-data-id="record.get('id')"
-        t-att-style="view.style_for(record)">
+        t-attf-style="#{(view.fonts || view.colors) ? view.style_for(record) : ''}"
+        t-attf-class="#{view.compute_decoration_classnames(record)}">
     <t t-set="asData" t-value="record.toForm().data"/>
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta"> </td>
