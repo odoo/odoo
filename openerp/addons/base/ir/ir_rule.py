@@ -144,7 +144,8 @@ class ir_rule(osv.osv):
         return []
 
     def clear_cache(self, cr, uid):
-        self._compute_domain.clear_cache(self)
+        """ Deprecated, use `clear_caches` instead. """
+        self.clear_caches()
 
     def domain_get(self, cr, uid, model_name, mode='read', context=None):
         dom = self._compute_domain(cr, uid, model_name, mode)
@@ -159,15 +160,15 @@ class ir_rule(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_rule, self).unlink(cr, uid, ids, context=context)
-        self.clear_cache(cr, uid)
+        self.clear_caches()
         return res
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_rule, self).create(cr, uid, vals, context=context)
-        self.clear_cache(cr, uid)
+        self.clear_caches()
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
-        self.clear_cache(cr,uid)
+        self.clear_caches()
         return res

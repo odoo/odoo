@@ -46,23 +46,22 @@ class decimal_precision(orm.Model):
         return res[0] if res else 2
 
     def clear_cache(self, cr):
-        """clear cache and update models. Notify other workers to restart their registry."""
-        self.precision_get.clear_cache(self)
-        RegistryManager.signal_registry_change(cr.dbname)
+        """ Deprecated, use `clear_caches` instead. """
+        self.clear_caches()
 
     def create(self, cr, uid, data, context=None):
         res = super(decimal_precision, self).create(cr, uid, data, context=context)
-        self.clear_cache(cr)
+        self.clear_caches()
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(decimal_precision, self).unlink(cr, uid, ids, context=context)
-        self.clear_cache(cr)
+        self.clear_caches()
         return res
 
     def write(self, cr, uid, ids, data, *args, **argv):
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
-        self.clear_cache(cr)
+        self.clear_caches()
         return res
 
 

@@ -199,6 +199,7 @@ class Registry(Mapping):
         This clears the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
+        self.cache.clear()
         for model in self.models.itervalues():
             model.clear_caches()
         # Special case for ir_ui_menu which does not use openerp.tools.ormcache.
