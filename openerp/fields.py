@@ -1154,18 +1154,18 @@ class _String(Field):
         records; the function call `translate(record_id, value)` translates the
         field value to the language given by the environment of `records`.
         """
-        if callable(self.translate):
-            # TODO: add a condition like context.get('website') for executing
-            # the code below: XML/HTML fields should be translated in the
-            # frontend by a specific widget that uses the English value and term
-            # translations
-            rec_trans = records.env['ir.translation']._get_terms_translations(
-                self.model_name, self.name, records.env.lang, records.ids)
+        ir_translation = records.env['ir.translation']
 
+        if callable(self.translate):
             if records._context.get('website_translate'):
+                # insert missing translations, and wrap translations in <span>
+                ir_translation.insert_missing(self, records)
                 map_trans = map_trans_website
             else:
                 map_trans = map_trans_default
+
+            rec_trans = ir_translation._get_terms_translations(
+                self.model_name, self.name, records.env.lang, records.ids)
 
             def translate(record_id, value):
                 src_trans = dict(map(map_trans, rec_trans[record_id]))
@@ -1173,7 +1173,7 @@ class _String(Field):
                 return self.translate(callback, value)
 
         else:
-            rec_trans = records.env['ir.translation']._get_ids(
+            rec_trans = ir_translation._get_ids(
                 '%s,%s' % (self.model_name, self.name), 'model', records.env.lang, records.ids)
 
             def translate(record_id, value):

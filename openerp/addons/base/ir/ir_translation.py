@@ -529,6 +529,46 @@ class ir_translation(osv.osv):
         return result
 
     @api.model
+    def insert_missing(self, field, records):
+        """ Insert missing translations for `field` on `records`. """
+        if callable(field.translate):
+            # insert missing translations for each term in src
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                        FROM res_lang l
+                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                            SELECT 1 FROM ir_translation
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
+                        );
+                    """
+            for record in records:
+                src = record[field.name] or None
+                for term in set(field.get_trans_terms(src)):
+                    self._cr.execute(query, {
+                        'name': "%s,%s" % (field.model_name, field.name),
+                        'res_id': record.id,
+                        'src': term,
+                    })
+        else:
+            # insert missing translations for src
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                        FROM res_lang l
+                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                            SELECT 1 FROM ir_translation
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
+                        );
+                        UPDATE ir_translation SET src=%(src)s
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
+                    """
+            for record in records:
+                self._cr.execute(query, {
+                    'name': "%s,%s" % (field.model_name, field.name),
+                    'res_id': record.id,
+                    'src': record[field.name] or None,
+                })
+
+    @api.model
     def translate_fields(self, model, id, field=None):
         """ Open a view for translating the field(s) of the record (model, id). """
         main_lang = 'en_US'
@@ -552,42 +592,9 @@ class ir_translation(osv.osv):
                     fld = fld.related_field
                 domain.insert(0, '|')
                 domain.extend(['&', ('res_id', '=', rec.id), ('name', '=', "%s,%s" % (fld.model_name, fld.name))])
-            assert fld.translate and rec._name == fld.model_name
 
-            src = rec[fld.name] or None
-            if not callable(fld.translate):
-                # insert missing translations for src
-                query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                            SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
-                            FROM res_lang l
-                            WHERE l.code != 'en_US' AND NOT EXISTS (
-                                SELECT 1 FROM ir_translation
-                                WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
-                            );
-                            UPDATE ir_translation SET src=%(src)s
-                            WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
-                        """
-                self._cr.execute(query, {
-                    'name': "%s,%s" % (fld.model_name, fld.name),
-                    'res_id': rec.id,
-                    'src': src,
-                })
-            elif src:
-                # insert missing translations for each term in src
-                query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                            SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
-                            FROM res_lang l
-                            WHERE l.code != 'en_US' AND NOT EXISTS (
-                                SELECT 1 FROM ir_translation
-                                WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
-                            );
-                        """
-                for term in set(fld.get_trans_terms(src)):
-                    self._cr.execute(query, {
-                        'name': "%s,%s" % (fld.model_name, fld.name),
-                        'res_id': rec.id,
-                        'src': term,
-                    })
+            assert fld.translate and rec._name == fld.model_name
+            self.insert_missing(fld, rec)
 
         action = {
             'name': 'Translate',
