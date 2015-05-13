@@ -303,8 +303,7 @@ function human_number (number) {
         number /= 1000;
         ++i;
     }
-    // return number.toFixed(2) + ' ' + units[i];
-    return parseInt(number) + ' ' + units[i];
+    return parseInt(number) + units[i];
 }
 
 /**

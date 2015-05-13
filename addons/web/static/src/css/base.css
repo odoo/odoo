@@ -35,6 +35,12 @@
   border: 0;
 }
 
+.oe_tz_warning {
+  color: red;
+  float: right;
+  margin: 4px;
+}
+
 .oe_indicator {
   z-index: 99999;
   position: absolute;
@@ -652,11 +658,6 @@
   display: block;
   color: #4c4c4c;
   text-decoration: none;
-}
-.oe_tz_warning {
-  color: red;
-  float: right;
-  margin: 4px;
 }
 .openerp .oe_dropdown_menu > li > a:hover {
   text-decoration: none;
@@ -3262,4 +3263,32 @@ body {
   .oe-view-manager-content .oe-view-manager-content > div {
     position: relative !important;
   }
+}
+.o_progressbar > div {
+  display: inline-block;
+}
+.o_progressbar .o_progressbar_title {
+  white-space: nowrap;
+  padding-right: 10px;
+}
+.o_progressbar .o_progress {
+  width: 100px;
+  height: 15px;
+  vertical-align: middle;
+  border: 1px solid silver;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+}
+.o_progressbar .o_progress.o_progress_overflow {
+  background-color: gray;
+}
+.o_progressbar .o_progress .o_progressbar_complete {
+  background-color: #3071A9;
+  height: 100%;
+}
+.o_progressbar .o_progressbar_value {
+  width: 100px;
+  white-space: nowrap;
+  padding-left: 10px;
 }
