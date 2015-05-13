@@ -20,6 +20,18 @@ var _lt = core._lt;
 var QWeb = core.qweb;
 var list_widget_registry = core.list_widget_registry;
 
+// Allowed decoration on the list's rows: bold, italic and bootstrap semantics classes
+var row_decoration = [
+    'decoration-bf',
+    'decoration-it',
+    'decoration-danger',
+    'decoration-info',
+    'decoration-muted',
+    'decoration-primary',
+    'decoration-success',
+    'decoration-warning'
+];
+
 var ListView = View.extend( /** @lends instance.web.ListView# */ {
     _template: 'ListView',
     display_name: _lt('List'),
@@ -166,55 +178,26 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         return this._super();
     },
     /**
-     * Returns the style for the provided record in the current view (from the
-     * ``@colors`` and ``@fonts`` attributes)
+     * Computes and returns the classnames for the provided record (from the
+     * ``@decoration`` attribute)
      *
      * @param {Record} record record for the current row
-     * @returns {String} CSS style declaration
+     * @returns {String} classnames
      */
-    style_for: function (record) {
-        var len, style= '';
-
+    compute_decoration_classnames: function (record) {
+        var classnames= '';
         var context = _.extend({}, record.attributes, {
             uid: session.uid,
             current_date: moment().format('YYYY-MM-DD')
             // TODO: time, datetime, relativedelta
         });
-        var i;
-        var pair;
-        var expression;
-        if (this.fonts) {
-            for(i=0, len=this.fonts.length; i<len; ++i) {
-                pair = this.fonts[i];
-                var font = pair[0];
-                expression = pair[1];
-                if (py.PY_isTrue(py.evaluate(expression, context))) {
-                    switch(font) {
-                    case 'bold':
-                        style += 'font-weight: bold;';
-                        break;
-                    case 'italic':
-                        style += 'font-style: italic;';
-                        break;
-                    case 'underline':
-                        style += 'text-decoration: underline;';
-                        break;
-                    }
-                }
-            }
-        }
 
-        if (!this.colors) { return style; }
-        for(i=0, len=this.colors.length; i<len; ++i) {
-            pair = this.colors[i];
-            var color = pair[0];
-            expression = pair[1];
-            if (py.PY_isTrue(py.evaluate(expression, context))) {
-                return style += 'color: ' + color + ';';
+        _.each(this.decoration, function(expr, decoration) {
+            if (py.PY_isTrue(py.evaluate(expr, context))) {
+                classnames += ' ' + decoration.replace('decoration', 'text');
             }
-            // TODO: handle evaluation errors
-        }
-        return style;
+        });
+        return classnames;
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -243,26 +226,13 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
 
-        if (this.fields_view.arch.attrs.colors) {
-            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
-                .compact()
-                .map(function(color_pair) {
-                    var pair = color_pair.split(':'),
-                        color = pair[0],
-                        expr = pair[1];
-                    return [color, py.parse(py.tokenize(expr)), expr];
-                }).value();
-        }
-
-        if (this.fields_view.arch.attrs.fonts) {
-            this.fonts = _(this.fields_view.arch.attrs.fonts.split(';')).chain().compact()
-                .map(function(font_pair) {
-                    var pair = font_pair.split(':'),
-                        font = pair[0],
-                        expr = pair[1];
-                    return [font, py.parse(py.tokenize(expr)), expr];
-                }).value();
-        }
+        // Retrieve the decoration defined on the model's list view
+        this.decoration = _.pick(this.fields_view.arch.attrs, function(value, key) {
+            return row_decoration.indexOf(key) >= 0;
+        });
+        this.decoration = _.mapObject(this.decoration, function(value) {
+            return py.parse(py.tokenize(value));
+        });
 
         this.setup_columns(this.fields_view.fields, this.grouped);
 
