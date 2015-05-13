@@ -1245,8 +1245,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         is_paid: function(){
             var currentOrder = this.pos.get('selectedOrder');
+            currency_rounding = this.pos.currency.rounding
             return (currentOrder.getTotalTaxIncluded() < 0.000001 
-                   || currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
+                   || currentOrder.getPaidTotal() + 0.000001 >= round_pr(currentOrder.getTotalTaxIncluded(), currency_rounding));
 
         },
         validate_order: function(options) {
