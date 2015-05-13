@@ -105,4 +105,20 @@
         </div>
     </div>
 </t>
+<t t-name="KanbanProgressBar">
+    <div t-att-class="(widget.state.editable ? 'o_progress_bar_editable' : '')" t-att-style="'text-align: center; ' + (widget.state.editable ? 'cursor: pointer; ' : '')">
+        <div style="text-align: center; width: 15%; float: left;">
+            <t t-esc="widget.state.title"/>:
+        </div>
+        <div class="progress" style="text-align: center; width: 65%; float: left; margin-bottom: 0;">
+            <div class="progress-bar o_progress_bar_complete" t-att-style="'width: ' + widget.state.width_complete + '%'">
+            </div>
+            <div class="progress-bar o_progress_bar_over" t-att-style="'width: ' + widget.state.width_over + '%'">
+            </div>
+        </div>
+        <div style="width: 20%; display: inline-block;">
+            <t t-esc="widget._format_number(widget.state.current_value)"/> / <t t-esc="widget._format_number(widget.state.max_value)"/>
+        </div>
+    </div>
+</t>
 </template>
