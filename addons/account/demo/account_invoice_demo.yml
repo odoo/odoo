@@ -122,7 +122,7 @@
       }
       account_id = self.pool.get('account.account').search(cr, uid, [('tag_ids', 'in', [ref('account.demo_ceo_wages_account')])])
       if not account_id:
-          account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_expenses'))])
+          account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_expenses'))])
       if account_id:
           line_vals['account_id'] = account_id[0]
           self._update(cr, uid, 'account.invoice.line', 'account', line_vals, 'ceo_wages_line')
@@ -143,7 +143,7 @@
       }
       account_id = self.pool.get('account.account').search(cr, uid, [('tag_ids', 'in', [ref('account.demo_coffee_machine_account')])])
       if not account_id:
-          account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_expenses'))])
+          account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_expenses'))])
       if account_id:
           line_vals['account_id'] = account_id[0]
           tax_id = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'purchase'), ('amount', '>', 0)])
@@ -154,7 +154,7 @@
           self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('demo_invoice_equipment_purchase')], 'invoice_open')
 -
   !python {model: account.bank.statement.line} : |
-      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_financing')])])
+      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_financing')])])
       line = self.browse(cr, uid, ref('account.demo_bank_statement_line_5'))
       if not line.journal_entry_ids and account_ids:
           line.write({'account_id': account_ids[0]})
@@ -175,8 +175,8 @@
       bank_journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'bank')])[0]
       if bank_journal_id:
           bank_account_id = self.pool.get('account.journal').browse(cr, uid, bank_journal_id).default_debit_account_id.id
-      fixed_asset_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', 'in', (ref('account.data_account_type_fixed_assets'),ref('account.data_account_type_current_assets')))])
-      equity_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_equity')), ('tag_ids', 'in', [ref('account.demo_capital_account')])])
+      fixed_asset_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id', 'in', (ref('account.data_account_type_fixed_assets'),ref('account.data_account_type_current_assets')))])
+      equity_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_equity')), ('tag_ids', 'in', [ref('account.demo_capital_account')])])
       if bank_account_id and fixed_asset_account_ids and equity_account_ids:
           self._update(cr, uid, 'account.move.line', 'account', {
               'move_id': ref('account.demo_opening_move'),

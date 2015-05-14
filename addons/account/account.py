@@ -100,9 +100,9 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    user_type = fields.Many2one('account.account.type', string='Type', required=True,
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type", 
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
-    internal_type = fields.Selection(related='user_type.type', store=True)
+    internal_type = fields.Selection(related='user_type_id.type', store=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
     #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
     last_time_entries_checked = fields.Datetime(string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
@@ -228,11 +228,11 @@ class AccountJournal(models.Model):
     analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
 
-    inbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
+    inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
         domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: self._default_inbound_payment_methods(),
         help="Means of payment for collecting money. Odoo modules offer various payments handling facilities, "
              "but you can always use the 'Manual' payment method in order to manage payments outside of the software.")
-    outbound_payment_methods = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
+    outbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
         domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: self._default_outbound_payment_methods(),
         help="Means of payment for sending money. Odoo modules offer various payments handling facilities, "
              "but you can always use the 'Manual' payment method in order to manage payments outside of the software.")
@@ -342,7 +342,7 @@ class AccountJournal(models.Model):
                 'name': name,
                 'currency_id': currency_id or False,
                 'code': new_code,
-                'user_type': liquidity_type and liquidity_type.id or False,
+                'user_type_id': liquidity_type and liquidity_type.id or False,
                 'company_id': company.id,
         }
 
@@ -409,11 +409,11 @@ class AccountJournal(models.Model):
         return res
 
     @api.multi
-    @api.depends('inbound_payment_methods', 'outbound_payment_methods')
+    @api.depends('inbound_payment_method_ids', 'outbound_payment_method_ids')
     def _methods_compute(self):
         for journal in self:
-            journal.at_least_one_inbound = bool(len(self.inbound_payment_methods))
-            journal.at_least_one_outbound = bool(len(self.outbound_payment_methods))
+            journal.at_least_one_inbound = bool(len(self.inbound_payment_method_ids))
+            journal.at_least_one_outbound = bool(len(self.outbound_payment_method_ids))
 
 
 #----------------------------------------------------------

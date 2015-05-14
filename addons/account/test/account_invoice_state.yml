@@ -38,7 +38,7 @@
   I check the journal associated and put this journal as not
 -
   !python {model: account.invoice, id: account_invoice_state}: |
-    moves = self.env['account.move.line'].search([('invoice', '=', self.id)])
+    moves = self.env['account.move.line'].search([('invoice_id', '=', self.id)])
     assert (len(moves) > 0), 'You should have multiple moves'
     moves[0].journal_id.write({'update_posted': True})
 -

@@ -21,8 +21,8 @@ class TestReconciliation(AccountingTestCase):
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_euro_id = self.env.ref("base.EUR").id
         self.env.ref('base.main_company').write({'currency_id': self.currency_euro_id})
-        self.account_rcv = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_receivable').id)])[0]
-        self.account_rsa = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_payable').id)])[0]
+        self.account_rcv = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
+        self.account_rsa = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.product = self.env.ref("product.product_product_4")
 
         self.bank_euro = self.env['res.partner.bank'].create({'acc_number': 'Reconciliation test', 'bank_name': 'Test Bank', 'company_id': self.env.user.company_id.id})
@@ -53,7 +53,7 @@ class TestReconciliation(AccountingTestCase):
             'price_unit': 100,
             'invoice_id': invoice.id,
             'name': 'product that cost 100',
-            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_revenue').id)])[0].id,
+            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
         })
 
         #validate invoice

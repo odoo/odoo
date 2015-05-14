@@ -113,14 +113,14 @@ class stock_move(osv.osv):
         fp_obj = self.pool.get('account.fiscal.position')
         # Get account_id
         if inv_type in ('out_invoice', 'out_refund'):
-            account_id = move.product_id.property_account_income.id
+            account_id = move.product_id.property_account_income_id.id
             if not account_id:
-                account_id = move.product_id.categ_id.property_account_income_categ.id
+                account_id = move.product_id.categ_id.property_account_income_categ_id.id
         else:
-            account_id = move.product_id.property_account_expense.id
+            account_id = move.product_id.property_account_expense_id.id
             if not account_id:
-                account_id = move.product_id.categ_id.property_account_expense_categ.id
-        fiscal_position = partner.property_account_position
+                account_id = move.product_id.categ_id.property_account_expense_categ_id.id
+        fiscal_position = partner.property_account_position_id
         account_id = fp_obj.map_account(cr, uid, fiscal_position, account_id)
 
         # set UoS if it's a sale and the picking doesn't have one
@@ -256,7 +256,7 @@ class stock_picking(osv.osv):
                         if ol.product_id.type != 'service':
                             oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
                             if not oa:
-                                oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id        
+                                oa = ol.product_id.categ_id.property_stock_account_input_categ_id and ol.product_id.categ_id.property_stock_account_input_categ_id.id        
                             if oa:
                                 fpos = ol.invoice_id.fiscal_position_id or False
                                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
@@ -268,11 +268,11 @@ class stock_picking(osv.osv):
             context = {}
         partner, currency_id, company_id, user_id = key
         if inv_type in ('out_invoice', 'out_refund'):
-            account_id = partner.property_account_receivable.id
-            payment_term = partner.property_payment_term.id or False
+            account_id = partner.property_account_receivable_id.id
+            payment_term = partner.property_payment_term_id.id or False
         else:
-            account_id = partner.property_account_payable.id
-            payment_term = partner.property_supplier_payment_term.id or False
+            account_id = partner.property_account_payable_id.id
+            payment_term = partner.property_supplier_payment_term_id.id or False
         return {
             'origin': move.picking_id.name,
             'date_invoice': context.get('date_inv', False),
@@ -281,7 +281,7 @@ class stock_picking(osv.osv):
             'account_id': account_id,
             'payment_term_id': payment_term,
             'type': inv_type,
-            'fiscal_position_id': partner.property_account_position.id,
+            'fiscal_position_id': partner.property_account_position_id.id,
             'company_id': company_id,
             'currency_id': currency_id,
             'journal_id': journal_id,

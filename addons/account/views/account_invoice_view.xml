@@ -455,7 +455,7 @@
                                     <field name="journal_id" groups="account.group_account_user"
                                     options="{'no_create': True}" attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id" invisible="1"/>
+                                    <field domain="[('partner_id.ref_company_ids', 'in', [company_id])]" name="partner_bank_id" invisible="1"/>
                                     <field name="date_due"/>
                                 </group>
                                 <group>

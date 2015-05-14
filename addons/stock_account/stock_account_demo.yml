@@ -5,7 +5,7 @@
       account_id = self.pool.get('account.account').search(cr, uid, [('tag_ids', 'in', [ref('account.demo_stock_account')])])
       fields_id = self.pool.get('ir.model.fields').search(cr, uid, [('model','=','product.category'),('name','=','property_stock_valuation_account_id')])
       if not account_id:
-          account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_current_assets'))])
+          account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_current_assets'))])
       if account_id:
           vals = {
               'name': 'property_stock_valuation_account_id',

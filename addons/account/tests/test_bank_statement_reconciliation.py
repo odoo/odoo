@@ -35,7 +35,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
         self.assertTrue(rec_move)
         counterpart_mv_line = None
         for l in rec_move.line_ids:
-            if l.account_id.user_type.type == 'receivable':
+            if l.account_id.user_type_id.type == 'receivable':
                 counterpart_mv_line = l
                 break
         self.assertIsNotNone(counterpart_mv_line)
@@ -64,7 +64,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
             'price_unit': amount,
             'invoice_id': invoice.id,
             'name': '.',
-            'account_id': self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_revenue').id)])[0].id,
+            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
         })
         invoice.signal_workflow('invoice_open')
 

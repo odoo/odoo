@@ -29,7 +29,7 @@
 -
   !python {model: account.bank.statement.line}: |
     import time
-    account_id = self.pool.get('account.account').search(cr, uid, [('user_type.type', '=', 'liquidity'), ('currency_id', '=', False)])[0]
+    account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id.type', '=', 'liquidity'), ('currency_id', '=', False)])[0]
     vals = {
         'amount': 1000,
         'date': time.strftime('%Y-%m-%d'),

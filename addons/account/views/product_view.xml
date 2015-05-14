@@ -15,11 +15,11 @@
                         </group>
                         <group name="properties">
                             <group>
-                                <field name="property_account_income" domain="[('internal_type','=','other'),('deprecated','=',False)]" groups="account.group_account_user"/>
+                                <field name="property_account_income_id" domain="[('internal_type','=','other'),('deprecated','=',False)]" groups="account.group_account_user"/>
                                 <field name="taxes_id" colspan="2" widget="many2many_tags"/>
                             </group>
                             <group>
-                                <field name="property_account_expense" domain="[('internal_type','=','other'),('deprecated','=',False)]" groups="account.group_account_user"/>
+                                <field name="property_account_expense_id" domain="[('internal_type','=','other'),('deprecated','=',False)]" groups="account.group_account_user"/>
                                 <field name="supplier_taxes_id" colspan="2" widget="many2many_tags"/>
                             </group>
                         </group>
@@ -36,8 +36,8 @@
                 <data>
                     <xpath expr="//group[@name='parent']" position="inside">
                         <group name="account_property" string="Account Properties" colspan="2">
-                            <field name="property_account_income_categ" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
-                            <field name="property_account_expense_categ" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
+                            <field name="property_account_income_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
+                            <field name="property_account_expense_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
                         </group>
                     </xpath>
                 </data>

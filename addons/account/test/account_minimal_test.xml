@@ -19,100 +19,100 @@
         <record id="xfa" model="account.account">
             <field name="code">X1000</field>
             <field name="name">Fixed Assets - (test)</field>
-            <field name="user_type" ref="account.data_account_type_fixed_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         </record>
         <record id="cas" model="account.account">
             <field name="code">X1010</field>
             <field name="name">Current Assets - (test)</field>
-            <field name="user_type" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
         <record id="stk" model="account.account">
             <field name="code">X1011</field>
             <field name="name">Purchased Stocks - (test)</field>
-            <field name="user_type" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.demo_stock_account')])]"/>
         </record>
         <record id="a_recv" model="account.account">
             <field name="code">X1012</field>
             <field name="name">Debtors - (test)</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account.data_account_type_receivable"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
         </record>
         <record id="ova" model="account.account">
             <field name="code">X1013</field>
             <field name="name">VAT Paid- (test)</field>
-            <field name="user_type" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
         <record id="bnk" model="account.account">
             <field name="code">X1014</field>
             <field name="name">Bank Current Account - (test)</field>
-            <field name="user_type" ref="account.data_account_type_liquidity"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         </record>
         <record id="cash" model="account.account">
             <field name="code">X1015</field>
             <field name="name">Cash - (test)</field>
-            <field name="user_type" ref="account.data_account_type_liquidity"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         </record>
         <record id="o_income" model="account.account">
             <field name="code">X1016</field>
             <field name="name">Opening Income - (test)</field>
-            <field name="user_type" ref="account.data_account_type_other_income"/>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
         </record>
         <record id="usd_bnk" model="account.account">
             <field name="code">X1017</field>
             <field name="name">USD Bank Account - (test)</field>
-            <field name="user_type" ref="account.data_account_type_liquidity"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
             <field name="currency_id" ref="base.USD"/>
         </record>
         <record id="transfer_account" model="account.account">
             <field name="code">X1019</field>
             <field name="name">Internal Transfert Account - (test)</field>
-            <field name="user_type" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile">1</field>
         </record>
         <record id="ncas" model="account.account">
             <field name="code">X1020</field>
             <field name="name">Non-current Assets - (test)</field>
-            <field name="user_type" ref="account.data_account_type_non_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         </record>
         <record id="prepayements" model="account.account">
             <field name="code">X1030</field>
             <field name="name">Prepayments - (test)</field>
-            <field name="user_type" ref="account.data_account_type_prepayments"/>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
         </record>
         <record id="current_liabilities" model="account.account">
             <field name="code">X1110</field>
             <field name="name">Current Liabilities - (test)</field>
-            <field name="user_type" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         </record>
         <record id="a_pay" model="account.account">
             <field name="code">X1111</field>
             <field name="name">Creditors - (test)</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
         </record>
 
         <record id="iva" model="account.account">
             <field name="code">X1112</field>
             <field name="name">VAT Received - (test)</field>
-            <field name="user_type" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         </record>
 
         <record id="rsa" model="account.account">
             <field name="code">X1113</field>
             <field name="name">Reserve and Profit/Loss - (test)</field>
-            <field name="user_type" ref="account.data_account_type_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         </record>
 
         <record id="cas" model="account.account">
             <field name="code">X1120</field>
             <field name="name">Non-current Liabilities - (test)</field>
-            <field name="user_type" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         </record>
         <record id="o_expense" model="account.account">
             <field name="code">X1114</field>
             <field name="name">Opening Expense - (test)</field>
-            <field name="user_type" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
         </record>
 
         <!-- Profit and Loss -->
@@ -120,95 +120,95 @@
         <record model="account.account" id="income_fx_income">
             <field name="name">Foreign Exchange Gain - (test)</field>
             <field name="code">X2010</field>
-            <field name="user_type" ref="account.data_account_type_revenue"/>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
             <field name="reconcile" eval="False"/>
         </record>
         <record id="a_sale" model="account.account">
             <field name="code">X2020</field>
             <field name="name">Product Sales - (test)</field>
-            <field name="user_type" ref="account.data_account_type_revenue"/>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
         <record id="a_sale_invest" model="account.account">
             <field name="code">X2021</field>
             <field name="name">Sale of Lands - (test)</field>
-            <field name="user_type" ref="account.data_account_type_revenue"/>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_investing')])]"/>
         </record>
         <record id="a_sale_finance" model="account.account">
             <field name="code">X2022</field>
             <field name="name">Bank Accounts Interests - (test)</field>
-            <field name="user_type" ref="account.data_account_type_revenue"/>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record id="cog" model="account.account">
             <field name="code">X2030</field>
             <field name="name">Cost of Goods Sold - (test)</field>
-            <field name="user_type" ref="account.data_account_type_direct_costs"/>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
         </record>
 
         <record model="account.account" id="income_fx_expense">
             <field name="name">Foreign Exchange Loss - (test)</field>
             <field name="code">X2110</field>
-            <field name="user_type" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="reconcile" eval="False"/>
         </record>
         <record id="a_expense" model="account.account">
             <field name="code">X2120</field>
             <field name="name">Expenses - (test)</field>
-            <field name="user_type" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
         <record id="a_salary_expense" model="account.account">
             <field name="code">X2121</field>
             <field name="name">Salary Expenses - (test)</field>
-            <field name="user_type" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
         <record id="a_expense_invest" model="account.account">
             <field name="code">X2122</field>
             <field name="name">Purchase of Equipments - (test)</field>
-            <field name="user_type" ref="account.data_account_type_fixed_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_investing')])]"/>
         </record>
         <record id="a_expense_finance" model="account.account">
             <field name="code">X2123</field>
             <field name="name">Bank Fees - (test)</field>
-            <field name="user_type" ref="account.data_account_type_expenses"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record id="a_capital" model="account.account">
             <field name="code">X3001</field>
             <field name="name">Capital</field>
-            <field name="user_type" ref="account.data_account_type_equity"/>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
         </record>
         <record id="a_dividends" model="account.account">
             <field name="code">X3002</field>
             <field name="name">Dividends</field>
-            <field name="user_type" ref="account.data_account_type_equity"/>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
         </record>
         <record id="a_current_year_earnings" model="account.account">
             <field name="code">X0000</field>
             <field name="name">Unaffected Earnings</field>
-            <field name="user_type" ref="account.data_unaffected_earnings"/>
+            <field name="user_type_id" ref="account.data_unaffected_earnings"/>
         </record>
 
         <!-- Properties -->
-        <record forcecreate="True" id="property_account_receivable" model="ir.property">
-            <field name="name">property_account_receivable</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_receivable')]"/>
+        <record forcecreate="True" id="property_account_receivable_id" model="ir.property">
+            <field name="name">property_account_receivable_id</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_receivable_id')]"/>
             <field eval="'account.account,'+str(a_recv)" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        <record forcecreate="True" id="property_account_payable" model="ir.property">
-            <field name="name">property_account_payable</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_payable')]"/>
+        <record forcecreate="True" id="property_account_payable_id" model="ir.property">
+            <field name="name">property_account_payable_id</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_payable_id')]"/>
             <field eval="'account.account,'+str(a_pay)" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        <record forcecreate="True" id="property_account_position" model="ir.property">
-            <field name="name">property_account_position</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_position')]"/>
+        <record forcecreate="True" id="property_account_position_id" model="ir.property">
+            <field name="name">property_account_position_id</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_position_id')]"/>
             <field eval="False" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
@@ -286,15 +286,15 @@
         Product income and expense accounts, default parameters
         -->
 
-        <record id="property_account_expense_categ" model="ir.property">
-            <field name="name">property_account_expense_categ</field>
-            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_expense_categ')]"/>
+        <record id="property_account_expense_categ_id" model="ir.property">
+            <field name="name">property_account_expense_categ_id</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_expense_categ_id')]"/>
             <field eval="'account.account,'+str(ref('a_expense'))" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        <record id="property_account_income_categ" model="ir.property">
-            <field name="name">property_account_income_categ</field>
-            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_income_categ')]"/>
+        <record id="property_account_income_categ_id" model="ir.property">
+            <field name="name">property_account_income_categ_id</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_income_categ_id')]"/>
             <field eval="'account.account,'+str(ref('a_sale'))" model="account.account" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>

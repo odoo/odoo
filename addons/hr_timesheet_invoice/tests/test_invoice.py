@@ -17,7 +17,7 @@ class TestInvoice(AccountingTestCase):
         self.timesheet_journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, "hr_timesheet", "analytic_journal")[1]
         self.expense_journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, 'account', 'exp')[1]
         user_type_id = self.ref('account.data_account_type_expenses')
-        self.expense_account_id = self.env['account.account'].create({'code': 'X2120', 'name': 'Test Expense Account', 'user_type': user_type_id}).id
+        self.expense_account_id = self.env['account.account'].create({'code': 'X2120', 'name': 'Test Expense Account', 'user_type_id': user_type_id}).id
         self.factor_100_id = self.registry("ir.model.data").get_object_reference(cr, uid, "hr_timesheet_invoice", "timesheet_invoice_factor1")[1]
 
         self.potato_account_id = self.account_analytic_account.create(cr, uid, {

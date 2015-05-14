@@ -8,7 +8,7 @@
       vals = {
         'name': 'Product Sales - (test)',
         'code': 'X2020',
-        'user_type': ref('account.data_account_type_revenue'),
+        'user_type_id': ref('account.data_account_type_revenue'),
         'tag_ids': [(6,0,[ref('account.account_tag_operating')])],
       }
       self._update(cr, uid, 'account.account', 'account_budget', vals, 'a_sale')
@@ -17,7 +17,7 @@
       vals = {
         'name': 'Expense - (test)',
         'code': 'X2120',
-        'user_type': ref('account.data_account_type_expenses'),
+        'user_type_id': ref('account.data_account_type_expenses'),
         'tag_ids': [(6,0,[ref('account.account_tag_operating')])],
       }
       self._update(cr, uid, 'account.account', 'account_budget', vals, 'a_expense')

@@ -56,14 +56,14 @@
                                     class="oe_link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
                             </div>
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
-                                <label for="sale_tax"/>
-                                <field name="sale_tax"
+                                <label for="sale_tax_id"/>
+                                <field name="sale_tax_id"
                                     domain="[('chart_template_id', '=', chart_template_id),('type_tax_use','in',('sale','all'))]"
                                     class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
-                                <label for="purchase_tax"/>
-                                <field name="purchase_tax"
+                                <label for="purchase_tax_id"/>
+                                <field name="purchase_tax_id"
                                     domain="[('chart_template_id', '=', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
                                     class="oe_inline"/>
                             </div>
@@ -147,8 +147,8 @@
                         <label for="id" string="Customer"/>
                         <div>
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="default_sale_tax"/>
-                                <field name="default_sale_tax"
+                                <label for="default_sale_tax_id"/>
+                                <field name="default_sale_tax_id"
                                     domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
                                     class="oe_inline"/>
                             </div>
@@ -166,8 +166,8 @@
                         <label for="id" string="Supplier"/>
                         <div name="other_cofing">
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="default_purchase_tax"/>
-                                <field name="default_purchase_tax"
+                                <label for="default_purchase_tax_id"/>
+                                <field name="default_purchase_tax_id"
                                     domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
                                     class="oe_inline"/>
                             </div>

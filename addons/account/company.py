@@ -14,7 +14,7 @@ class ResCompany(models.Model):
     period_lock_date = fields.Date(help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
     fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
     transfer_account_id = fields.Many2one('account.account',
-        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)], string="Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
+        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)], string="Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
     bank_account_code_char = fields.Char(string='Code of the main bank account')
@@ -31,8 +31,8 @@ class ResCompany(models.Model):
     expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',
         string="Loss Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
-    property_stock_account_input_categ = fields.Many2one('account.account')
-    property_stock_account_output_categ = fields.Many2one('account.account')
+    property_stock_account_input_categ_id = fields.Many2one('account.account', oldname="property_stock_account_input_categ")
+    property_stock_account_output_categ_id = fields.Many2one('account.account', oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account')
 
     @api.multi

@@ -9,35 +9,35 @@
   !record {model: account.account, id: account_anglo_stock_valuation_fifo}:
     code: X3000f
     name: Stock Valuation Account- (test)
-    user_type: account.data_account_type_current_assets
+    user_type_id: account.data_account_type_current_assets
 -
   Configure Stock Interim account (Received).
 -
   !record {model: account.account, id: account_anglo_stock_input_fifo}:
     code: X2800f
     name: Stock Interim account (Received)
-    user_type: account.data_account_type_expenses
+    user_type_id: account.data_account_type_expenses
 -
   Configure Stock Interim account (Delivered).
 -
   !record {model: account.account, id: account_anglo_stock_output_fifo}:
     code: X2801f
     name: Stock Interim account (Delivered)
-    user_type: account.data_account_type_revenue
+    user_type_id: account.data_account_type_revenue
 -
   Configure Price difference creditor Account.
 -
   !record {model: account.account, id: account_anglo_price_difference_fifo}:
     code: X7095f
     name: Price difference creditor Account
-    user_type: account.data_account_type_expenses
+    user_type_id: account.data_account_type_expenses
 -
   Configure Cash Bank Account.
 -
   !record {model: account.account, id: account_anglo_cash_fifo}:
     code: X5000f
     name: Cash/Bank Account
-    user_type: account.data_account_type_liquidity
+    user_type_id: account.data_account_type_liquidity
     reconcile: True
 -
   Configure Creditor Account Payable.
@@ -45,7 +45,7 @@
   !record {model: account.account, id: account_anglo_payable_fifo}:
     code: X440001f
     name: Creditor Account Payable
-    user_type: account.data_account_type_payable
+    user_type_id: account.data_account_type_payable
     reconcile: True
 -
   Configure Debtor Account Receivable.
@@ -53,7 +53,7 @@
   !record {model: account.account, id: account_anglo_receivable_fifo}:
     code: X400001f
     name: Debtor Account Receivable
-    user_type: account.data_account_type_receivable
+    user_type_id: account.data_account_type_receivable
     reconcile: True
 -
   Configure Cost of Good sale Account.
@@ -61,26 +61,26 @@
   !record {model: account.account, id: account_anglo_cogs_fifo}:
     code: X7000f
     name: Cost of goods sale account
-    user_type: account.data_account_type_expenses
+    user_type_id: account.data_account_type_expenses
 -
   Configure Income Account.
 -
   !record {model: account.account, id: account_anglo_income_fifo}:
     code: X8000f
     name: Income Account
-    user_type: account.data_account_type_revenue
+    user_type_id: account.data_account_type_revenue
 -
   I configure the account receivable of supplier
 -
   !record {model: res.partner, id: base.res_partner_3}:
-    property_account_payable: account_anglo_payable_fifo
-    property_account_receivable: account_anglo_receivable_fifo
+    property_account_payable_id: account_anglo_payable_fifo
+    property_account_receivable_id: account_anglo_receivable_fifo
 -
   I configure the account receivable of Customer.
 -
   !record {model: res.partner, id: base.res_partner_13}:
-    property_account_payable: account_anglo_payable_fifo
-    property_account_receivable: account_anglo_receivable_fifo
+    property_account_payable_id: account_anglo_payable_fifo
+    property_account_receivable_id: account_anglo_receivable_fifo
 -
   I configure the product category with stock valuation account.
 -
@@ -95,8 +95,8 @@
     standard_price: 0
     categ_id: product.product_category_5
     valuation: 'real_time'
-    property_account_income: account_anglo_income_fifo
-    property_account_expense: account_anglo_cogs_fifo
+    property_account_income_id: account_anglo_income_fifo
+    property_account_expense_id: account_anglo_cogs_fifo
     property_account_creditor_price_difference: account_anglo_price_difference_fifo
     property_stock_account_input: account_anglo_stock_input_fifo
     property_stock_account_output: account_anglo_stock_output_fifo

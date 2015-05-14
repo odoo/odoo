@@ -40,7 +40,7 @@ class AccountMove(models.Model):
                 total += line.debit
             move.amount = total
 
-    @api.depends('line_ids.debit', 'line_ids.credit', 'line_ids.matched_debit_ids.amount', 'line_ids.matched_credit_ids.amount', 'line_ids.account_id.user_type.type')
+    @api.depends('line_ids.debit', 'line_ids.credit', 'line_ids.matched_debit_ids.amount', 'line_ids.matched_credit_ids.amount', 'line_ids.account_id.user_type_id.type')
     def _compute_matched_percentage(self):
         """Compute the percentage to apply for cash basis method. This value is relevant only for moves that
         involve journal items on receivable or payable accounts.
@@ -49,7 +49,7 @@ class AccountMove(models.Model):
             total_amount = 0.0
             total_reconciled = 0.0
             for line in move.line_ids:
-                if line.account_id.user_type.type in ('receivable', 'payable'):
+                if line.account_id.user_type_id.type in ('receivable', 'payable'):
                     amount = abs(line.debit - line.credit)
                     total_amount += amount
                     for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
@@ -334,7 +334,7 @@ class AccountMoveLine(models.Model):
     date_maturity = fields.Date(string='Due date', index=True, required=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Date', required=True, index=True, default=fields.Date.context_today, store=True, copy=False)
-    analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
+    analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")
     tax_ids = fields.Many2many('account.tax', string='Taxes', copy=False, readonly=True)
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', copy=False, readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
@@ -342,9 +342,9 @@ class AccountMoveLine(models.Model):
     counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
 
     # TODO: put the invoice link and partner_id on the account_move
-    invoice = fields.Many2one('account.invoice')
+    invoice_id = fields.Many2one('account.invoice', oldname="invoice")
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
-    user_type = fields.Many2one('account.account.type', related='account_id.user_type', index=True, store=True)
+    user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type")
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
@@ -418,7 +418,7 @@ class AccountMoveLine(models.Model):
                     FROM
                         account_move_line l
                         RIGHT JOIN account_account a ON (a.id = l.account_id)
-                        RIGHT JOIN account_account_type at ON (at.id = a.user_type)
+                        RIGHT JOIN account_account_type at ON (at.id = a.user_type_id)
                         %s
                     WHERE
                         a.reconcile IS TRUE
@@ -904,7 +904,7 @@ class AccountMoveLine(models.Model):
         if ('account_id' in vals):
             account = AccountObj.browse(vals['account_id'])
             if journal.type_control_ids:
-                type = account.user_type
+                type = account.user_type_id
                 for t in journal.type_control_ids:
                     if type.code == t.code:
                         ok = True
@@ -988,10 +988,10 @@ class AccountMoveLine(models.Model):
             raise UserError(_('You cannot use deprecated account.'))
         if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit', 'amount_currency', 'currency_id')):
             self._update_check()
-        #when we set the expected payment date, log a note on the invoice related (if any)
-        if vals.get('expected_pay_date') and self.invoice:
+        #when we set the expected payment date, log a note on the invoice_id related (if any)
+        if vals.get('expected_pay_date') and self.invoice_id:
             msg = _('New expected payment date: ') + vals['expected_pay_date'] + '.\n' + vals.get('internal_note', '')
-            self.invoice.message_post(body=msg) #TODO: check it is an internal note (not a regular email)!
+            self.invoice_id.message_post(body=msg) #TODO: check it is an internal note (not a regular email)!
         #when making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
         if 'statement_id' in vals and self.payment_id:
             # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
@@ -1057,8 +1057,8 @@ class AccountMoveLine(models.Model):
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
                     raise UserError(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
-                if obj_line.analytic_lines:
-                    obj_line.analytic_lines.unlink()
+                if obj_line.analytic_line_ids:
+                    obj_line.analytic_line_ids.unlink()
                 vals_line = obj_line._prepare_analytic_line()[0]
                 self.env['account.analytic.line'].create(vals_line)
 
@@ -1094,7 +1094,7 @@ class AccountMoveLine(models.Model):
             domain += [(date_field, '<=', context['date_to'])]
         if context.get('date_from'):
             if not context.get('strict_range'):
-                domain += ['|', (date_field, '>=', context['date_from']), ('account_id.user_type.include_initial_balance', '=', True)]
+                domain += ['|', (date_field, '>=', context['date_from']), ('account_id.user_type_id.include_initial_balance', '=', True)]
             else:
                 domain += [(date_field, '>=', context['date_from'])]
 

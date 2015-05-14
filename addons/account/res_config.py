@@ -48,15 +48,15 @@ class AccountConfigSettings(models.TransientModel):
              summed and eventually this total tax amount will be rounded. If you sell with tax included,
              you should choose 'Round per line' because you certainly want the sum of your tax-included line
              subtotals to be equal to the total amount with taxes.""")
-    sale_tax = fields.Many2one('account.tax.template', string='Default sale tax')
-    purchase_tax = fields.Many2one('account.tax.template', string='Default purchase tax')
+    sale_tax_id = fields.Many2one('account.tax.template', string='Default sale tax', oldname="sale_tax")
+    purchase_tax_id = fields.Many2one('account.tax.template', string='Default purchase tax', oldname="purchase_tax")
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
     bank_account_code_char = fields.Char(string='Bank Accounts Code', related='company_id.bank_account_code_char', help='Define the code for the bank account')
     template_transfer_account_id = fields.Many2one('account.account.template', help="Intermediary account used when moving money from a liquidity account to another")
     transfer_account_id = fields.Many2one('account.account',
         related='company_id.transfer_account_id',
-        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
     complete_tax_set = fields.Boolean(string='Complete set of taxes',
         help='''This boolean helps you to choose if you want to propose to the user to encode
@@ -101,8 +101,8 @@ class AccountConfigSettings(models.TransientModel):
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
-    default_sale_tax = fields.Many2one('account.tax', help="This sale tax will be assigned by default on new products.")
-    default_purchase_tax = fields.Many2one('account.tax', help="This purchase tax will be assigned by default on new products.")
+    default_sale_tax_id = fields.Many2one('account.tax', help="This sale tax will be assigned by default on new products.", oldname="default_sale_tax")
+    default_purchase_tax_id = fields.Many2one('account.tax', help="This purchase tax will be assigned by default on new products.", oldname="default_purchase_tax")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
         implied_group='base.group_multi_currency',
         help="Allows you multi currency environment")
@@ -142,17 +142,17 @@ class AccountConfigSettings(models.TransientModel):
             ir_values = self.env['ir.values']
             taxes_id = ir_values.get_default('product.template', 'taxes_id', company_id = self.company_id.id)
             supplier_taxes_id = ir_values.get_default('product.template', 'supplier_taxes_id', company_id = self.company_id.id)
-            self.default_sale_tax = isinstance(taxes_id, list) and taxes_id[0] or taxes_id
-            self.default_purchase_tax = isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id
+            self.default_sale_tax_id = isinstance(taxes_id, list) and taxes_id[0] or taxes_id
+            self.default_purchase_tax_id = isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id
         return {}
 
     @api.onchange('chart_template_id')
     def onchange_chart_template_id(self):
         tax_templ_obj = self.env['account.tax.template']
-        self.complete_tax_set = self.sale_tax = self.purchase_tax = False
+        self.complete_tax_set = self.sale_tax_id = self.purchase_tax_id = False
         self.sale_tax_rate = self.purchase_tax_rate = 15
         if self.chart_template_id and not self.has_chart_of_accounts:
-            # update complete_tax_set, sale_tax and purchase_tax
+            # update complete_tax_set, sale_tax_id and purchase_tax_id
             self.complete_tax_set = self.chart_template_id.complete_tax_set
             if self.chart_template_id.complete_tax_set:
                 ir_values_obj = self.env['ir.values']
@@ -163,8 +163,8 @@ class AccountConfigSettings(models.TransientModel):
                 purchase_tax = tax_templ_obj.search(
                     [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'purchase')], limit=1,
                     order="sequence, id desc")
-                self.sale_tax = sale_tax
-                self.purchase_tax = purchase_tax
+                self.sale_tax_id = sale_tax
+                self.purchase_tax_id = purchase_tax
             if self.chart_template_id.code_digits:
                 self.code_digits = self.chart_template_id.code_digits
             if self.chart_template_id.transfer_account_id:
@@ -205,10 +205,10 @@ class AccountConfigSettings(models.TransientModel):
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
-        if self.default_sale_tax:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax.id], for_all_users=True, company_id=self.company_id.id)
-        if self.default_purchase_tax:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax.id], for_all_users=True, company_id=self.company_id.id)
+        if self.default_sale_tax_id:
+            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
+        if self.default_purchase_tax_id:
+            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
 
     @api.multi
     def set_chart_of_accounts(self):
@@ -221,8 +221,8 @@ class AccountConfigSettings(models.TransientModel):
                 'chart_template_id': self.chart_template_id.id,
                 'transfer_account_id': self.template_transfer_account_id.id,
                 'code_digits': self.code_digits or 6,
-                'sale_tax': self.sale_tax.id,
-                'purchase_tax': self.purchase_tax.id,
+                'sale_tax_id': self.sale_tax_id.id,
+                'purchase_tax_id': self.purchase_tax_id.id,
                 'sale_tax_rate': self.sale_tax_rate,
                 'purchase_tax_rate': self.purchase_tax_rate,
                 'complete_tax_set': self.complete_tax_set,

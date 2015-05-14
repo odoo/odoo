@@ -56,22 +56,22 @@
 
         <!-- Add payment term on some demo partners -->
         <record id="base.res_partner_2" model="res.partner">
-            <field name="property_payment_term" ref="account.account_payment_term_net"/>
+            <field name="property_payment_term_id" ref="account.account_payment_term_net"/>
         </record>
         <record id="base.res_partner_12" model="res.partner">
-            <field name="property_payment_term" ref="account_payment_term"/>
-            <field name="property_supplier_payment_term" ref="account_payment_term"/>
+            <field name="property_payment_term_id" ref="account_payment_term"/>
+            <field name="property_supplier_payment_term_id" ref="account_payment_term"/>
         </record>
         <record id="base.res_partner_4" model="res.partner">
-            <field name="property_supplier_payment_term" ref="account.account_payment_term_net"/>
+            <field name="property_supplier_payment_term_id" ref="account.account_payment_term_net"/>
         </record>
         <record id="base.res_partner_1" model="res.partner">
-            <field name="property_supplier_payment_term" ref="account_payment_term"/>
+            <field name="property_supplier_payment_term_id" ref="account_payment_term"/>
         </record>
 <!-- 
         <record id="account.credit_account" model="account.account">
             <field name="name">Bank Account</field>
-            <field name="user_type" ref="account.data_account_type_liquidity"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
             <field name="code">Testbank</field>
         </record>
 

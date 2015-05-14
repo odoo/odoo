@@ -4,7 +4,7 @@ class TestAccountValidateAccount(AccountingTestCase):
 
     def test_account_validate_account(self):
         account_move_line = self.env['account.move.line']
-        account_cash = self.env['account.account'].search([('user_type.type', '=', 'liquidity')], limit=1)
+        account_cash = self.env['account.account'].search([('user_type_id.type', '=', 'liquidity')], limit=1)
         journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
 
         company_id = self.env['res.users'].browse(self.env.uid).company_id.id

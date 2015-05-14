@@ -100,9 +100,9 @@ class account_analytic_line(osv.osv):
         res['product_id'] = product.id
         res['uom_id'] = product.uom_id.id
 
-        expense_account = product.property_account_expense.id
+        expense_account = product.property_account_expense_id.id
         if not expense_account:
-            expense_account = product.categ_id.property_account_expense_categ.id
+            expense_account = product.categ_id.property_account_expense_categ_id.id
             if not expense_account:
                 raise UserError(_('There is no expense account defined for this product: "%s" (id:%d)') % (product.name, product.id,))
         res['general_account_id'] = expense_account

@@ -3,7 +3,7 @@
 -
     !python {model: ir.model.data} : |
         import time
-        expense_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_expenses'))])
+        expense_account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_expenses'))])
         if expense_account_id:
             vals = {
                 'name': 'Requirements analysis and specification',

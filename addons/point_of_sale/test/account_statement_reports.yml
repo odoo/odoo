@@ -33,7 +33,7 @@
 -
   !python {model: account.bank.statement.line}: |
     new_aml_dicts = [{
-        'account_id': self.pool.get('res.partner').browse(cr, uid, ref('base.res_partner_4')).property_account_receivable.id,
+        'account_id': self.pool.get('res.partner').browse(cr, uid, ref('base.res_partner_4')).property_account_receivable_id.id,
         'name': "EXT001",
         'credit': 1000.0,
         'debit': 0.0,

@@ -393,8 +393,8 @@ class purchase_order(osv.osv):
         supplier = partner.browse(cr, uid, partner_id, context=context)
         return {'value': {
             'pricelist_id': supplier.property_product_pricelist_purchase.id,
-            'fiscal_position_id': fp or supplier.property_account_position and supplier.property_account_position.id or False,
-            'payment_term_id': supplier.property_supplier_payment_term.id or False,
+            'fiscal_position_id': fp or supplier.property_account_position_id and supplier.property_account_position_id.id or False,
+            'payment_term_id': supplier.property_supplier_payment_term_id.id or False,
             }}
 
     def invoice_open(self, cr, uid, ids, context=None):
@@ -549,20 +549,20 @@ class purchase_order(osv.osv):
         fiscal_obj = self.pool.get('account.fiscal.position')
         property_obj = self.pool.get('ir.property')
         if po_line.product_id:
-            acc_id = po_line.product_id.property_account_expense.id
+            acc_id = po_line.product_id.property_account_expense_id.id
             if not acc_id:
-                acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
+                acc_id = po_line.product_id.categ_id.property_account_expense_categ_id.id
             if not acc_id:
                 raise UserError(_('Define an expense account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
         else:
-            acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
+            acc_id = property_obj.get(cr, uid, 'property_account_expense_categ_id', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position_id or False
         #For anglo-saxon accounting
         account_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
         if po_line.company_id.anglo_saxon_accounting and po_line.product_id and not po_line.product_id.type == 'service':
             acc_id = po_line.product_id.property_stock_account_input and po_line.product_id.property_stock_account_input.id
             if not acc_id:
-                acc_id = po_line.product_id.categ_id.property_stock_account_input_categ and po_line.product_id.categ_id.property_stock_account_input_categ.id
+                acc_id = po_line.product_id.categ_id.property_stock_account_input_categ_id and po_line.product_id.categ_id.property_stock_account_input_categ_id.id
             if acc_id:
                 fpos = po_line.order_id.fiscal_position_id or False
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, acc_id)
@@ -608,7 +608,7 @@ class purchase_order(osv.osv):
         return {
             'name': order.partner_ref or order.name,
             'reference': order.partner_ref or order.name,
-            'account_id': order.partner_id.property_account_payable.id,
+            'account_id': order.partner_id.property_account_payable_id.id,
             'type': 'in_invoice',
             'partner_id': order.partner_id.id,
             'currency_id': order.currency_id.id,
@@ -1345,7 +1345,7 @@ class procurement_order(osv.osv):
             names_dict[id] = name
         for procurement in procurements:
             taxes_ids = procurement.product_id.supplier_taxes_id
-            taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
+            taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position_id, taxes_ids)
             name = names_dict[procurement.product_id.id]
             if procurement.product_id.description_purchase:
                 name += '\n' + procurement.product_id.description_purchase
@@ -1543,8 +1543,8 @@ class procurement_order(osv.osv):
                 'pricelist_id': partner.property_product_pricelist_purchase.id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
-                'fiscal_position_id': partner.property_account_position.id,
-                'payment_term_id': partner.property_supplier_payment_term.id,
+                'fiscal_position_id': partner.property_account_position_id.id,
+                'payment_term_id': partner.property_supplier_payment_term_id.id,
                 'dest_address_id': procurement.partner_dest_id.id,
                 'group_id': group,
                 'order_line': line_values,
@@ -1740,7 +1740,7 @@ class account_invoice_line(osv.Model):
                 # first check the product, if empty check the category
                 oa = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
                 if not oa:
-                    oa = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
+                    oa = i_line.product_id.categ_id.property_stock_account_input_categ_id and i_line.product_id.categ_id.property_stock_account_input_categ_id.id
                 if oa:
                     # get the fiscal position
                     fpos = i_line.invoice_id.fiscal_position_id or False

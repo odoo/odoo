@@ -7,9 +7,9 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     @api.one
-    @api.depends('outbound_payment_methods')
+    @api.depends('outbound_payment_method_ids')
     def _compute_check_writing_payment_method_selected(self):
-        self.check_writing_payment_method_selected = any(pm.code == 'check_writing' for pm in self.outbound_payment_methods)
+        self.check_writing_payment_method_selected = any(pm.code == 'check_writing' for pm in self.outbound_payment_method_ids)
 
     @api.one
     @api.depends('check_manual_sequencing')
@@ -72,6 +72,6 @@ class AccountJournal(models.Model):
         for bank_journal in bank_journals:
             check_sequence = self._create_check_sequence({'name': bank_journal.name, 'company_id': bank_journal.company_id.id})
             bank_journal.write({
-                'outbound_payment_methods': [(4, check_writing.id, None)],
+                'outbound_payment_method_ids': [(4, check_writing.id, None)],
                 'check_sequence_id': check_sequence.id,
             })

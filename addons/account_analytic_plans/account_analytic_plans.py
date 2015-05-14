@@ -381,7 +381,7 @@ class account_invoice(osv.osv):
                 ctx.update({'date': inv.date_invoice})
                 amount_calc = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context=ctx) * sign
                 qty = il['quantity']
-                il['analytic_lines'] = []
+                il['analytic_line_ids'] = []
                 for line2 in obj_move_line.account_ids:
                     amt = amount_calc * (line2.rate/100)
                     qtty = qty* (line2.rate/100)
@@ -397,7 +397,7 @@ class account_invoice(osv.osv):
                         'journal_id': self._get_journal_analytic(cr, uid, inv.type),
                         'ref': ref,
                     }
-                    il['analytic_lines'].append((0, 0, al_vals))
+                    il['analytic_line_ids'].append((0, 0, al_vals))
         return iml
 
 

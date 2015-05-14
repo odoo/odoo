@@ -60,7 +60,7 @@ class account_financial_report(osv.osv):
             elif report.type == 'account_type':
                 # it's the sum the leaf accounts with such an account type
                 report_types = [x.id for x in report.account_type_ids]
-                account_ids = account_obj.search(cr, uid, [('user_type','in', report_types), ('type','!=','view')], context=context)
+                account_ids = account_obj.search(cr, uid, [('user_type_id','in', report_types), ('type','!=','view')], context=context)
                 for a in account_obj.browse(cr, uid, account_ids, context=context):
                     for field in field_names:
                         res[report.id][field] += getattr(a, field)

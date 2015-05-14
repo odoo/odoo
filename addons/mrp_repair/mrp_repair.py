@@ -318,9 +318,9 @@ class mrp_repair(osv.osv):
                     }
                     inv_obj.write(cr, uid, [inv_id], invoice_vals, context=context)
                 else:
-                    if not repair.partner_id.property_account_receivable:
+                    if not repair.partner_id.property_account_receivable_id:
                         raise UserError(_('No account defined for partner "%s".') % repair.partner_id.name)
-                    account_id = repair.partner_id.property_account_receivable.id
+                    account_id = repair.partner_id.property_account_receivable_id.id
                     inv = {
                         'name': repair.name,
                         'origin': repair.name,
@@ -329,7 +329,7 @@ class mrp_repair(osv.osv):
                         'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
                         'comment': repair.quotation_notes,
-                        'fiscal_position_id': repair.partner_id.property_account_position.id
+                        'fiscal_position_id': repair.partner_id.property_account_position_id.id
                     }
                     inv_id = inv_obj.create(cr, uid, inv)
                     invoices_group[repair.partner_invoice_id.id] = inv_id
@@ -342,10 +342,10 @@ class mrp_repair(osv.osv):
                         else:
                             name = operation.name
 
-                        if operation.product_id.property_account_income:
-                            account_id = operation.product_id.property_account_income.id
-                        elif operation.product_id.categ_id.property_account_income_categ:
-                            account_id = operation.product_id.categ_id.property_account_income_categ.id
+                        if operation.product_id.property_account_income_id:
+                            account_id = operation.product_id.property_account_income_id.id
+                        elif operation.product_id.categ_id.property_account_income_categ_id:
+                            account_id = operation.product_id.categ_id.property_account_income_categ_id.id
                         else:
                             raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
 
@@ -371,10 +371,10 @@ class mrp_repair(osv.osv):
                         if not fee.product_id:
                             raise UserError(_('No product defined on Fees!'))
 
-                        if fee.product_id.property_account_income:
-                            account_id = fee.product_id.property_account_income.id
-                        elif fee.product_id.categ_id.property_account_income_categ:
-                            account_id = fee.product_id.categ_id.property_account_income_categ.id
+                        if fee.product_id.property_account_income_id:
+                            account_id = fee.product_id.property_account_income_id.id
+                        elif fee.product_id.categ_id.property_account_income_categ_id:
+                            account_id = fee.product_id.categ_id.property_account_income_categ_id.id
                         else:
                             raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
 
@@ -503,7 +503,7 @@ class ProductChangeMixin(object):
             product_obj = self.pool.get('product.product').browse(cr, uid, product, context=ctx)
             if partner_id:
                 partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-                result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, product_obj.taxes_id, context=ctx)
+                result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position_id, product_obj.taxes_id, context=ctx)
 
             result['name'] = product_obj.display_name
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False

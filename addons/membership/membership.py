@@ -378,8 +378,8 @@ class Partner(osv.osv):
         if type(ids) in (int, long,):
             ids = [ids]
         for partner in self.browse(cr, uid, ids, context=context):
-            account_id = partner.property_account_receivable and partner.property_account_receivable.id or False
-            fpos_id = partner.property_account_position and partner.property_account_position.id or False
+            account_id = partner.property_account_receivable_id and partner.property_account_receivable_id.id or False
+            fpos_id = partner.property_account_position_id and partner.property_account_position_id.id or False
             addr = self.address_get(cr, uid, [partner.id], ['invoice'])
             if partner.free_member:
                 raise UserError(_("Partner is a free Member."))

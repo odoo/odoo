@@ -11,9 +11,9 @@ class sale_order_line_make_invoice(osv.osv_memory):
     _description = "Sale OrderLine Make_invoice"
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
-        a = order.partner_id.property_account_receivable.id
-        if order.partner_id and order.partner_id.property_payment_term.id:
-            pay_term = order.partner_id.property_payment_term.id
+        a = order.partner_id.property_account_receivable_id.id
+        if order.partner_id and order.partner_id.property_payment_term_id.id:
+            pay_term = order.partner_id.property_payment_term_id.id
         else:
             pay_term = False
         return {
@@ -27,7 +27,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
             'currency_id' : order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term_id': pay_term,
-            'fiscal_position_id': order.fiscal_position_id.id or order.partner_id.property_account_position.id,
+            'fiscal_position_id': order.fiscal_position_id.id or order.partner_id.property_account_position_id.id,
             'user_id': order.user_id and order.user_id.id or False,
             'company_id': order.company_id and order.company_id.id or False,
             'date_invoice': fields.date.today(),

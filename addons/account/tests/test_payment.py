@@ -22,9 +22,9 @@ class TestPayment(AccountingTestCase):
         self.payment_method_manual_in = self.env.ref("account.account_payment_method_manual_in")
         self.payment_method_manual_out = self.env.ref("account.account_payment_method_manual_out")
 
-        self.account_receivable = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_receivable').id)])[0]
-        self.account_payable = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_payable').id)])[0]
-        self.account_revenue = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_revenue').id)])[0]
+        self.account_receivable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
+        self.account_payable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
+        self.account_revenue = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1)
 
         self.bank_euro = self.env['res.partner.bank'].create({'acc_number': '0123456789', 'bank_name': 'Test Bank', 'company_id': self.env.user.company_id.id})
         self.bank_journal_euro = self.bank_euro.journal_id
@@ -126,7 +126,7 @@ class TestPayment(AccountingTestCase):
         register_payments = self.register_payments_model.with_context(ctx).create({
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
-            'payment_method': self.payment_method_manual_in.id,
+            'payment_method_id': self.payment_method_manual_in.id,
         })
         register_payments.create_payment()
         payment = self.payment_model.search([], order="id desc", limit=1)
@@ -158,7 +158,7 @@ class TestPayment(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'journal_id': self.bank_journal_usd.id,
             'destination_journal_id': self.bank_journal_euro.id,
-            'payment_method': self.payment_method_manual_out.id,
+            'payment_method_id': self.payment_method_manual_out.id,
         })
         payment.post()
         self.check_journal_items(payment.move_line_ids, [
@@ -177,11 +177,11 @@ class TestPayment(AccountingTestCase):
             'journal_id': self.bank_journal_usd.id,
             'partner_type': 'supplier',
             'partner_id': self.partner_axelor.id,
-            'payment_method': self.payment_method_manual_out.id,
+            'payment_method_id': self.payment_method_manual_out.id,
         })
         payment.post()
 
         self.check_journal_items(payment.move_line_ids, [
             {'account_id': self.account_usd.id, 'debit': 0.0, 'credit': 38.21, 'amount_currency': -58.42, 'currency_id': self.currency_usd_id},
-            {'account_id': self.partner_axelor.property_account_payable.id, 'debit': 38.21, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_chf_id},
+            {'account_id': self.partner_axelor.property_account_payable_id.id, 'debit': 38.21, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_chf_id},
         ])

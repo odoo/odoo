@@ -126,7 +126,7 @@ class purchase_requisition(osv.osv):
             'currency_id': supplier_pricelist and supplier_pricelist.currency_id.id or requisition.company_id.currency_id.id,
             'location_id': requisition.procurement_id and requisition.procurement_id.location_id.id or requisition.picking_type_id.default_location_dest_id.id,
             'company_id': requisition.company_id.id,
-            'fiscal_position_id': supplier.property_account_position and supplier.property_account_position.id or False,
+            'fiscal_position_id': supplier.property_account_position_id and supplier.property_account_position_id.id or False,
             'requisition_id': requisition.id,
             'notes': requisition.description,
             'picking_type_id': requisition.picking_type_id.id
@@ -147,7 +147,7 @@ class purchase_requisition(osv.osv):
         vals = po_line_obj.onchange_product_id(
             cr, uid, [], supplier_pricelist, product.id, qty, default_uom_po_id,
             supplier.id, date_order=date_order,
-            fiscal_position_id=supplier.property_account_position,
+            fiscal_position_id=supplier.property_account_position_id,
             date_planned=requisition_line.schedule_date,
             name=False, price_unit=False, state='draft', context=context)['value']
         vals.update({

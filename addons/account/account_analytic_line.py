@@ -49,17 +49,17 @@ class AccountAnalyticLine(models.Model):
                 if not unit_obj or prod.uom_po_id.category_id.id != unit_obj.category_id.id:
                     unit = prod.uom_po_id.id
         if j_id.type <> 'sale':
-            a = prod.property_account_expense.id
+            a = prod.property_account_expense_id.id
             if not a:
-                a = prod.categ_id.property_account_expense_categ.id
+                a = prod.categ_id.property_account_expense_categ_id.id
             if not a:
                 raise UserError(_('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod.id,))
         else:
-            a = prod.property_account_income.id
+            a = prod.property_account_income_id.id
             if not a:
-                a = prod.categ_id.property_account_income_categ.id
+                a = prod.categ_id.property_account_income_categ_id.id
             if not a:
                 raise UserError(_('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \
@@ -117,13 +117,13 @@ class AccountAnalyticLine(models.Model):
                 if not self.product_uom_id or self.product_id.uom_po_id.category_id.id != self.product_uom_id.category_id.id:
                     unit = self.product_id.uom_po_id.id
         if journal_id.type != 'sale':
-            account = self.product_id.property_account_expense.id or self.product_id.categ_id.property_account_expense_categ.id
+            account = self.product_id.property_account_expense_id.id or self.product_id.categ_id.property_account_expense_categ_id.id
             if not account:
                 raise UserError(_('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (self.product_id.name, self.product_id.id,))
         else:
-            account = self.product_id.property_account_income.id or self.product_id.categ_id.property_account_income_categ.id
+            account = self.product_id.property_account_income_id.id or self.product_id.categ_id.property_account_income_categ_id.id
             if not account:
                 raise UserError(_('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \

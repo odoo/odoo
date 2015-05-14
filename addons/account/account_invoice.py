@@ -427,16 +427,16 @@ class AccountInvoice(models.Model):
         type = self.type
         if p:
             partner_id = p.id
-            rec_account = p.property_account_receivable
-            pay_account = p.property_account_payable
+            rec_account = p.property_account_receivable_id
+            pay_account = p.property_account_payable_id
             if company_id:
-                if p.property_account_receivable.company_id and \
-                        p.property_account_receivable.company_id.id != company_id and \
-                        p.property_account_payable.company_id and \
-                        p.property_account_payable.company_id.id != company_id:
+                if p.property_account_receivable_id.company_id and \
+                        p.property_account_receivable_id.company_id.id != company_id and \
+                        p.property_account_payable_id.company_id and \
+                        p.property_account_payable_id.company_id.id != company_id:
                     prop = self.env['ir.property']
-                    rec_dom = [('name', '=', 'property_account_receivable'), ('company_id', '=', company_id)]
-                    pay_dom = [('name', '=', 'property_account_payable'), ('company_id', '=', company_id)]
+                    rec_dom = [('name', '=', 'property_account_receivable_id'), ('company_id', '=', company_id)]
+                    pay_dom = [('name', '=', 'property_account_payable_id'), ('company_id', '=', company_id)]
                     res_dom = [('res_id', '=', 'res.partner,%s' % partner_id)]
                     rec_prop = prop.search(rec_dom + res_dom) or prop.search(rec_dom)
                     pay_prop = prop.search(pay_dom + res_dom) or prop.search(pay_dom)
@@ -449,11 +449,11 @@ class AccountInvoice(models.Model):
 
             if type in ('out_invoice', 'out_refund'):
                 account_id = rec_account.id
-                payment_term_id = p.property_payment_term.id
+                payment_term_id = p.property_payment_term_id.id
             else:
                 account_id = pay_account.id
-                payment_term_id = p.property_supplier_payment_term.id
-            fiscal_position = p.property_account_position.id
+                payment_term_id = p.property_supplier_payment_term_id.id
+            fiscal_position = p.property_account_position_id.id
             bank_id = p.bank_ids and p.bank_ids.ids[0] or False
         self.account_id = account_id
         self.payment_term_id = payment_term_id
@@ -596,10 +596,10 @@ class AccountInvoice(models.Model):
                 'uos_id': line.uos_id.id,
                 'account_analytic_id': line.account_analytic_id.id,
                 'tax_ids': tax_ids,
-                'invoice': self.id,
+                'invoice_id': self.id,
             }
             if line['account_analytic_id']:
-                move_line_dict['analytic_lines'] = [(0, 0, line._get_analytic_line())]
+                move_line_dict['analytic_line_ids'] = [(0, 0, line._get_analytic_line())]
             res.append(move_line_dict)
         return res
 
@@ -642,7 +642,7 @@ class AccountInvoice(models.Model):
                     am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
                     line2[tmp]['debit'] = (am > 0) and am or 0.0
                     line2[tmp]['credit'] = (am < 0) and -am or 0.0
-                    line2[tmp]['analytic_lines'] += l['analytic_lines']
+                    line2[tmp]['analytic_line_ids'] += l['analytic_line_ids']
                 else:
                     line2[tmp] = l
             line = []
@@ -707,7 +707,7 @@ class AccountInvoice(models.Model):
                         'date_maturity': t[0],
                         'amount_currency': diff_currency and amount_currency,
                         'currency_id': diff_currency and inv.currency_id.id,
-                        'invoice': inv.id
+                        'invoice_id': inv.id
                     })
             else:
                 iml.append({
@@ -718,7 +718,7 @@ class AccountInvoice(models.Model):
                     'date_maturity': inv.date_due,
                     'amount_currency': diff_currency and total_currency,
                     'currency_id': diff_currency and inv.currency_id.id,
-                    'invoice': inv.id
+                    'invoice_id': inv.id
                 })
             part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
             line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
@@ -737,7 +737,7 @@ class AccountInvoice(models.Model):
             }
             ctx['company_id'] = inv.company_id.id
             ctx['dont_create_taxes'] = True
-            ctx['invoice'] = inv.move_name and inv or False
+            ctx['invoice_id'] = inv.move_name and inv or False
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
@@ -764,14 +764,14 @@ class AccountInvoice(models.Model):
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
-            'analytic_lines': line.get('analytic_lines', []),
+            'analytic_line_ids': line.get('analytic_line_ids', []),
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
             'currency_id': line.get('currency_id', False),
             'quantity': line.get('quantity', 1.00),
             'product_id': line.get('product_id', False),
             'product_uom_id': line.get('uos_id', False),
             'analytic_account_id': line.get('account_analytic_id', False),
-            'invoice': line.get('invoice', False),
+            'invoice_id': line.get('invoice_id', False),
             'tax_ids': line.get('tax_ids', False),
             'tax_line_id': line.get('tax_line_id', False),
         }
@@ -914,10 +914,10 @@ class AccountInvoice(models.Model):
         payment_type = self.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
         if payment_type == 'inbound':
             payment_method = self.env.ref('account.account_payment_method_manual_in')
-            journal_payment_methods = pay_journal.inbound_payment_methods
+            journal_payment_methods = pay_journal.inbound_payment_method_ids
         else:
             payment_method = self.env.ref('account.account_payment_method_manual_out')
-            journal_payment_methods = pay_journal.outbound_payment_methods
+            journal_payment_methods = pay_journal.outbound_payment_method_ids
         if payment_method not in journal_payment_methods:
             raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
 
@@ -930,9 +930,9 @@ class AccountInvoice(models.Model):
             'partner_type': self.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier',
             'journal_id': pay_journal.id,
             'payment_type': payment_type,
-            'payment_method': payment_method.id,
+            'payment_method_id': payment_method.id,
             'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
-            'writeoff_account': writeoff_acc and writeoff_acc.id or False,
+            'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         })
         payment.post()
 
