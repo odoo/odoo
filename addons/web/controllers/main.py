@@ -139,9 +139,9 @@ def ensure_db(redirect='/web/database/selector'):
     # always switch the session to the computed db
     if db != request.session.db:
         request.session.logout()
+        request.session.db = db
         abort_and_redirect(request.httprequest.url)
 
-    request.session.db = db
 
 def module_installed():
     # Candidates module the current heuristic is the /static dir
