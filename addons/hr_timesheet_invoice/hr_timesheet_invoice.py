@@ -70,8 +70,8 @@ class account_analytic_line(osv.osv):
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
         if record_ids:
             employee = proxy.browse(cr, uid, record_ids[0], context=context)
-            if employee.product_id and employee.product_id.property_account_income:
-                return employee.product_id.property_account_income.id
+            if employee.product_id and employee.product_id.property_account_income_id:
+                return employee.product_id.property_account_income_id.id
         return False
 
     _defaults = {
@@ -107,17 +107,17 @@ class account_analytic_line(osv.osv):
             price = 0.0
         return price
 
-    def _prepare_cost_invoice(self, cr, uid, partner, company_id, currency_id, analytic_lines, group_by_partner=False, context=None):
+    def _prepare_cost_invoice(self, cr, uid, partner, company_id, currency_id, analytic_line_ids, group_by_partner=False, context=None):
         """ returns values used to create main invoice from analytic lines"""
         account_payment_term_obj = self.pool['account.payment.term']
         if group_by_partner:
             invoice_name = partner.name
         else:
-            invoice_name = analytic_lines[0].account_id.name
+            invoice_name = analytic_line_ids[0].account_id.name
         date_due = False
-        if partner.property_payment_term:
+        if partner.property_payment_term_id:
             pterm_list = account_payment_term_obj.compute(cr, uid,
-                    partner.property_payment_term.id, value=1,
+                    partner.property_payment_term_id.id, value=1,
                     date_ref=time.strftime('%Y-%m-%d'))
             if pterm_list:
                 pterm_list = [line[0] for line in pterm_list]
@@ -127,21 +127,21 @@ class account_analytic_line(osv.osv):
             'name': "%s - %s" % (time.strftime('%d/%m/%Y'), invoice_name),
             'partner_id': partner.id,
             'company_id': company_id,
-            'payment_term_id': partner.property_payment_term.id or False,
-            'account_id': partner.property_account_receivable.id,
+            'payment_term_id': partner.property_payment_term_id.id or False,
+            'account_id': partner.property_account_receivable_id.id,
             'currency_id': currency_id,
             'date_due': date_due,
-            'fiscal_position_id': partner.property_account_position.id
+            'fiscal_position_id': partner.property_account_position_id.id
         }
 
     def _prepare_cost_invoice_line(self, cr, uid, invoice_id, product_id, uom, user_id,
-                factor_id, account, analytic_lines, journal_type, data, context=None):
+                factor_id, account, analytic_line_ids, journal_type, data, context=None):
         product_obj = self.pool['product.product']
 
         uom_context = dict(context or {}, uom=uom)
 
-        total_price = sum(l.amount for l in analytic_lines)
-        total_qty = sum(l.unit_amount for l in analytic_lines)
+        total_price = sum(l.amount for l in analytic_line_ids)
+        total_qty = sum(l.unit_amount for l in analytic_line_ids)
 
         if data.get('product'):
             # force product, use its public price
@@ -176,11 +176,11 @@ class account_analytic_line(osv.osv):
             if factor.customer_name:
                 factor_name += ' - ' + factor.customer_name
 
-                general_account = product.property_account_income or product.categ_id.property_account_income_categ
+                general_account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
                 if not general_account:
                     raise UserError(_("Configuration Error!") + '\n' + _("Please define income account for product '%s'.") % product.name)
                 taxes = product.taxes_id or general_account.tax_ids
-                tax = self.pool['account.fiscal.position'].map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                tax = self.pool['account.fiscal.position'].map_tax(cr, uid, account.partner_id.property_account_position_id, taxes)
                 curr_invoice_line.update({
                     'invoice_line_tax_ids': [(6, 0, tax)],
                     'name': factor_name,
@@ -188,7 +188,7 @@ class account_analytic_line(osv.osv):
                 })
 
             note = []
-            for line in analytic_lines:
+            for line in analytic_line_ids:
                 # set invoice_line_note
                 details = []
                 if data.get('date', False):
@@ -243,14 +243,14 @@ class account_analytic_line(osv.osv):
                     line.account_id.pricelist_id.currency_id.id)
                 invoice_grouping.setdefault(key, []).append(line)
 
-        for (key_id, company_id, currency_id), analytic_lines in invoice_grouping.items():
+        for (key_id, company_id, currency_id), analytic_line_ids in invoice_grouping.items():
             # key_id is either an account.analytic.account, either a res.partner
             # don't really care, what's important is the analytic lines that
             # will be used to create the invoice lines
 
-            partner = analytic_lines[0].account_id.partner_id  # will be the same for every line
+            partner = analytic_line_ids[0].account_id.partner_id  # will be the same for every line
 
-            curr_invoice = self._prepare_cost_invoice(cr, uid, partner, company_id, currency_id, analytic_lines, group_by_partner, context=context)
+            curr_invoice = self._prepare_cost_invoice(cr, uid, partner, company_id, currency_id, analytic_line_ids, group_by_partner, context=context)
             invoice_context = dict(context,
                     lang=partner.lang,
                     force_company=company_id,  # set force_company in context so the correct product properties are selected (eg. income account)
@@ -261,7 +261,7 @@ class account_analytic_line(osv.osv):
             # use key (product, uom, user, invoiceable, analytic account, journal type)
             # creates one invoice line per key
             invoice_lines_grouping = {}
-            for analytic_line in analytic_lines:
+            for analytic_line in analytic_line_ids:
                 account = analytic_line.account_id
                 if (not partner) or not (account.pricelist_id):
                     raise UserError(_('Contract incomplete. Please fill in the Customer and Pricelist fields for %s.') % (account.name))
@@ -284,7 +284,7 @@ class account_analytic_line(osv.osv):
                     journal_type, data, context=context)
 
                 invoice_line_obj.create(cr, uid, curr_invoice_line, context=context)
-            self.write(cr, uid, [l.id for l in analytic_lines], {'invoice_id': last_invoice}, context=context)
+            self.write(cr, uid, [l.id for l in analytic_line_ids], {'invoice_id': last_invoice}, context=context)
             invoice_obj.compute_taxes(cr, uid, [last_invoice], context)
         return invoices
 
@@ -318,7 +318,7 @@ class account_invoice(osv.osv):
                     # *-* browse (or refactor to avoid read inside the loop)
                     to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'], context=context)[0]['to_invoice']
                     if to_invoice:
-                        il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
+                        il['analytic_line_ids'][0][2]['to_invoice'] = to_invoice[0]
         return iml
 
 
@@ -330,8 +330,8 @@ class account_move_line(osv.osv):
         analytic_line_obj = self.pool.get('account.analytic.line')
         for move_line in self.browse(cr, uid, ids, context=context):
             # For customer invoice, link analytic line to the invoice so it is not proposed for invoicing in Bill Tasks Work
-            invoice_id = move_line.invoice and move_line.invoice.type in ('out_invoice', 'out_refund') and move_line.invoice.id or False
-            for line in move_line.analytic_lines:
+            invoice_id = move_line.invoice_id and move_line.invoice_id.type in ('out_invoice', 'out_refund') and move_line.invoice_id.id or False
+            for line in move_line.analytic_line_ids:
                 analytic_line_obj.write(cr, uid, line.id, {
                     'invoice_id': invoice_id,
                     'to_invoice': line.account_id.to_invoice and line.account_id.to_invoice.id or False

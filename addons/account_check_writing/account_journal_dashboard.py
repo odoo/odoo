@@ -9,7 +9,7 @@ class account_journal(models.Model):
     def get_journal_dashboard_datas(self):
         domain_checks_to_print = [
             ('journal_id', '=', self.id),
-            ('payment_method.code', '=', 'check_writing'),
+            ('payment_method_id.code', '=', 'check_writing'),
             ('state','=','posted')
         ]
         return dict(
@@ -30,6 +30,6 @@ class account_journal(models.Model):
                 journal_id=self.id,
                 default_journal_id=self.id,
                 default_payment_type='outbound',
-                default_payment_method=self.env.ref('account_check_writing.account_payment_method_check_writing').id,
+                default_payment_method_id=self.env.ref('account_check_writing.account_payment_method_check_writing').id,
             ),
         }

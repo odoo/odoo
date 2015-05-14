@@ -46,13 +46,13 @@
   !record {model: account.account, id: account_income_i000}:
     name: "income account"
     code: "I000"
-    user_type: "account.data_account_type_revenue"
+    user_type_id: "account.data_account_type_revenue"
     tax_ids: [tax8]
 -
-  I set the account as property_account_income on the product and I set no tax on the product (so default tax from the account will be used)
+  I set the account as property_account_income_id on the product and I set no tax on the product (so default tax from the account will be used)
 -
   !record {model: product.product, id: product.product_product_consultant, view: False}:
-    property_account_income: account_income_i000
+    property_account_income_id: account_income_i000
     uom_id: product.product_uom_hour
     taxes_id: []
     list_price: 75

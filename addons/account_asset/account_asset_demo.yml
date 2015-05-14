@@ -4,10 +4,10 @@
     !python {model: ir.model.data} : |
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'general'), ('id', '!=', company.currency_exchange_journal_id.id)])
-        expense_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_expenses'))])
-        xfa_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_fixed_assets'))])
+        expense_account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_expenses'))])
+        xfa_account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_fixed_assets'))])
         if not xfa_account_id:
-            xfa_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_current_assets'))])
+            xfa_account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_current_assets'))])
         from datetime import datetime, timedelta
         import time
         if xfa_account_id and expense_account_id and journal_id:
@@ -60,9 +60,9 @@
                 'category_id': ref('account_asset_category_fixedassets0'),
             }
             self._update(cr, uid, 'account.asset.asset', 'account_asset', vals, 'account_asset_asset_office0')
-        sale_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_operating')])])
+        sale_account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_operating')])])
         if not sale_account_id:
-            sale_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_revenue'))])
+            sale_account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue'))])
         if xfa_account_id and sale_account_id:
             vals = {
                 'journal_id': journal_id[0],

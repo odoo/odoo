@@ -10,14 +10,14 @@
         code: X1012
         name: Debtors - (test)
         reconcile: !eval True
-        user_type: account.data_account_type_receivable
+        user_type_id: account.data_account_type_receivable
 -
     Create sales account
 -
   !record {model: account.account, id: a_sale}:
         code: X1020
         name: Product Sales - (test)
-        user_type: account.data_account_type_revenue
+        user_type_id: account.data_account_type_revenue
 -
     Create sales journal
 -
@@ -35,7 +35,7 @@
   !record {model: account.account, id: a_cash}:
         code: X1015
         name: Cash - (test)
-        user_type: account.data_account_type_liquidity
+        user_type_id: account.data_account_type_liquidity
 -
     Create cash journal
 -

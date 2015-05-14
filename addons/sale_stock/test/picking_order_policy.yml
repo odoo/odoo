@@ -161,7 +161,7 @@
     from openerp.tools import float_compare
     order = self.browse(cr, uid, ref("sale_order_service"))
     assert order.invoice_ids, "Invoice is not created."
-    ac = order.partner_invoice_id.property_account_receivable.id
+    ac = order.partner_invoice_id.property_account_receivable_id.id
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)])
     for invoice in order.invoice_ids:
         assert invoice.type == 'out_invoice',"Invoice should be Customer Invoice."
@@ -174,7 +174,7 @@
         assert invoice.payment_term_id.id == order.payment_term_id.id, "Payment term is not correspond."
     for so_line in order.order_line:
         inv_line = so_line.invoice_lines[0]
-        ac = so_line.product_id.property_account_income.id or so_line.product_id.categ_id.property_account_income_categ.id
+        ac = so_line.product_id.property_account_income_id.id or so_line.product_id.categ_id.property_account_income_categ_id.id
         assert inv_line.product_id.id == so_line.product_id.id or False,"Product is not correspond"
         assert inv_line.account_id.id == ac,"Account of Invoice line is not corresponding."
         assert inv_line.uos_id.id == (so_line.product_uos and so_line.product_uos.id or so_line.product_uom.id), "Product UOS is not correspond."

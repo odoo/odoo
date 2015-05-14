@@ -14,11 +14,11 @@ class TestPurchase(common.TransactionCase):
 
         # Useful accounts
         user_type_id = self.ref('account.data_account_type_expenses')
-        account_exp_id = self.env['account.account'].create({'code': 'X2020', 'name': 'Purchase - Test Expense Account', 'user_type': user_type_id, 'reconcile': True})
+        account_exp_id = self.env['account.account'].create({'code': 'X2020', 'name': 'Purchase - Test Expense Account', 'user_type_id': user_type_id, 'reconcile': True})
         user_type_id = self.ref('account.data_account_type_payable')
-        account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type': user_type_id, 'reconcile': True})
+        account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type_id': user_type_id, 'reconcile': True})
 
-        self.env['product.product'].browse(product_id).product_tmpl_id.write({'property_account_expense': account_exp_id})
+        self.env['product.product'].browse(product_id).product_tmpl_id.write({'property_account_expense_id': account_exp_id})
 
         # Create Purchase Journal
         self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'PTPJ', 'type': 'purchase', 'company_id': company_id})
@@ -34,7 +34,7 @@ class TestPurchase(common.TransactionCase):
         partner = self.env['res.partner'].create({
             'name': 'Test Customer',
             'email': 'testcustomer@test.com',
-            'property_account_payable': account_pay_id,
+            'property_account_payable_id': account_pay_id,
         })
         
         # In order to test I create purchase order and confirmed it.

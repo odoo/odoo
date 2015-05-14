@@ -37,7 +37,7 @@ class account_register_payments(models.TransientModel):
 
     def get_payment_vals(self):
         res = super(account_register_payments, self).get_payment_vals()
-        if self.payment_method == self.env.ref('account_check_writing.account_payment_method_check_writing'):
+        if self.payment_method_id == self.env.ref('account_check_writing.account_payment_method_check_writing'):
             res.update({
                 'check_amount_in_words': self.check_amount_in_words,
                 'check_manual_sequencing': self.check_manual_sequencing,
@@ -82,7 +82,7 @@ class account_payment(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals['payment_method'] == self.env.ref('account_check_writing.account_payment_method_check_writing').id\
+        if vals['payment_method_id'] == self.env.ref('account_check_writing.account_payment_method_check_writing').id\
                 and vals.get('check_manual_sequencing'):
             sequence = self.env['account.journal'].browse(vals['journal_id']).check_sequence_id
             vals.update({'check_number': sequence.next_by_id()})
@@ -92,7 +92,7 @@ class account_payment(models.Model):
     def send_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
-        self = self.filtered(lambda r: r.payment_method.code == 'check_writing' and r.state != 'reconciled')
+        self = self.filtered(lambda r: r.payment_method_id.code == 'check_writing' and r.state != 'reconciled')
 
         if len(self) == 0:
             raise UserError(_("Payments to print as a checks must have 'Check Writing' selected as payment method and "

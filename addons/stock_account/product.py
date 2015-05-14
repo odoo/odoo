@@ -55,8 +55,8 @@ class product_template(osv.osv):
         """
         accounts = super(product_template, self)._get_product_accounts()
         accounts.update({
-            'stock_input': self.property_stock_account_input or self.categ_id.property_stock_account_input_categ,
-            'stock_output': self.property_stock_account_output or self.categ_id.property_stock_account_output_categ,
+            'stock_input': self.property_stock_account_input or self.categ_id.property_stock_account_input_categ_id,
+            'stock_output': self.property_stock_account_output or self.categ_id.property_stock_account_output_categ_id,
             'stock_valuation': self.categ_id.property_stock_valuation_account_id or False,
         })
         return accounts
@@ -142,19 +142,19 @@ class product_category(osv.osv):
             type='many2one',
             string='Stock Journal',
             help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."),
-        'property_stock_account_input_categ': fields.property(
+        'property_stock_account_input_categ_id': fields.property(
             type='many2one',
             relation='account.account',
             string='Stock Input Account',
-            domain=[('deprecated', '=', False)],
+            domain=[('deprecated', '=', False)], oldname="property_stock_account_input_categ",
             help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
                  "can also directly be set on each product"),
-        'property_stock_account_output_categ': fields.property(
+        'property_stock_account_output_categ_id': fields.property(
             type='many2one',
             relation='account.account',
             domain=[('deprecated', '=', False)],
-            string='Stock Output Account',
+            string='Stock Output Account', oldname="property_stock_account_output_categ",
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
                  "can also directly be set on each product"),

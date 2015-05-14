@@ -881,9 +881,9 @@ class pos_order(osv.osv):
         journal = self.pool['account.journal'].browse(cr, uid, journal_id, context=context)
         # use the company of the journal and not of the current user
         company_cxt = dict(context, force_company=journal.company_id.id)
-        account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=company_cxt)
-        args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
-                             and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
+        account_def = property_obj.get(cr, uid, 'property_account_receivable_id', 'res.partner', context=company_cxt)
+        args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable_id \
+                             and order.partner_id.property_account_receivable_id.id) or (account_def and account_def.id) or False
 
         if not args['account_id']:
             if not args['partner_id']:
@@ -974,7 +974,7 @@ class pos_order(osv.osv):
             if not order.partner_id:
                 raise UserError(_('Please provide a partner for the sale.'))
 
-            acc = order.partner_id.property_account_receivable.id
+            acc = order.partner_id.property_account_receivable_id.id
             inv = {
                 'name': order.name,
                 'origin': order.name,
@@ -1073,11 +1073,11 @@ class pos_order(osv.osv):
             current_company = order.sale_journal.company_id
 
             group_tax = {}
-            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
+            account_def = property_obj.get(cr, uid, 'property_account_receivable_id', 'res.partner', context=context)
 
             order_account = order.partner_id and \
-                            order.partner_id.property_account_receivable and \
-                            order.partner_id.property_account_receivable.id or \
+                            order.partner_id.property_account_receivable_id and \
+                            order.partner_id.property_account_receivable_id.id or \
                             account_def and account_def.id or current_company.account_receivable.id
 
             if move_id is None:
@@ -1146,10 +1146,10 @@ class pos_order(osv.osv):
                 amount = line.price_subtotal
 
                 # Search for the income account
-                if  line.product_id.property_account_income.id:
-                    income_account = line.product_id.property_account_income.id
-                elif line.product_id.categ_id.property_account_income_categ.id:
-                    income_account = line.product_id.categ_id.property_account_income_categ.id
+                if  line.product_id.property_account_income_id.id:
+                    income_account = line.product_id.property_account_income_id.id
+                elif line.product_id.categ_id.property_account_income_categ_id.id:
+                    income_account = line.product_id.categ_id.property_account_income_categ_id.id
                 else:
                     raise UserError(_('Please define income '\
                         'account for this product: "%s" (id:%d).') \

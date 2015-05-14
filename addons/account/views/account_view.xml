@@ -17,7 +17,7 @@
                                 <group>
                                     <field name="code" string="Account code"/> -
                                     <field name="name" string="Account name"/>
-                                    <field name="user_type" widget="selection"/>
+                                    <field name="user_type_id" widget="selection"/>
                                     <field name="tax_ids" widget="many2many_tags"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
@@ -104,7 +104,7 @@
                 <tree string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="user_type"/>
+                    <field name="user_type_id"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </tree>
@@ -118,9 +118,9 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]" string="Account"/>
                     <filter icon="terp-sale" string="Receivable Accounts" domain="[('internal_type','=','receivable')]"/>
                     <filter icon="terp-purchase" string="Payable Accounts" domain="[('internal_type','=','payable')]"/>
-                    <field name="user_type"/>
+                    <field name="user_type_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type'}"/>
+                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type_id'}"/>
                     </group>
                 </search>
             </field>
@@ -171,7 +171,7 @@
         <act_window
             id="action_move_line_select_by_type"
             name="Journal Items"
-            context="{'search_default_user_type': [active_id]}"
+            context="{'search_default_user_type_id': [active_id]}"
             res_model="account.move.line"
             src_model="account.account.type"/>
 
@@ -268,8 +268,8 @@
                                         <field name="account_control_ids" widget="many2many_tags"/>
                                     </group>
                                     <group>
-                                        <field name="inbound_payment_methods" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
-                                        <field name="outbound_payment_methods" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                                        <field name="inbound_payment_method_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                                        <field name="outbound_payment_method_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                         <field name="group_invoice_lines" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                         <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
@@ -1002,7 +1002,7 @@
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
                             </page>
                             <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
-                                <field name="analytic_lines" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
+                                <field name="analytic_line_ids" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -1048,7 +1048,7 @@
                             </group>
                         </page>
                         <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
-                            <field name="analytic_lines"/>
+                            <field name="analytic_line_ids"/>
                         </page>
                     </notebook>
                 </form>
@@ -1411,7 +1411,7 @@
                         <field name="name"/>
                         <field name="code"/>
                         <newline/>
-                        <field name="user_type" widget="selection"/>
+                        <field name="user_type_id" widget="selection"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                         <field name="tag_ids" domain="[('applicability', '!=', 'taxes')]" widget="many2many_tags" context="{'default_applicability': 'accounts'}"/>
                         <field name="reconcile"/>
@@ -1431,7 +1431,7 @@
                 <tree string="Account Template">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="user_type" invisible="1"/>
+                    <field name="user_type_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1441,9 +1441,9 @@
             <field name="arch" type="xml">
                 <search string="Search Account Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
-                    <field name="user_type"/>
+                    <field name="user_type_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'user_type'}"/>
+                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'user_type_id'}"/>
                    </group>
                 </search>
             </field>
@@ -1476,12 +1476,12 @@
                     <field name="tax_template_ids" colspan="4"  nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group col="4">
-                        <field name="property_account_receivable"/>
-                        <field name="property_account_payable"/>
-                        <field name="property_account_expense_categ"/>
-                        <field name="property_account_income_categ"/>
-                        <field name="property_account_expense"/>
-                        <field name="property_account_income"/>
+                        <field name="property_account_receivable_id"/>
+                        <field name="property_account_payable_id"/>
+                        <field name="property_account_expense_categ_id"/>
+                        <field name="property_account_income_categ_id"/>
+                        <field name="property_account_expense_id"/>
+                        <field name="property_account_income_id"/>
                     </group>
                 </form>
             </field>
@@ -1495,10 +1495,10 @@
                     <field name="bank_account_code_char"/>
                     <group expand="0" string="Group By">
                         <filter string="Bank Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'bank_account_code_char'}"/>
-                        <filter string="Receivable Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_receivable'}"/>
-                        <filter string="Payable Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_payable'}"/>
-                        <filter string="Income Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_income_categ'}"/>
-                        <filter string="Expense Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_expense_categ'}"/>
+                        <filter string="Receivable Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
+                        <filter string="Payable Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
+                        <filter string="Income Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_income_categ_id'}"/>
+                        <filter string="Expense Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_expense_categ_id'}"/>
                     </group>
                 </search>
             </field>
@@ -1511,10 +1511,10 @@
                     <field name="name"/>
                     <field name="company_id"/>
                     <field name="bank_account_code_char"/>
-                    <field name="property_account_receivable" invisible="1"/>
-                    <field name="property_account_payable" invisible="1"/>
-                    <field name="property_account_expense_categ" invisible="1"/>
-                    <field name="property_account_income_categ" invisible="1"/>
+                    <field name="property_account_receivable_id" invisible="1"/>
+                    <field name="property_account_payable_id" invisible="1"/>
+                    <field name="property_account_expense_categ_id" invisible="1"/>
+                    <field name="property_account_income_categ_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1636,12 +1636,12 @@
                             <field name="company_id" options="{'no_create': True}"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                             <field name="currency_id" class="oe_inline"/>
                             <field name="use_anglo_saxon"/>
-                            <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','sale')]"/>
+                            <field name="sale_tax_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','sale')]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
                                 <field name="sale_tax_rate" class="oe_inline"/> %%
                             </div>
-                            <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','purchase')]"/>
+                            <field name="purchase_tax_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','purchase')]"/>
                             <label for="purchase_tax_rate" string="Purchase Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
                                 <field name="purchase_tax_rate" class="oe_inline"/> %%

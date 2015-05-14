@@ -76,16 +76,16 @@ class stock_picking(osv.osv):
         price = grid_obj.get_price_from_picking(cr, uid, grid_id,
                 invoice.amount_untaxed, picking.weight, picking.volume,
                 quantity, context=context)
-        account_id = picking.carrier_id.product_id.property_account_income.id
+        account_id = picking.carrier_id.product_id.property_account_income_id.id
         if not account_id:
             account_id = picking.carrier_id.product_id.categ_id\
-                    .property_account_income_categ.id
+                    .property_account_income_categ_id.id
 
         taxes = picking.carrier_id.product_id.taxes_id
         partner = picking.partner_id or False
         if partner:
-            account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
-            taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes)
+            account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position_id, account_id)
+            taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position_id, taxes)
         else:
             taxes_ids = [x.id for x in taxes]
 

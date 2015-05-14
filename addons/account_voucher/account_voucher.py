@@ -101,9 +101,9 @@ class AccountVoucher(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         if self.journal_id.type == 'sale':
-            account_id = self.partner_id.property_account_receivable.id
+            account_id = self.partner_id.property_account_receivable_id.id
         elif self.journal_id.type == 'purchase':
-            account_id = self.partner_id.property_account_payable.id
+            account_id = self.partner_id.property_account_payable_id.id
         else:
             account_id = self.journal_id.default_credit_account_id.id or self.journal_id.default_debit_account_id.id
         self.account_id = account_id
@@ -143,9 +143,9 @@ class AccountVoucher(models.Model):
             partner = self.partner_id
             journal = self.journal_id
             if journal.type == 'sale':
-                account_id = partner.property_account_receivable.id
+                account_id = partner.property_account_receivable_id.id
             elif journal.type == 'purchase':
-                account_id = partner.property_account_payable.id
+                account_id = partner.property_account_payable_id.id
             else:
                 account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
         self.account_id = account_id
@@ -357,7 +357,7 @@ class account_voucher_line(models.Model):
             self = self.with_context(lang=part.lang)
 
         product = self.env['product.product'].browse(product_id)
-        fpos = part.property_account_position.id
+        fpos = part.property_account_position_id.id
         account = self._get_account(product, fpos, type)
         values = {
             'name': product.partner_ref,

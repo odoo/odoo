@@ -661,7 +661,7 @@
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='property_account_income_categ']" position="before">
+                    <xpath expr="//field[@name='property_account_income_categ_id']" position="before">
                         <field name="property_account_creditor_price_difference_categ" domain="[('deprecated','=',False)]"/>
                     </xpath>
                 </data>
@@ -680,8 +680,8 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="property_account_expense" position="replace" >
-                     <field name="property_account_expense" domain="[('deprecated','=',False)]" attrs="{'readonly': [('purchase_ok', '=', 0)]}" groups="account.group_account_user"/>
+                <field name="property_account_expense_id" position="replace" >
+                     <field name="property_account_expense_id" domain="[('deprecated','=',False)]" attrs="{'readonly': [('purchase_ok', '=', 0)]}" groups="account.group_account_user"/>
                 </field>
                 <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
@@ -724,7 +724,7 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="property_account_expense" position="after">
+                <field name="property_account_expense_id" position="after">
                     <label string="" colspan="2"/>
                     <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" attrs="{'readonly':[('purchase_ok', '=', 0)]}" />
                     <newline/>

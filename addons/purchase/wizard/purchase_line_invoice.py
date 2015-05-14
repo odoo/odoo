@@ -54,7 +54,7 @@ class purchase_line_invoice(osv.osv_memory):
                 name = orders and orders[0].name or ''
                 journal_id = account_jrnl_obj.search(cr, uid, [('type', '=', 'purchase')], context=None)
                 journal_id = journal_id and journal_id[0] or False
-                a = partner.property_account_payable.id
+                a = partner.property_account_payable_id.id
                 inv = {
                     'name': name,
                     'origin': name,
@@ -67,7 +67,7 @@ class purchase_line_invoice(osv.osv_memory):
                     'currency_id' : orders[0].currency_id.id,
                     'comment': multiple_order_invoice_notes(orders),
                     'payment_term_id': orders[0].payment_term_id.id,
-                    'fiscal_position_id': partner.property_account_position.id
+                    'fiscal_position_id': partner.property_account_position_id.id
                 }
                 inv_id = invoice_obj.create(cr, uid, inv)
                 for order in orders:

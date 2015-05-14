@@ -26,12 +26,12 @@ class TestCheckJournalEntry(TransactionCase):
         self.product_obj.write(cr, uid, self.product_id, {'supplier_taxes_id': [(6, 0, [self.tax_id])]})
         # Create payable account for the expense
         user_type_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'data_account_type_payable')[1]
-        account_payable_id = self.registry('account.account').create(cr, uid, {'code': 'X1111', 'name': 'HR Expense - Test Payable Account', 'user_type': user_type_id, 'reconcile': True})
+        account_payable_id = self.registry('account.account').create(cr, uid, {'code': 'X1111', 'name': 'HR Expense - Test Payable Account', 'user_type_id': user_type_id, 'reconcile': True})
         # Create expenses account for the expense
         user_type_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'data_account_type_expenses')[1]
-        account_expense_id = self.registry('account.account').create(cr, uid, {'code': 'X2120', 'name': 'HR Expense - Test Purchase Account', 'user_type': user_type_id})
+        account_expense_id = self.registry('account.account').create(cr, uid, {'code': 'X2120', 'name': 'HR Expense - Test Purchase Account', 'user_type_id': user_type_id})
         # Assign it to the air ticket product
-        self.registry('product.product').write(cr, uid, self.product_id, {'property_account_expense': account_expense_id})
+        self.registry('product.product').write(cr, uid, self.product_id, {'property_account_expense_id': account_expense_id})
         # Create Sale Journal
         company_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'main_company')[1]
         self.registry('account.journal').create(cr, uid, {'name': 'Purchase Journal - Test', 'code': 'HRTPJ', 'type': 'purchase', 'company_id': company_id})

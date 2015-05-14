@@ -1,7 +1,7 @@
 -
   !python {model: ir.model.data} : |
       import time
-      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type.name', '=', 'Revenue'), ('tag_ids.name', 'in', ['Operating Activities'])])
+      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id.name', '=', 'Revenue'), ('tag_ids.name', 'in', ['Operating Activities'])])
       if account_ids:
           vals = {
               'name': 'Sales',
@@ -93,7 +93,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_16')
 
-      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type.name', '=', 'Expenses'), ('tag_ids.name', 'in', ['Operating Activities'])])
+      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id.name', '=', 'Expenses'), ('tag_ids.name', 'in', ['Operating Activities'])])
       if account_ids:
           vals = {
               'name': 'Purchases',

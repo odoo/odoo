@@ -56,12 +56,12 @@ class account_invoice_line(osv.osv):
             # first check the product, if empty check the category
             dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
             if not dacc:
-                dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
+                dacc = i_line.product_id.categ_id.property_stock_account_output_categ_id and i_line.product_id.categ_id.property_stock_account_output_categ_id.id
             # in both cases the credit account cacc will be the expense account
             # first check the product, if empty check the category
-            cacc = i_line.product_id.property_account_expense and i_line.product_id.property_account_expense.id
+            cacc = i_line.product_id.property_account_expense_id and i_line.product_id.property_account_expense_id.id
             if not cacc:
-                cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
+                cacc = i_line.product_id.categ_id.property_account_expense_categ_id and i_line.product_id.categ_id.property_account_expense_categ_id.id
             if dacc and cacc:
                 price_unit = i_line.move_id and i_line.move_id.price_unit or i_line.product_id.standard_price
                 return [
@@ -108,8 +108,8 @@ class account_invoice(osv.osv):
                     counterpart_acct_id = product.property_stock_account_output and \
                             product.property_stock_account_output.id
                     if not counterpart_acct_id:
-                        counterpart_acct_id = product.categ_id.property_stock_account_output_categ and \
-                                product.categ_id.property_stock_account_output_categ.id
+                        counterpart_acct_id = product.categ_id.property_stock_account_output_categ_id and \
+                                product.categ_id.property_stock_account_output_categ_id.id
                     if counterpart_acct_id:
                         fpos = invoice.fiscal_position_id or False
                         line_dict['account_id'] = fiscal_position.map_account(cr, uid,
@@ -444,7 +444,7 @@ class AccountChartTemplate(models.Model):
                 PropertyObj.create(vals)
 
         todo_list = [ # Property Stock Accounts
-            'property_stock_account_input_categ',
+            'property_stock_account_input_categ_id',
             'property_stock_account_output_categ',
             'property_stock_valuation_account_id',
         ]

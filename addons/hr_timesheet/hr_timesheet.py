@@ -61,8 +61,8 @@ class account_analytic_line(models.Model):
     @api.model
     def _get_general_account(self, user_id=None):
         emp = self.env['hr.employee'].search([('user_id', '=', user_id or self.env.uid)], limit=1)
-        if emp and emp.product_id.categ_id.property_account_expense_categ.id:
-            return emp.product_id.categ_id.property_account_expense_categ.id
+        if emp and emp.product_id.categ_id.property_account_expense_categ_id.id:
+            return emp.product_id.categ_id.property_account_expense_categ_id.id
         else:
             raise exceptions.ValidationError("This user or employee is not associated to a Product with a valid Financial Account")
 
@@ -88,7 +88,7 @@ class account_analytic_line(models.Model):
                     raise exceptions.ValidationError("The employee " + emp.name + " is not associated to a valid Product. Please define one for him or select another user.")
                 elif not emp.product_id.uom_id.id:
                     raise exceptions.ValidationError("The employee " + emp.name + " is not associated to a valid Product Unit of Measure. Please define one for him or select another user.")
-                elif not emp.product_id.categ_id.property_account_expense_categ.id:
+                elif not emp.product_id.categ_id.property_account_expense_categ_id.id:
                     raise exceptions.ValidationError("The employee " + emp.name + " is not associated to a valid Financial Account. Please define one for him or select another user.")
 
     @api.onchange('user_id')

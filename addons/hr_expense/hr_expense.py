@@ -126,8 +126,8 @@ class hr_expense_expense(osv.osv):
             employee = emp_obj.browse(cr, uid, employee_id, context=context)
             department_id = employee.department_id.id
             company_id = employee.company_id.id
-            if employee.address_home_id and employee.address_home_id.property_account_payable:
-                employee_payable_account_id = employee.address_home_id.property_account_payable.id
+            if employee.address_home_id and employee.address_home_id.property_account_payable_id:
+                employee_payable_account_id = employee.address_home_id.property_account_payable_id.id
         return {'value': {'department_id': department_id, 'company_id': company_id, 'employee_payable_account_id': employee_payable_account_id}}
 
     def expense_confirm(self, cr, uid, ids, context=None):
@@ -192,7 +192,7 @@ class hr_expense_expense(osv.osv):
             'debit': x['price']>0 and x['price'],
             'credit': x['price']<0 and -x['price'],
             'account_id': x['account_id'],
-            'analytic_lines': x.get('analytic_lines', False),
+            'analytic_line_ids': x.get('analytic_line_ids', False),
             'amount_currency': x['price']>0 and abs(x.get('amount_currency', False)) or -abs(x.get('amount_currency', False)),
             'currency_id': x.get('currency_id', False),
             'tax_line_id': x.get('tax_line_id', False),
@@ -298,7 +298,7 @@ class hr_expense_expense(osv.osv):
                 taxes = product.supplier_taxes_id
                 # If taxes are not related to the product, maybe they are in the account
                 if not taxes:
-                    a = product.property_account_expense.id or product.categ_id.property_account_expense_categ.id
+                    a = product.property_account_expense_id.id or product.categ_id.property_account_expense_categ_id.id
                     a = fpos_obj.map_account(cr, uid, fpos, a)
                     taxes = a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False
             if not taxes:
@@ -325,15 +325,15 @@ class hr_expense_expense(osv.osv):
         company = line.expense_id.company_id
         property_obj = self.pool.get('ir.property')
         if line.product_id:
-            acc = line.product_id.property_account_expense
+            acc = line.product_id.property_account_expense_id
             if not acc:
-                acc = line.product_id.categ_id.property_account_expense_categ
+                acc = line.product_id.categ_id.property_account_expense_categ_id
             if not acc:
                 raise UserError(_('No purchase account found for the product %s (or for his category), please configure one.') % (line.product_id.name))
         else:
-            acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company.id})
+            acc = property_obj.get(cr, uid, 'property_account_expense_categ_id', 'product.category', context={'force_company': company.id})
             if not acc:
-                raise UserError(_('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
+                raise UserError(_('Please configure Default Expense account for Product purchase: `property_account_expense_categ_id`.'))
         return {
             'type':'src',
             'name': line.name.split('\n')[0][:64],

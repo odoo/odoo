@@ -24,7 +24,7 @@ class AccountAccountTemplate(models.Model):
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency', help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True, index=True)
-    user_type = fields.Many2one('account.account.type', string='Type', required=True,
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
     reconcile = fields.Boolean(string='Allow Invoices & payments Matching', default=False,
@@ -71,20 +71,20 @@ class AccountChartTemplate(models.Model):
         help='List of all the taxes that have to be installed by the wizard')
     bank_account_code_char = fields.Char(string='Code of the main bank account')
     transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account', required=True,
-        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
     income_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
-    property_account_payable = fields.Many2one('account.account.template', string='Payable Account')
-    property_account_expense_categ = fields.Many2one('account.account.template', string='Expense Category Account')
-    property_account_income_categ = fields.Many2one('account.account.template', string='Income Category Account')
-    property_account_expense = fields.Many2one('account.account.template', string='Expense Account on Product Template')
-    property_account_income = fields.Many2one('account.account.template', string='Income Account on Product Template')
-    property_stock_account_input_categ = fields.Many2one('account.account.template')
-    property_stock_account_output_categ = fields.Many2one('account.account.template')
+    property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account', oldname="property_account_receivable")
+    property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account', oldname="property_account_payable")
+    property_account_expense_categ_id = fields.Many2one('account.account.template', string='Expense Category Account', oldname="property_account_expense_categ")
+    property_account_income_categ_id = fields.Many2one('account.account.template', string='Income Category Account', oldname="property_account_income_categ")
+    property_account_expense_id = fields.Many2one('account.account.template', string='Expense Account on Product Template', oldname="property_account_expense")
+    property_account_income_id = fields.Many2one('account.account.template', string='Income Account on Product Template', oldname="property_account_income")
+    property_stock_account_input_categ_id = fields.Many2one('account.account.template', oldname="property_stock_account_input_categ")
+    property_stock_account_output_categ_id = fields.Many2one('account.account.template', oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account.template')
 
     @api.one
@@ -159,9 +159,9 @@ class AccountChartTemplate(models.Model):
             # Get the default accounts
             default_account = False
             if journal['type'] == 'sale':
-                default_account = acc_template_ref.get(self.property_account_income_categ.id)
+                default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
             elif journal['type'] == 'purchase':
-                default_account = acc_template_ref.get(self.property_account_expense_categ.id)
+                default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
             elif journal['type'] == 'general' and journal['name'] == _('Exchange Rate Journal'):
                 if type=='credit':
                     default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
@@ -206,12 +206,12 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         PropertyObj = self.env['ir.property']
         todo_list = [
-            ('property_account_receivable', 'res.partner', 'account.account'),
-            ('property_account_payable', 'res.partner', 'account.account'),
-            ('property_account_expense_categ', 'product.category', 'account.account'),
-            ('property_account_income_categ', 'product.category', 'account.account'),
-            ('property_account_expense', 'product.template', 'account.account'),
-            ('property_account_income', 'product.template', 'account.account'),
+            ('property_account_receivable_id', 'res.partner', 'account.account'),
+            ('property_account_payable_id', 'res.partner', 'account.account'),
+            ('property_account_expense_categ_id', 'product.category', 'account.account'),
+            ('property_account_income_categ_id', 'product.category', 'account.account'),
+            ('property_account_expense_id', 'product.template', 'account.account'),
+            ('property_account_income_id', 'product.template', 'account.account'),
         ]
         for record in todo_list:
             account = getattr(self, record[0])
@@ -232,8 +232,8 @@ class AccountChartTemplate(models.Model):
                     #create the property
                     PropertyObj.create(vals)
         stock_properties = [
-            'property_stock_account_input_categ',
-            'property_stock_account_output_categ',
+            'property_stock_account_input_categ_id',
+            'property_stock_account_output_categ_id',
             'property_stock_valuation_account_id',
         ]
         for stock_property in stock_properties:
@@ -354,7 +354,7 @@ class AccountChartTemplate(models.Model):
                 'name': account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
-                'user_type': account_template.user_type and account_template.user_type.id or False,
+                'user_type_id': account_template.user_type_id and account_template.user_type_id.id or False,
                 'reconcile': account_template.reconcile,
                 'note': account_template.note,
                 'tax_ids': [(6, 0, tax_ids)],
@@ -548,15 +548,15 @@ class WizardMultiChartsAccounts(models.TransientModel):
     currency_id = fields.Many2one('res.currency', string='Currency', help="Currency as per company's country.", required=True)
     only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
-    bank_accounts_id = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True)
+    bank_account_ids = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True, oldname="bank_accounts_id")
     bank_account_code_char = fields.Char('Bank Accounts Code')
     code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
-    sale_tax = fields.Many2one('account.tax.template', string='Default Sales Tax')
-    purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
+    sale_tax_id = fields.Many2one('account.tax.template', string='Default Sales Tax', oldname="sale_tax")
+    purchase_tax_id = fields.Many2one('account.tax.template', string='Default Purchase Tax', oldname="purchase_tax")
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
     transfer_account_id = fields.Many2one('account.account.template', required=True, string='Transfer Account',
-        domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
     complete_tax_set = fields.Boolean('Complete Set of Taxes',
@@ -597,11 +597,11 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', '=', 'purchase')]
                 sale_tax = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
                 purchase_tax = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc", limit=1)
-                self.sale_tax = sale_tax.id
-                self.purchase_tax = purchase_tax.id
+                self.sale_tax_id = sale_tax.id
+                self.purchase_tax_id = purchase_tax.id
                 res.setdefault('domain', {})
-                res['domain']['sale_tax'] = repr(sale_tax_domain)
-                res['domain']['purchase_tax'] = repr(purchase_tax_domain)
+                res['domain']['sale_tax_id'] = repr(sale_tax_domain)
+                res['domain']['purchase_tax_id'] = repr(purchase_tax_domain)
             if self.chart_template_id.transfer_account_id:
                 self.transfer_account_id = self.chart_template_id.transfer_account_id.id
             if self.chart_template_id.code_digits:
@@ -617,8 +617,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
         tax_templ_obj = self.env['account.tax.template']
         account_chart_template = self.env['account.chart.template']
 
-        if 'bank_accounts_id' in fields:
-            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]})
+        if 'bank_account_ids' in fields:
+            res.update({'bank_account_ids': [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.env.user.company_id.id})
         if 'currency_id' in fields:
@@ -641,14 +641,14 @@ class WizardMultiChartsAccounts(models.TransientModel):
             if 'chart_template_id' in fields:
                 res.update({'only_one_chart_template': len(chart_templates) == 1,
                             'chart_template_id': chart_id})
-            if 'sale_tax' in fields:
+            if 'sale_tax_id' in fields:
                 sale_tax = tax_templ_obj.search([('chart_template_id', 'in', chart_hierarchy_ids),
                                                               ('type_tax_use', '=', 'sale')], limit=1, order='sequence')
-                res.update({'sale_tax': sale_tax and sale_tax.id or False})
-            if 'purchase_tax' in fields:
+                res.update({'sale_tax_id': sale_tax and sale_tax.id or False})
+            if 'purchase_tax_id' in fields:
                 purchase_tax = tax_templ_obj.search([('chart_template_id', 'in', chart_hierarchy_ids),
                                                                   ('type_tax_use', '=', 'purchase')], limit=1, order='sequence')
-                res.update({'purchase_tax': purchase_tax and purchase_tax.id or False})
+                res.update({'purchase_tax_id': purchase_tax and purchase_tax.id or False})
         res.update({
             'purchase_tax_rate': 15.0,
             'sale_tax_rate': 15.0,
@@ -730,10 +730,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
         acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
 
         # write values of default taxes for product as super user
-        if self.sale_tax and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [taxes_ref[self.sale_tax.id]], for_all_users=True, company_id=company.id)
-        if self.purchase_tax and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax.id]], for_all_users=True, company_id=company.id)
+        if self.sale_tax_id and taxes_ref:
+            ir_values_obj.sudo().set_default('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], for_all_users=True, company_id=company.id)
+        if self.purchase_tax_id and taxes_ref:
+            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], for_all_users=True, company_id=company.id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)
@@ -742,14 +742,14 @@ class WizardMultiChartsAccounts(models.TransientModel):
         self.env['account.account'].create({
             'code': '0',
             'name': _('Undistributed Profits/Losses'),
-            'user_type': self.env.ref("account.data_unaffected_earnings").id,
+            'user_type_id': self.env.ref("account.data_unaffected_earnings").id,
             'company_id': company.id,})
         return {}
 
     @api.multi
     def _create_bank_journals_from_o2m(self, company, acc_template_ref):
         '''
-        This function creates bank journals and its accounts for each line encoded in the field bank_accounts_id of the
+        This function creates bank journals and its accounts for each line encoded in the field bank_account_ids of the
         wizard.
 
         :param company_id: the id of the company for which the wizard is running.
@@ -760,8 +760,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
         self.ensure_one()
         # Build a list with all the data to process
         journal_data = []
-        if self.bank_accounts_id:
-            for acc in self.bank_accounts_id:
+        if self.bank_account_ids:
+            for acc in self.bank_account_ids:
                 vals = {
                     'acc_name': acc.acc_name,
                     'account_type': acc.account_type,

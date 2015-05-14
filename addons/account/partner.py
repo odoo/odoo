@@ -106,8 +106,8 @@ class AccountFiscalPosition(models.Model):
         partner = PartnerObj.browse(partner_id)
 
         # partner manually set fiscal position always win
-        if partner.property_account_position:
-            return partner.property_account_position.id
+        if partner.property_account_position_id:
+            return partner.property_account_position_id.id
 
         # if no delivery use invocing
         if delivery_id:
@@ -184,7 +184,7 @@ class ResPartner(models.Model):
         self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
-                      LEFT JOIN account_account_type act ON (a.user_type=act.id)
+                      LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
                       WHERE act.type IN ('receivable','payable')
                       AND l.partner_id IN %s
                       AND l.reconciled IS FALSE
@@ -335,27 +335,27 @@ class ResPartner(models.Model):
     contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
     issued_total = fields.Char(compute='_compute_issued_total', string="Journal Items")
-    property_account_payable = fields.Many2one('account.account', company_dependent=True,
-        string="Account Payable",
+    property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
+        string="Account Payable", oldname="property_account_payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
-    property_account_receivable = fields.Many2one('account.account', company_dependent=True,
-        string="Account Receivable",
+    property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
+        string="Account Receivable", oldname="property_account_receivable",
         domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
-    property_account_position = fields.Many2one('account.fiscal.position', company_dependent=True,
+    property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        help="The fiscal position will determine taxes and accounts used for the partner.")
-    property_payment_term = fields.Many2one('account.payment.term', company_dependent=True,
+        help="The fiscal position will determine taxes and accounts used for the partner.", oldname="property_account_position")
+    property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string ='Customer Payment Term',
-        help="This payment term will be used instead of the default one for sale orders and customer invoices")
-    property_supplier_payment_term = fields.Many2one('account.payment.term', company_dependent=True,
+        help="This payment term will be used instead of the default one for sale orders and customer invoices", oldname="property_payment_term")
+    property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
          string ='Supplier Payment Term',
-         help="This payment term will be used instead of the default one for purchase orders and supplier bills")
-    ref_companies = fields.One2many('res.company', 'partner_id',
-        string='Companies that refers to partner')
+         help="This payment term will be used instead of the default one for purchase orders and supplier bills", oldname="property_supplier_payment_term")
+    ref_company_ids = fields.One2many('res.company', 'partner_id',
+        string='Companies that refers to partner', oldname="ref_companies")
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
         help="The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
     last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date',
@@ -373,5 +373,5 @@ class ResPartner(models.Model):
     @api.model
     def _commercial_fields(self):
         return super(ResPartner, self)._commercial_fields() + \
-            ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
-             'property_payment_term', 'property_supplier_payment_term', 'last_time_entries_checked']
+            ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
+             'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']

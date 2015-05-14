@@ -16,8 +16,8 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         })
 
         # Should be changed by automatic on_change later
-        invoice_account = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_receivable').id)])[0].id
-        invoice_line_account = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_expenses').id)])[0].id
+        invoice_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1).id
+        invoice_line_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1).id
 
         invoice = self.env['account.invoice'].create({'partner_id': self.env.ref('base.res_partner_2').id,
             'account_id': invoice_account,

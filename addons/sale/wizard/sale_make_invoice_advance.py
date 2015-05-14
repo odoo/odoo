@@ -76,7 +76,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             # determine and check income account
             if not wizard.product_id.id :
                 prop = ir_property_obj.get(cr, uid,
-                            'property_account_income_categ', 'product.category', context=context)
+                            'property_account_income_categ_id', 'product.category', context=context)
                 prop_id = prop and prop.id or False
                 account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position_id or False, prop_id)
                 if not account_id:
@@ -124,13 +124,13 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'origin': sale.name,
                 'type': 'out_invoice',
                 'reference': False,
-                'account_id': sale.partner_id.property_account_receivable.id,
+                'account_id': sale.partner_id.property_account_receivable_id.id,
                 'partner_id': sale.partner_invoice_id.id,
                 'invoice_line_ids': [(0, 0, inv_line_values)],
                 'currency_id': sale.pricelist_id.currency_id.id,
                 'comment': '',
                 'payment_term_id': sale.payment_term_id.id,
-                'fiscal_position_id': sale.fiscal_position_id.id or sale.partner_id.property_account_position.id,
+                'fiscal_position_id': sale.fiscal_position_id.id or sale.partner_id.property_account_position_id.id,
                 'team_id': sale.team_id.id,
             }
             result.append((sale.id, inv_values))

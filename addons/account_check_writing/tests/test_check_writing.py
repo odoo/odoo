@@ -13,8 +13,8 @@ class TestCheckWriting(AccountingTestCase):
         self.product = self.env.ref("product.product_product_4")
         self.payment_method_check = self.env.ref("account_check_writing.account_payment_method_check_writing")
 
-        self.account_payable = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_payable').id)])[0]
-        self.account_expenses = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_expenses').id)])[0]
+        self.account_payable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
+        self.account_expenses = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1)
 
         self.bank = self.env['res.partner.bank'].create({'acc_number': '0123456789', 'bank_name': 'Test Bank', 'company_id': self.env.user.company_id.id})
         self.bank_journal = self.bank.journal_id
@@ -46,7 +46,7 @@ class TestCheckWriting(AccountingTestCase):
         }).create({
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal.id,
-            'payment_method': self.payment_method_check.id,
+            'payment_method_id': self.payment_method_check.id,
         })
         register_payments.create_payment()
         return self.env['account.payment'].search([], order="id desc", limit=1)

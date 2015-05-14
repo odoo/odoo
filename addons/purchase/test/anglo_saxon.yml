@@ -9,35 +9,35 @@
   !record {model: account.account, id: account_anglo_stock_valuation}:
     code: X3000
     name: Stock Valuation Account- (test)
-    user_type: account.data_account_type_current_assets
+    user_type_id: account.data_account_type_current_assets
 -
   Configure Stock Interim account (Received).
 -
   !record {model: account.account, id: account_anglo_stock_input}:
     code: X2800
     name: Stock Interim account (Received)
-    user_type: account.data_account_type_expenses
+    user_type_id: account.data_account_type_expenses
 -
   Configure Stock Interim account (Delivered).
 -
   !record {model: account.account, id: account_anglo_stock_output}:
     code: X2801
     name: Stock Interim account (Delivered)
-    user_type: account.data_account_type_revenue
+    user_type_id: account.data_account_type_revenue
 -
   Configure Price difference creditor Account.
 -
   !record {model: account.account, id: account_anglo_price_difference}:
     code: X7095
     name: Price difference creditor Account
-    user_type: account.data_account_type_expenses
+    user_type_id: account.data_account_type_expenses
 -
   Configure Cash Bank Account.
 -
   !record {model: account.account, id: account_anglo_cash}:
     code: X5000
     name: Cash/Bank Account
-    user_type: account.data_account_type_liquidity
+    user_type_id: account.data_account_type_liquidity
     reconcile: True
 -
   Configure Creditor Account Payable.
@@ -45,7 +45,7 @@
   !record {model: account.account, id: account_anglo_payable}:
     code: X440001
     name: Creditor Account Payable
-    user_type: account.data_account_type_payable
+    user_type_id: account.data_account_type_payable
     reconcile: True
 -
   Configure Debtor Account Receivable.
@@ -53,7 +53,7 @@
   !record {model: account.account, id: account_anglo_receivable}:
     code: X400001
     name: Debtor Account Receivable
-    user_type: account.data_account_type_receivable
+    user_type_id: account.data_account_type_receivable
     reconcile: True
 -
   Configure Cost of Good sale Account.
@@ -61,26 +61,26 @@
   !record {model: account.account, id: account_anglo_cogs}:
     code: X7000
     name: Cost of goods sale account
-    user_type: account.data_account_type_expenses
+    user_type_id: account.data_account_type_expenses
 -
   Configure Income Account.
 -
   !record {model: account.account, id: account_anglo_income}:
     code: X8000
     name: Income Account
-    user_type: account.data_account_type_revenue
+    user_type_id: account.data_account_type_revenue
 -
   I configure the account receivable of supplier
 -
   !record {model: res.partner, id: base.res_partner_3}:
-    property_account_payable: account_anglo_payable
-    property_account_receivable: account_anglo_receivable
+    property_account_payable_id: account_anglo_payable
+    property_account_receivable_id: account_anglo_receivable
 -
   I configure the account receivable of Customer.
 -
   !record {model: res.partner, id: base.res_partner_13}:
-    property_account_payable: account_anglo_payable
-    property_account_receivable: account_anglo_receivable
+    property_account_payable_id: account_anglo_payable
+    property_account_receivable_id: account_anglo_receivable
 -
   I configure the product category with stock valuation account.
 -
@@ -91,7 +91,7 @@
 -
   !python {model: product.product}: |
      self.write(cr, uid, [ref('product.product_product_10')], {'list_price': 20.00,'standard_price': 9,'categ_id': ref('product.product_category_5'),'valuation': 'real_time',
-      'property_account_income': ref('account_anglo_income'),'property_account_expense': ref('account_anglo_cogs'),
+      'property_account_income_id': ref('account_anglo_income'),'property_account_expense_id': ref('account_anglo_cogs'),
       'property_account_creditor_price_difference': ref('account_anglo_price_difference'),'property_stock_account_input': ref('account_anglo_stock_input'),
       'property_stock_account_output': ref('account_anglo_stock_output'), 'cost_method': 'standard'})
 -

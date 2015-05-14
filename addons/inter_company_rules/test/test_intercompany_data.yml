@@ -116,9 +116,9 @@
         'currency_id': ref("base.EUR"),
         'transfer_account_id': ref("account.transfer_account_id"),
         'code_digits': 6,
-        'purchase_tax': False,
+        'purchase_tax_id': False,
         'bank_account_code_char': 'COMP_A',
-        'sale_tax': False})
+        'sale_tax_id': False})
     self.execute(cr, uid, [wiz_comp_a])
     wiz_comp_b = self.create(cr, uid, {
         'chart_template_id': '1',
@@ -126,26 +126,26 @@
         'currency_id': ref("base.EUR"),
         'transfer_account_id': ref("account.transfer_account_id"),
         'code_digits': 6,
-        'purchase_tax': False,
+        'purchase_tax_id': False,
         'bank_account_code_char': 'COMP_B',
-        'sale_tax': False})
+        'sale_tax_id': False})
     self.execute(cr, uid, [wiz_comp_b])
 -
   Now remove company from related partners of company and apply default accounts.
 -
   !python {model: res.partner}: |
     account_obj = self.pool.get("account.account")
-    account_receivable_a = account_obj.search(cr, uid, [('company_id', '=', ref("company_a")), ('user_type.type', '=', 'receivable')], context=context)
-    account_payable_a = account_obj.search(cr, uid, [('company_id', '=', ref("company_a")), ('user_type.type', '=', 'payable')], context=context)
+    account_receivable_a = account_obj.search(cr, uid, [('company_id', '=', ref("company_a")), ('user_type_id.type', '=', 'receivable')], limit=1, context=context)
+    account_payable_a = account_obj.search(cr, uid, [('company_id', '=', ref("company_a")), ('user_type_id.type', '=', 'payable')], limit=1, context=context)
     self.write(cr, uid, [ref("partner_company_a")], {
         'company_id': False,
-        'property_account_receivable': account_receivable_a[0],
-        'property_account_payable': account_payable_a[0]
+        'property_account_receivable_id': account_receivable_a,
+        'property_account_payable_id': account_payable_a
     }, context=context)
-    account_receivable_b = account_obj.search(cr, uid, [('company_id', '=', ref("company_b")), ('user_type.type', '=', 'receivable')], context=context)
-    account_payable_b = account_obj.search(cr, uid, [('company_id', '=', ref("company_b")), ('user_type.type', '=', 'payable')], context=context)
+    account_receivable_b = account_obj.search(cr, uid, [('company_id', '=', ref("company_b")), ('user_type_id.type', '=', 'receivable')], limit=1, context=context)
+    account_payable_b = account_obj.search(cr, uid, [('company_id', '=', ref("company_b")), ('user_type_id.type', '=', 'payable')], limit=1, context=context)
     self.write(cr, uid, [ref("partner_company_b")], {
         'company_id': False,
-        'property_account_receivable': account_receivable_b[0],
-        'property_account_payable': account_payable_b[0]
+        'property_account_receivable_id': account_receivable_b,
+        'property_account_payable_id': account_payable_b
     }, context=context)

@@ -84,7 +84,7 @@ class stock_landed_cost(osv.osv):
         accounts = product_obj.browse(cr, uid, line.product_id.product_tmpl_id.id, context=context).get_product_accounts()
         debit_account_id = accounts.get('stock_valuation', False) and accounts['stock_valuation'].id or False
         already_out_account_id = accounts['stock_output'].id
-        credit_account_id = line.cost_line_id.account_id.id or cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
+        credit_account_id = line.cost_line_id.account_id.id or cost_product.property_account_expense_id.id or cost_product.categ_id.property_account_expense_categ_id.id
 
         if not credit_account_id:
             raise UserError(_('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
@@ -291,7 +291,7 @@ class stock_landed_cost_lines(osv.osv):
         result['name'] = product.name
         result['split_method'] = product.split_method
         result['price_unit'] = product.standard_price
-        result['account_id'] = product.property_account_expense and product.property_account_expense.id or product.categ_id.property_account_expense_categ.id
+        result['account_id'] = product.property_account_expense_id and product.property_account_expense_id.id or product.categ_id.property_account_expense_categ_id.id
         return {'value': result}
 
     _columns = {

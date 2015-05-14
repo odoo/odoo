@@ -31,8 +31,8 @@ class account_abstract_payment(models.AbstractModel):
     _description = "Contains the logic shared between models which allows to register payments"
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
-    payment_method = fields.Many2one('account.payment.method', string='Payment Method', required=True)
-    payment_method_code = fields.Char(related='payment_method.code',
+    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method', required=True, oldname="payment_method")
+    payment_method_code = fields.Char(related='payment_method_id.code',
         help="Technical field used to adapt the interface to the payment method selected.")
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')])
@@ -60,7 +60,7 @@ class account_abstract_payment(models.AbstractModel):
         if not self.journal_id:
             self.hide_payment_method = True
             return
-        journal_payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_methods or self.journal_id.outbound_payment_methods
+        journal_payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
         self.hide_payment_method = len(journal_payment_methods) == 1 and journal_payment_methods[0].code == 'manual'
 
     @api.onchange('journal_id')
@@ -68,11 +68,11 @@ class account_abstract_payment(models.AbstractModel):
         if self.journal_id:
             self.currency_id = self.journal_id.currency_id or self.company_id.currency_id
             # Set default payment method (we consider the first to be the default one)
-            payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_methods or self.journal_id.outbound_payment_methods
-            self.payment_method = payment_methods and payment_methods[0] or False
+            payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
+            self.payment_method_id = payment_methods and payment_methods[0] or False
             # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
             payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
-            return {'domain': {'payment_method': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
+            return {'domain': {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
         return {}
 
     def _get_invoices(self):
@@ -98,7 +98,7 @@ class account_register_payments(models.TransientModel):
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
         if self.payment_type:
-            return {'domain': {'payment_method': [('payment_type', '=', self.payment_type)]}}
+            return {'domain': {'payment_method_id': [('payment_type', '=', self.payment_type)]}}
 
     def _get_invoices(self):
         return self.env['account.invoice'].browse(self._context.get('active_ids'))
@@ -141,7 +141,7 @@ class account_register_payments(models.TransientModel):
         """ Hook for extension """
         return {
             'journal_id': self.journal_id.id,
-            'payment_method': self.payment_method.id,
+            'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
             'communication': self.communication,
             'invoice_ids': [(4, inv.id, None) for inv in self._get_invoices()],
@@ -194,7 +194,7 @@ class account_payment(models.Model):
     has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usablity purposes")
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
     payment_difference_handling = fields.Selection([('open', 'Partial payment'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
-    writeoff_account = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)
+    writeoff_account_id = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)
 
     # FIXME: ondelete='restrict' not working (eg. cancel a bank statement reconciliation with a payment)
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
@@ -210,9 +210,9 @@ class account_payment(models.Model):
             self.destination_account_id = self.company_id.transfer_account_id.id
         elif self.partner_id:
             if self.partner_type == 'customer':
-                self.destination_account_id = self.partner_id.property_account_receivable.id
+                self.destination_account_id = self.partner_id.property_account_receivable_id.id
             else:
-                self.destination_account_id = self.partner_id.property_account_payable.id
+                self.destination_account_id = self.partner_id.property_account_payable_id.id
 
     @api.onchange('partner_type')
     def _onchange_partner_type(self):
@@ -256,12 +256,12 @@ class account_payment(models.Model):
 
     @api.model
     def create(self, vals):
-        self._check_communication(vals['payment_method'], vals.get('communication', ''))
+        self._check_communication(vals['payment_method_id'], vals.get('communication', ''))
         return super(account_payment, self).create(vals)
 
     def _check_communication(self, payment_method_id, communication):
         """ This method is to be overwritten by payment type modules. The method body would look like :
-            if payment_method_id == self.env.ref('my_module.payment_method').id:
+            if payment_method_id == self.env.ref('my_module.payment_method_id').id:
                 try:
                     communication.decode('ascii')
                 except UnicodeError:
@@ -442,7 +442,7 @@ class account_payment(models.Model):
         """
         return {
             'partner_id': self.payment_type in ('inbound', 'outbound') and self.partner_id.commercial_partner_id.id or False,
-            'invoice': invoice_id and invoice_id.id or False,
+            'invoice_id': invoice_id and invoice_id.id or False,
             'move_id': move_id,
             'debit': debit,
             'credit': credit,

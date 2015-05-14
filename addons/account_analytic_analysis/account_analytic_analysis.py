@@ -660,7 +660,7 @@ class account_analytic_account(osv.osv):
         if not journal_ids:
             raise UserError(_('Please define a sale journal for the company "%s".') % (contract.company_id.name or '', ))
 
-        partner_payment_term = partner.property_payment_term and partner.property_payment_term.id or False
+        partner_payment_term = partner.property_payment_term_id and partner.property_payment_term_id.id or False
 
         currency_id = False
         if contract.pricelist_id:
@@ -671,7 +671,7 @@ class account_analytic_account(osv.osv):
             currency_id = contract.company_id.currency_id.id
 
         invoice = {
-           'account_id': partner.property_account_receivable.id,
+           'account_id': partner.property_account_receivable_id.id,
            'type': 'out_invoice',
            'partner_id': partner.id,
            'currency_id': currency_id,
@@ -693,9 +693,9 @@ class account_analytic_account(osv.osv):
         for line in contract.recurring_invoice_line_ids:
 
             res = line.product_id
-            account_id = res.property_account_income.id
+            account_id = res.property_account_income_id.id
             if not account_id:
-                account_id = res.categ_id.property_account_income_categ.id
+                account_id = res.categ_id.property_account_income_categ_id.id
             account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
 
             taxes = res.taxes_id or False

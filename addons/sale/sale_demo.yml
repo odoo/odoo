@@ -1,10 +1,10 @@
 -
   !python {model: ir.model.data} : |
       journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')])
-      account_recv_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_receivable'))])
-      account_sale_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_operating')])])
+      account_recv_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_receivable'))])
+      account_sale_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_operating')])])
       if not account_sale_id:
-          account_sale_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_revenue'))]
+          account_sale_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue'))]
       if journal_id and account_recv_id:
           vals = {
               'currency': ref('base.EUR'),

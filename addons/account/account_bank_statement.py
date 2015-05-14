@@ -448,9 +448,9 @@ class AccountBankStatementLine(models.Model):
         }
         if self.partner_id:
             if amount > 0:
-                data['open_balance_account_id'] = self.partner_id.property_account_receivable.id
+                data['open_balance_account_id'] = self.partner_id.property_account_receivable_id.id
             else:
-                data['open_balance_account_id'] = self.partner_id.property_account_payable.id
+                data['open_balance_account_id'] = self.partner_id.property_account_payable_id.id
 
         return data
 
@@ -557,7 +557,7 @@ class AccountBankStatementLine(models.Model):
 
         # Select move lines until their total amount is greater than the statement line amount
         domain = [('reconciled', '=', False)]
-        domain += [('account_id.user_type.type', '=', amount > 0 and 'receivable' or 'payable')]  # Make sure we can't mix receivable and payable
+        domain += [('account_id.user_type_id.type', '=', amount > 0 and 'receivable' or 'payable')]  # Make sure we can't mix receivable and payable
         domain += amount_domain_maker('<', amount)  # Will also enforce > 0
         mv_lines = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=5, additional_domain=domain)
         st_line_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
