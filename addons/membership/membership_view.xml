@@ -159,6 +159,7 @@
             <field name="priority">50</field>
             <field name="arch" type="xml">
                 <search string="Membership Partners">
+                    <field name="name" filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
                     <field name="membership_start" invisible="1"/>
                     <field name="membership_stop" string="End Membership Date"/>
                     <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
@@ -234,7 +235,7 @@
                                 <label for="membership_state"/>
                                 <div>
                                     <field name="membership_state"/>
-                                    <button name="%(action_membership_invoice_view)d" type="action" string="Buy Membership" 
+                                    <button name="%(action_membership_invoice_view)d" type="action" string="Buy Membership"
                                         attrs="{'invisible':[('free_member','=',True)]}" class="oe_link"/>
                                 </div>
                             </group>
