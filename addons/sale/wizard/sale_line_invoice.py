@@ -102,7 +102,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
             sales_order_obj.message_post(cr, uid, [order.id], body=_("Invoice created"), context=context)
             data_sale = sales_order_obj.browse(cr, uid, order.id, context=context)
             for line in data_sale.order_line:
-                if not line.invoiced:
+                if not line.invoiced and line.state != 'cancel':
                     flag = False
                     break
             if flag:

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-03-31 22:26+0000\n"
+"Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:15+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-01 05:35+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -33,12 +33,21 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klik for at starte en ny bud-runde. \n"
+"          </p><p>\n"
+"            I en bud-runde kan du bede om tilbud fra flere leverandører.\n"
+"            I budrunden kan du angive de varer du har brug for og danne \n"
+"            forespørgsler. Når du har fået svar fra leverandørerne, kan du\n"
+"            sammenligne og vælge mellem dem og slette andre.\n"
+"          </p>\n"
+"        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
 #: field:purchase.requisition.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analyse konto"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -48,27 +57,27 @@ msgstr "Godkendt af leverandør"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_bid_line_qty
 msgid "Bid Line Qty"
-msgstr ""
+msgstr "Bud linie antal"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
 msgid "Bid Lines"
-msgstr ""
+msgstr "Bud linier"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr ""
+msgstr "Valg af bud"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Bid Selection Type"
-msgstr ""
+msgstr "Bud valgtype"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Bid Submission Deadline"
-msgstr ""
+msgstr "Bud deadline"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
@@ -80,22 +89,22 @@ msgstr ""
 #: field:purchase.requisition.line,requisition_id:0
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bids"
-msgstr ""
+msgstr "Anmodning om tilbud"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,name:0
 msgid "Call for Bids Reference"
-msgstr ""
+msgstr "Anmodning om bud reference"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids in negotiation"
-msgstr ""
+msgstr "Bud i forhandling"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids where bids are closed"
-msgstr ""
+msgstr "Forespørgsler som er lukkede."
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -106,7 +115,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Calls for Bids"
-msgstr ""
+msgstr "Forespørgsler"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -117,12 +126,12 @@ msgstr "Annullér"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel Call"
-msgstr ""
+msgstr "Annullér forespørgsel"
 
 #. module: purchase_requisition
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Cancel Choice"
-msgstr ""
+msgstr "Fortryd valg"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -150,13 +159,13 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
 msgid "Change Bid line quantity"
-msgstr ""
+msgstr "Ændre bud antal"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Change Quantity"
-msgstr ""
+msgstr "Ændre antal"
 
 #. module: purchase_requisition
 #: help:product.template,purchase_requisition:0
@@ -164,27 +173,29 @@ msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
 msgstr ""
+"Afmærk dette felt for at danne bud anmodninger i stedet for at danne "
+"forespørgsler fra materialestyringen."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Supplier"
-msgstr ""
+msgstr "Vælg leverandør"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Choose product lines"
-msgstr ""
+msgstr "Vælg vare linier"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Close Call for Bids"
-msgstr ""
+msgstr "Luk bud"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Bids"
-msgstr ""
+msgstr "Afsluttede bud"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
@@ -195,12 +206,12 @@ msgstr "Firma"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm Call"
-msgstr ""
+msgstr "Bekræft anmodning"
 
 #. module: purchase_requisition
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Confirm Order"
-msgstr ""
+msgstr "Bekræft ordre"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -211,12 +222,12 @@ msgstr "Bekræft indkøbsordre"
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Bekræftet"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
 msgid "Create Request for Quotation"
-msgstr ""
+msgstr "Opret forespørgsel"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,create_uid:0
@@ -224,7 +235,7 @@ msgstr ""
 #: field:purchase.requisition.line,create_uid:0
 #: field:purchase.requisition.partner,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oprettet af"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,create_date:0
@@ -232,23 +243,23 @@ msgstr ""
 #: field:purchase.requisition.line,create_date:0
 #: field:purchase.requisition.partner,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oprettet den"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Dato for sidste besked på denne post."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
 #, python-format
 msgid "Define product(s) you want to include in the call for bids."
-msgstr ""
+msgstr "Angiv varer du vil have med i bud anmodningen"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,description:0
@@ -259,17 +270,17 @@ msgstr "Beskrivelse"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Done"
-msgstr ""
+msgstr "Udført"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Udkast"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "End Month"
-msgstr ""
+msgstr "Slut måned"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
@@ -285,7 +296,7 @@ msgstr "Followers"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
-msgstr ""
+msgstr "Gruppér efter"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_summary:0
@@ -302,7 +313,7 @@ msgstr ""
 #: field:purchase.requisition.line,id:0
 #: field:purchase.requisition.partner,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_unread:0
@@ -317,7 +328,7 @@ msgstr "Er en \"follower\""
 #. module: purchase_requisition
 #: field:purchase.requisition,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Sidste besked Dato"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,write_uid:0
@@ -325,7 +336,7 @@ msgstr ""
 #: field:purchase.requisition.line,write_uid:0
 #: field:purchase.requisition.partner,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Sidst opdateret af"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,write_date:0
@@ -333,7 +344,7 @@ msgstr ""
 #: field:purchase.requisition.line,write_date:0
 #: field:purchase.requisition.partner,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Sidst opdateret den"
 
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
@@ -358,7 +369,7 @@ msgstr "Besked- og kommunikations historik"
 #. module: purchase_requisition
 #: field:purchase.requisition,multiple_rfq_per_supplier:0
 msgid "Multiple RFQ per supplier"
-msgstr ""
+msgstr "Multiple forespørgsler pr. leverandør"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -373,7 +384,7 @@ msgstr "Ny"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Bids"
-msgstr ""
+msgstr "Ny bud anmodning"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -383,17 +394,17 @@ msgstr "Ordre dato"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr ""
+msgstr "Bestillings dato"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "PO Created"
-msgstr ""
+msgstr "Indkøbsordre oprettet"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,picking_type_id:0
 msgid "Picking Type"
-msgstr ""
+msgstr "Pluk type"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_order
@@ -409,7 +420,7 @@ msgstr "Vare"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Produktskabelon"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_uom_id:0
@@ -430,7 +441,7 @@ msgstr "Varer"
 #. module: purchase_requisition
 #: field:purchase.requisition,po_line_ids:0
 msgid "Products by supplier"
-msgstr ""
+msgstr "Varer pr. leverandør"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,line_ids:0
@@ -446,12 +457,12 @@ msgstr "Indkøbsordre"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Indkøbsordrelinie"
 
 #. module: purchase_requisition
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Indkøbsordrelinier"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
@@ -483,12 +494,12 @@ msgstr "Indkøbs rekvisitions partner"
 #: code:addons/purchase_requisition/purchase_requisition.py:416
 #, python-format
 msgid "Purchase Requisition created"
-msgstr ""
+msgstr "Indkøbsordre oprettet"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Purchase Requisitions (exclusive)"
-msgstr ""
+msgstr "Indkøbs ordrer (exclusive)"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -510,13 +521,13 @@ msgstr "Antal"
 #. module: purchase_requisition
 #: field:purchase.order.line,quantity_bid:0
 msgid "Quantity Bid"
-msgstr ""
+msgstr "Bud mængde"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:192
 #, python-format
 msgid "RFQ created"
-msgstr ""
+msgstr "Forespørgsel oprettet"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -532,12 +543,12 @@ msgstr "Anmod om tilbud"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "Forespørgsel"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr ""
+msgstr "Forespørgsels detaljer"
 
 #. module: purchase_requisition
 #: view:purchase.order:purchase_requisition.purchase_order_search_inherit
@@ -560,32 +571,32 @@ msgstr "Ansvarlig"
 #: field:purchase.requisition.line,schedule_date:0
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Planlagt dato"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,ordering_date:0
 msgid "Scheduled Ordering Date"
-msgstr ""
+msgstr "Planlagt bestillings dato"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Scheduled Ordering Date:"
-msgstr ""
+msgstr "Planlagt bestillings dato"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Call for Bids"
-msgstr ""
+msgstr "Søg bud anmodninger"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select multiple RFQ"
-msgstr ""
+msgstr "Vælg multiple forespørgsler"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr ""
+msgstr "Vælg kun en indkøbsforespørgsel"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
@@ -599,12 +610,12 @@ msgstr ""
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Selection Type:"
-msgstr ""
+msgstr "Valg type"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "Send forespørgsel på email"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -619,7 +630,7 @@ msgstr "Kilde dokument"
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Source:"
-msgstr ""
+msgstr "Kilde:"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter

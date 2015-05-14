@@ -450,7 +450,7 @@ def content_disposition(filename):
     if browser == 'msie' and version < 9:
         return "attachment; filename=%s" % escaped
     elif browser == 'safari':
-        return "attachment; filename=%s" % filename
+        return "attachment; filename=\"%s\"" % filename
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
@@ -1424,6 +1424,9 @@ class ExportFormat(object):
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
         ids = ids or Model.search(domain, 0, False, False, context)
+
+        if not request.env[model]._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
 
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])

@@ -182,9 +182,8 @@ class mail_thread(osv.AbstractModel):
 
     def read_followers_data(self, cr, uid, follower_ids, context=None):
         result = []
-        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one', context=context)
         for follower in self.pool.get('res.partner').browse(cr, uid, follower_ids, context=context):
-            is_editable = uid in map(lambda x: x.id, technical_group.users)
+            is_editable = self.pool['res.users'].has_group(cr, uid, 'base.group_no_one')
             is_uid = uid in map(lambda x: x.id, follower.user_ids)
             data = (follower.id,
                     follower.name,
@@ -340,9 +339,7 @@ class mail_thread(osv.AbstractModel):
         options = {
             'display_log_button': False
         }
-        group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
-        is_employee = group_user_id in [group.id for group in group_ids]
+        is_employee = self.pool['res.users'].has_group(cr, uid, 'base.group_user')
         if is_employee:
             options['display_log_button'] = True
         return options
@@ -945,6 +942,16 @@ class mail_thread(osv.AbstractModel):
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
         thread_references = references or in_reply_to
+
+        # 0. First check if this is a bounce message or not.
+        #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
+        #    As all MTA does not respect this RFC (googlemail is one of them),
+        #    we also need to verify if the message come from "mailer-daemon"
+        localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
+        if message.get_content_type() == 'multipart/report' or localpart == 'mailer-daemon':
+            _logger.info("Not routing bounce email from %s to %s with Message-Id %s",
+                         email_from, email_to, message_id)
+            return []
 
         # 1. message is a reply to an existing message (exact match of message_id)
         ref_match = thread_references and tools.reference_re.search(thread_references)

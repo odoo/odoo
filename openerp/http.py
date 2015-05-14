@@ -896,7 +896,8 @@ class Model(object):
                 raise Exception("Access denied")
             mod = request.registry[self.model]
             meth = getattr(mod, method)
-            cr = request.cr
+            # make sure to instantiate an environment
+            cr = request.env.cr
             result = meth(cr, request.uid, *args, **kw)
             # reorder read
             if method == "read":
