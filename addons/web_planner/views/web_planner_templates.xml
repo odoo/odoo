@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <odoo>
     <template id="assets_backend" name="planner assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/web_planner/static/src/less/web_planner.less"/>
-            <script type="text/javascript" src="/web_planner/static/src/js/web_planner.js"></script>
+            <script type="text/javascript" src="/web_planner/static/src/js/web_planner_backend.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_common" name="planner common assets" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/web_planner/static/src/less/web_planner_common.less"/>
+            <script type="text/javascript" src="/web_planner/static/src/js/web_planner_common.js"></script>
         </xpath>
     </template>
 </odoo>

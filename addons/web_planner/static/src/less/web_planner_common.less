@@ -254,6 +254,7 @@
         .modal-body {
             overflow-x: hidden;
             max-height: inherit;
+            padding: 0;
         }
         .row.o_planner {
             padding: 0 15px;
@@ -281,6 +282,9 @@
                 padding: 1em 15px;
                 background: #f7f7f7;
                 min-height: 60px;
+            }
+            .mark_as_done span{
+                font-family: Lato,serif;
             }
             // mark/uncheck button animation
             button.fa-check-square-o {
@@ -483,6 +487,8 @@
                 textarea,input {
                     background: #fcf8e3;
                     border: none;
+                    width: 100%;
+                    max-width: 100%;
                 }
                 > li {
                     list-style: none;

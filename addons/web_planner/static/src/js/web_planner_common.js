@@ -1,91 +1,13 @@
-odoo.define('web.planner', function (require) {
+odoo.define('web.planner.common', function (require) {
 "use strict";
 
 var core = require('web.core');
 var Model = require('web.Model');
-var session = require('web.session');
-var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
-
+var utils = require('web.utils');
 
 var QWeb = core.qweb;
 var bus = core.bus;
-
-var PlannerLauncher = Widget.extend({
-    template: "PlannerLauncher",
-    events: {
-        'click .o_planner_progress': 'toggle_dialog'
-    },
-    init: function(parent) {
-        this._super(parent);
-        this.planner_by_menu = {};
-        this.webclient = parent.getParent();
-        this.need_reflow = false;
-    },
-    start: function() {
-        var self = this;
-        self._super();
-
-        self.webclient.menu.on("open_menu", self, self.on_menu_clicked);
-        self.$el.hide();  // hidden by default
-        return self.fetch_application_planner().done(function(apps) {
-            self.planner_apps = apps;
-            return apps;
-        });
-    },
-    fetch_application_planner: function() {
-        var self = this;
-        var def = $.Deferred();
-        if (!_.isEmpty(this.planner_by_menu)) {
-            def.resolve(self.planner_by_menu);
-        }else{
-            (new Model('web.planner')).query().all().then(function(res) {
-                _.each(res, function(planner){
-                    self.planner_by_menu[planner.menu_id[0]] = planner;
-                    self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(self.planner_by_menu[planner.menu_id[0]].data) || {};
-                });
-                def.resolve(self.planner_by_menu);
-            }).fail(function() {def.reject();});
-        }
-        return def;
-    },
-    on_menu_clicked: function(id, $clicked_menu) {
-        var menu_id = $clicked_menu.parents('.oe_secondary_menu').data('menu-parent') || 0; // find top menu id
-        if (_.contains(_.keys(this.planner_apps), menu_id.toString())) {
-            this.$el.show();
-            this.setup(this.planner_apps[menu_id]);
-            this.need_reflow = true;
-        } else {
-            if (this.$el.is(":visible")) {
-                this.$el.hide();
-                this.need_reflow = true;
-            }
-        }
-        if (this.need_reflow) {
-            this.webclient.menu.reflow();
-            this.need_reflow = false;
-        }
-    },
-    setup: function(planner){
-        var self = this;
-        this.planner = planner;
-        this.dialog && this.dialog.destroy();
-        this.dialog = new PlannerDialog(this, planner);
-        this.$(".o_planner_progress").tooltip({html: true, title: this.planner.tooltip_planner, placement: 'bottom', delay: {'show': 500}});
-        this.dialog.on("planner_progress_changed", this, function(percent){
-            self.update_parent_progress_bar(percent);
-        });
-        this.dialog.appendTo(document.body);
-    },
-    // event
-    update_parent_progress_bar: function(percent) {
-        this.$(".progress-bar").css('width', percent+"%");
-    },
-    toggle_dialog: function() {
-        this.dialog.$('#PlannerModal').modal('toggle');
-    }
-});
-
 
 /*
     Widget implementing the Modal of the planner (with all form, menu items, mark buttons, pages, ...). The content (the view_id) is fetched by
@@ -145,7 +67,7 @@ var PlannerDialog = Widget.extend({
             // set the default value
             self._set_values(self.planner.data);
             // show last opened page
-            var last_open_page = (session.get_cookie(self.cookie_name)) ? session.get_cookie(self.cookie_name) : self.planner.data['last_open_page'] || false;
+            var last_open_page = (utils.get_cookie(self.cookie_name)) ? utils.get_cookie(self.cookie_name) : self.planner.data['last_open_page'] || false;
             if (last_open_page) {
                 self._switch_page(last_open_page);
             }
@@ -198,7 +120,7 @@ var PlannerDialog = Widget.extend({
         this.$(".o_planner div[id="+page_id+"]").addClass('show');
         this.$(".o_planner .o_planner_pages").scrollTop("0");
         this.planner.data['last_open_page'] = page_id;
-        session.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
+        utils.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
     },
     // planner data functions
     _get_values: function(page_id){
@@ -209,24 +131,24 @@ var PlannerDialog = Widget.extend({
         // only INPUT (select, textearea, input, checkbox and radio), and BUTTON (.mark_button#) are observed
         var inputs = base_elem.find("textarea[id^='input_element'], input[id^='input_element'], select[id^='input_element'], button[id^='mark_button']");
         _.each(inputs, function(elem){
-            elem = $(elem);
-            var tid = elem.attr('id');
-            if (elem.prop("tagName") == 'BUTTON'){
-                if(elem.hasClass('fa-check-square-o')){
+            var $elem = $(elem);
+            var tid = $elem.attr('id');
+            if ($elem.prop("tagName") == 'BUTTON'){
+                if($elem.hasClass('fa-check-square-o')){
                     values[tid] = 'marked';
                 }else{
                     values[tid] = '';
                 }
             }
-            if (elem.prop("tagName") == 'INPUT' || elem.prop("tagName") == 'TEXTAREA'){
-                var ttype = elem.attr('type');
+            if ($elem.prop("tagName") == 'INPUT' || $elem.prop("tagName") == 'TEXTAREA'){
+                var ttype = $elem.attr('type');
                 if (ttype == 'checkbox' || ttype == 'radio'){
                     values[tid] = '';
-                    if (elem.is(':checked')){
+                    if ($elem.is(':checked')){
                         values[tid] = 'checked';
                     }
                 }else{
-                    values[tid] = elem.val();
+                    values[tid] = $elem.val();
                 }
             }
         });
@@ -235,21 +157,21 @@ var PlannerDialog = Widget.extend({
     _set_values: function(values){
         var self = this;
         _.each(values, function(val, id){
-            var elem = self.$('#'+id);
-            if (elem.prop("tagName") == 'BUTTON'){
+            var $elem = self.$('#'+id);
+            if ($elem.prop("tagName") == 'BUTTON'){
                 if(val == 'marked'){
-                    elem.addClass('fa-check-square-o btn-default').removeClass('fa-square-o btn-primary');
-                    self.$(".o_planner li a[href=#"+elem.data('pageid')+"] span").addClass('fa-check');
+                    $elem.addClass('fa-check-square-o btn-default').removeClass('fa-square-o btn-primary');
+                    self.$(".o_planner li a[href=#"+$elem.data('pageid')+"] span").addClass('fa-check');
                 }
             }
-            if (elem.prop("tagName") == 'INPUT' || elem.prop("tagName") == 'TEXTAREA'){
-                var ttype = elem.attr("type");
+            if ($elem.prop("tagName") == 'INPUT' || $elem.prop("tagName") == 'TEXTAREA'){
+                var ttype = $elem.attr("type");
                 if (ttype  == 'checkbox' || ttype == 'radio'){
                     if (val == 'checked') {
-                       elem.attr('checked', 'checked');
+                       $elem.attr('checked', 'checked');
                     }
                 }else{
-                    elem.val(val);
+                    $elem.val(val);
                 }
             }
         });
@@ -306,15 +228,7 @@ var PlannerDialog = Widget.extend({
         this.$('#PlannerModal').modal('hide');
     },
 });
-
-// add planner launcher to the systray
-// if it is empty, it won't be display. Then, each time a top menu is clicked
-// a planner will be given to the launcher. The launcher will appears if the
-// given planner is not null.
-SystrayMenu.Items.push(PlannerLauncher);
-
 return {
-    PlannerLauncher: PlannerLauncher,
     PlannerDialog: PlannerDialog,
 };
 
