@@ -66,21 +66,13 @@ class ReportL10nBePartnerVatListing(models.AbstractModel):
                 'id': record['partner_id'],
                 'type': 'partner_id',
                 'name': record['name'],
-                'footnotes': self._get_footnotes('partner_id', record['partner_id'], context_id),
+                'footnotes': self.context_id._get_footnotes('partner_id', record['partner_id'], context_id),
                 'columns': columns,
                 'level': 2,
                 'unfoldable': False,
                 'unfolded': False,
             })
         return lines
-
-    @api.model
-    def _get_footnotes(self, type, target_id, context_id):
-        footnotes = context_id.footnotes.filtered(lambda s: s.type == type and s.target_id == target_id)
-        result = {}
-        for footnote in footnotes:
-            result.update({footnote.column: footnote.number})
-        return result
 
     @api.model
     def get_title(self):
