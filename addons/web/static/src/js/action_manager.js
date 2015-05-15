@@ -276,6 +276,11 @@ var ActionManager = Widget.extend({
         var action_index = this.action_stack.indexOf(action);
         this.clear_action_stack(this.action_stack.splice(action_index + 1));
 
+        // Hide the ControlPanel if the widget doesn't use it
+        if (!this.inner_widget.need_control_panel) {
+            this.main_control_panel.do_hide();
+        }
+
         return action.restore(index);
     },
     clear_action_stack: function(action_stack) {
