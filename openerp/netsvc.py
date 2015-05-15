@@ -78,10 +78,11 @@ class PostgreSQLHandler(logging.Handler):
     def emit(self, record):
         ct = threading.current_thread()
         ct_db = getattr(ct, 'dbname', None)
-        dbname = tools.config['log_db'] or ct_db
+        dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
         if not dbname:
             return
         with tools.ignore(Exception), tools.mute_logger('openerp.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
+            cr.autocommit(True)
             msg = tools.ustr(record.msg)
             if record.args:
                 msg = msg % record.args
@@ -187,8 +188,15 @@ def init_logger():
     logging.getLogger().addHandler(handler)
 
     if tools.config['log_db']:
+        db_levels = {
+            'debug': logging.DEBUG,
+            'info': logging.INFO,
+            'warning': logging.WARNING,
+            'error': logging.ERROR,
+            'critical': logging.CRITICAL,
+        }
         postgresqlHandler = PostgreSQLHandler()
-        postgresqlHandler.setLevel(25)
+        postgresqlHandler.setLevel(int(db_levels.get(tools.config['log_db_level'], tools.config['log_db_level'])))
         logging.getLogger().addHandler(postgresqlHandler)
 
     # Configure loggers levels
