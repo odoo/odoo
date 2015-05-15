@@ -66,8 +66,8 @@ class website_sale_options(website_sale):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
         product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
+        context = dict(context, inherit_branding=True)
         request.website = request.website.with_context(context)
-
         return request.website._render("website_sale_options.modal", {
                 'product': product,
                 'compute_currency': compute_currency,

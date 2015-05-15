@@ -318,7 +318,7 @@ class website_sale(http.Controller):
             if not context.get('pricelist'):
                 _order = order.with_context(pricelist=order.pricelist_id.id)
             values['suggested_products'] = _order._cart_accessories()
-
+        request.context = dict(request.context, inherit_branding=True)
         return request.website.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
