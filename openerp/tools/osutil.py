@@ -95,6 +95,59 @@ def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ign
                     if os.path.isfile(path):
                         zipf.write(path, path[len_prefix:])
 
+def _get_copy_function(src, dst):
+    # try hardlinking file, to see if filesystem supports it
+    with tempfile.NamedTemporaryFile(dir=src) as src_file:
+        try:
+            os.link(src_file.name, os.path.join(dst, '__test_link__'))
+            os.unlink(os.path.join(dst, '__test_link__'))
+            copy_function = os.link
+        except OSError as e:
+            copy_function = shutil.copy2
+    return copy_function
+
+def clonetree(src, dst, ignore=None):
+    """Same as shutil.copytree(), except it hardlinks the files instead of
+    copying them if the two paths belong to the same filesystem.
+
+    WARNING: Hardlinks are not copies, if the new files are modified, so are
+    the old ones. Don't use this if you need independent copies that can be
+    modified independently!"""
+    names = os.listdir(src)
+    if ignore is not None:
+        ignored_names = ignore(src, names)
+    else:
+        ignored_names = set()
+
+    os.makedirs(dst)
+    copy_function = _get_copy_function(src, dst)
+    errors = []
+    for name in names:
+        if name in ignored_names:
+            continue
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        try:
+            if os.path.isdir(srcname):
+                clonetree(srcname, dstname, ignore)
+            else:
+                copy_function(srcname, dstname)
+            # XXX What about devices, sockets etc.?
+        except (IOError, os.error) as why:
+            errors.append((srcname, dstname, str(why)))
+        # catch the Error from the recursive clonetree so that we can
+        # continue with other files
+        except Error as err:
+            errors.extend(err.args[0])
+    try:
+        shutil.copystat(src, dst)
+    except shutil.WindowsError:
+        # can't copy file access times on Windows
+        pass
+    except OSError as why:
+        errors.extend((src, dst, str(why)))
+    if errors:
+        raise Error(errors)
 
 if os.name != 'nt':
     getppid = os.getppid

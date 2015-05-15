@@ -103,7 +103,7 @@ def exp_duplicate_database(db_original_name, db_name):
     from_fs = openerp.tools.config.filestore(db_original_name)
     to_fs = openerp.tools.config.filestore(db_name)
     if os.path.exists(from_fs) and not os.path.exists(to_fs):
-        shutil.copytree(from_fs, to_fs)
+        openerp.tools.osutil.clonetree(from_fs, to_fs)
     return True
 
 def _drop_conn(cr, db_name):
@@ -187,7 +187,7 @@ def dump_db(db_name, stream, backup_format='zip'):
         with openerp.tools.osutil.tempdir() as dump_dir:
             filestore = openerp.tools.config.filestore(db_name)
             if os.path.exists(filestore):
-                shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
+                openerp.tools.osutil.clonetree(filestore, os.path.join(dump_dir, 'filestore'))
             with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
                 db = openerp.sql_db.db_connect(db_name)
                 with db.cursor() as cr:
