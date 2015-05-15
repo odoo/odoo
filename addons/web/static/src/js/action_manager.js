@@ -27,8 +27,8 @@ var Action = core.Class.extend({
      * @return {Deferred} resolved when widget is enabled
      */
     restore: function() {
-        if (this.__on_reverse_breadcrumb) {
-            return this.__on_reverse_breadcrumb();
+        if (this.on_reverse_breadcrumb) {
+            return this.on_reverse_breadcrumb();
         }
     },
     /**
