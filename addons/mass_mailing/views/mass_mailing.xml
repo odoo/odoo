@@ -499,7 +499,7 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                        <t t-if="widget.deletable">
                                             <li><a type="delete">Delete</a></li>
                                         </t>
                                     </ul>
@@ -787,10 +787,10 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                        <t t-if="widget.editable">
                                             <li><a type="edit">Settings</a></li>
                                         </t>
-                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                        <t t-if="widget.deletable">
                                             <li><a type="delete">Delete</a></li>
                                         </t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>

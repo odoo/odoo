@@ -168,8 +168,8 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Issue</a></li></t>
-                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                        <t t-if="widget.editable"><li><a type="edit">Edit Issue</a></li></t>
+                                        <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>

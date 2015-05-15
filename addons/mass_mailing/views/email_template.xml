@@ -50,11 +50,11 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_email_template">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <i class="fa fa-bars fa-lg"/>
-                                    <ul class="oe_dropdown_menu" t-if="widget.view.is_action_enabled('edit') or widget.view.is_action_enabled('delete')">
-                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                    <ul class="oe_dropdown_menu" t-if="widget.editable or widget.deletable">
+                                        <t t-if="widget.editable">
                                             <li><a type="edit">Edit</a></li>
                                         </t>
-                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                        <t t-if="widget.deletable">
                                             <li><a type="delete">Delete</a></li>
                                         </t>
                                     </ul>
