@@ -28,7 +28,7 @@
       </TStream>
     </template>
 
-    <template id='mercury_voidsale' name='Mercury VoidSale'>
+    <template id='mercury_voidsale'>
       <TStream>
         <Transaction>
           <MerchantID><t t-esc='merchant_id'/></MerchantID>
@@ -45,16 +45,13 @@
           </Amount>
           <TranInfo>
             <AuthCode><t t-esc='auth_code'/></AuthCode>
+            <t t-if='not is_voidsale'>
+              <AcqRefData><t t-esc='acq_ref_data'/></AcqRefData>
+              <ProcessData><t t-esc='process_data'/></ProcessData>
+            </t>
           </TranInfo>
         </Transaction>
       </TStream>
-    </template>
-
-    <template id='mercury_reversal' name='Mercury Reversal' inherit_id='card_reader.mercury_voidsale'>
-      <TranInfo>
-        <AcqRefData><t t-esc='acq_ref_data'/></AcqRefData>
-        <ProcessData><t t-esc='process_data'/></ProcessData>
-      </TranInfo>
     </template>
   </data>
 </openerp>

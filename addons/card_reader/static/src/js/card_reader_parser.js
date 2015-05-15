@@ -391,7 +391,7 @@ PaymentScreenWidget.include({
         }
     },
 
-    do_reversal: function (mercury_data) {
+    do_reversal: function (mercury_data, is_voidsale) {
         var def = new $.Deferred();
         var self = this;
 
@@ -406,31 +406,51 @@ PaymentScreenWidget.include({
             'transaction_code'  : 'VoidSaleByRecordNo',
         }, mercury_data);
 
+        var message = "";
+
+        if (is_voidsale) {
+            message = "Reversal failed, sending VoidSale...";
+        } else {
+            message = "Sending reversal...";
+        }
+
         def.notify({
             error: 0,
             status: 'Waiting',
-            message: 'Sending reversal...',
+            message: message,
         });
 
-        session.rpc("/pos/send_reversal", request_data)
+        var rpc_url = "/pos/";
+        if (is_voidsale)
+            rpc_url += "send_voidsale";
+        else
+            rpc_url += "send_reversal";
+
+        session.rpc(rpc_url, request_data)
             .done(function (data) {
                 console.log(data); // todo
                 var response = decodeMercuryResponse(data);
 
-                if (response.status === 'Approved') {
-                    // VoidSale was successful
-
-                    // todo: these need to become reversals. So this
-                    // should probably become != Approved to see if we
-                    // need to send voidsale
+                if (! is_voidsale) {
+                    if (response.status != 'Approved' || response.message != 'REVERSED') {
+                        // reversal was not successful, send voidsale
+                        self.do_reversal(mercury_data, true);
+                    } else {
+                        // reversal was successful
+                        def.resolve({
+                            status: response.status,
+                            error: response.error,
+                            message: response.message,
+                        });
+                    }
+                } else {
+                    // voidsale failed, nothing more we can do
+                    def.resolve({
+                        status: response.status,
+                        error: response.error,
+                        message: response.message,
+                    });
                 }
-
-                def.resolve({
-                    status: response.status,
-                    error: response.error,
-                    message: response.message,
-                });
-
 
             })  .fail(function (data) {
                 def.reject({
@@ -446,7 +466,7 @@ PaymentScreenWidget.include({
 
         for ( var i = 0; i < lines.length; i++ ) {
             if (lines[i].cid === cid && lines[i].mercury_data) {
-                this.do_reversal(lines[i].mercury_data);
+                this.do_reversal(lines[i].mercury_data, false);
             }
         }
 

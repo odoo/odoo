@@ -69,6 +69,30 @@ class CardReader(http.Controller):
         print '--------------------------------'
         return response
 
+    def _do_reversal(self, is_voidsale, data):
+        pos_session = self._get_pos_session()
+
+        if not pos_session:
+            return 0
+
+        config = pos_session.config_id
+        card_reader_config = self._get_card_reader_config_id(config, data['journal_id'])
+
+        if not card_reader_config:
+            return 0
+
+        data['url_base_action'] = card_reader_config.url_base_action
+        data['payment_server'] = card_reader_config.payment_server
+        data['merchant_pwd'] = card_reader_config.merchant_pwd
+        data['operator_id'] = pos_session.user_id.login
+        data['merchant_id'] = card_reader_config.merchant_id
+        data['config_id'] = config.id
+        data['memo'] = card_reader_config.memo
+        data['is_voidsale'] = is_voidsale
+
+        response = self._do_request('card_reader.mercury_voidsale', data)
+        return response
+
     @http.route('/pos/send_payment_transaction', type='json', auth='user')
     def payment_handler(self, **k):
         pos_session = self._get_pos_session()
@@ -95,24 +119,8 @@ class CardReader(http.Controller):
 
     @http.route('/pos/send_reversal', type='json', auth='user')
     def reversal_handler(self, **k):
-        pos_session = self._get_pos_session()
+        return self._do_reversal(False, k)
 
-        if not pos_session:
-            return 0
-
-        config = pos_session.config_id
-        card_reader_config = self._get_card_reader_config_id(config, k['journal_id'])
-
-        if not card_reader_config:
-            return 0
-
-        k['url_base_action'] = card_reader_config.url_base_action
-        k['payment_server'] = card_reader_config.payment_server
-        k['merchant_pwd'] = card_reader_config.merchant_pwd
-        k['operator_id'] = pos_session.user_id.login
-        k['merchant_id'] = card_reader_config.merchant_id
-        k['config_id'] = config.id
-        k['memo'] = card_reader_config.memo
-
-        response = self._do_request('card_reader.mercury_reversal', k)
-        return response
+    @http.route('/pos/send_voidsale', type='json', auth='user')
+    def voidsale_handler(self, **k):
+        return self._do_reversal(True, k)
