@@ -452,7 +452,7 @@ class mail_message(osv.Model):
             exp_domain = domain + [('id', '<', min(message_unload_ids + message_ids))]
         else:
             exp_domain = domain + ['!', ('id', 'child_of', message_unload_ids + parent_tree.keys())]
-        more_count = self.search_count(cr, uid, exp_domain, context=context)
+        more_count = self.search(cr, uid, exp_domain, context=context, limit=1)
         if more_count:
             # inside a thread: prepend
             if parent_id:
