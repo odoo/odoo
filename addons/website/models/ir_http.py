@@ -26,7 +26,7 @@ class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
-    geo_ip_resolver = None
+    _geoip_resolver = None
 
     def _get_converters(self):
         return dict(
@@ -66,6 +66,28 @@ class ir_http(orm.AbstractModel):
                 return code
         return False
 
+    def _geoip_setup_resolver(self):
+        if self._geoip_resolver is None:
+            try:
+                import GeoIP
+                # updated database can be downloaded on MaxMind website
+                # http://dev.maxmind.com/geoip/legacy/install/city/
+                geofile = config.get('geoip_database')
+                if os.path.exists(geofile):
+                    self._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
+                else:
+                    self._geoip_resolver = False
+                    logger.warning('GeoIP database file %r does not exists', geofile)
+            except ImportError:
+                self._geoip_resolver = False
+
+    def _geoip_resolve(self):
+        if 'geoip' not in request.session:
+            record = {}
+            if self._geoip_resolver and request.httprequest.remote_addr:
+                record = self._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+            request.session['geoip'] = record
+
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
@@ -86,24 +108,8 @@ class ir_http(orm.AbstractModel):
             func and func.routing.get('multilang', func.routing['type'] == 'http')
         )
 
-        if 'geoip' not in request.session:
-            record = {}
-            if self.geo_ip_resolver is None:
-                try:
-                    import GeoIP
-                    # updated database can be downloaded on MaxMind website
-                    # http://dev.maxmind.com/geoip/legacy/install/city/
-                    geofile = config.get('geoip_database')
-                    if os.path.exists(geofile):
-                        self.geo_ip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
-                    else:
-                        self.geo_ip_resolver = False
-                        logger.warning('GeoIP database file %r does not exists', geofile)
-                except ImportError:
-                    self.geo_ip_resolver = False
-            if self.geo_ip_resolver and request.httprequest.remote_addr:
-                record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
-            request.session['geoip'] = record
+        self._geoip_setup_resolver()
+        self._geoip_resolve()
 
         cook_lang = request.httprequest.cookies.get('website_lang')
         if request.website_enabled:
