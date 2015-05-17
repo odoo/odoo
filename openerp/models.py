@@ -1811,7 +1811,7 @@ class BaseModel(object):
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         try:
-            self.pool.cache.clear_prefix((self._name,))
+            self.pool.cache.clear()
             self.pool._any_cache_cleared = True
         except AttributeError:
             pass

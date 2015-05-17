@@ -78,13 +78,9 @@ class ormcache(object):
             return self.method(*args, **kwargs)
 
     def clear(self, model, *args):
-        """ Remove *args entry from the cache or all keys if *args is undefined """
+        """ Clear the registry cache """
         d, key0, _ = self.lru(model)
-        if args:
-            _logger.warn("ormcache.clear arguments are deprecated and ignored "
-                         "(while clearing caches on (%s).%s)",
-                         model._name, self.method.__name__)
-        d.clear_prefix(key0)
+        d.clear()
         model.pool._any_cache_cleared = True
 
 
