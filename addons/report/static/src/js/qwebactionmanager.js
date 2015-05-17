@@ -87,8 +87,8 @@ workers to print a pdf version of the reports.'), true);
                         framework.unblockUI();
                         return;
                     } else if (presence === 'upgrade') {
-                        self.do_notify(_t('Report'), _t('You should upgrade your version of\
-Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\
+                        self.do_notify(_t('Report'), _t('You should upgrade your version of \
+Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as \
 support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
 target="_blank">wkhtmltopdf.org</a>'), true);
                     }
