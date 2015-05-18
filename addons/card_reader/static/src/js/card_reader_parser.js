@@ -80,23 +80,21 @@ function decodeMercuryResponse (data) {
     };
 }
 
-// Extends the payment line object with the "paid" property used to
-// know if the payment line is already paid
-
-// the paid parameter is not saved with export as JSON
 var _paylineproto = pos_model.Paymentline.prototype;
 
 pos_model.Paymentline = pos_model.Paymentline.extend({
     initialize: function () {
         _paylineproto.initialize.apply(this, arguments);
         this.paid = false;
+        this.mercury_data = false;
     },
     init_from_JSON: function (json) {
         this.paid = json.paid;
+        this.mercury_data = json.mercury_data;
         _paylineproto.init_from_JSON.apply(this, arguments);
     },
     export_as_JSON: function () {
-        return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid});
+        return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid, mercury_data: this.mercury_data});
     }
 });
 
