@@ -39,9 +39,23 @@ class procurement_order(osv.osv):
         '''
         if use_new_cursor:
             use_new_cursor = cr.dbname
-        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
-        self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
-                use_new_cursor=use_new_cursor, context=context)
+        # Mail group to log execution
+        data_obj = self.pool['ir.model.data']
+        mail_group_obj = self.pool['mail.group']
+        __, mail_group_id = data_obj.get_object_reference(
+            cr, uid, 'procurement', 'group_mrp_scheduler_status')
+        warnings = "<div>MRP Scheduler finished.<br/>Warnings:<br/>"
+        warnings += self._procure_confirm(cr, uid,
+            use_new_cursor=use_new_cursor, context=context)
+        warnings += self._procure_orderpoint_confirm(cr, uid,
+            automatic=automatic, use_new_cursor=use_new_cursor,
+            context=context)
+        warnings += "</div>"
+        # Post summary message
+        mail_group_obj.message_post(cr, uid, [mail_group_id], body=warnings,
+                                    subtype='mail.mt_comment',
+                                    context=context)
+        cr.commit()
 
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
@@ -57,18 +71,32 @@ class procurement_order(osv.osv):
         '''
         if context is None:
             context = {}
+        warnings = ""
         try:
             if use_new_cursor:
                 cr = pooler.get_db(use_new_cursor).cursor()
             wf_service = netsvc.LocalService("workflow")
 
             procurement_obj = self.pool.get('procurement.order')
+
             if not ids:
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
             for id in ids:
-                wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
-            if use_new_cursor:
-                cr.commit()
+                try:
+                    wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
+                    if use_new_cursor:
+                        cr.commit()
+                except Exception as e:
+                    if not isinstance(e, OperationalError):
+                        warning = ("Exception in _procure_confirm on "
+                                   "procurement with ID %s: %s<br/>" % (id, e))
+                        logger.warn(warning)
+                        warnings += warning
+                    if use_new_cursor:
+                        cr.rollback()
+                        continue
+                    else:
+                        raise
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             prev_ids = []
@@ -77,10 +105,14 @@ class procurement_order(osv.osv):
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     try:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
-
                         if use_new_cursor:
                             cr.commit()
-                    except OperationalError:
+                    except Exception as e:
+                        if not isinstance(e, OperationalError):
+                            warning = ("Exception in _procure_confirm on "
+                                       "procurement %s: %s<br/>" % (proc.name, e))
+                            logger.warn(warning)
+                            warnings += warning
                         if use_new_cursor:
                             cr.rollback()
                             continue
@@ -97,10 +129,14 @@ class procurement_order(osv.osv):
                 for proc in procurement_obj.browse(cr, uid, ids):
                     try:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
-
                         if use_new_cursor:
                             cr.commit()
-                    except OperationalError:
+                    except Exception as e:
+                        if not isinstance(e, OperationalError):
+                            warning = ("Exception in _procure_confirm on "
+                                       "procurement %s: %s<br/>" % (proc.name, e))
+                            logger.warn(warning)
+                            warnings += warning
                         if use_new_cursor:
                             cr.rollback()
                             continue
@@ -119,7 +155,7 @@ class procurement_order(osv.osv):
                     cr.close()
                 except Exception:
                     pass
-        return {}
+        return warnings
 
     def _prepare_automatic_op_procurement(self, cr, uid, product, warehouse, location_id, context=None):
         return {'name': _('Automatic OP: %s') % (product.name,),
@@ -132,47 +168,74 @@ class procurement_order(osv.osv):
                 'company_id': warehouse.company_id.id,
                 'procure_method': 'make_to_order',}
 
-    def create_automatic_op(self, cr, uid, context=None):
+    def create_automatic_op(self, cr, uid, use_new_cursor=False, context=None):
         """
         Create procurement of  virtual stock < 0
 
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
+        @param use_new_cursor: False or the dbname
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         """
         if context is None:
             context = {}
+        warnings = ""
         product_obj = self.pool.get('product.product')
         proc_obj = self.pool.get('procurement.order')
         warehouse_obj = self.pool.get('stock.warehouse')
         wf_service = netsvc.LocalService("workflow")
+        try:
+            if use_new_cursor:
+                cr = pooler.get_db(use_new_cursor).cursor()
 
-        warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
-        products_ids = product_obj.search(cr, uid, [], order='id', context=context)
+            warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
+            products_ids = product_obj.search(cr, uid, [], order='id', context=context)
 
-        for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
-            context['warehouse'] = warehouse
-            # Here we check products availability.
-            # We use the method 'read' for performance reasons, because using the method 'browse' may crash the server.
-            for product_read in product_obj.read(cr, uid, products_ids, ['virtual_available'], context=context):
-                if product_read['virtual_available'] >= 0.0:
-                    continue
+            for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
+                context['warehouse'] = warehouse
+                # Here we check products availability.
+                # We use the method 'read' for performance reasons,
+                # because using the method 'browse' may crash the server.
+                for product_read in product_obj.read(cr, uid, products_ids, ['virtual_available'], context=context):
+                    if product_read['virtual_available'] >= 0.0:
+                        continue
 
-                product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
-                if product.supply_method == 'buy':
-                    location_id = warehouse.lot_input_id.id
-                elif product.supply_method == 'produce':
-                    location_id = warehouse.lot_stock_id.id
-                else:
-                    continue
-                proc_id = proc_obj.create(cr, uid,
-                            self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
-                            context=context)
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
-        return True
+                    product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
+                    if product.supply_method == 'buy':
+                        location_id = warehouse.lot_input_id.id
+                    elif product.supply_method == 'produce':
+                        location_id = warehouse.lot_stock_id.id
+                    else:
+                        continue
+                    try:
+                        proc_id = proc_obj.create(cr, uid,
+                                    self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
+                                    context=context)
+                        wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                        wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
+                        if use_new_cursor:
+                            cr.commit()
+                    except Exception as e:
+                        if not isinstance(e, OperationalError):
+                            warning = ("Exception in create_automatic_op on "
+                                       "new procurement for product %s: %s<br/>"
+                                       % (product.name, e))
+                            logger.warn(warning)
+                            warnings += warning
+                        if use_new_cursor:
+                            cr.rollback()
+                            continue
+                        else:
+                            raise
+        finally:
+            if use_new_cursor:
+                try:
+                    cr.close()
+                except Exception:
+                    pass
+        return warnings
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
         date_planned = start_date + \
@@ -189,7 +252,7 @@ class procurement_order(osv.osv):
                 'location_id': orderpoint.location_id.id,
                 'procure_method': 'make_to_order',
                 'origin': orderpoint.name}
-        
+
     def _product_virtual_get(self, cr, uid, order_point):
         location_obj = self.pool.get('stock.location')
         return location_obj._product_virtual_get(cr, uid,
@@ -212,16 +275,18 @@ class procurement_order(osv.osv):
         '''
         if context is None:
             context = {}
-        if use_new_cursor:
-            cr = pooler.get_db(use_new_cursor).cursor()
+        warnings = ""
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
-        
+
         procurement_obj = self.pool.get('procurement.order')
         wf_service = netsvc.LocalService("workflow")
         ids = [1]
         prev_ids = []
+
         if automatic:
-            self.create_automatic_op(cr, uid, context=context)
+            warnings = self.create_automatic_op(cr, uid, use_new_cursor, context=context)
+        if use_new_cursor:
+            cr = pooler.get_db(use_new_cursor).cursor()
         orderpoint_ids = orderpoint_obj.search(cr, uid, [])
         while orderpoint_ids:
             ids = orderpoint_ids[:100]
@@ -268,7 +333,12 @@ class procurement_order(osv.osv):
                                     {'procurement_id': proc_id}, context=context)
                     if use_new_cursor:
                         cr.commit()
-                except OperationalError:
+                except Exception as e:
+                    if not isinstance(e, OperationalError):
+                        warning = ("Exception in _procure_orderpoint_confirm "
+                                   "on orderpoint %s: %s<br/>" % (op.name, e))
+                        logger.warn(warning)
+                        warnings += warning
                     if use_new_cursor:
                         orderpoint_ids.append(op.id)
                         cr.rollback()
@@ -283,7 +353,7 @@ class procurement_order(osv.osv):
         if use_new_cursor:
             cr.commit()
             cr.close()
-        return {}
+        return warnings
 
 procurement_order()
 
