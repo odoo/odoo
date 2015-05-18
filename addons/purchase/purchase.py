@@ -941,7 +941,7 @@ class purchase_order_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         procurement_ids_to_cancel = []
         for line in self.browse(cr, uid, ids, context=context):
-            if line.state not in ['draft', 'cancel']:
+            if line.order_id.state in ['approved', 'done'] and line.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
             if line.move_dest_id:
                 procurement_ids_to_cancel.extend(procurement.id for procurement in line.move_dest_id.procurements)

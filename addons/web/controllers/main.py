@@ -31,6 +31,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
+from openerp.tools import ustr
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception, LazyResponse
@@ -567,14 +568,14 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     return res
 
 def content_disposition(filename):
-    filename = filename.encode('utf8')
-    escaped = urllib2.quote(filename)
+    filename = ustr(filename)
+    escaped = urllib2.quote(filename.encode('utf8'))
     browser = request.httprequest.user_agent.browser
     version = int((request.httprequest.user_agent.version or '0').split('.')[0])
     if browser == 'msie' and version < 9:
         return "attachment; filename=%s" % escaped
     elif browser == 'safari':
-        return "attachment; filename=\"%s\"" % filename
+        return u"attachment; filename=%s" % filename
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
