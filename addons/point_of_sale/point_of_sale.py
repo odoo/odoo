@@ -514,7 +514,7 @@ class pos_session(osv.osv):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise UserError(_("The type of the journal for your payment method should be bank or cash "))
-                getattr(st, 'button_confirm_%s' % st.journal_id.type)
+                st.button_confirm_bank()
         self._confirm_orders(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
 

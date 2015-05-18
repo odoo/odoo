@@ -1262,52 +1262,64 @@ exports.Orderline = Backbone.Model.extend({
         }
         return taxes;
     },
-    compute_all: function(taxes, price_unit) {
+    _compute_all: function(tax, base_amount, quantity) {
+        if (tax.amount_type === 'fixed') {
+            var ret = tax.amount * quantity;
+            return base_amount >= 0 ? ret : ret * -1;
+        }
+        if ((tax.amount_type === 'percent' && !tax.price_include) || (tax.amount_type === 'division' && tax.price_include)){
+            return base_amount * tax.amount / 100;
+        }
+        if (tax.amount_type === 'percent' && tax.price_include){
+            return base_amount - (base_amount / (1 + tax.amount / 100));
+        }
+        if (tax.amount_type === 'division' && !tax.price_include) {
+            return base_amount / (1 - tax.amount / 100) - base_amount;
+        }
+        return false;
+    },
+    compute_all: function(taxes, price_unit, quantity, currency_rounding) {
         var self = this;
-        var res = [];
-        var currency_rounding = this.pos.currency.rounding;
-        var base = price_unit;
+        var total_excluded = round_pr(price_unit * quantity, currency_rounding);
+        var total_included = total_excluded;
+        var base = total_excluded;
+        var list_taxes = [];
         _(taxes).each(function(tax) {
-            if (tax.price_include) {
-                if (tax.amount_type === "percent") {
-                    tmp =  base - round_pr(base / (1 + tax.amount/100),currency_rounding); 
-                } else if (tax.amount_type === "fixed") {
-                    tmp = round_pr(tax.amount * self.get_quantity(),currency_rounding);
-                    data = {amount:tmp, price_include:true, id: tax.id};
-                    res.push(data);
-                } else {
-                    throw "This type of tax is not supported by the point of sale: " + tax.amount_type;
-                }
-            } else {
-                if (tax.amount_type === "percent") {
-                    tmp = tax.amount/100 * base;
-                } else if (tax.amount_type === "fixed") {
-                    tmp = tax.amount * self.get_quantity();
-                } else {
-                    throw "This type of tax is not supported by the point of sale: " + tax.amount_type;
-                }
+            if (tax.amount_type === 'group'){
+                var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
+                total_excluded = ret.total_excluded;
+                base = ret.total_excluded;
+                total_included = ret.total_included;
+                list_taxes.concat(ret.taxes)
+            }
+            else {
+                var tax_amount = self._compute_all(tax, price_unit, quantity);
+                tax_amount = round_pr(tax_amount, currency_rounding);
 
-                var base_amount = data.amount;
-                var child_amount = 0.0;
-                if (tax.child_depend) {
-                    res.pop(); // do not use parent tax
-                    child_tax = self.compute_all(tax.child_taxes, base_amount);
-                    res.push(child_tax);
-                    _(child_tax).each(function(child) {
-                        child_amount += child.amount;
-                    });
-                }
-                if (tax.include_base_amount) {
-                    base += base_amount + child_amount;
+                if (tax_amount){
+                    if (tax.price_include) {
+                        total_excluded -= tax_amount;
+                        base -= tax_amount;
+                    }
+                    else {
+                        total_included += tax_amount;
+                    }
+                    if (tax.include_base_amount) {
+                        base += tax_amount;
+                    }
+                    var data = {
+                        id: tax.id,
+                        amount: tax_amount,
+                        name: tax.name,
+                    }
+                    list_taxes.push(data)
                 }
             }
         });
-        return res;
+        return {taxes: list_taxes, total_excluded: total_excluded, total_included: total_included};
     },
     get_all_prices: function(){
-        var base = round_pr(this.get_quantity() * this.get_unit_price() * (1.0 - (this.get_discount() / 100.0)), this.pos.currency.rounding);
-        var totalTax = base;
-        var totalNoTax = base;
+        var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
         var taxtotal = 0;
 
         var product =  this.get_product();
@@ -1322,21 +1334,15 @@ exports.Orderline = Backbone.Model.extend({
             }));
         });
 
-        var all_taxes = _(this.compute_all(product_taxes, base)).flatten();
-
-        _(all_taxes).each(function(tax) {
-            if (tax.price_include) {
-                totalNoTax -= tax.amount;
-            } else {
-                totalTax += tax.amount;
-            }
+        var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
+        _(all_taxes.taxes).each(function(tax) {
             taxtotal += tax.amount;
             taxdetail[tax.id] = tax.amount;
         });
 
         return {
-            "priceWithTax": totalTax,
-            "priceWithoutTax": totalNoTax,
+            "priceWithTax": all_taxes.total_included,
+            "priceWithoutTax": all_taxes.total_excluded,
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };
