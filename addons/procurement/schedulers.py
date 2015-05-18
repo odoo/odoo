@@ -29,6 +29,10 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp import tools
 from psycopg2 import OperationalError
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
