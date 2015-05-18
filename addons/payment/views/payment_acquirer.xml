@@ -58,6 +58,7 @@
                                     </ul>
                                 </div>
                             </div>
+                            <field name="registration_view_template_id"/>
                         </group>
                     </sheet>
                 </form>
@@ -188,6 +189,34 @@
             id='payment_transaction_menu'
             parent='root_payment_menu'
             sequence='20' />
+
+        <!-- Payment Methods -->
+        <record model='ir.ui.view' id='payment_method_tree_view'>
+            <field name='name'>payment.method.tree</field>
+            <field name='model'>payment.method</field>
+            <field name='arch' type='xml'>
+                <tree string='Payment Methods' create='false' editable='bottom'>
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name='partner_id' />
+                    <field name='acquirer_id' readonly='1'/>
+                    <field name='acquirer_ref' readonly='1'/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model='ir.actions.act_window' id='payment_method_act'>
+            <field name='name'>Saved Payment Data</field>
+            <field name='res_model'>payment.method</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+        </record>
+
+        <menuitem
+            action='payment_method_act'
+            id='payment_method_menu'
+            parent='root_payment_menu' />
 
     </data>
 </openerp>
