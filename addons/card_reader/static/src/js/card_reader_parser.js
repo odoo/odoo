@@ -105,11 +105,27 @@ var lookUpCodeTransaction = {
     'Approved': {
         '000000': _t('Transaction approved'),
     },
-    'Declined': {
-        '000000': _t('Transaction declined, insufficient balance on your card'),
+    'TimeoutError': {
+        '001006': _t('Global API Not Initialized'),
+        '001007': _t('Timeout on Response'),
+        '003003': _t('Socket Error sending request'),
+        '003004': _t('Socket already open or in use'),
+        '003005': _t('Socket Creation Failed'),
+        '003006': _t('Socket Connection Failed'),
+        '003007': _t('Connection Lost'),
+        '003008': _t('TCP/IP Failed to Initialize'),
+        '003010': _t('Time Out waiting for server response'),
+        '003011': _t('Connect Cancelled'),
+        '003053': _t('Initialize Failed'),
+        '009999': _t('Unknown Error'),
     },
-    'Error': {
-        '-1':     _t('Impossible to contact the proxy'),
+    'FatalError': {
+        '-1':     _t('Timeout error'),
+        '000000': _t('Insufficient balance on your card'),
+        '001001': _t('General Failure'),
+        '001003': _t('Invalid Command Format'),
+        '001004': _t('Insufficient Fields'),
+        '001011': _t('Empty Command String'),
         '002000': _t('Password Verified'),
         '002001': _t('Queue Full'),
         '002002': _t('Password Failed – Disconnecting'),
@@ -120,69 +136,53 @@ var lookUpCodeTransaction = {
         '002009': _t('Password Failed (Client / Server)'),
         '002010': _t('Password failed (Challenge / Response)'),
         '002011': _t('Internal Server Error – Call Provider'),
-        '001001': _t('General Failure '),
-        '004019': _t('TStream Type Missing'),
-        '001003': _t('Invalid Command Format '),
-        '004020': _t('Could Not Encrypt Response- Call Provider'),
-        '001004': _t('Insufficient Fields '),
-        '009999': _t('Unknown Error'),
-        '001006': _t('Global API Not Initialized '),
-        '100201': _t('Invalid Transaction Type'),
-        '001007': _t('Timeout on Response '),
-        '100202': _t('Invalid Operator ID'),
-        '001011': _t('Empty Command String '),
-        '100203': _t('Invalid Memo'),
-        '003002': _t('In Process with server '),
-        '100204': _t('Invalid Account Number'),
-        '003003': _t('Socket Error sending request '),
-        '100205': _t('Invalid Expiration Date'),
-        '003004': _t('Socket already open or in use '),
-        '100206': _t('Invalid Authorization Code'),
-        '003005': _t('Socket Creation Failed '),
-        '100207': _t('Invalid Authorization Code'),
-        '003006': _t('Socket Connection Failed '),
-        '100208': _t('Invalid Authorization Amount'),
-        '003007': _t('Connection Lost '),
-        '100209': _t('Invalid Cash Back Amount'),
-        '003008': _t('TCP/IP Failed to Initialize '),
-        '100210': _t('Invalid Gratuity Amount'),
+        '003002': _t('In Process with server'),
         '003009': _t('Control failed to find branded serial (password lookup failed)'),
-        '100211': _t('Invalid Purchase Amount'),
-        '003010': _t('Time Out waiting for server response '),
-        '100212': _t('Invalid Magnetic Stripe Data'),
-        '003011': _t('Connect Cancelled '),
-        '100213': _t('Invalid PIN Block Data'),
-        '003012': _t('128 bit CryptoAPI failed '),
-        '100214': _t('Invalid Derived Key Data'),
-        '003014': _t('Threaded Auth Started Expect Response '),
-        '100215': _t('Invalid State Code'),
-        '003017': _t('Failed to start Event Thread. '),
-        '100216': _t('Invalid Date of Birth'),
-        '003050': _t('XML Parse Error '),
-        '100217': _t('Invalid Check Type'),
-        '003051': _t('All Connections Failed '),
-        '100218': _t('Invalid Routing Number'),
-        '003052': _t('Server Login Failed '),
-        '100219': _t('Invalid TranCode'),
-        '003053': _t('Initialize Failed '),
-        '100220': _t('Invalid Merchant ID'),
-        '004001': _t('Global Response Length Error (Too Short) '),
-        '100221': _t('Invalid TStream Type'),
+        '003012': _t('128 bit CryptoAPI failed'),
+        '003014': _t('Threaded Auth Started Expect Response'),
+        '003017': _t('Failed to start Event Thread.'),
+        '003050': _t('XML Parse Error'),
+        '003051': _t('All Connections Failed'),
+        '003052': _t('Server Login Failed'),
+        '004001': _t('Global Response Length Error (Too Short)'),
         '004002': _t('Unable to Parse Response from Global (Indistinguishable)'),
-        '100222': _t('Invalid Batch Number'),
-        '004003': _t('Global String Error '),
-        '100223': _t('Invalid Batch Item Count'),
-        '004004': _t('Weak Encryption Request Not Supported '),
-        '100224': _t('Invalid MICR Input Type'),
-        '004005': _t('Clear Text Request Not Supported '),
-        '100225': _t('Invalid Driver’s License'),
-        '004010': _t('Unrecognized Request Format '),
-        '100226': _t('Invalid Sequence Number'),
-        '004011': _t('Error Occurred While Decrypting Request '),
-        '100227': _t('Invalid Pass Data'),
-        '004017': _t('Invalid Check Digit '),
-        '100228': _t('Invalid Card Type'),
+        '004003': _t('Global String Error'),
+        '004004': _t('Weak Encryption Request Not Supported'),
+        '004005': _t('Clear Text Request Not Supported'),
+        '004010': _t('Unrecognized Request Format'),
+        '004011': _t('Error Occurred While Decrypting Request'),
+        '004017': _t('Invalid Check Digit'),
         '004018': _t('Merchant ID Missing'),
+        '004019': _t('TStream Type Missing'),
+        '004020': _t('Could Not Encrypt Response- Call Provider'),
+        '100201': _t('Invalid Transaction Type'),
+        '100202': _t('Invalid Operator ID'),
+        '100203': _t('Invalid Memo'),
+        '100204': _t('Invalid Account Number'),
+        '100205': _t('Invalid Expiration Date'),
+        '100206': _t('Invalid Authorization Code'),
+        '100207': _t('Invalid Authorization Code'),
+        '100208': _t('Invalid Authorization Amount'),
+        '100209': _t('Invalid Cash Back Amount'),
+        '100210': _t('Invalid Gratuity Amount'),
+        '100211': _t('Invalid Purchase Amount'),
+        '100212': _t('Invalid Magnetic Stripe Data'),
+        '100213': _t('Invalid PIN Block Data'),
+        '100214': _t('Invalid Derived Key Data'),
+        '100215': _t('Invalid State Code'),
+        '100216': _t('Invalid Date of Birth'),
+        '100217': _t('Invalid Check Type'),
+        '100218': _t('Invalid Routing Number'),
+        '100219': _t('Invalid TranCode'),
+        '100220': _t('Invalid Merchant ID'),
+        '100221': _t('Invalid TStream Type'),
+        '100222': _t('Invalid Batch Number'),
+        '100223': _t('Invalid Batch Item Count'),
+        '100224': _t('Invalid MICR Input Type'),
+        '100225': _t('Invalid Driver’s License'),
+        '100226': _t('Invalid Sequence Number'),
+        '100227': _t('Invalid Pass Data'),
+        '100228': _t('Invalid Card Type'),
     },
 };
 
@@ -194,32 +194,39 @@ var PaymentTransactionPopupWidget = PopupWidget.extend({
         var self = this;
         this._super(options);
         options.transaction.then(function (data) {
-            // if the status and error code are known, use our custom message from the lookup table
-            if (lookUpCodeTransaction[data.status] && lookUpCodeTransaction[data.status][data.error]) {
-                data.message = lookUpCodeTransaction[data.status][data.error];
-            }
-
-            data.error = (data.error != '000000') ? ' ' + data.error : '';
-            self.$el.find('p.body').html(data.status + ' ' + data.error + '<br /><br />' + data.message);
-
-            if (data.status == 'Approved') {
-                if (data.partial) {
+            if (data.status == "Error" || data.status == "Declined") {
+                if (lookUpCodeTransaction["TimeoutError"][data.error]) { // Not fatal, retry
+                    data.message = "Error " + data.error + ": " + lookUpCodeTransaction["TimeoutError"][data.error] + ".<br/><br/>Retrying...";
+                } else if (lookUpCodeTransaction["FatalError"][data.error]) { // Fatal, stop
+                    data.message = "Error " + data.error + ": " + lookUpCodeTransaction["FatalError"][data.error];
                     self.close();
-                    self.$el.find('p.body').html('Partially approved');
+                    self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
+                }
+            } else if (data.status == "Success" || data.status == "Approved") {
+                if (data.partial) {
+                    data.message = "Partially approved";
+                    self.close();
                     self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
                 } else {
+                    data.message = lookUpCodeTransaction["Approved"][data.error];
                     setTimeout(function () {
                         self.gui.close_popup();
                     }, 2000);
                 }
-            } else {
-                self.close();
-                self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
             }
 
+            self.$el.find('p.body').html(data.message);
+
         }).progress(function (data) {
-            data.error = (data.error != '000000') ? ' '+data.error : '';
-            self.$el.find('p.body').html(data.status+' '+data.error+'<br /><br />'+data.message);
+            var to_display = '';
+
+            if (data.error) {
+                to_display = data.status + ' ' + data.error + '<br/><br/>' + data.message;
+            } else {
+                to_display = data.status + '<br/><br/>' + data.message;
+            }
+
+            self.$el.find('p.body').html(to_display);
         });
     }
 });
@@ -317,7 +324,7 @@ PaymentScreenWidget.include({
         _.extend(transaction, {
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
-            'invoice_no'        : 'SLK423K', // todo don't hardcode
+            'invoice_no'        : self.pos.get_order().sequence_number,
             'purchase'          : parsed_result.total,
             'journal_id'        : parsed_result.journal_id,
         });
@@ -328,39 +335,56 @@ PaymentScreenWidget.include({
             message: 'Handling transaction...',
         });
 
-        session.rpc("/pos/send_payment_transaction", transaction)
-            .done(function (data) {
-                console.log(data); // todo
-                var response = decodeMercuryResponse(data);
-                response.journal_id = parsed_result.journal_id;
-                
-                if (response.status === 'Approved') {
-                    // If the payment is approved, add a payment line
-                    var order = self.pos.get_order();
-                    order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
-                    order.selected_paymentline.paid = true;
-                    order.selected_paymentline.amount = response.authorize;
-                    order.selected_paymentline.mercury_data = response; // used to reverse transactions
-                    self.order_changes();
-                    self.reset_input();
-                    self.render_paymentlines();
+        var rpc_def = session.rpc("/pos/send_payment_transaction", transaction)
+                .done(function (data) {
+                    console.log(data); // todo
+
+                    if (! self.waiting_on_payment_response) {
+                        return;
+                    }
+                    self.waiting_on_payment_response = false;
+
+                    var response = decodeMercuryResponse(data);
+                    response.journal_id = parsed_result.journal_id;
+
+                    if (response.status === 'Approved') {
+                        // If the payment is approved, add a payment line
+                        var order = self.pos.get_order();
+                        order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
+                        order.selected_paymentline.paid = true;
+                        order.selected_paymentline.amount = response.authorize;
+                        order.selected_paymentline.mercury_data = response; // used to reverse transactions
+                        self.order_changes();
+                        self.reset_input();
+                        self.render_paymentlines();
+                    }
+
+                    def.resolve({
+                        status: response.status,
+                        error: response.error,
+                        partial: response.message === "PARTIAL AP" && response.authorize < response.purchase
+                    });
+
+                    // if a error related to timeout or connectivity issues arised, then retry the same transaction
+                    if (response.status == "Error" && lookUpCodeTransaction["TimeoutError"][response.error]) {
+                        self.credit_code_transaction(parsed_result);
+                    }
+
+                }).fail(function (data) {
+                    def.reject({
+                        status: 'Error',
+                        error: '-1',
+                    });
+                });
+
+        // if not receiving a response for > 60 seconds, we should retry
+        if (self.waiting_on_payment_response) {
+            setTimeout(function () {
+                if (rpc_def.state() == "pending") {
+                    self.credit_code_transaction(parsed_result);
                 }
-
-                def.resolve({
-                    status: response.status,
-                    error: response.error,
-                    message: response.message,
-                    partial: response.message === "PARTIAL AP" && response.authorize < response.purchase
-                });
-
-
-        })  .fail(function (data) {
-                def.reject({
-                    status: 'Odoo Error',
-                    error: '-1',
-                    message: 'Impossible to contact the proxy, please retry ...',
-                });
-        });
+            }, 65000);
+        }
     },
     credit_code_cancel: function () {
         return;
@@ -369,6 +393,7 @@ PaymentScreenWidget.include({
     credit_code_action: function (parsed_result) {
         self = this;
         parsed_result.total = this.pos.get_order().get_due();
+        self.waiting_on_payment_response = true;
 
         if (parsed_result.total) {
             if (onlinePaymentJournal.length === 1) {
@@ -407,11 +432,14 @@ PaymentScreenWidget.include({
         }, mercury_data);
 
         var message = "";
+        var rpc_url = "/pos/";
 
         if (is_voidsale) {
             message = "Reversal failed, sending VoidSale...";
+            rpc_url += "send_voidsale";
         } else {
             message = "Sending reversal...";
+            rpc_url += "send_reversal";
         }
 
         def.notify({
@@ -419,12 +447,6 @@ PaymentScreenWidget.include({
             status: 'Waiting',
             message: message,
         });
-
-        var rpc_url = "/pos/";
-        if (is_voidsale)
-            rpc_url += "send_voidsale";
-        else
-            rpc_url += "send_reversal";
 
         session.rpc(rpc_url, request_data)
             .done(function (data) {
