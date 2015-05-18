@@ -167,7 +167,7 @@ class ir_http(orm.AbstractModel):
         cache_enable = cache_time and request.httprequest.method == "GET" and request.website.user_id.id == request.uid
         cache_response = None
         if cache_enable:
-            key = (self._name, "cache", request.uid, request.httprequest.full_path)
+            key = (self._name, "cache", request.uid, request.lang, request.httprequest.full_path)
             try:
                 r = self.pool.cache[key]
                 if r['time'] + cache_time > time.time():
