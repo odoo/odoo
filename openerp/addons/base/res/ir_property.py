@@ -227,7 +227,7 @@ class ir_property(osv.osv):
         # retrieve the properties corresponding to the given record ids
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
         field_id = self._cr.fetchone()[0]
-        company_id = self.env['res.company']._company_default_get(model, field_id)
+        company_id = self.env.context.get('force_company') or self.env['res.company']._company_default_get(model, field_id)
         refs = {('%s,%s' % (model, id)): id for id in values}
         props = self.search([
             ('fields_id', '=', field_id),

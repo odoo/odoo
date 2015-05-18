@@ -65,7 +65,7 @@ $(document).ready(function () {
                     });
 
                     $modal.on("change", 'input[name="add_qty"]', function (event) {
-                        var product_id = $($modal.find('span.oe_price[data-oe-model="product.product"]').first()).data('oe-id');
+                        var product_id = $($modal.find('span.oe_price[data-product-id]')).first().data('product-id');
                         var default_price = parseInt($('.text-danger.oe_default_price > span.oe_currency_value').text());
                         var $dom = $(event.target).closest('tr');
                         var qty = $dom.find('input[name="add_qty"]').val();

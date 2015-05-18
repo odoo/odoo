@@ -2177,14 +2177,20 @@ class BaseModel(object):
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
-        current_table = self
-        parent_alias = '"%s"' % current_table._table
-        while field in current_table._inherit_fields and not field in current_table._columns:
-            parent_model_name = current_table._inherit_fields[field][0]
-            parent_table = self.pool[parent_model_name]
-            parent_alias = self._inherits_join_add(current_table, parent_model_name, query)
-            current_table = parent_table
-        return '%s."%s"' % (parent_alias, field)
+        # INVARIANT: alias is the SQL alias of model._table in query
+        model, alias = self, self._table
+        while field in model._inherit_fields and field not in model._columns:
+            # retrieve the parent model where field is inherited from
+            parent_model_name = model._inherit_fields[field][0]
+            parent_model = self.pool[parent_model_name]
+            parent_field = model._inherits[parent_model_name]
+            # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
+            parent_alias, _ = query.add_join(
+                (alias, parent_model._table, parent_field, 'id', parent_field),
+                implicit=True,
+            )
+            model, alias = parent_model, parent_alias
+        return '"%s"."%s"' % (alias, field)
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:

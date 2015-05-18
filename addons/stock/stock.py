@@ -2575,6 +2575,8 @@ class stock_move(osv.osv):
             code = 'incoming'
         return code
 
+    def _get_taxes(self, cr, uid, move, context=None):
+        return []
 
 class stock_inventory(osv.osv):
     _name = "stock.inventory"
@@ -2852,6 +2854,7 @@ class stock_inventory_line(osv.osv):
 
     _defaults = {
         'product_qty': 0,
+        'product_uom_id': lambda self, cr, uid, ctx=None: self.pool['ir.model.data'].get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
     }
 
     def create(self, cr, uid, values, context=None):
