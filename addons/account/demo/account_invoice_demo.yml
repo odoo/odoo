@@ -150,8 +150,9 @@
           if tax_id:
             line_vals['invoice_line_tax_ids'] = [(6, 0, [tax_id[0]])]
           self._update(cr, uid, 'account.invoice.line', 'account', line_vals, 'coffee_machine_line')
-          self.pool.get('account.invoice')._onchange_invoice_line_ids(cr, uid, [ref('demo_invoice_equipment_purchase')])
-          self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('demo_invoice_equipment_purchase')], 'invoice_open')
+          inv = self.env['account.invoice'].browse([ref('demo_invoice_equipment_purchase')])
+          inv._onchange_invoice_line_ids()
+          inv.signal_workflow('invoice_open')
 -
   !python {model: account.bank.statement.line} : |
       account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_financing')])])
