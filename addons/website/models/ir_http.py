@@ -78,7 +78,7 @@ class ir_http(orm.AbstractModel):
                     self._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
                 else:
                     self._geoip_resolver = False
-                    logger.warning('GeoIP database file %r does not exists', geofile)
+                    logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
             except ImportError:
                 self._geoip_resolver = False
 
