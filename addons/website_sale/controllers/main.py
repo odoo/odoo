@@ -330,6 +330,10 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
+        if order.state != 'draft':
+            request.website.sale_reset()
+            return {}
+
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
         if not display:
             return None

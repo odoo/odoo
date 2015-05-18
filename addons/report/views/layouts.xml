@@ -123,8 +123,7 @@
     <div class="header">
         <div class="row">
             <div class="col-xs-3">
-                <span t-esc="time.strftime('%Y-%m-%d')"/>
-                <span t-esc="time.strftime('%H:%M')"/>
+                <span t-esc="context_timestamp(datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
             </div>
             <div class="col-xs-2 col-xs-offset-2 text-center">
                 <span t-esc="company.name"/>

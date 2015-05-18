@@ -1029,7 +1029,7 @@ class purchase_order_line(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
-            if line.state not in ['draft', 'cancel']:
+            if line.order_id.state in ['approved', 'done'] and line.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
