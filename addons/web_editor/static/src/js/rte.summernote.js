@@ -616,34 +616,37 @@ eventHandler.attach = function (oLayoutInfo, options) {
     
     var clone_data = false;
     var $node = oLayoutInfo.editor;
-    if ($node.data('oe-model')) {
+    if ($node.data('oe-model') || $node.data('oe-translation-id')) {
         $node.on('content_changed', function () {
+            var $nodes = $('[data-oe-model], [data-oe-translation-id]')
+                .filter(function () { return this != $node[0];});
 
-        var $nodes = $('[data-oe-model]')
-            .filter(function () { return this != $node[0];})
-            .filter('[data-oe-model="'+$node.data('oe-model')+'"]')
-            .filter('[data-oe-id="'+$node.data('oe-id')+'"]')
-            .filter('[data-oe-field="'+$node.data('oe-field')+'"]');
-        if ($node.data('oe-type')) $nodes = $nodes.filter('[data-oe-type="'+$node.data('oe-type')+'"]');
-        if ($node.data('oe-expression')) $nodes = $nodes.filter('[data-oe-expression="'+$node.data('oe-expression')+'"]');
-        if ($node.data('oe-xpath')) $nodes = $nodes.filter('[data-oe-xpath="'+$node.data('oe-xpath')+'"]');
-        if ($node.data('oe-contact-options')) $nodes = $nodes.filter('[data-oe-contact-options="'+$node.data('oe-contact-options')+'"]');
+            if ($node.data('oe-model')) {
+                $nodes = $nodes.filter('[data-oe-model="'+$node.data('oe-model')+'"]')
+                    .filter('[data-oe-id="'+$node.data('oe-id')+'"]')
+                    .filter('[data-oe-field="'+$node.data('oe-field')+'"]');
+            }
+            if ($node.data('oe-translation-id')) $nodes = $nodes.filter('[data-oe-translation-id="'+$node.data('oe-translation-id')+'"]');
+            if ($node.data('oe-type')) $nodes = $nodes.filter('[data-oe-type="'+$node.data('oe-type')+'"]');
+            if ($node.data('oe-expression')) $nodes = $nodes.filter('[data-oe-expression="'+$node.data('oe-expression')+'"]');
+            if ($node.data('oe-xpath')) $nodes = $nodes.filter('[data-oe-xpath="'+$node.data('oe-xpath')+'"]');
+            if ($node.data('oe-contact-options')) $nodes = $nodes.filter('[data-oe-contact-options="'+$node.data('oe-contact-options')+'"]');
 
-        var nodes = $node.get();
+            var nodes = $node.get();
 
-        if ($node.data('oe-type') === "many2one") {
-            $nodes = $nodes.add($('[data-oe-model]')
-                .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
-                .filter('[data-oe-many2one-model="'+$node.data('oe-many2one-model')+'"]')
-                .filter('[data-oe-many2one-id="'+$node.data('oe-many2one-id')+'"]')
-                .filter('[data-oe-type="many2one"]'));
+            if ($node.data('oe-type') === "many2one") {
+                $nodes = $nodes.add($('[data-oe-model]')
+                    .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
+                    .filter('[data-oe-many2one-model="'+$node.data('oe-many2one-model')+'"]')
+                    .filter('[data-oe-many2one-id="'+$node.data('oe-many2one-id')+'"]')
+                    .filter('[data-oe-type="many2one"]'));
 
-            $nodes = $nodes.add($('[data-oe-model]')
-                .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
-                .filter('[data-oe-model="'+$node.data('oe-many2one-model')+'"]')
-                .filter('[data-oe-id="'+$node.data('oe-many2one-id')+'"]')
-                .filter('[data-oe-field="name"]'));
-        }
+                $nodes = $nodes.add($('[data-oe-model]')
+                    .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
+                    .filter('[data-oe-model="'+$node.data('oe-many2one-model')+'"]')
+                    .filter('[data-oe-id="'+$node.data('oe-many2one-id')+'"]')
+                    .filter('[data-oe-field="name"]'));
+            }
 
             if (!clone_data) {
                 clone_data = true;
