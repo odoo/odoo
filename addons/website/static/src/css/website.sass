@@ -241,8 +241,9 @@ body > nav.navbar
     width: 100%
     position: absolute
     z-index: 10000
-nav.navbar + #wrapwrap
-    padding-top: 34px
+@media (max-min: 767px)
+    nav.navbar + #wrapwrap
+        padding-top: 34px
 
 /* ----- BOOTSTRAP FIX ----- */
 

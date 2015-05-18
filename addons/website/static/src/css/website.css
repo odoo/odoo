@@ -346,8 +346,10 @@ body > nav.navbar {
   z-index: 10000;
 }
 
-nav.navbar + #wrapwrap {
-  padding-top: 34px;
+@media (min-width: 767px) {
+  nav.navbar + #wrapwrap {
+    padding-top: 34px;
+  }
 }
 
 /* ----- BOOTSTRAP FIX ----- */
