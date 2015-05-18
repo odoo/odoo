@@ -407,7 +407,6 @@ class AccountInvoice(models.Model):
         return super(AccountInvoice, self).unlink()
 
     @api.onchange('invoice_line_ids')
-    @api.multi
     def _onchange_invoice_line_ids(self):
         taxes_grouped = self.get_taxes_values()
         tax_lines = self.tax_line_ids.browse([])
