@@ -289,5 +289,24 @@
                 </form>
             </field>
         </record>
+
+        <record id="procurement_order_server_action" model="ir.actions.server">
+            <field name="name">Run Procurements</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
+                    self.run(cr, uid, context['active_ids'], context=context)</field>
+        </record>
+
+        <record id="run_procurement_order_action" model="ir.values">
+            <field name="model_id" ref="procurement.model_procurement_order" />
+            <field name="name">Run Procurements</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('procurement_order_server_action'))" />
+        </record>
+
     </data>
 </openerp>
