@@ -717,7 +717,7 @@ class pos_order(osv.osv):
         'name': fields.char('Order Ref', required=True, readonly=True, copy=False),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
-        'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
+        'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the cash register. It can be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits=0, multi='all'),
         'amount_total': fields.function(_amount_all, string='Total', digits=0,  multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0, multi='all'),
