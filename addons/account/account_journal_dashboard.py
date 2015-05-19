@@ -35,8 +35,8 @@ class account_journal(models.Model):
         data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
-        bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '>', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT)),('date', '<=', today.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date asc")
-        last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date desc", limit=1)
+        bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '>', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT)),('date', '<=', today.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date asc, id asc")
+        last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date desc, id desc", limit=1)
         start_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
         locale = self._context.get('lang', 'en_US')
         show_date = last_month
@@ -119,7 +119,7 @@ class account_journal(models.Model):
         ac_bnk_stmt = []
         number_draft = number_waiting = number_late = sum_draft = sum_waiting = sum_late = 0
         if self.type in ['bank', 'cash']:
-            last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc", limit=1)
+            last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc, id desc", limit=1)
             last_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
             ac_bnk_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('state', '=', 'open')])
             for ac_bnk in ac_bnk_stmt:
