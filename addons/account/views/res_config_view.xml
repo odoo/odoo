@@ -275,8 +275,10 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_account_config" name="Invoicing" parent="base.menu_config"
-            sequence="14" action="action_account_config"/>
+        <menuitem id="base.menu_account_config" name="Invoicing" parent="base.menu_config"
+            sequence="1"/>
+        <menuitem id="base.menu_account_general_settings" name="Settings" parent="base.menu_account_config"
+            sequence="0" action="action_account_config"/>
 
     </data>
 </openerp>
