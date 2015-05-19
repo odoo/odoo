@@ -31,9 +31,9 @@ class TestCreateInvoice(TransactionCase):
         self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'DSTPJ', 'type': 'purchase', 'company_id': self.env.ref('base.main_company').id})
 
         user_type_id = self.env.ref('account.data_account_type_payable')
-        account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type': user_type_id.id})
+        account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type': user_type_id.id, 'reconcile': True})
         user_type_id = self.env.ref('account.data_account_type_expenses')
-        account_exp_id = self.env['account.account'].create({'code': 'X1013', 'name': 'Purchase - Test Expense Account', 'user_type': user_type_id.id})
+        account_exp_id = self.env['account.account'].create({'code': 'X1013', 'name': 'Purchase - Test Expense Account', 'user_type': user_type_id.id, 'reconcile': True})
 
         self.customer.write({'property_account_payable': account_pay_id.id})
 
