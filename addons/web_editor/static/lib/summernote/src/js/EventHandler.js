@@ -48,7 +48,7 @@ define([
       if ($target.is('.note-editor, .note-air-editor')) {
         $editor = $target;
       } else {
-        $editor = $('[data-note-id="' + list.last($target.attr('id')) + '"]');
+        $editor = $('[data-note-id="' + list.last($target.attr('id').split('-')) + '"]');
       }
 
       return dom.buildLayoutInfo($editor);
