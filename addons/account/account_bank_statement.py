@@ -436,6 +436,7 @@ class AccountBankStatementLine(models.Model):
             'amount_str': amount_str,  # Amount in the statement line currency
             'currency_id': self.currency_id.id or statement_currency.id,
             'partner_id': self.partner_id.id,
+            'journal_id': self.journal_id.id,
             'statement_id': self.statement_id.id,
             'account_code': self.journal_id.default_debit_account_id.code,
             'account_name': self.journal_id.default_debit_account_id.name,
