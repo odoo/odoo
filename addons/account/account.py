@@ -226,29 +226,36 @@ class account_account(osv.osv):
     _description = "Account"
     _parent_store = True
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        if context is None:
-            context = {}
+    def _where_calc(self, cr, uid, domain, active_test=True, context=None):
+        """ Convert domains to allow easier filtering:
+                code: force case insensitive and right side matching search
+                journal_id: restrict to the accounts sharing the same account.account.type
+        """
         pos = 0
-
-        while pos < len(args):
-
-            if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
-            if args[pos][0] == 'journal_id':
-                if not args[pos][2]:
-                    del args[pos]
+        while pos < len(domain):
+            if domain[pos][0] == 'code' and domain[pos][1] in ('like', 'ilike') and domain[pos][2]:
+                domain[pos] = ('code', '=like', tools.ustr(domain[pos][2].replace('%', '')) + '%')
+            if domain[pos][0] == 'journal_id':
+                if not domain[pos][2]:
+                    del domain[pos]
                     continue
-                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2], context=context)
-                if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
-                    args[pos] = ('type','not in',('consolidation','view'))
+                jour = self.pool.get('account.journal').browse(cr, uid, domain[pos][2], context=context)
+                if (not (jour.account_control_ids or jour.type_control_ids)) or not domain[pos][2]:
+                    domain[pos] = ('type', 'not in', ('consolidation', 'view'))
                     continue
                 ids3 = map(lambda x: x.id, jour.type_control_ids)
                 ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', ids3)])
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
-                args[pos] = ('id', 'in', ids1)
+                domain[pos] = ('id', 'in', ids1)
             pos += 1
+
+        return super(account_account, self)._where_calc(cr, uid, domain, active_test, context)
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        """ Check presence of key 'consolidate_children' in context to include also the Consolidated Children
+            of found accounts into the result of the search
+        """
 
         if context and context.has_key('consolidate_children'): #add consolidated children of accounts
             ids = super(account_account, self).search(cr, uid, args, offset, limit,
@@ -734,7 +741,7 @@ class account_journal(osv.osv):
         'entry_posted': fields.boolean('Skip \'Draft\' State for Manual Entries', help='Check this box if you don\'t want new journal entries to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation. \nNote that journal entries that are automatically created by the system are always skipping that state.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
         'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
-
+        'active': fields.boolean('Active', select=True),
         'profit_account_id' : fields.many2one('account.account', 'Profit Account'),
         'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
@@ -746,6 +753,7 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : False,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'active': True,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -1755,7 +1763,7 @@ class account_tax_code(osv.osv):
         res2 = {}
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
-                amount = res.get(record.id, 0.0)
+                amount = res.get(record.id) or 0.0
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
@@ -2717,6 +2725,11 @@ class account_tax_code_template(osv.osv):
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
         'sign': fields.float('Sign For Parent', required=True),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax Code to appear on invoices."),
+        'sequence': fields.integer(
+            'Sequence', help=(
+                "Determine the display order in the report 'Accounting "
+                "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
+            ),
     }
 
     _defaults = {
@@ -2749,6 +2762,7 @@ class account_tax_code_template(osv.osv):
                 'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
                 'company_id': company_id,
                 'sign': tax_code_template.sign,
+                'sequence': tax_code_template.sequence,
             }
             #check if this tax code already exists
             rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('code', '=', vals['code']),('company_id', '=', vals['company_id'])], context=context)

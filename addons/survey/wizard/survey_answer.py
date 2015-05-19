@@ -28,7 +28,7 @@ from time import strftime
 
 from openerp import addons, netsvc, tools
 from openerp.osv import fields, osv
-from openerp.tools import to_xml
+from openerp.tools import to_xml, SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
 
@@ -125,7 +125,7 @@ class survey_question_wiz(osv.osv_memory):
                                 raise osv.except_osv(_('Warning!'),_("You cannot answer this survey more than %s times.") % (user_limit))
 
                         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
-                            survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
+                            survey_obj.write(cr, SUPERUSER_ID, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
 
                         p_id = p_id[sur_name_rec.page_no + 1]
                         surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'page_no' : sur_name_rec.page_no + 1})
@@ -401,8 +401,8 @@ class survey_question_wiz(osv.osv_memory):
                     result['fields'] = fields
                     result['context'] = context
                 else:
-                    survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
-                    sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
+                    survey_obj.write(cr, SUPERUSER_ID, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
+                    sur_response_obj.write(cr, uid, int(sur_name_read.response), {'state' : 'done'})
 
                     # mark the survey request as done; call 'survey_req_done' on its actual model
                     survey_req_obj = self.pool.get(context.get('active_model'))
@@ -610,7 +610,7 @@ class survey_question_wiz(osv.osv_memory):
                                               'date': strftime('%Y-%m-%d %H:%M:%S'), 'survey_id': sur_name_read['survey_id'][0]})
             survey_id = sur_name_read['survey_id'][0]
             sur_rec = survey_obj.read(cr, uid, survey_id)
-            survey_obj.write(cr, uid, survey_id,  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
+            survey_obj.write(cr, SUPERUSER_ID, survey_id,  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
             if context.has_key('cur_id'):
                 if context.has_key('request') and context.get('request',False):
                     self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})

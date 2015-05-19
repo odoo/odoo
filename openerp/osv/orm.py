@@ -240,7 +240,7 @@ POSTGRES_CONFDELTYPES = {
 }
 
 def intersect(la, lb):
-    return filter(lambda x: x in lb, la)
+    return list(set(lb).intersection(la))
 
 def fix_import_export_id_paths(fieldname):
     """
@@ -1215,17 +1215,6 @@ class BaseModel(object):
                                 for fpos2 in range(len(fields)):
                                     if lines2 and lines2[0][fpos2]:
                                         data[fpos2] = lines2[0][fpos2]
-                                if not data[fpos]:
-                                    dt = ''
-                                    for rr in r:
-                                        name_relation = self.pool.get(rr._table_name)._rec_name
-                                        if isinstance(rr[name_relation], browse_record):
-                                            rr = rr[name_relation]
-                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
-                                        rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
-                                        dt += tools.ustr(rr_name or '') + ','
-                                    data[fpos] = dt[:-1]
-                                    break
                                 lines += lines2[1:]
                                 first = False
                             else:
@@ -2287,6 +2276,7 @@ class BaseModel(object):
                 view = getattr(self, '_get_default_%s_view' % view_type)(
                     cr, user, context)
             except AttributeError:
+                if config['debug_mode']: raise
                 # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
 
@@ -2490,7 +2480,7 @@ class BaseModel(object):
                     else:
                         res[lang][f] = self._columns[f].string
         for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), fields)
+            cols = list(set(fields).intersection(self._inherit_fields))
             res2 = self.pool.get(table).read_string(cr, uid, id, langs, cols, context)
         for lang in res2:
             if lang in res:
@@ -2508,7 +2498,7 @@ class BaseModel(object):
                     src = self._columns[field].string
                     self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
         for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), vals)
+            cols = list(set(vals).intersection(self._inherit_fields))
             if cols:
                 self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
         return True
@@ -3317,7 +3307,8 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr)
+        if getattr(self, '_auto', True):
+            self._add_sql_constraints(cr)
 
         if create:
             self._execute_sql(cr)
@@ -3791,7 +3782,7 @@ class BaseModel(object):
 
         for table in self._inherits:
             col = self._inherits[table]
-            cols = [x for x in intersect(self._inherit_fields.keys(), fields_to_read) if x not in self._columns.keys()]
+            cols = list(set(fields_to_read).intersection(self._inherit_fields).difference(self._columns))
             if not cols:
                 continue
             res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)

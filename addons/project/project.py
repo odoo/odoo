@@ -135,6 +135,7 @@ class project(osv.osv):
             res.update(ids)
         return list(res)
 
+    # Deprecated; the _progress_rate method does not use this anymore
     def _get_project_and_children(self, cr, uid, ids, context=None):
         """ retrieve all children projects of project ids;
             return a dictionary mapping each project to its parent project (or None)
@@ -154,28 +155,75 @@ class project(osv.osv):
         return res
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
-        child_parent = self._get_project_and_children(cr, uid, ids, context)
         # compute planned_hours, total_hours, effective_hours specific to each project
+        # How this works: the WITH RECURSIVE statement will create an union line
+        # for each parent project with the hours of each child project; the final
+        # SUM(...) ensures we get a total of hours by project.
         cr.execute("""
-            SELECT project_id, COALESCE(SUM(planned_hours), 0.0),
-                COALESCE(SUM(total_hours), 0.0), COALESCE(SUM(effective_hours), 0.0)
-            FROM project_task WHERE project_id IN %s AND state <> 'cancelled'
-            GROUP BY project_id
-            """, (tuple(child_parent.keys()),))
+        WITH RECURSIVE recur_table(project_id,
+                                   parent_id,
+                                   planned_hours,
+                                   total_hours,
+                                   effective_hours) AS (
+            SELECT project.id,
+                   parent.id,
+                   COALESCE(task.planned, 0.0),
+                   COALESCE(task.total, 0.0),
+                   COALESCE(task.effective, 0.0)
+            FROM project_project project
+                 LEFT JOIN account_analytic_account account
+                      ON project.analytic_account_id = account.id
+                 LEFT JOIN project_project parent
+                      ON parent.analytic_account_id = account.parent_id
+                 LEFT JOIN (SELECT project_id,
+                                   SUM(planned_hours) as planned,
+                                   SUM(total_hours) as total,
+                                   SUM(effective_hours) as effective
+                            FROM project_task
+                            WHERE state <> 'cancelled'
+                            GROUP BY project_id) AS task
+                      ON project.id = task.project_id
+        UNION ALL
+            SELECT project.id,
+                   parent.id,
+                   recur_table.planned_hours,
+                   recur_table.total_hours,
+                   recur_table.effective_hours
+            FROM project_project project
+                 LEFT JOIN account_analytic_account account
+                      ON project.analytic_account_id = account.id
+                 LEFT JOIN project_project parent
+                      ON parent.analytic_account_id = account.parent_id
+                 LEFT JOIN (SELECT project_id,
+                                   SUM(planned_hours) as planned,
+                                   SUM(total_hours) as total,
+                                   SUM(effective_hours) as effective
+                            FROM project_task
+                            WHERE state <> 'cancelled'
+                            GROUP BY project_id) AS task
+                      ON project.id = task.project_id
+                 JOIN recur_table ON project.id = recur_table.parent_id
+        )
+        SELECT project_id,
+               SUM(planned_hours),
+               SUM(total_hours),
+               SUM(effective_hours)
+        FROM recur_table
+        WHERE project_id IN %s
+        GROUP BY project_id
+            """, (tuple(ids),))
         # aggregate results into res
-        res = dict([(id, {'planned_hours':0.0,'total_hours':0.0,'effective_hours':0.0}) for id in ids])
-        for id, planned, total, effective in cr.fetchall():
-            # add the values specific to id to all parent projects of id in the result
-            while id:
-                if id in ids:
-                    res[id]['planned_hours'] += planned
-                    res[id]['total_hours'] += total
-                    res[id]['effective_hours'] += effective
-                id = child_parent[id]
+        res = dict([(result_line[0], {'planned_hours': result_line[1],
+                                      'total_hours': result_line[2],
+                                      'effective_hours': result_line[3]})
+                    for result_line in cr.fetchall()])
         # compute progress rates
         for id in ids:
             if res[id]['total_hours']:
-                res[id]['progress_rate'] = round(100.0 * res[id]['effective_hours'] / res[id]['total_hours'], 2)
+                res[id]['progress_rate'] = round(100.0 *
+                                                 res[id]['effective_hours'] /
+                                                 res[id]['total_hours'],
+                                                 2)
             else:
                 res[id]['progress_rate'] = 0.0
         return res
@@ -192,7 +240,7 @@ class project(osv.osv):
         res =  super(project, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
-    
+
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
         res = {}
         attachment = self.pool.get('ir.attachment')
@@ -203,7 +251,7 @@ class project(osv.osv):
             task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
-        
+
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         if context is None:
             context = {}
@@ -228,7 +276,7 @@ class project(osv.osv):
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
-             '|', 
+             '|',
              '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
              '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)
 		]
@@ -691,7 +739,7 @@ class task(base_stage, osv.osv):
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
-            if task.state in ('done','cancelled'):
+            if task.stage_id and task.stage_id.fold:
                 res[task.id]['progress'] = 100.0
         return res
 
@@ -733,7 +781,7 @@ class task(base_stage, osv.osv):
                 new_name = _("%s (copy)") % (default.get('name', ''))
                 default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
@@ -898,18 +946,23 @@ class task(base_stage, osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
         if context is None: context = {}
-        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
-        # this should be safe (no context passed to avoid side-effects)
-        obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
-        tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
 
-        if tm in ['Hours','Hour']:
+        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
+        # this should be safe (no context passed to avoid side-effects)
+        obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
+        try:
+            # using get_object to get translation value
+            uom_hour = self.pool['ir.model.data'].get_object(cr, uid, 'product', 'product_uom_hour', context=context)
+        except ValueError:
+            uom_hour = False
+        if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
             return res
 
         eview = etree.fromstring(res['arch'])
 
+        # if the project_time_mode_id is not in hours (so in days), display it as a float field
         def _check_rec(eview):
             if eview.attrib.get('widget','') == 'float_time':
                 eview.set('widget','float')
@@ -921,9 +974,13 @@ class task(base_stage, osv.osv):
 
         res['arch'] = etree.tostring(eview)
 
+        # replace reference of 'Hours' to 'Day(s)'
         for f in res['fields']:
+            # TODO this NOT work in different language than english
+            # the field 'Initially Planned Hours' should be replaced by 'Initially Planned Days'
+            # but string 'Initially Planned Days' is not available in translation
             if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours', obj_tm.name)
         return res
 
     # ----------------------------------------
@@ -1170,13 +1227,20 @@ class task(base_stage, osv.osv):
         context = context or {}
         result = ""
         ident = ' '*ident
+        company = self.pool["res.users"].browse(cr, uid, uid, context=context).company_id
+        duration_uom = {
+            'day(s)': 'd', 'days': 'd', 'day': 'd', 'd': 'd',
+            'month(s)': 'm', 'months': 'm', 'month': 'month', 'm': 'm',
+            'week(s)': 'w', 'weeks': 'w', 'week': 'w', 'w': 'w',
+            'hour(s)': 'H', 'hours': 'H', 'hour': 'H', 'h': 'H',
+        }.get(company.project_time_mode_id.name.lower(), "hour(s)")
         for task in tasks:
             if task.state in ('done','cancelled'):
                 continue
             result += '''
 %sdef Task_%s():
-%s  todo = \"%.2fH\"
-%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident,task.total_hours)
+%s  todo = \"%.2f%s\"
+%s  effort = \"%.2f%s\"''' % (ident, task.id, ident, task.remaining_hours, duration_uom, ident, task.total_hours, duration_uom)
             start = []
             for t2 in task.parent_ids:
                 start.append("up.Task_%s.end" % (t2.id,))

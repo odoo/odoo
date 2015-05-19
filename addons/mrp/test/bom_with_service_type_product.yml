@@ -40,7 +40,7 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_servicetype_mo1"))
-    assert order.state == 'confirmed', "Production order should be confirmed."
+    assert order.state == 'ready', "Production order should be ready."
     for move_line in order.move_lines:
         move_line.action_consume(move_line.product_qty)
 -

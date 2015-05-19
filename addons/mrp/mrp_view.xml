@@ -389,7 +389,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Properties" groups="product.group_mrp_properties">
+                        <page string="Properties">
                             <group>
                                 <group>
                                     <field name="position"/>
@@ -404,8 +404,8 @@
                                     <field name="product_efficiency"/>
                                 </group>
                             </group>
-                            <separator string="Properties"/>
-                            <field name="property_ids" widget="many2many_tags"/>
+                            <separator string="Properties" groups="product.group_mrp_properties"/>
+                            <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                         </page>
                     </notebook>
                     <div class="oe_chatter">
@@ -462,7 +462,6 @@
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree string="BoM Structure" colors="blue:method">
-                    <field name="sequence" invisible="1"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="code"/>
                     <field name="product_id"/>

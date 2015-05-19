@@ -315,7 +315,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         // Ensure context & domain are evaluated and can be manipulated/used
         var ncontext = new instance.web.CompoundContext(options.additional_context, action.context || {});
         action.context = instance.web.pyeval.eval('context', ncontext);
-        if (action.context.active_id || action.context.active_ids) {
+        // if the variable 'search_disable_custom_filters' is already in the context,
+        // do nothing
+        if (!('search_disable_custom_filters' in action.context) && (action.context.active_id || action.context.active_ids)
+           ) {
             // Here we assume that when an `active_id` or `active_ids` is used
             // in the context, we are in a `related` action, so we disable the
             // searchview's default custom filters.
@@ -365,6 +368,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
      * @return {*}
      */
     ir_actions_common: function(executor, options) {
+        var self = this;
         if (this.inner_widget && executor.action.target !== 'new') {
             if (this.getParent().has_uncommitted_changes()) {
                 return $.Deferred().reject();
@@ -1588,7 +1592,7 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
         cr = human_readable ? '\n' : '';
 
     if (typeof(node) === 'string') {
-        return sindent + node;
+        return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw new Error(
             _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),

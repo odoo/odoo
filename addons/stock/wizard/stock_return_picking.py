@@ -176,6 +176,7 @@ class stock_return_picking(osv.osv_memory):
                                         'name': _('%s-%s-return') % (new_pick_name, pick.name),
                                         'move_lines': [], 
                                         'state':'draft', 
+                                        'backorder_id': False,
                                         'type': new_type,
                                         'date':date_cur, 
                                         'invoice_state': data['invoice_state'],

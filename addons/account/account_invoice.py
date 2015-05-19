@@ -532,8 +532,8 @@ class account_invoice(osv.osv):
                 acc_id = p.property_account_payable.id
                 partner_payment_term = p.property_supplier_payment_term and p.property_supplier_payment_term.id or False
             fiscal_position = p.property_account_position and p.property_account_position.id or False
-            if p.bank_ids:
-                bank_id = p.bank_ids[0].id
+            if p.commercial_partner_id.bank_ids:
+                bank_id = p.commercial_partner_id.bank_ids[0].id
 
         result = {'value': {
             'account_id': acc_id,
@@ -1033,7 +1033,7 @@ class account_invoice(osv.osv):
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
             move = {
-                'ref': inv.reference and inv.reference or inv.name,
+                'ref': inv.reference or inv.supplier_invoice_number or inv.name,
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': inv.date_invoice,
@@ -1121,6 +1121,23 @@ class account_invoice(osv.osv):
                         'AND account_analytic_line.move_id = account_move_line.id',
                         (ref, move_id))
         return True
+
+    def action_proforma(self, cr, uid, ids, context=None):
+        """
+        Check if all taxes are present with the correct base amount
+        on creating a proforma invoice. This leaves room for manual
+        corrections of the tax amount.
+        """
+        if not ids:
+            return True
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        ait_obj = self.pool.get('account.invoice.tax')
+        for inv in self.browse(cr, uid, ids, context=context):
+            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=context)
+            self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
+        return self.write(
+            cr, uid, ids, {'state': 'proforma2'}, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         if context is None:
@@ -1519,8 +1536,10 @@ class account_invoice_line(osv.osv):
         result['name'] = res.partner_ref
 
         result['uos_id'] = uom_id or res.uom_id.id
-        if res.description:
-            result['name'] += '\n'+res.description
+        if res.description_sale and type and type.startswith('out_'):
+            result['name'] += '\n'+res.description_sale
+        if res.description_purchase and type and type.startswith('in_'):
+            result['name'] += '\n'+res.description_purchase
 
         domain = {'uos_id':[('category_id','=',res.uom_id.category_id.id)]}
 
@@ -1665,7 +1684,7 @@ class account_invoice_tax(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
         'name': fields.char('Tax Description', size=64, required=True),
         'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')]),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
         'base': fields.float('Base', digits_compute=dp.get_precision('Account')),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'manual': fields.boolean('Manual'),
@@ -1696,13 +1715,10 @@ class account_invoice_tax(osv.osv):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency = False
-        factor = 1
-        if ids:
-            factor = self.read(cr, uid, ids[0], ['factor_tax'])['factor_tax']
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*factor, context={'date': date_invoice or fields.date.context_today(self, cr, uid)}, round=False)
+            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or fields.date.context_today(self, cr, uid)}, round=False)
         return {'value': {'tax_amount': amount}}
 
     _order = 'sequence'

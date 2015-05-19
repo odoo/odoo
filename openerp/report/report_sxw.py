@@ -18,6 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import orm
+from openerp.tools.translate import _
+
 from lxml import etree
 import StringIO
 import cStringIO
@@ -234,6 +237,7 @@ class rml_parse(object):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         for obj in self.objects:
+            obj.refresh()
             obj._context['lang'] = lang
 
     def _get_lang_dict(self):
@@ -500,9 +504,13 @@ class report_sxw(report_rml, preprocess.report):
                             'res_id': obj.id,
                             }, context=ctx
                         )
-                    except Exception:
-                        #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
-                        _logger.error('Could not create saved report attachment', exc_info=True)
+                    except Exception as e:
+                        if not isinstance(e, orm.except_orm):
+                            raise orm.except_orm(
+                                _('Error!'),
+                                _('Could not create saved report attachment'),
+                            )
+                        raise
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':

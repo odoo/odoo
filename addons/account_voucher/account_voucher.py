@@ -70,13 +70,13 @@ class account_config_settings(osv.osv_memory):
             type='many2one',
             relation='account.account',
             string="Gain Exchange Rate Account", 
-            domain="[('type', '=', 'other')]"),
+            domain="[('type', '=', 'other'), ('company_id', '=', company_id)]"),
         'expense_currency_exchange_account_id': fields.related(
             'company_id', 'expense_currency_exchange_account_id',
             type="many2one",
             relation='account.account',
             string="Loss Exchange Rate Account",
-            domain="[('type', '=', 'other')]"),
+            domain="[('type', '=', 'other'), ('company_id', '=', company_id)]"),
     }
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         res = super(account_config_settings, self).onchange_company_id(cr, uid, ids, company_id, context=context)
@@ -88,6 +88,23 @@ class account_config_settings(osv.osv_memory):
             res['value'].update({'income_currency_exchange_account_id': False, 
                                  'expense_currency_exchange_account_id': False})
         return res
+
+    def _check_account_gain(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.income_currency_exchange_account_id.company_id and obj.company_id != obj.income_currency_exchange_account_id.company_id:
+                return False
+        return True
+
+    def _check_account_loss(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.expense_currency_exchange_account_id.company_id and obj.company_id != obj.expense_currency_exchange_account_id.company_id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_account_gain, 'The company of the gain exchange rate account must be the same than the company selected.', ['income_currency_exchange_account_id']),
+        (_check_account_loss, 'The company of the loss exchange rate account must be the same than the company selected.', ['expense_currency_exchange_account_id']),
+    ]
 
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):

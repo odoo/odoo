@@ -34,6 +34,10 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
+# Only users who can modify the user (incl. the user herself) see the real contents of these fields
+USER_PRIVATE_FIELDS = ['password']
+
 class groups(osv.osv):
     _name = "res.groups"
     _description = "Access Groups"
@@ -277,8 +281,10 @@ class res_users(osv.osv):
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
-            if 'password' in o and ('id' not in o or o['id'] != uid):
-                o['password'] = '********'
+            if ('id' not in o or o['id'] != uid):
+                for f in USER_PRIVATE_FIELDS:
+                    if f in o:
+                        o[f] = '********'
             return o
 
         if fields and (ids == [uid] or ids == uid):
@@ -860,6 +866,8 @@ class users_view(osv.osv):
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
         res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
         # add reified groups fields
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            return res
         for app, kind, gs in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
             if kind == 'selection':
                 # selection group field

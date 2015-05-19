@@ -93,7 +93,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     image.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
 
-def image_resize_image_big(base64_source, size=(1204, 1204), encoding='base64', filetype='PNG', avoid_if_small=True):
+def image_resize_image_big(base64_source, size=(1024, 1024), encoding='base64', filetype='PNG', avoid_if_small=True):
     """ Wrapper on image_resize_image, to resize images larger than the standard
         'big' image size: 1024x1024px.
         :param size, encoding, filetype, avoid_if_small: refer to image_resize_image

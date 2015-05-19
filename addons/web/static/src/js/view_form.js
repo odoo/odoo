@@ -148,6 +148,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.$el.off('.formBlur');
         }
         this._super();
+        if (this.$buttons) {
+            this.$buttons.remove();
+        }
     },
     load_form: function(data) {
         var self = this;
@@ -854,6 +857,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         readonly_values[f.name] = f.get_value();
                     }
                 }
+            }
+            // Heuristic to assign a proper sequence number for new records that
+            // are added in a dataset containing other lines with existing sequence numbers
+            if (!self.datarecord.id && self.fields.sequence &&
+                !_.has(values, 'sequence') && !_.isEmpty(self.dataset.cache)) {
+                // Find current max or min sequence (editable top/bottom)
+                var current = _[prepend_on_create ? "min" : "max"](
+                    _.map(self.dataset.cache, function(o){return o.values.sequence})
+                );
+                values['sequence'] = prepend_on_create ? current - 1 : current + 1;
             }
             if (form_invalid) {
                 self.set({'display_invalid_fields': true});
@@ -3518,7 +3531,6 @@ var commands = {
 };
 instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
-    disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
         lazy_build_o2m_kanban_view();
@@ -3790,6 +3802,9 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         }
         return $.when(false);
     },
+    is_false: function() {
+        return this.dataset.ids.length == 0;
+    },
     is_syntax_valid: function() {
         if (! this.viewmanager || ! this.viewmanager.views[this.viewmanager.active_view])
             return true;
@@ -3857,6 +3872,10 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
 instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.o2m.build_context();
+        var self = this;
+        _.each(arguments, function(context) {
+            self.context.add(context);
+        });
         return this.context;
     }
 });
@@ -4305,7 +4324,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
 */
 instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     multi_selection: false,
-    disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.is_loaded = $.Deferred();
@@ -4822,25 +4840,29 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 contexts: [this.context]
             }).done(function (results) {
                 var search_defaults = {};
+                var options = {};
                 _.each(results.context, function (value_, key) {
                     var match = /^search_default_(.*)$/.exec(key);
                     if (match) {
                         search_defaults[match[1]] = value_;
                     }
+                    if (key === 'search_disable_custom_filters'){
+                        options['disable_custom_filters'] = value_;
+                    }
                 });
-                self.setup_search_view(search_defaults);
+                self.setup_search_view(search_defaults, options);
             });
         } else { // "form"
             this.new_object();
         }
     },
-    setup_search_view: function(search_defaults) {
+    setup_search_view: function(search_defaults, options) {
         var self = this;
         if (this.searchview) {
             this.searchview.destroy();
         }
         this.searchview = new instance.web.SearchView(this,
-                this.dataset, false,  search_defaults);
+                this.dataset, false,  search_defaults, options);
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),

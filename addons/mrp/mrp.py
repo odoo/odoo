@@ -73,6 +73,16 @@ class mrp_workcenter(osv.osv):
             value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
+    def _check_capacity_per_cycle(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.capacity_per_cycle <= 0.0:
+                return False
+        return True
+
+    _constraints = [
+        (_check_capacity_per_cycle, 'The capacity per cycle must be strictly positive.', ['capacity_per_cycle']),
+    ]
+
 mrp_workcenter()
 
 
@@ -247,19 +257,16 @@ class mrp_bom(osv.osv):
         return True
 
     def _check_product(self, cr, uid, ids, context=None):
-        all_prod = []
         boms = self.browse(cr, uid, ids, context=context)
-        def check_bom(boms):
+        def check_bom(boms, all_prod):
             res = True
             for bom in boms:
                 if bom.product_id.id in all_prod:
-                    res = res and False
-                all_prod.append(bom.product_id.id)
-                lines = bom.bom_lines
-                if lines:
-                    res = res and check_bom([bom_id for bom_id in lines if bom_id not in boms])
+                    return False
+                if bom.bom_lines:
+                    res = res and check_bom([b for b in bom.bom_lines if b not in boms], all_prod + [bom.product_id.id])
             return res
-        return check_bom(boms)
+        return check_bom(boms, [])
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive BoM.', ['parent_id']),
@@ -313,7 +320,7 @@ class mrp_bom(osv.osv):
                 max_prop = prop
         return result
 
-    def _bom_explode(self, cr, uid, bom, factor, properties=None, addthis=False, level=0, routing_id=False):
+    def _bom_explode(self, cr, uid, bom, factor, properties=None, addthis=False, level=0, routing_id=False, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product.
         @param factor: Factor of product UoM.
@@ -335,7 +342,7 @@ class mrp_bom(osv.osv):
             newbom = self._bom_find(cr, uid, bom.product_id.id, bom.product_uom.id, properties)
 
             if newbom and newbom != bom.id:
-                res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10)
+                res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10, context=context)
                 result = result + res[0]
                 result2 = result2 + res[1]
                 phantom = True
@@ -370,7 +377,7 @@ class mrp_bom(osv.osv):
                 if (bom2.date_start and bom2.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT)) or \
                     (bom2.date_stop and bom2.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT)):
                     continue
-                res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
+                res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10, context=context)
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
@@ -624,7 +631,7 @@ class mrp_production(osv.osv):
 
         # get components and workcenter_lines from BoM structure
         factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
-        return bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
+        return bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id, context=context)
 
     def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
         """ Compute product_lines and workcenter_lines from BoM structure

@@ -263,7 +263,7 @@ class mail_thread(osv.AbstractModel):
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
         for key, val in context.iteritems():
-            if key.startswith('default_'):
+            if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
         self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
 
@@ -1376,6 +1376,7 @@ class mail_thread(osv.AbstractModel):
         """
         subtype_obj = self.pool.get('mail.message.subtype')
         follower_obj = self.pool.get('mail.followers')
+        notification_obj = self.pool.get('mail.notification')
         new_followers = dict()
 
         # fetch auto_follow_fields: res.users relation fields whose changes are tracked for subscription
@@ -1446,7 +1447,16 @@ class mail_thread(osv.AbstractModel):
                         ('model', '=', self._name),
                         ('res_id', '=', record_id)], limit=1, context=context)
                 if msg_ids:
-                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=user_pids, context=context)
+                    notification_obj._notify(cr, uid, msg_ids[0], partners_to_notify=user_pids, context=context)
+                    message = message_obj.browse(cr, uid, msg_ids[0], context=context)
+                    if message.parent_id:
+                        partner_ids_to_parent_notify = set(user_pids).difference(partner.id for partner in message.parent_id.notified_partner_ids)
+                        for partner_id in partner_ids_to_parent_notify:
+                            notification_obj.create(cr, uid, {
+                                'message_id': message.parent_id.id,
+                                'partner_id': partner_id,
+                                'read': True,
+                            }, context=context)
 
         return True
 

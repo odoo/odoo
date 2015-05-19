@@ -15,5 +15,58 @@
             <field name="name">Survey / User</field>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
-    </data>
+        <record model="res.groups" id="base.group_survey_invitee">
+            <field name="name">Survey / Invitee</field>
+        </record>
+	<record id="rule_survey_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey" />
+	    <field name="domain_force">[("invited_user_ids", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_survey_page_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey_page" />
+	    <field name="domain_force">[("survey_id.invited_user_ids", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_survey_question_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey_question" />
+	    <field name="domain_force">[("survey.invited_user_ids", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_survey_answer_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey_answer" />
+	    <field name="domain_force">[("question_id.survey.invited_user_ids", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_survey_response_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey_response" />
+	    <field name="domain_force">[("user_id", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_survey_response_line_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey_response_line" />
+	    <field name="domain_force">[("response_id.user_id", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_survey_response_answer_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey_response_answer" />
+	    <field name="domain_force">[("response_id.response_id.user_id", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_survey_history_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey_history" />
+	    <field name="domain_force">[("survey_id.invited_user_ids", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_survey_question_column_heading_invitee" model="ir.rule">
+	    <field name="model_id" ref="model_survey_question_column_heading" />
+	    <field name="domain_force">[("question_id.survey.invited_user_ids", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+	<record id="rule_res_partner_invitee" model="ir.rule">
+	    <field name="model_id" ref="base.model_res_partner" />
+	    <field name="domain_force">[("id", "=", user.id)]</field>
+	    <field name="groups" eval="[(6, 0,[ref('base.group_survey_invitee')])]" />
+	</record>
+     </data>
 </openerp>
