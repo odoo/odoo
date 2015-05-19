@@ -14,9 +14,9 @@ class TestPurchase(common.TransactionCase):
 
         # Useful accounts
         user_type_id = self.ref('account.data_account_type_expenses')
-        account_exp_id = self.env['account.account'].create({'code': 'X2020', 'name': 'Purchase - Test Expense Account', 'user_type': user_type_id})
+        account_exp_id = self.env['account.account'].create({'code': 'X2020', 'name': 'Purchase - Test Expense Account', 'user_type': user_type_id, 'reconcile': True})
         user_type_id = self.ref('account.data_account_type_payable')
-        account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type': user_type_id})
+        account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type': user_type_id, 'reconcile': True})
 
         self.env['product.product'].browse(product_id).product_tmpl_id.write({'property_account_expense': account_exp_id})
 

@@ -47,9 +47,9 @@ class TestSale(TestMail):
 
         # Usefull accounts
         user_type_id = IrModelData.xmlid_to_res_id('account.data_account_type_revenue')
-        account_rev_id = account_obj.create({'code': 'X2020', 'name': 'Sales - Test Sales Account', 'user_type': user_type_id})
+        account_rev_id = account_obj.create({'code': 'X2020', 'name': 'Sales - Test Sales Account', 'user_type': user_type_id, 'reconcile': True})
         user_type_id = IrModelData.xmlid_to_res_id('account.data_account_type_receivable')
-        account_recv_id = account_obj.create({'code': 'X1012', 'name': 'Sales - Test Reicv Account', 'user_type': user_type_id})
+        account_recv_id = account_obj.create({'code': 'X1012', 'name': 'Sales - Test Reicv Account', 'user_type': user_type_id, 'reconcile': True})
 
         # Add account to product
         product_template_id = self.env.ref('sale.advance_product_0').product_tmpl_id
