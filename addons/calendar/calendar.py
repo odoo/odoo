@@ -585,7 +585,7 @@ class calendar_alarm(osv.Model):
     def _update_cron(self, cr, uid, context=None):
         try:
             cron = self.pool['ir.model.data'].get_object(
-                cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
+                cr, SUPERUSER_ID, 'calendar', 'ir_cron_scheduler_alarm', context=context)
         except ValueError:
             return False
         return cron.toggle(model=self._name, domain=[('type', '=', 'email')])
