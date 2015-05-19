@@ -72,6 +72,7 @@ class Users(models.Model):
         # TODO change SUPERUSER_ID into user.id but catch errors
         return self.partner_id.sudo().message_post(body=body)
 
+    @api.multi
     def unlink(self):
         # Cascade-delete mail aliases as well, as they should not exist without the user.
         aliases = self.mapped('alias_id')
