@@ -293,7 +293,7 @@ class AccountMoveLine(models.Model):
             counterpart = counterpart[0:2] + ["..."]
         self.counterpart = ",".join(counterpart)
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, string="Label")
     quantity = fields.Float(digits=(16, 2),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
@@ -333,7 +333,7 @@ class AccountMoveLine(models.Model):
         help="You can check this box to mark this journal item as a litigation with the associated partner")
     date_maturity = fields.Date(string='Due date', index=True, required=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
-    date = fields.Date(related='move_id.date', string='Effective date', required=True, index=True, default=fields.Date.context_today, store=True, copy=False)
+    date = fields.Date(related='move_id.date', string='Date', required=True, index=True, default=fields.Date.context_today, store=True, copy=False)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     tax_ids = fields.Many2many('account.tax', string='Taxes', copy=False, readonly=True)
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', copy=False, readonly=True)

@@ -100,7 +100,7 @@ class AccountVoucher(models.Model):
                         \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
                         \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' status is used when user cancel voucher.')
-    reference = fields.Char('Supplier Reference', readonly=True, states={'draft': [('readonly', False)]},
+    reference = fields.Char('Bill Reference', readonly=True, states={'draft': [('readonly', False)]},
                                  help="The partner reference of this document.", copy=False)
     amount = fields.Monetary(string='Total', store=True, readonly=True, compute='_compute_total')
     tax_amount = fields.Monetary(readonly=True, store=True, compute='_compute_total')
@@ -111,7 +111,7 @@ class AccountVoucher(models.Model):
     paid = fields.Boolean(compute='_check_paid', help="The Voucher has been totally paid.")
     pay_now = fields.Selection([
             ('pay_now', 'Pay Directly'),
-            ('pay_later', 'Pay Later or Group Funds'),
+            ('pay_later', 'Pay Later'),
         ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_now')
     date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
     audit = fields.Boolean('To Review', related="move_id.to_check", help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')

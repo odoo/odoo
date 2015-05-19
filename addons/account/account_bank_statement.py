@@ -21,8 +21,8 @@ class AccountCashboxLine(models.Model):
         """ Calculates Sub total"""
         self.subtotal = self.coin_value * self.number
 
-    coin_value = fields.Float(string='Unit of Currency', required=True, digits=0)
-    number = fields.Integer(string='Opening Number of Units', help='Opening Unit Numbers')
+    coin_value = fields.Float(string='Coin/Bill Value', required=True, digits=0)
+    number = fields.Integer(string='Number of Coins/Bills', help='Opening Unit Numbers')
     subtotal = fields.Float(compute='_sub_total', string='Subtotal', digits=0, readonly=True)
     cashbox_id = fields.Many2one('account.bank.statement.cashbox')
 
@@ -178,7 +178,7 @@ class AccountBankStatement(models.Model):
         if context.get('cashbox_id'):
             context['active_id'] = self.id
             return {
-                'name': _('Cashbox Entries'),
+                'name': _('Cash Control'),
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'account.bank.statement.cashbox',
