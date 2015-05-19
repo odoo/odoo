@@ -358,7 +358,7 @@ class product_pricelist(osv.osv):
                         price = min(price, price_limit + price_max_margin)
 
                     rule_id = rule.id
-                break
+                    break
 
             # Final price conversion to target UoM
             price = product_uom_obj._compute_price(cr, uid, price_uom_id, price, qty_uom_id)
