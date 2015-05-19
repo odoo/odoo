@@ -6,7 +6,7 @@ from openerp.tools import mute_logger
 
 class TestInvite(TestMail):
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_invite_email(self):
         mail_invite = self.env['mail.wizard.invite'].with_context({
             'default_res_model': 'mail.group',

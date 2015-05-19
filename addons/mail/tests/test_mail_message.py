@@ -109,7 +109,7 @@ class TestMailMessage(TestMail):
         self.assertNotIn('mail.group', msg.message_id)
         self.assertNotIn('-%d-' % self.group_pigs.id, msg.message_id)
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_mail_message_access_search(self):
         # Data: various author_ids, partner_ids, documents
         msg1 = self.env['mail.message'].create({
@@ -170,6 +170,7 @@ class TestMailMessage(TestMail):
         with self.assertRaises(except_orm):
             self.message.sudo(self.user_employee).read()
 
+    @mute_logger('openerp.models')
     def test_mail_message_access_read_crash_portal(self):
         with self.assertRaises(except_orm):
             self.message.sudo(self.user_portal).read(['body', 'message_type', 'subtype_id'])
@@ -203,6 +204,7 @@ class TestMailMessage(TestMail):
         with self.assertRaises(AccessError):
             self.env['mail.message'].sudo(self.user_public).create({'model': 'mail.group', 'res_id': self.group_public.id, 'body': 'Test'})
 
+    @mute_logger('openerp.models')
     def test_mail_message_access_create_crash(self):
         # Do: Bert create a private message -> ko, no creation rights
         with self.assertRaises(except_orm):

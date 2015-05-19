@@ -62,7 +62,7 @@ class TestMailTemplate(TestMail):
         self.assertEqual(set(attachments.mapped('res_model')), set(['res.partner']))
         self.assertEqual(set(attachments.mapped('res_id')), set([self.user_admin.partner_id.id]))
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_composer_template_send(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
@@ -83,7 +83,7 @@ class TestMailTemplate(TestMail):
         # self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
         #     'mail.message attachment name / data incorrect')
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_composer_template_mass_mailing(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
