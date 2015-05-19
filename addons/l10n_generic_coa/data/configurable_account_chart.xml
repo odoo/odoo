@@ -138,6 +138,7 @@
             <field name="name">Product Sales</field>
             <field name="user_type" ref="account.data_account_type_revenue"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
 
         <record id="conf_cog" model="account.account.template">
@@ -145,6 +146,7 @@
             <field name="name">Cost of Goods Sold</field>
             <field name="user_type" ref="account.data_account_type_expenses"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
 
         <record id="conf_a_expense" model="account.account.template">
@@ -152,13 +154,7 @@
             <field name="name">Expenses</field>
             <field name="user_type" ref="account.data_account_type_expenses"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
-        </record>
-
-        <record id="conf_a_salary_expense" model="account.account.template">
-            <field name="code">221</field>
-            <field name="name">Salary Expenses</field>
-            <field name="user_type" ref="account.data_account_type_expenses"/>
-            <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
 
         <record id="conf_a_current_year_earnings" model="account.account.template">
@@ -174,6 +170,7 @@
             <field name="user_type" ref="account.data_account_type_revenue"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record model="account.account.template" id="exchange_fx_expense">
             <field name="name">Foreign Exchange Loss</field>
@@ -181,6 +178,7 @@
             <field name="user_type" ref="account.data_account_type_expenses"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record id="a_salary_expense" model="account.account.template">
             <field name="code">2121</field>
