@@ -25,7 +25,7 @@ this event.
         'views/product.xml',
         'views/sale_order.xml',
         'event_sale_data.xml',
-        'views/report_registrationbadge.xml',
+        'report/event_event_templates.xml',
         'security/ir.model.access.csv',
         'wizard/event_edit_registration.xml',
     ],

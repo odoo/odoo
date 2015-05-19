@@ -93,3 +93,13 @@ class event(models.Model):
         elif 'website_published' in init_values and not self.website_published:
             return 'website_event.mt_event_unpublished'
         return super(event, self)._track_subtype(init_values)
+
+    @api.multi
+    def action_open_badge_editor(self):
+        """ open the event badge editor : redirect to the report page of event badge report """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'new',
+            'url': '/report/html/%s/%s' % ('event.event_event_report_template_badge', self.id),
+        }

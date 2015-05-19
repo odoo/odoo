@@ -168,6 +168,12 @@ class event_event(models.Model):
     description = fields.Html(
         string='Description', oldname='note', translate=True,
         readonly=False, states={'done': [('readonly', True)]})
+    # badge fields
+    badge_front = fields.Html(string='Badge Front')
+    badge_back = fields.Html(string='Badge Back')
+    badge_innerleft = fields.Html(string='Badge Innner Left')
+    badge_innerright = fields.Html(string='Badge Inner Right')
+    event_logo = fields.Html(string='Event Logo')
 
     @api.multi
     @api.depends('name', 'date_begin', 'date_end')
@@ -363,3 +369,30 @@ class event_registration(models.Model):
             if attendee.partner_id:
                 attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
         return recipients
+
+    @api.multi
+    def action_send_badge_email(self):
+        """ Open a window to compose an email, with the template - 'event_badge'
+            message loaded by default
+        """
+        self.ensure_one()
+        template = self.env.ref('event.event_registration_mail_template_badge')
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
+        ctx = dict(
+            default_model='event.registration',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template.id,
+            default_composition_mode='comment',
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }

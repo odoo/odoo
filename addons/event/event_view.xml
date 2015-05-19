@@ -37,7 +37,7 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        
+
         <menuitem id="menu_event_configuration" name="Event" parent="base.menu_config"
             sequence="14"/>
         <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="menu_event_configuration" groups="base.group_no_one"/>
@@ -70,10 +70,10 @@
                             <h1><field name="name"/></h1>
                         </div>
                         <div class="oe_right oe_button_box" groups="base.group_user">
-                            <button name="%(event.act_event_registration_from_event)d" 
-                                type="action" 
-                                class="oe_stat_button oe_inline" 
-                                icon="fa-github" 
+                            <button name="%(event.act_event_registration_from_event)d"
+                                type="action"
+                                class="oe_stat_button oe_inline oe_event_attendee_button"
+                                icon="fa-github"
                                 help="Register with this event">
                                 <field name="seats_reserved" widget="statinfo" string="Attendees"/>
                             </button>
@@ -302,6 +302,7 @@
             <field name="arch" type="xml">
                 <form string="Event Registration">
                     <header>
+                        <button name="action_send_badge_email" string="Send by Email" type="object" states="open,done" class="oe_highlight"/>
                         <button name="confirm_registration" string="Confirm" states="draft" type="object" class="oe_highlight"/>
                         <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
                         <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" />
@@ -451,7 +452,7 @@
             <field name="res_model">event.mail</field>
             <field name="view_type">form</field>
         </record>
-        
+
         <menuitem name="Events Mail Schedulers" id="menu_event_type" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
 
     </data>
