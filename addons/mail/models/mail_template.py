@@ -227,38 +227,33 @@ class MailTemplate(models.Model):
 
     @api.multi
     def create_action(self):
-        ActWindow = self.env['ir.actions.act_window'].sudo()
-
-        data_obj = self.pool.get('ir.model.data')
+        ActWindowSudo = self.env['ir.actions.act_window'].sudo()
+        IrValuesSudo = self.env['ir.values'].sudo()
+        view = self.env.ref('mail.email_compose_message_wizard_form')
 
         for template in self:
             src_obj = template.model_id.model
-            model_data_id = data_obj._get_id(cr, uid, 'mail', 'email_compose_message_wizard_form')
-            res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
-            button_name = _('Send Mail (%s)') % template.name
-            act_id = action_obj.create(cr, SUPERUSER_ID, {
-                 'name': button_name,
-                 'type': 'ir.actions.act_window',
-                 'res_model': 'mail.compose.message',
-                 'src_model': src_obj,
-                 'view_type': 'form',
-                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
-                 'view_mode':'form,tree',
-                 'view_id': res_id,
-                 'target': 'new',
-                 'auto_refresh':1
-            }, context)
-            ir_values_id = self.pool.get('ir.values').create(cr, SUPERUSER_ID, {
-                 'name': button_name,
-                 'model': src_obj,
-                 'key2': 'client_action_multi',
-                 'value': "ir.actions.act_window,%s" % act_id,
-                 'object': True,
-             }, context)
 
+            button_name = _('Send Mail (%s)') % template.name
+            action = ActWindowSudo.create({
+                'name': button_name,
+                'type': 'ir.actions.act_window',
+                'res_model': 'mail.compose.message',
+                'src_model': src_obj,
+                'view_type': 'form',
+                'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
+                'view_mode': 'form,tree',
+                'view_id': view.id,
+                'target': 'new',
+                'auto_refresh': 1})
+            ir_value = IrValuesSudo.create({
+                'name': button_name,
+                'model': src_obj,
+                'key2': 'client_action_multi',
+                'value': "ir.actions.act_window,%s" % action.id})
             template.write({
-                'ref_ir_act_window': act_id,
-                'ref_ir_value': ir_values_id,
+                'ref_ir_act_window': action.id,
+                'ref_ir_value': ir_value.id,
             })
 
         return True

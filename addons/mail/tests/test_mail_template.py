@@ -128,3 +128,15 @@ class TestMailTemplate(TestMail):
         last_template = self.env['mail.template'].search([('model', '=', 'mail.group'), ('subject', '=', 'Forget me subject')], limit=1)
         self.assertEqual(last_template.body_html, '<p>Dummy body</p>', 'email_template incorrect body_html')
 
+    def test_add_context_action(self):
+        self.email_template.create_action()
+
+        # check template act_window and ir_values has been updated
+        self.assertTrue(bool(self.email_template.ref_ir_act_window))
+        self.assertTrue(bool(self.email_template.ref_ir_value))
+
+        # check those records
+        action = self.email_template.ref_ir_act_window
+        self.assertEqual(action.name, 'Send Mail (%s)' % self.email_template.name)
+        value = self.email_template.ref_ir_value
+        self.assertEqual(value.name, 'Send Mail (%s)' % self.email_template.name)
