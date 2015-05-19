@@ -455,7 +455,7 @@ var KanbanRecord = Widget.extend({
     toogle_manage_pane: function(){
         this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
         this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
-        this.$('.o_kanban_manage_button_section').toggleClass(this.kanban_color(this.values['color'].value));
+        this.$('.o_kanban_manage_button_section').toggleClass(this.kanban_color((this.values['color'] && this.values['color'].value) || 0));
     },
 
     do_action_delete: function($action) {

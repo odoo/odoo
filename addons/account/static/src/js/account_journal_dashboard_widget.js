@@ -17,7 +17,6 @@ var JournalDashboardGraph = kanban_common.AbstractField.extend({
             switch(type) {
                 case "line":
                     var chart = nv.models.lineChart();
-                    chart.dispatch.on('tooltipShow', function(){console.log(arguments);})
                     chart.options({
                         x: function(d,u) { return u},
                         width: self.$el.find('svg').width(),
@@ -46,6 +45,7 @@ var JournalDashboardGraph = kanban_common.AbstractField.extend({
                         return label;
                     })
                     .showMaxMin(false);
+                    chart.yAxis.tickFormat(d3.format(',.2f'));
                     break;
                 case "bar":
                     var bar_color = [];
@@ -85,14 +85,7 @@ var JournalDashboardGraph = kanban_common.AbstractField.extend({
     },
 });
 
-var JournalDashboard = kanban_common.AbstractField.extend({
-    start: function(){
-        //used to set 2 dashboard per line
-        this.$el.parents('.oe_kanban_record').addClass('col-md-6');
-    },
-});
 
 kanban_common.registry.add('dashboard_graph', JournalDashboardGraph);
-kanban_common.registry.add('dashboard_journal', JournalDashboard);
 
 });
