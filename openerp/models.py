@@ -667,6 +667,7 @@ class BaseModel(object):
             # process store parameter
             store = column.store
             if store is True:
+                priority = column.priority
                 if isinstance(column, fields.related):
                     # create triggers for every object in the path
                     # this relies on being able to search through the whole
@@ -680,6 +681,11 @@ class BaseModel(object):
                         if part not in current_model._fields:
                             continue
                         part_field = current_model._fields[part]
+                        # if we have a related field in our path, expand it
+                        if isinstance(part_field.column, fields.related):
+                            priority += 1
+                            tail = list(part_field.column.arg) + tail
+                            continue
                         trigger_model = current_model._name
                         trigger_fields = [part]
                         get_ids = lambda self, cr, uid, ids, c={}: ids
@@ -697,12 +703,12 @@ class BaseModel(object):
                         head.append(part)
                     store = {
                         trigger_model: (
-                            get_ids, trigger_fields, column.priority, None)
+                            get_ids, trigger_fields, priority, None)
                         for trigger_model, get_ids, trigger_fields in triggers
                     }
                 else:
                     get_ids = lambda self, cr, uid, ids, c={}: ids
-                    store = {cls._name: (get_ids, None, column.priority, None)}
+                    store = {cls._name: (get_ids, None, priority, None)}
             for model, spec in store.iteritems():
                 if len(spec) == 4:
                     (fnct, fields2, order, length) = spec
