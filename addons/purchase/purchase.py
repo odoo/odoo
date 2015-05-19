@@ -1325,7 +1325,7 @@ class account_invoice(osv.Model):
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
         wf_service = netsvc.LocalService("workflow")
-        for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
+        for order in purchase_order_obj.browse(cr, user_id, po_ids, context=context):
             # Signal purchase order workflow that an invoice has been validated.
             invoiced = []
             shipped = True
@@ -1338,8 +1338,8 @@ class account_invoice(osv.Model):
                 if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
                     invoiced.append(po_line.id)
             if invoiced and shipped:
-                self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
-            wf_service.trg_write(uid, 'purchase.order', order.id, cr)
+                self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})
+            wf_service.trg_write(user_id, 'purchase.order', order.id, cr)
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
