@@ -1136,6 +1136,24 @@ var One2ManyList = AddAnItemList.extend({
     },
 });
 
+var One2ManyFormView = FormView.extend({
+    form_template: 'One2Many.formview',
+    load_form: function(data) {
+        this._super(data);
+        var self = this;
+        this.$buttons.find('button.oe_form_button_create').click(function() {
+            self.save().done(self.on_button_new);
+        });
+    },
+    do_notify_change: function() {
+        if (this.dataset.parent_view) {
+            this.dataset.parent_view.do_notify_change();
+        } else {
+            this._super.apply(this, arguments);
+        }
+    }
+});
+
 var One2ManyViewManager = ViewManager.extend({
     init: function(parent, dataset, views, flags) {
         // By default, render buttons and pager in O2M fields, but no sidebar
@@ -1150,13 +1168,44 @@ var One2ManyViewManager = ViewManager.extend({
         this.set_cp_bus(this.control_panel.get_bus());
         this._super(parent, dataset, views, flags);
         this.registry = core.view_registry.extend({
-            'list': One2ManyListView
+            list: One2ManyListView,
+            form: One2ManyFormView,
         });
         this.__ignore_blur = false;
     },
     start: function() {
         this.control_panel.prependTo(this.$el);
         return this._super();
+    },
+    switch_mode: function(mode, unused) {
+        if (mode !== 'form') {
+            return this._super(mode, unused);
+        }
+        var self = this;
+        var id = self.o2m.dataset.index !== null ? self.o2m.dataset.ids[self.o2m.dataset.index] : null;
+        var pop = new common.FormOpenPopup(this);
+        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
+            title: _t("Open: ") + self.o2m.string,
+            create_function: function(data, options) {
+                return self.o2m.data_create(data, options);
+            },
+            write_function: function(id, data, options) {
+                return self.o2m.data_update(id, data, {}).done(function() {
+                    self.o2m.reload_current_view();
+                });
+            },
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views.form : undefined,
+            parent_view: self.o2m.view,
+            child_name: self.o2m.name,
+            read_function: function(ids, fields, options) {
+                return self.o2m.data_read(ids, fields, options);
+            },
+            form_view_options: {'not_interactible_on_create':true},
+            readonly: self.o2m.get("effective_readonly")
+        });
+        pop.on("elements_selected", self, function() {
+            self.o2m.reload_current_view();
+        });
     },
 });
 
