@@ -240,7 +240,7 @@ class res_company(osv.osv):
                 return rule.company_dest_id.id
         return user.company_id.id
 
-    @tools.ormcache()
+    @tools.ormcache('uid', 'company')
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []

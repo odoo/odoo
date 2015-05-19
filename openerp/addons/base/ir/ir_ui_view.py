@@ -320,7 +320,7 @@ class view(osv.osv):
         if not values.get('name'):
             values['name'] = "%s %s" % (values.get('model'), values['type'])
 
-        self.clear_cache()
+        self.clear_caches()
         return super(view, self).create(
             cr, uid,
             self._compute_defaults(cr, uid, values, context=context),
@@ -343,7 +343,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        self.clear_cache()
+        self.clear_caches()
         ret = super(view, self).write(
             cr, uid, ids,
             self._compute_defaults(cr, uid, vals, context=context),
@@ -925,11 +925,11 @@ class view(osv.osv):
     #------------------------------------------------------
     # QWeb template views
     #------------------------------------------------------
-    _read_template_cache = dict(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
-    if config['dev_mode']:
-        _read_template_cache['size'] = 0
 
-    @tools.conditional(not tools.config['dev_mode'], tools.ormcache_context(**_read_template_cache))
+    # apply ormcache_context decorator unless in dev mode...
+    @tools.conditional(not config['dev_mode'],
+        tools.ormcache_context('uid', 'view_id',
+            keys=('lang', 'inherit_branding', 'editable', 'translatable')))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
@@ -956,7 +956,8 @@ class view(osv.osv):
         return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
 
     def clear_cache(self):
-        self._read_template.clear_cache(self)
+        """ Deprecated, use `clear_caches` instead. """
+        self.clear_caches()
 
     def _contains_branded(self, node):
         return node.tag == 't'\
@@ -1070,7 +1071,7 @@ class view(osv.osv):
         self._translate_qweb(cr, uid, arch, translate_func, context=context)
         return arch
 
-    @openerp.tools.ormcache()
+    @openerp.tools.ormcache('uid', 'id')
     def get_view_xmlid(self, cr, uid, id):
         imd = self.pool['ir.model.data']
         domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', id)]

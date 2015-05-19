@@ -176,13 +176,13 @@ class lang(osv.osv):
         (_check_grouping, "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case.", ['grouping'])
     ]
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('lang')
     def _lang_get(self, cr, uid, lang):
         lang_ids = self.search(cr, uid, [('code', '=', lang)]) or \
                    self.search(cr, uid, [('code', '=', 'en_US')])
         return lang_ids[0]
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('lang', 'monetary')
     def _lang_data_get(self, cr, uid, lang, monetary=False):
         if type(lang) in (str, unicode):
             lang = self._lang_get(cr, uid, lang)
