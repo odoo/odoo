@@ -6,7 +6,7 @@ from openerp.tools import mute_logger
 
 class TestMessageRead(TestMail):
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def setUp(self):
         super(TestMessageRead, self).setUp()
         self.group_pigs.message_subscribe_users([self.user_employee.id])

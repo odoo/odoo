@@ -89,7 +89,7 @@ class TestMailFeatures(TestMail):
             'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
         )
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_inbox_redirection_message_document(self):
         """ Inbox redirection: message + read access: Doc """
         message = self.group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id], message_type='comment', subtype='mail.mt_comment')
@@ -105,7 +105,7 @@ class TestMailFeatures(TestMail):
             'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
         )
 
-    @mute_logger('openerp.addons.mail.mail_mail', 'openerp.models')
+    @mute_logger('openerp.addons.mail.models.mail_mail', 'openerp.models')
     def test_inbox_redirection_message_inbox(self):
         """ Inbox redirection: message without read access: Inbox """
         message = self.group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id], message_type='comment', subtype='mail.mt_comment')
@@ -138,7 +138,7 @@ class TestMailFeatures(TestMail):
             'URL redirection: action without parameters should redirect to client action Inbox'
         )
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_needaction(self):
         na_emp1_base = self.env['mail.message'].sudo(self.user_employee)._needaction_count(domain=[])
         na_emp2_base = self.env['mail.message'].sudo(self.user_employee_2)._needaction_count(domain=[])
@@ -174,42 +174,42 @@ class TestMessagePost(TestMail):
             'res_model': 'mail.compose.message', 'res_id': 0})
         self.group_pigs.message_subscribe_users(user_ids=self.user_employee.id)
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_no_subscribe_author(self):
         original_followers = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment')
         self.assertEqual(self.group_pigs.message_follower_ids, original_followers)
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_subscribe_author(self):
         original_followers = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment')
         self.assertEqual(self.group_pigs.message_follower_ids, original_followers | self.user_employee.partner_id)
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_no_subscribe_recipients(self):
         original_followers = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
         self.assertEqual(self.group_pigs.message_follower_ids, original_followers)
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients(self):
         original_followers = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
         self.assertEqual(self.group_pigs.message_follower_ids, original_followers | self.partner_1 | self.partner_2)
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients_partial(self):
         original_followers = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True, 'mail_post_autofollow_partner_ids': [self.partner_2.id]}).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
         self.assertEqual(self.group_pigs.message_follower_ids, original_followers | self.partner_2)
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_notifications(self):
         _body, _body_alt = '<p>Test Body</p>', 'Test Body'
         _subject = 'Test Subject'
@@ -268,7 +268,7 @@ class TestMessagePost(TestMail):
         self.assertTrue(all(_body_alt in m['body'] for m in self._mails))
         self.assertFalse(any(m['references'] for m in self._mails))
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_answer(self):
         _body = '<p>Test Body</p>'
         _subject = 'Test Subject'
@@ -300,7 +300,7 @@ class TestMessagePost(TestMail):
         self.assertEqual(new_msg.parent_id.id, parent_msg.id, 'message_post: flatten error')
         self.assertFalse(new_msg.notified_partner_ids)
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_message_compose(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
@@ -331,7 +331,7 @@ class TestMessagePost(TestMail):
 
         # TODO: test attachments ?
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_message_compose_mass_mail(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
@@ -385,7 +385,7 @@ class TestMessagePost(TestMail):
         # self.assertEqual(set(group_bird.message_follower_ids.ids), set([self.partner_admin_id]),
         #                 'compose wizard: mail_post_autofollow and mail_create_nosubscribe context keys not correctly taken into account')
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_message_compose_mass_mail_active_domain(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',

@@ -31,7 +31,7 @@ class test_portal(TestMail):
             'body': 'Body text'})
         compose.send_mail()
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_invite_email_portal(self):
         group_pigs = self.group_pigs
         base_url = self.env['ir.config_parameter'].get_param('web.base.url', default='')
@@ -83,7 +83,7 @@ class test_portal(TestMail):
         self.assertIn('login=%s' % self.user_employee.login, url,
                       'notification email: link should contain the user login')
 
-    @mute_logger('openerp.addons.mail.mail_mail', 'openerp.models')
+    @mute_logger('openerp.addons.mail.models.mail_mail', 'openerp.models')
     def test_inbox_redirection_portal(self):
         group_pigs = self.group_pigs
         port_act_id = self.ref('portal.action_mail_inbox_feeds_portal')
