@@ -269,7 +269,7 @@ class ir_translation(osv.osv):
             return
         return super(ir_translation, self)._check_selection_field_value(cr, uid, field, value, context=context)
 
-    @tools.ormcache_multi(skiparg=3, multi=6)
+    @tools.ormcache_multi('name', 'tt', 'lang', multi='ids')
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
         if ids:
@@ -333,7 +333,7 @@ class ir_translation(osv.osv):
         
         return (query, params)
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('name', 'types', 'lang', 'source', 'res_id')
     def __get_source(self, cr, uid, name, types, lang, source, res_id):
         # res_id is a tuple or None, otherwise ormcache cannot cache it!
         query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)

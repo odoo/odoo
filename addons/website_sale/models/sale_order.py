@@ -135,8 +135,7 @@ class website(orm.Model):
                                                  string='Price list available for this Ecommerce/Website'),
     }
 
-    @tools.ormcache()
-    # No context, else no cache
+    @tools.ormcache('uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl')
     def _get_pl(self, cr, uid, country_code, show_visible, website_pl, current_pl, all_pl):
         """ Return the list of pricelists that can be used on website for the current user.
 
@@ -362,10 +361,12 @@ class website_pricelist(osv.Model):
                                               'website_pricelist_id', 'res_country_group_id', string='Country Groups'),
     }
 
-    # _get_pl is cached to avoid to recompute at each request the list of pricelists availables.
-    # So, we need to invalidate the cache when we change the config of website price list to force to recompute.
     def clear_cache(self):
-        self.pool['website']._get_pl.clear_cache(self.pool['website'])
+        # website._get_pl() is cached to avoid to recompute at each request the
+        # list of available pricelists. So, we need to invalidate the cache when
+        # we change the config of website price list to force to recompute.
+        website = self.pool['website']
+        website._get_pl.clear_cache(website)
 
     def create(self, cr, uid, data, context=None):
         res = super(website_pricelist, self).create(cr, uid, data, context=context)

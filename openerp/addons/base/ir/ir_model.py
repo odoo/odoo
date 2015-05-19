@@ -733,7 +733,7 @@ class ir_model_access(osv.osv):
     # But as the method raises an exception in that case,  the key 'lang' might
     # not be really necessary as a cache key, unless the `ormcache_context`
     # decorator catches the exception (it does not at the moment.)
-    @tools.ormcache_context(accepted_keys=('lang',))
+    @tools.ormcache_context('uid', 'model', 'mode', 'raise_exception', keys=('lang',))
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
@@ -913,7 +913,7 @@ class ir_model_data(osv.osv):
             cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
     # NEW V8 API
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('xmlid')
     def xmlid_lookup(self, cr, uid, xmlid):
         """Low level xmlid lookup
         Return (id, res_model, res_id) or raise ValueError if not found
