@@ -528,6 +528,10 @@ class Field(object):
         if not self.states and self.inherited:
             self.states = field.states
 
+        # special case for inherited required fields
+        if self.inherited and field.required:
+            self.required = True
+
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
         # when related_sudo, bypass access rights checks when reading values
