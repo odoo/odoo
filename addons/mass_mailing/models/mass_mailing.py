@@ -391,35 +391,6 @@ class MassMailing(osv.Model):
 
     _inherit = ['utm.mixin']
 
-    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, date_begin, context=None):
-        """ Generic method to generate data for bar chart values using SparklineBarWidget.
-            This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
-
-            :param obj: the target model (i.e. crm_lead)
-            :param domain: the domain applied to the read_group
-            :param list read_fields: the list of fields to read in the read_group
-            :param str value_field: the field used to compute the value of the bar slice
-            :param str groupby_field: the fields used to group
-
-            :return list section_result: a list of dicts: [
-                                                {   'value': (int) bar_column_value,
-                                                    'tootip': (str) bar_column_tooltip,
-                                                }
-                                            ]
-        """
-        date_begin = date_begin.date()
-        section_result = [{'value': 0,
-                           'tooltip': ustr((date_begin + relativedelta.relativedelta(days=i)).strftime('%d %B %Y')),
-                           } for i in range(0, self._period_number)]
-        group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
-        field = obj._fields.get(groupby_field.split(':')[0])
-        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if field.type == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
-        for group in group_obj:
-            group_begin_date = datetime.strptime(group['__domain'][0][2], pattern).date()
-            timedelta = relativedelta.relativedelta(group_begin_date, date_begin)
-            section_result[timedelta.days] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field)}
-        return section_result
-
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing """
         results = {}
