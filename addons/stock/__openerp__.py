@@ -51,7 +51,7 @@ Dashboard / Reports for Warehouse Management will include:
 * Moves Analysis
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['product', 'procurement', 'board', 'web_kanban_gauge', 'web_kanban_sparkline', 'barcodes'],
+    'depends': ['product', 'procurement', 'board', 'barcodes'],
     'category': 'Warehouse Management',
     'sequence': 16,
     'demo': [
