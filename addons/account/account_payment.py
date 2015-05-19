@@ -39,7 +39,6 @@ class account_abstract_payment(models.AbstractModel):
     amount = fields.Monetary(string='Payment Amount', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
-    date = fields.Date(string='Accounting Date', copy=False, help="Keep empty to use the payment date.",)
     communication = fields.Char()
     journal_id = fields.Many2one('account.journal', string='Bank Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
@@ -168,7 +167,6 @@ class account_register_payments(models.TransientModel):
             'journal_id': self.journal_id.id,
             'payment_method': self.payment_method.id,
             'payment_date': self.payment_date,
-            'date': self.date,
             'communication': self.communication,
             'invoice_ids': [(4, inv.id, None) for inv in invoices],
             'payment_type': self.payment_type,
@@ -193,7 +191,7 @@ class account_payment(models.Model):
         self.has_invoices = bool(self.invoice_ids)
 
     @api.one
-    @api.depends('invoice_ids', 'amount', 'date', 'currency_id')
+    @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id')
     def _compute_payment_difference(self):
         if len(self.invoice_ids) == 0:
             return
@@ -348,7 +346,7 @@ class account_payment(models.Model):
                         sequence = rec.env.ref('account.sequence_payment_supplier_refund')
                     if rec.payment_type == 'outbound':
                         sequence = rec.env.ref('account.sequence_payment_supplier_invoice')
-            rec.name = sequence.with_context(ir_sequence_date=rec.date or rec.payment_date).next_by_id()
+            rec.name = sequence.with_context(ir_sequence_date=rec.payment_date).next_by_id()
 
             # Create the journal entry
             amount = rec.amount * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
@@ -451,10 +449,10 @@ class account_payment(models.Model):
             raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
             raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
-        name = journal.with_context(ir_sequence_date=self.date).sequence_id.next_by_id()
+        name = journal.with_context(ir_sequence_date=self.payment_date).sequence_id.next_by_id()
         return {
             'name': name,
-            'date': self.date or self.payment_date,
+            'date': self.payment_date,
             'ref': self.communication or '',
             'company_id': self.company_id.id,
             'journal_id': journal.id,
