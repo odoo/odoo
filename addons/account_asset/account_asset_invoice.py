@@ -51,7 +51,7 @@ class account_invoice_line(osv.osv):
                     'name': line.name,
                     'code': line.invoice_id.number or False,
                     'category_id': line.asset_category_id.id,
-                    'purchase_value': line.price_subtotal,
+                    'purchase_value': line.price_subtotal / line.quantity,
                     'period_id': line.invoice_id.period_id.id,
                     'partner_id': line.invoice_id.partner_id.id,
                     'company_id': line.invoice_id.company_id.id,
@@ -60,9 +60,12 @@ class account_invoice_line(osv.osv):
                 }
                 changed_vals = asset_obj.onchange_category_id(cr, uid, [], vals['category_id'], context=context)
                 vals.update(changed_vals['value'])
-                asset_id = asset_obj.create(cr, uid, vals, context=context)
-                if line.asset_category_id.open_asset:
-                    asset_obj.validate(cr, uid, [asset_id], context=context)
+                qty = line.quantity
+                while qty > 0:
+                    qty -= 1
+                    asset_id = asset_obj.create(cr, uid, vals, context=context)
+                    if line.asset_category_id.open_asset:
+                        asset_obj.validate(cr, uid, [asset_id], context=context)
         return True
 
 
