@@ -1148,6 +1148,16 @@ var bankStatementReconciliation = abstractReconciliation.extend({
         this.excluded_move_lines_ids = {};
     },
 
+    serverPreprocessResultHandler: function(data) {
+        // Handles the data returned by a RPC call to reconciliation_widget_preprocess. Extending this method
+        // and reconciliation_widget_preprocess allows to fetch more data without extra RPC calls.
+        this.num_already_reconciled_lines = data.num_already_reconciled_lines;
+        this.notifications = this.notifications.concat(data.notifications);
+        this.lines = data.st_lines_ids;
+        if (this.single_statement && data.statement_name)
+            this.title = data.statement_name;
+    },
+
     start: function() {
         var self = this;
         return $.when(this._super()).then(function(){
@@ -1156,13 +1166,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
             // Let the server prepare the ground
             deferred_promises.push(self.model_bank_statement
                 .call("reconciliation_widget_preprocess", [self.statement_ids || undefined])
-                .then(function(data) {
-                    self.num_already_reconciled_lines = data.num_already_reconciled_lines;
-                    self.notifications = self.notifications.concat(data.notifications);
-                    self.lines = data.st_lines_ids;
-                    if (self.single_statement && data.statement_name)
-                        self.title = data.statement_name;
-                })
+                .then(function(data){ self.serverPreprocessResultHandler(data) })
             );
 
             // Get the id of the menuitem
@@ -2091,12 +2095,13 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
     },
 
     getPostMortemProcess: function() {
+        var clone = _.clone(this);
         var parent = this.getParent();
         var partner_id = this.partner_id;
         var mv_lines_selected = this.get("mv_lines_selected");
         return function() {
             parent.unexcludeMoveLines(undefined, partner_id, mv_lines_selected);
-            parent.childValidated();
+            parent.childValidated(clone);
         };
     },
 });
@@ -2624,6 +2629,7 @@ core.action_registry.add('manual_reconciliation_view', manualReconciliation);
 return {
     bankStatementReconciliation: bankStatementReconciliation,
     manualReconciliation: manualReconciliation,
+    bankStatementReconciliationLine: bankStatementReconciliationLine,
 };
 
 });
