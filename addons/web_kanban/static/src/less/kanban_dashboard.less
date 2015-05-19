@@ -2,9 +2,9 @@
 
     &.o_kanban_mobile {
         .oe_kanban_record {
-            min-width: 400px;
+            width: 400px;
         }
-        strong {
+        span {
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -20,6 +20,14 @@
             width: 100%;
         }
 
+        /* This is a hack but this is the least ugly way to do it:
+         * We want two blocks (a visible one and an invisible one)
+         * to be overlap but both height should be equal to the
+         * height of the biggest block. Solution : put 0 width for
+         * the invisible on. The 0 padding and margin is mandatory for
+         * the elements to use the same space in both state (visible
+         * and invisible).
+        */
         .o_invisible {
             width: 0;
             visibility: hidden;
@@ -34,14 +42,20 @@
                 margin-left: 0px !important;
                 margin-right: 0px !important;
             }
+
+            .oe_kanban_colorpicker {
+                min-height: 21px;
+
+                li {
+                    height: 0px;
+                }
+            }
         }
 
         .oe_kanban_record {
-            padding: 0 !important;
+            padding: 0;
             position: relative;
             margin: 10px;
-            min-width: 350px;
-            min-height: 200px; 
 
             // @media (max-width: @grid-float-breakpoint) {
             //     margin: 10px !important;
@@ -123,7 +137,7 @@
 
         .o_kanban_card_manage_title {
             font-weight: bold;
-            border-color: #EEEEEE;
+            border-color: lightgrey;
             border-bottom-style: solid;
             border-bottom-width: 1px;
             margin-bottom: 8px;
@@ -131,20 +145,11 @@
         }
 
         .o_kanban_card_manage_settings {
-            text-align: right;
             padding: 8px;
 
-            border-color: #EEEEEE;
+            border-color: lightgrey;
             border-top-style: solid;
             border-top-width: 1px;
-        }
-
-        .o_progress_bar_complete {
-            background-color: @odoo-brand-optional;
-        }
-
-        .o_progress_bar_over {
-            background-color: grey;
         }
     }
 }
