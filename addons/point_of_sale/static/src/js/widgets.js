@@ -314,7 +314,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         changeAmount: function(event) {
             var newAmount = event.currentTarget.value;
-            var amount = parseFloat(newAmount);
+            var amount = parseFloat(newAmount.replace(",","."));
             if(!isNaN(amount)){
                 this.amount = amount;
                 this.payment_line.set_amount(amount);
