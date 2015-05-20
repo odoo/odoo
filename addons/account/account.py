@@ -31,6 +31,7 @@ from openerp import tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
+from openerp.tools.safe_eval import safe_eval as eval
 
 import openerp.addons.decimal_precision as dp
 
@@ -2001,7 +2002,7 @@ class account_tax(osv.osv):
         for tax in taxes:
             if tax.applicable_type=='code':
                 localdict = {'price_unit':price_unit, 'product':product, 'partner':partner}
-                exec tax.python_applicable in localdict
+                eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
                 if localdict.get('result', False):
                     res.append(tax)
             else:
@@ -2042,7 +2043,7 @@ class account_tax(osv.osv):
                # data['amount'] = quantity
             elif tax.type=='code':
                 localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner, 'quantity': quantity}
-                exec tax.python_compute in localdict
+                eval(tax.python_compute, localdict, mode="exec", nocopy=True)
                 amount = localdict['result']
                 data['amount'] = amount
             elif tax.type=='balance':
@@ -2190,7 +2191,7 @@ class account_tax(osv.osv):
 
             elif tax.type=='code':
                 localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
-                exec tax.python_compute_inv in localdict
+                eval(tax.python_compute_inv, localdict, mode="exec", nocopy=True)
                 amount = localdict['result']
             elif tax.type=='balance':
                 amount = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
