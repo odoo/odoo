@@ -287,6 +287,11 @@
                                         <field name="tax_line_ids">
                                             <tree editable="bottom" string="Taxes">
                                                 <field name="name"/>
+                                                <!--Need invisible fields for on_change to create all necessary info -->
+                                                <field name="tax_id" invisible="1"/>
+                                                <field name="account_analytic_id" invisible="1"/>
+                                                <field name="sequence" invisible="1"/>
+                                                <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_invoice"/>
                                                 <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                                 <field name="amount"/>
@@ -445,8 +450,13 @@
                                 </group>
                             </group>
                             <field name="tax_line_ids">
-                                <tree editable="bottom" string="Taxes">
+                                <tree editable="bottom" string="Taxes" create="0">
                                     <field name="name"/>
+                                    <!--Need invisible fields for on_change to create all necessary info -->
+                                    <field name="tax_id" invisible="1"/>
+                                    <field name="account_analytic_id" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="manual" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="amount"/>
                                     <field name="currency_id" invisible="1"/>
