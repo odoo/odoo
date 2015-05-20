@@ -68,9 +68,7 @@
                             </h3>
                             <span class="label label-warning" t-if="not channel.can_see_full">Private channel</span>
                         </div>
-                        <div>
-                            <p class="text-muted oe_no_empty" t-field="channel.description"/>
-                        </div>
+                        <div class="text-muted oe_no_empty" t-field="channel.description"/>
                     </div>
                 </div>
             </div>
@@ -80,7 +78,7 @@
 
 <!-- Channels View: option: subscription -->
 <template id="opt_subscription_on_channels" name="Subscription" customize_show="True" inherit_id="website_slides.channels">
-    <xpath expr="//p[@t-field='channel.description']" position="after">
+    <xpath expr="//div[@t-field='channel.description']" position="after">
         <t t-call="website_mail.follow">
             <t t-set="email" t-value="user.email"/>
             <t t-set="object" t-value="channel"/>
