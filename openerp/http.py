@@ -913,11 +913,11 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def __init__(self, *args, **kwargs):
         self.inited = False
         self.modified = False
+        self.rotate = False
         super(OpenERPSession, self).__init__(*args, **kwargs)
         self.inited = True
         self._default_values()
         self.modified = False
-        self.rotate = False
 
     def __getattr__(self, attr):
         return self.get(attr, None)
