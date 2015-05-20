@@ -228,6 +228,25 @@
             <field name="expense_currency_exchange_account_id" ref="exchange_fx_expense"/>
         </record>
 
+        <!-- Tax template for sale and purchase -->
+        <record id="sale_tax_template" model="account.tax.template">
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="name">Tax 15%</field>
+            <field name="amount">15</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="conf_iva"/>
+            <field name="refund_account_id" ref="conf_iva"/>
+        </record>
+
+       <record id="purchase_tax_template" model="account.tax.template">
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="name">Purchase Tax 15%</field>
+            <field name="amount">15</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="conf_ova"/>
+            <field name="refund_account_id" ref="conf_ova"/>
+        </record>
+
 <!--
         <record id="otaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
