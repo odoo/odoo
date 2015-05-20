@@ -83,6 +83,10 @@
                                 <label for="purchase_tax_rate"/>
                                 <field name="purchase_tax_rate" />
                             </div>
+                            <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('has_chart_of_accounts','!=',False)]}">
+                                <label for="template_transfer_account_id"/>
+                                <field name="template_transfer_account_id" class="oe_inline"/>
+                            </div>
                         </div>
                     </group>
                     <group string="Fiscal Year">
@@ -231,9 +235,9 @@
                                     class="oe_inline oe_link"/>
                                 <field name="company_footer"/>
                             </div>
-                            <div>
+                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
                                 <label for="transfer_account_id"/>
-                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('chart_template_id','!=',False)]}"/>
+                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}"/>
                             </div>
                             <div name='payment_acquirer'>
                                 <label for="paypal_account"/>

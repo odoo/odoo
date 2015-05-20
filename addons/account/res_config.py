@@ -53,6 +53,7 @@ class AccountConfigSettings(models.TransientModel):
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
     bank_account_code_char = fields.Char(string='Bank Accounts Code', related='company_id.bank_account_code_char', help='Define the code for the bank account')
+    template_transfer_account_id = fields.Many2one('account.account.template', help="Intermediary account used when moving money from a liquidity account to another")
     transfer_account_id = fields.Many2one('account.account',
         related='company_id.transfer_account_id',
         domain=lambda self: [('reconcile', '=', True), ('user_type.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
@@ -212,7 +213,7 @@ class AccountConfigSettings(models.TransientModel):
             if self.chart_template_id.code_digits:
                 self.code_digits = self.chart_template_id.code_digits
             if self.chart_template_id.transfer_account_id:
-                self.transfer_account_id = self.chart_template_id.transfer_account_id.id
+                self.template_transfer_account_id = self.chart_template_id.transfer_account_id.id
             if self.chart_template_id.bank_account_code_char:
                 self.bank_account_code_char = self.chart_template_id.bank_account_code_char
         return {}
@@ -247,6 +248,11 @@ class AccountConfigSettings(models.TransientModel):
         }
 
     @api.multi
+    def set_transfer_account(self):
+        if self.transfer_account_id and self.transfer_account_id != self.company_id.transfer_account_id:
+            self.company_id.write({'transfer_account_id': self.transfer_account_id.id})
+
+    @api.multi
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
@@ -264,7 +270,7 @@ class AccountConfigSettings(models.TransientModel):
             wizard = self.env['wizard.multi.charts.accounts'].create({
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
-                'transfer_account_id': self.transfer_account_id.id,
+                'transfer_account_id': self.template_transfer_account_id.id,
                 'code_digits': self.code_digits or 6,
                 'sale_tax': self.sale_tax.id,
                 'purchase_tax': self.purchase_tax.id,
