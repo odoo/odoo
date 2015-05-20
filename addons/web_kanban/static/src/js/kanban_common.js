@@ -856,7 +856,7 @@ var KanbanGroup = Widget.extend({
 var KanbanProgressBar = AbstractField.extend({
     events: {
         'click': function() {
-            if(this.progressbar.readonly) {
+            if(!this.readonly && this.progressbar.readonly) {
                 this.toggle_progressbar();
             }
         }
@@ -870,7 +870,8 @@ var KanbanProgressBar = AbstractField.extend({
             readonly: true,
             value: record[this.options.current_value].raw_value,
             max_value: record[this.options.max_value].raw_value,
-            title: this.options.title
+            title: this.options.title,
+            edit_max_value: this.options.edit_max_value,
         });
 
         this.readonly = !this.options.editable;
@@ -888,8 +889,8 @@ var KanbanProgressBar = AbstractField.extend({
         return $.when(this._super(), def).then(function() {
             if(!self.readonly) {
                 var parent = self.getParent();
-                self.progressbar.on('change:value', self, function(e) {
-                    var value = this.progressbar.get('value') || 0;
+                self.progressbar.on('change:value change:max_value', self, function(e) {
+                    var value = this.progressbar.get(this.progressbar.edit_max_value ? 'max_value' : 'value') || 0;
                     if(!isNaN(value)) {
                         parent.view.dataset.call(this.on_change, [parent.id, value]).then(function() {
                             self.toggle_progressbar();
