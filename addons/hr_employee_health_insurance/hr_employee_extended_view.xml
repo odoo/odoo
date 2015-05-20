@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		<record id="view_hr_employee_extended" model="ir.ui.view">
+            <field name="name">hr.employee.form.extended</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page[@string='HR Settings']" position="after">
+					<page string="Health Insurance">
+						<group col="4">
+							 <group>
+								<field name="health"/>
+							 </group>
+							 <group>
+								<field name="date"/>
+							 </group>
+							 <group>
+								<field name="plan_id"/>
+							 </group>
+						</group>
+						<group string="Employee Coverage">
+							<field name="employee_coverage_status_ids" nolabel="1">
+								<tree string="Employee Coverate Status">
+							       <field name="status"/>
+							       <field name="dob"/>
+				                   <field name="date_coverage_starts"/>
+				                   <field name="notes"/>
+				                   <field name="hr_employee_id" invisible="1"/>
+				                </tree>
+				                <form string="Employee Coverage Status" version="7.0">
+									<group>
+										<group>
+											<field name="status"/>
+											<field name="dob"/>
+										</group>
+										<group>
+											<field name="date_coverage_starts"/>
+										</group>
+									</group>
+									<label for="notes"/>
+									<field name="notes"/>
+								</form>
+							</field>
+						</group>
+					</page>					
+                </xpath>				
+			</field>
+		</record>
+		
+		
+		<record id="view_employee_planform" model="ir.ui.view">
+            <field name="name">employee.plan.form</field>
+            <field name="model">plan.plan</field>
+            <field name="arch" type="xml">
+            	<form string="Employee Plan" version="7.0">
+        			<group>
+    					<field name="name"/>
+        			</group>
+        			<label for="notes"/>
+					<field name="notes"/>
+    			</form>
+			</field>
+		</record>
+	</data>
+</openerp>
