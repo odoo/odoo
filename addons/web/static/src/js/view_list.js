@@ -2310,7 +2310,7 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         if (!value) {
             return options.value_if_empty || '';
         }
-
+        var download_name = value.substr(0, 10) + ".bin";
         var download_url;
         if (value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
@@ -2321,13 +2321,15 @@ instance.web.list.Binary = instance.web.list.Column.extend({
             }
         }
         if (this.filename && row_data[this.filename]) {
+            download_name =  row_data[this.filename].value;	    
             text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
                     row_data[this.filename].value, {type: 'char'}));
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)', {
+        return _.template('<a href="<%-href%>" download="<%-download%>" ><%-text%></a> (<%-size%>)', {
             text: text,
             href: download_url,
             size: instance.web.binary_to_binsize(value),
+	    download:download_name,
         });
     }
 });
