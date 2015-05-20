@@ -2307,27 +2307,29 @@ instance.web.list.Binary = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         var text = _t("Download");
         var value = row_data[this.id].value;
+	var download_name = value.substr(0, 10) + ".bin";
         if (!value) {
             return options.value_if_empty || '';
         }
-
         var download_url;
         if (value.substr(0, 10).indexOf(' ') == -1) {
-            download_url = "data:application/octet-stream;base64," + value;
+            download_url =  "data:application/octet-stream;base64," + value;
         } else {
             download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }
-        }
-        if (this.filename && row_data[this.filename]) {
-            text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
-                    row_data[this.filename].value, {type: 'char'}));
-        }
-        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)', {
+        } 
+	if (this.filename && row_data[this.filename].value) {
+            download_name =  row_data[this.filename].value;            
+	    text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
+            row_data[this.filename].value, {type: 'char'}));
+ 	}
+        return _.template('<a href="<%-href%>" download="<%-download%>" ><%-text%></a> (<%-size%>)', {
             text: text,
             href: download_url,
             size: instance.web.binary_to_binsize(value),
+	    download: download_name,
         });
     }
 });
