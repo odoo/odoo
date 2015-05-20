@@ -22,6 +22,7 @@
 import time
 from osv import fields,osv
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"

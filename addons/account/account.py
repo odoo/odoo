@@ -29,6 +29,7 @@ import pooler
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 
 def check_cycle(self, cr, uid, ids, context=None):
     """ climbs the ``self._table.parent_id`` chains for 100 levels or
@@ -1888,7 +1889,7 @@ class account_tax(osv.osv):
         for tax in taxes:
             if tax.applicable_type=='code':
                 localdict = {'price_unit':price_unit, 'address':obj_partener_address.browse(cr, uid, address_id), 'product':product, 'partner':partner}
-                exec tax.python_applicable in localdict
+                eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
                 if localdict.get('result', False):
                     res.append(tax)
             else:
@@ -1930,7 +1931,7 @@ class account_tax(osv.osv):
             elif tax.type=='code':
                 address = address_id and obj_partener_address.browse(cr, uid, address_id) or None
                 localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
-                exec tax.python_compute in localdict
+                eval(tax.python_compute, localdict, mode="exec", nocopy=True)
                 amount = localdict['result']
                 data['amount'] = amount
             elif tax.type=='balance':
@@ -2052,7 +2053,7 @@ class account_tax(osv.osv):
             elif tax.type=='code':
                 address = address_id and obj_partener_address.browse(cr, uid, address_id) or None
                 localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
-                exec tax.python_compute_inv in localdict
+                eval(tax.python_compute_inv, localdict, mode="exec", nocopy=True)
                 amount = localdict['result']
             elif tax.type=='balance':
                 amount = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)

@@ -25,6 +25,8 @@ import email
 import tools
 import binascii
 import dateutil.parser
+from tools.safe_eval import safe_eval as eval
+
 class email_server_tools(osv.osv_memory):
     _inherit = "email.server.tools"
     def history_message(self, cr, uid, model, res_id, message, context=None):

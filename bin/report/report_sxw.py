@@ -35,6 +35,7 @@ import zipfile
 import common
 from osv.fields import float as float_class, function as function_class
 from osv.orm import browse_record
+from tools.safe_eval import safe_eval as eval
 
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'

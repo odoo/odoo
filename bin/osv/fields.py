@@ -42,6 +42,7 @@ import osv
 import netsvc
 import tools
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 
 def _symbol_set(symb):
     if symb == None or symb == False:

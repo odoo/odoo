@@ -115,7 +115,7 @@ class document_directory_content(osv.osv):
             fname_fld = content.fname_field or 'id'
             where = []
             if node.domain:
-                where += eval(node.domain)
+                where += safe_eval(node.domain)
             if nodename:
                 # Reverse-parse the nodename to deduce the clause:
                 prefix = (content.prefix or '')

@@ -25,6 +25,7 @@ import re
 import tools
 from tools.translate import _
 from base_module_quality import base_module_quality
+from tools.safe_eval import safe_eval as eval
 
 class quality_test(base_module_quality.abstract_quality_check):
 

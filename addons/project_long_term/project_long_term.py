@@ -228,10 +228,9 @@ class project_phase(osv.osv):
             # Phases Defination for the Project
             s = '''
     def Phase_%s():
-        title = \"%s\"
         effort = \'%s\'
         resource = %s
-'''%(phase.id, phase.name, duration, str_vals or False)
+'''%(phase.id, duration, str_vals or False)
 
             # Recalculate date_start and date_end
             # according to constraints on date start and date end on phase
@@ -329,16 +328,14 @@ class project_phase(osv.osv):
             for key, vals in resource_objs.items():
                 cls_str +='''
     class Resource_%s(Resource):
-        title = \"%s\"
         vacation = %s
         efficiency = %s
-'''%(key,  vals.get('name',False), vals.get('vacation', False), vals.get('efficiency', False))
+'''%(key,  vals.get('vacation', False), vals.get('efficiency', False))
     
             # Create a new project for each phase
             func_str += '''
 def Phase_%d():
     from resource.faces import Resource
-    title = \"%s\"
     start = \'%s\'
     minimum_time_unit = %s
     working_hours_per_day = %s
@@ -347,7 +344,7 @@ def Phase_%d():
     working_days_per_year = %s
     vacation = %s
     working_days =  %s
-'''%(phase.id, phase.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+'''%(phase.id, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
             
             parent = False
             task_ids = []
@@ -500,16 +497,14 @@ class project(osv.osv):
             for key, vals in resource_objs.items():
                 cls_str +='''
     class Resource_%s(Resource):
-        title = \"%s\"
         vacation = %s
         efficiency = %s
-'''%(key,  vals.get('name',False), vals.get('vacation', False), vals.get('efficiency', False))
+'''%(key,  vals.get('vacation', False), vals.get('efficiency', False))
         
             # Create a new project for each phase
             func_str += '''
 def Project_%d():
     from resource.faces import Resource
-    title = \"%s\"
     start = \'%s\'
     minimum_time_unit = %s
     working_hours_per_day = %s
@@ -518,7 +513,7 @@ def Project_%d():
     working_days_per_year = %s
     vacation = %s
     working_days =  %s
-'''%(project.id, project.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+'''%(project.id, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
 
             func_str += cls_str
             phase_ids = []
@@ -676,16 +671,14 @@ def Project_%d():
             for key, vals in resource_objs.items():
                 cls_str +='''
     class Resource_%s(Resource):
-        title = \"%s\"
         vacation = %s
         efficiency = %s
-'''%(key,  vals.get('name',False), vals.get('vacation', False), vals.get('efficiency', False))
+'''%(key,  vals.get('vacation', False), vals.get('efficiency', False))
     
             # Create a new project for each phase
             func_str += '''
 def Project_%d():
     from resource.faces import Resource
-    title = \"%s\"
     start = \'%s\'
     minimum_time_unit = %s
     working_hours_per_day = %s
@@ -694,7 +687,7 @@ def Project_%d():
     working_days_per_year = %s
     vacation = %s
     working_days =  %s
-'''%(project.id, project.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+'''%(project.id, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
             
             parent = False
             task_ids = []
@@ -769,18 +762,16 @@ class project_task(osv.osv):
         if not flag:
             s = '''
         def Task_%s():
-            title = \"%s\"
             effort = \'%s\'
             resource = %s
-'''%(task.id, task.name, duration, str_resource)
+'''%(task.id, duration, str_resource)
             #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
         else:
             s = '''
     def Task_%s():
-        title = \"%s\"
         effort = \'%s\'
         resource = %s
-'''%(task.id, task.name, duration, str_resource)
+'''%(task.id, duration, str_resource)
         s += '\n'
         return s
 project_task()

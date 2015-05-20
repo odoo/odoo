@@ -29,6 +29,7 @@ import netsvc
 from osv import fields, osv
 import tools
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 import decimal_precision as dp
 
 def prev_bounds(cdate=False):

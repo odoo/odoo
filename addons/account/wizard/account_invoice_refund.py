@@ -23,6 +23,7 @@ import time
 
 from osv import fields, osv
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 import netsvc
 
 class account_invoice_refund(osv.osv_memory):

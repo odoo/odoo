@@ -22,6 +22,7 @@
 import pooler
 import tools
 from osv import fields, osv
+from tools.safe_eval import safe_eval as eval
 
 class Env(dict):
 

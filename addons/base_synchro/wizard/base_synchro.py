@@ -27,6 +27,7 @@ import re
 import tools
 import threading
 from osv import osv, fields
+from tools.safe_eval import safe_eval as eval
 
 class RPCProxyOne(object):
     def __init__(self, server, ressource):

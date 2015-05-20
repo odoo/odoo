@@ -23,7 +23,7 @@ from osv import fields, osv, orm
 from tools.translate import _
 from datetime import datetime
 from datetime import timedelta
-from tools.safe_eval import safe_eval
+from tools.safe_eval import safe_eval as eval
 import pooler 
 import re
 import time

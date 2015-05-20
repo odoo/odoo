@@ -22,6 +22,7 @@
 from osv import fields, osv
 from tools.translate import _
 from tools import ustr
+from tools.safe_eval import safe_eval as eval
 
 class report_result(osv.osv):
     """
