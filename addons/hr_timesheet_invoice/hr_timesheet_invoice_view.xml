@@ -14,7 +14,7 @@
                     </group>
                  </xpath>
                 <xpath expr="/form/sheet" position='before'>
-                    <header>
+                    <header  attrs="{'invisible': [('type','=','template')]}">
                         <button name="set_pending" string="To Renew" type="object" states="open" />
                         <button name="set_close" string="Close Contract" type="object" states="open,pending" />
                         <button name="set_open" string="Set In Progress" type="object" states="pending,close,cancelled,draft" />
