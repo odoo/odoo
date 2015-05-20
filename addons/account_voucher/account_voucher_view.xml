@@ -51,18 +51,18 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <strong><field name="partner_id"/></strong>
+                                        <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
                                     <div class="col-xs-6">
-                                        <strong class="pull-right text-right"><field name="amount"/></strong>
+                                        <strong><span class="pull-right text-right"><t t-esc="record.amount.value"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6 text-muted">
-                                        <field name="number"/> <field name="date"/>
+                                        <span><t t-esc="record.number.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['proforma'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['posted'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><field name="state"/></span>
+                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['proforma'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['posted'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
                                     </div>
                                 </div>
                             </div>
