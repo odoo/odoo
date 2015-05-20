@@ -24,6 +24,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
+from openerp.tools.safe_eval import safe_eval as eval
 
 class account_invoice_refund(osv.osv_memory):
 
