@@ -917,6 +917,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.inited = True
         self._default_values()
         self.modified = False
+        self.rotate = False
 
     def __getattr__(self, attr):
         return self.get(attr, None)
@@ -948,6 +949,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
+        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
@@ -973,6 +975,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             if not (keep_db and k == 'db'):
                 del self[k]
         self._default_values()
+        self.rotate = True
 
     def _default_values(self):
         self.setdefault("db", None)
@@ -1369,6 +1372,10 @@ class Root(object):
             response = result
 
         if httprequest.session.should_save:
+            if httprequest.session.rotate:
+                self.session_store.delete(httprequest.session)
+                httprequest.session.sid = self.session_store.generate_key()
+                httprequest.session.modified = True
             self.session_store.save(httprequest.session)
         # We must not set the cookie if the session id was specified using a http header or a GET parameter.
         # There are two reasons to this:

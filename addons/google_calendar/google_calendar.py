@@ -414,7 +414,7 @@ class google_calendar(osv.AbstractModel):
         user_obj = self.pool['res.users']
         myPartnerID = user_obj.browse(cr, uid, uid, context).partner_id.id
         attendee_record = []
-        alarm_record = []
+        alarm_record = set()
         partner_record = [(4, myPartnerID)]
         result = {}
 
@@ -461,7 +461,7 @@ class google_calendar(osv.AbstractModel):
                     'name': "%s minutes - %s" % (google_alarm['minutes'], google_alarm['method'])
                 }
                 alarm_id = [calendar_alarm_obj.create(cr, uid, data, context=context)]
-            alarm_record.append(alarm_id[0])
+            alarm_record.add(alarm_id[0])
 
         UTC = pytz.timezone('UTC')
         if single_event_dict.get('start') and single_event_dict.get('end'):  # If not cancelled
@@ -489,7 +489,7 @@ class google_calendar(osv.AbstractModel):
         result.update({
             'attendee_ids': attendee_record,
             'partner_ids': list(set(partner_record)),
-            'alarm_ids': [(6, 0, alarm_record)],
+            'alarm_ids': [(6, 0, list(alarm_record))],
 
             'name': single_event_dict.get('summary', 'Event'),
             'description': single_event_dict.get('description', False),
@@ -976,7 +976,9 @@ class calendar_event(osv.Model):
     _inherit = "calendar.event"
 
     def get_fields_need_update_google(self, cr, uid, context=None):
-        return ['name', 'description', 'allday', 'date', 'date_end', 'stop', 'attendee_ids', 'alarm_ids', 'location', 'class', 'active']
+        return ['name', 'description', 'allday', 'start', 'date_end', 'stop',
+                'attendee_ids', 'alarm_ids', 'location', 'class', 'active',
+                'start_date', 'start_datetime', 'stop_date', 'stop_datetime']
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:

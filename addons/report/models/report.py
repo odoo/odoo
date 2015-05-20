@@ -22,7 +22,7 @@
 from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
-from openerp.osv import osv
+from openerp.osv import osv, fields
 from openerp.tools import config
 from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
@@ -38,6 +38,7 @@ import lxml.html
 import os
 import subprocess
 from contextlib import closing
+from datetime import datetime
 from distutils.version import LooseVersion
 from functools import partial
 from pyPdf import PdfFileWriter, PdfFileReader
@@ -142,6 +143,8 @@ class Report(osv.Model):
                 context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
         values.update(
             time=time,
+            datetime=datetime,
+            context_timestamp=lambda t: fields.datetime.context_timestamp(cr, uid, t, context),
             translate_doc=translate_doc,
             editable=True,
             user=user,
