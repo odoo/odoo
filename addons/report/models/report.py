@@ -38,7 +38,6 @@ import lxml.html
 import os
 import subprocess
 from contextlib import closing
-from datetime import datetime
 from distutils.version import LooseVersion
 from functools import partial
 from pyPdf import PdfFileWriter, PdfFileReader
@@ -143,7 +142,6 @@ class Report(osv.Model):
                 context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
         values.update(
             time=time,
-            datetime=datetime,
             context_timestamp=lambda t: fields.datetime.context_timestamp(cr, uid, t, context),
             translate_doc=translate_doc,
             editable=True,
