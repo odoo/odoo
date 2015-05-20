@@ -160,18 +160,18 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <strong><field name="partner_id"/></strong>
+                                        <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
                                     <div class="col-xs-6">
-                                        <strong class="pull-right text-right"><field name="amount_total_signed"/></strong>
+                                        <strong><span class="pull-right text-right"><t t-esc="record.amount_total_signed.value"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6 text-muted">
-                                        <field name="number"/> <field name="date_invoice"/>
+                                        <span><t t-esc="record.number.value"/> <t t-esc="record.date_invoice.value"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['proforma', 'proforma2', 'open'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['paid'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><field name="state"/></span>
+                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['proforma', 'proforma2', 'open'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['paid'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
                                     </div>
                                 </div>
                             </div>
@@ -418,6 +418,31 @@
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
+                                <kanban class="o_kanban_mobile o_kanban_one2many">
+                                    <field name="product_id"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="quantity"/>
+                                    <field name="uos_id" groups="product.group_uom"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.product_id.value or 'None'"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-8 text-muted">
+                                                        <span><t t-esc="record.quantity.value"/> <t t-esc="record.uos_id.value"/></span>
+                                                    </div>
+                                                    <div class="col-xs-4 text-muted">
+                                                        <span class="text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="amount_untaxed"/>

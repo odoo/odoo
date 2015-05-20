@@ -366,18 +366,18 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <strong><field name="partner_id"/></strong>
+                                        <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
                                     <div class="col-xs-6">
-                                        <strong class="pull-right text-right"><field name="amount_total"/></strong>
+                                        <strong><span class="pull-right text-right"><t t-esc="record.amount_total.value"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <field name="name"/> <t t-esc="record.date_order.value and record.date_order.value.split(' ')[0] or False"/>
+                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value and record.date_order.value.split(' ')[0] or False"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['except_picking', 'except_invoice'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['approved'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><field name="state"/></span>
+                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['except_picking', 'except_invoice'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['approved'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
                                     </div>
                                 </div>
                             </div>
