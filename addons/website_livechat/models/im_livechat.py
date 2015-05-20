@@ -11,7 +11,7 @@ class ImLivechatChannel(models.Model):
     @api.v7
     # TODO : when mixin in new api.v8, change this !
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(im_livechat_channel, self)._website_url(cr, uid, ids, field_name, arg, context=context)
+        res = super(ImLivechatChannel, self)._website_url(cr, uid, ids, field_name, arg, context=context)
         for channel in self.browse(cr, uid, ids, context=context):
             res[channel.id] = "/livechat/channel/%s" % (slug(channel),)
         return res
