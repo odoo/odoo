@@ -22,7 +22,7 @@ var ProgressBar = Widget.extend({
         'change input': 'on_change_input',
         'input input': 'on_change_input',
         'click .o_progress': function(e) {
-            if(!this.readonly) {
+            if(!this.readonly && this.edit_on_click) {
                 var $target = $(e.currentTarget);
                 this.set('value', Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * this.get('max_value')));
             }
@@ -34,15 +34,19 @@ var ProgressBar = Widget.extend({
 
         options = _.defaults(options || {}, {
             readonly: true,
+            edit_on_click: false,
             value: 0,
             max_value: 100,
-            title: ''
+            title: '',
+            edit_max_value: false,
         });
 
         this.readonly = options.readonly;
+        this.edit_on_click = options.edit_on_click;
         this.set('value', options.value);
         this.set('max_value', options.max_value);
         this.title = options.title;
+        this.edit_max_value = options.edit_max_value;
 
         this.on('change:value', this, this._render_value);
         this.on('change:max_value', this, this._render_value);
@@ -64,17 +68,23 @@ var ProgressBar = Widget.extend({
                     $input.select();
                 }
             } else {
-                this.set('value', $(e.target).val());
+                this.set(this.edit_max_value ? 'max_value' : 'value', $(e.target).val());
             }
         }
     },
 
-    _render_value: function(value) {
-        if(isNaN(value)) {
-            value = this.get('value');
+    _render_value: function(v) {
+        var value = this.get('value');
+        var max_value = this.get('max_value');
+        if(!isNaN(v)) {
+            if(this.edit_max_value) {
+                max_value = v;
+            } else {
+                value = v;
+            }
         }
         value = value || 0;
-        var max_value = this.get('max_value');
+        max_value = max_value || 0;
 
         var widthComplete;
         if(value <= max_value) {
@@ -92,8 +102,8 @@ var ProgressBar = Widget.extend({
             } else {
                 this.$('.o_progressbar_value').html(utils.human_number(value) + "%");
             }
-        } else {
-            this.$('.o_progressbar_value').val(value);
+        } else if(isNaN(v)) {
+            this.$('.o_progressbar_value').val(this.edit_max_value ? max_value : value);
         }
     }
 });
