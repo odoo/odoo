@@ -238,7 +238,7 @@ class Cursor(object):
             raise
         except Exception:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.exception("bad query: %s", self._obj.query or query)
+                _logger.exception("bad query: %s", self._obj.query.decode('utf-8') if self._obj.query else query)
             raise
 
         # simple query count is always computed
@@ -249,7 +249,7 @@ class Cursor(object):
             delay = mdt.now() - now
             delay = delay.seconds * 1E6 + delay.microseconds
 
-            _logger.debug("query: %s", self._obj.query)
+            _logger.debug("query: %s", self._obj.query.decode('utf-8') if self._obj.query else query)
             res_from = re_from.match(query.lower())
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
