@@ -98,7 +98,6 @@
                         <group>
                             <field name="category_id" on_change="onchange_category_id(category_id)"/>
                             <field name="code"/>
-                            <field name="parent_id"/>
                         </group>
                         <group>
                             <field name="purchase_date"/>
@@ -179,7 +178,6 @@
     <record model="ir.ui.view" id="view_account_asset_asset_tree">
         <field name="name">account.asset.asset.tree</field>
         <field name="model">account.asset.asset</field>
-        <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Assets" colors="blue:(state == 'draft');grey:(state == 'close')">
                 <field name="name"/>
@@ -198,7 +196,6 @@
     <record model="ir.ui.view" id="view_account_asset_asset_hierarchy_tree">
         <field name="name">account.asset.asset.hierarchy</field>
         <field name="model">account.asset.asset</field>
-        <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Assets">
                 <field name="name"/>
@@ -277,7 +274,7 @@
         <field name="name">Asset Hierarchy</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
+        <field name="domain">[]</field>
         <field name="view_id" ref="view_account_asset_asset_hierarchy_tree"/>
     </record>
 
