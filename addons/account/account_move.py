@@ -331,7 +331,7 @@ class AccountMoveLine(models.Model):
         default=_get_journal, required=True, index=True, store=True, copy=False)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    date_maturity = fields.Date(string='Due date', index=True,
+    date_maturity = fields.Date(string='Due date', index=True, required=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Effective date', required=True, index=True, default=fields.Date.context_today, store=True, copy=False)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
@@ -882,6 +882,7 @@ class AccountMoveLine(models.Model):
         journal = self.env['account.journal'].browse(context['journal_id'])
         vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
         vals['date'] = vals.get('date') or context.get('date')
+        vals['date_maturity'] = vals.get('date_maturity') if vals.get('date_maturity') else vals['date']
         if not move_id:
             if not vals.get('move_id', False):
                 if journal.sequence_id:
