@@ -195,7 +195,7 @@ var PaymentTransactionPopupWidget = PopupWidget.extend({
             if (data.status == "Error" || data.status == "Declined") {
                 if (lookUpCodeTransaction["TimeoutError"][data.error]) { // Not fatal, retry
                     data.message = "Error " + data.error + ": " + lookUpCodeTransaction["TimeoutError"][data.error] + ".<br/><br/>Retrying...";
-                } else if (lookUpCodeTransaction["FatalError"][data.error]) { // Fatal, stop
+                } else { // Fatal, stop
                     data.message = "Error " + data.error + ": " + lookUpCodeTransaction["FatalError"][data.error];
                     self.close();
                     self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
