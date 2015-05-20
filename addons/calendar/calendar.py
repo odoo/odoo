@@ -479,13 +479,13 @@ class calendar_alarm_manager(osv.AbstractModel):
 
     def get_next_notif(self, cr, uid, context=None):
         ajax_check_every_seconds = 300
-        partner = self.pool['res.users'].read(cr, SUPERUSER_ID, uid, ['calendar_last_notif_ack'], context=context)
+        partner = self.pool['res.users'].read(cr, SUPERUSER_ID, uid, ['partner_id', 'calendar_last_notif_ack'], context=context)
         all_notif = []
 
         if not partner:
             return []
 
-        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner['id'], mail=False, context=context)
+        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner['partner_id'][0], mail=False, context=context)
 
         for event in all_events:  # .values()
             max_delta = all_events[event]['max_duration']
