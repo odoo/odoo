@@ -1,7 +1,7 @@
 import logging
 import sets
 
-from openerp import models, fields
+from openerp import models, fields, api
 _logger = logging.getLogger(__name__)
 
 
@@ -32,9 +32,36 @@ class account_bank_statement_line(models.Model):
 
     card_number = fields.Char(string='Card Number', size=4, help='The last 4 numbers of the card used to pay')
     card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, Maestro, ...)')
-    card_owner_name = fields.Char(string='Card Name', help='The name of the card owner')
+    card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
 
 class account_journal(models.Model):
     _inherit = 'account.journal'
 
     card_reader_config_id = fields.Many2one('card_reader.configuration', string='Card Reader Config', help='The configuration of the card reader used for this journal')
+
+class pos_order_card(models.Model):
+    _inherit = "pos.order"
+
+    @api.model
+    def _payment_fields(self, ui_paymentline):
+        fields = super(pos_order_card, self)._payment_fields(ui_paymentline)
+        fields.update({
+            'card_number': ui_paymentline.get('card_number'),
+            'card_brand': ui_paymentline.get('card_brand'),
+            'card_owner_name': ui_paymentline.get('card_owner_name')
+        })
+
+        return fields
+
+    @api.model
+    def add_payment(self, order_id, data):
+        statement_id = super(pos_order_card, self).add_payment(order_id, data)
+        statement_line = self.env['account.bank.statement.line'].search([('statement_id', '=', statement_id),
+                                                                         ('pos_statement_id', '=', order_id),
+                                                                         ('journal_id', '=', data['journal']),
+                                                                         ('amount', '=', data['amount'])])
+        statement_line.card_number = data.get('card_number')
+        statement_line.card_brand = data.get('card_brand')
+        statement_line.card_owner_name = data.get('card_owner_name')
+
+        return statement_id

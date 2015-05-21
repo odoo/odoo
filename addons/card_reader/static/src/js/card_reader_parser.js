@@ -69,6 +69,7 @@ function decodeMercuryResponse (data) {
         status: cmd_response.find("CmdStatus").text(),
         message: cmd_response.find("TextResponse").text(),
         error: cmd_response.find("DSIXReturnCode").text(),
+        card_type: tran_response.find("CardType").text(),
         auth_code: tran_response.find("AuthCode").text(),
         acq_ref_data: tran_response.find("AcqRefData").text(),
         process_data: tran_response.find("ProcessData").text(),
@@ -94,7 +95,11 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         _paylineproto.init_from_JSON.apply(this, arguments);
     },
     export_as_JSON: function () {
-        return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid, mercury_data: this.mercury_data});
+        return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid,
+                                                                              card_number: this.card_number,
+                                                                              card_brand: this.card_brand,
+                                                                              card_owner_name: this.card_owner_name,
+                                                                              mercury_data: this.mercury_data});
     }
 });
 
@@ -237,12 +242,12 @@ PaymentScreenWidget.include({
         if(track_list < 6) return {};
 
         return {
-            'private'       : track_list.pop(),
-            'service_code'  : track_list.pop(),
-            'validity'      : track_list.pop(),
-            'name'          : track_list.pop(),
-            'card_number'   : track_list.pop(),
-            'original'      : track_list.pop(),
+            'private'        : track_list.pop(),
+            'service_code'   : track_list.pop(),
+            'validity'       : track_list.pop(),
+            'card_owner_name': track_list.pop(),
+            'card_number'    : track_list.pop(),
+            'original'       : track_list.pop(),
         };
 
     },
@@ -283,20 +288,13 @@ PaymentScreenWidget.include({
 
         // Construct a dictionnary to store all data from the magnetic card
         var transaction = {
-            track1: this._decode_track(parsed_result.code.match(this._track1)),
-            track2: this._decode_track(parsed_result.code.match(this._track2)),
-            track3: {},
-            encrypted_data: this._decode_encrypted_data(parsed_result.code.split('|')),
-        };
-
-        // Extends the dictionnary with needed client side data to complete the request transaction
-        _.extend(transaction, {
+            'encrypted_data'    : this._decode_encrypted_data(parsed_result.code.split('|')),
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
             'invoice_no'        : self.pos.get_order().sequence_number,
             'purchase'          : parsed_result.total,
             'journal_id'        : parsed_result.journal_id,
-        });
+        };
 
         var def = old_deferred || new $.Deferred();
 
@@ -322,10 +320,15 @@ PaymentScreenWidget.include({
 
                     if (response.status === 'Approved') {
                         // If the payment is approved, add a payment line
+                        var track1 = self._decode_track(parsed_result.code.match(self._track1));
+
                         var order = self.pos.get_order();
                         order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
                         order.selected_paymentline.paid = true;
                         order.selected_paymentline.amount = response.authorize;
+                        order.selected_paymentline.card_number = track1['card_number'].substr(-4);
+                        order.selected_paymentline.card_brand = response.card_type;
+                        order.selected_paymentline.card_owner_name = track1['card_owner_name'];
                         order.selected_paymentline.mercury_data = response; // used to reverse transactions
                         self.order_changes();
                         self.reset_input();

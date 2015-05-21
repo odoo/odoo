@@ -72,6 +72,19 @@
           </field>
         </record>
 
+        <record model="ir.ui.view" id="view_pos_order">
+          <field name="name">POS orders</field>
+          <field name="model">pos.order</field>
+          <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="before">
+              <field name="card_number"/>
+              <field name="card_brand"/>
+              <field name="card_owner_name"/>
+            </xpath>
+          </field>
+        </record>
+
         <menuitem parent="point_of_sale.menu_point_config_product" action="card_reader.action_configuration_form" id="menu_pos_card_reader_config"
             sequence="35"/>
     </data>
