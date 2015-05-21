@@ -976,7 +976,9 @@ class calendar_event(osv.Model):
     _inherit = "calendar.event"
 
     def get_fields_need_update_google(self, cr, uid, context=None):
-        return ['name', 'description', 'allday', 'date', 'date_end', 'stop', 'attendee_ids', 'alarm_ids', 'location', 'class', 'active']
+        return ['name', 'description', 'allday', 'start', 'date_end', 'stop',
+                'attendee_ids', 'alarm_ids', 'location', 'class', 'active',
+                'start_date', 'start_datetime', 'stop_date', 'stop_datetime']
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:

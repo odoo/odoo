@@ -1646,34 +1646,34 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         /* ---- Payment Status --- */
         get_subtotal : function(){
-            return this.orderlines.reduce((function(sum, orderLine){
+            return round_pr(this.orderlines.reduce((function(sum, orderLine){
                 return sum + orderLine.get_display_price();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         get_total_with_tax: function() {
-            return this.orderlines.reduce((function(sum, orderLine) {
+            return round_pr(this.orderlines.reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_with_tax();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         get_total_without_tax: function() {
-            return this.orderlines.reduce((function(sum, orderLine) {
+            return round_pr(this.orderlines.reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_without_tax();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         get_total_discount: function() {
-            return this.orderlines.reduce((function(sum, orderLine) {
+            return round_pr(this.orderlines.reduce((function(sum, orderLine) {
                 return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         get_total_tax: function() {
-            return this.orderlines.reduce((function(sum, orderLine) {
+            return round_pr(this.orderlines.reduce((function(sum, orderLine) {
                 return sum + orderLine.get_tax();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         get_total_paid: function() {
-            return this.paymentlines.reduce((function(sum, paymentLine) {
+            return round_pr(this.paymentlines.reduce((function(sum, paymentLine) {
                 return sum + paymentLine.get_amount();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         get_tax_details: function(){
             var details = {};

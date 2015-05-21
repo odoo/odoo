@@ -43,7 +43,7 @@ openerp.pos_restaurant.load_splitbill = function(instance, module){
                 }
             }else{
                 if( split.quantity < line.get_quantity()){
-                    split.quantity += line.get_unit().rounding;
+                    split.quantity += line.get_unit().is_unit ? 1 : line.get_unit().rounding;
                     if(split.quantity > line.get_quantity()){
                         split.quantity = line.get_quantity();
                     }

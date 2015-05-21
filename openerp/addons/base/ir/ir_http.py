@@ -137,9 +137,10 @@ class ir_http(osv.AbstractModel):
 
         # This is done first as the attachment path may
         # not match any HTTP controller
-        attach = self._serve_attachment()
-        if attach:
-            return attach
+        if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
+            attach = self._serve_attachment()
+            if attach:
+                return attach
 
         # Don't handle exception but use werkeug debugger if server in --dev mode
         if openerp.tools.config['dev_mode']:

@@ -1183,6 +1183,7 @@ class Binary(http.Controller):
             }
         except Exception:
             args = {'error': "Something horrible happened"}
+            _logger.exception("Fail to upload attachment %s" % ufile.filename)
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @http.route([

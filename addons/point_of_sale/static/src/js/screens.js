@@ -1453,6 +1453,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             this.inputbuffer = "";
             this.firstinput  = true;
+            this.decimal_point = instance.web._t.database.parameters.decimal_point;
             
             // This is a keydown handler that prevents backspace from
             // doing a back navigation
@@ -1515,7 +1516,14 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 this.inputbuffer = newbuf;
                 var order = this.pos.get_order();
                 if (order.selected_paymentline) {
-                    order.selected_paymentline.set_amount(parseFloat(this.inputbuffer));
+                    var amount;
+                    try{
+                        amount = instance.web.parse_value(this.inputbuffer, {type: "float"});
+                    }
+                    catch(e){
+                        amount = 0;
+                    }
+                    order.selected_paymentline.set_amount(amount);
                     this.order_changes();
                     this.render_paymentlines();
                     this.$('.paymentline.selected .edit').text(this.inputbuffer);

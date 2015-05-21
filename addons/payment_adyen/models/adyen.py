@@ -172,7 +172,7 @@ class TxAdyen(osv.Model):
             })
             return True
         else:
-            error = _('Paypal: feedback error')
+            error = _('Adyen: feedback error')
             _logger.info(error)
             tx.write({
                 'state': 'error',
