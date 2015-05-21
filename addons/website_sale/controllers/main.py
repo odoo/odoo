@@ -685,7 +685,49 @@ class website_sale(http.Controller):
         request.session['sale_last_order_id'] = order.id
 
         request.website.sale_get_order(update_pricelist=True, context=context)
+
+        extra_step = registry['ir.model.data'].xmlid_to_object(cr, uid, 'website_sale.extra_info_option', raise_if_not_found=True)
+        if extra_step.active:
+            return request.redirect("/shop/extra_info")
+
         return request.redirect("/shop/payment")
+
+    #------------------------------------------------------
+    # Extra step
+    #------------------------------------------------------
+    @http.route(['/shop/extra_info'], type='http', auth="public", website=True)
+    def extra_info(self, **post):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+
+        # Check that this option is activated
+        extra_step = registry['ir.model.data'].xmlid_to_object(cr, uid, 'website_sale.extra_info_option', raise_if_not_found=True)
+        if not extra_step.active:
+            return request.redirect("/shop/payment")
+
+        # check that cart is valid
+        order = request.website.sale_get_order(context=context)
+        redirection = self.checkout_redirection(order)
+        if redirection:
+            return redirection
+
+        # if form posted
+        if 'post_values' in post:
+            values = {}
+            for field_name, field_value in post.items():
+                if field_name in request.registry['sale.order']._fields and field_name.startswith('x_'):
+                    values[field_name] = field_value
+            if values:
+                order.write(values)
+            return request.redirect("/shop/payment")
+
+        values = {
+            'website_sale_order': order
+        }
+
+        sale_order_obj = request.registry.get('sale.order')
+        values.update(sale_order_obj._get_website_data(cr, uid, order, context))
+
+        return request.website.render("website_sale.extra_info", values)
 
     #------------------------------------------------------
     # Payment

@@ -611,7 +611,7 @@
 
 <template id="wizard_checkout" name="website_sale: Wizard Checkout">
     <ul class="wizard pull-right">
-        <li t-att-class="step==10 and 'text-primary' or 'text-muted'">
+        <li t-att-class="step==10 and 'text-primary' or 'text-muted'" id="step10">
           <t t-if="step&gt;10 and step&lt;50">
             <a href="/shop/cart" class='text-success'>
               Review Order<span class="chevron"></span>
@@ -621,7 +621,7 @@
               Review Order<span class="chevron"></span>
           </t>
         </li>
-         <li t-att-class="(step==20 and 'text-primary') or 'text-muted'">
+        <li t-att-class="(step==20 and 'text-primary') or 'text-muted'" id="step20">
           <t t-if="step&gt;20 and step&lt;50">
             <a href="/shop/checkout"  class='text-success'>
               <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span>
@@ -631,14 +631,81 @@
               <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span>
           </t>
         </li>
-        <li t-att-class="(step==30 and 'text-primary') or 'text-muted'">
+        <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
           Payment<span class="chevron"></span>
         </li>
-        <li t-att-class="(step==50 and 'text-primary') or 'text-muted'">
+        <li t-att-class="(step==50 and 'text-primary') or 'text-muted'" id="step50">
           Confirmation<span class="chevron"></span>
         </li>
     </ul>
+</template>
 
+<template id="extra_info" name="Checkout Extra Info">
+  <t t-call="website.layout">
+      <div id="wrap">
+        <div class="container oe_website_sale">
+          <t t-call="website_sale.wizard_checkout">
+            <t t-set="step" t-value="30"/>
+          </t>
+          <h1 class="mb32">Extra Step</h1>
+          <div class="row">
+            <form class="form-horizontal" method="post">
+              <div class="form-group">
+                <label for="x_test" class="col-sm-2 control-label">Field 1</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="x_test" id="x_test" placeholder="Field not required"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="x_test_required" class="col-sm-2 control-label"><span class='text-danger'>* </span>Field 2</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="x_test_required"  id="x_test_required" required="True" placeholder="Field required"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="not_x" class="col-sm-2 control-label">Field 3</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="not_x" id="not_x" placeholder="Field not custom"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button name="post_values" type="submit" class="btn btn-default">Continue</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </t>
+</template>
+
+<template id="extra_info_option" name="Extra Step Option" inherit_id="wizard_checkout" active="False" customize_show="True">
+  <xpath expr="//li[@id='step40']" position="replace">
+    <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
+      <t t-if="step&gt;40 and step&lt;50">
+        <a href="/shop/payment"  class='text-success'>
+          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Payment</t><span class="chevron"></span>
+        </a>
+      </t>
+      <t t-if="not (step&gt;40 and step&lt;50)">
+          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Payment</t><span class="chevron"></span>
+      </t>
+    </li>
+  </xpath>
+
+  <xpath expr="//li[@id='step20']" position="after">
+    <li t-att-class="(step==30 and 'text-primary') or 'text-muted'" id="step30">
+      <t t-if="step&gt;30 and step&lt;50">
+        <a href="/shop/extra_info"  class='text-success'>
+          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Extra Info</t><span class="chevron"></span>
+        </a>
+      </t>
+      <t t-if="not (step&gt;30 and step&lt;50)">
+          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Extra Info</t><span class="chevron"></span>
+      </t>
+    </li>
+  </xpath>
 </template>
 
 <template id="cart" name="Shopping Cart">
@@ -1020,7 +1087,7 @@
       <div id="wrap">
         <div class="container oe_website_sale">
           <t t-call="website_sale.wizard_checkout">
-            <t t-set="step" t-value="30"/>
+            <t t-set="step" t-value="40"/>
           </t>
           <h1 class="mb32">Validate Order</h1>
           <div class="row">
