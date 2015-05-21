@@ -38,7 +38,7 @@
 
                 <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
                     <div class="col-xs-12 o_kanban_primary_bottom">
-                        <field name="absence_of_today" widget="progress" options="{'title': 'Absence', 'current_value': 'absence_of_today', 'max_value': 'total_employee'}"/>
+                        <field name="absence_of_today" widget="progress" options="{'title': 'Absence', 'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
                     </div>
                 </xpath>
 
@@ -63,7 +63,7 @@
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="%(action_hr_holidays_leaves_analysis)d" type="action">
+                            <a name="%(action_hr_holidays_leaves_analysis_filtered)d" type="action">
                                 Leaves
                             </a>
                         </div>

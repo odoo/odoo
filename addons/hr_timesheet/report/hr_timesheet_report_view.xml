@@ -59,6 +59,17 @@
             <field name="context">{}</field>  <!-- force empty -->
         </record>
 
+        <record id="action_hr_timesheet_report_stat_filtered" model="ir.actions.act_window">
+            <field name="name">Timesheet Analysis</field>
+            <field name="res_model">hr.timesheet.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="context">{
+                'search_default_department_id': [active_id],
+                'default_department_id': active_id}
+            </field>
+        </record>
+
         <menuitem id="menu_timesheets_reports" name="Reports"
             parent="hr_attendance.timesheet_menu_root" sequence="99" groups="base.group_hr_manager"/>
         <menuitem action="action_hr_timesheet_report_stat_all"  id="menu_hr_timesheet_report_all"

@@ -43,8 +43,7 @@
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
                 <div class="col-xs-12 o_kanban_primary_bottom" t-if="record.invoiced_target.raw_value">
-                    <!-- TODO: use progressbar widget when available on kanban view -->
-                    <field name="invoiced_forecast" widget="progress" options="{'title': 'Forecast', 'current_value': 'invoiced_forecast', 'max_value': 'invoiced_target', 'editable': 'true', 'on_change': 'action_forecast'}"/>
+                    <field name="invoiced_forecast" widget="progress" options="{'title': 'Forecast', 'current_value': 'invoiced_forecast', 'max_value': 'invoiced_target', 'editable': true, 'on_change': 'action_forecast'}"/>
                 </div>
                 <div t-if="!record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
                     Define an invoicing target in the sales team settings to see the period's achievement and forecast at a glance.

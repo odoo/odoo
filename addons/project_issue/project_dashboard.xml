@@ -14,6 +14,13 @@
                     <span class="o_label"><field name="label_issues"/></span>
                 </a>
             </xpath>
+
+            <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                <div>
+                    <a name="%(action_project_issue_report)d" type="action">Issues</a>
+                </div>
+            </xpath>
+
         </field>
     </record>
 </odoo>
