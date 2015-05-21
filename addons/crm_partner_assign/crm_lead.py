@@ -21,6 +21,7 @@
 
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.exceptions import UserError
 
 
