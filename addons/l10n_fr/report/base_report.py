@@ -29,6 +29,7 @@
 import time
 
 from openerp.report import report_sxw
+from openerp.tools.safe_eval import safe_eval as eval
 
 class base_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):

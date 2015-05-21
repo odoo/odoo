@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-08-27 22:40+0000\n"
-"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
+"PO-Revision-Date: 2015-02-25 13:33+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-28 06:25+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2015-02-26 05:46+0000\n"
+"X-Generator: Launchpad (build 17361)\n"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -174,6 +174,7 @@ msgstr "Por ejemplo, Inventario anual"
 #: field:stock.pack.operation,product_qty:0
 #: field:stock.quant,qty:0
 #: field:stock.return.picking.line,quantity:0
+#: field:stock.transfer_details_items,quantity:0
 #: view:website:stock.report_inventory
 #: view:website:stock.report_package_barcode
 #: view:website:stock.report_picking
@@ -341,9 +342,9 @@ msgstr ""
 "directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: stock
-#: code:addons/stock/stock.py:860
-#: code:addons/stock/stock.py:2064
-#: code:addons/stock/stock.py:2318
+#: code:addons/stock/stock.py:880
+#: code:addons/stock/stock.py:2159
+#: code:addons/stock/stock.py:2415
 #: code:addons/stock/wizard/stock_change_product_qty.py:92
 #: code:addons/stock/wizard/stock_return_picking.py:69
 #: code:addons/stock/wizard/stock_return_picking.py:84
@@ -537,7 +538,7 @@ msgstr ""
 "entrega de los productos finales. Es el tiempo que promete a sus clientes."
 
 #. module: stock
-#: code:addons/stock/product.py:59
+#: code:addons/stock/product.py:60
 #, python-format
 msgid "Products: "
 msgstr "Productos: "
@@ -553,7 +554,7 @@ msgid "Draft Physical Inventories"
 msgstr "Inventarios físicos borrador"
 
 #. module: stock
-#: code:addons/stock/stock.py:1829
+#: code:addons/stock/stock.py:1916
 #, python-format
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
@@ -650,7 +651,9 @@ msgstr "Albaranes internos"
 #. module: stock
 #: field:stock.location.path,location_dest_id:0
 #: field:stock.move,location_dest_id:0
+#: field:stock.pack.operation,location_dest_id:0
 #: field:stock.picking,location_dest_id:0
+#: field:stock.transfer_details_items,destinationloc_id:0
 msgid "Destination Location"
 msgstr "Ubicación destino"
 
@@ -783,10 +786,7 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_tracking_form
-#: model:ir.model,name:stock.model_stock_tracking
-#: model:ir.ui.menu,name:stock.menu_action_tracking_form
-#: view:stock.tracking:0
+#: field:stock.transfer_details,packop_ids:0
 msgid "Packs"
 msgstr "Paquetes"
 
@@ -1008,7 +1008,7 @@ msgid "Change Product Quantity"
 msgstr "Cambiar cantidad producto"
 
 #. module: stock
-#: code:addons/stock/product.py:263
+#: code:addons/stock/product.py:268
 #, python-format
 msgid "Future P&L"
 msgstr "P&L futuras"
@@ -1580,7 +1580,7 @@ msgid "To be refunded/invoiced"
 msgstr "Para ser abonado/facturado"
 
 #. module: stock
-#: code:addons/stock/stock.py:2303
+#: code:addons/stock/stock.py:2400
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Sólo puede eliminar movimientos borrador."
@@ -1672,8 +1672,7 @@ msgid "Waiting"
 msgstr "En espera"
 
 #. module: stock
-#: view:stock.move:0
-#: view:stock.move.split:0
+#: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Split"
 msgstr "Dividir"
 
@@ -1728,6 +1727,7 @@ msgstr ""
 
 #. module: stock
 #: field:stock.move,create_date:0
+#: field:stock.picking,date:0
 #: field:stock.production.lot,create_date:0
 #: field:stock.quant,create_date:0
 msgid "Creation Date"
@@ -1857,7 +1857,7 @@ msgid "Stock Invoice Onshipping"
 msgstr "Factura en el envío de existencias"
 
 #. module: stock
-#: code:addons/stock/stock.py:2318
+#: code:addons/stock/stock.py:2415
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr "Introduzca por favor una cantidad positiva a deshechar"
@@ -1929,9 +1929,9 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Cuenta de valoracion de existencias (salida)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1753
-#: code:addons/stock/stock.py:1828
-#: code:addons/stock/stock.py:2147
+#: code:addons/stock/stock.py:1840
+#: code:addons/stock/stock.py:1915
+#: code:addons/stock/stock.py:2243
 #, python-format
 msgid "Operation Forbidden!"
 msgstr "Operación prohibida"
@@ -2040,7 +2040,7 @@ msgid "Localization"
 msgstr "Ubicación"
 
 #. module: stock
-#: code:addons/stock/product.py:259
+#: code:addons/stock/product.py:264
 #, python-format
 msgid "Delivered Qty"
 msgstr "Ctdad enviada"
@@ -2106,6 +2106,7 @@ msgstr ""
 #: view:stock.move:stock.stock_move_tree
 #: field:stock.move,date:0
 #: field:stock.pack.operation,date:0
+#: field:stock.transfer_details_items,date:0
 #: view:website:stock.report_inventory
 msgid "Date"
 msgstr "Fecha"
@@ -2334,7 +2335,7 @@ msgid "Generate accounting entries per stock movement"
 msgstr "Generar asientos contables por cada movimiento de existencias"
 
 #. module: stock
-#: code:addons/stock/product.py:249
+#: code:addons/stock/product.py:254
 #, python-format
 msgid "Received Qty"
 msgstr "Ctdad recibida"
@@ -2415,7 +2416,7 @@ msgid "Customer Locations"
 msgstr "Ubicaciones de cliente"
 
 #. module: stock
-#: code:addons/stock/stock.py:2303
+#: code:addons/stock/stock.py:2400
 #, python-format
 msgid "User Error!"
 msgstr "¡Error de usuario!"
@@ -2646,7 +2647,7 @@ msgid "Warehouse board"
 msgstr "Tablero almacén"
 
 #. module: stock
-#: code:addons/stock/product.py:269
+#: code:addons/stock/product.py:274
 #, python-format
 msgid "Future Qty"
 msgstr "Ctdad futura"
@@ -2702,12 +2703,14 @@ msgstr ""
 "espera."
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.ui.menu,name:stock.menu_product_in_config_stock
 #: model:ir.ui.menu,name:stock.menu_product_template_config_stock
 #: model:ir.ui.menu,name:stock.menu_stock_product
 #: model:ir.ui.menu,name:stock.menu_stock_products_menu
 #: view:product.template:stock.product_template_search_form_view_stock
 #: view:stock.config.settings:stock.view_stock_config_settings
+#: view:stock.location:stock.view_location_form
 #: view:stock.location.route:stock.stock_location_route_form_view
 #: view:stock.picking:stock.view_picking_form
 #: view:stock.production.lot:stock.view_production_lot_form
@@ -2772,7 +2775,7 @@ msgid "Move"
 msgstr "Movimiento"
 
 #. module: stock
-#: code:addons/stock/product.py:265
+#: code:addons/stock/product.py:270
 #, python-format
 msgid "P&L Qty"
 msgstr "Ctdad P&L"
@@ -3370,10 +3373,7 @@ msgstr ""
 "            "
 
 #. module: stock
-#. openerp-web
-#: code:addons/stock/static/src/xml/picking.xml:111
 #: view:stock.move:stock.view_move_tree
-#, python-format
 msgid "Process"
 msgstr "Procesar"
 
@@ -3416,7 +3416,7 @@ msgstr ""
 "            "
 
 #. module: stock
-#: code:addons/stock/stock.py:2347
+#: code:addons/stock/stock.py:2444
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr "%s %s %s ha sido <b>desechado</b>."
@@ -3525,7 +3525,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr "Análisis inventario"
+msgstr "Análisis existencias"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -3533,7 +3533,7 @@ msgid "Destination Journal"
 msgstr "Diario de destino"
 
 #. module: stock
-#: code:addons/stock/stock.py:3221
+#: code:addons/stock/stock.py:3350
 #: model:stock.location,name:stock.stock_location_shop0
 #: model:stock.location,name:stock.stock_location_stock
 #, python-format
@@ -3564,6 +3564,7 @@ msgstr "Albarán devuelto"
 #: view:stock.quant:stock.quant_search_view
 #: field:stock.quant,product_id:0
 #: field:stock.return.picking.line,product_id:0
+#: field:stock.transfer_details_items,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 #: view:website:stock.report_inventory
 #: view:website:stock.report_lot_barcode
@@ -3777,6 +3778,8 @@ msgstr "Referencia paquete"
 #: field:procurement.rule,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 #: field:stock.move,location_id:0
+#: field:stock.pack.operation,location_id:0
+#: field:stock.transfer_details_items,sourceloc_id:0
 msgid "Source Location"
 msgstr "Ubicación origen"
 
@@ -3853,7 +3856,7 @@ msgid "Inventory Move"
 msgstr "Movimiento de inventario"
 
 #. module: stock
-#: code:addons/stock/product.py:275
+#: code:addons/stock/product.py:280
 #, python-format
 msgid "Future Productions"
 msgstr "Producciones futuras"
@@ -3954,6 +3957,7 @@ msgstr "Compañía"
 #: field:stock.inventory.line,product_uom_id:0
 #: field:stock.move.scrap,product_uom:0
 #: field:stock.pack.operation,product_uom_id:0
+#: field:stock.transfer_details_items,product_uom_id:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product Unit of Measure"
 msgstr "Unidad de medida del producto"
@@ -4005,7 +4009,7 @@ msgstr "Seguimiento"
 
 #. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/js/widgets.js:644
+#: code:addons/stock/static/src/js/widgets.js:651
 #, python-format
 msgid "Ok"
 msgstr "Aceptar"
@@ -4038,10 +4042,10 @@ msgid "Non European Customers"
 msgstr "Clientes no europeos"
 
 #. module: stock
-#: code:addons/stock/stock.py:357
-#: code:addons/stock/stock.py:467
-#: code:addons/stock/stock.py:2863
-#: code:addons/stock/stock.py:2948
+#: code:addons/stock/stock.py:368
+#: code:addons/stock/stock.py:479
+#: code:addons/stock/stock.py:2989
+#: code:addons/stock/stock.py:3074
 #, python-format
 msgid "Error!"
 msgstr "¡Error!"
@@ -4074,6 +4078,7 @@ msgstr "Albaranes de salida confirmados"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 #: view:stock.move:stock.view_move_search
+#: field:stock.transfer_details,picking_id:0
 msgid "Picking"
 msgstr "Albarán"
 
@@ -4225,7 +4230,7 @@ msgstr "Cantidad de salida total"
 #: field:stock.move,backorder_id:0
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr "Pedido en espera de"
+msgstr "Entrega parcial de"
 
 #. module: stock
 #: model:ir.model,name:stock.model_action_traceability
@@ -4293,8 +4298,8 @@ msgstr ""
 "al haber y la cuenta de entrada de existencias irá al debe."
 
 #. module: stock
-#: code:addons/stock/stock.py:2531
-#: code:addons/stock/stock.py:2682
+#: code:addons/stock/stock.py:2643
+#: code:addons/stock/stock.py:2808
 #, python-format
 msgid "INV:"
 msgstr "FV:"
@@ -4341,9 +4346,9 @@ msgstr ""
 "Ésta es la cantidad de productos desde un punto de vista de inventario. Para "
 "movimientos en el estado 'Realizado', ésta es la cantidad de productos que "
 "se movieron realmente. Para otros movimiento, ésta es la cantidad de "
-"producto que está planeado mover. Disminuyendo esta cantidad no se genera un "
-"pedido en espera. Cambiando esta cantidad en movimientos asignados, afecta "
-"la reserva de producto, y debe ser realizado con cuidado."
+"producto que está planeado mover. Disminuyendo esta cantidad no se genera "
+"una entrega parcial. Cambiando esta cantidad en movimientos asignados, "
+"afecta a la reserva de producto, y debe ser realizado con cuidado."
 
 #. module: stock
 #: help:stock.location,valuation_in_account_id:0
@@ -4362,14 +4367,15 @@ msgstr ""
 "ubicaciones internas."
 
 #. module: stock
-#: code:addons/stock/product.py:257
+#: code:addons/stock/product.py:262
 #, python-format
 msgid "Future Deliveries"
 msgstr "Entregas futuras"
 
 #. module: stock
-#: code:addons/stock/stock.py:3166
+#: code:addons/stock/stock.py:3292
 #: field:stock.inventory.line,package_id:0
+#: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 #, python-format
 msgid "Pack"
 msgstr "Paquete"
@@ -4392,11 +4398,12 @@ msgstr "¡Existencias insuficientes para el nº de serie!"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
+#: field:stock.move,product_tmpl_id:0
 msgid "Product Template"
 msgstr "Plantilla producto"
 
 #. module: stock
-#: code:addons/stock/stock.py:3145
+#: code:addons/stock/stock.py:3271
 #: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
@@ -4459,21 +4466,13 @@ msgid "update"
 msgstr "actualizar"
 
 #. module: stock
-#: view:stock.change.product.qty:0
-#: view:stock.change.standard.price:0
-#: view:stock.config.settings:0
-#: view:stock.fill.inventory:0
-#: view:stock.inventory.line.split:0
-#: view:stock.inventory.merge:0
-#: view:stock.invoice.onshipping:0
-#: view:stock.location.product:0
-#: view:stock.move.consume:0
-#: view:stock.move.scrap:0
-#: view:stock.move.split:0
-#: view:stock.partial.move:0
-#: view:stock.partial.picking:0
-#: view:stock.return.picking:0
-#: view:stock.split.into:0
+#: view:make.procurement:stock.view_make_procurment_wizard
+#: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
+#: view:stock.change.product.qty:stock.view_change_product_quantity
+#: view:stock.config.settings:stock.view_stock_config_settings
+#: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
+#: view:stock.return.picking:stock.view_stock_return_picking_form
+#: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "or"
 msgstr "o"
 
@@ -4485,7 +4484,7 @@ msgid "Invoiced"
 msgstr "Facturado"
 
 #. module: stock
-#: code:addons/stock/stock.py:1890
+#: code:addons/stock/stock.py:1977
 #, python-format
 msgid "Information"
 msgstr "Información"
@@ -4507,6 +4506,7 @@ msgstr ""
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
+#: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "_Apply"
 msgstr "_Aplicar"
 
@@ -4645,7 +4645,7 @@ msgid "November"
 msgstr "Noviembre"
 
 #. module: stock
-#: code:addons/stock/product.py:271
+#: code:addons/stock/product.py:276
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Ctdad no planificada"
@@ -4702,17 +4702,18 @@ msgid "Move History (parent moves)"
 msgstr "Historial movimientos (mov. padres)"
 
 #. module: stock
-#: code:addons/stock/product.py:253
+#: code:addons/stock/product.py:258
 #, python-format
 msgid "Future Stock"
 msgstr "Existencias futuras"
 
 #. module: stock
-#: code:addons/stock/stock.py:617
-#: code:addons/stock/stock.py:2364
-#: code:addons/stock/stock.py:2368
-#: code:addons/stock/stock.py:2719
-#: code:addons/stock/stock.py:3618
+#: code:addons/stock/stock.py:638
+#: code:addons/stock/stock.py:2353
+#: code:addons/stock/stock.py:2461
+#: code:addons/stock/stock.py:2465
+#: code:addons/stock/stock.py:2845
+#: code:addons/stock/stock.py:3753
 #, python-format
 msgid "Error"
 msgstr "Error"
@@ -4723,7 +4724,7 @@ msgid "Production Lot"
 msgstr "Lote de producción"
 
 #. module: stock
-#: code:addons/stock/stock.py:1470
+#: code:addons/stock/stock.py:1564
 #: model:ir.ui.menu,name:stock.menu_traceability
 #: view:stock.config.settings:stock.view_stock_config_settings
 #: view:stock.production.lot:stock.view_production_lot_form
@@ -4930,7 +4931,7 @@ msgid "Location Content"
 msgstr "Contenido ubicación"
 
 #. module: stock
-#: code:addons/stock/product.py:277
+#: code:addons/stock/product.py:282
 #, python-format
 msgid "Produced Qty"
 msgstr "Ctdad producida"
@@ -4961,7 +4962,7 @@ msgid "Production"
 msgstr "Producción"
 
 #. module: stock
-#: code:addons/stock/stock.py:4128
+#: code:addons/stock/stock.py:4263
 #: view:stock.location:stock.view_location_search
 #, python-format
 msgid "Customer"
@@ -5052,7 +5053,7 @@ msgid "Warning !"
 msgstr "¡Aviso!"
 
 #. module: stock
-#: code:addons/stock/stock.py:3224
+#: code:addons/stock/stock.py:3353
 #: model:stock.location,name:stock.stock_location_output
 #, python-format
 msgid "Output"

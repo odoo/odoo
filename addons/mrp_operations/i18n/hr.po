@@ -8,25 +8,27 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-02-28 09:50+0000\n"
+"Last-Translator: Vito Banovac <vito.banovac@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2015-03-01 05:28+0000\n"
+"X-Generator: Launchpad (build 17361)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_tree_view_inherit
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_graph
 msgid "Work Orders"
 msgstr "Radni nalozi"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:484
+#: code:addons/mrp_operations/mrp_operations.py:464
 #, python-format
 msgid "Operation is already finished!"
 msgstr ""
@@ -68,31 +70,32 @@ msgid "Work Centers"
 msgstr "Radni centri"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
 msgstr "Resume"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Product to Produce"
-msgstr "Product to Produce"
+msgstr "Proizvod za proizvodnju"
 
 #. module: mrp_operations
-#: view:mrp_operations.operation:0
+#: view:mrp_operations.operation:mrp_operations.mrp_production_operation_tree_view
 msgid "Production Operation"
 msgstr "Production Operation"
 
 #. module: mrp_operations
-#: view:mrp.production:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Set to Draft"
 msgstr "Postavi na nacrt"
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
-msgstr "Free Serialisation"
+msgstr "Dozvoli bez podređenog"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_production
@@ -105,7 +108,7 @@ msgid "Mrp Operations"
 msgstr "Mrp operacije"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:122
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
 msgstr ""
@@ -117,7 +120,7 @@ msgid "Day"
 msgstr "Dan"
 
 #. module: mrp_operations
-#: view:mrp.production:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Cancel Order"
 msgstr "Otkaži nalog"
 
@@ -142,11 +145,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr "The work orders are created on the basis of the production order."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
-#: code:addons/mrp_operations/mrp_operations.py:465
-#: code:addons/mrp_operations/mrp_operations.py:469
-#: code:addons/mrp_operations/mrp_operations.py:481
-#: code:addons/mrp_operations/mrp_operations.py:484
+#: code:addons/mrp_operations/mrp_operations.py:122
+#: code:addons/mrp_operations/mrp_operations.py:445
+#: code:addons/mrp_operations/mrp_operations.py:449
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:464
 #, python-format
 msgid "Error!"
 msgstr "Greška!"
@@ -159,14 +162,15 @@ msgid "Cancelled"
 msgstr "Otkazani"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:477
+#: code:addons/mrp_operations/mrp_operations.py:457
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr ""
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_calendar
+#: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_gantt
 msgid "Operations"
 msgstr "Operations"
 
@@ -176,13 +180,13 @@ msgid "Stock Move"
 msgstr "Skladišni prijenosi"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:481
+#: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid "No operation to cancel."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
@@ -194,7 +198,7 @@ msgid "# of Lines"
 msgstr "# linija"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.production.workcenter.line,production_state:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
@@ -202,9 +206,9 @@ msgid "Draft"
 msgstr "Nacrt"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Actual Production Date"
-msgstr ""
+msgstr "Stvarni datum proizvodnje"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,state:0
@@ -220,7 +224,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Production Workcenter"
 msgstr ""
 
@@ -259,15 +263,14 @@ msgstr "Work Order Analysis"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "Planiranje resursa"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Planned Date"
 msgstr "Planiran datum"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
 msgstr "Količina"
@@ -283,9 +286,9 @@ msgid "Operation Name"
 msgstr "Operation Name"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: field:mrp.production.workcenter.line,state:0
-#: view:mrp.workorder:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 #: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
@@ -307,7 +310,7 @@ msgid "Future Work Orders"
 msgstr "Future Work Orders"
 
 #. module: mrp_operations
-#: view:mrp.production:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Finish Order"
 msgstr ""
 
@@ -339,7 +342,7 @@ msgid "Operation Cancelled"
 msgstr "Operation Cancelled"
 
 #. module: mrp_operations
-#: view:mrp.production:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Pause Work Order"
 msgstr ""
 
@@ -397,34 +400,35 @@ msgid "Pause"
 msgstr "Pauza"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "In Progress"
-msgstr "In Progress"
+msgstr "U tijeku"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:445
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:469
+#: code:addons/mrp_operations/mrp_operations.py:449
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
 msgstr "Start"
 
 #. module: mrp_operations
-#: view:mrp_operations.operation:0
+#: view:mrp_operations.operation:mrp_operations.operation_calendar_view
 msgid "Calendar View"
 msgstr "Calendar View"
 
@@ -436,25 +440,29 @@ msgid ""
 msgstr "Operaciju je moguće otkazati na kartici radnog naloga."
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Set Draft"
 msgstr "Set Draft"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
 msgstr "Na čekanju"
 
 #. module: mrp_operations
-#: view:mrp_operations.operation.code:0
+#: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_form_view
+#: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_tree_view
 msgid "Production Operation Code"
 msgstr "Šifra operacije proizvodnje"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:441
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
@@ -467,12 +475,12 @@ msgid "August"
 msgstr "Kolovoz"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Started"
 msgstr "Započeto"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Production started late"
 msgstr ""
 
@@ -487,7 +495,6 @@ msgid "June"
 msgstr "Lipanj"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
 #: field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
 msgstr "Ukupno ciklusa"
@@ -505,10 +512,9 @@ msgstr "Children Moves"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
 msgid "Work Orders Planning"
-msgstr "Work Orders Planning"
+msgstr "Planiranje resursa"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
 #: field:mrp.workorder,date:0
 msgid "Date"
 msgstr "Datum"
@@ -519,7 +525,7 @@ msgid "November"
 msgstr "Studeni"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Search"
 msgstr "Search"
 
@@ -534,7 +540,7 @@ msgid "January"
 msgstr "Siječanj"
 
 #. module: mrp_operations
-#: view:mrp.production:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Resume Work Order"
 msgstr ""
 
@@ -549,16 +555,16 @@ msgid "Information from the production order."
 msgstr "Information from the production order."
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:434
+#: code:addons/mrp_operations/mrp_operations.py:441
 #: code:addons/mrp_operations/mrp_operations.py:454
-#: code:addons/mrp_operations/mrp_operations.py:461
-#: code:addons/mrp_operations/mrp_operations.py:474
-#: code:addons/mrp_operations/mrp_operations.py:477
+#: code:addons/mrp_operations/mrp_operations.py:457
 #, python-format
 msgid "Sorry!"
 msgstr "Oprostite!"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Current"
 msgstr "Trenutno"
 
@@ -590,7 +596,7 @@ msgstr "Operacija izvršena"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
-#: view:mrp.workorder:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
 msgstr "Izvršeno"
@@ -601,12 +607,12 @@ msgid "Start/Stop Barcode"
 msgstr "Start/Stop Barcode"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Cancel"
 msgstr "Odustani"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:454
+#: code:addons/mrp_operations/mrp_operations.py:434
 #, python-format
 msgid "Operation is not started yet!"
 msgstr ""
@@ -617,7 +623,7 @@ msgid "Start Operation"
 msgstr "Pokreni operaciju"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Information"
 msgstr "Informacija"
 
@@ -644,7 +650,7 @@ msgid "Work Centers Barcode"
 msgstr "Work Centers Barcode"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Late"
 msgstr "Kasni"
 
@@ -654,24 +660,23 @@ msgid "Delay"
 msgstr "Kašnjenje"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
 msgstr "Proizvodnja"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Search Work Orders"
 msgstr "Search Work Orders"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 #: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
-#: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
 msgstr "Radni centar"
 
@@ -682,13 +687,12 @@ msgstr "Planirani datum"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,product:0
-#: view:mrp.workorder:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 #: field:mrp.workorder,product_id:0
 msgid "Product"
 msgstr "Proizvod"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
 #: field:mrp.workorder,total_hours:0
 msgid "Total Hours"
 msgstr "Uk. sati"
@@ -708,15 +712,16 @@ msgid "May"
 msgstr "Svibanj"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
 msgstr "Dovršeno"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.graph_in_hrs_workcenter
 msgid "Hours by Work Center"
 msgstr "Hours by Work Center"
 
@@ -726,7 +731,7 @@ msgid "Working Hours"
 msgstr "Radno vrijeme(od-do)"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Planned Month"
 msgstr ""
 
@@ -761,7 +766,7 @@ msgid "#Line Orders"
 msgstr "#Line Orders"
 
 #. module: mrp_operations
-#: view:mrp.production:0
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Start Working"
 msgstr ""
 
@@ -786,6 +791,6 @@ msgid "Year"
 msgstr "Godina"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Duration"
 msgstr "Trajanje"
