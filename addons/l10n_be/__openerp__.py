@@ -69,13 +69,11 @@ Wizards provided by this module:
         #'wizard/l10n_be_vat_intra_view.xml',
         #'wizard/l10n_be_partner_vat_listing.xml',
         'l10n_be_sequence.xml',
-        'l10n_be_reports.xml',
         'fiscal_templates.xml',
         'account_fiscal_position_tax_template.xml',
         'account_chart_template.yml',
         'security/ir.model.access.csv',
         'views/report_vatintraprint.xml',
-        'views/report_vatpartnerlisting.xml',
         'report_vat_statement.xml',
     ],
     'demo': [
