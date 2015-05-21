@@ -609,17 +609,45 @@
 
 <!-- /shop/cart -->
 
+<template id="wizard_checkout" name="website_sale: Wizard Checkout">
+    <ul class="wizard pull-right">
+        <li t-att-class="step==10 and 'text-primary' or 'text-muted'">
+          <t t-if="step&gt;10 and step&lt;50">
+            <a href="/shop/cart" class='text-success'>
+              Review Order<span class="chevron"></span>
+            </a>
+          </t>
+          <t t-if="not (step&gt;10 and step&lt;50)">
+              Review Order<span class="chevron"></span>
+          </t>
+        </li>
+         <li t-att-class="(step==20 and 'text-primary') or 'text-muted'">
+          <t t-if="step&gt;20 and step&lt;50">
+            <a href="/shop/checkout"  class='text-success'>
+              <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span>
+            </a>
+          </t>
+          <t t-if="not (step&gt;20 and step&lt;50)">
+              <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span>
+          </t>
+        </li>
+        <li t-att-class="(step==30 and 'text-primary') or 'text-muted'">
+          Payment<span class="chevron"></span>
+        </li>
+        <li t-att-class="(step==50 and 'text-primary') or 'text-muted'">
+          Confirmation<span class="chevron"></span>
+        </li>
+    </ul>
+
+</template>
+
 <template id="cart" name="Shopping Cart">
   <t t-call="website.layout">
       <div id="wrap">
         <div class="container oe_website_sale">
-
-          <ul class="wizard pull-right">
-              <li class="text-primary">Review Order<span class="chevron"></span></li>
-              <li class="text-muted"><t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span></li>
-              <li class="text-muted">Payment<span class="chevron"></span></li>
-              <li class="text-muted">Confirmation<span class="chevron"></span></li>
-          </ul>
+          <t t-call="website_sale.wizard_checkout">
+            <t t-set="step" t-value="10"/>
+          </t>
           <h1 class="mb32">Shopping Cart</h1>
           <div class="row">
               <div class="col-md-8 col-sm-9 oe_cart">
@@ -829,12 +857,9 @@
     <t t-set="additional_title">Shop - Checkout</t>
     <div id="wrap">
       <div class="container oe_website_sale">
-          <ul class="wizard pull-right">
-              <li><a href="/shop/cart" class="text-success">Review Order<span class="chevron"></span></a></li>
-              <li class="text-primary"><t t-if="not only_services">Shipping &amp;</t> Billing<span class="chevron"></span></li>
-              <li class="text-muted">Payment<span class="chevron"></span></li>
-              <li class="text-muted">Confirmation<span class="chevron"></span></li>
-          </ul>
+        <t t-call="website_sale.wizard_checkout">
+          <t t-set="step" t-value="20"/>
+        </t>
           <h1>Your Address</h1>
           <form action="/shop/confirm_order" method="post">
 
@@ -994,13 +1019,9 @@
       <t t-set="additional_title">Shop - Select Payment Mode</t>
       <div id="wrap">
         <div class="container oe_website_sale">
-
-          <ul class="wizard pull-right">
-              <li><a href="/shop/cart" class="text-success">Review Order<span class="chevron"></span></a></li>
-              <li><a href="/shop/checkout" class="text-success"><t t-if="not website_sale_order or not website_sale_order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span></a></li>
-              <li class="text-primary">Payment<span class="chevron"></span></li>
-              <li class="text-muted">Confirmation<span class="chevron"></span></li>
-          </ul>
+          <t t-call="website_sale.wizard_checkout">
+            <t t-set="step" t-value="30"/>
+          </t>
           <h1 class="mb32">Validate Order</h1>
           <div class="row">
           <div class="col-lg-8 col-sm-9">
@@ -1123,13 +1144,9 @@
       <t t-set="additional_title">Shop - Confirmed</t>
       <div id="wrap">
         <div class="container oe_website_sale">
-
-          <ul class="wizard pull-right">
-              <li class="text-muted">Review Order<span class="chevron"></span></li>
-              <li class="text-muted"><t t-if="not order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span></li>
-              <li class="text-muted">Payment<span class="chevron"></span></li>
-              <li class="text-primary">Confirmation<span class="chevron"></span></li>
-          </ul>
+          <t t-call="website_sale.wizard_checkout">
+            <t t-set="step" t-value="50"/>
+          </t>
           <h1 class="mb32">Order <em t-field="order.name"/> Confirmed</h1>
           <div class="row">
               <div class="col-md-8">
