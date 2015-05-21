@@ -1143,6 +1143,15 @@ class _String(Field):
 
         return translate
 
+    def check_trans_value(self, value):
+        """ Check and possibly sanitize the translated term `value`. """
+        if callable(self.translate):
+            # do a "no-translation" to sanitize the value
+            callback = lambda term: None
+            return self.translate(callback, value)
+        else:
+            return value
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a

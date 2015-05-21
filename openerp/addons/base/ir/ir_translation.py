@@ -475,26 +475,32 @@ class ir_translation(osv.osv):
         fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        ids = super(ir_translation, self).create(cr, uid, vals, context=context)
+    @api.model
+    def create(self, vals):
+        if vals.get('type') == 'model' and vals.get('value'):
+            # check and sanitize value
+            mname, fname = vals['name'].split(',')
+            field = self.env[mname]._fields[fname]
+            vals['value'] = field.check_trans_value(vals['value'])
+        record = super(ir_translation, self).create(vals)
         self.clear_caches()
-        self.pool['ir.ui.view'].clear_cache()
-        return ids
+        return record
 
-    def write(self, cursor, user, ids, vals, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
+    @api.multi
+    def write(self, vals):
         if vals.get('value'):
             vals.setdefault('state', 'translated')
+            ttype = vals.get('type') or self[:1].type
+            if ttype == 'model':
+                # check and sanitize value
+                name = vals.get('name') or self[:1].name
+                mname, fname = name.split(',')
+                field = self.env[mname]._fields[fname]
+                vals['value'] = field.check_trans_value(vals['value'])
         elif vals.get('src') or not vals.get('value', True):
             vals.setdefault('state', 'to_translate')
-        result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
+        result = super(ir_translation, self).write(vals)
         self.clear_caches()
-        self.pool['ir.ui.view'].clear_cache()
         return result
 
     def unlink(self, cursor, user, ids, context=None):
