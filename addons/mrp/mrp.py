@@ -268,7 +268,6 @@ class mrp_bom(osv.osv):
             return res
         return check_bom(boms, [])
 
-
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive BoM.', ['parent_id']),
         (_check_product, 'BoM line product should not be same as BoM product.', ['product_id']),
@@ -321,7 +320,7 @@ class mrp_bom(osv.osv):
                 max_prop = prop
         return result
 
-    def _bom_explode(self, cr, uid, bom, factor, properties=None, addthis=False, level=0, routing_id=False):
+    def _bom_explode(self, cr, uid, bom, factor, properties=None, addthis=False, level=0, routing_id=False, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product.
         @param factor: Factor of product UoM.
@@ -343,7 +342,7 @@ class mrp_bom(osv.osv):
             newbom = self._bom_find(cr, uid, bom.product_id.id, bom.product_uom.id, properties)
 
             if newbom and newbom != bom.id:
-                res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10)
+                res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10, context=context)
                 result = result + res[0]
                 result2 = result2 + res[1]
                 phantom = True
@@ -378,7 +377,7 @@ class mrp_bom(osv.osv):
                 if (bom2.date_start and bom2.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT)) or \
                     (bom2.date_stop and bom2.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT)):
                     continue
-                res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
+                res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10, context=context)
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
@@ -632,7 +631,7 @@ class mrp_production(osv.osv):
 
         # get components and workcenter_lines from BoM structure
         factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
-        return bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
+        return bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id, context=context)
 
     def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
         """ Compute product_lines and workcenter_lines from BoM structure

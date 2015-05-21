@@ -557,6 +557,7 @@ class one2many(_column):
             return
         _table = obj.pool.get(self._obj)._table
         obj = obj.pool.get(self._obj)
+        already_unlinked = set()  # prevent failure for duplicated unlinks
         for act in values:
             if act[0] == 0:
                 act[2][self._fields_id] = id
@@ -565,7 +566,9 @@ class one2many(_column):
             elif act[0] == 1:
                 obj.write(cr, user, [act[1]], act[2], context=context)
             elif act[0] == 2:
-                obj.unlink(cr, user, [act[1]], context=context)
+                if act[1] not in already_unlinked:
+                    obj.unlink(cr, user, [act[1]], context=context)
+                    already_unlinked.add(act[1])
             elif act[0] == 3:
                 reverse_rel = obj._all_columns.get(self._fields_id)
                 assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'

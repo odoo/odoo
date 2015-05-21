@@ -2060,6 +2060,12 @@
   position: relative;
   display: inline-block;
 }
+.openerp .oe_form_editable .oe_form_required.oe_form_field_one2many table.oe_list_content, .openerp .oe_form_editable .oe_form_required.oe_form_field_many2many table.oe_list_content {
+  background-color: #d2d2ff !important;
+}
+.openerp .oe_form_editable .oe_form_invalid.oe_form_field_one2many table.oe_list_content, .openerp .oe_form_editable .oe_form_invalid.oe_form_field_many2many table.oe_list_content {
+  background-color: #ff6666 !important;
+}
 .openerp .oe_form_invalid input, .openerp .oe_form_invalid select, .openerp .oe_form_invalid textarea {
   background-color: #F66 !important;
   border: 1px solid #D00 !important;
@@ -2131,8 +2137,8 @@
 }
 .openerp .oe_form_sheet_width {
   min-width: 650px;
-  max-width: 860px;
-  margin: 0 auto;
+  max-width: auto;
+  margin: 16px;
 }
 .openerp .oe_form_sheet {
   background: white;
@@ -2192,8 +2198,8 @@
 .openerp .oe_form div.oe_chatter {
   box-sizing: border-box;
   min-width: 682px;
-  max-width: 892px;
-  margin: 0 auto;
+  max-width: 0 auto;
+  margin: 16px;
   padding: 16px 16px 48px;
 }
 .openerp .oe_form div.oe_form_configuration p, .openerp .oe_form div.oe_form_configuration ul, .openerp .oe_form div.oe_form_configuration ol {
@@ -2760,6 +2766,9 @@
 }
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;
+}
+.openerp .oe_form_field_one2many, .openerp .oe_form_field_many2many {
+  overflow-x: auto;
 }
 .openerp .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page, .openerp .oe_form_field_many2many > .oe_view_manager .oe_list_pager_single_page {
   display: none !important;

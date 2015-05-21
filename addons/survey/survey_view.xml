@@ -268,6 +268,35 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="survey_form_invitee">
+            <field name="name">survey_form_invitee</field>
+            <field name="model">survey</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_survey_invitee')])]" />
+            <field name="priority" eval="1" />
+            <field name="inherit_id" ref="survey_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <form position="replace">
+                        <form string="Survey" version="7.0">
+                            <sheet>
+                                <field name="state" invisible="True" />
+                                <div class="oe_button_box oe_right">
+                                    <button name="fill_survey" states="open" string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
+                                </div>
+                                <div class="oe_title">
+                                    <label for="title" class="oe_edit_only"/>
+                                    <h1>
+                                        <field name="title" attrs="{'readonly':[('state','=','close')]}"/>
+                                    </h1>
+                                </div>
+                                <field name="note" />
+                            </sheet>
+                        </form>
+                    </form>
+                </data>
+            </field>
+        </record>
+ 
         <record id="survey_search" model="ir.ui.view">
             <field name="name">survey_search</field>
             <field name="model">survey</field>
@@ -1224,14 +1253,16 @@
             id="act_survey_pages"
             name="Pages"
             res_model="survey.page"
-            src_model="survey"/>
+            src_model="survey"
+            groups="base.group_survey_user"/>
 
         <act_window
             context="{'search_default_survey': active_id, 'default_survey': active_id}"
             id="act_survey_question"
             name="Questions"
             res_model="survey.question"
-            src_model="survey"/>
+            src_model="survey"
+            groups="base.group_survey_user"/>
 
 
         <act_window
@@ -1239,7 +1270,7 @@
             id="act_survey_page_question"
             name="Questions"
             res_model="survey.question"
-            src_model="survey.page"/>
+            src_model="survey.page" />
 
         <act_window domain="[('question_id', '=', active_id)]"
             id="act_survey_answer"
@@ -1252,7 +1283,8 @@
             id="act_survey_request"
             name="Survey Requests"
             res_model="survey.request"
-            src_model="survey"/>
+            src_model="survey"
+            groups="base.group_survey_user"/>
 
     </data>
 </openerp>

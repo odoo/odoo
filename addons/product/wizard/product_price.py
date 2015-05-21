@@ -28,6 +28,9 @@ class product_price_list(osv.osv_memory):
     _description = 'Price List'
 
     _columns = {
+        'partner_id': fields.many2one('res.partner', 'Supplier',
+            help='For price lists based on the supplier price, fill in the '
+            'supplier in question here'),
         'price_list': fields.many2one('product.pricelist', 'PriceList', required=True),
         'qty1': fields.integer('Quantity-1'),
         'qty2': fields.integer('Quantity-2'),
@@ -51,9 +54,10 @@ class product_price_list(osv.osv_memory):
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5'], context=context)
+        res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5', 'partner_id'], context=context)
         res = res and res[0] or {}
         res['price_list'] = res['price_list'][0]
+        res['partner_id'] = res['partner_id'] and res['partner_id'][0]
         datas['form'] = res
         return {
             'type': 'ir.actions.report.xml',
