@@ -413,12 +413,17 @@ class stock_move(osv.osv):
             res['price_unit'] = res['price_unit'] / uos_coeff
         return res
 
-    def _get_moves_taxes(self, cr, uid, moves, context=None):
-        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, context=context)
-        for move in moves:
-            if move.procurement_id and move.procurement_id.sale_line_id:
-                is_extra_move[move.id] = False
-                extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.procurement_id.sale_line_id.tax_id])]
+    def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
+        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, inv_type, context=context)
+        if inv_type == 'out_invoice':
+            for move in moves:
+                if move.procurement_id and move.procurement_id.sale_line_id:
+                    is_extra_move[move.id] = False
+                    extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.procurement_id.sale_line_id.tax_id])]
+                elif move.picking_id.sale_id and move.product_id.product_tmpl_id.taxes_id:
+                    fp = move.picking_id.sale_id.fiscal_position
+                    res = self.pool.get("account.invoice.line").product_id_change(cr, uid, [], move.product_id.id, None, partner_id=move.picking_id.partner_id.id, fposition_id=(fp and fp.id), context=context)
+                    extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_id'])]
         return (is_extra_move, extra_move_tax)
 
     def _get_taxes(self, cr, uid, move, context=None):
