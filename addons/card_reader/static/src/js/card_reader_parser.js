@@ -192,39 +192,18 @@ var PaymentTransactionPopupWidget = PopupWidget.extend({
         var self = this;
         this._super(options);
         options.transaction.then(function (data) {
-            if (data.status == "Error" || data.status == "Declined") {
-                if (lookUpCodeTransaction["TimeoutError"][data.error]) { // Not fatal, retry
-                    data.message = "Error " + data.error + ": " + lookUpCodeTransaction["TimeoutError"][data.error] + ".<br/><br/>Retrying...";
-                } else { // Fatal, stop
-                    data.message = "Error " + data.error + ": " + lookUpCodeTransaction["FatalError"][data.error];
-                    self.close();
-                    self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
-                }
-            } else if (data.status == "Success" || data.status == "Approved") {
-                if (data.partial) {
-                    data.message = "Partially approved";
-                    self.close();
-                    self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
-                } else {
-                    data.message = lookUpCodeTransaction["Approved"][data.error];
-                    setTimeout(function () {
-                        self.gui.close_popup();
-                    }, 2000);
-                }
+            if (data.auto_close) {
+                setTimeout(function () {
+                    self.gui.close_popup();
+                }, 2000);
+            } else {
+                self.close();
+                self.$el.find('.popup').append('<div class="footer"><div class="button cancel">Ok</div></div>');
             }
 
             self.$el.find('p.body').html(data.message);
-
         }).progress(function (data) {
-            var to_display = '';
-
-            if (data.error) {
-                to_display = data.status + ' ' + data.error + '<br/><br/>' + data.message;
-            } else {
-                to_display = data.status + '<br/><br/>' + data.message;
-            }
-
-            self.$el.find('p.body').html(to_display);
+            self.$el.find('p.body').html(data.message);
         });
     }
 });
@@ -295,19 +274,12 @@ PaymentScreenWidget.include({
     },
 
     // Handler to manage the card reader string
-    credit_code_transaction: function (parsed_result) {
+    credit_code_transaction: function (parsed_result, old_deferred, retry_nr) {
         if(!allowOnlinePayment(this.pos)) {
             return;
         }
 
-        var def = new $.Deferred();
         var self = this;
-
-        // show the transaction popup.
-        // the transaction deferred is used to update transaction status
-        this.gui.show_popup('payment-transaction', {
-            transaction: def
-        });
 
         // Construct a dictionnary to store all data from the magnetic card
         var transaction = {
@@ -318,7 +290,6 @@ PaymentScreenWidget.include({
         };
 
         // Extends the dictionnary with needed client side data to complete the request transaction
-
         _.extend(transaction, {
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
@@ -327,20 +298,24 @@ PaymentScreenWidget.include({
             'journal_id'        : parsed_result.journal_id,
         });
 
-        def.notify({
-            error: 0,
-            status: 'Waiting',
-            message: 'Handling transaction...',
-        });
+        var def = old_deferred || new $.Deferred();
+
+        // show the transaction popup.
+        // the transaction deferred is used to update transaction status
+        // if we have a previous deferred it indicates that this is a retry
+        if (! old_deferred) {
+            this.gui.show_popup('payment-transaction', {
+                transaction: def
+            });
+            def.notify({
+                status: 'Waiting',
+                message: 'Handling transaction...',
+            });
+        }
 
         var rpc_def = session.rpc("/pos/send_payment_transaction", transaction)
                 .done(function (data) {
                     console.log(data); // todo
-
-                    if (! self.waiting_on_payment_response) {
-                        return;
-                    }
-                    self.waiting_on_payment_response = false;
 
                     var response = decodeMercuryResponse(data);
                     response.journal_id = parsed_result.journal_id;
@@ -355,17 +330,47 @@ PaymentScreenWidget.include({
                         self.order_changes();
                         self.reset_input();
                         self.render_paymentlines();
+
+                        if (response.message === "PARTIAL AP") {
+                            def.resolve({
+                                message: "Partially approved",
+                                auto_close: false,
+                            });
+                        } else {
+                            def.resolve({
+                                message: lookUpCodeTransaction["Approved"][response.error],
+                                auto_close: true,
+                            });
+                        }
                     }
 
-                    def.resolve({
-                        status: response.status,
-                        error: response.error,
-                        partial: response.message === "PARTIAL AP" && response.authorize < response.purchase
-                    });
+                    // if an error related to timeout or connectivity issues arised, then retry the same transaction
+                    else {
+                        if (lookUpCodeTransaction["TimeoutError"][response.error]) { // recoverable error
+                            if (! retry_nr) {
+                                retry_nr = 1;
+                            }
 
-                    // if a error related to timeout or connectivity issues arised, then retry the same transaction
-                    if (response.status == "Error" && lookUpCodeTransaction["TimeoutError"][response.error]) {
-                        self.credit_code_transaction(parsed_result);
+                            if (retry_nr <= 5) {
+                                def.notify({
+                                    message: "Retry #" + retry_nr + "...<br/><br/>" + response.message,
+                                });
+                                setTimeout(function () {
+                                    self.credit_code_transaction(parsed_result, def, retry_nr + 1);
+                                }, 1000);
+                            } else {
+                                def.resolve({
+                                    message: "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + " (Mercury down?)",
+                                    auto_close: false
+                                });
+                            }
+
+                        } else { // not recoverable
+                            def.resolve({
+                                message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error],
+                                auto_close: false
+                            });
+                        }
                     }
 
                 }).fail(function (data) {
@@ -376,13 +381,11 @@ PaymentScreenWidget.include({
                 });
 
         // if not receiving a response for > 60 seconds, we should retry
-        if (self.waiting_on_payment_response) {
-            setTimeout(function () {
-                if (rpc_def.state() == "pending") {
-                    self.credit_code_transaction(parsed_result);
-                }
-            }, 65000);
-        }
+        setTimeout(function () {
+            if (rpc_def.state() == "pending") {
+                self.credit_code_transaction(parsed_result);
+            }
+        }, 65000);
     },
     credit_code_cancel: function () {
         return;
@@ -391,7 +394,6 @@ PaymentScreenWidget.include({
     credit_code_action: function (parsed_result) {
         self = this;
         parsed_result.total = this.pos.get_order().get_due();
-        self.waiting_on_payment_response = true;
 
         if (parsed_result.total) {
             if (onlinePaymentJournal.length === 1) {
@@ -458,18 +460,19 @@ PaymentScreenWidget.include({
                     } else {
                         // reversal was successful
                         def.resolve({
-                            status: response.status,
-                            error: response.error,
-                            message: response.message,
+                            message: "Reversal succeeded",
                         });
                     }
-                } else {
-                    // voidsale failed, nothing more we can do
-                    def.resolve({
-                        status: response.status,
-                        error: response.error,
-                        message: response.message,
-                    });
+                } else { // voidsale ended, nothing more we can do
+                    if (response.status === 'Approved') {
+                        def.resolve({
+                            message: "VoidSale succeeded",
+                        });
+                    } else {
+                        def.resolve({
+                            message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error],
+                        });
+                    }
                 }
 
             })  .fail(function (data) {
