@@ -2339,7 +2339,11 @@ class stock_move(osv.osv):
                     new_std_price = new_price
                 else:
                     # Get the standard price
-                    amount_unit = product.price_get('standard_price', context=context)[product.id]
+                    pricetype_obj = self.pool.get('product.price.type')
+                    price_type_id = pricetype_obj.search(cr, uid, [('field','=','standard_price')])[0]
+                    price_type_currency_id = pricetype_obj.browse(cr, uid, price_type_id).currency_id.id
+                    amount_unit = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
+                        context['currency_id'], product.standard_price, round=False, context=context)
                     new_std_price = ((amount_unit * product_avail[product.id])\
                         + (new_price * qty))/(product_avail[product.id] + qty)
 
