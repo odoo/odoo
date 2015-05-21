@@ -17,13 +17,6 @@
                 <xpath expr="//header/button[@name='print_quotation'][1]" position="replace">
                     <button name="print_quotation" string="Print" type="object" states="draft" groups="base.group_user"/>
                 </xpath>
-                <xpath expr="//sheet/div[@name='buttons']" position="inside">
-                    <button name="open_quotation" type="object" icon="fa fa-book"
-                        class="oe_inline oe_stat_button oe_right"
-                        attrs="{'invisible': [('template_id', '=', False)]}">
-                        <div>View Online<br />Quotation</div>
-                    </button>
-                </xpath>
                 <xpath expr="//page[@string='Order Lines']" position="after">
                     <page string="Suggested Products">
                         <label string="Optional Products &amp; Services" for="options"/>
@@ -42,7 +35,13 @@
                     </page>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="after">
-                    <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id)"/>                    
+                    <label for="template_id"/>
+                    <div>
+                        <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id)"/>
+                        <button name="open_quotation" type="object" 
+                        class="oe_link" string="View Online Quotation"
+                        attrs="{'invisible': [('template_id', '=', False)]}"/>
+                    </div>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="website_description" invisible="1"/>
