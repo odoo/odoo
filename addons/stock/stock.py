@@ -637,10 +637,16 @@ class stock_quant(osv.osv):
                 res.append((None, quantity))
                 break
             for quant in self.browse(cr, uid, quants, context=context):
+                qty = quant.qty
+                if quant.propagated_from_id:
+                    propagated_quant = self.browse(cr, uid, quant.propagated_from_id.id, context=context)
+                    qty -= max(-propagated_quant.qty, qty)
+                    if qty == 0:
+                        continue
                 rounding = product.uom_id.rounding
-                if float_compare(quantity, abs(quant.qty), precision_rounding=rounding) >= 0:
-                    res += [(quant, abs(quant.qty))]
-                    quantity -= abs(quant.qty)
+                if float_compare(quantity, abs(qty), precision_rounding=rounding) >= 0:
+                    res += [(quant, abs(qty))]
+                    quantity -= abs(qty)
                 elif float_compare(quantity, 0.0, precision_rounding=rounding) != 0:
                     res += [(quant, quantity)]
                     quantity = 0
