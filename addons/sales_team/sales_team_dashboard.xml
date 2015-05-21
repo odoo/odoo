@@ -48,7 +48,12 @@
                                 </div>
 
                                 <div t-if="widget.view.is_action_enabled('edit')" class="o_kanban_card_manage_settings row">
-                                    <a type="edit">Settings</a>
+                                    <div class="col-xs-8">
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <a type="edit">Settings</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -51,6 +51,7 @@
                 <search string="Hr Attendance Search">
                     <field name="name" string="Attendance"/>
                     <field name="action"/>
+                    <field name="department_id"/>
                     <filter string="Today" name="today" domain="[('name','&gt;=',datetime.datetime.now().replace(hour=0, minute=0, second=0)),('name','&lt;=',datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
                     <filter string="Current Month" domain="[('name','&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
                     <separator/>
@@ -104,6 +105,18 @@
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">pivot,graph</field>
+            <field name="view_id"></field>  <!-- force empty -->
+        </record>
+
+        <record id="action_hr_attendance_graph_filtered" model="ir.actions.act_window">
+            <field name="name">Attendance Analysis</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="context">{
+                'search_default_department_id': [active_id],
+                'default_department_id': active_id}
+            </field>
             <field name="view_id"></field>  <!-- force empty -->
         </record>
 

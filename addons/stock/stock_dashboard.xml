@@ -6,6 +6,7 @@
             <kanban class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0">
                 <field name="complete_name"/>
                 <field name="color"/>
+                <field name="code"/>
                 <field name="count_picking_ready"/>
                 <field name="count_picking_draft"/>
                 <field name="count_picking_waiting"/>
@@ -26,18 +27,14 @@
                             <div class="container o_kanban_card_content o_visible">
                                 <div class="row">
                                     <div class="col-xs-6 o_kanban_primary_left">
-                                        <button class="btn btn-primary" name="%(action_picking_tree)d" type="action">Transfers</button>
+                                        <button class="btn btn-primary" name="%(action_picking_tree_ready)d" type="action">
+                                            <span t-if="record.code.raw_value =='incoming'"><t t-esc="record.count_picking_ready.value"/> To Receive</span>
+                                            <span t-if="record.code.raw_value =='outgoing'"><t t-esc="record.count_picking_ready.value"/> To Do</span>
+                                            <span t-if="record.code.raw_value =='internal'"><t t-esc="record.count_picking_ready.value"/> Transfers</span>
+                                        </button>
                                     </div>
                                     <div class="col-xs-6 o_kanban_primary_right">
                                         <div t-if="record.count_picking_ready.raw_value > 0" class="row">
-                                            <div class="col-xs-9">
-                                                <a name="%(action_picking_tree_ready)d" type="action">
-                                                    Ready
-                                                </a>
-                                            </div>
-                                            <div class="col-xs-3">
-                                                <field name="count_picking_ready"/>
-                                            </div>
                                         </div>
 
                                         <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
@@ -76,7 +73,7 @@
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane o_invisible">
                                 <div class="row">
-                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div class="o_kanban_card_manage_title">
                                             <span>View</span>
                                         </div>
@@ -93,7 +90,7 @@
                                             <a name="%(action_picking_tree_backorder)d" type="action">Back Orders</a>
                                         </div>
                                     </div>
-                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
                                         <div class="o_kanban_card_manage_title">
                                             <span>New</span>
                                         </div>
@@ -101,21 +98,15 @@
                                             <a name="%(action_picking_form)d" type="action" >Transfer</a>
                                         </div>
                                     </div>
-                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
-                                        <div class="o_kanban_card_manage_title">
-                                            <span>Reports</span>
-                                        </div>
-                                        <div>
-                                            <a name="%(action_stock_level_forecast_report)d" type="action" >Stock Level Forecast</a>
-                                        </div>
-                                        <div>
-                                            <a name="%(action_stock_line_date)d" type="action" >Latest Inventories &amp; Moves</a>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div t-if="widget.view.is_action_enabled('edit')" class="o_kanban_card_manage_settings row">
-                                    <a type="edit">Settings</a>
+                                    <div class="col-xs-8">
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <a type="edit">Settings</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
