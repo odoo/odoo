@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-05-15 06:26+0000\n"
+"Last-Translator: Eric Huang <eh@cenoq.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:15+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-16 05:44+0000\n"
+"X-Generator: Launchpad (build 17493)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -318,6 +318,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊建立一張將轉換為採購訂單的報價單。\n"
+"              </p><p>\n"
+"                使用此選單根據參考單號、供應商、產品等項目進行尋找採購清單。\n"
+"                對每張採購訂單，您能追蹤關於供應商的討論，控管已取貨產品及\n"
+"                控管供應商發票。\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -758,7 +766,7 @@ msgstr "距離交貨日數"
 #. module: purchase
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "審核日期"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -1270,7 +1278,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_picking_tree_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr ""
+msgstr "在入庫中"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
@@ -1642,7 +1650,7 @@ msgstr "採購訂單"
 msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr ""
+msgstr "請輸入客戶地址，如果您選擇由供應商直接寄達客戶，否則保持住址空白，則改為寄達您的公司。"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1794,7 +1802,7 @@ msgstr "詢價 N\""
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "詢價單"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
@@ -1965,7 +1973,7 @@ msgstr "未稅金額"
 msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
-msgstr ""
+msgstr "本價格清單決定使用在採購訂單的交易幣別, 它也做為計算已選擇的產品/數量的供應商價格."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1231
@@ -2086,7 +2094,7 @@ msgstr "無法取消此採購訂單"
 msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
-msgstr ""
+msgstr "當建立採購單時，會自動產出唯一的採購單號。"
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0

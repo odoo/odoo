@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-05-07 05:12+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:27+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-08 05:33+0000\n"
+"X-Generator: Launchpad (build 17474)\n"
+"Language: tr\n"
 
 #. module: subscription
 #: field:subscription.document,active:0
@@ -29,7 +30,7 @@ msgstr "Etkin"
 #: field:subscription.subscription,create_uid:0
 #: field:subscription.subscription.history,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: subscription
 #: field:subscription.document,create_date:0
@@ -37,12 +38,12 @@ msgstr ""
 #: field:subscription.subscription,create_date:0
 #: field:subscription.subscription.history,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturulma"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
 msgid "Cron Job"
-msgstr ""
+msgstr "Cron işi"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -68,6 +69,7 @@ msgstr "Varsayılan Değer"
 #: help:subscription.document.fields,value:0
 msgid "Default value is considered for field when new document is generated."
 msgstr ""
+"Yeni belge oluşturulduğunda alan için varsayılan değeri kabul edilir."
 
 #. module: subscription
 #: help:subscription.subscription,note:0
@@ -119,7 +121,7 @@ msgstr "ilk Tarih"
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_filter
 msgid "Group By"
-msgstr ""
+msgstr "Grupla"
 
 #. module: subscription
 #: field:subscription.document,id:0
@@ -127,7 +129,7 @@ msgstr ""
 #: field:subscription.subscription,id:0
 #: field:subscription.subscription.history,id:0
 msgid "ID"
-msgstr ""
+msgstr "Kimlik"
 
 #. module: subscription
 #: help:subscription.document,active:0
@@ -135,6 +137,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
 msgstr ""
+"Etkin alanın yanlış olarak ayarlarsanız, size abonelik belge ezelî izale "
+"gizlemek sağlayacaktır."
 
 #. module: subscription
 #: help:subscription.subscription,active:0
@@ -142,12 +146,14 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
 msgstr ""
+"Etkin alanın yanlış olarak ayarlarsanız, size abonelik kaldırma olmadan "
+"gizlemek sağlayacaktır."
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_form
 #: field:subscription.subscription,notes:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Dahili Notlar"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
@@ -165,7 +171,7 @@ msgstr "Aralıklı Birimi"
 #: field:subscription.subscription,write_uid:0
 #: field:subscription.subscription.history,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: subscription
 #: field:subscription.document,write_date:0
@@ -173,7 +179,7 @@ msgstr ""
 #: field:subscription.subscription,write_date:0
 #: field:subscription.subscription.history,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -214,7 +220,7 @@ msgstr "İş Ortağı"
 msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
-msgstr ""
+msgstr "Lütfen başka bir kaynak dokümanı deneyin. Bu mevcut değil!"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_form
@@ -225,13 +231,13 @@ msgstr "Süreç"
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 msgid "Recurring Documents"
-msgstr ""
+msgstr "Tekrarlanan Dökümanlar"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Recurring Types"
-msgstr ""
+msgstr "Yinelenen türleri"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_filter
@@ -242,7 +248,7 @@ msgstr "Çalışan"
 #. module: subscription
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
-msgstr ""
+msgstr "Abonelik üzerinde çalışan zamanlayıcı"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_filter
@@ -338,10 +344,10 @@ msgstr "Haftalar"
 #: code:addons/subscription/subscription.py:118
 #, python-format
 msgid "Wrong Source Document!"
-msgstr ""
+msgstr "Yanlış kaynak belge!"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:145
 #, python-format
 msgid "You cannot delete an active subscription!"
-msgstr ""
+msgstr "Etkin bir abonelik silemezsiniz!"
