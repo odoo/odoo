@@ -137,9 +137,10 @@ class ir_http(osv.AbstractModel):
     def _handle_exception(self, exception):
         # This is done first as the attachment path may
         # not match any HTTP controller.
-        attach = self._serve_attachment()
-        if attach:
-            return attach
+        if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
+            attach = self._serve_attachment()
+            if attach:
+                return attach
 
         # If handle_exception returns something different than None, it will be used as a response
         try:
