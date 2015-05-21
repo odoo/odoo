@@ -27,6 +27,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

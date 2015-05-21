@@ -21,6 +21,7 @@
 
 from openerp import tools
 from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 
 class Env(dict):
 
