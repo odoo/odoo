@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-04-27 10:35+0000\n"
+"Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:13+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-04-28 05:45+0000\n"
+"X-Generator: Launchpad (build 17453)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -197,6 +197,12 @@ msgid ""
 "* The 'Cancelled' status is set automatically when user cancel purchase "
 "order."
 msgstr ""
+" *حالة 'المسودة' يتم تحديدها تلقائياً عندما يكون أمر الشراء فى حالة "
+"المسودة.\n"
+"*حالة 'المُصادقة' يتم تحديدها تلقائياً كتأكيد عندما يكون أمر البيع فى حالة "
+"المُصادقة.    \n"
+"* يتم تعيين حالة \"تم\" تلقائيا عندما يتم تعيين أمر الشراء على النحو تم.\n"
+"* يتم تعيين حالة \"إلغاء\" تلقائيا عند المستخدم إلغاء أمر الشراء."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:198
@@ -208,7 +214,7 @@ msgstr ""
 #: field:product.product,purchase_count:0
 #: field:product.template,purchase_count:0
 msgid "# Purchases"
-msgstr ""
+msgstr "# المشتريات"
 
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
@@ -285,6 +291,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p فئة=\"oe_عرض_لا تحتوى_إنشاء\">\n"
+"انقر لإضافة إصدار لائحة الأسعار .\n"
+"</p><p>\n"
+"يمكن أن يكون هناك أكثر من إصدار واحد من لائحة الأسعار، كل \n"
+"هذه يجب أن تكون سارية المفعول خلال فترة معينة من الزمن. بعض \n"
+"الأمثلة من الإصدارات: الأسعار الرئيسية، 2010، 2011، مبيعات الصيف، \n"
+"الخ .\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree_picking_to_invoice
@@ -318,6 +333,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p فئة=\"oe_عرض_لا يحتوى_إنشاء\">\n"
+"انقر لإنشاء الاقتباسات التي سيتم تحويلها إلى أمر الشراء\n"
+"</p><p>\n"
+"استخدام هذه القائمة للبحث داخل أوامر الشراء من قبل \n"
+"المراجع، والمورد، والمنتجات، وما إلى ذلك من أجل كل أمر الشراء، \n"
+"يمكنك تتبع المناقشة ذات الصلة مع المورد، والسيطرة \n"
+"على المنتجات الواردة والتحكم في فواتير الموردين\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -385,6 +409,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"هنا يمكنك تتبع جميع خطوط أوامر الشراء حيث أن \n"
+"الفواتير تكون \"معتمدة على خطوط طلبات الشراء \"، والتي \n"
+"لم تكن قد تلقت فاتورة المورد بعد. يمكنك توليد \n"
+"مسودة فاتورة المورد استنادا إلى خطوط من هذه القائمة.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
@@ -441,7 +472,7 @@ msgstr "يسمح لك باختيار والحفاظ على وحدات قياس �
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
+msgstr "يسمح لك بتحديد الحساب التحليلي بناء على أوامر الشراء ."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -451,13 +482,13 @@ msgstr "حساب تحليلي"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "المحاسبة التحليلية للمشتريات"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "المحاسببة التحليلية للمشتريات"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -503,7 +534,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr ""
+msgstr "بناءاً على سطور أوامر الشراء"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -524,12 +555,12 @@ msgstr "على أساس توليد مسودة فاتورة"
 #: selection:purchase.config.settings,default_invoice_method:0
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr ""
+msgstr "بناءً على الشحنات الواردة"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr ""
+msgstr "بناءً على سطور أوامر الشراء"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -660,7 +691,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Configure Purchases"
-msgstr ""
+msgstr "إعدادت المشتريات"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -712,7 +743,7 @@ msgstr "عنوان العميل"
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Customer Address (Direct Delivery)"
-msgstr ""
+msgstr "عناوين العملاء (التسليم المباشر)"
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
@@ -785,7 +816,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:599
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "تحديد يومية المشتريات لهذه الشركة: \"%s\" (id:%d)."
 
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
@@ -856,7 +887,7 @@ msgstr "تم انشاء طلب شراء 'مسودة'"
 #: code:addons/purchase/edi/purchase_order.py:132
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "تبادل البيانات الإلكترونية لائحة الأسعار (%s)"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_email_templates
@@ -917,7 +948,7 @@ msgstr "المتابعون"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr ""
+msgstr "فرض مستويين من الموافقات"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -1195,6 +1226,9 @@ msgid ""
 "Orders for procuring products,they will be scheduled that many days earlier "
 "to cope with unexpected supplier delays."
 msgstr ""
+"هامش الخطأ لمرات عروض الموردين. عندما يولد النظام أوامر الشراء لتدبير "
+"المنتجات، وسيتم تحديد مواعيد لهم مبكرة بعدد من الأيام لمواجهة التأخير غير "
+"المتوقع ."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
@@ -1219,7 +1253,7 @@ msgstr "الرسائل و سجل التواصل"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr ""
+msgstr "المشتريات الشهرية"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1241,7 +1275,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1220
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "لا يوجد مورد محدد لهذا المنتج"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1218
@@ -1264,7 +1298,7 @@ msgstr "ملاحظات"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr ""
+msgstr "على مسودة الفواتير"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_picking_tree_picking_to_invoice
@@ -1276,7 +1310,7 @@ msgstr "عند الشحنات القادمة"
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "On Purchase Order Lines"
-msgstr ""
+msgstr "علي سطور أوامر الشراء"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
@@ -1645,6 +1679,8 @@ msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"وضع عنوان إذا كنت تريد التسليم مباشرة من المورد إلى العميل. خلاف ذلك، الحفاظ "
+"عليها فارغة للتسليم إلى الشركة الخاصة بك."
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1683,12 +1719,12 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "طلبات عروض الأسعار المعتمدة"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "طلبات عروض الأسعار المُصدق عليها"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
@@ -1705,7 +1741,7 @@ msgstr ""
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "طلب عروض الأسعار_${(شىء.أسم or '').إستبدال('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1740,7 +1776,7 @@ msgstr "تاريخ التلقي"
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "نسبة المُستلم"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
@@ -1760,6 +1796,7 @@ msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
 msgstr ""
+"مرجعية الوثيقة التى ولدت طلب امر الشراء و أمر البيع أو طلب الشراء الداخلى"
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -1830,7 +1867,7 @@ msgstr "ابحث عن امر شراء"
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "تحديد أمر بيع مفتوح"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1114
@@ -1875,7 +1912,7 @@ msgstr "مستند المصدر"
 #. module: purchase
 #: help:product.template,purchase_ok:0
 msgid "Specify if the product can be selected in a purchase order line."
-msgstr ""
+msgstr "تحديد إمكانية تحديد المنتج في خط أمر الشراء."
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -1919,7 +1956,7 @@ msgstr "مورِّد"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Supplier Features"
-msgstr ""
+msgstr "ميزات المورد"
 
 #. module: purchase
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
@@ -1955,7 +1992,7 @@ msgstr "الشروط و الأحكام"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "شروط وأحكام ..."
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
@@ -1978,6 +2015,8 @@ msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
 msgstr ""
+"المنتج \"%s\" تم تعريف مع الشركة باعتبارها بائع التجزئة مما يبدو أن هناك خطأ "
+"في التهيئة!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1134
@@ -1986,6 +2025,8 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
 msgstr ""
+"المورد الذى تم تحديده لديه الحد الأدنى من الكمية المحددة من %s %s ,يجب عليك "
+"ألا تشترى أقل من ذلك ."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1130
@@ -2138,12 +2179,12 @@ msgstr ""
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on orders"
-msgstr ""
+msgstr "استخدام حسابات تحليلية متعددة للأوامر"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr ""
+msgstr "إستخدام حسابات تحليلية متعددة لأوامر الشراء"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user

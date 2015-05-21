@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-11-21 04:06+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"PO-Revision-Date: 2015-05-19 13:54+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:55+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-20 05:31+0000\n"
+"X-Generator: Launchpad (build 17508)\n"
 "Language: tr\n"
 
 #. module: mass_mailing
@@ -173,6 +173,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bir elıcı eklemek için tıklayın.\n"
+"              </p>\n"
+"            "
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
@@ -185,6 +189,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bir toplu mail kampanyası oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                Email sonuçlarına göre toplu mail kapmanyası yapısı "
+"oluşturun.\n"
+"              </p>\n"
+"            "
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -196,6 +207,12 @@ msgid ""
 "    contacts easily and to send to mailings in a single click.\n"
 "</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">yeni bir posta listesi. \n"
+" oluşturmak için \n"
+" tıklayın burada</p><p>\n"
+" posta listeleri için müşteriler and\n"
+" kişileri kolayca yönetmenize ve içinde bir tek tıklama. \n"
+" postalar göndermek için izin verir</p>"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
@@ -208,6 +225,12 @@ msgid ""
 "your contacts, customers or leads using mailing lists.\n"
 "</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">yeni bir e-posta. \n"
+" oluşturmak için \n"
+" tıklayın burada</p><p>\n"
+" toplu postalama için kolayca tasarlamanızı ve kişiler, müşteriler veya "
+"posta listelerine. \n"
+" kullanarak müşteri adayları toplu postalar göndermek sağlar</p>"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.campaign,unique_ab_testing:0
@@ -248,7 +271,7 @@ msgstr "Metin"
 #: field:mail.mass_mailing.campaign,bounced:0
 #: field:mail.statistics.report,bounced:0
 msgid "Bounced"
-msgstr ""
+msgstr "Karşılıksız çıktı"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
@@ -359,12 +382,12 @@ msgstr "Oluşturma Tarihi"
 #. module: mass_mailing
 #: help:mail.mail.statistics,exception:0
 msgid "Date of technical error leading to the email not being sent"
-msgstr ""
+msgstr "E-posta gönderilmiyor önde gelen teknik hata tarihi"
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.contact,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Kayıta işlenmiş son mesajın tarihi."
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,scheduled:0
@@ -374,22 +397,22 @@ msgstr "E-posta oluşturulma tarihi"
 #. module: mass_mailing
 #: help:mail.mail.statistics,opened:0
 msgid "Date when the email has been opened the first time"
-msgstr ""
+msgstr "İlk kez e-posta açıldığında tarihi"
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,sent:0
 msgid "Date when the email has been sent"
-msgstr ""
+msgstr "E-posta başarılı bir şekilde gönderildi"
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,replied:0
 msgid "Date when this email has been replied for the first time."
-msgstr ""
+msgstr "E-postaya ilk olarak cevap verilen tarih."
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,bounced:0
 msgid "Date when this email has bounced."
-msgstr ""
+msgstr "E-postanın karşılıksız çıktığı tarih"
 
 #. module: mass_mailing
 #: view:email.template:mass_mailing.view_email_template_kanban
@@ -469,7 +492,7 @@ msgstr "E-posta İşlemleri"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Eposta yazma sihirbazı"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
@@ -489,7 +512,7 @@ msgstr "İstisna"
 #. module: mass_mailing
 #: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Opt Out"
-msgstr ""
+msgstr "Çekilenler Hariç"
 
 #. module: mass_mailing
 #: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
@@ -511,7 +534,7 @@ msgstr "İzleyiciler"
 #: field:mail.mass_mailing,email_from:0
 #: field:mail.statistics.report,email_from:0
 msgid "From"
-msgstr ""
+msgstr "From:"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
@@ -531,6 +554,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet kanban ekranlarına "
+"eklenebilmesi için html biçimindedir."
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,id:0
@@ -552,11 +577,14 @@ msgid ""
 "related mail_mail can be deleted separately from its statistics.However the "
 "ID is needed for several action and controllers."
 msgstr ""
+"İlgili mail_mail Teşhıs kodu Bu alan, ilgili mail_mail-ebilmek var olmak "
+"silmek ayrı ayrı kendi istatistiklerinden tamsayı alanı çünkü. Ancak kimliği "
+"birkaç eylem ve denetleyicileri için gereklidir."
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.contact,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 
 #. module: mass_mailing
 #: help:mail.mass_mailing.campaign,unique_ab_testing:0
@@ -564,11 +592,14 @@ msgid ""
 "If checked, recipients will be mailed only once, allowing to sendvarious "
 "mailings in a single campaign to test the effectivenessof the mailings."
 msgstr ""
+"Bu onay kutusu işaretlendiğinde, alıcılar yalnızca tek bir kampanyadaki "
+"sendvarious postalar için postalar effectivenessof test etmek için izin bir "
+"kez gönderilecektir."
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
 msgid "In Document"
-msgstr ""
+msgstr "Belge"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,message_is_follower:0
@@ -690,12 +721,12 @@ msgstr "Toplu Postalama Kampanyalarını Yönetme"
 #. module: mass_mailing
 #: field:marketing.config.settings,group_mass_mailing_campaign:0
 msgid "Manage Mass Mailing using Campaign"
-msgstr ""
+msgstr "Toplu Postalama Kampanyalarını Yönetme"
 
 #. module: mass_mailing
 #: help:marketing.config.settings,group_mass_mailing_campaign:0
 msgid "Manage mass mailign using Campaigns"
-msgstr ""
+msgstr "Toplu Postalama Kampanyalarını Yönetme"
 
 #. module: mass_mailing
 #: field:mail.statistics.report,name:0
@@ -777,6 +808,10 @@ msgid ""
 "can sort out your analysis by different groups to get accurate grained "
 "analysis."
 msgstr ""
+"Yığın posta istatistikleri çıkılan posta, açılan posta sayısı gibi bilgileri "
+"posta yanıtladı farklı e-posta ile ilgili kontrol etmenizi sağlar. "
+"Analiziniz doğru taneli analiz almak için farklı gruplar tarafından dışarı "
+"sıralayabilirsiniz."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings
@@ -830,13 +865,13 @@ msgstr "Kontak Sayısı"
 #. module: mass_mailing
 #: model:ir.actions.client,name:mass_mailing.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr ""
+msgstr "Pazarlama Menüsünü Aç"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:555
 #, python-format
 msgid "Open with Visual Editor"
-msgstr ""
+msgstr "Görsel Editörde Aç"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,opened:0
@@ -865,12 +900,12 @@ msgstr "Açılma Oranı"
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,opt_out:0
 msgid "Opt Out"
-msgstr ""
+msgstr "Çekildi"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Options"
-msgstr "Şeçenekler"
+msgstr "Seçenekler"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail
@@ -882,12 +917,12 @@ msgstr "Giden Postalar"
 msgid ""
 "Percentage of the contacts that will be mailed. Recipients will be taken "
 "randomly."
-msgstr ""
+msgstr "Gönderilecek kişilerin yüzdesi. Alıcılar rastgele alınacaktır."
 
 #. module: mass_mailing
 #: help:mail.mass_mailing,reply_to:0
 msgid "Preferred Reply-To Address"
-msgstr ""
+msgstr "Yanıtlama Adresi"
 
 #. module: mass_mailing
 #: view:email.template:mass_mailing.email_template_form_minimal
@@ -917,7 +952,7 @@ msgstr "Alıcılar"
 #. module: mass_mailing
 #: field:mail.mass_mailing,mailing_model:0
 msgid "Recipients Model"
-msgstr ""
+msgstr "Alıcılar"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -956,7 +991,7 @@ msgstr "Yanıtla"
 #. module: mass_mailing
 #: field:mail.mass_mailing,reply_to_mode:0
 msgid "Reply-To Mode"
-msgstr ""
+msgstr "Yanıtlama Adresi"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
@@ -967,7 +1002,7 @@ msgstr "Sorumlu"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_test
 msgid "Sample Mail Wizard"
-msgstr ""
+msgstr "Örnek Posta Gönder"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_1
@@ -1154,6 +1189,8 @@ msgid ""
 "                                                Please use a specific reply-"
 "to email address."
 msgstr ""
+"Bu seçeneği seçtiğiniz alıcılar için kullanılabilir değil. \n"
+" Lütfen özel yanıt için e-posta adresi kullanın."
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,total:0
@@ -1184,7 +1221,7 @@ msgstr "e-postalar kuyrukta ve yakında gönderilecektir."
 #. module: mass_mailing
 #: view:mail.mass_mailing.test:mass_mailing.view_mail_mass_mailing_test_form
 msgid "or"
-msgstr ""
+msgstr "veya"
 
 #. module: mass_mailing
 #: view:website:website.snippets
