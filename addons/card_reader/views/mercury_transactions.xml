@@ -1,18 +1,22 @@
 <?xml version='1.0' encoding='utf-8'?>
 <openerp>
   <data>
+    <template id='mercury_common'>
+      <MerchantID><t t-esc='merchant_id'/></MerchantID>
+      <LaneID><t t-esc='config_id'/></LaneID>
+      <TranType><t t-esc='transaction_type'/></TranType>
+      <TranCode><t t-esc='transaction_code'/></TranCode>
+      <InvoiceNo><t t-esc='invoice_no'/></InvoiceNo>
+      <Frequency>OneTime</Frequency>
+    </template>
+
     <template id='mercury_transaction'>
       <TStream>
         <Transaction>
-          <MerchantID><t t-esc='merchant_id'/></MerchantID>
+          <t t-call='card_reader.mercury_common'/>
           <OperatorID>test</OperatorID> <!-- TODO -->
-          <TranType><t t-esc='transaction_type'/></TranType>
-          <TranCode><t t-esc='transaction_code'/></TranCode>
-          <InvoiceNo><t t-esc='invoice_no'/></InvoiceNo>
-          <LaneID><t t-esc='config_id'/></LaneID>
           <TerminalID><t t-esc='config_id'/></TerminalID>
           <RecordNo>RecordNumberRequested</RecordNo>
-          <Frequency>OneTime</Frequency>
           <PartialAuth>Allow</PartialAuth>
           <Memo><t t-esc='memo'/></Memo>
           <Account>
@@ -31,14 +35,9 @@
     <template id='mercury_voidsale'>
       <TStream>
         <Transaction>
-          <MerchantID><t t-esc='merchant_id'/></MerchantID>
-          <TranType><t t-esc='transaction_type'/></TranType>
-          <TranCode><t t-esc='transaction_code'/></TranCode>
-          <InvoiceNo><t t-esc='invoice_no'/></InvoiceNo>
+          <t t-call='card_reader.mercury_common'/>
           <RefNo><t t-esc='ref_no'/></RefNo>
-          <LaneID><t t-esc='config_id'/></LaneID>
           <RecordNo><t t-esc='record_no'/></RecordNo>
-          <Frequency>OneTime</Frequency>
           <Memo><t t-esc='memo'/></Memo>
           <Amount>
             <Purchase><t t-esc='"%.2f" % authorize'/></Purchase> <!-- format required by Mercury -->
@@ -50,6 +49,21 @@
               <ProcessData><t t-esc='process_data'/></ProcessData>
             </t>
           </TranInfo>
+        </Transaction>
+      </TStream>
+    </template>
+
+    <template id='mercury_return'>
+      <TStream>
+        <Transaction>
+          <t t-call='card_reader.mercury_common'/>
+          <OperatorID>Test</OperatorID>
+          <PartialAuth>Allow</PartialAuth>
+          <RefNo><t t-esc='ref_no'/></RefNo>
+          <RecordNo><t t-esc='record_no'/></RecordNo>
+          <Amount>
+            <Purchase><t t-esc='"%.2f" % purchase'/></Purchase>
+          </Amount>
         </Transaction>
       </TStream>
     </template>

@@ -2,8 +2,8 @@ import logging
 import sets
 
 from openerp import models, fields, api
-_logger = logging.getLogger(__name__)
 
+_logger = logging.getLogger(__name__)
 
 class barcode_rule(models.Model):
     _inherit = 'barcode.rule'
@@ -33,6 +33,8 @@ class account_bank_statement_line(models.Model):
     card_number = fields.Char(string='Card Number', size=4, help='The last 4 numbers of the card used to pay')
     card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, Maestro, ...)')
     card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
+    ref_no = fields.Char(string='Mercury reference number')
+    record_no = fields.Char(string='Mercury record number')
 
 class account_journal(models.Model):
     _inherit = 'account.journal'
@@ -45,10 +47,13 @@ class pos_order_card(models.Model):
     @api.model
     def _payment_fields(self, ui_paymentline):
         fields = super(pos_order_card, self)._payment_fields(ui_paymentline)
+
         fields.update({
             'card_number': ui_paymentline.get('card_number'),
             'card_brand': ui_paymentline.get('card_brand'),
-            'card_owner_name': ui_paymentline.get('card_owner_name')
+            'card_owner_name': ui_paymentline.get('card_owner_name'),
+            'ref_no': ui_paymentline.get('ref_no'),  # todo jov
+            'record_no': ui_paymentline.get('record_no')  # todo jov
         })
 
         return fields
@@ -64,4 +69,26 @@ class pos_order_card(models.Model):
         statement_line.card_brand = data.get('card_brand')
         statement_line.card_owner_name = data.get('card_owner_name')
 
+        # todo jov: this needs some work in that we can only keep most
+        # recent record_no and we need to delete after 6 months
+        statement_line.ref_no = data.get('ref_no')
+        statement_line.record_no = data.get('record_no')
+
         return statement_id
+
+    @api.multi
+    def refund(self):
+        abs = super(pos_order_card, self).refund()
+
+        for order in self.browse(self.ids):
+            for statement_line in order.statement_ids:
+                if statement_line.card_brand:
+                    response = self.env['card_reader.mercury_transaction'].do_return({'transaction_type': 'Credit', 'transaction_code': 'ReturnByRecordNo',
+                                                                                      'ref_no': statement_line.ref_no, 'record_no': statement_line.record_no,
+                                                                                      'purchase': statement_line.amount, 'journal_id': statement_line.journal_id.id}, self.user_id.id)
+
+                    if "<TextResponse>AP DUPE</TextResponse>" in response:
+                        _logger.warning("Mercury credit card return was NOT approved, because it was a duplicate return.")
+                    elif "<TextResponse>AP</TextResponse>" not in response:
+                        _logger.error("Mercury credit card return was NOT approved.")
+        return abs

@@ -15,12 +15,12 @@ class MercuryTransaction(models.Model):
         s = s.replace("&amp;", "&")
         return s
 
-    def _get_pos_session(self, request_session):
+    def _get_pos_session(self, request_uid):
         # if user not logged in exit fail
-        if not request_session.uid:
+        if not request_uid:
             return 0
 
-        pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', request_session.uid)])
+        pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', request_uid)])
         if not pos_session:
             return 0
 
@@ -36,8 +36,8 @@ class MercuryTransaction(models.Model):
         else:
             return 0
 
-    def _setup_request(self, data, request_session):
-        pos_session = self._get_pos_session(request_session)
+    def _setup_request(self, data, request_uid):
+        pos_session = self._get_pos_session(request_uid)
 
         if not pos_session:
             return 0
@@ -72,7 +72,7 @@ class MercuryTransaction(models.Model):
 
         try:
             r = urllib2.Request(data['payment_server'], data=xml_transaction, headers=headers)
-            u = urllib2.urlopen(r)
+            u = urllib2.urlopen(r)  # todo jov: add timeout=
             response = self._unescape_html(u.read())
         except urllib2.HTTPError as e:
             print e.code
@@ -83,13 +83,18 @@ class MercuryTransaction(models.Model):
         print '--------------------------------'
         return response
 
-    def do_payment(self, data, request_session):
-        self._setup_request(data, request_session)
+    def do_payment(self, data, request_uid):
+        self._setup_request(data, request_uid)
         response = self._do_request('card_reader.mercury_transaction', data)
         return response
 
-    def do_reversal(self, data, request_session, is_voidsale):
-        self._setup_request(data, request_session)
+    def do_reversal(self, data, request_uid, is_voidsale):
+        self._setup_request(data, request_uid)
         data['is_voidsale'] = is_voidsale
         response = self._do_request('card_reader.mercury_voidsale', data)
+        return response
+
+    def do_return(self, data, request_uid):
+        self._setup_request(data, request_uid)
+        response = self._do_request('card_reader.mercury_return', data)
         return response

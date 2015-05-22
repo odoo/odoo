@@ -99,6 +99,8 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
                                                                               card_number: this.card_number,
                                                                               card_brand: this.card_brand,
                                                                               card_owner_name: this.card_owner_name,
+                                                                              ref_no: this.ref_no,
+                                                                              record_no: this.record_no,
                                                                               mercury_data: this.mercury_data});
     }
 });
@@ -329,6 +331,8 @@ PaymentScreenWidget.include({
                         order.selected_paymentline.card_number = track1['card_number'].substr(-4);
                         order.selected_paymentline.card_brand = response.card_type;
                         order.selected_paymentline.card_owner_name = track1['card_owner_name'];
+                        order.selected_paymentline.ref_no = response.ref_no; // todo jov
+                        order.selected_paymentline.record_no = response.record_no; // todo jov
                         order.selected_paymentline.mercury_data = response; // used to reverse transactions
                         self.order_changes();
                         self.reset_input();
