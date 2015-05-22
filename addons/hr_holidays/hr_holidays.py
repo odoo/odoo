@@ -13,10 +13,8 @@ import time
 from operator import attrgetter
 
 from dateutil.relativedelta import relativedelta
-import pytz
 
 from openerp.exceptions import UserError, AccessError
-from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _

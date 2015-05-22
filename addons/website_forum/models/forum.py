@@ -615,11 +615,16 @@ class Post(models.Model):
         self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
-    @api.model
-    def _get_access_link(self, mail, partner):
-        post = self.browse(mail.res_id)
-        res_id = post.parent_id and "%s#answer-%s" % (post.parent_id.id, post.id) or post.id
-        return "/forum/%s/question/%s" % (post.forum_id.id, res_id)
+    @api.one
+    def get_access_action(self):
+        """ Override method that generated the link to access the document. Instead
+        of the classic form view, redirect to the post on the website directly """
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
+            'target': 'self',
+            'res_id': self.id,
+        }
 
     @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, message_type='notification', subtype=None, context=None, **kwargs):

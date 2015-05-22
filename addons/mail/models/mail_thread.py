@@ -17,7 +17,7 @@ import time
 import xmlrpclib
 from email.message import Message
 from email.utils import formataddr
-from urllib import urlencode
+from werkzeug import url_encode
 
 from openerp import _, api, fields, models
 from openerp import exceptions
@@ -503,66 +503,129 @@ class MailThread(models.AbstractModel):
             because portal users have a different Inbox action than classic users. """
         return 'mail.mail_message_action_inbox'
 
-    @api.model
-    def message_redirect_action(self):
-        """ For a given message, return an action that either
-            - opens the form view of the related document if model, res_id, and
-              read access to the document
-            - opens the Inbox with a default search on the conversation if model,
-              res_id
-            - opens the Inbox with context propagated
+    @api.multi
+    def _notification_link_helper(self, link_type, **kwargs):
+        if kwargs.get('message_id'):
+            base_params = {
+                'message_id': kwargs.pop('message_id')
+            }
+        else:
+            self.ensure_one()
+            base_params = {
+                'model': self._name,
+                'res_id': self.ids[0],
+            }
 
+        link = False
+        if link_type in ['view', 'assign', 'follow', 'unfollow']:
+            params = dict(base_params)
+            link = '/mail/view?%s' % url_encode(params)
+        elif link_type == 'workflow':
+            params = dict(base_params, signal=kwargs['signal'])
+            link = '/mail/workflow?%s' % url_encode(params)
+        elif link_type == 'method':
+            method = kwargs.pop('method')
+            params = dict(base_params, method=method, params=kwargs)
+            link = '/mail/method?%s' % url_encode(params)
+        elif link_type == 'new':
+            params = dict(base_params, view_id=kwargs.get('view_id'))
+            link = '/mail/new?%s' % url_encode(params)
+        return link
+
+    @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        """ Given the categories of partners to emails in group_data, set the
+        right group for the recipients. The basic behavior is simply to
+        distinguish users from partners.
+
+        Inherit this method to group recipients according to specific criterions
+        allowing to tune the notification email. Generally this will be based
+        on user groups (res.groups), but not necessarily.
+
+        Example: having defined a group_hr_user entry, store HR users and
+        officers. """
+        # TDE note: recipients is normally sudo-ed
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if not recipient.user_ids:
+                group_data['partner'] |= recipient
+            else:
+                group_data['user'] |= recipient
+        return group_data
+
+    @api.multi
+    def _notification_get_recipient_groups(self, message, recipients):
+        """ Give the categories of recipients for notification emails. As emails
+        are generated once for group of recipients to work in batch, the first
+        thing to do is to categorize them. The basic behavior is simply
+        to distinguish users from partners.
+
+        Specific values :
+
+         - button_access: used to display 'View Document' in email, if set
+         - button_follow: used to display 'Follow' in email, if set
+         - button unfollow: used to display 'Unfollow' in email, if set
         """
-        # default action is the Inbox action
-        action = self.env.ref(self._get_inbox_action_xml_id()).read()[0]
-        params = self._context.get('params')
-        msg_id = model = res_id = None
-
-        if params:
-            msg_id = params.get('message_id')
-            model = params.get('model')
-            res_id = params.get('res_id', params.get('id'))  # signup automatically generated id instead of res_id
-        if not msg_id and not (model and res_id):
-            return action
-        if msg_id and not (model and res_id):
-            msg = self.env['mail.message'].browse(msg_id).exists()
-            try:
-                model, res_id = msg.model, msg.res_id
-            except exceptions.AccessError:
-                pass
-
-        # if model + res_id found: try to redirect to the document or fallback on the Inbox
-        if model and res_id:
-            RecordModel = self.env[model]
-            if RecordModel.check_access_rights('read', raise_exception=False):
-                try:
-                    # TDE FIXME: clean that copde
-                    RecordModel.browse(res_id).check_access_rule('read')
-                    action = RecordModel.browse(res_id).get_access_action()[0]
-                except exceptions.AccessError:
-                    pass
-            action.update({
-                'context': {
-                    'search_default_model': model,
-                    'search_default_res_id': res_id,
-                }
-            })
-        return action
-
-    @api.model
-    def _get_access_link(self, mail, partner):
-        # the parameters to encode for the query and fragment part of url
-        query = {'db': self._cr.dbname}
-        fragment = {
-            'login': partner.user_ids[0].login,
-            'action': 'mail.action_mail_redirect',
+        # TDE note: recipients is normally sudo-ed
+        return {
+            'partner': {
+                'button_access': None,
+                'button_follow': False,
+                'button_unfollow': False,
+            },
+            'user': {
+            }
         }
-        if mail.notification:
-            fragment['message_id'] = mail.mail_message_id.id
-        elif mail.model and mail.res_id:
-            fragment.update(model=mail.model, res_id=mail.res_id)
 
-        return "/web?%s#%s" % (urlencode(query), urlencode(fragment))
+    @api.multi
+    def _message_notification_recipients(self, message, recipients):
+        # At this point, all access rights should be ok. We sudo everything to
+        # access rights checks and speedup the computation.
+        recipients_sudo = recipients.sudo()
+        # message_sudo = message.sudo()
+
+        access_link = self._notification_link_helper('view', message_id=message.id)
+
+        if message.model:
+            model_name = self.env['ir.model'].sudo().search([('model', '=', self.env[message.model]._name)]).name_get()[0][1]
+            view_title = '%s %s' % (_('View'), model_name)
+        else:
+            view_title = _('View')
+
+        result = {}
+        group_data = {}
+
+        for category, data in self._notification_get_recipient_groups(message, recipients).iteritems():
+            result[category] = {
+                'followers': self.env['res.partner'],
+                'not_followers': self.env['res.partner'],
+                'button_access': {'url': access_link, 'title': view_title},
+                'button_follow': {'url': '/mail/follow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Follow')},
+                'button_unfollow': {'url': '/mail/unfollow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Unfollow')},
+                'actions': list(),
+            }
+            group_data[category] = self.env['res.partner']
+            result[category].update(data)
+
+        doc_followers = self.env['mail.followers']
+        if message.model and message.res_id:
+            doc_followers = self.env['mail.followers'].sudo().search([
+                ('res_model', '=', message.model),
+                ('res_id', '=', message.res_id),
+                ('partner_id', 'in', recipients_sudo.ids)])
+        partner_followers = doc_followers.mapped('partner_id')
+
+        # classify recipients, then set them in followers / not followers
+        group_data = self._notification_group_recipients(message, recipients, set(), group_data)
+        for category, recipients in group_data.iteritems():
+            for recipient in recipients:
+                if recipient in partner_followers:
+                    result[category]['followers'] |= recipient
+                else:
+                    result[category]['not_followers'] |= recipient
+
+        return result
 
     # ------------------------------------------------------
     # Email specific

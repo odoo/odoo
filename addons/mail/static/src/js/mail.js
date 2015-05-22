@@ -296,7 +296,6 @@ var MailThread = Attachment.extend ({
         'click .o_timeline_msg_expandable':'on_message_expandable',
         'click .o_timeline_parent_expandable':'on_thread_expandable',
         'click .o_timeline_parent_subject':'on_parent_message',
-        'click .o_timeline_go_to_doc':'on_record_clicked',
         'mouseenter .oe_follwrs':'on_display_followers',
     },
 
@@ -628,32 +627,6 @@ var MailThread = Attachment.extend ({
             res_model: 'res.partner',
             views: [[false, 'form']],
             res_id: partner_id,
-        });
-    },
-
-    /**
-     * go to the document
-     */
-    on_record_clicked: function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var self = this;
-        var state = {
-            'model': this.context.default_model,
-            'id': this.context.default_res_id,
-            'title': this.record_name,
-        };
-
-        web_client.action_manager.do_push_state(state);
-
-        this.context.params = {
-            model: this.context.default_model,
-            res_id: this.context.default_res_id,
-        };
-
-        this.ds_thread.call("message_redirect_action", {context: this.context}).then(function(action){
-            self.do_action(action);
         });
     },
 
