@@ -370,7 +370,7 @@
         # Search the company via its one2many (the one2many must point back at the company).
         company = self.browse(cr, uid, ref('ymltest_company3'))
         max_currency_id = max(self.pool['res.partner.bank'].search(cr, uid, []))
-        bank_ids1 = self.pool['res.partner.bank'].search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
+        bank_ids1 = self.pool['res.partner.bank'].search(cr, uid, [('acc_number', 'not like', 'probably_unexisting_name')])
         bank_ids2 = self.pool['res.partner.bank'].search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
         bank_ids3 = self.pool['res.partner.bank'].search(cr, uid, [('id', 'not in', [])])
         assert bank_ids1 == bank_ids2 == bank_ids3, 'All 3 results should have be the same: all banks'

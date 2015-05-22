@@ -300,7 +300,83 @@ class AccountJournal(models.Model):
         return self.env['ir.sequence'].create(seq)
 
     @api.model
+    def _prepare_bank_account(self, name, company, currency_id):
+        '''
+        This function prepares the value to use for the creation of the default debit and credit accounts of a
+        bank journal (created through the wizard of generating COA from templates for example).
+
+        :param name: name of the bank account
+        :param company: company for which the wizard is running
+        :param currency_id: ID of the currency in wich is the bank account
+        :return: mapping of field names and values
+        :rtype: dict
+        '''
+
+        # Seek the next available number for the account code
+        code_digits = company.accounts_code_digits or 0
+        bank_account_code_char = company.bank_account_code_char or ''
+        for num in xrange(1, 100):
+            new_code = str(bank_account_code_char.ljust(code_digits - 1, '0')) + str(num)
+            rec = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
+            if not rec:
+                break
+        else:
+            raise UserError(_('Cannot generate an unused account code.'))
+
+        liquidity_type = self.env.ref('account.data_account_type_liquidity')
+        return {
+                'name': name,
+                'currency_id': currency_id or False,
+                'code': new_code,
+                'user_type': liquidity_type and liquidity_type.id or False,
+                'company_id': company.id,
+        }
+
+    @api.model
+    def _prepare_bank_journal(self, company, line):
+        '''
+        This function prepares the value to use for the creation of a bank journal created through the wizard of
+        generating COA from templates.
+
+        :param company: company for which the wizard is running
+        :param line: dictionary containing the values encoded by the user related to his bank account with keys 
+            - acc_name (char): name of the bank account
+            - account_type (char): kind of liquidity journal to create. Either 'bank' or 'cash'
+            - currency_id (int): id of the currency related to this account if its different than the company currency (False otherwise)
+        :return: mapping of field names and values
+        :rtype: dict
+        '''
+        # we need to loop to find next number for journal code
+        for num in xrange(1, 100):
+            # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
+            journal_code = line.get('account_type', 'bank') == 'cash' and 'CSH' or 'BNK'
+            journal_code += str(num)
+            journal = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
+            if not journal:
+                break
+        else:
+            raise UserError(_('Cannot generate an unused journal code.'))
+
+        return {
+                'name': line['acc_name'],
+                'code': journal_code,
+                'type': line.get('account_type', 'bank'),
+                'company_id': company.id,
+                'analytic_journal_id': False,
+                'currency_id': line.get('currency_id', False),
+                'show_on_dashboard': True,
+        }
+
+    @api.model
     def create(self, vals):
+        if vals.get('type') in ('bank', 'cash'):
+            default_account = vals.get('default_debit_account_id') or vals.get('default_credit_account_id')
+            if not default_account:
+                company = self.env['res.company'].browse(vals['company_id'])
+                account_vals = self._prepare_bank_account(vals.get('name'), company, vals.get('currency_id'))
+                default_account = self.env['account.account'].create(account_vals)
+                vals['default_debit_account_id'] = default_account.id
+                vals['default_credit_account_id'] = default_account.id
         # We just need to create the relevant sequences according to the chosen options
         if not vals.get('sequence_id'):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})

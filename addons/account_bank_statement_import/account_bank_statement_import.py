@@ -44,7 +44,7 @@ class AccountBankStatementImport(models.TransientModel):
         journal_id = rec._get_journal(currency_id, bank_account_id, account_number)
         # Create the bank account if not already existing
         if not bank_account_id and account_number:
-            rec._create_bank_account(account_number, journal_id=journal_id, partner_id=self.env.uid)
+            rec._create_bank_account(account_number, journal_id=journal_id)
         # Prepare statement data to be used for bank statements creation
         stmts_vals = rec._complete_stmts_vals(stmts_vals, journal_id, account_number)
         # Create the bank statements
@@ -145,7 +145,9 @@ class AccountBankStatementImport(models.TransientModel):
 
         # If there is no journal, create one (and its account)
         if not journal_id and account_number:
-            journal_id = self.env.user.company_id._create_bank_account_and_journal(account_number, currency_id)
+            company = self.env.user.company_id
+            journal_vals = self.env['account.journal']._prepare_bank_journal(company, {'account_type': 'bank', 'acc_name': account_number, 'currency_id': currency_id})
+            journal_id = self.env['account.journal'].create(journal_vals).id
             if bank_account_id:
                 bank_account.write({'journal_id': journal_id})
 
@@ -154,7 +156,7 @@ class AccountBankStatementImport(models.TransientModel):
             raise UserError(_('Cannot find in which journal import this statement. Please manually select a journal.'))
         return journal_id
 
-    def _create_bank_account(self, account_number, journal_id=False, partner_id=False):
+    def _create_bank_account(self, account_number, journal_id=False):
         try:
             bank_type = self.env.ref('bank.bank_normal')
             bank_code = bank_type.code
@@ -167,11 +169,10 @@ class AccountBankStatementImport(models.TransientModel):
         }
         # Odoo users bank accounts (which we import statement from) have company_id and journal_id set
         # while 'counterpart' bank accounts (from which statement transactions originate) don't.
-        # Warning : if company_id is set, the method post_write of class bank will create a journal
         if journal_id:
-            vals_acc['partner_id'] = self.env.uid
             vals_acc['journal_id'] = journal_id
             vals_acc['company_id'] = self.env.user.company_id.id
+            vals_acc['partner_id'] = self.env.user.company_id.partner_id.id
 
         return self.env['res.partner.bank'].create(vals_acc)
 
@@ -184,7 +185,7 @@ class AccountBankStatementImport(models.TransientModel):
                 if unique_import_id:
                     line_vals['unique_import_id'] = (account_number and account_number + '-' or '') + unique_import_id
 
-                if not 'bank_account_id' in line_vals or not line_vals['bank_account_id']:
+                if not line_vals.get('bank_account_id'):
                     # Find the partner and his bank account or create the bank account. The partner selected during the
                     # reconciliation process will be linked to the bank when the statement is closed.
                     partner_id = False
@@ -196,6 +197,8 @@ class AccountBankStatementImport(models.TransientModel):
                             bank_account_id = partner_bank.id
                             partner_id = partner_bank.partner_id.id
                         else:
+                            #do not pass the journal_id in _create_bank_account() because we don't want to link
+                            #that bank_account to the journal (it belongs to a partner, not to the company)
                             bank_account_id = self._create_bank_account(identifying_string).id
                     line_vals['partner_id'] = partner_id
                     line_vals['bank_account_id'] = bank_account_id

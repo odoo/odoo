@@ -31,7 +31,6 @@ class TestSale(TestMail):
 
     def test_sale_to_invoice(self):
         """ Testing for invoice create,validate and pay with invoicing and payment user.""" 
-        import time
         # Usefull models
         IrModelData = self.env['ir.model.data']
         partner_obj = self.env['res.partner']
@@ -41,9 +40,9 @@ class TestSale(TestMail):
         group_id = IrModelData.xmlid_to_res_id('account.group_account_invoice') or False
         product_id = IrModelData.xmlid_to_res_id('product.product_category_3') or False
         company_id = IrModelData.xmlid_to_res_id('base.main_company') or False
-        journal_id = self.env['res.company'].browse(company_id)._create_bank_account_and_journal('BNK')
-        account_id = journal_obj.browse(journal_id).default_credit_account_id.id
-        date = time.strftime("%Y/%m/%d")
+        company = self.env['res.company'].browse(company_id)
+        journal_vals = journal_obj._prepare_bank_journal(company, {'account_type': 'bank', 'acc_name': 'BNK'})
+        journal = journal_obj.create(journal_vals)
 
         # Usefull accounts
         user_type_id = IrModelData.xmlid_to_res_id('account.data_account_type_revenue')

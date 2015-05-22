@@ -50,55 +50,6 @@ class AccountAccountTemplate(models.Model):
         return res
 
 
-class AccountAddTmplWizard(models.TransientModel):
-    """Add one more account from the template.
-
-    With the 'nocreate' option, some accounts may not be created. Use this to add them later."""
-    _name = 'account.addtmpl.wizard'
-
-    @api.model
-    def _get_def_cparent(self):
-        context = self._context or {}
-        tmpl_obj = self.env['account.account.template']
-
-        tids = tmpl_obj.read([context['tmpl_ids']], ['parent_id'])
-        if not tids or not tids[0]['parent_id']:
-            return False
-        ptids = tmpl_obj.read([tids[0]['parent_id'][0]], ['code'])
-        account = False
-        if not ptids or not ptids[0]['code']:
-            raise UserError(_('There is no parent code for the template account.'))
-            account = self.env['account.account'].search([('code', '=', ptids[0]['code'])], limit=1)
-        return account
-
-    cparent_id = fields.Many2one('account.account', string='Parent target', default=lambda self: self._get_def_cparent(),
-        help="Creates an account with the selected template under this existing parent.", required=True, domain=[('deprecated', '=', False)])
-
-    @api.multi
-    def action_create(self):
-        context = self._context or {}
-        AccountObj = self.env['account.account']
-        data = self.read()[0]
-        company_id = AccountObj.read([data['cparent_id'][0]], ['company_id'])[0]['company_id'][0]
-        account_template = self.env['account.account.template'].browse(context['tmpl_ids'])
-        vals = {
-            'name': account_template.name,
-            'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-            'code': account_template.code,
-            'user_type': account_template.user_type and account_template.user_type.id or False,
-            'reconcile': account_template.reconcile,
-            'note': account_template.note,
-            'parent_id': data['cparent_id'][0],
-            'company_id': company_id,
-        }
-        AccountObj.create(vals)
-        return {'type': 'state', 'state': 'end'}
-
-    @api.multi
-    def action_cancel(self):
-        return {'type': 'state', 'state': 'end'}
-
-
 class AccountChartTemplate(models.Model):
     _name = "account.chart.template"
     _description = "Templates for Account Chart"
@@ -776,74 +727,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
         self._create_bank_journals_from_o2m(company, acc_template_ref)
         return {}
 
-    @api.model
-    def _prepare_bank_journal(self, company, line, default_account_id):
-        '''
-        This function prepares the value to use for the creation of a bank journal created through the wizard of
-        generating COA from templates.
-
-        :param line: dictionary containing the values encoded by the user related to his bank account
-        :param default_account_id: id of the default debit.credit account created before for this journal.
-        :param company_id: id of the company for which the wizard is running
-        :return: mapping of field names and values
-        :rtype: dict
-        '''
-        # we need to loop to find next number for journal code
-        for num in xrange(1, 100):
-            # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
-            journal_code = line['account_type'] == 'cash' and 'CSH' or 'BNK'
-            journal_code += str(num)
-            journal = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
-            if not journal:
-                break
-        else:
-            raise UserError(_('Cannot generate an unused journal code.'))
-
-        return {
-                'name': line['acc_name'],
-                'code': journal_code,
-                'type': line['account_type'],
-                'company_id': company.id,
-                'analytic_journal_id': False,
-                'currency_id': line['currency_id'] or False,
-                'default_credit_account_id': default_account_id,
-                'default_debit_account_id': default_account_id,
-                'show_on_dashboard': True,
-        }
-
-    @api.model
-    def _prepare_bank_account(self, company, line):
-        '''
-        This function prepares the value to use for the creation of the default debit and credit accounts of a
-        bank journal created through the wizard of generating COA from templates.
-
-        :param company: company for which the wizard is running
-        :param line: dictionary containing the values encoded by the user related to his bank account
-        :return: mapping of field names and values
-        :rtype: dict
-        '''
-
-        # Seek the next available number for the account code
-        code_digits = company.accounts_code_digits or 0
-        bank_account_code_char = company.bank_account_code_char or ''
-        for num in xrange(1, 100):
-            new_code = str(bank_account_code_char.ljust(code_digits - 1, '0')) + str(num)
-            rec = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
-            if not rec:
-                break
-        else:
-            raise UserError(_('Cannot generate an unused account code.'))
-
-        liquidity_type = self.env.ref('account.data_account_type_liquidity')
-
-        return {
-                'name': line['acc_name'],
-                'currency_id': line['currency_id'] or False,
-                'code': new_code,
-                'user_type': liquidity_type and liquidity_type.id or False,
-                'company_id': company.id,
-        }
-
     @api.multi
     def _create_bank_journals_from_o2m(self, company, acc_template_ref):
         '''
@@ -872,13 +755,21 @@ class WizardMultiChartsAccounts(models.TransientModel):
         company.write({'bank_account_code_char': ref_acc_bank})
 
         for line in journal_data:
-            # Create the default debit/credit accounts for this bank journal
-            vals = self._prepare_bank_account(company, line)
-            default_account = self.env['account.account'].create(vals)
-
-            #create the bank journal
-            vals_journal = self._prepare_bank_journal(company, line, default_account.id)
-            self.env['account.journal'].create(vals_journal)
+            if line['account_type'] == 'bank':
+                #create the bank account that will trigger the journal and account.account creation
+                res_partner_bank_vals = {
+                    'acc_number': line['acc_name'],
+                    'currency_id': line['currency_id'],
+                    'company_id': company.id,
+                    'owner_name': company.partner_id.name,
+                    'partner_id': company.partner_id.id,
+                    'footer': True
+                }
+                self.env['res.partner.bank'].create(res_partner_bank_vals)
+            else:
+                #create the cash journal that will trigger the account.account creation
+                vals_journal = self.env['account.journal']._prepare_bank_journal(company, line)
+                self.env['account.journal'].create(vals_journal)
         return True
 
 

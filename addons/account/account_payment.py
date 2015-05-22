@@ -32,6 +32,8 @@ class account_abstract_payment(models.AbstractModel):
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], default='outbound', required=True)
     payment_method = fields.Many2one('account.payment.method', string='Payment Method', required=True)
+    payment_method_code = fields.Char(related='payment_method.code',
+        help="Technical field used to adapt the interface to the payment method selected.")
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')], default='supplier')
     partner_id = fields.Many2one('res.partner', string='Partner')
@@ -51,18 +53,6 @@ class account_abstract_payment(models.AbstractModel):
     def _check_amount(self):
         if not self.amount > 0.0:
             raise ValidationError('The payment amount must be strictly positive.')
-
-    @api.one
-    @api.constrains('communication')
-    def _check_communication(self):
-        """ This method is to be overwritten by payment type modules. The method body would look like :
-            if self.payment_method == self.env.ref('my_module.payment_method'):
-                try:
-                    self.communication.decode('ascii')
-                except UnicodeDecodeError:
-                    raise ValidationError(_t("The communication cannot contain any special character"))
-        """
-        pass
 
     @api.one
     @api.depends('payment_type', 'journal_id')
@@ -271,6 +261,21 @@ class account_payment(models.Model):
 
     def _get_invoices(self):
         return self.invoice_ids
+
+    @api.model
+    def create(self, vals):
+        self._check_communication(vals['payment_method'], vals.get('communication', ''))
+        return super(account_payment, self).create(vals)
+
+    def _check_communication(self, payment_method_id, communication):
+        """ This method is to be overwritten by payment type modules. The method body would look like :
+            if payment_method_id == self.env.ref('my_module.payment_method').id:
+                try:
+                    communication.decode('ascii')
+                except UnicodeError:
+                    raise ValidationError(_("The communication cannot contain any special character"))
+        """
+        pass
 
     @api.multi
     def button_journal_entries(self):
