@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from babel.dates import format_datetime, format_date
 
 from openerp import models, api, _, fields
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.misc import formatLang
 
 class account_journal(models.Model):
@@ -39,21 +39,21 @@ class account_journal(models.Model):
         # Query to optimize loading of data for bank statement graphs
         # Return a list containing the latest bank statement balance per day for the
         # last 30 days for current journal
-        SQL_query = """SELECT a.date, a.balance_end 
+        query = """SELECT a.date, a.balance_end 
                         FROM account_bank_statement AS a, 
                             (SELECT c.date, max(c.id) AS stmt_id 
                                 FROM account_bank_statement AS c 
                                 WHERE c.journal_id = %s 
-                                    AND c.date > '%s' 
-                                    AND c.date <= '%s' 
+                                    AND c.date > %s 
+                                    AND c.date <= %s 
                                     GROUP BY date, id 
                                     ORDER BY date, id) AS b 
-                        WHERE a.id = b.stmt_id;""" % (self.id, last_month.strftime(DEFAULT_SERVER_DATE_FORMAT), today.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                        WHERE a.id = b.stmt_id;"""
 
-        self.env.cr.execute(SQL_query)
+        self.env.cr.execute(query, (self.id, last_month, today))
         bank_stmt = self.env.cr.dictfetchall()
 
-        last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DEFAULT_SERVER_DATE_FORMAT))], order="date desc, id desc", limit=1)
+        last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DF))], order="date desc, id desc", limit=1)
         start_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
 
         locale = self._context.get('lang', 'en_US')
@@ -65,7 +65,7 @@ class account_journal(models.Model):
 
         for stmt in bank_stmt:
             #fill the gap between last data and the new one
-            number_day_to_add = (datetime.strptime(stmt.get('date'), DEFAULT_SERVER_DATE_FORMAT) - show_date).days
+            number_day_to_add = (datetime.strptime(stmt.get('date'), DF) - show_date).days
             last_balance = data[len(data) - 1]['y']
             for day in range(0,number_day_to_add + 1):
                 show_date = show_date + timedelta(days=1)
@@ -95,7 +95,7 @@ class account_journal(models.Model):
         title = _('Invoices owed to you')
         if self.type == 'purchase':
             title = _('Bills you need to pay')
-        today = datetime.today()
+        today = datetime.strptime(fields.Date.context_today(self), DF)
         data.append({'label': _('Past'), 'value':0.0, 'color': '#ff0000'})
         day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang', 'en_US')))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
@@ -114,20 +114,20 @@ class account_journal(models.Model):
             data.append({'label':label,'value':0.0, 'color': '#ff0000' if i<0 else '#ff7f0e'})
 
         # Build SQL query to find amount aggregated by week
-        select_sql_clause = """SELECT sum(residual_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %s and state = 'open'""" % (self.id)
-        SQL_query = ''
+        select_sql_clause = """SELECT sum(residual_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
+        query = ''
         start_date = (first_day_of_week + timedelta(days=-7))
         for i in range(0,6):
             if i == 0:
-                SQL_query += "("+select_sql_clause+" and date < '"+start_date.strftime(DEFAULT_SERVER_DATE_FORMAT)+"')"
+                query += "("+select_sql_clause+" and date < '"+start_date.strftime(DF)+"')"
             elif i == 6:
-                SQL_query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DEFAULT_SERVER_DATE_FORMAT)+"')"
+                query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"')"
             else:
                 next_date = start_date + timedelta(days=7)
-                SQL_query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DEFAULT_SERVER_DATE_FORMAT)+"' and date < '"+next_date.strftime(DEFAULT_SERVER_DATE_FORMAT)+"')"
+                query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"' and date < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
 
-        self.env.cr.execute(SQL_query)
+        self.env.cr.execute(query, {'journal_id':self.id})
         query_results = self.env.cr.dictfetchall()
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
@@ -151,20 +151,20 @@ class account_journal(models.Model):
                     if not line.journal_entry_ids:
                         number_to_reconcile += 1
             # optimization to read sum of balance from account_move_line
-            SQL_query = """SELECT sum(balance) FROM account_move_line WHERE account_id in (%s, %s);""" % (self.default_debit_account_id.id, self.default_credit_account_id.id)
-            self.env.cr.execute(SQL_query)
+            query = """SELECT sum(balance) FROM account_move_line WHERE account_id in (%s, %s);"""
+            self.env.cr.execute(query, (self.default_debit_account_id.id, self.default_credit_account_id.id))
             query_results = self.env.cr.dictfetchall()
             if query_results and query_results[0].get('sum') != None:
                 account_sum = query_results[0].get('sum')
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             # optimization to find total and sum of invoice that are in draft, open state
-            SQL_query = """SELECT state, count(id) AS count, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel') GROUP BY state;""" % (self.id)
-            self.env.cr.execute(SQL_query)
+            query = """SELECT state, count(id) AS count, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel') GROUP BY state;"""
+            self.env.cr.execute(query, (self.id,))
             query_results = self.env.cr.dictfetchall()
             today = datetime.today()
-            SQL_query = """SELECT count(id) AS count_late, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND date < '%s' AND state = 'open';""" % (self.id, today.strftime(DEFAULT_SERVER_DATE_FORMAT))
-            self.env.cr.execute(SQL_query)
+            query = """SELECT count(id) AS count_late, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
+            self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
             for result in query_results:
                 if result.get('state') in ['draft', 'proforma', 'proforma2']:
