@@ -437,7 +437,7 @@ class survey_question_wiz(osv.osv_memory):
                             vals = {'state': 'outgoing',
                                     'subject': "Survey Answer Of " + user_name,
                                     'body_html': '<pre>%s</pre>' % mail,
-                                    'email_to': [resp_email],
+                                    'email_to': resp_email,
                                     'email_from': user_email}
                             if attachments:
                                 vals['attachment_ids'] = [(0,0,{'name': a_name,
