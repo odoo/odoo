@@ -20,33 +20,10 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/loader/<string:dbname>/<int:channel_id>', type='http', auth='none')
     def loader(self, dbname, channel_id, **kwargs):
-        registry, cr, uid, context = openerp.modules.registry.RegistryManager.get(dbname), request.cr, openerp.SUPERUSER_ID, request.context
-        info = registry.get('im_livechat.channel').get_info_for_chat_src(cr, uid, channel_id)
-        info["dbname"] = dbname
-        info["channel"] = channel_id
-        info["username"] = kwargs.get("username", "Visitor")
-        # find the country from the request
-        country_id = False
-        country_code = request.session.geoip and request.session.geoip.get('country_code') or False
-        if country_code:
-            country_ids = registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
-            if country_ids:
-                country_id = country_ids[0]
-        # extract url
-        url = request.httprequest.headers.get('Referer') or request.httprequest.base_url
-        # find the match rule for the given country and url
-        rule = registry.get('im_livechat.channel.rule').match_rule(cr, uid, channel_id, url, country_id, context=context)
-        if rule:
-            if rule.action == 'hide_button':
-                # don't return the initialization script, since its blocked (in the country)
-                return
-            rule_data = {
-                'action' : rule.action,
-                'auto_popup_timer' : rule.auto_popup_timer,
-                'regex_url' : rule.regex_url,
-            }
-        info['rule'] = json.dumps(rule and rule_data or False)
-        return request.render('im_livechat.loader', info)
+        registry = openerp.modules.registry.RegistryManager.get(dbname)
+        username = kwargs.get("username", "Visitor")
+        info = registry.get('im_livechat.channel').match_rules(request.cr, request.uid, request, dbname, channel_id, username=username, context=request.context)
+        return request.render('im_livechat.loader', {'info': info}) if info else False
 
     @http.route('/im_livechat/get_session', type="json", auth="none")
     def get_session(self, channel_id, anonymous_name, **kwargs):

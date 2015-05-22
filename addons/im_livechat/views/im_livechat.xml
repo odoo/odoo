@@ -76,23 +76,32 @@
             <!-- css style -->
             <link t-att-href="'%s/web/css/im_livechat.external_lib' % (url)" rel="stylesheet"/>
             <!-- js of all the required lib (internal and external) -->
-            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript" async="async" />
+            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript"/>
             <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" async="async" />
+            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript"/>
         </template>
 
         <!-- Template rendering all the scripts required to execute the Livechat from a page containing Odoo -->
         <template id="internal_loader" name="All the scripts to launch the LiveSupport from an internal Web Page">
-            <!-- css style -->
-            <link property='stylesheet' t-att-href="'%s/web/css/im_livechat.internal_lib' % (url)" rel="stylesheet"/>
-            <!-- js of all the required lib (internal and external) -->
-            <script t-att-src="'%s/web/js/im_livechat.internal_lib' % (url)" type="text/javascript" />
-            <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" />
+            <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, dbname, channel)"/>
+            <t t-if="info" t-translate="off">
+                <script type="text/javascript">
+                    <t t-call="im_livechat.loader"/>
+                </script>
+            </t>
+        </template>
+
+        <!-- Template registering all the assets required to execute the Livechat from a page containing Odoo -->
+        <template id="assets_common" name="All the assets to launch the LiveSupport from an internal Web Page" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">
+                <t t-call="im_livechat.internal_lib"/>
+            </xpath>
         </template>
 
         <!-- Bundle of External Librairies of the Livechat -->
         <template id="external_lib" name="External Librairies of the Livechat, required to make it work">
+            <!-- Momentjs -->
+            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
             <!-- OpenERP minimal lib -->
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
@@ -105,8 +114,6 @@
 
         <!-- Bundle of Librairies of the Bus, Chat, Livechat -->
         <template id="internal_lib" name="Librairies of the Livechat">
-            <!-- Momentjs -->
-            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
             <!-- IM module -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
             <script type="text/javascript" src="/im_chat/static/src/js/im_chat.js"></script>
@@ -121,17 +128,17 @@
             <t t-translate="off">
                 (function() {
                     window.livesupport = new openerp.im_livechat.LiveSupport(
-                        "<t t-esc="url"/>",
-                        "<t t-esc="dbname"/>",
-                        <t t-esc="channel"/>,
+                        "<t t-esc="info['url']"/>",
+                        "<t t-esc="info['dbname']"/>",
+                        <t t-esc="info['channel']"/>,
                         {
-                            buttonText: "<t t-esc="buttonText"/>",
-                            inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
-                            defaultMessage: "<t t-esc="defaultMessage"/>" || '',
+                            buttonText: "<t t-esc="info['buttonText']"/>",
+                            inputPlaceholder: "<t t-esc="info['inputPlaceholder']"/>",
+                            defaultMessage: "<t t-esc="info['defaultMessage']"/>",
                             auto: window.oe_im_livechat_auto || false,
-                            defaultUsername: "<t t-esc="username"/>" || undefined,
+                            defaultUsername: "<t t-esc="info['username']"/>",
                         },
-                        <t t-raw="rule"/>
+                        <t t-raw="info['rule']"/>
                     );
                 })();
             </t>

@@ -22,6 +22,7 @@
 import openerp
 import openerp.addons.im_chat.im_chat
 import random
+import json
 import re
 
 from openerp.osv import osv, fields
@@ -153,6 +154,35 @@ class im_livechat_channel(osv.Model):
         'user_ids': _default_user_ids,
         'image': _get_default_image,
     }
+
+    def match_rules(self, cr, uid, request, dbname, channel_id, username='Visitor', context=None):
+        uid = openerp.SUPERUSER_ID
+        info = self.get_info_for_chat_src(cr, uid, channel_id)
+        info["dbname"] = dbname
+        info["channel"] = channel_id
+        info["username"] = username
+        # find the country from the request
+        country_id = False
+        country_code = request.session.geoip and request.session.geoip.get('country_code') or False
+        if country_code:
+            country_ids = self.pool.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
+            if country_ids:
+                country_id = country_ids[0]
+        # extract url
+        url = request.httprequest.headers.get('Referer') or request.httprequest.base_url
+        # find the match rule for the given country and url
+        rule = self.pool.get('im_livechat.channel.rule').match_rule(cr, uid, channel_id, url, country_id, context=context)
+        if rule:
+            if rule.action == 'hide_button':
+                # don't return the initialization script, since its blocked (in the country)
+                return False
+            rule_data = {
+                'action' : rule.action,
+                'auto_popup_timer' : rule.auto_popup_timer,
+                'regex_url' : rule.regex_url,
+            }
+        info['rule'] = json.dumps(rule and rule_data or False)
+        return info
 
     def get_available_users(self, cr, uid, channel_id, context=None):
         """ get available user of a given channel """
