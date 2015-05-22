@@ -15,18 +15,21 @@ class TestSearch(AccountTestUsers):
             name="Tax Received",
             code="X121",
             user_type=ac_ids.id,
+            reconcile=True,
         )).id, "X121 Tax Received"
 
         self.apurchase = self.account_model.create(dict(
             name="Purchased Stocks",
             code="X1101",
             user_type=ac_ids.id,
+            reconcile=True,
         )).id, "X1101 Purchased Stocks"
 
         self.asale = self.account_model.create(dict(
             name="Product Sales",
             code="XX200",
             user_type=ac_ids.id,
+            reconcile=True,
         )).id, "XX200 Product Sales"
 
         self.all_ids = [self.atax[0], self.apurchase[0], self.asale[0]]

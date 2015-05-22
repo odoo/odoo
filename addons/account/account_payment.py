@@ -39,8 +39,8 @@ class account_abstract_payment(models.AbstractModel):
     amount = fields.Monetary(string='Payment Amount', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
-    communication = fields.Char()
-    journal_id = fields.Many2one('account.journal', string='Bank Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    communication = fields.Char(string='Memo')
+    journal_id = fields.Many2one('account.journal', string='Payment Mode', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
@@ -214,8 +214,8 @@ class account_payment(models.Model):
 
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
     has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usablity purposes")
-    payment_difference = fields.Float(compute='_compute_payment_difference', readonly=True)
-    payment_difference_handling = fields.Selection([('open', 'Keep Open'), ('reconcile', 'Reconcile Payment Balance')], default='open', string="Payment Difference", copy=False)
+    payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
+    payment_difference_handling = fields.Selection([('open', 'Partial payment'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
     writeoff_account = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)
 
     # FIXME: ondelete='restrict' not working (eg. cancel a bank statement reconciliation with a payment)

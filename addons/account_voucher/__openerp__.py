@@ -51,7 +51,6 @@ This module manages:
         'security/ir.model.access.csv',
         'account_voucher_view.xml',
         'voucher_sales_purchase_view.xml',
-        'report/account_voucher_sales_receipt_view.xml',
         'security/account_voucher_security.xml',
         'account_voucher_data.xml',
     ],

@@ -87,6 +87,13 @@ class AccountAccount(models.Model):
     #            if res[account.id]:
     #                account.has_unreconciled_entries = True
 
+    @api.multi
+    @api.constrains('internal_type', 'reconcile')
+    def _check_reconcile(self):
+        for account in self:
+            if account.internal_type in ('receivable', 'payable') and account.reconcile == False:
+                raise ValueError(_('You cannot have a receivable/payable account that is not reconciliable. (account code: %s)') % account.code)
+
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
         help="Forces all moves for this account to have this secondary currency.")
@@ -123,6 +130,11 @@ class AccountAccount(models.Model):
                 domain = ['&'] + domain
         accounts = self.search(domain + args, limit=limit)
         return accounts.name_get()
+
+    @api.onchange('internal_type')
+    def onchange_internal_type(self):
+        if self.internal_type in ('receivable', 'payable'):
+            self.reconcile = True
 
     @api.multi
     @api.depends('name', 'code')

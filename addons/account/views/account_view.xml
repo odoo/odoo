@@ -333,7 +333,7 @@
                             <tree editable="bottom">
                                 <field name="coin_value"/>
                                 <field name="number"/>
-                                <field name="subtotal"/>
+                                <field name="subtotal" sum="Total"/>
                             </tree>
                         </field>
                     </group>
@@ -347,7 +347,7 @@
         </record>
 
         <record id="action_view_account_bnk_stmt_cashbox" model="ir.actions.act_window">
-            <field name="name">Cashbox Entries</field>
+            <field name="name">Cash Control</field>
             <field name="res_model">account.bank.statement.cashbox</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1061,6 +1061,7 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false">
                     <field name="date"/>
+                    <field name="move_id" required="0"/>
                     <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -1068,7 +1069,6 @@
                     <field name="partner_id"/>
                     <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
-                    <field name="move_id" required="0"/>
                     <field name="reconciled"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
@@ -1230,13 +1230,13 @@
                                 <tree editable="top" string="Journal Items">
                                     <field name="name"/>
                                     <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
-                                    <field name="debit" sum="Total Debit"/>
-                                    <field name="credit" sum="Total Credit"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency" groups="base.group_multi_currency"/>
                                     <field name="company_currency_id" invisible="1"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="reconciled"/>
+                                    <field name="debit" sum="Total Debit"/>
+                                    <field name="credit" sum="Total Credit"/>
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
@@ -1816,7 +1816,6 @@
                         <field colspan="4" name="name"/>
                         <field name="debit_credit"/>
                         <field name="report_type"/>
-                        <separator string="Lines"/>
                         <field colspan="4" name="line_ids" nolabel="1"/>
                     </group>
                     </sheet>
@@ -1891,10 +1890,10 @@
             <field name="model">account.financial.report.line</field>
             <field name="arch" type="xml">
                 <tree string="Report Lines">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="level"/>
-                    <field name="green_on_positive"/>
                     <field name="figure_type"/>
                 </tree>
             </field>
