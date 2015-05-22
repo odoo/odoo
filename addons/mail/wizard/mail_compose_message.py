@@ -177,9 +177,9 @@ class MailComposer(models.TransientModel):
                 result['model'] = parent.model
             if not values.get('res_id'):
                 result['res_id'] = parent.res_id
-            partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
+            partner_ids = values.get('partner_ids', list()) + [(4, id) for id in parent.partner_ids.ids]
             if self._context.get('is_private') and parent.author_id:  # check message is private then add author also in partner list.
-                partner_ids += [parent.author_id.id]
+                partner_ids += [(4, parent.author_id.id)]
             result['partner_ids'] = partner_ids
         elif values.get('model') and values.get('res_id'):
             doc_name_get = self.env[values.get('model')].browse(values.get('res_id')).name_get()
