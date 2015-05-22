@@ -66,19 +66,20 @@ instance.web.PivotView = instance.web.View.extend({
         var load_fields = this.model.call('fields_get', [])
                 .then(this.prepare_fields.bind(this));
 
-        if (this.$sidebar) {
-            openerp.session.rpc('/web/pivot/check_xlwt').then(function (result) {
-                if (result) {
-                    self.sidebar = new instance.web.Sidebar(self);
-                    self.sidebar.appendTo(self.$sidebar);
-                    self.sidebar.add_items('other', [{
-                        label: _t("Download xls"),
-                        callback: self.download_table.bind(self)
-                    }]);
-                }
-            });
-        }
-        return $.when(this._super(), load_fields).then(this.render_buttons.bind(this));
+        return $.when(this._super(), load_fields).then(this.render_buttons.bind(this)).then(function(){
+            if (self.$sidebar) {
+                return openerp.session.rpc('/web/pivot/check_xlwt').then(function (result) {
+                    if (result) {
+                        self.sidebar = new instance.web.Sidebar(self);
+                        self.sidebar.appendTo(self.$sidebar);
+                        self.sidebar.add_items('other', [{
+                            label: _t("Download xls"),
+                            callback: self.download_table.bind(self)
+                        }]);
+                    }
+                });
+            }
+        });
     },
     render_buttons: function () {
         var self = this;
