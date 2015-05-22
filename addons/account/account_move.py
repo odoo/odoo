@@ -1105,6 +1105,9 @@ class AccountMoveLine(models.Model):
         if context.get('company_id'):
             domain += [('company_id', '=', context['company_id'])]
 
+        if 'company_ids' in context:
+            domain += [('company_id', 'in', context['company_ids'])]
+
         where_clause = ""
         where_clause_params = []
         if domain:
