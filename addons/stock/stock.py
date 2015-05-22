@@ -1166,7 +1166,10 @@ class stock_picking(osv.osv):
         invoices_group = {}
         res = {}
         inv_type = type
-        for picking in self.browse(cr, uid, ids, context=context):
+        for picking_id in ids:
+            # We browse INSIDE THE LOOP in order to avoid this bug:
+            # https://github.com/odoo/odoo/issues/4201
+            picking = self.browse(cr, uid, picking_id, context=context)
             if picking.invoice_state != '2binvoiced':
                 continue
             partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
