@@ -652,7 +652,7 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = self.httprequest.args.to_dict()
-        params.update(self.httprequest.form.to_dict())
+        params.update(self.httprequest.form.to_dict(flat=False))
         params.update(self.httprequest.files.to_dict())
         params.pop('session_id', None)
         self.params = params
