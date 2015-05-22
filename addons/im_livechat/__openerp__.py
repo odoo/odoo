@@ -29,6 +29,7 @@ Help your customers with this chat, and analyse their feedback.
         "im_livechat_demo.xml",
     ],
     'depends' : ["mail", "rating", "im_chat"],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
     'application': True,

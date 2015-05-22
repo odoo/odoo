@@ -100,20 +100,14 @@
             openerp.session = new openerp.Session(null, server_url, { use_cors: false });
             this.load_template(db, channel, options, rule);
         },
-        _get_template_list: function(){
-            return ['/im_livechat/static/src/xml/im_livechat.xml', '/im_chat/static/src/xml/im_chat.xml'];
-        },
         load_template: function(db, channel, options, rule){
             var self = this;
             // load the qweb templates
             var defs = [];
-            var templates = this._get_template_list();
-            _.each(templates, function(tmpl){
-                defs.push(openerp.session.rpc('/web/proxy/load', {path: tmpl}).then(function(xml) {
-                    openerp.qweb.add_template(xml);
-                }));
-            });
-            return $.when.apply($, defs).then(function() {
+            var mods = 'im_livechat,im_chat'
+            return openerp.session.rpc('/web/proxy/load', {path: '/web/webclient/qweb?mods=' + mods}).then(function(xml) {
+                if (!xml) { return; }
+                openerp.qweb.add_template(_.str.trim(xml));
                 self.setup(db, channel, options, rule);
             });
         },
