@@ -35,12 +35,12 @@ Build an Odoo module
 Both server and client extensions are packaged as *modules* which are
 optionally loaded in a *database*.
 
-Odoo modules can either add brand new business logic to an Odoo system, or
-alter and extend existing business logic: a module can be created to add your
-country's accounting rules to Odoo's generic accounting support, while the
-next module adds support for real-time visualisation of a bus fleet.
+Modules can add new business logic to an Odoo system, or
+alter and extend existing business logic: one module could add your
+country's accounting rules to Odoo's generic accounting support, while another
+adds support for real-time visualisation of a bus fleet.
 
-Everything in Odoo thus starts and ends with modules.
+Everything in Odoo starts and ends with modules.
 
 Composition of a module
 -----------------------
@@ -96,9 +96,9 @@ Odoo provides a mechanism to help set up a new module, :ref:`odoo.py
 
     $ odoo.py scaffold <module name> <where to put it>
 
-The command creates a subdirectory for your module, and automatically creates a
-bunch of standard files for a module. Most of them simply contain commented code
-or XML. The usage of most of those files will be explained along this tutorial.
+The command creates a subdirectory for your module and automatically creates a
+number of standard files - most of these simply contain commented code
+or XML. The usage of most of these files will be explained in this tutorial.
 
 .. exercise:: Module creation
 
@@ -117,14 +117,14 @@ Object-Relational Mapping
 -------------------------
 
 A key component of Odoo is the :abbr:`ORM (Object-Relational Mapping)` layer.
-This layer avoids having to write most :abbr:`SQL (Structured Query Language)`
-by hand and provides extensibility and security services\ [#rawsql]_.
+This layer reduces the need for hand-producued :abbr:`SQL (Structured Query Language)`
+and provides extensibility and security services\ [#rawsql]_.
 
 Business objects are declared as Python classes extending
 :class:`~openerp.models.Model` which integrates them into the automated
 persistence system.
 
-Models can be configured by setting a number of attributes at their
+Models can be configured by setting attributes during
 definition. The most important attribute is
 :attr:`~openerp.models.Model._name` which is required and defines the name for
 the model in the Odoo system. Here is a minimally complete definition of a
@@ -137,7 +137,7 @@ model::
 Model fields
 ------------
 
-Fields are used to define what the model can store and where. Fields are
+Fields define what the model can store and where. Fields are
 defined as attributes on the model class::
 
     from openerp import models, fields
@@ -150,7 +150,7 @@ defined as attributes on the model class::
 Common Attributes
 #################
 
-Much like the model itself, its fields can be configured, by passing
+Much like the model itself, its fields can be configured by passing
 configuration attributes as parameters::
 
     name = field.Char(required=True)
@@ -217,7 +217,7 @@ Data files
 ----------
 
 Odoo is a highly data driven system. Although behavior is customized using
-Python_ code part of a module's value is in the data it sets up when loaded.
+Python_ code, part of a module's value is in the data it sets up when loaded.
 
 .. tip:: some modules exist solely to add data into Odoo
     :class: aphorism
@@ -242,7 +242,7 @@ record.
 * ``<field>`` elements have a ``name`` which is the name of the field in the
   model (e.g. ``description``). Their body is the field's value.
 
-Data files have to be declared in the manifest file to be loaded, they can
+Data files must be declared in the manifest file to be loaded, they can
 be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
 (only loaded in demonstration mode).
 
@@ -991,8 +991,8 @@ behavior:
 
 .. exercise:: List coloring
 
-    Modify the Session tree view in such a way that sessions lasting less than
-    5 days are colored blue, and the ones lasting more than 15 days are
+    Modify the Session tree view so that sessions lasting less than
+    5 days are colored blue, and those lasting more than 15 days are
     colored red.
 
     .. only:: solutions
@@ -1435,7 +1435,7 @@ Wizards are launched by ``ir.actions.act_window`` records, with the field
 popup window. The action may be triggered by a menu item.
 
 There is another way to launch the wizard: using an ``ir.actions.act_window``
-record like above, but with an extra field ``src_model`` that specifies in the
+record as above, but with an extra field ``src_model`` that specifies in the
 context of which model the action is available. The wizard will appear in the
 contextual actions of the model, above the main view. Because of some internal
 hooks in the ORM, such an action is declared in XML with the tag ``act_window``.
