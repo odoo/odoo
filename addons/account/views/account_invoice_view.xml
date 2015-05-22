@@ -223,7 +223,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
-                    You have <bold><a class="alert-link" onclick="var current_url=location.href;location.href='#outstanding';history.replaceState(null,null,current_url);">outstanding payments</a></bold> for this customer. You can reconcile them to pay this invoice.
+                    You have <bold><a class="alert-link" href="#outstanding">outstanding payments</a></bold> for this customer. You can reconcile them to pay this invoice.
                 </div>
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Supplier Bill">
@@ -364,7 +364,7 @@
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
-                    You have <bold><a class="alert-link" onclick="var current_url=location.href;location.href='#outstanding';history.replaceState(null,null,current_url);">outstanding payments</a></bold> for this customer. You can reconcile them to pay this invoice.
+                    You have <bold><a class="alert-link" href="outstanding">outstanding payments</a></bold> for this customer. You can reconcile them to pay this invoice.
                 </div>
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Invoice">
