@@ -98,18 +98,7 @@
                 defaultUsername: _t("Visitor"),
             });
             openerp.session = new openerp.Session(null, server_url, { use_cors: false });
-            this.load_template(db, channel, options, rule);
-        },
-        load_template: function(db, channel, options, rule){
-            var self = this;
-            // load the qweb templates
-            var defs = [];
-            var mods = 'im_livechat,im_chat'
-            return openerp.session.rpc('/web/proxy/load', {path: '/web/webclient/qweb?mods=' + mods}).then(function(xml) {
-                if (!xml) { return; }
-                openerp.qweb.add_template(_.str.trim(xml));
-                self.setup(db, channel, options, rule);
-            });
+            this.setup(db, channel, options, rule);
         },
         setup: function(db, channel, options, rule){
             var self = this;
@@ -151,7 +140,7 @@
             this.no_session_message = _t("None of our collaborators seems to be available, please try again later.");
         },
         start: function() {
-            this.$().append(openerp.qweb.render("im_livechat.chatButton", {widget: this}));
+            this.$().append(this.text);
             // set up the manager
             this.manager = new openerp.im_chat.ConversationManager(this, this.options);
             this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight());
@@ -178,25 +167,38 @@
                 });
             }
         },
+        load_template: function(){
+            console.log('loaded')
+            var self = this;
+            // load the qweb templates
+            var defs = [];
+            var mods = 'im_livechat,im_chat'
+            return openerp.session.rpc('/web/proxy/load', {path: '/web/webclient/qweb?mods=' + mods}).then(function(xml) {
+                if (!xml) { return; }
+                openerp.qweb.add_template(_.str.trim(xml));
+            });
+        },
         set_conversation: function(session, welcome_message){
             var self = this;
-            this.session = session;
-            if(session.state === 'closed'){
-                return;
-            }
-            this.conv = this.manager.apply_session(session);
-            this.conv.on("destroyed", this, function() {
-                openerp.bus.bus.stop_polling();
-                delete self.conv;
-                delete self.session;
+            self.load_template().then(function() {
+                self.session = session;
+                if(session.state === 'closed'){
+                    return;
+                }
+                self.conv = self.manager.apply_session(session);
+                self.conv.on("destroyed", self, function() {
+                    openerp.bus.bus.stop_polling();
+                    delete self.conv;
+                    delete self.session;
+                });
+                // start the polling
+                openerp.bus.bus.add_channel(session.uuid);
+                openerp.bus.bus.start_polling();
+                // add the automatic welcome message
+                if(welcome_message){
+                    self.send_welcome_message();
+                }
             });
-            // start the polling
-            openerp.bus.bus.add_channel(session.uuid);
-            openerp.bus.bus.start_polling();
-            // add the automatic welcome message
-            if(welcome_message){
-                this.send_welcome_message();
-            }
         },
         send_welcome_message: function(){
             var self = this;
