@@ -265,9 +265,8 @@ class account_analytic_account(osv.osv):
         """executed for all the objects down the hierarchy during copy"""
         if not default:
             default = {}
-        default.update(
-            code=False,
-            line_ids=[])
+        default.setdefault('code', False)
+        default.setdefault('line_ids', [])
         return super(account_analytic_account, self).copy_data(cr, uid, id, default, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
