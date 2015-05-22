@@ -66,7 +66,7 @@ class ReportL10nBePartnerVatListing(models.AbstractModel):
                 'id': record['partner_id'],
                 'type': 'partner_id',
                 'name': record['name'],
-                'footnotes': self.context_id._get_footnotes('partner_id', record['partner_id'], context_id),
+                'footnotes': context_id._get_footnotes('partner_id', record['partner_id']),
                 'columns': columns,
                 'level': 2,
                 'unfoldable': False,
