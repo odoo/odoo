@@ -114,7 +114,6 @@ class res_partner_bank(osv.osv):
         return value
 
     _columns = {
-        'name': fields.char('Bank Account'), # to be removed in v6.2 ?
         'acc_number': fields.char('Account Number', required=True),
         'bank': fields.many2one('res.bank', 'Bank'),
         'bank_bic': fields.char('Bank Identifier Code'),
@@ -133,7 +132,8 @@ class res_partner_bank(osv.osv):
         'state': fields.selection(_bank_type_get, 'Bank Account Type',
             change_default=True),
         'sequence': fields.integer('Sequence'),
-        'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
+        'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders."),
+        'currency_id': fields.many2one('res.currency', string='Currency', help="Currency of the bank account and its related journal."),
     }
 
     _defaults = {
@@ -150,9 +150,6 @@ class res_partner_bank(osv.osv):
         'state_id': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'state_id', context=context),
         'name': '/',
-        'company_id': lambda obj, cursor, user, context: obj.pool.get('res.company')._company_default_get(
-            cursor, user, 'res.partner.bank', context=context),
-        'partner_id': lambda obj, cr, uid, context: obj.pool.get('res.users').browse(cr, uid, uid, context).company_id.partner_id
     }
 
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
@@ -190,7 +187,10 @@ class res_partner_bank(osv.osv):
                     data = dict((k, v or '') for (k, v) in data.iteritems())
                     name = bank_code_format[data['state']] % data
                 except Exception:
-                    raise UserError(_("Formating Error") + ':' + _("Invalid Bank Account Type Name format."))
+                    raise UserError(_("Bank account name formating error") + ': ' + _("Check the format_layout field set on the Bank Account Type."))
+            if data.get('currency_id'):
+                currency_name = self.pool.get('res.currency').browse(cr, uid, data['currency_id'], context=context).name
+                name += ' (' + currency_name + ')'
             res.append((data.get('id', False), name))
         return res
 
@@ -219,7 +219,6 @@ class res_partner_bank(osv.osv):
             result['bank_bic'] = bank.bic
         return {'value': result}
 
-
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         result = {}
         if partner_id is not False:
@@ -228,7 +227,7 @@ class res_partner_bank(osv.osv):
             result['owner_name'] = part.name
             result['street'] = part.street or False
             result['city'] = part.city or False
-            result['zip'] =  part.zip or False
-            result['country_id'] =  part.country_id.id
+            result['zip'] = part.zip or False
+            result['country_id'] = part.country_id.id
             result['state_id'] = part.state_id.id
         return {'value': result}

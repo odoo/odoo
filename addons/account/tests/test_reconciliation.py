@@ -25,12 +25,12 @@ class TestReconciliation(AccountingTestCase):
         self.account_rsa = self.env['account.account'].search([('user_type', '=', self.env.ref('account.data_account_type_payable').id)])[0]
         self.product = self.env.ref("product.product_product_4")
 
-        self.bank_euro = self.env['res.partner.bank'].create({'acc_number': 'Reconciliation test', 'bank_name': 'Test Bank'})
+        self.bank_euro = self.env['res.partner.bank'].create({'acc_number': 'Reconciliation test', 'bank_name': 'Test Bank', 'company_id': self.env.user.company_id.id})
         self.bank_journal_euro = self.bank_euro.journal_id
         self.account_euro = self.bank_journal_euro.default_debit_account_id
 
         self.bank_usd = self.env['res.partner.bank'].create({'acc_number': 'Reconciliation test USD',
-                                                             'bank_name': 'Test Bank USD'})
+                                                             'bank_name': 'Test Bank USD', 'company_id': self.env.user.company_id.id})
         self.bank_journal_usd = self.bank_usd.journal_id
         self.account_usd = self.bank_journal_usd.default_debit_account_id
         self.account_usd.write({'currency_id': self.currency_usd_id})

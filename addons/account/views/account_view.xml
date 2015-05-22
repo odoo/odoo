@@ -254,14 +254,14 @@
                                 <field name="type"/>
                             </group>
                             <group>
-                                <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('deprecated', '=', False)]"/>
-                                <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('deprecated', '=', False)]"/>
+                                <field name="default_debit_account_id" domain="[('deprecated', '=', False)]"/>
+                                <field name="default_credit_account_id" domain="[('deprecated', '=', False)]"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Advanced Settings">
+                            <page name="advanced_settings" string="Advanced Settings">
                                 <group>
                                     <group>
                                         <field name="type_control_ids" widget="many2many_tags"/>
@@ -1455,29 +1455,6 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_template_search"/>
         </record>
-
-        <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
-            <field name="name">Create Account</field>
-            <field name="model">account.addtmpl.wizard</field>
-            <field name="arch" type="xml">
-                <form string="Create Account">
-                    <header>
-                        <button icon="gtk-ok" name="action_create" string="Add" type="object" class="oe_highlight"  />
-                    </header>
-                    <separator col="4" colspan="4" string="Create an Account Based on this Template"/>
-                    <field name="cparent_id"/>
-                </form>
-            </field>
-        </record>
-
-        <act_window domain="[]" id="action_account_addtmpl_wizard_form"
-            name="Create Account"
-            target="new"
-            res_model="account.addtmpl.wizard"
-            context="{'tmpl_ids': active_id}"
-            src_model="account.account.template"
-            view_type="form" view_mode="form"/>
-
 
         <!-- Chart of Accounts Templates -->
         <record id="view_account_chart_template_form" model="ir.ui.view">

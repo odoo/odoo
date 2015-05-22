@@ -33,22 +33,6 @@ class ResCompany(models.Model):
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
 
     @api.multi
-    def _create_bank_account_and_journal(self, account_number, currency_id=None):
-        """ Create a journal and its account """
-        MultiChartsAccounts = self.env['wizard.multi.charts.accounts']
-
-        if currency_id is None:
-            currency_id = self.currency_id.id
-
-        vals_account = {'currency_id': currency_id, 'acc_name': account_number, 'account_type': 'bank'}
-        vals_account = MultiChartsAccounts._prepare_bank_account(self, vals_account)
-        account_id = self.env['account.account'].create(vals_account).id
-
-        vals_journal = {'currency_id': currency_id, 'acc_name': _('Bank') + ' ' + account_number, 'account_type': 'bank'}
-        vals_journal = MultiChartsAccounts._prepare_bank_journal(self, vals_journal, account_id)
-        return self.env['account.journal'].create(vals_journal).id
-
-    @api.multi
     def compute_fiscalyear_dates(self, date):
         """ Computes the start and end dates of the fiscalyear where the given 'date' belongs to
             @param date: a datetime object
