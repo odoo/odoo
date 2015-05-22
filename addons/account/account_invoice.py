@@ -195,7 +195,7 @@ class AccountInvoice(models.Model):
     move_name = fields.Char(string='Journal Entry', readonly=True,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
-    reference = fields.Char(string='Partner\'s Invoice Reference',
+    reference = fields.Char(string='Supplier Reference',
         help="The partner reference of this invoice.")
     reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
         required=True, readonly=True, states={'draft': [('readonly', False)]},

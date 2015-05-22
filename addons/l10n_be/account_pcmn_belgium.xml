@@ -334,18 +334,21 @@
             <field name="code">404</field>
             <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field eval="True" name="reconcile"/>
         </record>
         <record id="a406" model="account.account.template">
             <field name="name">Acomptes versés</field>
             <field name="code">406</field>
             <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field eval="True" name="reconcile"/>
         </record>
         <record id="a407" model="account.account.template">
             <field name="name">Créances douteuses</field>
             <field name="code">407</field>
             <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field eval="True" name="reconcile"/>
         </record>
         <record id="a411059" model="account.account.template">
             <field name="name">T.V.A Déductible</field>
@@ -510,18 +513,21 @@
             <field name="code">444</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field eval="True" name="reconcile"/>
         </record>
         <record id="a446" model="account.account.template">
             <field name="name">Acomptes reçus</field>
             <field name="code">446</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field eval="True" name="reconcile"/>
         </record>
         <record id="a448" model="account.account.template">
             <field name="name">Compensations fournisseurs</field>
             <field name="code">448</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field eval="True" name="reconcile"/>
         </record>
         <record id="a4500" model="account.account.template">
             <field name="name">Dettes fiscales estimées</field>
