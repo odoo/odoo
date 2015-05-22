@@ -1,44 +1,24 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 {
     'name': 'Check Writing',
-    'version': '1.1',
-    'author': 'OpenERP SA, NovaPoint Group',
+    'version': '1.0',
+    'author': 'Odoo SA',
     'category': 'Generic Modules/Accounting',
+    'summary': 'Keep Track of Checks Payments',
     'description': """
-Module for the Check Writing and Check Printing.
-================================================
+Check Writing
+=============
+This module allows to register your payments by check in odoo.
+You can also print checks by installing a module that adds country-specific check printing.
+The check settings are located in the accounting journals configuration page.
     """,
     'website': 'https://www.odoo.com/page/accounting',
-    'depends' : ['account_voucher'],
+    'depends' : ['account_accountant'],
     'data': [
-        'wizard/account_check_batch_printing_view.xml',
-        'account_view.xml',
-        'account_check_writing_data.xml',
-        'data/report_paperformat.xml',
-        'views/report_check.xml',
-        'account_check_writing_report.xml',
+        'data/check_writing.xml',
+        'views/account_journal_view.xml',
+        'views/account_payment_view.xml',
     ],
-    'demo': ['account_demo.xml'],
-    'test': [],
-    'installable': False,
-    'active': False,
+    'installable': True,
+    'auto_install': False,
 }
