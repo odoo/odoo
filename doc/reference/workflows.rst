@@ -115,7 +115,7 @@ Activities
 ----------
 
 While the transitions can be seen as the control structures of the workflows,
-activities are the places where everything happens, from changing record
+activities are where everything happens, from changing record
 states to sending email.
 
 Different kinds of activities exist: ``Dummy``, ``Function``, ``Subflow``, and
