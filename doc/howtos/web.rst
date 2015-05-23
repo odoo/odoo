@@ -2240,7 +2240,7 @@ the most useful being:
 
     .. _See the online documentation to know how to use it: http://www.w3schools.com/html/html5_geolocation.asp
 
-    Please also note that the user should not
+    Please also note that the user should not be able to
     click on that button when the form view is in read-only mode. So, this
     custom widget should handle correctly the ``effective_readonly`` property
     just like any field. One way to do this would be to make the button
