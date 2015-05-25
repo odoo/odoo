@@ -21,6 +21,7 @@ try:
     from .. escpos import *
     from .. escpos.exceptions import *
     from .. escpos.printer import Usb
+    from .. escpos.printer import File
 except ImportError:
     escpos = printer = None
 
@@ -48,9 +49,9 @@ class EscposDriver(Thread):
         self.lock  = Lock()
         self.status = {'status':'connecting', 'messages':[]}
 
-    def supported_devices(self):
+    def supported_devices_usb(self):
         if not os.path.isfile('escpos_devices.pickle'):
-            return supported_devices.device_list
+            return supported_devices.device_list_usb
         else:
             try:
                 f = open('escpos_devices.pickle','r')
@@ -58,7 +59,10 @@ class EscposDriver(Thread):
                 f.close()
             except Exception as e:
                 self.set_status('error',str(e))
-                return supported_devices.device_list
+                return supported_devices.device_list_usb
+
+    def supported_devices_file(self):
+        return supported_devices.device_list_file
 
     def add_supported_device(self,device_string):
         r = re.compile('[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}');
@@ -99,9 +103,22 @@ class EscposDriver(Thread):
     def connected_usb_devices(self):
         connected = []
         
-        for device in self.supported_devices():
+        for device in self.supported_devices_usb():
             if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                 connected.append(device)
+        return connected
+
+    def connected_file_devices(self):
+        connected = []
+
+        for device in self.supported_devices_file():
+            try:
+                fileDevice = File(device['devfile']) # try to open file device
+                fileDevice = None # close it
+                connected.append(device)
+            except:
+                _logger.warning('could not open file ' + device['devfile'])
+                pass
         return connected
 
     def lockedstart(self):
@@ -116,9 +133,14 @@ class EscposDriver(Thread):
         if len(printers) > 0:
             self.set_status('connected','Connected to '+printers[0]['name'])
             return Usb(printers[0]['vendor'], printers[0]['product'])
-        else:
-            self.set_status('disconnected','Printer Not Found')
-            return None
+
+        printers = self.connected_file_devices()
+        if len(printers) > 0:
+            self.set_status('connected','Connected to '+printers[0]['name'])
+            return File(printers[0]['devfile'])
+
+        self.set_status('disconnected','Printer Not Found')
+        return None
 
     def get_status(self):
         self.push_task('status')
@@ -163,7 +185,7 @@ class EscposDriver(Thread):
                     error = False
                     time.sleep(5)
                     continue
-                elif task == 'receipt': 
+                elif task == 'receipt':
                     if timestamp >= time.time() - 1 * 60 * 60:
                         self.print_receipt_body(printer,data)
                         printer.cut()

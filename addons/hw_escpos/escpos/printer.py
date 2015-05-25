@@ -170,6 +170,71 @@ class Serial(Escpos):
 
 
 
+class File(Escpos):
+    """ Define File printer """
+
+    def __init__(self, devfile="/dev/usb/lp0"):
+        """
+        @param devfile  : Device file under dev filesystem
+        """
+        self.devfile  = devfile
+        self.open()
+
+
+    def open(self):
+        """ Setup serial port and set is as escpos device """
+        self.device = open(self.devfile,'w')
+        if self.device is None:
+            raise Exception('File {0} not found'.format(self.devfile))
+
+    def get_printer_status(self):
+        status = {
+            'printer': {},
+            'offline': {},
+            'error'  : {},
+            'paper'  : {},
+        }
+        status['printer']['status_code']     = 0
+        status['printer']['status_error']    = False
+        status['printer']['online']          = True
+        status['printer']['recovery']        = False
+        status['printer']['paper_feed_on']   = False
+        status['printer']['drawer_pin_high'] = False
+        status['offline']['status_code']     = 0
+        status['offline']['status_error']    = False
+        status['offline']['cover_open']      = False
+        status['offline']['paper_feed_on']   = False
+        status['offline']['paper']           = False
+        status['offline']['error']           = False
+        status['error']['status_code']       = 0
+        status['error']['status_error']      = False
+        status['error']['recoverable']       = False
+        status['error']['autocutter']        = False
+        status['error']['unrecoverable']     = False
+        status['error']['auto_recoverable']  = False
+        status['paper']['status_code']       = 0
+        status['paper']['status_error']      = False
+        status['paper']['near_end']          = False
+        status['paper']['present']           = True
+        return status
+
+    def _raw(self, msg):
+        """ Print any command sent in raw format """
+        self.device.write(msg)
+
+    def close(self):
+        try:
+            if self.device is not None:
+                self.device.close()
+        except:
+            pass
+
+    def __del__(self):
+        """ Close File interface """
+        self.close()
+
+
+
 class Network(Escpos):
     """ Define Network printer """
 

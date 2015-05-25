@@ -25,6 +25,9 @@ CD_KICK_5 = '\x1b\x70\x01'     # Sends a pulse to pin 5 []
 # Paper
 PAPER_FULL_CUT  = '\x1d\x56\x00' # Full cut paper
 PAPER_PART_CUT  = '\x1d\x56\x01' # Partial cut paper
+SHEET_SLIP_MODE = '\x1B\x63\x30\x04' # Print ticket on injet slip paper
+SHEET_ROLL_MODE = '\x1B\x63\x30\x01' # Print ticket on paper roll 
+
 # Text format   
 TXT_NORMAL      = '\x1b\x21\x00' # Normal text
 TXT_2HEIGHT     = '\x1b\x21\x10' # Double height text

@@ -694,6 +694,12 @@ class Escpos:
             stylestack      = StyleStack() 
             serializer      = XmlSerializer(self)
             root            = ET.fromstring(xml.encode('utf-8'))
+            if 'sheet' in root.attrib and root.attrib['sheet'] == 'slip':
+                self._raw(SHEET_SLIP_MODE)
+                self.slip_sheet_mode = True
+            else:
+                self._raw(SHEET_ROLL_MODE)
+                self.slip_sheet_mode = False
 
             self._raw(stylestack.to_escpos())
 
@@ -703,7 +709,10 @@ class Escpos:
                 self.cashdraw(2)
                 self.cashdraw(5)
             if not 'cut' in root.attrib or root.attrib['cut'] == 'true' :
-                self.cut()
+                if self.slip_sheet_mode:
+                    self._raw(CTL_FF)
+                else:
+                    self.cut()
 
         except Exception as e:
             errmsg = str(e)+'\n'+'-'*48+'\n'+traceback.format_exc() + '-'*48+'\n'
