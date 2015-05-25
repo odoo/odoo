@@ -187,7 +187,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                     <field name="partner_id" groups="base.group_user" string="Supplier"/>
-                    <field name="date_invoice"/>
+                    <field name="date_invoice" string="Bill Date"/>
                     <field name="number"/>
                     <field name="reference"/>
                     <field name="commercial_partner_id" invisible="1"/>
@@ -196,11 +196,9 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_untaxed" groups="base.group_multi_currency"/>
-                    <field name="amount_untaxed_signed" sum="Untaxed Amount"/>
                     <field name="amount_total_signed" sum="Total Amount"/>
                     <field name="residual_signed" sum="Residual Amount" string="To Pay"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
                     <field name="type" invisible="context.get('type',True)"/>
@@ -246,7 +244,7 @@
                         </group>
                         <group>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
-                            <field name="date_invoice" />
+                            <field name="date_invoice" string="Bill Date"/>
                             <field name="date_due"/>
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
