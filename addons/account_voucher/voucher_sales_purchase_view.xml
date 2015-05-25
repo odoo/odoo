@@ -126,7 +126,7 @@
             <field name="view_mode">tree,kanban</field>
             <field name="domain">[('journal_id.type','=','sale'), ('voucher_type','=','sale')]</field>
             <field name="context">{'default_voucher_type': 'sale', 'voucher_type': 'sale'}</field>
-            <field name="view_id" eval="False"/>
+            <field name="view_id" eval="view_voucher_tree"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
             <field name="help" type="html">
@@ -245,7 +245,7 @@
             <field name="view_mode">tree,kanban</field>
             <field name="domain">[('journal_id.type','=','purchase'), ('voucher_type','=','purchase')]</field>
             <field name="context">{'default_voucher_type': 'purchase', 'voucher_type': 'purchase'}</field>
-            <field name="view_id" eval="False"/>
+            <field name="view_id" eval="view_voucher_tree_purchase"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
             <field name="help" type="html">
