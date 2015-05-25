@@ -236,6 +236,9 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
                             ret.resolve();
                         }
                     },
+                    cancel : function() {
+                        ret.reject();
+                    }
                 });
             } else {
                 ret.resolve();
