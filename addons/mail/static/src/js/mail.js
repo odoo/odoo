@@ -1512,7 +1512,7 @@ var ComposeMessageTopButton = Widget.extend({
     on_compose_message: function (ev) {
         ev.preventDefault();
         var ctx = {}
-        if ($('a.oe_compose_post') && $('a.oe_compose_post').is(":visible") == true &&
+        if ($('button.o_timeline_compose_post') && $('button.o_timeline_compose_post').is(":visible") == true &&
              (this.getParent()).getParent().action_manager.inner_widget.active_view.type == 'form'){
             ctx = {
                 'default_res_id': (this.getParent()).getParent().action_manager.inner_widget.active_view.controller.datarecord.id,
