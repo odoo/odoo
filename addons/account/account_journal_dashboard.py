@@ -184,9 +184,9 @@ class account_journal(models.Model):
             'number_draft': number_draft,
             'number_waiting': number_waiting,
             'number_late': number_late,
-            'sum_draft': formatLang(self.env, sum_draft, currency_obj=self.currency_id or self.company_id.currency_id),
-            'sum_waiting': formatLang(self.env, sum_waiting, currency_obj=self.currency_id or self.company_id.currency_id),
-            'sum_late': formatLang(self.env, sum_late, currency_obj=self.currency_id or self.company_id.currency_id),
+            'sum_draft': formatLang(self.env, sum_draft or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
+            'sum_waiting': formatLang(self.env, sum_waiting or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
+            'sum_late': formatLang(self.env, sum_late or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'currency_id': self.currency_id and self.currency_id.id or self.company_id.currency_id.id,
             'show_import': True if self.type in ['bank', 'cash'] and len(ac_bnk_stmt) == 0 and last_balance == 0 else False,
         }

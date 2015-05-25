@@ -242,17 +242,13 @@
                             <field string="Supplier" name="partner_id"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
-                            <field name="fiscal_position_id" options="{'no_create': True}"/>
+                            <field name="reference" string="Supplier Reference"/>
                         </group>
                         <group>
-                            <field name="reference" string="Supplier Reference"/>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" />
                             <field name="date_due"/>
                             <field name="move_name" invisible="1"/>
-                            <field name="journal_id" groups="account.group_account_user"
-                                options="{'no_create': True}"
-                                attrs="{'readonly':[('move_name','!=',False)]}"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
                             <field name="check_total" groups="account.group_supplier_inv_check_total"/>
@@ -328,6 +324,7 @@
                                     <field name="payment_term_id" options="{'no_create': True}"/>
                                 </group>
                                 <group>
+                                    <field name="fiscal_position_id" options="{'no_create': True}" placeholder="Auto-detect"/>
                                     <field name="move_id" groups="account.group_account_manager" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="date" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -454,7 +451,7 @@
                                 <field name="reconciled" invisible="1"/>
                                 <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1" widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
                             </group>
-                            <field name="comment" class="oe_inline" placeholder="Additional notes..."/>
+                            <field name="comment" class="oe_inline" placeholder="Terms and conditions..."/>
                         </page>
                         <page string="Other Info">
                             <group col="4">
