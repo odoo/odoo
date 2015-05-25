@@ -1136,7 +1136,8 @@ class account_move_line(osv.osv):
         period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.') % (period.name, journal.name))
+                self._check_journal_check_msg(
+                    cr, uid, period.name, journal.name, context=context)
         if not result:
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),
@@ -1144,6 +1145,13 @@ class account_move_line(osv.osv):
                 'period_id': period.id
             })
         return True
+
+    def _check_journal_check_msg(
+            self, cr, uid, period_name, journal_name, context=None):
+        raise osv.except_osv(
+            _('Error!'),
+            _('You can not add/modify entries in a closed period %s '
+              'of journal %s.') % (period_name, journal_name))
 
     def _update_check(self, cr, uid, ids, context=None):
         done = {}
