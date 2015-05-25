@@ -629,20 +629,6 @@
             </field>
         </record>
 
-       <!-- Update account invoice list view!-->
-        <record model="ir.ui.view" id="account_invoice_tree">
-            <field name="name">Account Invoice</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_tree"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="team_id" string="Sales Team" groups="base.group_multi_salesteams"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
         <!-- Update account invoice search view!-->
         <record id="account_invoice_groupby_inherit" model="ir.ui.view">
             <field name="name">account.invoice.groupby</field>

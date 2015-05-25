@@ -9,8 +9,7 @@
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
-                    <field name="partner_id"/>
-                    <field name="journal_id" groups="account.group_account_user"/>
+                    <field name="partner_id" string="Customer"/>
                     <field name="voucher_type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="currency_id" invisible="1"/>
@@ -18,16 +17,15 @@
                 </tree>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_voucher_tree_nocreate">
-            <field name="name">account.voucher.tree_nocreate</field>
+        <record model="ir.ui.view" id="view_voucher_tree_purchase">
+            <field name="name">account.voucher.tree.supplier</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries" create="0" edit="0">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
-                    <field name="partner_id"/>
-                    <field name="journal_id" groups="account.group_account_user"/>
+                    <field name="partner_id" string="Supplier"/>
                     <field name="voucher_type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="currency_id" invisible="1"/>
