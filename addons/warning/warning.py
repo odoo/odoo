@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import api
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 
@@ -96,41 +97,26 @@ class purchase_order(osv.osv):
 
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
-    def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-                            date_invoice=False, payment_term=False,
-                            partner_bank_id=False, company_id=False,
-                            context=None):
-        if not partner_id:
-            return {'value': {
-            'account_id': False,
-            'payment_term_id': False,
-            }
-        }
-        warning = {}
-        title = False
-        message = False
-        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        if partner.invoice_warn != 'no-message':
-            title = _("Warning for %s") % partner.name
-            message = partner.invoice_warn_msg
-            warning = {
-                'title': title,
-                'message': message
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        result =  super(account_invoice, self)._onchange_partner_id()
+        res = {}
+        if not self.partner_id:
+            self.account_id = False
+            self.payment_term_id = False
+            return result
+
+        if self.partner_id.invoice_warn != 'no-message':
+            res['warning'] = {
+                'title': _("Warning for %s") % self.partner_id.name,
+                'message': self.partner_id.invoice_warn_msg
                 }
 
-            if partner.invoice_warn == 'block':
-                return {'value': {'partner_id': False}, 'warning': warning}
+            if self.partner_id.invoice_warn == 'block':
+                self.partner_id = False
 
-        result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
-            date_invoice=date_invoice, payment_term=payment_term, 
-            partner_bank_id=partner_bank_id, company_id=company_id, context=context)
-
-        if result.get('warning',False):
-            warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
-            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
-
-        if warning:
-            result['warning'] = warning
+            return res
         return result
 
 
