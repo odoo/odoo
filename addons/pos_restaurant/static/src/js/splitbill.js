@@ -62,13 +62,13 @@ openerp.pos_restaurant.load_splitbill = function(instance, module){
                 neworder.remove_orderline(split.line);
                 split.line = null;
             }
-     
             splitlines[line_id] = split;
+            var precision = (split.quantity + "").indexOf('.') >= 0 ? (split.quantity + "").split('.')[1].length : 0;
             $el.replaceWith($(QWeb.render('SplitOrderline',{
                 widget: this,
                 line: line,
                 selected: split.quantity !== 0,
-                quantity: split.quantity,
+                quantity: instance.web.format_value(split.quantity, {type : "float", digits : [1, precision]}),
                 id: line_id,
             })));
             this.$('.order-info .subtotal').text(this.format_currency(neworder.get_subtotal()));

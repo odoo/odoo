@@ -927,10 +927,12 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 if(unit){
                     if (unit.rounding) {
                         this.quantity    = round_pr(quant, unit.rounding);
-                        this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                        var precision = Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10));
+                        this.quantityStr = instance.web.format_value(parseFloat(this.quantity.toFixed(precision)), {type : "float", digits : [1,precision]});
+
                     } else {
                         this.quantity    = round_pr(quant, 1);
-                        this.quantityStr = this.quantity.toFixed(0);
+                        this.quantityStr = instance.web.format_value(parseFloat(this.quantity.toFixed(0)), {type : "float"});
                     }
                 }else{
                     this.quantity    = quant;
@@ -1220,7 +1222,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             return this.amount;
         },
         get_amount_str: function(){
-            return this.amount.toFixed(this.pos.currency.decimals);
+            return instance.web.format_value(parseFloat(this.amount.toFixed(this.pos.currency.decimals)), {type : "float", digits : [1, this.pos.currency.decimals]});
         },
         set_selected: function(selected){
             if(this.selected !== selected){
@@ -1404,6 +1406,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             }
 
             var receipt = {
+                decimal_point: instance._t.database.parameters.decimal_point,
                 orderlines: orderlines,
                 paymentlines: paymentlines,
                 subtotal: this.get_subtotal(),

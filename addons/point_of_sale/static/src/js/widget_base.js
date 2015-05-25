@@ -43,6 +43,7 @@ openerp.point_of_sale.load_basewidget = function load_basewidget(instance, modul
             this.format_currency_no_symbol = function(amount){
                 amount = round_pr(amount,currency.rounding);
                 amount = amount.toFixed(decimals);
+                amount = instance.web.format_value(parseFloat(amount), {type : "float", digits : [1, decimals]})
                 return amount;
             };
 
@@ -51,7 +52,7 @@ openerp.point_of_sale.load_basewidget = function load_basewidget(instance, modul
                 amount = openerp.instances[this.session.name].web.format_value(parseFloat(amount), { type : 'float' });
             }
 
-            return amount;
+            return instance.web.format_value(parseFloat(amount), {type : "float", digits : [1, decimals]});
         },
         show: function(){
             this.$el.removeClass('oe_hidden');
@@ -61,7 +62,8 @@ openerp.point_of_sale.load_basewidget = function load_basewidget(instance, modul
         },
         format_pr: function(value,precision){
             var decimals = precision > 0 ? Math.max(0,Math.ceil(Math.log(1.0/precision) / Math.log(10))) : 0;
-            return value.toFixed(decimals);
+            var amount = value.toFixed(decimals);
+            return instance.web.format_value(parseFloat(amount), {type : "float", digits : [1, decimals]})
         },
         format_fixed: function(value,integer_width,decimal_width){
             value = value.toFixed(decimal_width || 0);
@@ -74,7 +76,7 @@ openerp.point_of_sale.load_basewidget = function load_basewidget(instance, modul
                 value = '0' + value;
                 missing--;
             }
-            return value;
+            return instance.web.format_value(parseFloat(value), {type : "float", digits: [integer_width, decimal_width]});
         },
     });
 

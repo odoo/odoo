@@ -639,7 +639,7 @@
     </t>
 
     <t t-name="XmlReceipt">
-        <receipt align='center' width='40' value-thousands-separator='' >
+        <receipt align='center' width='40' value-thousands-separator='' t-att-value-decimals-separator='receipt.decimal_point' >
             <t t-if='receipt.company.logo'>
                 <img t-att-src='receipt.company.logo' />
                 <br/>
