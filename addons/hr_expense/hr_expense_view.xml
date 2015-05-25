@@ -84,13 +84,6 @@
                             <field name="user_valid" attrs="{'invisible': [('state','=','draft')]}" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_user']}"/>
                             <field name="currency_id" groups="base.group_multi_currency" on_change="onchange_currency_id(currency_id, company_id)"/>
                         </group>
-                        <group>
-                            <field name="journal_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'purchase')]" string="Journal" groups="account.group_account_user"/>
-                            <field name="employee_payable_account_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('internal_type', '=', 'payable')]" groups="account.group_account_user"/>
-                        </group>
-                        <group>
-                            <label class="oe_grey" groups="account.group_account_user" string="If this field is empty, entries will be generated in the purchase journal."/>
-                        </group>
                     </group>
                     <notebook>
                         <page string="Expense Lines">
@@ -134,6 +127,16 @@
                                 </div>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Accounting Info" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['done', 'paid'])]}">
+                            <group>
+                                <group>
+                                    <field name="journal_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'purchase')]" string="Journal"/>
+                                </group>
+                                <group>
+                                    <field name="employee_payable_account_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('internal_type', '=', 'payable')]"/>
                                 </group>
                             </group>
                         </page>
