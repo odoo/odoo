@@ -1313,7 +1313,7 @@ openerp.account = function (instance) {
             self.is_valid = false;
             self.$(".tip_reconciliation_not_balanced").show();
             self.$(".tbody_open_balance").empty();
-            self.$(".button_ok").text(_("OK")).removeClass("btn-primary").attr("disabled", "disabled");
+            self.$(".button_ok").text(_t("OK")).removeClass("btn-primary").attr("disabled", "disabled");
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
