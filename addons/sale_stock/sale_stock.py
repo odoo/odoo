@@ -196,6 +196,8 @@ class sale_order(osv.osv):
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
+                if order_line.state == 'cancel':
+                    continue
                 if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
                     return True
         return False
@@ -280,6 +282,29 @@ class sale_order_line(osv.osv):
 
         return {'value': result, 'warning': warning}
 
+    def _check_routing(self, cr, uid, ids, product, warehouse_id, context=None):
+        """ Verify the route of the product based on the warehouse
+            return True if the product availibility in stock does not need to be verified
+        """
+        is_available = False
+        if warehouse_id:
+            warehouse = self.pool['stock.warehouse'].browse(cr, uid, warehouse_id, context=context)
+            for product_route in product.route_ids:
+                if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
+                    is_available = True
+                    break
+        else:
+            try:
+                mto_route_id = self.pool['stock.warehouse']._get_mto_route(cr, uid, context=context)
+            except osv.except_osv:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                mto_route_id = False
+            if mto_route_id:
+                for product_route in product.route_ids:
+                    if product_route.id == mto_route_id:
+                        is_available = True
+                        break
+        return is_available
 
     def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -287,7 +312,6 @@ class sale_order_line(osv.osv):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        warehouse_obj = self.pool['stock.warehouse']
         warning = {}
         #UoM False due to hack which makes sure uom changes price, ... in product_id_change
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty=qty,
@@ -316,28 +340,11 @@ class sale_order_line(osv.osv):
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
 
         if product_obj.type == 'product':
-            #determine if the product is MTO or not (for a further check)
-            isMto = False
-            if warehouse_id:
-                warehouse = warehouse_obj.browse(cr, uid, warehouse_id, context=context)
-                for product_route in product_obj.route_ids:
-                    if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
-                        isMto = True
-                        break
-            else:
-                try:
-                    mto_route_id = warehouse_obj._get_mto_route(cr, uid, context=context)
-                except:
-                    # if route MTO not found in ir_model_data, we treat the product as in MTS
-                    mto_route_id = False
-                if mto_route_id:
-                    for product_route in product_obj.route_ids:
-                        if product_route.id == mto_route_id:
-                            isMto = True
-                            break
+            #determine if the product needs further check for stock availibility
+            is_available = self._check_routing(cr, uid, ids, product_obj, warehouse_id, context=context)
 
             #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
-            if not isMto:
+            if not is_available:
                 uom_record = False
                 if uom:
                     uom_record = product_uom_obj.browse(cr, uid, uom, context=context)
@@ -361,6 +368,14 @@ class sale_order_line(osv.osv):
                     }
         res.update({'warning': warning})
         return res
+
+    def button_cancel(self, cr, uid, ids, context=None):
+        lines = self.browse(cr, uid, ids, context=context)
+        for procurement in lines.mapped('procurement_ids'):
+            for move in procurement.move_ids:
+                if move.state == 'done' and not move.scrapped:
+                    raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sale order line which is linked to a stock move already done.'))
+        return super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -388,7 +403,7 @@ class stock_move(osv.osv):
         if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
             sale_order = move.procurement_id.sale_line_id.order_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
-        elif move.picking_id.sale_id:
+        elif move.picking_id.sale_id and context.get('inv_type') in ('out_invoice', 'out_refund'):
             # In case of extra move, it is better to use the same data as the original moves
             sale_order = move.picking_id.sale_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
@@ -396,7 +411,7 @@ class stock_move(osv.osv):
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        if move.procurement_id and move.procurement_id.sale_line_id:
+        if inv_type in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             res['invoice_line_tax_ids'] = [(6, 0, [x.id for x in sale_line.tax_id])]
             res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
@@ -420,6 +435,10 @@ class stock_move(osv.osv):
                 extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.procurement_id.sale_line_id.tax_id])]
         return (is_extra_move, extra_move_tax)
 
+    def _get_taxes(self, cr, uid, move, context=None):
+        if move.procurement_id.sale_line_id.tax_id:
+            return [tax.id for tax in move.procurement_id.sale_line_id.tax_id]
+        return super(stock_move, self)._get_taxes(cr, uid, move, context=context)
 
 class stock_location_route(osv.osv):
     _inherit = "stock.location.route"
@@ -474,6 +493,7 @@ class stock_picking(osv.osv):
                 'user_id': sale.user_id.id,
                 'team_id': sale.team_id.id,
                 'name': sale.client_order_ref or '',
+                'comment': sale.note,
                 })
         return inv_vals
 

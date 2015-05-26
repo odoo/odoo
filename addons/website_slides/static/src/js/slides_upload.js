@@ -10,7 +10,7 @@ var slides = require('website_slides.slides');
 
 var _t = core._t;
 
-$(document).ready(function () {
+website.if_dom_contains('.oe_slide_js_upload', function () {
 
     website.add_template_file('/website_slides/static/src/xml/website_slides.xml');
 

@@ -11,7 +11,7 @@ var Widget = require('web.Widget');
 var _t = core._t;
 
 
-var COOKIE_NAME = 'livechat_conversation';
+var COOKIE_NAME = 'odoo_livechat_conversation';
 var SERVICE_URL = 'https://services.odoo.com/';
 
 var OdooSupport = Widget.extend({

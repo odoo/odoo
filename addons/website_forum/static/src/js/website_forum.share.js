@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var SocialShare = require('website.share');
 var website = require('website.website');
+website.if_dom_contains('.website_forum', function () {
 
 var qweb = core.qweb;
 website.add_template_file('/website_forum/static/src/xml/website_forum_share_templates.xml');
@@ -61,6 +62,7 @@ website.ready().done(function() {
     }
 });
 
-return ForumShare;
+});
+return {};
 
 });

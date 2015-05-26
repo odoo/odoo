@@ -295,8 +295,8 @@ class ir_sequence(models.Model):
             return False
         force_company = self.env.context.get('force_company')
         if not force_company:
-            force_company = self.env.user.company_id
-        preferred_sequences = [s for s in seq_ids if s.company_id and s.company_id == force_company]
+            force_company = self.env.user.company_id.id
+        preferred_sequences = [s for s in seq_ids if s.company_id and s.company_id.id == force_company]
         seq_id = preferred_sequences[0] if preferred_sequences else seq_ids[0]
         return seq_id._next()
 

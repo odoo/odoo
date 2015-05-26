@@ -49,8 +49,11 @@ class ImChatSession(models.Model):
         """
         self.ensure_one()
         users_infos = super(ImChatSession, self).session_user_info()
+        # identify the operator for the 'welcome message'
+        for user_profile in users_infos:
+            user_profile['is_operator'] = bool(user_profile['id'] == self.env._context.get('im_livechat_operator_id'))
         if self.anonymous_name:
-            users_infos.append({'id': False, 'name': self.anonymous_name, 'im_status': 'online'})
+            users_infos.append({'id': False, 'name': self.anonymous_name, 'im_status': 'online', 'is_operator': False})
         return users_infos
 
     @api.model

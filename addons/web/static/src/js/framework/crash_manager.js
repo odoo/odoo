@@ -36,19 +36,24 @@ var CrashManager = core.Class.extend({
         this.active = false;
     },
     rpc_error: function(error) {
+        var self = this;
         if (!this.active) {
+            return;
+        }
+        if (this.$indicator){
             return;
         }
         if (error.code == -32098) {
             $.blockUI({ message: '' , overlayCSS: {'z-index': 9999, backgroundColor: '#FFFFFF', opacity: 0.0, cursor: 'wait'}});
-            var $indicator = $('<div class="oe_indicator">' + _t("Trying to reconnect... ") + '<i class="fa fa-refresh"></i></div>');
-            $indicator.prependTo("body");
+            this.$indicator = $('<div class="oe_indicator">' + _t("Trying to reconnect... ") + '<i class="fa fa-refresh"></i></div>');
+            this.$indicator.prependTo("body");
             var timeinterval = setInterval(function(){
                 ajax.jsonRpc('/web/webclient/version_info').then(function() {
                     clearInterval(timeinterval);
-                    $indicator.html(_t("You are back online"));
-                    $indicator.delay(2000).fadeOut('slow',function(){
-                        $indicator.remove();
+                    self.$indicator.html(_t("You are back online"));
+                    self.$indicator.delay(2000).fadeOut('slow',function(){
+                        $(this).remove();
+                        self.$indicator.remove();
                     });
                     $.unblockUI();
                 });

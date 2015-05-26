@@ -129,13 +129,7 @@ class pos_details(report_sxw.rml_parse):
             return {}
 
     def _total_of_the_day(self, objects):
-        if self.total:
-             if self.total == self.total_invoiced:
-                 return self.total
-             else:
-                 return ((self.total or 0.00) - (self.total_invoiced or 0.00))
-        else:
-            return False
+        return self.total or 0.00
 
     def _sum_invoice(self, objects):
         return reduce(lambda acc, obj:

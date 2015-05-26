@@ -203,7 +203,11 @@ class WebRequest(object):
     def env(self):
         """
         The :class:`~openerp.api.Environment` bound to current request.
+        Raises a :class:`RuntimeError` if the current requests is not bound
+        to a database.
         """
+        if not self.db:
+            return RuntimeError('request not bound to a database')
         return openerp.api.Environment(self.cr, self.uid, self.context)
 
     @lazy_property
@@ -238,6 +242,8 @@ class WebRequest(object):
         """
         # can not be a lazy_property because manual rollback in _call_function
         # if already set (?)
+        if not self.db:
+            return RuntimeError('request not bound to a database')
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
@@ -907,7 +913,8 @@ class Model(object):
                 raise Exception("Access denied")
             mod = request.registry[self.model]
             meth = getattr(mod, method)
-            cr = request.cr
+            # make sure to instantiate an environment
+            cr = request.env.cr
             result = meth(cr, request.uid, *args, **kw)
             # reorder read
             if method == "read":
@@ -923,6 +930,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def __init__(self, *args, **kwargs):
         self.inited = False
         self.modified = False
+        self.rotate = False
         super(OpenERPSession, self).__init__(*args, **kwargs)
         self.inited = True
         self._default_values()
@@ -958,6 +966,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
+        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
@@ -983,6 +992,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             if not (keep_db and k == 'db'):
                 del self[k]
         self._default_values()
+        self.rotate = True
 
     def _default_values(self):
         self.setdefault("db", None)
@@ -1378,7 +1388,22 @@ class Root(object):
         else:
             response = result
 
+        # save to cache if requested and possible
+        if getattr(request, 'cache_save', False) and response.status_code == 200:
+            response.freeze()
+            r = response.response
+            if isinstance(r, list) and len(r) == 1 and isinstance(r[0], str):
+                request.registry.cache[request.cache_save] = {
+                    'content': r[0],
+                    'mimetype': response.headers['Content-Type'],
+                    'time': time.time(),
+                }
+
         if httprequest.session.should_save:
+            if httprequest.session.rotate:
+                self.session_store.delete(httprequest.session)
+                httprequest.session.sid = self.session_store.generate_key()
+                httprequest.session.modified = True
             self.session_store.save(httprequest.session)
         # We must not set the cookie if the session id was specified using a http header or a GET parameter.
         # There are two reasons to this:

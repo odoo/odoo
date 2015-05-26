@@ -79,7 +79,7 @@ class purchase_report(osv.osv):
                     s.dest_address_id,
                     s.pricelist_id,
                     s.validator,
-                    s.picking_type_id as picking_type_id,
+                    spt.warehouse_id as picking_type_id,
                     s.partner_id as partner_id,
                     s.create_uid as user_id,
                     s.company_id as company_id,
@@ -108,6 +108,7 @@ class purchase_report(osv.osv):
                             LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
+                    left join stock_picking_type spt on (spt.id=s.picking_type_id)
                     left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
                 group by
                     s.company_id,
@@ -129,7 +130,7 @@ class purchase_report(osv.osv):
                     t.categ_id,
                     s.date_order,
                     s.state,
-                    s.picking_type_id,
+                    spt.warehouse_id,
                     u.uom_type,
                     u.category_id,
                     t.uom_id,

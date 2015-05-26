@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp import addons, http, SUPERUSER_ID, fields
+from openerp import http, SUPERUSER_ID, fields
 from openerp.http import request
 from openerp.tools import html_escape
+from openerp.addons.website.controllers.main import Website
+from openerp.addons.website_crm.controllers.main import contactus
 
-
-class PageController(addons.website.controllers.main.Website):
+class PageController(Website):
 
     @http.route('/page/<page:page>', auth="public", website=True)
     def page(self, page, **opt):
@@ -32,7 +33,7 @@ class PageController(addons.website.controllers.main.Website):
         return response
 
 
-class ContactController(addons.website_crm.controllers.main.contactus):
+class ContactController(contactus):
 
     @http.route(['/crm/contactus'], type='http', auth="public", website=True)
     def contactus(self, **kwargs):
