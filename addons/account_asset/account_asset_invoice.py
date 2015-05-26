@@ -22,10 +22,12 @@
 from openerp.osv import fields, osv
 
 class account_invoice(osv.osv):
-
     _inherit = 'account.invoice'
-    def action_number(self, cr, uid, ids, *args):
-        result = super(account_invoice, self).action_number(cr, uid, ids, *args)
+
+    def action_number(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        result = super(account_invoice, self).action_number(cr, uid, ids, context=context)
         for inv in self.browse(cr, uid, ids):
             self.pool.get('account.invoice.line').asset_create(cr, uid, inv.invoice_line)
         return result

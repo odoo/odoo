@@ -49,7 +49,8 @@
 -
   I change the state of invoice to "Proforma2" by clicking PRO-FORMA button
 -
-  !workflow {model: account.invoice, action: invoice_proforma2, ref: account_invoice_customer0}
+  !python {model: account.invoice}: |
+  self.invoice_proforma2(cr, uid, [ref("account_invoice_customer0")], {"lang": 'en_US', "tz": False, "active_model": "account.invoice", "active_ids": [ref("account.account_invoice_customer0")], "type": "out_invoice", "active_id": ref("account.account_invoice_customer0"), }) 
 -
   I check that the invoice state is now "Proforma2"
 -
@@ -64,7 +65,8 @@
 -
   I create invoice by clicking on Create button
 -
-  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_customer0}
+  !python {model: account.invoice}: |
+  self.invoice_open(cr, uid, [ref("account_invoice_customer0")], {"lang": 'en_US', "tz": False, "active_model": "account.invoice", "active_ids": [ref("account.account_invoice_customer0")], "type": "out_invoice", "active_id": ref("account.account_invoice_customer0"), })
 -
   I check that the invoice state is "Open"
 -
