@@ -883,7 +883,13 @@ var FieldOne2Many = AbstractManyField.extend({
     commit_value: function() {
         var view = this.get_active_view();
         if (view && view.type === "list" && view.controller.__focus) {
-            return view.controller._on_blur_one2many(true);
+            var def = $.Deferred();
+            view.controller._on_blur_one2many(true).always(function () {
+                setTimeout(function () {def.resolve();},0);
+            }, function () {
+                setTimeout(function () {def.reject();},0);
+            });
+            return def;
         }
         return $.when(false);
     },
@@ -914,7 +920,9 @@ var One2ManyDataSet = data.BufferedDataSet.extend({
         var self = this;
         var def = this._super(data, options);
         def.then(function (id) {
-            self.trigger("dataset_changed", id, data, options);
+            setTimeout(function () {
+                self.trigger("dataset_changed", id, data, options);
+            },0);
         });
         return def;
     },
