@@ -1150,6 +1150,7 @@
             <small>profile</small>
             <t t-call="website.publish_management" groups="base.group_website_publisher">
                 <t t-set="object" t-value="user"/>
+                <t t-set="publish_edit" t-value="True"/>
             </t>
         </h1>
         <div class="row">
