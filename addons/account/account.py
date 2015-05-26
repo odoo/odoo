@@ -371,8 +371,17 @@ class account_account(osv.osv):
                     # Computing Adjusted Balance and Unrealized Gains and losses
                     # Adjusted Balance = Foreign Balance / Exchange Rate
                     # Unrealized Gains and losses = Adjusted Balance - Balance
-                    adj_bal = sums[current.id].get('foreign_balance', 0.0) / current.exchange_rate
-                    sums[current.id].update({'adjusted_balance': adj_bal, 'unrealized_gain_loss': adj_bal - sums[current.id].get('balance', 0.0)})
+                    get = lambda k: sums[current.id].get(k, 0.0)
+                    adj_bal = currency_obj.compute(
+                        cr, uid,
+                        current.currency_id.id, current.company_id.currency_id.id,
+                        get('foreign_balance'),
+                        context=context
+                    )
+                    sums[current.id].update(
+                        adjusted_balance=adj_bal,
+                        unrealized_gain_loss=adj_bal - get('balance')
+                    )
 
             for id in ids:
                 res[id] = sums.get(id, null_result)
