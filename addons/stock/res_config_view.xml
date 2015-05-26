@@ -120,8 +120,8 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_stock_config_settings" name="Warehouse" parent="base.menu_config"
-            sequence="5" groups="group_stock_manager"/>
+        <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
+            sequence="100" groups="group_stock_manager,base.group_configuration"/>
         <menuitem id="menu_stock_general_settings" name="Settings" parent="menu_stock_config_settings"
             sequence="0" action="action_stock_config_settings"/>
     </data>

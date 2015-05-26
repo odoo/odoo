@@ -522,8 +522,8 @@
               </p>
             </field>
         </record>
-        <menuitem name="Point of Sales" parent="base.menu_config"
-            id="menu_point_config_product" sequence="3" groups="group_pos_manager"/>
+        <menuitem name="Configuration" parent="menu_point_root"
+            id="menu_point_config_product" sequence="100" groups="group_pos_manager,base.group_configuration"/>
         <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_config_product" sequence="20" />
         <!-- END -->
 

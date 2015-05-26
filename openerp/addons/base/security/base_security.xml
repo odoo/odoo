@@ -7,8 +7,12 @@
             Note that the field 'category_id' is set later in
             base/module/module_data.xml
         -->
+        <record model="res.groups" id="group_configuration">
+            <field name="name">Configuration</field>
+        </record>
         <record model="res.groups" id="group_erp_manager">
             <field name="name">Access Rights</field>
+            <field name="implied_ids" eval="[(4, ref('group_configuration'))]"/>
         </record>
         <record model="res.groups" id="group_system">
             <field name="name">Settings</field>

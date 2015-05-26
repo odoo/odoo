@@ -38,8 +38,8 @@
             <field name="view_type">form</field>
         </record>
 
-        <menuitem id="menu_event_configuration" name="Event" parent="base.menu_config"
-            sequence="14"/>
+        <menuitem id="menu_event_configuration" name="Configuration" parent="event_main_menu"
+            sequence="100" groups="base.group_configuration"/>
         <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="menu_event_configuration" groups="base.group_no_one"/>
 
         <!-- EVENT.REGISTRATION ACTIONS -->
