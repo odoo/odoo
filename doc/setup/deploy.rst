@@ -77,7 +77,7 @@ create a new user (``odoo``) and set it as the database user.
   to be completely non-functional, the user needs to be created with
   ``no-createdb`` and the database must be owned by a different user.
 
-  .. warning:: the user must *not* be a superuser
+  .. warning:: the user *must not* be a superuser
 
 HTTPS
 =====
