@@ -42,7 +42,7 @@ class website_event(website_event):
     def _process_tickets_details(self, data):
         ticket_post = {}
         for key, value in data.iteritems():
-            if not key.startswith('nb_register') or not '-' in key:
+            if not key.startswith('nb_register') or '-' not in key:
                 continue
             items = key.split('-')
             if len(items) < 2:
@@ -61,7 +61,7 @@ class website_event(website_event):
         for registration in registrations:
             ticket = request.registry['event.event.ticket'].browse(cr, SUPERUSER_ID, int(registration['ticket_id']), context=context)
             cart_values = order.with_context(event_ticket_id=ticket.id)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[registration])
-            attendee_ids &= set(cart_values.get('attendees', []))
+            attendee_ids |= set(cart_values.get('attendee_ids', []))
 
         # free tickets -> order with amount = 0: auto-confirm, no checkout
         if not order.amount_total:

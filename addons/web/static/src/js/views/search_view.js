@@ -888,14 +888,15 @@ return Widget.extend({
     },
     expand: function () {
         var self = this;
-        this.current_result.expand(this.get_search_string()).then(function (results) {
+        var current_result = this.current_result;
+        current_result.expand(this.get_search_string()).then(function (results) {
             (results || [{label: '(no result)'}]).reverse().forEach(function (result) {
                 result.indent = true;
                 var $li = self.make_list_item(result);
-                self.current_result.$el.after($li);
+                current_result.$el.after($li);
             });
-            self.current_result.expanded = true;
-            self.current_result.$el.find('span.oe-expand').html('▼');
+            current_result.expanded = true;
+            current_result.$el.find('span.oe-expand').html('▼');
         });
     },
     fold: function () {

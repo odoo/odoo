@@ -130,8 +130,15 @@ def image_save_for_web(image, fp=None, format=None):
     if image.format == 'PNG':
         opt.update(optimize=True)
         if image.mode != 'P':
+            # Get the alpha band
+            alpha = image.split()[-1]
             # Floyd Steinberg dithering by default
             image = image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
+            # Set all pixel values below 128 to 255 and the rest to 0
+            mask = Image.eval(alpha, lambda a: 255 if a <=128 else 0)
+            # Paste the color of index 255 and use alpha as a mask
+            image.paste(255, mask)
+            opt.update(transparency=255)
     elif image.format == 'JPEG':
         opt.update(optimize=True, quality=80)
     if fp:

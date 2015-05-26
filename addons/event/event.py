@@ -250,7 +250,7 @@ class event_event(models.Model):
         return res
 
     @api.one
-    def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
+    def mail_attendees(self, template_id, force_send=True, filter_func=lambda self: True):
         for attendee in self.registration_ids.filtered(filter_func):
             self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
@@ -336,6 +336,7 @@ class event_registration(models.Model):
             body=_('New registration confirmed: %s.') % (self.name or ''),
             subtype="event.mt_event_registration")
         self.state = 'open'
+        self.env['event.mail'].run()
 
     @api.one
     def button_reg_close(self):

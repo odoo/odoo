@@ -22,14 +22,25 @@ var Filters = common.AbstractField.extend({
         var val = this.field.raw_value;
         var self = this;
         if (val) {
-            val = eval(val);
+                // This widget is temporary
+                // To keep only while the widget domain filter doesn't exist !
+
+                // Ugly hack to have (more) python domains which can be evaluated in JS
+                val = val.replace('(', '[').replace(')', ']').replace('False', 'false').replace('True', 'true')
+                try {
+                    val = eval(val);
+                }
+                catch(err) {
+                    // don't block UI if domain is not evaluable in JS
+                    console.debug(err.message);
+                    val = [['error','=', err.message]];
+                }
             if (val.length <= this.MAX_LEN) {
                 var i = 0;
                 while (i < val.length) {
                     var res = this.interpret(val, i);
                     i = res[0];
                     var $span = res[1];
-                    // var $span = '<h2>' + res[1] + '</h2>';
                     self.$el.append($span);
                 }
             }

@@ -1,7 +1,7 @@
 odoo.define('planner_project.planner', function (require) {
 "use strict";
 
-var planner = require('web.planner');
+var planner = require('web.planner.common');
 var core = require('web.core');
 var _t = core._t;
 

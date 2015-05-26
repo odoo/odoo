@@ -1853,10 +1853,11 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 
     changePartnerClickHandler: function() {
         var self = this;
-        self.$(".change_partner_container").find("input").attr("placeholder", self.st_line.partner_name);
-        self.$(".change_partner_container").show();
-        self.$(".partner_name").hide();
-        self.change_partner_field.$drop_down.trigger("click");
+        $.when(self.changePartner(false)).then(function(){
+            self.$(".change_partner_container").show();
+            self.$(".partner_name").hide();
+            self.change_partner_field.$drop_down.trigger("click");
+        })
     },
 
 

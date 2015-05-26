@@ -50,6 +50,7 @@ var PosBaseWidget = Widget.extend({
 
         if (typeof amount === 'number') {
             amount = round_di(amount,decimals).toFixed(decimals);
+                amount = openerp.instances[this.session.name].web.format_value(parseFloat(amount), { type : 'float' });
         }
 
         return amount;

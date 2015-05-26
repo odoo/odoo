@@ -2,11 +2,13 @@
 
 from openerp import api, fields, models, _
 from openerp.osv import expression
+from openerp.tools import float_is_zero
 from openerp.tools import float_compare, float_round
 from openerp.tools.misc import formatLang
 from openerp.exceptions import UserError, ValidationError
 
 import time
+import math
 
 class AccountCashboxLine(models.Model):
     """ Cash Box Details """

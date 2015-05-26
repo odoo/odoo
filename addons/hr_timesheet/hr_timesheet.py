@@ -159,12 +159,12 @@ class account_analytic_account(models.Model):
 
     @api.onchange('invoice_on_timesheets')
     def onchange_invoice_on_timesheets(self):
-        result = {}
+        result = {'value': {}}
         if not self.invoice_on_timesheets:
             return {'value': {'to_invoice': False}}
         try:
             to_invoice = self.env['ir.model.data'].xmlid_to_res_id('hr_timesheet_invoice.timesheet_invoice_factor1')
-            result['to_invoice'] = to_invoice
+            result['value']['to_invoice'] = to_invoice
         except ValueError:
             pass
         return result

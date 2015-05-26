@@ -22,6 +22,7 @@ var Input = Widget.extend( /** @lends instance.web.search.Input# */{
      */
     init: function (parent) {
         this._super(parent);
+        this.searchview = parent;
         this.load_attrs({});
     },
     /**
@@ -406,9 +407,17 @@ var ManyToOneField = CharField.extend({
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
         var context = pyeval.eval(
             'contexts', [this.searchview.dataset.get_context()]);
+        var args = this.attrs.domain;
+        if (typeof args === 'string') {
+            try {
+                args = pyeval.eval('domain', args);
+            } catch(e) {
+                args = [];
+            }
+        }
         return this.model.call('name_search', [], {
             name: needle,
-            args: (typeof this.attrs.domain === 'string') ? [] : this.attrs.domain,
+            args: args,
             limit: 8,
             context: context
         }).then(function (results) {
@@ -433,7 +442,8 @@ var ManyToOneField = CharField.extend({
             // to handle this as if it were a single value.
             value = value[0];
         }
-        return this.model.call('name_get', [value]).then(function (names) {
+        var context = pyeval.eval('contexts', [this.searchview.dataset.get_context()]);
+        return this.model.call('name_get', [value], {context: context}).then(function (names) {
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
         });

@@ -5,6 +5,7 @@ import math
 
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import UserError
 from openerp import api, fields, models, _

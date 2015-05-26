@@ -76,6 +76,7 @@ var localStorage = window.localStorage;
 var Tour = {
     tours: {},
     defaultDelay: 50,
+    autoRunning: true,
     retryRunningDelay: 1000,
     errorDelay: 5000,
     state: null,
@@ -378,6 +379,7 @@ var Tour = {
     },
     logError: function (step, message, all) {
         var state = Tour.getState();
+        console.log(state.tour.steps.slice());
         message += '\ntour: ' + state.id
             + (step ? '\nstep: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
             + (all ? '\nhref: ' + window.location.href : '' )
@@ -711,7 +713,11 @@ var Tour = {
 
 /////////////////////////////////////////////////
 
-$(document).ready(Tour.running);
+$(document).ready(function () {
+    if (Tour.autoRunning) {
+        Tour.running();
+    };
+});
 
 return Tour;
 

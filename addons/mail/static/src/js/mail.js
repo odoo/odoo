@@ -49,7 +49,7 @@ var TimelineRecordThread = form_common.AbstractField.extend ({
             'readonly': this.node.attrs.readonly || false,
             'compose_placeholder' : this.node.attrs.placeholder || false,
             'display_log_button' : this.options.display_log_button || true,
-            'show_compose_message': this.view.is_action_enabled('edit') || false,
+            'show_compose_message': true,
             'show_link': this.parent.is_action_enabled('edit') || true,
         }, this.node.params);
     },
@@ -1434,7 +1434,6 @@ var ComposeMessage = Attachment.extend ({
                 }
             }
         }
-
         this.$(".o_timeline_msg_attachment_list").html(this.display_attachments(this));
 
         var $input = this.$('input.oe_form_binary_file');

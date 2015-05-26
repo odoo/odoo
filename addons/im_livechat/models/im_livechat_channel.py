@@ -171,7 +171,7 @@ class ImLivechatChannel(models.Model):
             user_to_add.append((4, self.env.uid))
         # create the session, and add the link with the given channel
         session = self.env["im_chat.session"].sudo().create({'user_ids': user_to_add, 'channel_id': channel_id, 'anonymous_name': anonymous_name})
-        return session.sudo().session_info()
+        return session.sudo().with_context(im_livechat_operator_id=user_id).session_info()
 
     @api.model
     def get_channel_infos(self, channel_id):

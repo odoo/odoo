@@ -168,6 +168,7 @@ return Widget.extend({
           // rotateLabels: 40,
           showControls: (this.groupbys.length > 1)
         });
+        chart.yAxis.tickFormat(function(d) { return openerp.web.format_value(d, { type : 'float' });});
 
         chart(svg);
         this.to_remove = chart.update;

@@ -314,8 +314,8 @@ class account_analytic_line(osv.osv):
             res['value']['to_invoice'] = st or False
             if acc.state == 'pending':
                 res['warning'] = {
-                    'title': 'Warning',
-                    'message': 'The analytic account is in pending state.\nYou should not work on this account !'
+                    'title': _('Warning'),
+                    'message': _('The analytic account is in pending state.\nYou should not work on this account !')
                 }
             elif acc.state == 'close' or acc.state == 'cancelled':
                 raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))

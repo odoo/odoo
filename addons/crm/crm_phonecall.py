@@ -77,6 +77,7 @@ class crm_phonecall(osv.osv):
         'priority': '1',
         'state':  _get_default_state,
         'user_id': lambda self, cr, uid, ctx: uid,
+        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'active': 1
     }
 
