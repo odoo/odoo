@@ -127,7 +127,7 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree fonts="bold:message_unread==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Call for Tenders">
+            <tree decoration-bf="message_unread==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Call for Tenders">
                 <field name="message_unread" invisible="1"/>
                 <field name="name"/>
                 <field name="ordering_date"/>
@@ -227,7 +227,7 @@
             <field name="model">purchase.order.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order Lines" create="false" colors="blue:state == 'confirmed';gray:state == 'cancel'">
+                <tree string="Purchase Order Lines" create="false" decoration-info="state == 'confirmed'" decoration-muted="state == 'cancel'">
                     <field name="name"/>
                     <field name="partner_id" string="Supplier" />
                     <field name="product_id"/>

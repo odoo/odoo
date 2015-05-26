@@ -10,7 +10,7 @@
             <field name="name">procurement.order.tree</field>
             <field name="model">procurement.order</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
+                <tree string="Procurement Lines" decoration-danger="date_planned&lt;current_date and state == 'exception'" decoration-success="state=='confirmed'" decoration-muted="state in ['done','cancel']" decoration-info="state == 'ready'">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
@@ -242,4 +242,3 @@
         </record>
     </data>
 </openerp>
-

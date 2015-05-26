@@ -25,7 +25,7 @@
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" colors="blue:state=='draft'" fonts="bold: message_unread == True">
+                <tree string="Expenses" decoration-warning="state=='draft'" decoration-bf="message_unread == True">
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="date"/>
@@ -43,7 +43,7 @@
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'"  string="Expenses" editable="top">
+                <tree decoration-warning="state == 'draft'" decoration-muted="state == 'cancelled'" string="Expenses" editable="top">
                     <field name="employee_id"/>
                     <field name="date"/>
                     <field name="department_id" groups="hr.group_multi_departments"/>

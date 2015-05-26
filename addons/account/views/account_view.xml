@@ -392,7 +392,7 @@
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree colors="red:balance_end_real!=balance_end and state=='open';blue:state=='open' and (balance_end_real==balance_end);black:state=='confirm'" string="Statements">
+                <tree decoration-danger="balance_end_real!=balance_end and state=='open'" decoration-info="state=='open' and (balance_end_real==balance_end)" string="Statements">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
@@ -484,7 +484,7 @@
                     <notebook>
                         <page string="Transactions" name="statement_line_ids">
                             <field name="line_ids" context="{'date':date}">
-                                <tree editable="bottom" string="Statement lines" colors="grey:journal_entry_ids">
+                                <tree editable="bottom" string="Statement lines" decoration-muted="journal_entry_ids">
                                     <field name="sequence" readonly="1" invisible="1"/>
                                     <field name="journal_entry_ids" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
@@ -1181,7 +1181,7 @@
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state == 'posted'" string="Journal Entries">
+                <tree decoration-info="state == 'draft'" string="Journal Entries">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="partner_id"/>

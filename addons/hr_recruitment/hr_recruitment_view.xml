@@ -28,7 +28,7 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" fonts="bold:message_unread==True">
+            <tree string="Applicants" decoration-bf="message_unread==True">
                 <field name="message_unread" invisible="1"/>
                 <field name="last_stage_id" invisible="1"/>
                 <field name="create_date"/>

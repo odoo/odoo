@@ -50,7 +50,7 @@
             <field name="name">picking.wave.tree</field>
             <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
-                <tree string="Stock Picking Waves" colors="black:state in ('in_progress','done');grey: state=='cancel'">
+                <tree string="Stock Picking Waves" decoration-muted="state=='cancel'">
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="state"/>

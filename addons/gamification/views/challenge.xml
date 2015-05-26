@@ -6,7 +6,7 @@
             <field name="name">Challenges List</field>
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
-                <tree string="Goal definitions" colors="blue:state == 'draft';grey:state == 'done'">
+                <tree string="Goal definitions" decoration-info="state == 'draft'" decoration-muted="state == 'done'">
                     <field name="name"/>
                     <field name="period"/>
                     <field name="manager_id"/>

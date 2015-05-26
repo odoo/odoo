@@ -81,7 +81,7 @@
             <field name="name">stock.inventory.tree</field>
             <field name="model">stock.inventory</field>
             <field name="arch" type="xml">
-                <tree string="Lot Inventory" colors="grey:state == 'cancel'">
+                <tree string="Lot Inventory" decoration-muted="state == 'cancel'">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
@@ -124,7 +124,7 @@
                         <page string="Inventory Details" >
                             <button name="reset_real_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
-                                <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != theoretical_qty; red: theoretical_qty &lt; 0">
+                                <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
                                     <field name="product_id"  domain="[('type','=','product')]" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
                                     <field name="product_uom_id" groups="product.group_uom" string="UoM" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_locations" on_change="onchange_createline(location_id, product_id, product_uom_id, package_id, prod_lot_id, partner_id)"/>
@@ -145,7 +145,7 @@
                         </page>
                         <page string="Inventory Adjustments" attrs="{'invisible': [('state', '!=', 'done')]}">
                             <field name="move_ids">
-                                <tree colors="grey:scrapped == True" string="Stock Moves">
+                                <tree decoration-muted="scrapped == True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
@@ -281,7 +281,7 @@
             <field name="name">Stock Moves</field>
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state == 'cancel'" string="Moves" create="false">
+                <tree decoration-muted="state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
@@ -377,7 +377,7 @@
             <field name="model">stock.location</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
+                <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'">
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -666,7 +666,7 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Picking list">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and min_date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="location_dest_id"/>
                     <field name="partner_id"/>
@@ -1029,7 +1029,7 @@
             <field name="model">stock.move</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state == 'cancel';red:(state not in ('cancel','done')) and date > current_date" string="Moves">
+                <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves">
                     <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
@@ -1061,7 +1061,7 @@
             <field name="model">stock.move</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:scrapped == True" string="Stock Moves">
+                <tree decoration-muted="scrapped == True" string="Stock Moves">
                     <field name="product_id"/>
                     <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
@@ -1297,7 +1297,7 @@
             <field name="model">stock.move</field>
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state == 'cancel'" default_order='date_expected, picking_id, sequence' string="Moves">
+                <tree decoration-muted="state == 'cancel'" default_order='date_expected, picking_id, sequence' string="Moves">
                     <field name="date_expected" widget='date'/>
                     <field name="date" widget="date"/>
                     <field name="picking_id" string="Reference" invisible="1"/>

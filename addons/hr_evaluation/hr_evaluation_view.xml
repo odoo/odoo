@@ -208,8 +208,8 @@
             <field name="name">hr_evaluation.evaluation.tree</field>
             <field name="model">hr_evaluation.evaluation</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" string="Appraisal"
-                        fonts="bold: message_unread == True">
+                <tree decoration-info="state == 'draft'" decoration-muted="state in('done','cancel')" string="Appraisal"
+                       decoration-bf="message_unread == True">
                     <field name="employee_id"/>
                     <field name="plan_id"/>
                     <field name="date"/>
@@ -314,7 +314,7 @@
             <field name="name">hr_evaluation.interview.tree</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="arch" type="xml">
-                <tree string="Interview Appraisal" fonts="bold: message_unread == True">
+                <tree string="Interview Appraisal" decoration-bf="message_unread == True">
                     <field name="deadline" string="Deadline Date"/>
                     <field name="survey_id" domain="[('res_model','=','hr_evaluation')]"/>
                     <field name="user_id" string="Interviewer"/>

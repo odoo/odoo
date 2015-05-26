@@ -124,8 +124,8 @@
             <field name="name">hr.holidays.allocation.tree</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests"
-                        fonts="bold: message_unread == True">
+                <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
+                       decoration-bf="message_unread == True">
                     <field name="employee_id"/>
                     <field name="holiday_type"/>
                     <field name="category_id"/>
@@ -167,7 +167,7 @@
             <field name="model">hr.holidays</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Leaves Summary">
                     <field name="employee_id"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="1"/>
@@ -189,7 +189,7 @@
             <field name="model">hr.holidays</field>
             <field name="priority">21</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Employee's Leave">
+                <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Employee's Leave">
                     <field name="employee_id"/>
                     <field name="type"/>
                     <field name="name"/>
@@ -210,8 +210,8 @@
             <field name="name">hr.holidays.tree</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests"
-                        fonts="bold: message_unread == True">
+                <tree decoration-danger="state == 'refuse'" decoration-info="state == ' draft'" string="Leave Requests"
+                       decoration-bf="message_unread == True">
                     <field name="employee_id"/>
                     <field name="holiday_type" string="Mode" groups="base.group_no_one"/>
                     <field name="holiday_status_id"/>

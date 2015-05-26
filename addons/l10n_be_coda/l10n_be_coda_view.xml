@@ -38,7 +38,7 @@
             <field name="model">account.bank.statement.line</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Statement lines" create="0" colors="blue:not journal_entry_ids">
+                <tree editable="bottom" string="Statement lines" create="0" decoration-info="not journal_entry_ids">
                     <field name="sequence" readonly="1" invisible="1"/>
                     <field name="journal_entry_ids" invisible="1"/>
                     <field name="statement_id" readonly="1" />

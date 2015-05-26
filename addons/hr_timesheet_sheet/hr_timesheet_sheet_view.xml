@@ -60,7 +60,7 @@
             <field name="name">hr.timesheet.sheet.tree</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'done'" fonts="bold: message_unread == True" string="Timesheets">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'done'" decoration-bf="message_unread == True" string="Timesheets">
                     <field name="employee_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -174,7 +174,7 @@
                                 </group>
                             </group>
                             <field name="period_ids">
-                                <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
+                                <tree decoration-danger="total_difference&lt;0.1" decoration-info="total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
                                     <field name="total_attendance" widget="float_time" sum="Attendances"/>
                                     <field name="total_timesheet" widget="float_time" sum="Timesheets"/>
@@ -354,7 +354,7 @@
             <field name="name">hr.timesheet.day.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
             <field name="arch" type="xml">
-                <tree colors="blue:total_difference&lt;0.1;red:total_difference&gt;=0.1" string="Period">
+                <tree decoration-info="total_difference&lt;0.1" decoration-danger="total_difference&gt;=0.1" string="Period">
                     <field name="name"/>
                     <field name="total_attendance" widget="float_time" sum="Total Attendances" groups="base.group_hr_attendance"/>
                     <field name="total_timesheet" widget="float_time" sum="Total Timesheet"/>

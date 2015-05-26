@@ -122,7 +122,7 @@
             <field name="name">Orders</field>
             <field name="model">pos.order</field>
             <field name="arch" type="xml">
-                <tree string="POS Orders" colors="blue:state == 'draft';gray:state in ('done','cancel');black:state not in('done','cancel')">
+                <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')">
                     <field name="name"/>
                     <field name="pos_reference"/>
                     <field name="partner_id"/>
@@ -730,7 +730,7 @@
             <field name="name">pos.config.tree.view</field>
             <field name="model">pos.config</field>
             <field name="arch" type="xml">
-                <tree string="Point of Sale Configuration" colors="grey:state == 'inactive'">
+                <tree string="Point of Sale Configuration" decoration-muted="state == 'inactive'">
                     <field name="name" />
                     <field name="stock_location_id" groups="stock.group_locations"/>
                     <field name="state" />

@@ -121,7 +121,7 @@
             <field name="name">account.invoice.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
                     <field name="partner_id" groups="base.group_user" string="Customer"/>
                     <field name="date_invoice"/>
                     <field name="number"/>
@@ -183,7 +183,7 @@
             <field name="name">account.invoice.supplier.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
                     <field name="partner_id" groups="base.group_user" string="Supplier"/>
                     <field name="date_invoice" string="Bill Date"/>
                     <field name="number"/>

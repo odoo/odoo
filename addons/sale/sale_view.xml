@@ -91,7 +91,7 @@
             <field name="model">sale.order</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                <tree string="Sales Orders" decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('waiting_date','manual')" decoration-danger="state in ('invoice_except','shipping_except')">
                     <field name="message_unread" invisible="1"/>
                     <field name="name" string="Order Number"/>
                     <field name="date_order"/>
@@ -108,7 +108,7 @@
             <field name="model">sale.order</field>
             <field name="priority">4</field>
             <field name="arch" type="xml">
-                <tree string="Quotation" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                <tree string="Quotation" decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('waiting_date','manual')" decoration-danger="state in ('invoice_except','shipping_except')">
                     <field name="message_unread" invisible="1"/>
                     <field name="name" string="Quotation Number"/>
                     <field name="date_order"/>

@@ -107,7 +107,7 @@
         <field name="name">marketing.campaign.tree</field>
         <field name="model">marketing.campaign</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Campaigns">
+            <tree decoration-info="state == 'draft'" decoration-muted="state in ('done','cancelled')" string="Campaigns">
                 <field name="name"/>
                 <field name="object_id"/>
                 <field name="mode"/>
@@ -232,7 +232,7 @@
         <field name="name">marketing.campaign.segment.tree</field>
         <field name="model">marketing.campaign.segment</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Segments">
+            <tree decoration-info="state == 'draft'" decoration-muted="state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
                 <field name="campaign_id"/>
                 <field name="date_run"/>
@@ -372,7 +372,7 @@
         <field name="name">marketing.campaign.workitem.tree</field>
         <field name="model">marketing.campaign.workitem</field>
         <field name="arch" type="xml">
-            <tree colors="red:state == 'exception';black:state == 'todo';gray:state == 'cancelled'" string="Marketing Campaign Activities">
+            <tree decoration-danger="state == 'exception'" decoration-muted="state == 'cancelled'" string="Marketing Campaign Activities">
                 <field name="campaign_id"/>
                 <field name="segment_id"/>
                 <field name="activity_id"/>
