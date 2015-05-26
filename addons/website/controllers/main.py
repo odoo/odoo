@@ -379,7 +379,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         '/website/image/<model>/<id>/<field>',
         '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
         ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=None, max_height=None):
+    def website_image(self, model, id, field, max_width=None, max_height=None, db=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -406,6 +406,13 @@ class Website(openerp.addons.web.controllers.main.Home):
                              field, model, id, max_width, max_height)
             response = werkzeug.wrappers.Response()
             return self.placeholder(response)
+
+    @http.route([
+        '/website/image_kw/<model>/<id>/<field>',
+        '/website/image_kw/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
+        ], auth="public", website=True)
+    def website_image_kw(self, model, id, field, max_width=None, max_height=None, **kwargs):
+        return self.website_image(self, model, id, field, max_width, max_height)
 
     #------------------------------------------------------
     # Server actions
