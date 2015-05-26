@@ -334,9 +334,9 @@
 
                                     <div class="o_timeline_parent_message">
 
-                                        <div class="o_timeline_msg_icons" t-if="!options.readonly"> <!-- *** read *** -->
+                                        <span class="o_timeline_msg_icons" t-if="!options.readonly"> <!-- *** read *** -->
                                             <i t-if="options.show_read_unread_button" title="Done" class="oe_read fa fa-check"/>
-                                        </div> <!-- *** read *** -->
+                                        </span> <!-- *** read *** -->
 
                                         <span t-attf-class="o_timeline_parent_subject #{widget.model and widget.res_id 
                                                             and options.show_link ? 'o_timeline_small_subject' : ''}"> <!-- *** subject *** -->
@@ -387,14 +387,14 @@
                                             </a>
                                         </span> <!-- *** author *** -->
 
-                                        <span class="o_timeline_msg_icons" t-if="!options.readonly"> <!-- *** repy *** -->
-                                            <i t-if="options.show_reply_button" title="Reply" class="oe_reply fa fa-reply"/>
-                                        </span> <!-- *** reply *** -->
-
                                         <span class="o_timeline_parent_followers" t-if="widget.nb_followers > 0"> <!-- *** followers *** -->
                                             <span title="Number of followers"> <t t-raw="widget.nb_followers"/> </span>
                                             <i class="oe_follwrs fa fa-users"></i>
                                         </span> <!-- *** followers *** -->
+
+                                        <span class="o_timeline_msg_icons" t-if="!options.readonly"> <!-- *** repy *** -->
+                                            <i t-if="options.show_reply_button" title="Reply" class="oe_reply fa fa-reply"/>
+                                        </span> <!-- *** reply *** -->
                                     </div>
                                 </t>
                             </div>
