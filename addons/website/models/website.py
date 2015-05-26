@@ -77,8 +77,10 @@ def is_multilang_url(local_url, langs=None):
         path = url[0]
         query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        func = router.match(path, query_args=query_string)[0]
-        return func.routing.get('website', False) and func.routing.get('multilang', True)
+        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
+        func = router.match(path, method='POST', query_args=query_string)[0]
+        return (func.routing.get('website', False) and
+                func.routing.get('multilang', func.routing['type'] == 'http'))
     except Exception:
         return False
 
@@ -227,12 +229,12 @@ class website(osv.osv):
             return False
 
     @openerp.tools.ormcache(skiparg=3)
-    def _get_languages(self, cr, uid, id, context=None):
+    def _get_languages(self, cr, uid, id):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
 
     def get_languages(self, cr, uid, ids, context=None):
-        return self._get_languages(cr, uid, ids[0], context=context)
+        return self._get_languages(cr, uid, ids[0])
 
     def get_alternate_languages(self, cr, uid, ids, req=None, context=None):
         langs = []
@@ -535,7 +537,7 @@ class website(osv.osv):
 
         ids = Model.search(cr, uid,
                            [('id', '=', id)], context=context)
-        if not ids and 'website_published' in Model._all_columns:
+        if not ids and 'website_published' in Model._fields:
             ids = Model.search(cr, openerp.SUPERUSER_ID,
                                [('id', '=', id), ('website_published', '=', True)], context=context)
         if not ids:
@@ -602,7 +604,8 @@ class website(osv.osv):
     def image_url(self, cr, uid, record, field, size=None, context=None):
         """Returns a local url that points to the image field of a given browse record."""
         model = record._name
-        id = '%s_%s' % (record.id, hashlib.sha1(record.sudo().write_date).hexdigest()[0:7])
+        sudo_record = record.sudo()
+        id = '%s_%s' % (record.id, hashlib.sha1(sudo_record.write_date or sudo_record.create_date or '').hexdigest()[0:7])
         size = '' if size is None else '/%s' % size
         return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
@@ -684,12 +687,12 @@ class ir_attachment(osv.osv):
                 result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
-        return dict(
-            (attach['id'], self._compute_checksum(attach))
-            for attach in self.read(
-                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
-                context=context)
-        )
+        result = dict.fromkeys(ids, False)
+        attachments = self.read(cr, uid, ids, ['res_model'], context=context)
+        view_attachment_ids = [attachment['id'] for attachment in attachments if attachment['res_model'] == 'ir.ui.view']
+        for attach in self.read(cr, uid, view_attachment_ids, ['res_model', 'res_id', 'type', 'datas'], context=context):
+            result[attach['id']] = self._compute_checksum(attach)
+        return result
 
     def _compute_checksum(self, attachment_dict):
         if attachment_dict.get('res_model') == 'ir.ui.view'\
@@ -705,7 +708,7 @@ class ir_attachment(osv.osv):
             return result
 
         for record in self.browse(cr, uid, ids, context=context):
-            if not record.datas: continue
+            if record.res_model != 'ir.ui.view' or not record.datas: continue
             try:
                 result[record.id] = openerp.tools.image_resize_image_big(record.datas)
             except IOError: # apparently the error PIL.Image.open raises

@@ -66,7 +66,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email, include_lost=True, context=context))
             tomerge = list(set(tomerge))
 
-            if 'action' in fields:
+            if 'action' in fields and not res.get('action'):
                 res.update({'action' : partner_id and 'exist' or 'create'})
             if 'partner_id' in fields:
                 res.update({'partner_id' : partner_id})
@@ -112,10 +112,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         res = False
         lead_ids = vals.get('lead_ids', [])
         team_id = vals.get('section_id', False)
+        partner_id = vals.get('partner_id')
         data = self.browse(cr, uid, ids, context=context)[0]
         leads = lead.browse(cr, uid, lead_ids, context=context)
         for lead_id in leads:
-            partner_id = self._create_partner(cr, uid, lead_id.id, data.action, lead_id.partner_id.id, context=context)
+            partner_id = self._create_partner(cr, uid, lead_id.id, data.action, partner_id or lead_id.partner_id.id, context=context)
             res = lead.convert_opportunity(cr, uid, [lead_id.id], partner_id, [], False, context=context)
         user_ids = vals.get('user_ids', False)
         if context.get('no_force_assignation'):
@@ -138,18 +139,26 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         w = self.browse(cr, uid, ids, context=context)[0]
         opp_ids = [o.id for o in w.opportunity_ids]
+        vals = {
+            'section_id': w.section_id.id,
+        }
+        if w.partner_id:
+            vals['partner_id'] = w.partner_id.id
         if w.name == 'merge':
             lead_id = lead_obj.merge_opportunity(cr, uid, opp_ids, context=context)
             lead_ids = [lead_id]
             lead = lead_obj.read(cr, uid, lead_id, ['type', 'user_id'], context=context)
             if lead['type'] == "lead":
                 context = dict(context, active_ids=lead_ids)
-                self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids, 'user_ids': [w.user_id.id], 'section_id': w.section_id.id}, context=context)
+                vals.update({'lead_ids': lead_ids, 'user_ids': [w.user_id.id]})
+                self._convert_opportunity(cr, uid, ids, vals, context=context)
             elif not context.get('no_force_assignation') or not lead['user_id']:
-                lead_obj.write(cr, uid, lead_id, {'user_id': w.user_id.id, 'section_id': w.section_id.id}, context=context)
+                vals.update({'user_id': w.user_id.id})
+                lead_obj.write(cr, uid, lead_id, vals, context=context)
         else:
             lead_ids = context.get('active_ids', [])
-            self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids, 'user_ids': [w.user_id.id], 'section_id': w.section_id.id}, context=context)
+            vals.update({'lead_ids': lead_ids, 'user_ids': [w.user_id.id]})
+            self._convert_opportunity(cr, uid, ids, vals, context=context)
 
         return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
 

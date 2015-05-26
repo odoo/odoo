@@ -15,6 +15,9 @@ def setup(app):
     app.add_node(exercise, html=(
         lambda self, node: self.visit_admonition(node, 'exercise'),
         lambda self, node: self.depart_admonition(node)
+    ), latex=(
+        lambda self, node: self.visit_admonition(node),
+        lambda self, node: self.depart_admonition(node)
     ))
 
 from docutils import nodes

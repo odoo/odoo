@@ -43,6 +43,5 @@ document and Wiki based Hidden.
     'demo': ['knowledge_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/1_config_knowledge.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

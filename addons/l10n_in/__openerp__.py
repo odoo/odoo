@@ -51,6 +51,5 @@ Sheet, now only Vertical format has been permitted Which is Supported By OpenERP
     ],
     'auto_install': False,
     'installable': True,
-    'images': ['images/config_chart_l10n_in.jpeg','images/l10n_in_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -727,8 +727,8 @@ form: module.record_id""" % (xml_id,)
             f_ref = field.get("ref",'').encode('utf-8')
             f_search = field.get("search",'').encode('utf-8')
             f_model = field.get("model",'').encode('utf-8')
-            if not f_model and model._all_columns.get(f_name):
-                f_model = model._all_columns[f_name].column._obj
+            if not f_model and f_name in model._fields:
+                f_model = model._fields[f_name].comodel_name
             f_use = field.get("use",'').encode('utf-8') or 'id'
             f_val = False
 
@@ -739,26 +739,24 @@ form: module.record_id""" % (xml_id,)
                 # browse the objects searched
                 s = f_obj.browse(cr, self.uid, f_obj.search(cr, self.uid, q))
                 # column definitions of the "local" object
-                _cols = self.pool[rec_model]._all_columns
+                _fields = self.pool[rec_model]._fields
                 # if the current field is many2many
-                if (f_name in _cols) and _cols[f_name].column._type=='many2many':
+                if (f_name in _fields) and _fields[f_name].type == 'many2many':
                     f_val = [(6, 0, map(lambda x: x[f_use], s))]
                 elif len(s):
                     # otherwise (we are probably in a many2one field),
                     # take the first element of the search
                     f_val = s[0][f_use]
             elif f_ref:
-                if f_name in model._all_columns \
-                          and model._all_columns[f_name].column._type == 'reference':
+                if f_name in model._fields and model._fields[f_name].type == 'reference':
                     val = self.model_id_get(cr, f_ref)
                     f_val = val[0] + ',' + str(val[1])
                 else:
                     f_val = self.id_get(cr, f_ref)
             else:
                 f_val = _eval_xml(self,field, self.pool, cr, self.uid, self.idref)
-                if f_name in model._all_columns:
-                    import openerp.osv as osv
-                    if isinstance(model._all_columns[f_name].column, osv.fields.integer):
+                if f_name in model._fields:
+                    if model._fields[f_name].type == 'integer':
                         f_val = int(f_val)
             res[f_name] = f_val
 
@@ -800,8 +798,10 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(el.get('priority', "16"), name='priority'))
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
-        if el.get('active') in ("True", "False") and mode != "update":
-            record.append(Field(name='active', eval=el.get('active')))
+        if el.get('active') in ("True", "False"):
+            view_id = self.id_get(cr, tpl_id, raise_if_not_found=False)
+            if mode != "update" or not view_id:
+                record.append(Field(name='active', eval=el.get('active')))
         if el.get('customize_show') in ("True", "False"):
             record.append(Field(name='customize_show', eval=el.get('customize_show')))
         groups = el.attrib.pop('groups', None)
@@ -826,19 +826,21 @@ form: module.record_id""" % (xml_id,)
 
         return self._tag_record(cr, record, data_node)
 
-    def id_get(self, cr, id_str):
+    def id_get(self, cr, id_str, raise_if_not_found=True):
         if id_str in self.idref:
             return self.idref[id_str]
-        res = self.model_id_get(cr, id_str)
+        res = self.model_id_get(cr, id_str, raise_if_not_found)
         if res and len(res)>1: res = res[1]
         return res
 
-    def model_id_get(self, cr, id_str):
+    def model_id_get(self, cr, id_str, raise_if_not_found=True):
         model_data_obj = self.pool['ir.model.data']
         mod = self.module
-        if '.' in id_str:
-            mod,id_str = id_str.split('.')
-        return model_data_obj.get_object_reference(cr, self.uid, mod, id_str)
+        if '.' not in id_str:
+            id_str = '%s.%s' % (mod, id_str)
+        return model_data_obj.xmlid_to_res_model_res_id(
+            cr, self.uid, id_str,
+            raise_if_not_found=raise_if_not_found)
 
     def parse(self, de, mode=None):
         if de.tag != 'openerp':

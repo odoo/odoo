@@ -122,6 +122,7 @@
 
 <template id="group_message">
     <t t-call="website.layout">
+        <t t-set="additional_title"><t t-esc="message.description"/></t>
         <section class="container">
             <div class="row mt8">
                 <ol class="breadcrumb pull-left">
@@ -211,7 +212,7 @@
                                                     t-att-title="attachment.name"/>
                                             </t>
                                             <t t-if="attachment.file_type != 'webimage'">
-                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
+                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type or 'disk') + '.png'"
                                                     class='oe_attachment_webimage'
                                                     t-att-title="attachment.name"/>
                                             </t>

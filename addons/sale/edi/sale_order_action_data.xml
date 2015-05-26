@@ -39,7 +39,7 @@
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
        &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />
        &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />
-       &nbsp;&nbsp;Order date: ${object.date_order}<br />
+       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})} <br />
        % if object.origin:
        &nbsp;&nbsp;Order reference: ${object.origin}<br />
        % endif
@@ -55,7 +55,7 @@
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
         <a style="margin-left: 120px;" href="${object.paypal_url}">
-            <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+            <img class="oe_edi_paypal_button" src="/sale/static/img/btn_paynowcc_lg.gif"/>
         </a>
     % endif
 

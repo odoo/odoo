@@ -59,6 +59,7 @@ var localStorage = window.localStorage;
 var Tour = {
     tours: {},
     defaultDelay: 50,
+    autoRunning: true,
     retryRunningDelay: 1000,
     errorDelay: 5000,
     state: null,
@@ -241,10 +242,18 @@ var Tour = {
     },
     repositionPopover: function() {
         var popover = Tour.$element.data("bs.popover");
-        var $tip = Tour.$element.data("bs.popover").tip();
+        var $tip = popover.tip();
 
         if (popover.options.orphan) {
             return $tip.css("top", $(window).outerHeight() / 2 - $tip.outerHeight() / 2);
+        }
+
+        if (Tour.$element.parents("div").filter(function(){ return getComputedStyle(this).position === 'fixed'; }).length) {
+            var pos = popover.getPosition();
+            var top = pos.top;
+            if (popover.options.placement === "top") top -= $tip.height();
+            if (popover.options.placement === "bottom") top += pos.height;
+            $tip.css({'top': top+'px'});
         }
 
         var offsetBottom, offsetHeight, offsetRight, offsetWidth, originalLeft, originalTop, tipOffset;
@@ -270,10 +279,10 @@ var Tour = {
         $tip.offset(tipOffset);
         if (popover.options.placement === "bottom" || popover.options.placement === "top") {
                 var left = Tour.$element.offset().left + Tour.$element.outerWidth()/2 - tipOffset.left;
-                $tip.find(".arrow").css("left", left ? left + "px" : "");
+                popover.arrow().css("left", left ? left + "px" : "");
         } else if (popover.options.placement !== "auto") {
                 var top = Tour.$element.offset().top + Tour.$element.outerHeight()/2 - tipOffset.top;
-                $tip.find(".arrow").css("top", top ? top + "px" : "");
+                popover.arrow().css("top", top ? top + "px" : "");
         }
     },
     _load_template: false,
@@ -331,6 +340,7 @@ var Tour = {
     },
     error: function (step, message) {
         var state = Tour.getState();
+        console.log(state.tour.steps.slice());
         message += '\n tour: ' + state.id
             + (step ? '\n step: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
             + '\n href: ' + window.location.href
@@ -560,6 +570,10 @@ openerp.Tour = Tour;
 
 /////////////////////////////////////////////////
 
-$(document).ready(Tour.running);
+$(document).ready(function () {
+    if (Tour.autoRunning) {
+        Tour.running();
+    };
+});
 
 }());

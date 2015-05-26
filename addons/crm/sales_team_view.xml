@@ -72,7 +72,7 @@
 
        <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
             <field name="name">Opportunities Analysis</field>
-            <field name="res_model">crm.lead.report</field>
+            <field name="res_model">crm.opportunity.report</field>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm.view_report_crm_opportunity_graph"/>
             <field name="domain">[('type','=', 'opportunity'), ('section_id', '=', active_id)]</field>

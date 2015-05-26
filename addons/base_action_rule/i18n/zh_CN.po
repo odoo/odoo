@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-05-15 03:25+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:55+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2015-05-16 05:44+0000\n"
+"X-Generator: Launchpad (build 17493)\n"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -33,6 +33,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击设置一个新的自动动作规则. \n"
+"              </p><p>\n"
+"                使用自动操作自动触发动作在各类画面中\n"
+"                . 例如: 一个线索被某特定用户创建可以自动设置到到某个销售组中,\n"
+"                或者一个商机在等待14天之后自动触发一个提醒邮件.\n"
+"               \n"
+"              </p>\n"
+"            "
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -70,17 +79,17 @@ msgstr "自动动作"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Timed Condition"
-msgstr ""
+msgstr "根据时间条件"
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "更新前过滤器"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -101,12 +110,12 @@ msgstr "创建时间"
 #: field:base.action.rule,create_uid:0
 #: field:base.action.rule.lead.test,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建者"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建于"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -163,6 +172,7 @@ msgid ""
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
 msgstr ""
+"到您的\"相关模型\"页面，在\"查找\"视图 设置过滤条件 (例如:线索/商机 使用 过滤条件：创建日期\"等于\"2012-01-01)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -180,13 +190,13 @@ msgstr ""
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr ""
+msgstr "在执行规则前，此条件必须被满足"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
 "If present, this condition must be satisfied before the update of the record."
-msgstr ""
+msgstr "在更新记录前此条件必须被满足"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -196,7 +206,7 @@ msgstr "处理中"
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid "In order to create a new filter:"
-msgstr ""
+msgstr "为了创建一个新的过滤条件："
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -205,11 +215,12 @@ msgid ""
 "the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
+"在同一个\"搜索\"视图，选择菜单中的\"保存现有的过滤条件\"，输入名称（例如：创建于01/01/2012)并且勾选\"共享给其他用户\"的选项。"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "最近动作"
 
 #. module: base_action_rule
 #: field:base.action.rule,last_run:0
@@ -236,7 +247,7 @@ msgstr "分"
 #. module: base_action_rule
 #: field:base.action.rule,model:0
 msgid "Model"
-msgstr ""
+msgstr "模型"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -251,17 +262,17 @@ msgstr "新建"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation"
-msgstr ""
+msgstr "创建时"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation & Update"
-msgstr ""
+msgstr "创建或更新时"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Update"
-msgstr ""
+msgstr "更新时"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,partner_id:0
@@ -276,7 +287,7 @@ msgstr "待处理"
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "相关的文档模型"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,user_id:0
@@ -303,12 +314,12 @@ msgstr "序号"
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 #: field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
-msgstr ""
+msgstr "服务器动作"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid "Server actions to run"
-msgstr ""
+msgstr "要运行的服务器动作"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
@@ -323,12 +334,12 @@ msgstr "状态"
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0
 msgid "Subject"
-msgstr ""
+msgstr "主题"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "过滤器必须是本页存在的。"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_id:0
@@ -345,7 +356,7 @@ msgstr ""
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
+msgstr "当需要基于时间条件做计算时，可能使用一个基于工作日的日历去计算是比较合适的."
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
@@ -362,4 +373,4 @@ msgstr ""
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "如果不选中，此规则被隐藏且不被执行"

@@ -7,13 +7,13 @@
             <div class="oe_structure"/>
             <div class="row">
                 <div class="col-xs-6">
-                    <p t-if="o.partner_shipping_id == o.partner_invoice_id">Invoice and shipping address:</p>
-                    <p t-if="o.partner_shipping_id != o.partner_invoice_id">Invoice address: </p>
+                    <strong t-if="o.partner_shipping_id == o.partner_invoice_id">Invoice and shipping address:</strong>
+                    <strong t-if="o.partner_shipping_id != o.partner_invoice_id">Invoice address:</strong>
                     <div t-field="o.partner_invoice_id" 
                         t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                     <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
-                    <div t-if="o.partner_shipping_id != o.partner_invoice_id">
-                        <p>Shipping address :</p>
+                    <div t-if="o.partner_shipping_id != o.partner_invoice_id" class="mt8">
+                        <strong>Shipping address:</strong>
                         <div t-field="o.partner_shipping_id" 
                             t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                         <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
@@ -117,9 +117,9 @@
             </div>
 
             <p t-field="o.note" />
-            <p t-if="o.payment_term">
+            <p t-if="o.payment_term.note">
                 <strong>Payment Term:</strong>
-                <span t-field="o.payment_term"/>
+                <span t-field="o.payment_term.note"/>
             </p>
             <div class="oe_structure"/>
         </div>

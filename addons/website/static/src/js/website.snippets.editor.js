@@ -155,7 +155,7 @@
             website.snippet.stop_animation();
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.start_animation();
+                website.snippet.start_animation(true);
                 $("#wrapwrap *").off('mousedown mouseup click');
             });
 
@@ -972,7 +972,7 @@
                 self.$target.carousel(+$(this).data('slide-to')); });
 
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, .content.row, [data-slide]').attr('contentEditable', 'true');
+            this.$target.find('.oe_structure, .content.row, [data-slide], .row > blockquote').attr('contentEditable', 'true');
         },
         clean_for_save: function () {
             this._super();

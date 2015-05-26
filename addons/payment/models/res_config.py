@@ -19,4 +19,7 @@ class AccountPaymentConfig(osv.TransientModel):
         'module_payment_buckaroo': fields.boolean(
             'Manage Payments Using Buckaroo',
             help='-It installs the module payment_buckaroo.'),
+        'module_payment_authorize': fields.dummy(
+            'Manage Payments Using Authorize.Net',
+            help='-It installs the module payment_authorize.'),
     }

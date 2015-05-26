@@ -22,7 +22,7 @@
 {
     "name" : "Romania - Accounting",
     "version" : "1.0",
-    "author" : "TOTAL PC SYSTEMS",
+    "author" : "ERPsystems Solutions",
     "website": "http://www.erpsystems.ro",
     "category" : "Localization/Account Charts",
     "depends" : ['account','account_chart','base_vat'],

@@ -471,12 +471,14 @@ function openerp_picking_widgets(instance){
             return new instance.web.Model('stock.picking.type').get_func('search_read')([],[])
                 .then(function(types){
                     self.picking_types = types;
+                    type_ids = [];
                     for(var i = 0; i < types.length; i++){
                         self.pickings_by_type[types[i].id] = [];
+                        type_ids.push(types[i].id);
                     }
                     self.pickings_by_type[0] = [];
 
-                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']]], [] ], {context: new instance.web.CompoundContext()});
+                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']], ['picking_type_id', 'in', type_ids]], [] ], {context: new instance.web.CompoundContext()});
 
                 }).then(function(pickings){
                     self.pickings = pickings;
@@ -484,7 +486,7 @@ function openerp_picking_widgets(instance){
                         var picking = pickings[i];
                         self.pickings_by_type[picking.picking_type_id[0]].push(picking);
                         self.pickings_by_id[picking.id] = picking;
-                        self.picking_search_string += '' + picking.id + ':' + picking.name.toUpperCase() + '\n'
+                        self.picking_search_string += '' + picking.id + ':' + (picking.name ? picking.name.toUpperCase(): '') + '\n';
                     }
 
                 });
@@ -878,7 +880,8 @@ function openerp_picking_widgets(instance){
             if (pack_op_ids.length !== 0){
                 return new instance.web.Model('stock.picking')
                     .call('action_pack',[[[self.picking.id]], pack_op_ids])
-                    .then(function(){
+                    .then(function(pack){
+                        //TODO: the functionality using current_package_id in context is not needed anymore
                         instance.session.user_context.current_package_id = false;
                         return self.refresh_ui(self.picking.id);
                     });

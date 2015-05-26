@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2014-10-21 10:33+0000\n"
+"Last-Translator: Miku Laitinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:28+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-02-19 05:42+0000\n"
+"X-Generator: Launchpad (build 17341)\n"
 
 #. module: project
 #: field:res.partner,task_count:0
@@ -57,6 +57,19 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                  Klikkaa aloittaaksesi uuden projektin.\n"
+"                </p><p>\n"
+"                  Projekteilla voit organisoida itsesi tai organisaatiosi "
+"työntekoa. Voit suunnitella tehtäviä, käsitellä ongelmatapauksia ja seurata "
+"ajankäyttöä. Voit luoda sisäisiä projekteja (esim. tutkimus & tuotekehitys, "
+"myyntiprosessien parantaminen), yksityisiä projekteja (henkilökohtainen "
+"tehtävälista) tai asiakasprojekteja.\n"
+"                </p><p>\n"
+"                  Organisaatiosi sisäisten projektien lisäksi voit kutsua "
+"asiakkaitasi projektien osapuoliksi.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_category_action
@@ -415,6 +428,7 @@ msgid "Cumulative Flow"
 msgstr "Kumulatiivinen virtaus"
 
 #. module: project
+#: view:project.project:project.edit_project
 #: field:project.task,partner_id:0
 msgid "Customer"
 msgstr "Asiakas"
@@ -716,6 +730,17 @@ msgid ""
 "portal\n"
 "   is activated, portal users see the followed tasks or issues."
 msgstr ""
+"Määritä tähän projektiin liittyvien tehtävien ja tapausten näkyvyys:\n"
+"- Julkinen projekti: kaikki näkevät kaiken. Jos portaali on käytössä, "
+"portaalikäyttäjät näkevät kaikki tehtävät ja tapaukset. Jos anonyymi "
+"portaali on käytössä, vierailijat näkevät kaikki tehtävät ja tapaukset.\n"
+"- Asiakasprojekti (vain jos portaali on käytössä): työntekijät näkevät "
+"kaiken. Jos portaali on käytössä, portaalikäyttäjät näkevät itsensä tai "
+"samassa yrityksessä työskentelevien seuraamat tehtävät ja tapaukset.\n"
+"- Sisäinen projekti: kaikki työntekijät näkevät tehtävät ja tapaukset\n"
+"- Yksityinen projekti: vain nimetyt työntekijät näkevät tehtävät ja "
+"tapaukset. Jos portaali on käytössä, nimetyt portaalikäyttäjät voivat nähdä "
+"tehtävät ja tapaukset."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -809,6 +834,12 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: code:addons/project/project.py:201
+#, python-format
+msgid "Internal project: all employees can access"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:171
 #, python-format
 msgid "Invalid Action!"
@@ -884,7 +915,7 @@ msgstr ""
 #: help:project.config.settings,module_pad:0
 msgid ""
 "Lets the company customize which Pad installation should be used to link to "
-"new pads (for example: http://ietherpad.com/).\n"
+"new pads (for example: http://etherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
 
@@ -1135,6 +1166,12 @@ msgid "Privacy / Visibility"
 msgstr "Näkyvyys"
 
 #. module: project
+#: code:addons/project/project.py:202
+#, python-format
+msgid "Private project: followers Only"
+msgstr ""
+
+#. module: project
 #: field:project.project,progress_rate:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
@@ -1256,6 +1293,12 @@ msgstr ""
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:200
+#, python-format
+msgid "Public project"
 msgstr ""
 
 #. module: project
@@ -1385,6 +1428,11 @@ msgstr "Vaiheet"
 #: view:project.task.type:project.task_type_search
 msgid "Stages common to all projects"
 msgstr "Yhteiset vaiheet kaikille projekteille"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Start Date"
+msgstr "Alkupäivä"
 
 #. module: project
 #: field:project.task,date_start:0
@@ -1763,6 +1811,11 @@ msgid "Usability"
 msgstr ""
 
 #. module: project
+#: view:project.project:project.edit_project
+msgid "Use Tasks"
+msgstr ""
+
+#. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
 msgstr "Käytä yhdistettyä yhteistyötaulua tehtäville"
@@ -1863,6 +1916,12 @@ msgstr "_Delegoi"
 #. module: project
 #: view:project.task:project.view_task_kanban
 msgid "oe_kanban_text_red"
+msgstr ""
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "or"
 msgstr ""
 
 #. module: project

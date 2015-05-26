@@ -155,7 +155,7 @@
                     <field name="name" string="Call for Bids"/>
                     <field name="exclusive" />
                     <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Bids"/>
-                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Bids in negociation"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Bids in negotiation"/>
                     <filter icon="terp-dialog-close" string="Closed Bids" domain="[('state','=','open')]" help="Call for Bids where bids are closed"/>
                     <separator/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
@@ -164,7 +164,7 @@
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Start Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="Ordering Date" icon="terp-go-month" domain="[]" context="{'group_by':'ordering_date'}"/>
                         <filter string="End Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>

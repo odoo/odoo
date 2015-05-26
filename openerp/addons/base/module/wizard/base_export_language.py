@@ -20,6 +20,7 @@
 ##############################################################################
 
 import base64
+import contextlib
 import cStringIO
 
 from openerp import tools
@@ -51,29 +52,29 @@ class base_language_export(osv.osv_memory):
     }
     _defaults = { 
         'state': 'choose',
-        'name': 'lang.tar.gz',
         'lang': NEW_LANG_KEY,
         'format': 'csv',
     }
 
     def act_getfile(self, cr, uid, ids, context=None):
-        this = self.browse(cr, uid, ids)[0]
+        this = self.browse(cr, uid, ids, context=context)[0]
         lang = this.lang if this.lang != NEW_LANG_KEY else False
-        mods = map(lambda m: m.name, this.modules) or ['all']
-        mods.sort()
-        buf = cStringIO.StringIO()
-        tools.trans_export(lang, mods, buf, this.format, cr)
+        mods = sorted(map(lambda m: m.name, this.modules)) or ['all']
+
+        with contextlib.closing(cStringIO.StringIO()) as buf:
+            tools.trans_export(lang, mods, buf, this.format, cr)
+            out = base64.encodestring(buf.getvalue())
+
         filename = 'new'
         if lang:
             filename = get_iso_codes(lang)
         elif len(mods) == 1:
             filename = mods[0]
-        this.name = "%s.%s" % (filename, this.format)
-        out = base64.encodestring(buf.getvalue())
-        buf.close()
-        self.write(cr, uid, ids, {'state': 'get',
-                                  'data': out,
-                                  'name':this.name}, context=context)
+        extension = this.format
+        if not lang and extension == 'po':
+            extension = 'pot'
+        name = "%s.%s" % (filename, extension)
+        this.write({ 'state': 'get', 'data': out, 'name': name })
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'base.language.export',

@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Lato);
+@import url(https://fonts.googleapis.com/css?family=Lato);
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 html {
   font-family: sans-serif;
@@ -4076,7 +4076,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-default {
-  background-color: #ffffff;
+  background-color: white;
   border-color: 0;
 }
 .navbar-default .navbar-brand {
@@ -5902,8 +5902,10 @@ button.close {
 .panel-body:after,
 .modal-footer:before,
 .modal-footer:after,
-.document-super:before,
-.document-super:after,
+.document-super:not(.stripe):before,
+.document-super:not(.stripe):after,
+.document-super.stripe:before,
+.document-super.stripe:after,
 .document:before,
 .document:after {
   content: " ";
@@ -5924,7 +5926,8 @@ button.close {
 .pager:after,
 .panel-body:after,
 .modal-footer:after,
-.document-super:after,
+.document-super:not(.stripe):after,
+.document-super.stripe:after,
 .document:after {
   clear: both;
 }
@@ -6181,35 +6184,53 @@ body {
   overflow: auto;
   position: relative;
 }
-.document-super {
+.document-super:not(.stripe) {
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
 }
 @media (min-width: 768px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 750px;
   }
 }
 @media (min-width: 992px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 970px;
   }
 }
 @media (min-width: 1200px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 1170px;
   }
 }
-.document-super > .navbar-header,
-.document-super > .navbar-collapse {
+.document-super:not(.stripe) > .navbar-header,
+.document-super:not(.stripe) > .navbar-collapse {
   margin-right: -15px;
   margin-left: -15px;
 }
 @media (min-width: 768px) {
-  .document-super > .navbar-header,
-  .document-super > .navbar-collapse {
+  .document-super:not(.stripe) > .navbar-header,
+  .document-super:not(.stripe) > .navbar-collapse {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+.document-super.stripe {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.document-super.stripe > .navbar-header,
+.document-super.stripe > .navbar-collapse {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+@media (min-width: 768px) {
+  .document-super.stripe > .navbar-header,
+  .document-super.stripe > .navbar-collapse {
     margin-right: 0;
     margin-left: 0;
   }
@@ -6226,6 +6247,18 @@ body {
 }
 @media (min-width: 992px) {
   .documentwrapper {
+    float: left;
+    width: 100%;
+  }
+}
+.with-sidebar .documentwrapper {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 992px) {
+  .with-sidebar .documentwrapper {
     float: left;
     width: 75%;
   }
@@ -6296,7 +6329,7 @@ body {
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
 }
-.docs-nav .navbar-nav > li > a:after {
+.docs-nav .navbar-nav > li.dropdown > a:after {
   content: " ";
   display: inline-block;
   width: 0;
@@ -6307,7 +6340,7 @@ body {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
-.docs-nav .navbar-nav > li .dropdown-menu > li.current > a.current {
+.docs-nav .navbar-nav > li.dropdown .dropdown-menu > li.current > a.current {
   background-color: #a24689;
   color: white;
 }
@@ -6576,6 +6609,9 @@ body {
 dt:hover > a > .viewcode-link {
   display: inline;
 }
+blockquote.highlights {
+  border: none;
+}
 div.section > h1 {
   padding-bottom: 9px;
   margin: 40px 0 20px;
@@ -6589,6 +6625,9 @@ div.section > h2 {
   font-size: 36px;
   padding-top: 20px;
   margin-top: 0;
+}
+.body {
+  position: relative;
 }
 .body > .section > .section {
   margin-bottom: 60px;
@@ -6642,47 +6681,42 @@ div.section > h2 {
 .admonition.exercise > .admonition-title {
   color: #555555;
 }
-/*
- * Code snippets
- *
- * Generated via Pygments
- */
+.highlight {
+  position: relative;
+  color: #333333;
+  background: #eeeeee none !important;
+  border: 1px solid #777777;
+  border-radius: 4px 0 4px 4px;
+  margin: 10px 0;
+}
 .highlight pre {
-  padding: 4px;
+  padding: 0;
+  margin: 10px;
   font-size: 75%;
   word-break: normal;
   word-wrap: normal;
+  background: none;
+  border: none;
 }
-/*
- * ZeroClipboard styles
- */
-.zero-clipboard {
-  position: relative;
-  display: none;
-}
-@media (min-width: 768px) {
-  .zero-clipboard {
-    display: block;
-  }
-}
-.btn-clipboard {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 10;
+.highlight:hover .btn-show-setup {
   display: block;
+}
+.highlight .btn-show-setup {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  z-index: 3;
   padding: 5px 8px;
   font-size: 12px;
-  color: #777;
+  color: #777777;
   cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #e1e1e8;
-  border-radius: 0 4px 0 4px;
+  border: 1px solid #777777;
+  border-radius: 4px 4px 0 0;
+  background: inherit;
 }
-.btn-clipboard-hover {
-  color: #fff;
-  background-color: #a24689;
-  border-color: #a24689;
+.highlight .btn-show-setup:focus {
+  outline: none;
 }
 img.align-center {
   display: block;
@@ -6708,60 +6742,548 @@ td.field-body > ul {
 .descclassname {
   opacity: 0.5;
 }
+.index-tree ul,
+.index-tree li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.index-tree > ul > li {
+  margin-bottom: 0.5em;
+}
+.index-tree > ul > li > a {
+  font-family: Lato, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+.index-tree > ul > li > a small,
+.index-tree > ul > li > a .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.index-tree > ul > li > a small,
+.index-tree > ul > li > a .small {
+  font-size: 65%;
+}
+.index-tree > ul > li > ul {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.index-tree > ul > li > ul > li {
+  width: 50%;
+}
+.index-tree > ul > li > ul > li a {
+  font-family: Lato, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+.index-tree > ul > li > ul > li a small,
+.index-tree > ul > li > ul > li a .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.index-tree > ul > li > ul > li a small,
+.index-tree > ul > li > ul > li a .small {
+  font-size: 75%;
+}
+.index-tree > ul > li a {
+  display: block;
+  color: #a24689 !important;
+  padding: 0.3em 0;
+  margin: 3px !important;
+}
+.index-tree > ul > li a:hover {
+  background-color: #eeeeee;
+}
 .stripe .section {
   margin-bottom: 2em;
 }
 @media (min-width: 992px) {
-  .stripe .section > *,
-  .stripe .section > .force-left {
+  .stripe .section:not(.force-right) > *,
+  .stripe .section:not(.force-right) > .force-left {
     width: 49%;
     float: left;
     clear: left;
   }
-  .stripe .section > .force-right,
-  .stripe .section > [class*=highlight] {
+  .stripe .section:not(.force-right) > .force-right {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+  .stripe .section:not(.force-right) > .force-right,
+  .stripe .section:not(.force-right) > [class*=highlight-] {
     float: none;
     clear: none;
+    margin-left: 50%;
+    width: 50%;
+    color: #eeeeee;
+  }
+  .stripe .section:not(.force-right) > .force-right legend,
+  .stripe .section:not(.force-right) > [class*=highlight-] legend {
+    color: inherit;
+  }
+  .stripe .section:not(.force-right) > .force-right input,
+  .stripe .section:not(.force-right) > [class*=highlight-] input {
+    color: inherit;
+    background-color: #555555;
+  }
+  .stripe .section:not(.force-right) > .force-right a,
+  .stripe .section:not(.force-right) > [class*=highlight-] a {
+    color: #d9a8cc;
+  }
+  .stripe .section:not(.force-right) > .force-right code,
+  .stripe .section:not(.force-right) > [class*=highlight-] code,
+  .stripe .section:not(.force-right) > .force-right .literal,
+  .stripe .section:not(.force-right) > [class*=highlight-] .literal {
+    color: #f9f2f4;
+    background-color: #555555;
+  }
+  .stripe .section:not(.force-right) > .force-right:not(.highlight-json) .highlight,
+  .stripe .section:not(.force-right) > [class*=highlight-]:not(.highlight-json) .highlight {
+    border-bottom-color: #777777;
+  }
+  .stripe .section:not(.force-right) > .force-right.admonition,
+  .stripe .section:not(.force-right) > [class*=highlight-].admonition {
     margin-left: 51%;
+    width: 49%;
+    border-top-color: #777777;
+    border-bottom-color: #777777;
+    border-right-color: #777777;
   }
-  .stripe .section > h1,
-  .stripe .section > h2,
-  .stripe .section > h3,
-  .stripe .section > h4,
-  .stripe .section > h5,
-  .stripe .section > h6 {
-    background-color: rgba(255, 255, 255, 0.7);
+  .stripe .section:not(.force-right) > .force-right .table th,
+  .stripe .section:not(.force-right) > [class*=highlight-] .table th,
+  .stripe .section:not(.force-right) > .force-right .table td,
+  .stripe .section:not(.force-right) > [class*=highlight-] .table td {
+    border-color: #777777;
   }
-  .stripe .section > h1,
-  .stripe .section > h2,
-  .stripe .section > h3,
-  .stripe .section > h4,
-  .stripe .section > h5,
-  .stripe .section > h6,
-  .stripe .section > .section {
+  .stripe .section:not(.force-right) > .force-right .highlight,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight {
+    border-color: #555555;
+    border-style: solid;
+    border-width: 1px 0;
+    border-radius: 0;
+    color: #cccccc;
+    background: none !important;
+    /* Line Numbers */
+    /* Comment */
+    /* Error */
+    /* Generic */
+    /* Keyword */
+    /* Literal */
+    /* Name */
+    /* Operator */
+    /* Other */
+    /* Punctuation */
+    /* Comment.Multiline */
+    /* Comment.Preproc */
+    /* Comment.Single */
+    /* Comment.Special */
+    /* Generic.Deleted */
+    /* Generic.Emph */
+    /* Generic.Error */
+    /* Generic.Heading */
+    /* Generic.Inserted */
+    /* Generic.Output */
+    /* Generic.Prompt */
+    /* Generic.Strong */
+    /* Generic.Subheading */
+    /* Generic.Traceback */
+    /* Keyword.Constant */
+    /* Keyword.Declaration */
+    /* Keyword.Namespace */
+    /* Keyword.Pseudo */
+    /* Keyword.Reserved */
+    /* Keyword.Type */
+    /* Literal.Date */
+    /* Literal.Number */
+    /* Literal.String */
+    /* Name.Attribute */
+    /* Name.Builtin */
+    /* Name.Class */
+    /* Name.Constant */
+    /* Name.Decorator */
+    /* Name.Entity */
+    /* Name.Exception */
+    /* Name.Function */
+    /* Name.Label */
+    /* Name.Namespace */
+    /* Name.Other */
+    /* Name.Property */
+    /* Name.Tag */
+    /* Name.Variable */
+    /* Operator.Word */
+    /* Text.Whitespace */
+    /* Literal.Number.Float */
+    /* Literal.Number.Hex */
+    /* Literal.Number.Integer */
+    /* Literal.Number.Oct */
+    /* Literal.String.Backtick */
+    /* Literal.String.Char */
+    /* Literal.String.Doc */
+    /* Literal.String.Double */
+    /* Literal.String.Escape */
+    /* Literal.String.Heredoc */
+    /* Literal.String.Interpol */
+    /* Literal.String.Other */
+    /* Literal.String.Regex */
+    /* Literal.String.Single */
+    /* Literal.String.Symbol */
+    /* Name.Builtin.Pseudo */
+    /* Name.Variable.Class */
+    /* Name.Variable.Global */
+    /* Name.Variable.Instance */
+    /* Literal.Number.Integer.Long */
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .lineno,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .lineno {
+    color: #586e75;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .c,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .c {
+    color: #586e75;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .err,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .err {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .g,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .g {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .k,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .k {
+    color: #859900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .l,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .l {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .n,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .n {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .o,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .o {
+    color: #859900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .x,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .x {
+    color: #cb4b16;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .p,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .p {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .cm,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .cm {
+    color: #586e75;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .cp,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .cp {
+    color: #859900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .c1,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .c1 {
+    color: #586e75;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .cs,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .cs {
+    color: #859900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .gd,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gd {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .ge,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ge {
+    color: #cccccc;
+    font-style: italic;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .gr,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gr {
+    color: #dc322f;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .gh,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gh {
+    color: #cb4b16;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .gi,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gi {
+    color: #859900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .go,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .go {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .gp,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gp {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .gs,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gs {
+    color: #cccccc;
+    font-weight: bold;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .gu,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gu {
+    color: #cb4b16;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .gt,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .gt {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .kc,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kc {
+    color: #cb4b16;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .kd,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kd {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .kn,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kn {
+    color: #859900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .kp,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kp {
+    color: #859900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .kr,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kr {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .kt,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .kt {
+    color: #dc322f;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .ld,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ld {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .m,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .m {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .s,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .s {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .na,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .na {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nb,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nb {
+    color: #b58900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nc,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nc {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .no,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .no {
+    color: #cb4b16;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nd,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nd {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .ni,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ni {
+    color: #cb4b16;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .ne,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ne {
+    color: #cb4b16;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nf,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nf {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nl,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nl {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nn,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nn {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nx,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nx {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .py,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .py {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nt,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nt {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .nv,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .nv {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .ow,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ow {
+    color: #859900;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .w,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .w {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .mf,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .mf {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .mh,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .mh {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .mi,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .mi {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .mo,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .mo {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .sb,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sb {
+    color: #586e75;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .sc,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sc {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .sd,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sd {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .s2,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .s2 {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .se,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .se {
+    color: #cb4b16;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .sh,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sh {
+    color: #cccccc;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .si,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .si {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .sx,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sx {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .sr,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .sr {
+    color: #dc322f;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .s1,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .s1 {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .ss,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .ss {
+    color: #2aa198;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .bp,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .bp {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .vc,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .vc {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .vg,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .vg {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .vi,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .vi {
+    color: #268bd2;
+  }
+  .stripe .section:not(.force-right) > .force-right .highlight .il,
+  .stripe .section:not(.force-right) > [class*=highlight-] .highlight .il {
+    color: #2aa198;
+  }
+  .stripe .body > .section .section {
+    border-top: 1px solid #eeeeee;
+  }
+  .stripe .body > .section h1 + .section {
+    border-top: none;
+  }
+  .stripe .section:not(.force-right) > h1,
+  .stripe .section:not(.force-right) > h2,
+  .stripe .section:not(.force-right) > h3,
+  .stripe .section:not(.force-right) > h4,
+  .stripe .section:not(.force-right) > h5,
+  .stripe .section:not(.force-right) > h6 {
+    max-width: 50%;
+  }
+  .stripe .section:not(.force-right) > h1,
+  .stripe .section:not(.force-right) > h2,
+  .stripe .section:not(.force-right) > h3,
+  .stripe .section:not(.force-right) > h4,
+  .stripe .section:not(.force-right) > h5,
+  .stripe .section:not(.force-right) > h6,
+  .stripe .section > .section:not(.force-right) {
     position: relative;
     width: auto;
     float: none;
     clear: both;
   }
-  .stripe .bodywrapper {
-    position: relative;
+  .stripe .documentwrapper {
+    overflow: auto;
   }
-  .stripe .bodywrapper:before {
+  .stripe .documentwrapper:before {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 50%;
     content: "";
-    width: 0;
-    border-left: 1px solid #777777;
+    width: 50%;
+    background: #333333;
+  }
+  .stripe .highlight pre {
+    white-space: pre-wrap;
+  }
+  .stripe .btn-show-setup {
+    background-color: transparent;
+    color: #eeeeee;
+    border-color: #777777;
+  }
+  .stripe .btn-show-setup.active {
+    background-color: #555555;
+    -webkit-transition: background-color 0.5s linear;
+    -o-transition: background-color 0.5s linear;
+    transition: background-color 0.5s linear;
   }
 }
 .stripe .switcher {
   color: white;
   width: auto !important;
   float: none !important;
-  position: fixed;
+  position: absolute;
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: flex-end;
@@ -6772,6 +7294,10 @@ td.field-body > ul {
   margin: 0;
   z-index: 5;
 }
+.stripe .switcher.affix {
+  position: fixed;
+  top: 0;
+}
 .stripe .switcher li {
   background-color: #0f131a;
   padding: 0.4em 1em;
@@ -6781,10 +7307,10 @@ td.field-body > ul {
 }
 .stripe .switcher li:first-child {
   border-left-width: 1px;
-  border-radius: 5px 0 0 5px;
+  border-radius: 0 0 0 5px;
 }
 .stripe .switcher li:last-child {
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 0 5px 0;
 }
 .stripe .switcher li:hover {
   background-color: #222;

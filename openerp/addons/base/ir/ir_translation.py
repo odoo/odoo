@@ -20,7 +20,6 @@
 ##############################################################################
 
 import logging
-import unicodedata
 
 from openerp import tools
 import openerp.modules
@@ -119,18 +118,26 @@ class ir_translation_import_cursor(object):
 
         # Records w/o res_id must _not_ be inserted into our db, because they are
         # referencing non-existent data.
-        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % \
-            self._table_name)
+        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % self._table_name)
 
-        find_expr = "irt.lang = ti.lang AND irt.type = ti.type " \
-                    " AND irt.name = ti.name AND irt.src = ti.src " \
-                    " AND (ti.type != 'model' OR ti.res_id = irt.res_id) "
+        find_expr = """
+                irt.lang = ti.lang
+            AND irt.type = ti.type
+            AND irt.module = ti.module
+            AND irt.name = ti.name
+            AND (ti.type IN ('field', 'help') OR irt.src = ti.src)
+            AND (    ti.type NOT IN ('model', 'view')
+                 OR (ti.type = 'model' AND ti.res_id = irt.res_id)
+                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id))
+                )
+        """
 
         # Step 2: update existing (matching) translations
         if self._overwrite:
             cr.execute("""UPDATE ONLY %s AS irt
                 SET value = ti.value,
-                state = 'translated'
+                    src = ti.src,
+                    state = 'translated'
                 FROM %s AS ti
                 WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
                 """ % (self._parent_table, self._table_name, find_expr))
@@ -199,7 +206,7 @@ class ir_translation(osv.osv):
             #Also not removing lang from context trigger an error when lang is different
             context_wo_lang = context.copy()
             context_wo_lang.pop('lang', None)
-            model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
+            model.write(cr, uid, [record.res_id], {field: value}, context=context_wo_lang)
         return self.write(cr, uid, id, {'src': value}, context=context)
 
     _columns = {
@@ -278,7 +285,7 @@ class ir_translation(osv.osv):
 
     def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
         self._get_ids.clear_cache(self)
-        self._get_source.clear_cache(self)
+        self.__get_source.clear_cache(self)
 
         cr.execute('delete from ir_translation '
                 'where lang=%s '
@@ -306,7 +313,7 @@ class ir_translation(osv.osv):
                         AND src=%s"""
             params = (lang or '', types, tools.ustr(source))
             if res_id:
-                query += " AND res_id=%s"
+                query += " AND res_id in %s"
                 params += (res_id,)
             if name:
                 query += " AND name=%s"
@@ -323,6 +330,16 @@ class ir_translation(osv.osv):
         return (query, params)
 
     @tools.ormcache(skiparg=3)
+    def __get_source(self, cr, uid, name, types, lang, source, res_id):
+        # res_id is a tuple or None, otherwise ormcache cannot cache it!
+        query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
+        cr.execute(query, params)
+        res = cr.fetchone()
+        trad = res and res[0] or u''
+        if source and not trad:
+            return tools.ustr(source)
+        return trad
+
     def _get_source(self, cr, uid, name, types, lang, source=None, res_id=None):
         """
         Returns the translation for the given combination of name, type, language
@@ -333,7 +350,7 @@ class ir_translation(osv.osv):
         :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
         :param lang: language code of the desired translation
         :param source: optional source term to translate (should be unicode)
-        :param res_id: optional resource id to translate (if used, ``source`` should be set)
+        :param res_id: optional resource id or a list of ids to translate (if used, ``source`` should be set)
         :rtype: unicode
         :return: the request translation, or an empty unicode string if no translation was
                  found and `source` was not passed
@@ -344,22 +361,18 @@ class ir_translation(osv.osv):
             return tools.ustr(source or '')
         if isinstance(types, basestring):
             types = (types,)
-        
-        query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
-        
-        cr.execute(query, params)
-        res = cr.fetchone()
-        trad = res and res[0] or u''
-        if source and not trad:
-            return tools.ustr(source)
-        # Remove control characters
-        return filter(lambda c: unicodedata.category(c) != 'Cc', tools.ustr(trad))
+        if res_id:
+            if isinstance(res_id, (int, long)):
+                res_id = (res_id,)
+            else:
+                res_id = tuple(res_id)
+        return self.__get_source(cr, uid, name, types, lang, source, res_id)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
-        self._get_source.clear_cache(self)
+        self.__get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
         self.pool['ir.ui.view'].clear_cache()
         return ids
@@ -374,7 +387,7 @@ class ir_translation(osv.osv):
         if vals.get('value'):
             vals.update({'state':'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
-        self._get_source.clear_cache(self)
+        self.__get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
         self.pool['ir.ui.view'].clear_cache()
         return result
@@ -385,7 +398,7 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        self._get_source.clear_cache(self)
+        self.__get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
@@ -399,15 +412,15 @@ class ir_translation(osv.osv):
         langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
         main_lang = 'en_US'
         translatable_fields = []
-        for f, info in trans_model._all_columns.items():
-            if info.column.translate:
-                if info.parent_model:
-                    parent_id = trans_model.read(cr, uid, [id], [info.parent_column], context=context)[0][info.parent_column][0]
-                    translatable_fields.append({ 'name': f, 'id': parent_id, 'model': info.parent_model })
+        for k, f in trans_model._fields.items():
+            if getattr(f, 'translate', False):
+                if f.inherited:
+                    parent_id = trans_model.read(cr, uid, [id], [f.related[0]], context=context)[0][f.related[0]][0]
+                    translatable_fields.append({'name': k, 'id': parent_id, 'model': f.base_field.model_name})
                     domain.insert(0, '|')
-                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (info.parent_model, f))])
+                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (f.base_field.model_name, k))])
                 else:
-                    translatable_fields.append({ 'name': f, 'id': id, 'model': model })
+                    translatable_fields.append({'name': k, 'id': id, 'model': model })
         if len(langs):
             fields = [f.get('name') for f in translatable_fields]
             record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
@@ -432,9 +445,9 @@ class ir_translation(osv.osv):
             'domain': domain,
         }
         if field:
-            info = trans_model._all_columns[field]
+            f = trans_model._fields[field]
             action['context'] = {
-                'search_default_name': "%s,%s" % (info.parent_model or model, field)
+                'search_default_name': "%s,%s" % (f.base_field.model_name, field)
             }
         return action
 

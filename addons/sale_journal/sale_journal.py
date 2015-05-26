@@ -61,16 +61,32 @@ class picking(osv.osv):
     }
 
 
+class stock_move(osv.osv):
+    _inherit = "stock.move"
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        """
+            Pass the invoice type to the picking from the sales order
+            (Should also work in case of Phantom BoMs when on explosion the original move is deleted, similar to carrier_id on delivery)
+        """
+        procs_to_check = []
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.invoice_type_id:
+                procs_to_check += [move.procurement_id]
+        res = super(stock_move, self).action_confirm(cr, uid, ids, context=context)
+        pick_obj = self.pool.get("stock.picking")
+        for proc in procs_to_check:
+            pickings = list(set([x.picking_id.id for x in proc.move_ids if x.picking_id and not x.picking_id.invoice_type_id]))
+            if pickings:
+                pick_obj.write(cr, uid, pickings, {'invoice_type_id': proc.sale_line_id.order_id.invoice_type_id.id}, context=context)
+        return res
+
+
 class sale(osv.osv):
     _inherit = "sale.order"
     _columns = {
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', help="Generate invoice based on the selected option.")
     }
-
-    def _prepare_order_picking(self, cr, uid, order, context=None):
-        result = super(sale,self)._prepare_order_picking(cr, uid, order, context=context)
-        result.update(invoice_type_id=order.invoice_type_id and order.invoice_type_id.id or False)
-        return result
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         result = super(sale, self).onchange_partner_id(cr, uid, ids, part, context=context)

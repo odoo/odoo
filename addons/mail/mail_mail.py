@@ -153,7 +153,7 @@ class mail_mail(osv.Model):
         if context is None:
             context = {}
         if partner and partner.user_ids:
-            base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+            base_url = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'web.base.url')
             mail_model = mail.model or 'mail.thread'
             url = urljoin(base_url, self.pool[mail_model]._get_access_link(cr, uid, mail, partner, context=context))
             return "<span class='oe_mail_footer_access'><small>%(access_msg)s <a style='color:inherit' href='%(portal_link)s'>%(portal_msg)s</a></small></span>" % {
@@ -298,10 +298,20 @@ class mail_mail(osv.Model):
                         subtype='html',
                         subtype_alternative='plain',
                         headers=headers)
-                    res = ir_mail_server.send_email(cr, uid, msg,
+                    try:
+                        res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
                                                     context=context)
-
+                    except AssertionError as error:
+                        if error.message == ir_mail_server.NO_VALID_RECIPIENT:
+                            # No valid recipient found for this particular
+                            # mail item -> ignore error to avoid blocking
+                            # delivery to next recipients, if any. If this is
+                            # the only recipient, the mail will show as failed.
+                            _logger.warning("Ignoring invalid recipients for mail.mail %s: %s",
+                                            mail.message_id, email.get('email_to'))
+                        else:
+                            raise
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True

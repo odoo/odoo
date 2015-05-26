@@ -30,7 +30,6 @@ This gives the profitability by calculating the difference between the Unit
 Price and Cost Price.
     """,
     'author':'OpenERP SA',
-    'images':['images/sale_margin.jpeg'],
     'depends':['sale'],
     'demo':['sale_margin_demo.xml'],
     'test': ['test/sale_margin.yml'],

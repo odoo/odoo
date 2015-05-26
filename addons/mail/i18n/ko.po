@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-09-03 02:53+0000\n"
-"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-03-16 09:04+0000\n"
+"Last-Translator: ChangJoon Lee <lee@serialimage.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:15+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-03-17 05:48+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 "Language: ko\n"
 
 #. module: mail
@@ -49,7 +49,7 @@ msgstr "(이메일주소가 없음)"
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
-msgstr ""
+msgstr "<div><p>안녕하세요,</p><p>%s 님이 다음 %s 문서에 귀하를 초대했습니다: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
@@ -68,6 +68,11 @@ msgid ""
 "                        </p>\n"
 "                        %(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>\n"
+"                            여기를 클릭하여 새 %(document)s 문서를 보내거나 다음 주소로 이메일을 "
+"발송하십시오: <a href='mailto:%(email)s'>%(email)s</a>\n"
+"                        </p>\n"
+"                        %(static_help)s"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:145
@@ -76,6 +81,8 @@ msgid ""
 "<p class='oe_view_nocontent_create'>Click here to add new "
 "%(document)s</p>%(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>여기를 클릭하여 새 %(document)s "
+"추가</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -91,6 +98,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>좋아요!</b> 받은 편집함이 비어있습니다.\n"
+"                </p><p>\n"
+"                    받은 편지함에는 개인 메세지나 사용자가 따르는 사람이나 문서의 관련 정보와 이메일을 포함합니다.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -102,6 +115,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>개인 메세지 없음.</b>\n"
+"                </p><p>\n"
+"                    이 목록에는 사용자게 발송된 메세지가 나타납니다.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_star_feeds
@@ -116,6 +135,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>할 일 없음.</b>\n"
+"                </p><p>\n"
+"                    받은 편지함의 메세지를 처리할 때, <i>할일</i>로 설정할 수 있습니다. 이 메뉴에서 사용자의 "
+"모든 할일을 처리할 수 있습니다.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_archives_feeds
@@ -164,7 +190,7 @@ msgstr "접근 그룹"
 #. module: mail
 #: help:mail.message.subtype,default:0
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "가입시 자동 활성화됨"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -186,7 +212,7 @@ msgstr "팔로워 추가"
 #: code:addons/mail/static/src/xml/mail.xml:161
 #, python-format
 msgid "Add an internal note that will not be sent to the followers"
-msgstr ""
+msgstr "팔로워에게 전달되지 않을 내부 노트를 추가합니다."
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -273,7 +299,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail_followers.xml:62
 #, python-format
 msgid "And"
-msgstr ""
+msgstr "그리고"
 
 #. module: mail
 #: help:mail.compose.message,no_auto_thread:0
@@ -285,7 +311,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:101
+#: code:addons/mail/static/src/js/mail_followers.js:102
 #, python-format
 msgid "Apply"
 msgstr "적용"
@@ -375,7 +401,7 @@ msgstr "최상의 영업 관례"
 #. module: mail
 #: model:mail.group,name:mail.group_board
 msgid "Board meetings"
-msgstr ""
+msgstr "임원 회의"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -384,7 +410,7 @@ msgstr "본문"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:105
+#: code:addons/mail/static/src/js/mail_followers.js:106
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: view:mail.mail:mail.view_mail_form
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
@@ -427,7 +453,7 @@ msgstr "의견"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1970
+#: code:addons/mail/static/src/js/mail.js:1980
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #, python-format
@@ -577,7 +603,7 @@ msgstr "그룹 제안 표시"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1021
+#: code:addons/mail/static/src/js/mail.js:1035
 #, python-format
 msgid "Do you really want to delete this message?"
 msgstr "정말로 이 메시지를 삭제하시겠습니까?"
@@ -596,7 +622,7 @@ msgstr "완료"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:99
+#: code:addons/mail/static/src/js/mail_followers.js:100
 #, python-format
 msgid "Edit Subscription of "
 msgstr "다음에 대한 구독 편집 "
@@ -1034,7 +1060,7 @@ msgid "Log an internal note"
 msgstr "내부 메모 기록"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:330
+#: code:addons/mail/mail_mail.py:340
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "메일 전송에 실패함"
@@ -1252,7 +1278,7 @@ msgstr "새로 만들기"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:184
+#: code:addons/mail/static/src/js/mail_followers.js:205
 #, python-format
 msgid "No followers"
 msgstr "팔로워가 없음"
@@ -1303,7 +1329,7 @@ msgstr "문서의 팔로워에에 알림 (공개글만)"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:186
+#: code:addons/mail/static/src/js/mail_followers.js:207
 #, python-format
 msgid "One follower"
 msgstr "한 명의 팔로워"
@@ -1436,7 +1462,7 @@ msgstr "사진"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:611
+#: code:addons/mail/static/src/js/mail.js:621
 #, python-format
 msgid "Please complete partner's informations"
 msgstr ""
@@ -1493,7 +1519,7 @@ msgid "R&D"
 msgstr "연구개발"
 
 #. module: mail
-#: code:addons/mail/wizard/mail_compose_message.py:188
+#: code:addons/mail/wizard/mail_compose_message.py:191
 #, python-format
 msgid "Re:"
 msgstr "Re:"
@@ -1990,7 +2016,7 @@ msgstr "경고!"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:140
+#: code:addons/mail/static/src/js/mail_followers.js:141
 #, python-format
 msgid ""
 "Warning! \n"
@@ -2000,7 +2026,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:309
+#: code:addons/mail/static/src/js/mail_followers.js:330
 #, python-format
 msgid ""
 "Warning! \n"
@@ -2017,6 +2043,16 @@ msgstr ""
 #: model:mail.group,name:mail.group_all_employees
 msgid "Whole Company"
 msgstr "회사 전체"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail.js:374
+#, python-format
+msgid ""
+"You are currently composing a message, your message will be discarded.\n"
+"\n"
+"Are you sure you want to leave this page ?"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/res_users.py:74
@@ -2067,6 +2103,11 @@ msgid "and"
 msgstr ""
 
 #. module: mail
+#: view:mail.mail:mail.view_mail_form
+msgid "by"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/mail_thread.py:115
 #, python-format
 msgid "document"
@@ -2074,7 +2115,7 @@ msgstr "문서"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:188
+#: code:addons/mail/static/src/js/mail_followers.js:209
 #, python-format
 msgid "followers"
 msgstr "팔로워"
@@ -2127,8 +2168,16 @@ msgid "notified"
 msgstr "알림"
 
 #. module: mail
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
+#: view:mail.mail:mail.view_mail_form
+msgid "on"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:56
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
+#: view:mail.wizard.invite:mail.mail_wizard_invite_form
 #, python-format
 msgid "or"
 msgstr ""
@@ -2212,11 +2261,3 @@ msgstr "업로드하는 중"
 #, python-format
 msgid "your messages"
 msgstr ""
-
-#, python-format
-#~ msgid ""
-#~ "<span class='oe_mail_footer_access'><small>about <a style='color:inherit' "
-#~ "href=\"%s\">%s %s</a></small></span>"
-#~ msgstr ""
-#~ "<span class='oe_mail_footer_access'><small> <a style='color:inherit' "
-#~ "href=\"%s\">%s %s</a>정보</small></span>"

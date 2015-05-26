@@ -142,7 +142,7 @@ class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null',),
-        'auto_create_task': fields.boolean('Create Task Automatically', help="Thick this option if you want to create a task automatically each time this product is sold"),
+        'auto_create_task': fields.boolean('Create Task Automatically', help="Tick this option if you want to create a task automatically each time this product is sold"),
     }
 
 class product_product(osv.osv):

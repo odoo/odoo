@@ -8,10 +8,10 @@ class TestFloatExport(common.TransactionCase):
 
     def get_converter(self, name):
         converter = self.registry('ir.qweb.field.float')
-        column = self.Model._all_columns[name].column
+        field = self.Model._fields[name]
 
         return lambda value, options=None: converter.value_to_html(
-            self.cr, self.uid, value, column, options=options, context=None)
+            self.cr, self.uid, value, field, options=options, context=None)
 
     def test_basic_float(self):
         converter = self.get_converter('float')

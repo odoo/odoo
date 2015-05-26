@@ -22,7 +22,7 @@
 """ Models registries.
 
 """
-from collections import Mapping
+from collections import Mapping, defaultdict
 import logging
 import os
 import threading
@@ -51,7 +51,7 @@ class Registry(Mapping):
         self._init = True
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
-        self.fields_by_model = None
+        self._fields_by_model = None
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -73,6 +73,7 @@ class Registry(Mapping):
         self.base_registry_signaling_sequence = None
         self.base_cache_signaling_sequence = None
 
+        self.cache = LRU(8192)
         # Flag indicating if at least one model cache has been cleared.
         # Useful only in a multi-process context.
         self._any_cache_cleared = False
@@ -113,6 +114,20 @@ class Registry(Mapping):
             for fname in fnames:
                 fields.append(model_fields[fname])
         return fields
+
+    def clear_manual_fields(self):
+        """ Invalidate the cache for manual fields. """
+        self._fields_by_model = None
+
+    def get_manual_fields(self, cr, model_name):
+        """ Return the manual fields (as a dict) for the given model. """
+        if self._fields_by_model is None:
+            # Query manual fields for all models at once
+            self._fields_by_model = dic = defaultdict(dict)
+            cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
+            for field in cr.dictfetchall():
+                dic[field['model']][field['name']] = field
+        return self._fields_by_model[model_name]
 
     def do_parent_store(self, cr):
         for o in self._init_parent:
@@ -158,14 +173,28 @@ class Registry(Mapping):
 
             :param partial: ``True`` if all models have not been loaded yet.
         """
+        lazy_property.reset_all(self)
+
+        # load custom models
+        ir_model = self['ir.model']
+        cr.execute('select model from ir_model where state=%s', ('manual',))
+        for (model_name,) in cr.fetchall():
+            ir_model.instanciate(cr, SUPERUSER_ID, model_name, {})
+
         # prepare the setup on all models
         for model in self.models.itervalues():
-            model._prepare_setup_fields(cr, SUPERUSER_ID)
+            model._prepare_setup(cr, SUPERUSER_ID)
 
         # do the actual setup from a clean state
         self._m2m = {}
         for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID, partial=partial)
+            model._setup_base(cr, SUPERUSER_ID, partial)
+
+        for model in self.models.itervalues():
+            model._setup_fields(cr, SUPERUSER_ID)
+
+        for model in self.models.itervalues():
+            model._setup_complete(cr, SUPERUSER_ID)
 
     def clear_caches(self):
         """ Clear the caches
@@ -274,8 +303,9 @@ class RegistryManager(object):
                     # cannot specify the memory limit soft on windows...
                     size = 42
                 else:
-                    # On average, a clean registry take 25MB of memory + cache
-                    avgsz = 30 * 1024 * 1024
+                    # A registry takes 10MB of memory on average, so we reserve
+                    # 10Mb (registry) + 5Mb (working memory) per registry
+                    avgsz = 15 * 1024 * 1024
                     size = int(config['limit_memory_soft'] / avgsz)
 
             cls._registries = LRU(size)
@@ -428,14 +458,6 @@ class RegistryManager(object):
                     _logger.info("Invalidating all model caches after database signaling.")
                     registry.clear_caches()
                     registry.reset_any_cache_cleared()
-                    # One possible reason caches have been invalidated is the
-                    # use of decimal_precision.write(), in which case we need
-                    # to refresh fields.float columns.
-                    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
-                    for model in registry.values():
-                        for field in model._fields.values():
-                            if field.type == 'float':
-                                field._setup_digits(env)
                 registry.base_registry_signaling_sequence = r
                 registry.base_cache_signaling_sequence = c
             finally:

@@ -128,7 +128,7 @@
                                     <field name="state_id" on_change="onchange_state(state_id)" options='{"no_open": True}' placeholder="State" style="width: 24%%"/>
                                     <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                 </div>
-                                <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": True, "no_create": True}'/>
                             </div>
                         </group>
                         <group>
@@ -372,8 +372,8 @@
             <field name="arch" type="xml">
                 <form string="Opportunities">
                     <header>
-                        <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"/>
-                        <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"/>
+                        <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
+                        <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
                             domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
@@ -457,7 +457,7 @@
                                             <field name="state_id" options='{"no_open": True}' on_change="onchange_state(state_id)" placeholder="State" style="width: 24%%"/>
                                             <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                         </div>
-                                        <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
+                                        <field name="country_id" placeholder="Country" options='{"no_open": True, "no_create": True}'/>
                                     </div>
                                 </group>
 
@@ -548,11 +548,11 @@
                     <field name="probability"/>
                     <separator/>
                     <filter string="New" name="new"
-                            domain="[('probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
                     <filter string="Won" name="won"
-                            domain="[('probability', '=', 100), ('stage_id.fold', '=', True)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
-                            domain="[('probability', '=', 0), ('stage_id.fold', '=', True)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.fold', '=', True)]"/>
                     <separator/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"

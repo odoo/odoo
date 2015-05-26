@@ -685,6 +685,20 @@ class test_views(ViewCase):
         )
         self.assertTrue(validate())     # inherited view
 
+        # validation of a second inherited view (depending on 1st)
+        self._insert_view(
+            name='inherited view 2',
+            model=model,
+            priority=5,
+            inherit_id=vid,
+            arch="""<?xml version="1.0"?>
+                        <xpath expr="//field[@name='name']" position="after">
+                          <field name="target"/>
+                        </xpath>
+                    """,
+        )
+        self.assertTrue(validate())     # inherited view
+
     def test_view_inheritance(self):
         Views = self.registry('ir.ui.view')
 

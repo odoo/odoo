@@ -34,8 +34,9 @@ class stock_picking(osv.osv):
             total_weight = total_weight_net = 0.00
 
             for move in picking.move_lines:
-                total_weight += move.weight
-                total_weight_net += move.weight_net
+                if move.state != 'cancel':
+                    total_weight += move.weight
+                    total_weight_net += move.weight_net
 
             res[picking.id] = {
                                 'weight': total_weight,
@@ -53,19 +54,19 @@ class stock_picking(osv.osv):
 
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
-        'volume': fields.float('Volume'),
+        'volume': fields.float('Volume', copy=False),
         'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['picking_id', 'product_id','product_uom_qty','product_uom'], 40),
+                 'stock.move': (_get_picking_line, ['state', 'picking_id', 'product_id','product_uom_qty','product_uom'], 40),
                  }),
         'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['picking_id', 'product_id','product_uom_qty','product_uom'], 40),
+                 'stock.move': (_get_picking_line, ['state', 'picking_id', 'product_id','product_uom_qty','product_uom'], 40),
                  }),
-        'carrier_tracking_ref': fields.char('Carrier Tracking Ref'),
-        'number_of_packages': fields.integer('Number of Packages'),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', copy=False),
+        'number_of_packages': fields.integer('Number of Packages', copy=False),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
     }
 
@@ -119,14 +120,22 @@ class stock_picking(osv.osv):
             'invoice_line_tax_id': [(6, 0, taxes_ids)],
         }
 
-    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
+    def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
+        invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
-        invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
-        invoice = self.browse(cr, uid, invoice_id, context=context)
-        invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
-        if invoice_line:
-            invoice_line_obj.create(cr, uid, invoice_line)
-        return invoice_id
+        invoice_ids = super(stock_picking, self)._invoice_create_line(cr, uid, moves, journal_id, inv_type=inv_type, context=context)
+        delivey_invoices = {}
+        for move in moves:
+            for invoice in move.picking_id.sale_id.invoice_ids:
+                if invoice.id in invoice_ids:
+                    delivey_invoices[invoice] = move.picking_id
+        if delivey_invoices:
+            for invoice, picking in delivey_invoices.items():
+                invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
+                if invoice_line:
+                    invoice_line_obj.create(cr, uid, invoice_line)
+                    invoice_obj.button_compute(cr, uid, [invoice.id], context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
+        return invoice_ids
 
     def _get_default_uom(self, cr, uid, context=None):
         uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')
@@ -169,6 +178,24 @@ class stock_move(osv.osv):
                  }),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        """
+            Pass the carrier to the picking from the sales order
+            (Should also work in case of Phantom BoMs when on explosion the original move is deleted)
+        """
+        procs_to_check = []
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.carrier_id:
+                procs_to_check += [move.procurement_id]
+        res = super(stock_move, self).action_confirm(cr, uid, ids, context=context)
+        pick_obj = self.pool.get("stock.picking")
+        for proc in procs_to_check:
+            pickings = list(set([x.picking_id.id for x in proc.move_ids if x.picking_id and not x.picking_id.carrier_id]))
+            if pickings:
+                pick_obj.write(cr, uid, pickings, {'carrier_id': proc.sale_line_id.order_id.carrier_id.id}, context=context)
+        return res
+
 
     def _get_default_uom(self, cr, uid, context=None):
         uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')

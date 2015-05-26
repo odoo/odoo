@@ -79,7 +79,7 @@
                     <tr t-if="gettaxamount(data['form'])"><td colspan="2"><strong>Taxes</strong></td></tr>
                     <tr t-foreach="gettaxamount(data['form'])" t-as="tax">
                         <td><span t-esc="tax['name']"/></td>
-                        <td class="text_right">
+                        <td class="text-right">
                             <strong t-esc="formatLang(tax['amount'], currency_obj = res_company.currency_id)"/>
                         </td>
                     </tr>

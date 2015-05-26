@@ -77,7 +77,7 @@ class MailThread(osv.AbstractModel):
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented. """
-        if self._all_columns.get('message_bounce'):
+        if 'message_bounce' in self._fields:
             for obj in self.browse(cr, uid, ids, context=context):
                 self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
 

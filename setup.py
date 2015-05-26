@@ -115,7 +115,7 @@ def py2exe_options():
 
 
 setup(
-    name='openerp',
+    name='odoo',
     version=version,
     description=description,
     long_description=long_desc,

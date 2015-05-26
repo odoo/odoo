@@ -1,6 +1,6 @@
-==========
-Web Client
-==========
+=============================
+Building Interface Extensions
+=============================
 
 .. highlight:: javascript
 
@@ -19,7 +19,7 @@ or extend existing business systems of Odoo, see :doc:`backend`.
     * jQuery_
     * `Underscore.js`_
 
-    It also requires an installed Odoo, and Git_.
+    It also requires :ref:`an installed Odoo <setup/install>`, and Git_.
 
 
 A Simple Module
@@ -45,7 +45,14 @@ If you browse the ``petstore`` folder, you should see the following content:
 .. code-block:: text
 
     oepetstore
+    |-- images
+    |   |-- alligator.jpg
+    |   |-- ball.jpg
+    |   |-- crazy_circle.jpg
+    |   |-- fish.jpg
+    |   `-- mice.jpg
     |-- __init__.py
+    |-- oepetstore.message_of_the_day.csv
     |-- __openerp__.py
     |-- petstore_data.xml
     |-- petstore.py
@@ -78,9 +85,9 @@ sub-folders are conventional and not strictly necessary.
     currently look like::
 
         openerp.oepetstore = function(instance, local) {
-            var _t = openerp.web._t,
-                _lt = openerp.web._lt;
-            var QWeb = openerp.web.qweb;
+            var _t = instance.web._t,
+                _lt = instance.web._lt;
+            var QWeb = instance.web.qweb;
 
             local.HomePage = instance.Widget.extend({
                 start: function() {
@@ -88,8 +95,8 @@ sub-folders are conventional and not strictly necessary.
                 },
             });
 
-            openerp.web.client_actions.add(
-                'petstore.homepage', 'local.HomePage');
+            instance.web.client_actions.add(
+                'petstore.homepage', 'instance.oepetstore.HomePage');
         }
 
 Which only prints a small message in the browser's console.
@@ -528,7 +535,7 @@ characteristics:
     structural extensibility where an XML-based templating engine can be
     generically altered using e.g. XPath or CSS and a tree-alteration DSL (or
     even just XSLT). This flexibility and extensibility is a core
-    characteristic of Odoo, and losting it was considered unacceptable.
+    characteristic of Odoo, and losing it was considered unacceptable.
 
 Using QWeb
 ----------
@@ -1121,6 +1128,7 @@ Exercise
                     },
                     start: function() {
                         this.input_changed();
+                        return this._super();
                     },
                     input_changed: function() {
                         var color = [
@@ -1136,9 +1144,9 @@ Exercise
                 local.HomePage = instance.Widget.extend({
                     template: "HomePage",
                     start: function() {
-                        this.colorInput = new local.ColorInputWidget(this)
-                            .on("change:color", this, this.color_changed);
-                            .appendTo(this.$el);
+                        this.colorInput = new local.ColorInputWidget(this);
+                        this.colorInput.on("change:color", this, this.color_changed);
+                        return this.colorInput.appendTo(this.$el);
                     },
                     color_changed: function() {
                         this.$(".oe_color_div").css("background-color", this.colorInput.get("color"));
@@ -1560,8 +1568,10 @@ Exercises
                             .filter([['categ_id.name', '=', "Pet Toys"]])
                             .limit(5)
                             .all()
-                            .then(function (result) {
-                                self.$el.append(QWeb.render('PetToys', {item: item}));
+                            .then(function (results) {
+                                _(results).each(function (item) {
+                                    self.$el.append(QWeb.render('PetToy', {item: item}));
+                                });
                             });
                     }
                 });
@@ -1578,7 +1588,7 @@ Exercises
                         <div class="oe_petstore_homepage_right"></div>
                     </div>
                 </t>
-                <t t-name="MessageofTheDay">
+                <t t-name="MessageOfTheDay">
                     <div class="oe_petstore_motd">
                         <p class="oe_mywidget_message_of_the_day"></p>
                     </div>
@@ -1732,7 +1742,7 @@ attributes are:
             <t t-name="PetToy">
                 <div class="oe_petstore_pettoy" t-att-data-id="item.id">
                     <p><t t-esc="item.name"/></p>
-                    <p><img t-attf-src="data:image/jpg;base64,#{item.image}"/></p>
+                    <p><img t-attf-src="data:image/jpg;base64,{{item.image}}"/></p>
                 </div>
             </t>
 

@@ -135,9 +135,7 @@ class WebsiteBlog(http.Controller):
         pager_end = page * self._blog_post_per_page
         blog_posts = blog_posts[pager_begin:pager_end]
 
-        tag_obj = request.registry['blog.tag']
-        tag_ids = tag_obj.search(cr, uid, [], context=context)
-        tags = tag_obj.browse(cr, uid, tag_ids, context=context)
+        tags = blog.all_tags()[blog.id]
 
         values = {
             'blog': blog,
@@ -201,17 +199,12 @@ class WebsiteBlog(http.Controller):
         tags = tag_obj.browse(cr, uid, tag_obj.search(cr, uid, [], context=context), context=context)
 
         # Find next Post
-        visited_blogs = request.httprequest.cookies.get('visited_blogs') or ''
-        visited_ids = filter(None, visited_blogs.split(','))
-        visited_ids = map(lambda x: int(x), visited_ids)
-        if blog_post.id not in visited_ids:
-            visited_ids.append(blog_post.id)
-        next_post_id = blog_post_obj.search(cr, uid, [
-            ('id', 'not in', visited_ids),
-        ], order='ranking desc', limit=1, context=context)
-        if not next_post_id:
-            next_post_id = blog_post_obj.search(cr, uid, [('id', '!=', blog.id)], order='ranking desc', limit=1, context=context)
-        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id[0], context=context) or False
+        all_post_ids = blog_post_obj.search(cr, uid, [('blog_id', '=', blog.id)], context=context)
+        # should always return at least the current post
+        current_blog_post_index = all_post_ids.index(blog_post.id)
+        next_post_id = all_post_ids[0 if current_blog_post_index == len(all_post_ids) - 1 \
+                            else current_blog_post_index + 1]
+        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id, context=context) or False
 
         values = {
             'tags': tags,
@@ -229,7 +222,6 @@ class WebsiteBlog(http.Controller):
             'comments': comments,
         }
         response = request.website.render("website_blog.blog_post_complete", values)
-        response.set_cookie('visited_blogs', ','.join(map(str, visited_ids)))
 
         request.session[request.session_id] = request.session.get(request.session_id, [])
         if not (blog_post.id in request.session[request.session_id]):
@@ -260,7 +252,7 @@ class WebsiteBlog(http.Controller):
             subtype='mt_comment',
             author_id=partner_ids[0],
             path=post.get('path', False),
-            context=dict(context, mail_create_nosubcribe=True))
+            context=context)
         return message_id
 
     @http.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'], website=True)
@@ -302,14 +294,13 @@ class WebsiteBlog(http.Controller):
     @http.route('/blogpost/new', type='http', auth="public", website=True)
     def blog_post_create(self, blog_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].create(cr, uid, {
             'blog_id': blog_id,
             'name': _("Blog Post Title"),
             'subtitle': _("Subtitle"),
             'content': '',
             'website_published': False,
-        }, context=create_context)
+        }, context=context)
         new_blog_post = request.registry['blog.post'].browse(cr, uid, new_blog_post_id, context=context)
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
@@ -323,7 +314,7 @@ class WebsiteBlog(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
-        nid = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
+        nid = request.registry['blog.post'].copy(cr, uid, int(blog_post_id), {}, context=create_context)
         new_blog_post = request.registry['blog.post'].browse(cr, uid, nid, context=context)
         post = request.registry['blog.post'].browse(cr, uid, nid, context)
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(post.blog_id), slug(new_blog_post)))

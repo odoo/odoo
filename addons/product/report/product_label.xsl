@@ -77,7 +77,7 @@
                         <barCode><xsl:value-of select="ean13" /></barCode> 
                     </td>
                     <td>
-                        <para style="nospace"><xsl:value-of select="substring(product, 1, pmaxChars)"/></para><xsl:text>, </xsl:text>
+                        <para style="nospace"><xsl:value-of select="substring(product, 1, $pmaxChars)"/></para><xsl:text>, </xsl:text>
                         <para style="nospace"><xsl:value-of select="variant"/></para>
                     </td>
                 </tr>

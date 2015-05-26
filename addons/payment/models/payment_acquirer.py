@@ -62,7 +62,8 @@ class PaymentAcquirer(osv.Model):
         'name': fields.char('Name', required=True),
         'provider': fields.selection(_provider_selection, string='Provider', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'pre_msg': fields.html('Message', help='Message displayed to explain and help the payment process.'),
+        'pre_msg': fields.html('Message', translate=True,
+            help='Message displayed to explain and help the payment process.'),
         'post_msg': fields.html('Thanks Message', help='Message displayed after having done the payment process.'),
         'validation': fields.selection(
             [('manual', 'Manual'), ('automatic', 'Automatic')],
@@ -94,7 +95,7 @@ class PaymentAcquirer(osv.Model):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
         for acquirer in self.browse(cr, uid, ids, context=context):
-            if any(c for c, f in self._all_columns.items() if getattr(f.column, 'required_if_provider', None) == acquirer.provider and not acquirer[c]):
+            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in self._fields.items()):
                 return False
         return True
 
@@ -115,7 +116,7 @@ class PaymentAcquirer(osv.Model):
 
              - partner_values: will contain name, lang, email, zip, address, city,
                country_id (int or False), country (browse or False), phone, reference
-             - tx_values: will contain refernece, amount, currency_id (int or False),
+             - tx_values: will contain reference, amount, currency_id (int or False),
                currency (browse or False), partner (browse or False)
         """
         acquirer = self.browse(cr, uid, id, context=context)
@@ -370,8 +371,15 @@ class PaymentTransaction(osv.Model):
                                          help='Reference of the customer in the acquirer database'),
     }
 
-    _sql_constraints = [
-        ('reference_uniq', 'UNIQUE(reference)', 'The payment transaction reference must be unique!'),
+    def _check_reference(self, cr, uid, ids, context=None):
+        transaction = self.browse(cr, uid, ids[0], context=context)
+        if transaction.state not in ['cancel', 'error']:
+            if self.search(cr, uid, [('reference', '=', transaction.reference), ('id', '!=', transaction.id)], context=context, count=True):
+                return False
+        return True
+
+    _constraints = [
+        (_check_reference, 'The payment transaction reference must be unique!', ['reference', 'state']),
     ]
 
     _defaults = {

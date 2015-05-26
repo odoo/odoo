@@ -468,6 +468,15 @@ openerp.PropertiesMixin = _.extend({}, openerp.EventDispatcherMixin, {
             var tmp = self.__getterSetterInternalMap[key];
             if (tmp === val)
                 return;
+            if (key === 'value' && self.field && self.field.type === 'float' && tmp && val){
+                var digits = self.field.digits;
+                if (digits !== 0){
+                    digits = digits ? digits[1] : 2;
+                    if (openerp.web.float_is_zero(tmp - val, digits)){
+                        return;
+                    }
+                }
+            }
             changed = true;
             self.__getterSetterInternalMap[key] = val;
             if (! options.silent)

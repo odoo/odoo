@@ -4,7 +4,9 @@ from datetime import datetime
 import uuid
 from werkzeug.exceptions import Forbidden
 
+import logging
 import openerp
+
 from openerp import api, tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
@@ -13,6 +15,7 @@ from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 
+_logger = logging.getLogger(__name__)
 
 class KarmaError(Forbidden):
     """ Karma-related error, used for forum and posts. """
@@ -34,7 +37,7 @@ class Forum(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'faq': fields.html('Guidelines'),
-        'description': fields.html('Description'),
+        'description': fields.html('Description', translate=True),
         # karma generation
         'karma_gen_question_new': fields.integer('Asking a question'),
         'karma_gen_question_upvote': fields.integer('Question upvoted'),
@@ -116,6 +119,31 @@ class Forum(osv.Model):
         create_context = dict(context, mail_create_nolog=True)
         return super(Forum, self).create(cr, uid, values, context=create_context)
 
+    def _tag_to_write_vals(self, cr, uid, ids, tags='', context=None):
+        User = self.pool['res.users']
+        Tag = self.pool['forum.tag']
+        result = {}
+        for forum in self.browse(cr, uid, ids, context=context):
+            post_tags = []
+            existing_keep = []
+            for tag in filter(None, tags.split(',')):
+                if tag.startswith('_'):  # it's a new tag
+                    # check that not already created meanwhile or maybe excluded by the limit on the search
+                    tag_ids = Tag.search(cr, uid, [('name', '=', tag[1:])], context=context)
+                    if tag_ids:
+                        existing_keep.append(int(tag_ids[0]))
+                    else:
+                        # check if user have Karma needed to create need tag
+                        user = User.browse(cr, uid, uid, context=context)
+                        if user.exists() and user.karma >= forum.karma_retag:
+                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': forum.id}))
+                else:
+                    existing_keep.append(int(tag))
+            post_tags.insert(0, [6, 0, existing_keep])
+            result[forum.id] = post_tags
+
+        return result
+
 
 class Post(osv.Model):
     _name = 'forum.post'
@@ -194,7 +222,7 @@ class Post(osv.Model):
     def _get_post_karma_rights(self, cr, uid, ids, field_name, arg, context=None):
         user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         res = dict.fromkeys(ids, False)
-        for post in self.browse(cr, uid, ids, context=context):
+        for post in self.browse(cr, SUPERUSER_ID, ids, context=context):
             res[post.id] = {
                 'karma_ask': post.forum_id.karma_ask,
                 'karma_answer': post.forum_id.karma_answer,
@@ -218,13 +246,16 @@ class Post(osv.Model):
                 'can_downvote': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_downvote'],
                 'can_comment': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_comment'],
                 'can_comment_convert': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_comment_convert'],
+                'can_view': (uid == SUPERUSER_ID or
+                                user.karma >= res[post.id]['karma_close'] or
+                                    post.create_uid.karma > 0),
             })
         return res
 
     _columns = {
         'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
-        'content': fields.html('Content'),
+        'content': fields.html('Content', strip_style=True),
         'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
         'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
         'views': fields.integer('Number of Views'),
@@ -307,6 +338,7 @@ class Post(osv.Model):
         'can_downvote': fields.function(_get_post_karma_rights, string='Can Downvote', type='boolean', multi='_get_post_karma_rights'),
         'can_comment': fields.function(_get_post_karma_rights, string='Can Comment', type='boolean', multi='_get_post_karma_rights'),
         'can_comment_convert': fields.function(_get_post_karma_rights, string='Can Convert to Comment', type='boolean', multi='_get_post_karma_rights'),
+        'can_view': fields.function(_get_post_karma_rights, string='Can View', type='boolean', multi='_get_post_karma_rights'),
     }
 
     _defaults = {
@@ -317,6 +349,15 @@ class Post(osv.Model):
         'favourite_ids': list(),
         'child_ids': list(),
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.parent_id and not post.name:
+                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
+            else:
+                result.append((post.id, '%s' % (post.name)))
+        return result
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -345,6 +386,14 @@ class Post(osv.Model):
             self.message_post(cr, uid, post_id, subject=post.name, body=body, subtype='website_forum.mt_question_new', context=context)
             self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [uid], post.forum_id.karma_gen_question_new, context=context)
         return post_id
+
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        for post in self.browse(cr, uid, mids, context=context):
+            # Make sure only author or moderator can edit/delete messages
+            if operation in ('write', 'unlink') and not post.can_edit:
+                raise KarmaError('Not enough karma to edit a post.')
+        return super(Post, self).check_mail_message_access(
+            cr, uid, mids, operation, model_obj=model_obj, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         posts = self.browse(cr, uid, ids, context=context)
@@ -379,10 +428,40 @@ class Post(osv.Model):
                 self.message_post(cr, uid, obj_id, body=body, subtype=subtype, context=context)
         return res
 
+
+    def reopen(self, cr, uid, ids, context=None):
+        if any(post.parent_id or post.state != 'close'
+                    for post in self.browse(cr, uid, ids, context=context)):
+            return False
+
+        reason_offensive = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_7')
+        reason_spam = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_8')
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.closed_reason_id.id in (reason_offensive, reason_spam):
+                _logger.info('Upvoting user <%s>, reopening spam/offensive question',
+                             post.create_uid)
+                # TODO: in master, consider making this a tunable karma parameter
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id],
+                                                 post.forum_id.karma_gen_question_downvote * -5,
+                                                 context=context)
+        self.pool['forum.post'].write(cr, SUPERUSER_ID, ids, {'state': 'active'}, context=context)
+
     def close(self, cr, uid, ids, reason_id, context=None):
         if any(post.parent_id for post in self.browse(cr, uid, ids, context=context)):
             return False
-        return self.pool['forum.post'].write(cr, uid, ids, {
+
+        reason_offensive = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_7')
+        reason_spam = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_8')
+        if reason_id in (reason_offensive, reason_spam):
+            for post in self.browse(cr, uid, ids, context=context):
+                _logger.info('Downvoting user <%s> for posting spam/offensive contents',
+                             post.create_uid)
+                # TODO: in master, consider making this a tunable karma parameter
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id],
+                                                 post.forum_id.karma_gen_question_downvote * 5,
+                                                 context=context)
+
+        self.pool['forum.post'].write(cr, uid, ids, {
             'state': 'close',
             'closed_uid': uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
@@ -441,7 +520,7 @@ class Post(osv.Model):
         }
         message_id = self.pool['forum.post'].message_post(
             cr, uid, question.id,
-            context=dict(context, mail_create_nosubcribe=True),
+            context=dict(context, mail_create_nosubscribe=True),
             **values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues

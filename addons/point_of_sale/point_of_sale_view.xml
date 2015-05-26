@@ -26,7 +26,7 @@
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="session_id" required="1"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
@@ -496,7 +496,7 @@
             <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
                 <tree string="Product Product Categories">
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="complete_name"/>
                 </tree>
             </field>
@@ -673,7 +673,7 @@
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
-                        <field name="journal_ids" colspan="4" nolabel="1">
+                        <field name="journal_ids" colspan="4" nolabel="1" context="{'default_journal_user': 1}">
                             <tree string="Journals">
                                 <field name="code" />
                                 <field name="name" />
@@ -699,7 +699,7 @@
                         </group>
                         <group string="Receipt" >
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
-                            <field name="receipt_footer" placeholder="A custom receipt header footage"/>
+                            <field name="receipt_footer" placeholder="A custom receipt footer message"/>
                         </group>
                         <group string="Barcode Types" col="1">
                             <p>
@@ -930,7 +930,7 @@
                     <field name="name" />
                     <filter string="Open" domain="[('state', '=', 'opened')]" />
                     <separator/>
-                    <filter string="Today" domain="[('start_at', '>=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" />
+                    <filter string="Today" domain="[('start_at', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" />
                     <field name="config_id" />
                     <field name="user_id" />
                     <group expand="0" string="Group By">

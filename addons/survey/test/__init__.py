@@ -21,7 +21,3 @@
 
 
 from . import test_survey
-
-checks = [
-    test_survey
-]

@@ -219,7 +219,7 @@ class hr_timesheet_sheet(osv.osv):
 
     def _sheet_date(self, cr, uid, ids, forced_user_id=False, context=None):
         for sheet in self.browse(cr, uid, ids, context=context):
-            new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
+            new_user_id = forced_user_id or sheet.employee_id.user_id and sheet.employee_id.user_id.id
             if new_user_id:
                 cr.execute('SELECT id \
                     FROM hr_timesheet_sheet_sheet \
@@ -256,6 +256,14 @@ class hr_timesheet_sheet(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a timesheet which is already confirmed.'))
             elif sheet['total_attendance'] <> 0.00:
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a timesheet which have attendance entries.'))
+
+        toremove = []
+        analytic_timesheet = self.pool.get('hr.analytic.timesheet')
+        for sheet in self.browse(cr, uid, ids, context=context):
+            for timesheet in sheet.timesheet_ids:
+                toremove.append(timesheet.id)
+        analytic_timesheet.unlink(cr, uid, toremove, context=context)
+
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
@@ -318,7 +326,8 @@ class hr_timesheet_line(osv.osv):
         for ts_line in self.browse(cursor, user, ids, context=context):
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
-                 ('employee_id.user_id', '=', ts_line.user_id.id)],
+                 ('employee_id.user_id', '=', ts_line.user_id.id),
+                 ('state', 'in', ['draft', 'new'])],
                 context=context)
             if sheet_ids:
             # [0] because only one sheet possible for an employee between 2 dates
@@ -357,17 +366,11 @@ class hr_timesheet_line(osv.osv):
             ),
     }
 
-    def _check_sheet_state(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for timesheet_line in self.browse(cr, uid, ids, context=context):
-            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
-                return False
-        return True
-
-    _constraints = [
-        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state']),
-    ]
+    def write(self, cr, uid, ids, values, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        self._check(cr, uid, ids)
+        return super(hr_timesheet_line, self).write(cr, uid, ids, values, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         if isinstance(ids, (int, long)):
@@ -556,12 +559,13 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                         MAX(id) as id,
                         name,
                         sheet_id,
+                        timezone,
                         SUM(total_timesheet) as total_timesheet,
-                        CASE WHEN SUM(total_attendance) < 0
+                        CASE WHEN SUM(orphan_attendances) != 0
                             THEN (SUM(total_attendance) +
                                 CASE WHEN current_date <> name
                                     THEN 1440
-                                    ELSE (EXTRACT(hour FROM current_time AT TIME ZONE 'UTC') * 60) + EXTRACT(minute FROM current_time AT TIME ZONE 'UTC')
+                                    ELSE (EXTRACT(hour FROM current_time AT TIME ZONE 'UTC' AT TIME ZONE coalesce(timezone, 'UTC')) * 60) + EXTRACT(minute FROM current_time AT TIME ZONE 'UTC' AT TIME ZONE coalesce(timezone, 'UTC'))
                                 END
                                 )
                             ELSE SUM(total_attendance)
@@ -570,30 +574,46 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                         ((
                             select
                                 min(hrt.id) as id,
+                                p.tz as timezone,
                                 l.date::date as name,
                                 s.id as sheet_id,
                                 sum(l.unit_amount) as total_timesheet,
+                                0 as orphan_attendances,
                                 0.0 as total_attendance
                             from
                                 hr_analytic_timesheet hrt
                                 JOIN account_analytic_line l ON l.id = hrt.line_id
                                 LEFT JOIN hr_timesheet_sheet_sheet s ON s.id = hrt.sheet_id
-                            group by l.date::date, s.id
+                                JOIN hr_employee e ON s.employee_id = e.id
+                                JOIN resource_resource r ON e.resource_id = r.id
+                                LEFT JOIN res_users u ON r.user_id = u.id
+                                LEFT JOIN res_partner p ON u.partner_id = p.id
+                            group by l.date::date, s.id, timezone
                         ) union (
                             select
                                 -min(a.id) as id,
-                                a.name::date as name,
+                                p.tz as timezone,
+                                (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date as name,
                                 s.id as sheet_id,
                                 0.0 as total_timesheet,
-                                SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
+                                SUM(CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END) as orphan_attendances,
+                                SUM(((EXTRACT(hour FROM (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))) * 60) + EXTRACT(minute FROM (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC')))) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
                             from
                                 hr_attendance a
                                 LEFT JOIN hr_timesheet_sheet_sheet s
                                 ON s.id = a.sheet_id
+                                JOIN hr_employee e
+                                ON a.employee_id = e.id
+                                JOIN resource_resource r
+                                ON e.resource_id = r.id
+                                LEFT JOIN res_users u
+                                ON r.user_id = u.id
+                                LEFT JOIN res_partner p
+                                ON u.partner_id = p.id
                             WHERE action in ('sign_in', 'sign_out')
-                            group by a.name::date, s.id
+                            group by (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date, s.id, timezone
                         )) AS foo
-                        GROUP BY name, sheet_id
+                        GROUP BY name, sheet_id, timezone
                 )) AS bar""")
 
 

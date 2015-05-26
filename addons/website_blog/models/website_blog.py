@@ -7,6 +7,7 @@ import random
 
 from openerp import tools
 from openerp import SUPERUSER_ID
+from openerp.addons.website.models.website import slug
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -22,6 +23,32 @@ class Blog(osv.Model):
         'description': fields.text('Description'),
     }
 
+    def all_tags(self, cr, uid, ids, min_limit=1, context=None):
+        req = """
+            SELECT
+                p.blog_id, count(*), r.blog_tag_id
+            FROM
+                blog_post_blog_tag_rel r
+                    join blog_post p on r.blog_post_id=p.id
+            WHERE
+                p.blog_id in %s
+            GROUP BY
+                p.blog_id,
+                r.blog_tag_id
+            ORDER BY
+                count(*) DESC
+        """
+        cr.execute(req, [tuple(ids)])
+        tag_by_blog = {i: [] for i in ids}
+        for blog_id, freq, tag_id in cr.fetchall():
+            if freq >= min_limit:
+                tag_by_blog[blog_id].append(tag_id)
+
+        tag_obj = self.pool['blog.tag']
+        for blog_id in tag_by_blog:
+            tag_by_blog[blog_id] = tag_obj.browse(cr, uid, tag_by_blog[blog_id], context=context)
+        return tag_by_blog
+
 
 class BlogTag(osv.Model):
     _name = 'blog.tag'
@@ -30,6 +57,9 @@ class BlogTag(osv.Model):
     _order = 'name'
     _columns = {
         'name': fields.char('Name', required=True),
+        'post_ids': fields.many2many(
+            'blog.post', string='Posts',
+        ),
     }
 
 
@@ -111,6 +141,8 @@ class BlogPost(osv.Model):
         :return result: (html, mappin), where html is the updated html with ID
                         and mapping is a list of (old_ID, new_ID), where old_ID
                         is None is the paragraph is a new one. """
+
+        existing_attributes = []
         mapping = []
         if not html:
             return html, mapping
@@ -118,7 +150,6 @@ class BlogPost(osv.Model):
             tags = ['p']
         if attribute is None:
             attribute = 'data-unique-id'
-        counter = 0
 
         # form a tree
         root = lxml.html.fragment_fromstring(html, create_parent='div')
@@ -129,17 +160,22 @@ class BlogPost(osv.Model):
         # - img src -> check URL
         # - a href -> check URL
         for node in root.iter():
-            if not node.tag in tags:
+            if node.tag not in tags:
                 continue
             ancestor_tags = [parent.tag for parent in node.iterancestors()]
-            if ancestor_tags:
-                ancestor_tags.pop()
-            ancestor_tags.append('counter_%s' % counter)
-            new_attribute = '/'.join(reversed(ancestor_tags))
+
             old_attribute = node.get(attribute)
-            node.set(attribute, new_attribute)
-            mapping.append((old_attribute, counter))
-            counter += 1
+            new_attribute = old_attribute
+            if old_attribute in existing_attributes:
+                if ancestor_tags:
+                    ancestor_tags.pop()
+                counter = random.randint(10000, 99999)
+                ancestor_tags.append('counter_%s' % counter)
+                new_attribute = '/'.join(reversed(ancestor_tags))
+                node.set(attribute, new_attribute)
+
+            existing_attributes.append(new_attribute)
+            mapping.append((old_attribute, new_attribute))
 
         html = lxml.html.tostring(root, pretty_print=False, method='html')
         # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
@@ -152,15 +188,23 @@ class BlogPost(osv.Model):
             content = self.browse(cr, uid, id, context=context).content
         if content is False:
             return content
+
         content, mapping = self.html_tag_nodes(content, attribute='data-chatter-id', tags=['p'], context=context)
-        for old_attribute, new_attribute in mapping:
-            if not old_attribute:
-                continue
-            msg_ids = self.pool['mail.message'].search(cr, SUPERUSER_ID, [('path', '=', old_attribute)], context=context)
-            self.pool['mail.message'].write(cr, SUPERUSER_ID, msg_ids, {'path': new_attribute}, context=context)
+        if id:  # not creating
+            existing = [x[0] for x in mapping if x[0]]
+            msg_ids = self.pool['mail.message'].search(cr, SUPERUSER_ID, [
+                ('res_id', '=', id),
+                ('model', '=', self._name),
+                ('path', 'not in', existing),
+                ('path', '!=', False)
+            ], context=context)
+            self.pool['mail.message'].unlink(cr, SUPERUSER_ID, msg_ids, context=context)
+
         return content
 
     def create_history(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for i in ids:
             history = self.pool.get('blog.post.history')
             if vals.get('content'):
@@ -170,6 +214,23 @@ class BlogPost(osv.Model):
                 }
                 history.create(cr, uid, res)
 
+    def _check_for_publication(self, cr, uid, ids, vals, context=None):
+        if vals.get('website_published'):
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+            for post in self.browse(cr, uid, ids, context=context):
+                post.blog_id.message_post(
+                    body='<p>%(post_publication)s <a href="%(base_url)s/blog/%(blog_slug)s/post/%(post_slug)s">%(post_link)s</a></p>' % {
+                        'post_publication': _('A new post %s has been published on the %s blog.') % (post.name, post.blog_id.name),
+                        'post_link': _('Click here to access the post.'),
+                        'base_url': base_url,
+                        'blog_slug': slug(post.blog_id),
+                        'post_slug': slug(post),
+                    },
+                    subtype='website_blog.mt_blog_blog_published',
+                    context=context)
+            return True
+        return False
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -178,14 +239,19 @@ class BlogPost(osv.Model):
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
         self.create_history(cr, uid, [post_id], vals, context)
+        self._check_for_publication(cr, uid, [post_id], vals, context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if 'content' in vals:
-            vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
+            vals['content'] = self._postproces_content(cr, uid, ids[0], vals['content'], context=context)
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
+        self._check_for_publication(cr, uid, ids, vals, context=context)
         return result
+
 
 class BlogPostHistory(osv.Model):
     _name = "blog.post.history"

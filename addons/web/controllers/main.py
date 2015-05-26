@@ -35,6 +35,7 @@ from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.modules import get_module_resource
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
+from openerp.tools import ustr
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception
@@ -443,14 +444,14 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     return res
 
 def content_disposition(filename):
-    filename = filename.encode('utf8')
-    escaped = urllib2.quote(filename)
+    filename = ustr(filename)
+    escaped = urllib2.quote(filename.encode('utf8'))
     browser = request.httprequest.user_agent.browser
     version = int((request.httprequest.user_agent.version or '0').split('.')[0])
     if browser == 'msie' and version < 9:
         return "attachment; filename=%s" % escaped
     elif browser == 'safari':
-        return "attachment; filename=%s" % filename
+        return u"attachment; filename=%s" % filename
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
@@ -534,14 +535,15 @@ class Home(http.Controller):
     @http.route([
         '/web/css/<xmlid>',
         '/web/css/<xmlid>/<version>',
+        '/web/css.<int:page>/<xmlid>/<version>',
     ], type='http', auth='public')
-    def css_bundle(self, xmlid, version=None, **kw):
+    def css_bundle(self, xmlid, version=None, page=None, **kw):
         try:
             bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
             return request.not_found()
 
-        response = request.make_response(bundle.css(), [('Content-Type', 'text/css')])
+        response = request.make_response(bundle.css(page), [('Content-Type', 'text/css')])
         return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
 
 class WebClient(http.Controller):
@@ -724,21 +726,21 @@ class Database(http.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token):
+    def backup(self, backup_db, backup_pwd, token, backup_format='zip'):
         try:
-            db_dump = base64.b64decode(
-                request.session.proxy("db").dump(backup_pwd, backup_db))
-            filename = "%(db)s_%(timestamp)s.dump" % {
-                'db': backup_db,
-                'timestamp': datetime.datetime.utcnow().strftime(
-                    "%Y-%m-%d_%H-%M-%SZ")
-            }
-            return request.make_response(db_dump,
-               [('Content-Type', 'application/octet-stream; charset=binary'),
-               ('Content-Disposition', content_disposition(filename))],
-               {'fileToken': token}
-            )
+            openerp.service.security.check_super(backup_pwd)
+            ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+            filename = "%s_%s.%s" % (backup_db, ts, backup_format)
+            headers = [
+                ('Content-Type', 'application/octet-stream; charset=binary'),
+                ('Content-Disposition', content_disposition(filename)),
+            ]
+            dump_stream = openerp.service.db.dump_db(backup_db, None, backup_format)
+            response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
+            response.set_cookie('fileToken', token)
+            return response
         except Exception, e:
+            _logger.exception('Database.backup')
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @http.route('/web/database/restore', type='http', auth="none")
@@ -773,6 +775,7 @@ class Session(http.Controller):
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
             "username": request.session.login,
+            "company_id": request.env.user.company_id.id if request.session.uid else None,
         }
 
     @http.route('/web/session/get_session_info', type='json', auth="none")
@@ -920,20 +923,6 @@ class DataSet(http.Controller):
         return self._call_kw(model, method, args, {})
 
     def _call_kw(self, model, method, args, kwargs):
-        # Temporary implements future display_name special field for model#read()
-        if method in ('read', 'search_read') and kwargs.get('context', {}).get('future_display_name'):
-            if 'display_name' in args[1]:
-                if method == 'read':
-                    names = dict(request.session.model(model).name_get(args[0], **kwargs))
-                else:
-                    names = dict(request.session.model(model).name_search('', args[0], **kwargs))
-                args[1].remove('display_name')
-                records = getattr(request.session.model(model), method)(*args, **kwargs)
-                for record in records:
-                    record['display_name'] = \
-                        names.get(record['id']) or "{0}#{1}".format(model, (record['id']))
-                return records
-
         if method.startswith('_'):
             raise Exception("Access Denied: Underscore prefixed methods cannot be remotely called")
 
@@ -1019,7 +1008,8 @@ class Binary(http.Controller):
     @http.route('/web/binary/image', type='http', auth="public")
     def image(self, model, id, field, **kw):
         last_update = '__last_update'
-        Model = request.session.model(model)
+        Model = request.registry[model]
+        cr, uid, context = request.cr, request.uid, request.context
         headers = [('Content-Type', 'image/png')]
         etag = request.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(request.session_id).hexdigest()
@@ -1032,15 +1022,15 @@ class Binary(http.Controller):
                 if not id and hashed_session == etag:
                     return werkzeug.wrappers.Response(status=304)
                 else:
-                    date = Model.read([id], [last_update], request.context)[0].get(last_update)
+                    date = Model.read(cr, uid, [id], [last_update], context)[0].get(last_update)
                     if hashlib.md5(date).hexdigest() == etag:
                         return werkzeug.wrappers.Response(status=304)
 
             if not id:
-                res = Model.default_get([field], request.context).get(field)
+                res = Model.default_get(cr, uid, [field], context).get(field)
                 image_base64 = res
             else:
-                res = Model.read([id], [last_update, field], request.context)[0]
+                res = Model.read(cr, uid, [id], [last_update, field], context)[0]
                 retag = hashlib.md5(res.get(last_update)).hexdigest()
                 image_base64 = res.get(field)
 
@@ -1086,15 +1076,16 @@ class Binary(http.Controller):
         :param str filename_field: field holding the file's name, if any
         :returns: :class:`werkzeug.wrappers.Response`
         """
-        Model = request.session.model(model)
+        Model = request.registry[model]
+        cr, uid, context = request.cr, request.uid, request.context
         fields = [field]
         if filename_field:
             fields.append(filename_field)
         if id:
-            res = Model.read([int(id)], fields, request.context)[0]
+            res = Model.read(cr, uid, [int(id)], fields, context)[0]
         else:
-            res = Model.default_get(fields, request.context)
-        filecontent = base64.b64decode(res.get(field, ''))
+            res = Model.default_get(cr, uid, fields, context)
+        filecontent = base64.b64decode(res.get(field) or '')
         if not filecontent:
             return request.not_found()
         else:
@@ -1121,12 +1112,12 @@ class Binary(http.Controller):
         if filename_field:
             fields.append(filename_field)
         if data:
-            res = { field: data }
+            res = {field: data, filename_field: jdata.get('filename', None)}
         elif id:
             res = Model.read([int(id)], fields, context)[0]
         else:
             res = Model.default_get(fields, context)
-        filecontent = base64.b64decode(res.get(field, ''))
+        filecontent = base64.b64decode(res.get(field) or '')
         if not filecontent:
             raise ValueError(_("No content found for field '%s' on '%s:%s'") %
                 (field, model, id))
@@ -1177,6 +1168,7 @@ class Binary(http.Controller):
             }
         except Exception:
             args = {'error': "Something horrible happened"}
+            _logger.exception("Fail to upload attachment %s" % ufile.filename)
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @http.route([
@@ -1434,6 +1426,9 @@ class ExportFormat(object):
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
         ids = ids or Model.search(domain, 0, False, False, context)
+
+        if not request.env[model]._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
 
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])
