@@ -81,7 +81,7 @@
             <field name="name">Project Issue Tracker Tree</field>
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
-                <tree string="Issue Tracker Tree" fonts="bold:message_unread==True">
+                <tree string="Issue Tracker Tree" decoration-bf="message_unread==True">
                     <field name="message_unread" invisible="1"/>
                     <field name="id"/>
                     <field name="name"/>
@@ -229,7 +229,7 @@
             <field name="name">Project Issue- Feature Tracker Tree</field>
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
-                <tree string="Feature Tracker Tree" fonts="bold:message_unread==True">
+                <tree string="Feature Tracker Tree" decoration-bf="message_unread==True">
                     <field name="id"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="name" string="Feature description"/>

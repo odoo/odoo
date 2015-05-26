@@ -132,7 +132,7 @@
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <tree string="Events" fonts="bold:message_unread==True" colors="red:(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved);grey:state=='cancel'">
+                <tree string="Events" decoration-bf="message_unread==True" decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)" decoration-muted="state=='cancel'">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="date_begin"/>
@@ -281,7 +281,7 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" fonts="bold:message_unread==True">
+                <tree string="Registration" decoration-bf="message_unread==True">
                     <field name="create_date"/>
                     <field name="partner_id"/>
                     <field name="name"/>

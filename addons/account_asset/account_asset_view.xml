@@ -131,7 +131,7 @@
                         </page>
                         <page string="Depreciation Board">
                             <field name="depreciation_line_ids" mode="tree">
-                                <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
+                                <tree string="Depreciation Lines" decoration-info="(move_check == False)">
                                     <field name="depreciation_date"/>
                                     <field name="sequence" invisible="1"/>
                                     <field name="depreciated_value" readonly="1"/>
@@ -179,7 +179,7 @@
         <field name="name">account.asset.asset.tree</field>
         <field name="model">account.asset.asset</field>
         <field name="arch" type="xml">
-            <tree string="Assets" colors="blue:(state == 'draft');grey:(state == 'close')">
+            <tree string="Assets" decoration-info="(state == 'draft')" decoration-muted="(state == 'close')">
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="purchase_date"/>

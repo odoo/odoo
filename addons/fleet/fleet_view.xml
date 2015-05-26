@@ -295,7 +295,7 @@
             <field name="name">fleet.vehicle.tree</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
-                <tree string="Vehicle" colors="orange:contract_renewal_due_soon and not contract_renewal_overdue;red:contract_renewal_overdue">
+                <tree string="Vehicle" decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue" decoration-danger="contract_renewal_overdue">
                     <field name="license_plate" />
                     <field name="model_id" />
                     <field name="driver_id" />
@@ -514,7 +514,7 @@
             <field name="name">fleet.vehicle.log.contract.tree</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contract logs" colors="orange:days_left>0 and days_left&lt;15;red:days_left==0;grey:state=='closed'">
+                <tree string="Contract logs" decoration-warning="days_left>0 and days_left&lt;15" decoration-danger="days_left==0" decoration-muted="state=='closed'">
                     <field name="start_date" />
                     <field name="expiration_date" />
                     <field name="days_left" invisible="1"/>

@@ -215,7 +215,7 @@
             <field name="model">project.project</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:message_unread==True" colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
+                <tree decoration-bf="message_unread==True" decoration-danger="date and (date&lt;current_date) and (state == 'open')" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
                     <field name="sequence" widget="handle"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="date" invisible="1"/>
@@ -404,7 +404,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree fonts="bold:message_unread==True" colors="red:date_deadline and (date_deadline&lt;current_date)" string="Tasks">
+                <tree decoration-bf="message_unread==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
                     <field name="message_unread" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>

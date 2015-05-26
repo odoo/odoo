@@ -220,7 +220,7 @@
         <field name="model">ir.attachment</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree colors="blue:type in ('url',)" string="Attachments">
+            <tree decoration-info="type in ('url',)" string="Attachments">
                 <field name="name"/>
                 <field name="parent_id" />
                 <field name="user_id"/>
@@ -280,4 +280,3 @@
         src_model="document.directory"/>
 </data>
 </openerp>
-

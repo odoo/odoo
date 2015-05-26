@@ -65,7 +65,7 @@
             <field name="name">mail.mail.tree</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
-                <tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
+                <tree string="Emails" decoration-muted="state in ('sent', 'cancel')" decoration-info="state=='outgoing'" decoration-danger="state=='exception'">
                     <field name="date"/>
                     <field name="subject"/>
                     <field name="author_id" string="User"/>

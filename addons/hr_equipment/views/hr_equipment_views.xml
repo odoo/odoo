@@ -128,7 +128,7 @@
         <field name="name">hr.equipment.request.tree</field>
         <field name="model">hr.equipment.request</field>
         <field name="arch" type="xml">
-            <tree string="maintenance Request" fonts="bold:message_unread==True">
+            <tree string="maintenance Request" decoration-bf="message_unread==True">
                 <field name="message_unread" invisible="1"/>
                 <field name="name"/>
                 <field name="request_date" groups="base.group_no_one"/>
@@ -303,7 +303,7 @@
         <field name="name">hr.equipment.tree</field>
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
-            <tree string="Assign To Employee"  fonts="bold:message_unread==True">
+            <tree string="Assign To Employee"  decoration-bf="message_unread==True">
                 <field name="message_unread" invisible="1"/>
                 <field name="name"/>
                 <field name="employee_id" string="Employee"/>

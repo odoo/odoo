@@ -6,7 +6,7 @@
         <field name="name">mrp.repair.tree</field>
         <field name="model">mrp.repair</field>
         <field name="arch" type="xml">
-            <tree string="Repairs order" colors="gray:state in ('done','cancel');black:state not in ('done','cancel');blue:state=='draft'">
+            <tree string="Repairs order" decoration-muted="state in ('done','cancel')" decoration-info="state=='draft'">
                 <field name="name" />
                 <field name="product_id" />
                 <field name="partner_id"/>
