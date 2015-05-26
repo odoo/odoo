@@ -868,8 +868,6 @@ class account_bank_statement_line(osv.osv):
                     else:
                         amount_unreconciled = currency_obj.compute(cr, uid, company_currency.id, mv_line_dict['currency_id'] , mv_line.amount_residual, context=ctx)
                     if float_is_zero(mv_line_dict['amount_currency'] + amount_unreconciled, precision_rounding=mv_line.currency_id.rounding):
-                        import pudb
-                        pu.db
                         amount = mv_line_dict['debit'] or mv_line_dict['credit']
                         sign = -1 if mv_line_dict['debit'] else 1
                         currency_rate_difference = sign * (mv_line.amount_residual - amount)
