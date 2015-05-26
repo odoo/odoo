@@ -26,6 +26,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
             this.current_screen = null; 
 
             this.chrome.ready.then(function(){
+                instance.web.cordova.posready();
                 var order = self.pos.get_order();
                 if (order) {
                     self.show_saved_screen(order);
@@ -271,6 +272,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
             this.chrome.loading_message(_t('Closing ...'));
 
             this.pos.push_order().then(function(){
+                instance.web.cordova.poslogout();
                 return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id'])
                 .pipe(function(res) {
                     window.location = '/web#action=' + res[0]['res_id'];
