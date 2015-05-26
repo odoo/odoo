@@ -3,7 +3,7 @@
     <data>
         <template id="assets_backend" name="mass_mailing assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing.css"/>
+                <link rel="stylesheet" href="/mass_mailing/static/src/less/mass_mailing.less"/>
                 <link rel="stylesheet" href="/mass_mailing/static/src/css/email_template.css"/>
                 <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing.js"></script>
             </xpath>
@@ -503,9 +503,8 @@
                                     </ul>
                                 </div>
                                  <div class="oe_kanban_content">
-                                    <div>
+                                    <div class="o_title">
                                         <h3><field name="name"/></h3>
-
                                         <div attrs="{'invisible': [('sent_date', '=', False)]}">
                                             <h4 style="display: inline;"><field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/></h4>
                                             <t t-if="record.mass_mailing_campaign_id.raw_value" groups="mass_mailing.group_mass_mailing_campaign"> - </t><field name="sent_date"/>
@@ -513,14 +512,32 @@
                                     </div>
                                     <div attrs="{'invisible': [('sent_date', '=', False)]}">
                                         <t t-if="record.sent_date">
-                                            <div style="display: inline-block">
-                                                <field name="delivered" widget="gauge" style="width:120px; height: 90px;"
-                                                    options="{'max_field': 'total'}"/>
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <a>Opened</a>
+                                                </div>
+                                                <div class="col-xs-4 text-right">
+                                                    <field name="opened_ratio"/> %
+                                                </div>
                                             </div>
-                                            <div style="display: inline-block; vertical-align: top;">
-                                                <strong>Opened</strong> <field name="opened_ratio"/> %<br />
-                                                <strong>Replied</strong> <field name="replied_ratio"/> % <br />
-                                                <strong>Clicks</strong> <field name="clicks_ratio"/> % <br />
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <a>Replied</a>
+                                                </div>
+                                                <div class="col-xs-4 text-right">
+                                                    <field name="replied_ratio"/> %
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <a>Clicks</a>
+                                                </div>
+                                                <div class="col-xs-4 text-right">
+                                                    <field name="clicks_ratio"/> %
+                                                </div>
+                                            </div>
+                                            <div class='o_kanban_primary_bottom'>
+                                                <field name="delivered" widget="progress" options="{'title': 'Delivered', 'current_value': 'delivered', 'max_value': 'total', 'editable': false}"/>
                                             </div>
                                         </t>
                                     </div>
