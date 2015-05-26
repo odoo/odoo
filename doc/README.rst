@@ -12,7 +12,7 @@ http://getbootstrap.com with additional changes and additions, bundled as
 a Sphinx theme.
 
 The main style file is ``_themes/odoodoc/static/style.less``, it is not
-converted on the fly and must be compiled manually when altere, using the
+converted on the fly and must be compiled manually when altered, using the
 official node-based lessc_ tool.
 
 ``odoodoc`` must be added as an extension to a project using the theme, it
@@ -40,15 +40,15 @@ Additional features
 
 * versions switcher, uses the ``canonical_root`` setting and an additional
   ``versions`` setting which should be a comma-separated list of available
-  versions. Appends the each version and page name to the root, and displays
+  versions. Appends the version and page name to the root, and displays
   a list of those links on the current page
-* canonical urls, requires a ``canonical_root`` setting value, and optionally
+* canonical urls, require a ``canonical_root`` setting value, and optionally
   a ``canonical_branch`` (default: ``master``)
 * :guilabel:`Edit on github` link in Sphinx pages if ``github_user`` and
   ``github_project`` are provided
 * :guilabel:`[source]` links in autodoc content links to github with the same
   requirements (requires Sphinx 1.2)
-* ``aphorism`` class for admonitions, makes the first line of the admonition
+* ``aphorism`` class for admonitions (warnings), makes the first line of the admonition
   inline and the same size as the admonition category (mostly for short,
   single-phrase admonitions)
 * ``exercise`` directive, mostly for training-type documents, the

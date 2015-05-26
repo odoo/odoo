@@ -92,7 +92,7 @@ Adding these few more lines will put the new page in your menu::
       <field name="sequence" type="int">20</field>
   </record>
 
-Congrats! It's online! Now drag and drop some snippets on the page and let's
+Congratulations! It's online! Now drag and drop some snippets on the page and let's
 style!
 
 Pimp Your Theme
@@ -249,8 +249,8 @@ The snippet body
 ''''''''''''''''
 
 A snippet has to be in a section with the class ``oe_snippet_body`` to work
-correctly.  As Odoo use the Bootstrap framework, you have use containers and
-rows to hold your content. Please refer the the Bootstrap documentation::
+correctly.  As Odoo use the Bootstrap framework, you must use containers and
+rows to hold your content. Please refer to the Bootstrap documentation::
 
   <xpath expr="//div[@id='snippet_structure']" position="inside">
       <div>
@@ -280,7 +280,7 @@ Inside your fresh new row, add some bootstraped contents::
 Adding images to your snippet
 '''''''''''''''''''''''''''''
 
-You can easely add images in your snippets simply by setting up css
+You can easily add images in your snippets by setting up css
 backgrounds images.
 
 Put your images in ``odoo/addons/theme_dummy/static/img``, or in sub-folders
@@ -297,7 +297,7 @@ these lines
 
 Add also the ``width`` and the ``height`` css attributes to theses new classes.
 
-In :file:`odoo/addons/theme_dummy/views/pages.xml` change the correspondant
+In :file:`odoo/addons/theme_dummy/views/pages.xml` change the corresponding
 lines as below::
 
   <div class="row">
@@ -322,7 +322,7 @@ Defining Your Theme Options
 Understanding XPath
 '''''''''''''''''''
 
-As your stylesheets are running on the whole website, giving more option to
+As your stylesheets are running on the whole website, adding options to
 your snippets and applying them independently will push your design
 forward. In ``odoo/addons/theme_dummy/views/`` create a new file, name it
 ``options.xml`` and add these lines::
@@ -337,7 +337,7 @@ Explain xpath
 
 .. TODO:: syntax not correct (see website examples) 
 
-Your option menu is now correctly set in the database, you can create an new
+Your option menu is now correctly set in the database, you can create a new
 dropdown menu.
 
 Let's say yout want three options which will change the text color and the
@@ -359,7 +359,7 @@ Simple less css options
 '''''''''''''''''''''''
 
 In order to see these options in action, you have to write some new css
-classes. Open custom.css and add this new lines
+classes. Open custom.css and add these new lines::
 
 .. code-block:: css
 
@@ -376,7 +376,7 @@ options apply it.
 XPath & inherits
 ''''''''''''''''
 
-You can also add images in your variables and use them on certain part of your
+You can also add images in your variables and use them on certain parts of your
 pages, snippets or any html element.
 
 In :file:`odoo/addons/theme_dummy/static/style/custom.css` add these new lines
@@ -389,7 +389,7 @@ In :file:`odoo/addons/theme_dummy/static/style/custom.css` add these new lines
         background-image: @bg-01;
     }
 
-Now that you have set the background image, you can decide how and where the
+Now you have set the background image, you can decide how and where the
 user can use it, for example, on a simple div.
 
 Open :file:`odoo/addons/theme_dummy/views/options.xml` and add this new xpath::
@@ -402,7 +402,7 @@ Open :file:`odoo/addons/theme_dummy/views/options.xml` and add this new xpath::
       </ul>
   </xpath>
 
-Your option is ready to be applied but you want it to be shown only a certain
+Your option is ready to be applied but you want it to be shown only in a certain
 part of a snippet.
 
 Open :file:`odoo/addons/theme_dummy/views/snippets.xml` and add a new snippet
@@ -455,7 +455,7 @@ Modifying the image database
 
 Odoo provides its own image library but you certainly want to adapt it to your
 design.  Do not use the Media Manager uploading Tool to add image in your
-theme. The images url's will be lost on reload!  Instead of uploading your
+theme. The images urls will be lost on reload!  Instead of uploading your
 images, you can create your own library and disable the old ones.
 
 In ``odoo/addons/theme_dummy/views/`` create a new file, name it
@@ -469,7 +469,7 @@ In ``odoo/addons/theme_dummy/views/`` create a new file, name it
       <field name="url">/theme_clean/static/img/library/bg/bg_blue.jpg</field>
   </record>
 
-Your images is now available in your Media Manager.  And your Theme has a
+Your image is now available in your Media Manager.  And your theme has a
 total new look.
 
 Theme Selector

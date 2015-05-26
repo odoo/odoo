@@ -415,7 +415,7 @@ This is performed using :abbr:`RPC <Remote Procedure Call>`.
 Odoo Web provides two primary APIs to handle this: a low-level
 JSON-RPC based API communicating with the Python section of Odoo
 Web (and of your module, if you have a Python part) and a high-level
-API above that allowing your code to talk directly to high-level Odoo models.
+API above that allows your code to talk directly to high-level Odoo models.
 
 All networking APIs are :ref:`asynchronous <reference/async>`. As a result,
 all of them will return Deferred_ objects (whether they resolve those with
@@ -466,12 +466,12 @@ first one, adding new properties or modifiying the parent object's::
         // do work with users records
     });
 
-The query is only actually performed when calling one of the query
+The query is only performed when calling one of the query
 serialization methods, :func:`~openerp.web.Query.all` and
 :func:`~openerp.web.Query.first`. These methods will perform a new
 RPC call every time they are called.
 
-For that reason, it's actually possible to keep "intermediate" queries
+For that reason, it's possible to keep "intermediate" queries
 around and use them differently/add new specifications on them.
 
 .. class:: Model(name)
@@ -584,7 +584,7 @@ around and use them differently/add new specifications on them.
 Aggregation (grouping)
 ''''''''''''''''''''''
 
-Odoo has powerful grouping capacities, but they are kind-of strange
+Odoo has powerful grouping capacities, but they are unusual
 in that they're recursive, and level n+1 relies on data provided
 directly by the grouping at level n. As a result, while
 :py:meth:`openerp.models.Model.read_group` works it's not a very intuitive
@@ -719,8 +719,8 @@ It has also some disadvantages:
 
 This is obviously a very large change and will require everyone to
 adopt new habits.  For example, the variable openerp does not exist
-anymore.  The new way of doing things is to import explicitely the module 
-you need, and declaring explicitely the objects you export.  Here is a
+anymore.  The new way of doing things is to explicitly import the module 
+you need, and explicitly declaring the objects you export.  Here is a
 simple example::
 
     odoo.define('addon_name.service', function (require) {
@@ -752,7 +752,7 @@ The idea is that you define what you need to import (by using the
 something).  The web client will then make sure that your code is loaded
 properly.
 
-Modules are contained in a file, but a file can define several modules 
+Modules are contained in a file, but a file may define several modules 
 (however, it is better to keep them in separate files).
 
 
@@ -1078,7 +1078,7 @@ Asynchronous cases
 ------------------
 
 The test case examples so far are all synchronous, they execute from
-the first to the last line and once the last line has executed the
+the first line to the last and when the last line has executed the
 test is done. But the web client is full of :ref:`asynchronous code
 <reference/async>`, and thus test cases need to be async-aware.
 
@@ -1102,12 +1102,12 @@ to specify the number of assertions the case should expect, if less or
 more assertions are specified the case will count as failed.
 
 Asynchronous test cases *must* specify the number of assertions they
-will run. This allows more easily catching situations where e.g. the
+will run. This simplifies catching situations where e.g. the
 test architecture was not warned about asynchronous operations.
 
 .. note::
 
-    Asynchronous test cases also have a 2 seconds timeout: if the test
+    Asynchronous test cases also have a timeout: if the test
     does not finish within 2 seconds, it will be considered
     failed. This pretty much always means the test will not
     resolve. This timeout *only* applies to the test itself, not to

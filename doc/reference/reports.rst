@@ -184,8 +184,8 @@ language, you could call the report's external layout this way::
 
 .. tip::
 
-    Please take note that this works only when calling external templates, you will not be
-    able to translate part of a document by setting a ``t-lang`` attribute on an xml node other 
+    Please note that this works only when calling external templates, you cannot
+    translate part of a document by setting a ``t-lang`` attribute on an xml node other 
     than ``t-call``. If you wish to translate part of a template, you can create an external
     template with this partial template and call it from the main one with the ``t-lang``
     attribute.
