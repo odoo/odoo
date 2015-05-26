@@ -266,11 +266,11 @@
 
         <menuitem id="menu_expense_approved" parent="account.menu_finance_payables" 
             action="action_approved_expense" sequence="15"/>
-        <menuitem id="menu_hr_expense_configuration" name="Expenses" parent="base.menu_config"
-            sequence="20"/>
+        <menuitem id="menu_hr_expense_root" name="Expenses" sequence="20"/>
+        <menuitem id="menu_hr_expense_configuration" name="Configuration" parent="menu_hr_expense_root"
+            sequence="100" groups="base.group_configuration"/>
         <menuitem id="menu_hr_product" name="Expense Products" parent="menu_hr_expense_configuration" 
             action="hr_expense_product" groups="base.group_hr_manager"/>
-        <menuitem id="menu_hr_expense_root" name="Expenses" sequence="20"/>
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="menu_hr_expense_root"/>
         <menuitem action="action_request_approve_expense" id="menu_expense_to_approve" name="Approvals" 
             parent="menu_hr_expense_root" groups="base.group_hr_user"/>

@@ -31,8 +31,8 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_mass_mailing_configuration" name="Mass Mailing" parent="base.menu_config"
-            sequence="14"/>
+        <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
+            sequence="100" groups="base.group_configuration"/>
         <menuitem id="menu_mass_mailing_global_settings" name="Settings" 
             parent="menu_mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration"/>
 

@@ -135,8 +135,8 @@
             <field name="context">{'default_invoice_on_timesheets':1}</field>
         </record>
 
-        <menuitem name="Timesheets" id="menu_hr_timesheet_config" sequence="10"
-            parent="base.menu_config"/>
+        <menuitem name="Configuration" id="menu_hr_timesheet_config" sequence="100"
+            parent="hr_attendance.timesheet_menu_root" groups="base.group_configuration"/>
         <menuitem parent="menu_hr_timesheet_config" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="2" groups="base.group_hr_manager"/>
         
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">

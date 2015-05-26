@@ -4,7 +4,7 @@
         <menuitem id='menu_lunch' name='Lunch' sequence="24" groups="group_lunch_user" icon="fa-cutlery"/>
         <menuitem name="My Lunch" parent="menu_lunch" id="menu_lunch_title" sequence="50" />
         <menuitem name="Manager" parent="menu_lunch" id="menu_lunch_admin" sequence="51" groups="group_lunch_manager"/>
-        <menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" groups="group_lunch_manager"/>
+        <menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" groups="group_lunch_manager,base.group_configuration"/>
 
          <!--View Search to group/filter by Supplier and time-->
         <record id="lunch_order_line_view_search" model="ir.ui.view">

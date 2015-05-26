@@ -31,8 +31,8 @@
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
-        <menuitem id="menu_knowledge_configuration" name="Knowledge" parent="base.menu_config"
-            sequence="19" action="action_knowledge_configuration"/>
+        <menuitem id="menu_knowledge_configuration" name="Configuration" parent="menu_document"
+            sequence="100" action="action_knowledge_configuration" groups="base.group_configuration"/>
 
     </data>
 </openerp>

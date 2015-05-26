@@ -169,7 +169,7 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem name="Attendance" parent="base.menu_config" id="menu_hr_attendance_config" sequence="29"/>
+        <menuitem name="Configuration" parent="menu_hr_attendance_root" id="menu_hr_attendance_config" sequence="100" groups="base.group_configuration"/>
         <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" 
             parent="menu_hr_attendance_config" groups="base.group_hr_attendance" sequence="1"/>
 

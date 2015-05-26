@@ -30,7 +30,7 @@
               </p>
             </field>
         </record>
-        <menuitem id="menu_purchase_config" name="Purchases" parent="base.menu_config" sequence="4" groups="group_purchase_manager"/>
+        <menuitem id="menu_purchase_config" name="Configuration" parent="base.menu_purchase_root" sequence="100" groups="group_purchase_manager,base.group_configuration"/>
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
             parent="menu_purchase_config" sequence="50" groups="product.group_purchase_pricelist"/>

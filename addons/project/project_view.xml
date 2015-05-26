@@ -14,13 +14,13 @@
             parent="base.menu_main_pm"
             sequence="2" groups="base.group_no_one"/>
 
-        <menuitem id="menu_project_config" name="Project" parent="base.menu_config"
-            sequence="2"/>
+        <menuitem id="menu_project_config" name="Configuration" parent="base.menu_main_pm"
+            sequence="100" groups="base.group_configuration"/>
 
         <menuitem name="Configuration"
             id="base.menu_definitions"
             parent="menu_project_config"
-            groups="base.group_no_one"
+            groups="base.group_configuration"
             sequence="100"/>
 
         <record id="view_task_search_form" model="ir.ui.view">

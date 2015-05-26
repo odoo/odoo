@@ -3,9 +3,9 @@
     <data>
         <!-- Root Menus -->
 
-        <menuitem id="menu_hr_payroll_configuration" name="Payroll" parent="base.menu_config"
-            sequence="23" groups="base.group_hr_manager"/>
         <menuitem id="menu_hr_payroll_root" name="Payroll" sequence="23"/>
+        <menuitem id="menu_hr_payroll_configuration" name="Configuration" parent="menu_hr_payroll_root"
+            sequence="100" groups="base.group_hr_manager,base.group_configuration"/>
 
         <!-- Contract View -->
         <record id="hr_contract_form_inherit" model="ir.ui.view">
