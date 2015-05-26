@@ -1333,6 +1333,7 @@ class stock_picking(osv.osv):
                 #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
                 qty = uom_obj._compute_qty_obj(cr, uid, product.uom_id, remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
         picking = op.picking_id
+        move = op.linked_move_operation_ids[-1].move_id
         res = {
             'picking_id': picking.id,
             'location_id': picking.location_id.id,
@@ -1342,6 +1343,15 @@ class stock_picking(osv.osv):
             'product_uom_qty': qty,
             'name': _('Extra Move: ') + product.name,
             'state': 'draft',
+            'backorder_id' : move.backorder_id.id,
+            'date_expected' : move.date_expected,
+            'group_id' : move.group_id.id,
+            'origin' : move.origin,
+            'partner_id' : move.partner_id.id,
+            'procurement_id' : move.procurement_id.id,
+            'purchase_line_id' : move.purchase_line_id.id,
+            'rule_id' : move.rule_id.id,
+            'warehouse_id' : move.warehouse_id.id,
             }
         return res
 
