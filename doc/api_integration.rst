@@ -4,8 +4,8 @@
 Web Service API
 ===============
 
-Odoo is mostly extended internally via modules, but much of its features and
-all of its data is also available from the outside for external analysis or
+Odoo is usually extended internally via modules, but many of its features and
+all of its data are also available from the outside for external analysis or
 integration with various tools. Part of the :ref:`reference/orm/model` API is
 easily available over XML-RPC_ and accessible from a variety of languages.
 
@@ -22,7 +22,7 @@ easily available over XML-RPC_ and accessible from a variety of languages.
 Connection
 ==========
 
-.. kinda gross because it duplicates existing bits
+.. kinda gross because it duplicates existing parts
 
 .. only:: html
 
@@ -188,8 +188,8 @@ database:
 Logging in
 ----------
 
-Odoo requires users of the API to be authenticated before being able to query
-much data.
+Odoo requires users of the API to be authenticated before they can query
+most data.
 
 The ``xmlrpc/2/common`` endpoint provides meta-calls which don't require
 authentication, such as the authentication itself or fetching version
@@ -366,7 +366,7 @@ companies for instance:
 Pagination
 ''''''''''
 
-By default a research will return the ids of all records matching the
+By default a search will return the ids of all records matching the
 condition, which may be a huge number. ``offset`` and ``limit`` parameters are
 available to only retrieve a subset of all matched records.
 
@@ -412,8 +412,8 @@ available to only retrieve a subset of all matched records.
 Count records
 -------------
 
-Rather than retrieve a possibly gigantic list of records and count them
-afterwards, :meth:`~openerp.models.Model.search_count` can be used to retrieve
+Rather than retrieve a (possibly) gigantic list of records and count them,
+:meth:`~openerp.models.Model.search_count` can be used to retrieve
 only the number of records matching the query. It takes the same
 :ref:`domain <reference/orm/domains>` filter as
 :meth:`~openerp.models.Model.search` and no other parameter.
@@ -466,7 +466,7 @@ Record data is accessible via the :meth:`~openerp.models.Model.read` method,
 which takes a list of ids (as returned by
 :meth:`~openerp.models.Model.search`) and optionally a list of fields to
 fetch. By default, it will fetch all the fields the current user can read,
-which tends to be a huge amount.
+which tends to be a large number.
 
 .. rst-class:: switchable
 
@@ -575,7 +575,7 @@ Listing record fields
 a model's fields and check which ones seem to be of interest.
 
 Because
-it returns a great amount of meta-information (it is also used by client
+it returns a large amount of meta-information (it is also used by client
 programs) it should be filtered before printing, the most interesting items
 for a human user are ``string`` (the field's label), ``help`` (a help text if
 available) and ``type`` (to know which values to expect, or to send when
@@ -654,7 +654,7 @@ updating a record):
 Search and read
 ---------------
 
-Because that is a very common task, Odoo provides a
+Because it is a very common task, Odoo provides a
 :meth:`~openerp.models.Model.search_read` shortcut which as its name notes is
 equivalent to a :meth:`~openerp.models.Model.search` followed by a
 :meth:`~openerp.models.Model.read`, but avoids having to perform two requests
@@ -662,7 +662,7 @@ and keep ids around.
 
 Its arguments are similar to :meth:`~openerp.models.Model.search`'s, but it
 can also take a list of ``fields`` (like :meth:`~openerp.models.Model.read`,
-if that list is not provided it'll fetch all fields of matched records):
+if that list is not provided it will fetch all fields of matched records):
 
 .. rst-class:: switchable
 
@@ -854,7 +854,7 @@ a record).
 Delete records
 --------------
 
-Records can be deleted in bulk by providing the ids of all records to remove
+Records can be deleted in bulk by providing their ids
 to :meth:`~openerp.models.Model.unlink`.
 
 .. rst-class:: switchable
@@ -903,13 +903,13 @@ to :meth:`~openerp.models.Model.unlink`.
 Inspection and introspection
 ----------------------------
 
-.. todo:: ``get_external_id`` is kinda crap and may not return an id: it just
+.. todo:: ``get_external_id`` may not return an id: it just
           gets a random existing xid but won't generate one if there is no
           xid currently associated with the record. And operating with xids
           isn't exactly fun in RPC.
 
 While we previously used :meth:`~openerp.models.Model.fields_get` to query a
-model's and have been using an arbitrary model from the start, Odoo stores
+model and have been using an arbitrary model from the start, Odoo stores
 most model metadata inside a few meta-models which allow both querying the
 system and altering models and fields (with some limitations) on the fly over
 XML-RPC.
@@ -919,7 +919,7 @@ XML-RPC.
 ``ir.model``
 ''''''''''''
 
-Provides informations about Odoo models themselves via its various fields
+Provides information about Odoo models via its various fields
 
 ``name``
     a human-readable description of the model
@@ -1064,7 +1064,7 @@ Provides informations about Odoo models themselves via its various fields
 ``ir.model.fields``
 '''''''''''''''''''
 
-Provides informations about the fields of Odoo models and allows adding
+Provides information about the fields of Odoo models and allows adding
 custom fields without using Python code
 
 ``model_id``
@@ -1245,7 +1245,7 @@ Instead of using the top-level ``execute_kw``, signals are sent using
 Signals are sent to a specific record, and possibly trigger a transition on
 the workflow instance associated with the record.
 
-.. warning:: requires that the ``account`` module be installed
+.. warning:: This example needs the ``account`` module installed
     :class: force-right
 
 .. rst-class:: switchable
