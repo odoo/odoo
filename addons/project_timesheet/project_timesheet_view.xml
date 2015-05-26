@@ -40,10 +40,10 @@
                     <field name="effective_hours" widget="float_time"
                             groups="project.group_time_work_estimation_tasks"/>
                 </field>
-                <xpath expr='//div[@name="buttons"]' position="inside">
-                    <button class="oe_inline oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('invoice_on_timesheets','=',False)]}"
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('invoice_on_timesheets','=',False)]}"
                         icon="fa-calendar" string="Timesheets"/>
-                </xpath>
+                </div>
                 <xpath expr='//field[@name="partner_id"]' position='after'>
                     <field name="pricelist_id" invisible="1"/>
                 </xpath>

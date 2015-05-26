@@ -15,6 +15,9 @@
             <field name="arch" type="xml">
                 <form string="Company">
                   <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(preview_report)d" string="Preview Header/Footer" type="action"/>
+                    </div>
                     <div>
                         <field name="logo" widget="image"  class="oe_avatar oe_left"/>
                     </div>
@@ -89,9 +92,6 @@
                                 <div>
                                     <field name="font" class="oe_inline" on_change="onchange_font_name(font, rml_header, rml_header2, rml_header3)" />
                                     <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link" colspan="1"/>
-                                </div>
-                                <div class="oe_right oe_button_box" name="button_box" colspan="2">
-                                    <button name="%(preview_report)d" string="Preview Header/Footer" type="action"/>
                                 </div>
                                 <group col="1" colspan="2">
                                     <field name="rml_header"/>

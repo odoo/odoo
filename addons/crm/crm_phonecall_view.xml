@@ -87,19 +87,28 @@
                     <field name="state" nolabel="1" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Phone Call">
-                    <div class="oe_right oe_button_box">
-                        <button class="oe_inline oe_stat_button" type="object" name="action_button_convert2opportunity" 
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_button_convert2opportunity" 
                             icon="fa-star" attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state', 'not in', ('open', 'done'))]}"
                             help="Convert To Opportunity">
-                            <div>Convert To<br/>Opportunity</div>
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Convert To</span>
+                                <span class="o_stat_text">Opportunity</span>
+                            </div>
                         </button>
 
-                        <button class="oe_inline oe_stat_button" type="action" 
+                        <button class="oe_stat_button" type="action" 
                             name="%(phonecall_to_phonecall_act)d" icon="fa-phone">
-                            <div>Schedule<br/>Other Call</div>
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Schedule</span>
+                                <span class="o_stat_text">Other Call</span>
+                            </div>
                         </button>
-                        <button class="oe_inline oe_stat_button" name="action_make_meeting" type="object" icon="fa-calendar fa-fw">
-                            <div>Schedule<br/>A Meeting</div>
+                        <button class="oe_stat_button" name="action_make_meeting" type="object" icon="fa-calendar fa-fw">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Schedule</span>
+                                <span class="o_stat_text">A Meeting</span>
+                            </div>
                         </button>
                     </div>
                     <div class="oe_title">

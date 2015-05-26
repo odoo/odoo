@@ -79,12 +79,12 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline oe_stat_button" name= "%(action_product_default_list)d" type="action" 
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name= "%(action_product_default_list)d" type="action" 
                         groups="analytic.group_analytic_accounting" icon="fa-xing">
                         <field string="Analytic Rules" name="rules_count" widget="statinfo" />
                     </button>
-                </xpath>
+                </div>
             </field>
         </record>
         
@@ -93,12 +93,12 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline oe_stat_button" name= "action_view_rules" type="object" 
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name= "action_view_rules" type="object" 
                         groups="analytic.group_analytic_accounting" icon="fa-xing">
                         <field string="Analytic Rules" name="rules_count" widget="statinfo" />
                     </button>
-                </xpath>
+                </div>
             </field>
         </record>
 

@@ -374,18 +374,18 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="buttons"]' position='inside'>
-                    <button class="oe_inline oe_stat_button"
+                <div name="button_box" position='inside'>
+                    <button class="oe_stat_button"
                         string="To invoice"
                         icon="fa-money"
                         name="%(action_hr_tree_invoiced_all)d"
                         type="action"
                         context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"/>
-                    <button class="oe_inline oe_stat_button" string="Invoices"
+                    <button class="oe_stat_button" string="Invoices"
                         icon="fa-book"
                         name="%(action_contract_invoices_all)d"
                         type="action"/>
-                </xpath>
+                </div>
             </field>
         </record>
 

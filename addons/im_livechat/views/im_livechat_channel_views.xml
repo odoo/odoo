@@ -71,6 +71,14 @@
             <field name="arch" type="xml">
                 <form>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_session','=', 0)]}" name="%(im_chat_session_action_from_channel)d" icon="fa-comments">
+                            <field string="Sessions" name="nbr_session" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
+                            <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
+                        </button>
+                    </div>
                     <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -82,14 +90,6 @@
                             <button type="object" name="action_quit" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
                             <field name="are_you_inside" invisible="1"/>
                         </div>
-                    </div>
-                    <div class="oe_right oe_button_box" name="buttons">
-                        <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('nbr_session','=', 0)]}" name="%(im_chat_session_action_from_channel)d" icon="fa-comments">
-                            <field string="Sessions" name="nbr_session" widget="statinfo"/>
-                        </button>
-                        <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
-                            <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
-                        </button>
                     </div>
                     <group>
                         <group string="Operators">

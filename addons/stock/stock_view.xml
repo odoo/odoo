@@ -195,7 +195,7 @@
             <field name="model">stock.production.lot</field>
             <field name="arch" type="xml">
                 <form string="Serial Number">
-                    <div class="oe_button_box oe_right">
+                    <div class="oe_button_box" name="button_box">
                         <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                     </div>
                     <div class="oe_title">
@@ -316,7 +316,7 @@
             <field name="model">stock.location</field>
             <field name="arch" type="xml">
                 <form string="Stock Location">
-                    <div class="oe_right oe_button_box" name="buttons">
+                    <div class="oe_button_box" name="button_box">
                         <button string="Current Stock" 
                                 class="oe_stat_button" 
                                 icon="fa-building-o" name="%(location_open_quants)d" type="action"
@@ -532,7 +532,7 @@
             <field name="arch" type="xml">
                 <form string="Warehouse">
                     <sheet>
-                        <div class="oe_right oe_button_box">                        
+                        <div class="oe_button_box" name="button_box">
                             <button name="view_all_routes_for_wh" 
                                     string="Routes"
                                     icon="fa-refresh"
@@ -703,7 +703,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
-                    <div class="oe_right oe_button_box" name="button_box">
+                    <div class="oe_button_box" name="button_box">
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
@@ -1564,7 +1564,7 @@
             <field name="arch" type="xml">
                 <form string="Reordering Rules">
                     <sheet>
-                        <div class="oe_right oe_button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button name="action_view_proc_to_process" type="object" string="Procurement Orders to Process"/>                            
                         </div>
                         <group>
@@ -1631,9 +1631,9 @@
                         <field name="route_ids" widget="many2many_tags"/>
                     </group>
                 </xpath>
-                <xpath expr="//div[@name='button_box']" position="inside">
+                <div name="button_box" position="inside">
                     <button name="do_view_pickings" class="oe_stat_button" icon="fa-bars" string="Group's Pickings" type="object"/>
-                </xpath>
+                </div>
                 <xpath expr="//field[@name='rule_id']" position="replace">
                     <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>
                     <field name="partner_dest_id"/>
@@ -1759,8 +1759,8 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Quants" create="false" edit="false">
-                    <div class="oe_right oe_button_box">
-                        <button name="action_view_quant_history" type="object" string="Quant History"/>                            
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_quant_history" type="object" string="Quant History"/>
                     </div>
                     <group>
                         <field name="product_id"/>
@@ -1861,11 +1861,12 @@
             <field name="arch" type="xml">
                 <form string="Package">
                     <sheet>
-                        <div class="oe_right oe_button_box">
-                            <button class="oe_inline" name="unpack" string="Unpack" type="object"/>
-                            <button class="oe_inline oe_stat_button" name="%(action_picking_tree_all)d"
+                        <div class="oe_button_box" name="button_box">
+                            <button name="unpack" string="Unpack" type="object"/>
+                            <button class="oe_stat_button" name="%(action_picking_tree_all)d"
                             string="Package Transfers" type="action" 
                             widget="statinfo" icon="fa-dropbox"/>
+                            <button name="get_content_package" type="object" string="View Contained Packages content" icon="gtk-execute" attrs="{'invisible': [('children_ids','=',[])]}"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" string="Package Reference" class="oe_edit_only"/>
@@ -1895,9 +1896,6 @@
                                     </tree>
                                 </field>
 
-                                <div class="oe_right oe_button_box" style="margin-top: 10px">
-                                    <button name="get_content_package" type="object" string="View Contained Packages content" icon="gtk-execute" attrs="{'invisible': [('children_ids','=',[])]}"/>
-                                </div>
                                 <separator string="Contained Packages"/>
                                 <field name="children_ids">
                                     <tree string="Contained Packages">
@@ -2050,9 +2048,9 @@
             <field name="model">procurement.group</field>
             <field name="inherit_id" ref="procurement.procurement_group_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='button_box']" position="inside">
+                <div name="button_box" position="inside">
                     <button name="%(do_view_pickings)d" string="Pickings" type="action"/>
-                </xpath>
+                </div>
             </field>
         </record>
 

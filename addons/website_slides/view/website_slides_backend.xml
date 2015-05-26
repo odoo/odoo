@@ -40,13 +40,13 @@
             <field name="arch" type="xml">
                 <form string="Slide">
                     <sheet>
-                        <field name="image" widget="image" class="oe_left oe_avatar" options='{"preview_image": "image_thumb"}'/>
-                        <div class="oe_right oe_button_box" name="buttons">
-                            <button class="oe_inline oe_stat_button" name="open_website_url"
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="open_website_url"
                                     type="object" icon="fa-globe">
                                 <field name="website_published" widget="website_button"/>
                             </button>
                         </div>
+                        <field name="image" widget="image" class="oe_left oe_avatar" options='{"preview_image": "image_thumb"}'/>
                         <div class="oe_title oe_left">
                             <div class="oe_edit_only">
                                 <label for="name" string="Name"/>
@@ -194,6 +194,12 @@
             <field name="arch" type="xml">
                 <form string="Channels">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="open_website_url"
+                                    type="object" icon="fa-globe">
+                                <field name="website_published" widget="website_button"/>
+                            </button>
+                        </div>
                         <div class="oe_title oe_left">
                             <div class="oe_edit_only">
                                 <label for="name" string="Name"/>
@@ -201,12 +207,6 @@
                             <h1>
                                 <field name="name" default_focus="1" placeholder="Name"/>
                             </h1>
-                        </div>
-                        <div class="oe_right oe_button_box" name="buttons">
-                            <button class="oe_inline oe_stat_button" name="open_website_url"
-                                    type="object" icon="fa-globe">
-                                <field name="website_published" widget="website_button"/>
-                            </button>
                         </div>
                         <field name="category_ids" widget="many2many_tags" placeholder="Categories" context="{'default_channel_id': active_id}"
                             domain="[('channel_id','=', active_id)]"/>

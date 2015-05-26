@@ -192,19 +192,19 @@
         <field name="arch" type="xml">
             <form string="Equipments">
                 <sheet>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Name"/>
-                        <h1><field name="name" string="Name"/></h1>
-                        <label for="serial_no" class="oe_edit_only"/>
-                        <field name="serial_no"/>
-                    </div>
-                    <div class="oe_right oe_button_box" name="buttons">
+                    <div class="oe_button_box" name="button_box">
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
                             class="oe_stat_button"
                             icon="fa-ticket">
                             <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <h1><field name="name" string="Name"/></h1>
+                        <label for="serial_no" class="oe_edit_only"/>
+                        <field name="serial_no"/>
                     </div>
                     <group>
                         <group>
@@ -392,13 +392,7 @@
         <field name="arch" type="xml">
             <form string="Equipment Categories">
                 <sheet>
-                <div class="oe_title">
-                    <label for="name" class="oe_edit_only" string="Category Name"/>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
-                </div>
-                <div class="oe_right oe_button_box" name="buttons">
+                <div class="oe_button_box" name="button_box">
                     <button name="%(hr_equipment_action_from_category_form)d"
                         class="oe_stat_button"
                         icon="fa-laptop"
@@ -411,6 +405,12 @@
                         icon="fa-ticket">
                         <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                     </button>
+                </div>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only" string="Category Name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
                 </div>
                 <group>
                     <group col="4">

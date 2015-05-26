@@ -221,7 +221,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
-                    <div class="oe_right oe_button_box">
+                    <div class="oe_button_box" name="button_box">
                         <button name="%(act_payslip_lines)d" 
                             class="oe_stat_button" 
                             icon="fa-money" 
@@ -391,7 +391,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//div[@name='button_box']" position="inside">
+                    <div name="button_box" position="inside">
                         <button name="%(act_hr_employee_payslip_list)d"  
                             class="oe_stat_button" 
                             icon="fa-money" 
@@ -399,7 +399,7 @@
                             groups="base.group_hr_user">
                             <field name="payslip_count" widget="statinfo" string="Payslips"/>
                         </button>
-                    </xpath>
+                    </div>
                 </data>
             </field>
         </record>

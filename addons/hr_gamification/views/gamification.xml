@@ -7,9 +7,9 @@
             <field name="model">gamification.badge</field>
             <field name="inherit_id" ref="gamification.badge_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
+                <div name="button_box" position="inside">
                     <button string="Granted Employees" type="object" name="get_granted_employees" attrs="{'invisible': [('stat_count','=',0)]}" />
-                </xpath>
+                </div>
             </field>
         </record>
 

@@ -1105,12 +1105,12 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <div name="buttons" position="inside">
-                    <button class="oe_inline oe_stat_button" name="%(template_open_bom)d" type="action"
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="%(template_open_bom)d" type="action"
                         attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
-                    <button class="oe_inline oe_stat_button" name="action_view_mos" type="object" 
+                    <button class="oe_stat_button" name="action_view_mos" type="object" 
                         attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>
@@ -1124,12 +1124,12 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <div name="buttons" position="inside">
-                    <button class="oe_inline oe_stat_button" name="action_view_bom" type="object" 
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="action_view_bom" type="object" 
                         attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
-                    <button class="oe_inline oe_stat_button" name="%(act_product_mrp_production)d" type="action" 
+                    <button class="oe_stat_button" name="%(act_product_mrp_production)d" type="action" 
                         attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>

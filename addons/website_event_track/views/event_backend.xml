@@ -90,9 +90,9 @@
                         <field name="state" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Track">
-                        <div class="oe_right oe_button_box">
+                        <div class="oe_button_box" name="button_box">
                             <field name="website_url" invisible="1"/>
-                            <button class="oe_inline oe_stat_button" name="open_website_url"
+                            <button class="oe_stat_button" name="open_website_url"
                                 type="object" icon="fa-globe">
                                 <field name="website_published" widget="website_button"/>
                             </button>
@@ -310,20 +310,20 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
+                <div name="button_box" position="inside">
                     <button name="%(action_event_track_from_event)d" 
                             type="action" 
-                            class="oe_stat_button oe_inline" 
+                            class="oe_stat_button" 
                             icon="fa-inbox">
                         <field name="count_tracks" widget="statinfo"/>
                     </button>
                     <button name="%(action_event_sponsor_from_event)d"
                             type="action"
-                            class="oe_stat_button oe_inline"
+                            class="oe_stat_button"
                             icon="fa-users">
-                        <field name="count_sponsor" widget="statinfo" class="oe_inline" string="Sponsorships"/>
+                        <field name="count_sponsor" widget="statinfo" string="Sponsorships"/>
                     </button>
-                </xpath>
+                </div>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <div name="event_checkboxes">
                         <field name="show_menu"/>
@@ -333,8 +333,6 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                         <field name="show_track_proposal"/>
                         <label for="show_track_proposal"/>
                     </div>
-                </xpath>
-                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
                 </xpath>
             </field>
         </record>

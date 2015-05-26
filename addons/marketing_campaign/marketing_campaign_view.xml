@@ -61,13 +61,16 @@
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
             <sheet string="Campaign">
-                <div class="oe_right oe_button_box" name="button_box">
+                <div class="oe_button_box" name="button_box">
                     <button type="action"
                         name="%(act_marketing_campaing_stat)d"
                         class="oe_stat_button"
                         icon="fa-keyboard-o"
                         help="Marketing Campaign Statistics">
-                        <div>Campaign<br/>Statistics</div>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Campaign</span>
+                            <span class="o_stat_text">Statistics</span>
+                        </div>
                     </button>
                     <button type="action"
                         name="%(act_marketing_campaing_segment_opened)d"

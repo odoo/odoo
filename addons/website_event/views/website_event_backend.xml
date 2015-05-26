@@ -8,20 +8,20 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
+            <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
-                <button class="oe_inline oe_stat_button" name="open_website_url"
+                <button class="oe_stat_button" name="open_website_url"
                     type="object" icon="fa-globe">
                     <field name="website_published" widget="website_button"/>
                 </button>
-            </xpath>
+            </div>
             <xpath expr="//field[@name='organizer_id']" position="after">
                 <field name="twitter_hashtag"/>
             </xpath>
-            <xpath expr="//div[@class='oe_right oe_button_box']/button" position="before">
+            <xpath expr="//div[@name='button_box']/button" position="before">
                 <button name="action_open_badge_editor"
                     type="object"
-                    class="oe_stat_button oe_inline"
+                    class="oe_stat_button"
                     icon="fa-newspaper-o"
                     string="Badge"
                     help="Edit Event Badge">

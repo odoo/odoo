@@ -245,9 +245,9 @@
             <field name="arch" type="xml">
                 <form string="Contact List">
                     <sheet>
-                        <div class="oe_right oe_button_box" name="buttons">
+                        <div class="oe_button_box" name="button_box">
                             <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
-                                    type="action" icon="fa-user" class="oe_stat_button pull-right">
+                                    type="action" icon="fa-user" class="oe_stat_button">
                                 <field name="contact_nbr" string="Recipients" widget="statinfo"/>
                             </button>
                         </div>
@@ -392,7 +392,7 @@
                         </strong></p>
                     </div>
                     <sheet>
-                        <div class="oe_button_box pull-right" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
+                        <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
                             <button name="%(action_view_mail_mail_statistics_mailing)d" type="action"
                                 icon="fa-envelope-o" class="oe_stat_button"
                                 attrs="{'invisible': [('sent', '=', 0)]}" >
@@ -705,43 +705,39 @@
                         <span><field name="stage_id" widget="statusbar" clickable="True"/></span>
                     </header>
                     <sheet>
+                        <field name="total" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"
+                            attrs="{'invisible': [('total', '=', 0)]}">
+                            <button name="%(action_view_mass_mailings_from_campaign)d"
+                                type="action" class="oe_stat_button" icon="fa-envelope-o">
+                                <field name="total_mailings" widget="statinfo" string="Mailings"/>
+                            </button>
+                            <button name="%(action_view_mail_mail_statistics_mailing)d" type="action"
+                                icon="fa-envelope-o" class="oe_stat_button"
+                                attrs="{'invisible': [('sent', '=', 0)]}" >
+                                <field name="sent" string="Emails Sent" widget="statinfo"/>
+                            </button>
+                            <button name="%(action_view_mass_mailing_contacts)d"
+                                type="action" class="oe_stat_button">
+                                <field name="received_ratio" widget="percentpie" string="Received"/>
+                            </button>
+                            <button name="%(action_view_mass_mailing_contacts)d"
+                                type="action" class="oe_stat_button">
+                                <field name="opened_ratio" widget="percentpie" string="Opened"/>
+                            </button>
+                            <button name="%(action_view_mass_mailing_contacts)d"
+                                type="action" class="oe_stat_button">
+                                <field name="replied_ratio" widget="percentpie" string="Replied"/>
+                            </button>
+                            <button name="%(dropdb snipp)d"
+                                type="action" class="oe_stat_button">
+                                <field name="clicks_ratio" widget="percentpie" string="Clicks"/>
+                            </button>
+                        </div>
                         <group>
-                            <group>
-                                <field name="name" string="Campaign Name" on_change="on_change_campaign_name(name)"/>
-                                <field name="user_id"/>
-                                <field name="tag_ids" widget="many2many_tags"/>
-                            </group>
-                            <group>
-                                <field name="total" invisible="1"/>
-                                <div class="oe_right oe_button_box" name="buttons"
-                                    attrs="{'invisible': [('total', '=', 0)]}">
-                                    <button name="%(action_view_mass_mailings_from_campaign)d"
-                                        type="action" class="oe_inline oe_stat_button" icon="fa-envelope-o">
-                                        <field name="total_mailings" widget="statinfo" string="Mailings"/>
-                                    </button>
-                                    <button name="%(action_view_mail_mail_statistics_mailing)d" type="action"
-                                        icon="fa-envelope-o" class="oe_stat_button"
-                                        attrs="{'invisible': [('sent', '=', 0)]}" >
-                                        <field name="sent" string="Emails Sent" widget="statinfo"/>
-                                    </button>
-                                    <button name="%(action_view_mass_mailing_contacts)d"
-                                        type="action" class="oe_stat_button oe_inline">
-                                        <field name="received_ratio" widget="percentpie" string="Received"/>
-                                    </button>
-                                    <button name="%(action_view_mass_mailing_contacts)d"
-                                        type="action" class="oe_stat_button oe_inline">
-                                        <field name="opened_ratio" widget="percentpie" string="Opened"/>
-                                    </button>
-                                    <button name="%(action_view_mass_mailing_contacts)d"
-                                        type="action" class="oe_stat_button oe_inline">
-                                        <field name="replied_ratio" widget="percentpie" string="Replied"/>
-                                    </button>
-                                    <button name="%(dropdb snipp)d"
-                                        type="action" class="oe_stat_button">
-                                        <field name="clicks_ratio" widget="percentpie" string="Clicks"/>
-                                    </button>
-                                </div>
-                            </group>
+                            <field name="name" string="Campaign Name" on_change="on_change_campaign_name(name)"/>
+                            <field name="user_id"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                         <notebook>
                             <page string="Tracking">

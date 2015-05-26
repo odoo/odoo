@@ -53,8 +53,7 @@
                     <field name='product_variant_count' invisible='1'/>
                     <sheet>
                         <field name="id" invisible="True"/>
-                        <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
-                        </div>
+                        <div class="oe_button_box" name="button_box"/>
                         <div class="oe_left" style="width: 500px;">
                             <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                             <div class="oe_title" style="width: 390px;">
@@ -255,14 +254,14 @@
                     <field name="barcode" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                     <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                 </field>
-                <xpath expr="//page[@string='Sales']" position="after">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" string="Variant Prices"  name="%(variants_template_action)d" type="action" icon="fa-strikethrough"/>
+                    <button class="oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
+                        <field string="List of Variants" name="product_variant_count" widget="statinfo" />
+                    </button>
+                </div>
+                <xpath expr="//page[@name='Sales']" position="after">
                     <page name="variants" string="Variants">
-                        <div class="oe_right">
-                            <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(variants_template_action)d" type="action" icon="fa-strikethrough"/>
-                            <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
-                                <field string="List of Variants" name="product_variant_count" widget="statinfo" />
-                            </button>
-                        </div>
                         <p class="oe_grey">
                             <strong>Warning</strong>: adding or deleting attributes
                             will delete and recreate existing variants and lead
