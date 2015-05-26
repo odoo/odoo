@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-John Bradshaw - jbradsha@github.com - https://github.com/jbradsha
+John Bradshaw - jbradsha@users.noreply.github.com - https://github.com/jbradsha
