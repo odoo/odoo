@@ -49,7 +49,6 @@ You can define the different phases of interviews and easily rate the applicant 
     'data': [
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
-        'hr_recruitment_menu.xml',
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
         'report/hr_recruitment_report_view.xml',
