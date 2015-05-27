@@ -6,16 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-05-11 04:50+0000\n"
+"Last-Translator: Mustafa Rawi <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:32+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-12 05:36+0000\n"
+"X-Generator: Launchpad (build 17487)\n"
+"Language: ar\n"
 
 #. module: calendar
 #: model:email.template,body_html:calendar.calendar_template_meeting_reminder
@@ -209,6 +210,193 @@ msgid ""
 "                \n"
 "                "
 msgstr ""
+"\n"
+"                <html>\n"
+"                    <head>\n"
+"                        <meta http-equiv=\"Content-type\" "
+"content=\"text/html; charset=utf-8\" />\n"
+"                        <title>${object.event_id.name}</title>\n"
+"                        <style>\n"
+"                            span.oe_mail_footer_access {\n"
+"                                display:block;    \n"
+"                                text-align:center;\n"
+"                                color:grey;                                \n"
+"                            }\n"
+"                        </style>\n"
+"                    </head>\n"
+"                    <body>\n"
+"                        <div style=\"border-radius: 2px; max-width: 1200px; "
+"height: auto;margin-left: auto;margin-right: auto;background-"
+"color:#f9f9f9;\">\n"
+"                            <div style=\"height:auto;text-align: center;font-"
+"size : 30px;color: #8A89BA;\">\n"
+"                                <strong>${object.event_id.name}</strong>     "
+"                           \n"
+"                            </div>\n"
+"                            <div style=\"height: 50px;text-align: left;font-"
+"size : 14px;border-collapse: separate;margin-top:10px\">\n"
+"                                <strong style=\"margin-left:12px\">السيد(ة) "
+"${object.cn}</strong> ,<br/>\n"
+"                                <p style=\"margin-left:12px\">نذكر سيادتكم "
+"بالمناسبة التالية: </p>\n"
+"                            </div>\n"
+"                            <div style=\"height: auto;margin-"
+"left:12px;margin-top:30px;\">\n"
+"                                <table>\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <div style=\"border-top-left-"
+"radius:3px;border-top-right-radius:3px;font-size:12px;border-"
+"collapse:separate;text-align:center;font-"
+"weight:bold;color:#ffffff;width:130px;min-height: 18px;border-"
+"color:#ffffff;background:#8a89ba;padding-top: "
+"4px;\">${object.event_id.get_interval(object.event_id.start, "
+"'dayname')}</div>\n"
+"                                            <div style=\"font-size:48px;min-"
+"height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-"
+"color: #E1E2F8;width: 130px;\">\n"
+"                                                "
+"${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                            </div>\n"
+"                                            <div style='font-size:12px;text-"
+"align:center;font-weight:bold;color:#ffffff;background-"
+"color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, "
+"'month')}</div>\n"
+"                                            <div style=\"border-"
+"collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-"
+"size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px "
+"solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and "
+"object.event_id.get_interval(object.event_id.start, 'time', "
+"tz=object.partner_id.tz) or ''}</div>\n"
+"                                        </td>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: "
+"10px;font-size: 16px;\">\n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if "
+"object.event_id.location:\n"
+"                                                                <div "
+"style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    المكان\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td  "
+"style=\"vertical-align:top;\">\n"
+"                                                            % if "
+"object.event_id.location:\n"
+"                                                                <div style = "
+"\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-"
+"size: 14px\" >\n"
+"                                                                    : "
+"${object.event_id.location}\n"
+"                                                                    <span "
+"style= \"color:#A9A9A9; \">(<a "
+"href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">عرض"
+" الخريطة</a>)\n"
+"                                                                        "
+"</span>\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>                "
+"                                        \n"
+"                                                    </tr> \n"
+"                                                                             "
+"                   \n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if "
+"object.event_id.description :\n"
+"                                                                <div "
+"style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    بشأن\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td style=\"vertical-"
+"align:text-top;\">\n"
+"                                                            % if "
+"object.event_id.description :\n"
+"                                                                <div "
+"style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    : "
+"${object.event_id.description}\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                                             "
+"                   \n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if not "
+"object.event_id.allday and object.event_id.duration:\n"
+"                                                                <div "
+"style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica "
+"Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    المدة\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td colspan=\"3\" "
+"style=\"vertical-align:text-top;\">\n"
+"                                                            % if not "
+"object.event_id.allday and object.event_id.duration:\n"
+"                                                                <div "
+"style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    : "
+"${('%dH%02d' % "
+"(object.event_id.duration,(object.event_id.duration*60)%60))}\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                    </tr>                    "
+"                            \n"
+"                                                <tr style=\" height: "
+"30px;\">\n"
+"                                                    <td style=\"height: "
+"25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div>\n"
+"                                                            الحضور\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                    <td colspan=\"3\">\n"
+"                                                       : \n"
+"                                                        % for attendee in "
+"object.event_id.attendee_ids:\n"
+"                                                            <div "
+"style=\"display:inline-block; border-radius: 50%; width:10px; "
+"height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or "
+"'white'};\"></div>\n"
+"                                                            % if attendee.cn "
+"!= object.cn:\n"
+"                                                                <span "
+"style=\"margin-left:5px\">${attendee.cn}</span>\n"
+"                                                            % else:\n"
+"                                                                <span "
+"style=\"margin-left:5px\">وسيادتكم</span>\n"
+"                                                            % endif\n"
+"                                                        % endfor\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </div>            \n"
+"                        </div>\n"
+"                    </body>\n"
+"                </html>\n"
+"                \n"
+"                "
 
 #. module: calendar
 #: model:email.template,body_html:calendar.calendar_template_meeting_invitation
@@ -423,6 +611,213 @@ msgid ""
 "                \n"
 "                "
 msgstr ""
+"\n"
+"                <html>\n"
+"                    <head>\n"
+"                        <meta http-equiv=\"Content-type\" "
+"content=\"text/html; charset=utf-8\" />\n"
+"                        <title>${object.event_id.name}</title>\n"
+"                        <style> \n"
+"                            span.oe_mail_footer_access {\n"
+"                                display:block;    \n"
+"                                text-align:center;\n"
+"                                color:grey;                                \n"
+"                            }\n"
+"                        </style>\n"
+"                    </head>\n"
+"                    <body>\n"
+"                        <div style=\"border-radius: 2px; max-width: 1200px; "
+"height: auto;margin-left: auto;margin-right: auto;background-"
+"color:#f9f9f9;\">\n"
+"                            <div style=\"height:auto;text-align: center;font-"
+"size : 30px;color: #8A89BA;\">\n"
+"                                <strong>${object.event_id.name}</strong>\n"
+"                            </div>\n"
+"                            <div style=\"height: 50px;text-align: left;font-"
+"size : 14px;border-collapse: separate;margin-top:10px\">\n"
+"                                <strong style=\"margin-left:12px\">السيد(ة) "
+"${object.cn}</strong> ,<br/><p style=\"margin-left:12px\">يدعوك "
+"${object.event_id.user_id.partner_id.name} لحضور ${object.event_id.name} في "
+"${object.event_id.user_id.company_id.name}.</p> \n"
+"                            </div>\n"
+"                            <div style=\"height: auto;margin-"
+"left:12px;margin-top:30px;\">\n"
+"                                <table>\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <div style=\"border-top-left-"
+"radius:3px;border-top-right-radius:3px;font-size:12px;border-"
+"collapse:separate;text-align:center;font-"
+"weight:bold;color:#ffffff;width:130px;min-height: 18px;border-"
+"color:#ffffff;background:#8a89ba;padding-top: "
+"4px;\">${object.event_id.get_interval(object.event_id.start, "
+"'dayname')}</div>\n"
+"                                            <div style=\"font-size:48px;min-"
+"height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-"
+"color: #E1E2F8;width: 130px;\">\n"
+"                                                "
+"${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                            </div>\n"
+"                                            <div style='font-size:12px;text-"
+"align:center;font-weight:bold;color:#ffffff;background-"
+"color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, "
+"'month')}</div>\n"
+"                                            <div style=\"border-"
+"collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-"
+"size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px "
+"solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and "
+"object.event_id.get_interval(object.event_id.start, 'time', "
+"tz=object.partner_id.tz) or ''}</div>\n"
+"                                        </td>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: "
+"10px;font-size: 16px;\">\n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if "
+"object.event_id.location:\n"
+"                                                                <div "
+"style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    المكان\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td  "
+"style=\"vertical-align:top;\">\n"
+"                                                            % if "
+"object.event_id.location:\n"
+"                                                                <div style = "
+"\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-"
+"size: 14px\" >\n"
+"                                                                    : "
+"${object.event_id.location}\n"
+"                                                                    <span "
+"style= \"color:#A9A9A9; \">(<a "
+"href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">عرض"
+" الخريطة</a>)\n"
+"                                                                        "
+"</span>\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>                "
+"                                        \n"
+"                                                    </tr> \n"
+"                                                                             "
+"                   \n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if "
+"object.event_id.description :\n"
+"                                                                <div "
+"style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    بشأن\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td style=\"vertical-"
+"align:text-top;\">\n"
+"                                                            % if "
+"object.event_id.description :\n"
+"                                                                <div "
+"style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    : "
+"${object.event_id.description}\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                                             "
+"                   \n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if not "
+"object.event_id.allday and object.event_id.duration:\n"
+"                                                                <div "
+"style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica "
+"Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    المدة\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td colspan=\"3\" "
+"style=\"vertical-align:text-top;\">\n"
+"                                                            % if not "
+"object.event_id.allday and object.event_id.duration:\n"
+"                                                                <div "
+"style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    : "
+"${('%dH%02d' % "
+"(object.event_id.duration,(object.event_id.duration*60)%60))}\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                    </tr>                    "
+"                            \n"
+"                                                <tr style=\" height: "
+"30px;\">\n"
+"                                                    <td style=\"height: "
+"25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div>\n"
+"                                                            الحاضرون\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                    <td colspan=\"3\">\n"
+"                                                       : \n"
+"                                                        % for attendee in "
+"object.event_id.attendee_ids:\n"
+"                                                            <div "
+"style=\"display:inline-block; border-radius: 50%; width:10px; "
+"height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or "
+"'white'};\"></div>\n"
+"                                                            % if attendee.cn "
+"!= object.cn:\n"
+"                                                                <span "
+"style=\"margin-left:5px\">${attendee.cn}</span>\n"
+"                                                            % else:\n"
+"                                                                <span "
+"style=\"margin-left:5px\">وسيادتكم</span>\n"
+"                                                            % endif\n"
+"                                                        % endfor\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </div>\n"
+"                            <div style=\"height: auto;width:450px; margin:0 "
+"auto;padding-top:20px;padding-bottom:40px;\">\n"
+"                                    <a style=\"padding: 8px 30px 8px "
+"30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin "
+": 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" "
+"href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&token=${object.access_token}&action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&id=${object.event_id.id}\">قبول</a>\n"
+"                                    <a style=\"padding: 8px 30px 8px "
+"30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin "
+": 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" "
+"href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or "
+"'' }&token=${object.access_token}&action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&id=${object.event_id.id}\">رفض</a>\n"
+"                                    <a style=\"padding: 8px 30px 8px "
+"30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-"
+"decoration: none;color:#FFFFFF;\" "
+"href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&token=${object.access_token}&action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&id=${object.event_id.id}\">عرض</a>\n"
+"                            </div> \n"
+"                        </div>\n"
+"                    </body>\n"
+"                </html>\n"
+"                \n"
+"                "
 
 #. module: calendar
 #: model:email.template,body_html:calendar.calendar_template_meeting_changedate
@@ -641,28 +1036,240 @@ msgid ""
 "                \n"
 "                "
 msgstr ""
+" \n"
+"                <html>\n"
+"                    <head>\n"
+"                        <meta http-equiv=\"Content-type\" "
+"content=\"text/html; charset=utf-8\" />\n"
+"                        <title>${object.event_id.name}</title>\n"
+"                        <style>\n"
+"                            span.oe_mail_footer_access {\n"
+"                                display:block;    \n"
+"                                text-align:center;\n"
+"                                color:grey;                                \n"
+"                            }\n"
+"                        </style>\n"
+"                    </head>\n"
+"                    <body>\n"
+"                        <div style=\"border-radius: 2px; max-width: 1200px; "
+"height: auto;margin-left: auto;margin-right: auto;background-"
+"color:#f9f9f9;\">\n"
+"                            <div style=\"height:auto;text-align: center;font-"
+"size : 30px;color: #8A89BA;\">\n"
+"                                <strong>${object.event_id.name}</strong>\n"
+"                            </div>\n"
+"                            <div style=\"height: 50px;text-align: right;font-"
+"size : 14px;border-collapse: separate;margin-top:10px\">\n"
+"                                <strong style=\"margin-left:12px\">السيد(ة) "
+"${object.cn}</strong> ,<br/>\n"
+"                                <p style=\"margin-left:12px\">تغير موعد "
+"الاجتماع...<br/>\n"
+"                                الاجتماع الذي يحضر له "
+"${object.event_id.user_id.partner_id.name} تغير إلى : "
+"${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.</p>\n"
+"                            </div>\n"
+"                            <div style=\"height: auto;margin-"
+"left:12px;margin-top:30px;\">\n"
+"                                <table>\n"
+"                                    <tr>                                     "
+"   \n"
+"                                        <td>\n"
+"                                            <div style=\"border-top-left-"
+"radius:3px;border-top-right-radius:3px;font-size:12px;border-"
+"collapse:separate;text-align:center;font-"
+"weight:bold;color:#ffffff;width:130px;min-height: 18px;border-"
+"color:#ffffff;background:#8a89ba;padding-top: "
+"4px;\">${object.event_id.get_interval(object.event_id.start, "
+"'dayname')}</div>\n"
+"                                            <div style=\"font-size:48px;min-"
+"height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-"
+"color: #E1E2F8;width: 130px;\">\n"
+"                                                "
+"${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                            </div>\n"
+"                                            <div style='font-size:12px;text-"
+"align:center;font-weight:bold;color:#ffffff;background-"
+"color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, "
+"'month')}</div>\n"
+"                                            <div style=\"border-"
+"collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-"
+"size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px "
+"solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and "
+"object.event_id.get_interval(object.event_id.start, 'time', "
+"tz=object.partner_id.tz) or ''}</div>\n"
+"                                        </td>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: "
+"10px;font-size: 16px;\">\n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if "
+"object.event_id.location:\n"
+"                                                                <div "
+"style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    المكان\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td  "
+"style=\"vertical-align:top;\">\n"
+"                                                            % if "
+"object.event_id.location:\n"
+"                                                                <div style = "
+"\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-"
+"size: 14px\" >\n"
+"                                                                    : "
+"${object.event_id.location}\n"
+"                                                                    <span "
+"style= \"color:#A9A9A9; \">(<a "
+"href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">مشا"
+"هدة الخريطة</a>)\n"
+"                                                                        "
+"</span>\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>                "
+"                                        \n"
+"                                                    </tr> \n"
+"                                                                             "
+"                   \n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if "
+"object.event_id.description :\n"
+"                                                                <div "
+"style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    بشأن\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td style=\"vertical-"
+"align:text-top;\">\n"
+"                                                            % if "
+"object.event_id.description :\n"
+"                                                                <div "
+"style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    : "
+"${object.event_id.description}\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                                             "
+"                   \n"
+"                                                    <tr>\n"
+"                                                        <td style=\"vertical-"
+"align:top;\">\n"
+"                                                            % if not "
+"object.event_id.allday and object.event_id.duration:\n"
+"                                                                <div "
+"style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica "
+"Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    المدة\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                        <td colspan=\"3\" "
+"style=\"vertical-align:text-top;\">\n"
+"                                                            % if not "
+"object.event_id.allday and object.event_id.duration:\n"
+"                                                                <div "
+"style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                                    : "
+"${('%dH%02d' % "
+"(object.event_id.duration,(object.event_id.duration*60)%60))}\n"
+"                                                                </div>\n"
+"                                                            % endif\n"
+"                                                        </td>\n"
+"                                                    </tr>                    "
+"                            \n"
+"                                                <tr style=\" height: "
+"30px;\">\n"
+"                                                    <td style=\"height: "
+"25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', "
+"Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div>\n"
+"                                                            الحاضرون\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                    <td colspan=\"3\">\n"
+"                                                       : \n"
+"                                                        % for attendee in "
+"object.event_id.attendee_ids:\n"
+"                                                            <div "
+"style=\"display:inline-block; border-radius: 50%; width:10px; "
+"height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or "
+"'white'};\"></div>\n"
+"                                                            % if attendee.cn "
+"!= object.cn:\n"
+"                                                                <span "
+"style=\"margin-left:5px\">${attendee.cn}</span>\n"
+"                                                            % else:\n"
+"                                                                <span "
+"style=\"margin-left:5px\">وسيادتكم</span>\n"
+"                                                            % endif\n"
+"                                                        % endfor\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>                                     "
+" \n"
+"                            </div>\n"
+"                            <div style=\"height: auto;width:450px; margin:0 "
+"auto;padding-top:20px;padding-bottom:40px;\">\n"
+"                                    <a style=\"padding: 8px 30px 8px "
+"30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin "
+": 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" "
+"href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&token=${object.access_token}&action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&id=${object.event_id.id}\">قبول</a>\n"
+"                                    <a style=\"padding: 8px 30px 8px "
+"30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin "
+": 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" "
+"href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&token=${object.access_token}&action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&id=${object.event_id.id}\">رفض</a>\n"
+"                                    <a style=\"padding: 8px 30px 8px "
+"30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-"
+"decoration: none;color:#FFFFFF;\" "
+"href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&token=${object.access_token}&action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&id=${object.event_id.id}\">مشاهدة</a>\n"
+"                            </div>                             \n"
+"                        </div>\n"
+"                    </body>\n"
+"                </html>\n"
+"                \n"
+"                "
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/base_calendar.js:20
 #, python-format
 msgid " [Me]"
-msgstr ""
+msgstr " [أنا]"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name}"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name} - Date has been updated"
-msgstr ""
+msgstr "${object.event_id.name} - تم تحديث التاريخ"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - تذكير"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -678,78 +1285,86 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            انقر لإنشاء اجتماع جديد.\n"
+"          </p><p>\n"
+"            هذه الرزنامة مشتركة بين كافة الموظفين وتتكامل مع تطبيقات أودو "
+"الأخرى، مثل\n"
+"            إجازات الموظفين أو فرص البيع.\n"
+"          </p>\n"
+"        "
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1593
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
-msgstr ""
+msgstr "تم إرسال بريد إلكتروني للتنبيه بتغيير التاريخ!"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Accept"
-msgstr "اقبل"
+msgstr "قبول"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Accepted"
-msgstr "تم القبول"
+msgstr "مقبول"
 
 #. module: calendar
 #: field:calendar.event,active:0
 msgid "Active"
-msgstr "نشِط"
+msgstr "نشط"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/base_calendar.js:100
 #, python-format
 msgid "Add Favorite Calendar"
-msgstr ""
+msgstr "أضف رزنامة مفضلة"
 
 #. module: calendar
 #: field:calendar.event,allday:0
 msgid "All Day"
-msgstr "كامل اليوم"
+msgstr "طوال اليوم"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:776
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "طول اليوم، %s"
 
 #. module: calendar
 #: field:calendar.alarm,duration:0
 msgid "Amount"
-msgstr ""
+msgstr "المبلغ"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1096
 #, python-format
 msgid "An invitation email has been sent to attendee %s"
-msgstr ""
+msgstr "تم إرسال بريد إلى الحاضر %s"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1407
 #, python-format
 msgid "An invitation email has been sent to attendee(s)"
-msgstr ""
+msgstr "تم إرسال بريد إلى الحاضر(ين)"
 
 #. module: calendar
 #: field:calendar.event,is_attendee:0
 msgid "Attendee"
-msgstr ""
+msgstr "الحاضر"
 
 #. module: calendar
 #: field:calendar.event,attendee_status:0
 msgid "Attendee Status"
-msgstr ""
+msgstr "حالة الحاضر"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr "معلومات عن الحضور"
+msgstr "معلومات الحاضرين"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -757,7 +1372,7 @@ msgstr "معلومات عن الحضور"
 #: field:calendar.event,attendee_ids:0
 #: field:calendar.event,partner_ids:0
 msgid "Attendees"
-msgstr "الحضور"
+msgstr "الحاضرون"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -780,12 +1395,12 @@ msgstr "باليوم"
 #. module: calendar
 #: field:calendar.event,start:0
 msgid "Calculated start"
-msgstr ""
+msgstr "البداية المحسوبة"
 
 #. module: calendar
 #: field:calendar.event,stop:0
 msgid "Calculated stop"
-msgstr ""
+msgstr "النهاية المحسوبة"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
@@ -798,17 +1413,17 @@ msgstr "التقويم"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:42
 #, python-format
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "دعوة رزنامة"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "انقر هنا لتحديث هذه المرة فقط وليس كل التكرار."
 
 #. module: calendar
 #: field:calendar.attendee,cn:0
 msgid "Common name"
-msgstr "الإسم الشائع"
+msgstr "الاسم الدارج"
 
 #. module: calendar
 #: selection:calendar.event,state:0
@@ -827,7 +1442,7 @@ msgstr "جهة الاتصال"
 #: field:calendar.event,create_uid:0
 #: field:calendar.event.type,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أنشئ بواسطة"
 
 #. module: calendar
 #: field:calendar.alarm,create_date:0
@@ -836,7 +1451,7 @@ msgstr ""
 #: field:calendar.event,create_date:0
 #: field:calendar.event.type,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "أنشئ في"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet1
@@ -858,12 +1473,12 @@ msgstr "اليوم من الشهر"
 #. module: calendar
 #: help:calendar.event,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاريخ آخر رسالة في هذا السجل"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "اليوم من الشهر"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
@@ -908,7 +1523,7 @@ msgstr "التفاصيل"
 #: code:addons/calendar/static/src/js/base_calendar.js:124
 #, python-format
 msgid "Do you really want to delete this filter from favorite?"
-msgstr ""
+msgstr "هل ترغب حقاً في حذف الفلتر من مفضلاتك؟"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form_popup
@@ -931,12 +1546,12 @@ msgstr "لم يتم العثور على عناوين بريد الكتروني"
 #. module: calendar
 #: help:calendar.attendee,email:0
 msgid "Email of Invited Person"
-msgstr "البريد الإلكتروني للشخص المدعو"
+msgstr "عنوان بريد المدعو"
 
 #. module: calendar
 #: field:calendar.contacts,partner_id:0
 msgid "Employee"
-msgstr ""
+msgstr "الموظف"
 
 #. module: calendar
 #: field:calendar.event,stop_date:0
@@ -946,7 +1561,7 @@ msgstr "تاريخ الإنتهاء"
 #. module: calendar
 #: field:calendar.event,stop_datetime:0
 msgid "End Datetime"
-msgstr ""
+msgstr "وقت-تاريخ الانتهاء"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -956,12 +1571,12 @@ msgstr "تاريخ الانتهاء"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "ينتهي في"
 
 #. module: calendar
 #: constraint:calendar.event:0
 msgid "Error ! End date cannot be set before start date."
-msgstr "خطأ ! لا يمكن أن يكون تاريخ الانتهاء قبل تاريخ البدء."
+msgstr "خطأ! لا يمكن أن يكون تاريخ الانتهاء سابقاً لتاريخ البدء."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1260
@@ -972,29 +1587,29 @@ msgstr "خطأ!"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 msgid "Event"
-msgstr "الحدث"
+msgstr "المناسبة"
 
 #. module: calendar
 #: field:calendar.event,display_time:0
 msgid "Event Time"
-msgstr ""
+msgstr "وقت المناسبة"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "تنبيه المناسبة"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/base_calendar.js:30
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "رزنامة الجميع"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
+msgstr "اجتماع تغذية راجعة"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1036,7 +1651,7 @@ msgstr "متفرّغ/مشغول"
 #. module: calendar
 #: field:calendar.event,fr:0
 msgid "Fri"
-msgstr "الجمعة"
+msgstr "جمعة"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1046,18 +1661,18 @@ msgstr "الجمعة"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr ""
+msgstr "تجميع حسب"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr ""
+msgstr "التجميع حسب التاريخ غير مدعوم، استخدم واجهة الرزنامة كبديل."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP routing"
 
 #. module: calendar
 #: help:calendar.event,message_summary:0
@@ -1065,6 +1680,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"يحتفظ بسجل المحادثات (مثل عدد الرسائل،...). هذا الملخص بصيغة HTML لتتمكن من "
+"إدراجه في واجهات Kanban."
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -1084,16 +1701,14 @@ msgstr "الهوية"
 #. module: calendar
 #: help:calendar.event,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك."
 
 #. module: calendar
 #: help:calendar.event,active:0
 msgid ""
 "If the active field is set to true, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
-"أذا عيين الحقل النشط الى صحيح, سيسمح لك بإخفاءمعلومات عن تنبيه الحدث بدون "
-"ازالتها."
+msgstr "إذا قمت بإلغاء تحديد حقل نشط، سيمكنك إخفاء التنبيه دون أن تحذفه."
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet2
@@ -1103,12 +1718,12 @@ msgstr "اجتماع داخلي"
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr ""
+msgstr "الدعوة"
 
 #. module: calendar
 #: field:calendar.attendee,access_token:0
 msgid "Invitation Token"
-msgstr ""
+msgstr "مفتاح الدعوة"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1123,7 +1738,7 @@ msgstr "الدعوات"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "معالج الدعوة"
 
 #. module: calendar
 #: field:calendar.event,message_is_follower:0
@@ -1138,7 +1753,7 @@ msgstr "الأخير"
 #. module: calendar
 #: field:calendar.event,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "تاريخ آخر رسالة"
 
 #. module: calendar
 #: field:calendar.alarm,write_uid:0
@@ -1147,7 +1762,7 @@ msgstr ""
 #: field:calendar.event,write_uid:0
 #: field:calendar.event.type,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: calendar
 #: field:calendar.alarm,write_date:0
@@ -1156,17 +1771,17 @@ msgstr ""
 #: field:calendar.event,write_date:0
 #: field:calendar.event.type,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث في"
 
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "آخر إخطار تم قراءته من الرزنامة الأساسية"
 
 #. module: calendar
 #: help:calendar.event,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr "تكرار الحدث تلقائياً حسب تلك الفترة"
+msgstr "حتى تتكرر المناسبة آلياً كلما مرت هذه الفترة"
 
 #. module: calendar
 #: field:calendar.event,location:0
@@ -1176,12 +1791,12 @@ msgstr "المكان"
 #. module: calendar
 #: help:calendar.event,location:0
 msgid "Location of Event"
-msgstr "مكان الحدث"
+msgstr "مكان المناسبة"
 
 #. module: calendar
 #: field:calendar.contacts,user_id:0
 msgid "Me"
-msgstr ""
+msgstr "أنا"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -1208,12 +1823,12 @@ msgstr "نوع الاجتماع"
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 msgid "Meeting Types"
-msgstr "نوع الاجتماع"
+msgstr "أنواع الاجتماعات"
 
 #. module: calendar
 #: field:calendar.attendee,event_id:0
 msgid "Meeting linked"
-msgstr ""
+msgstr "الاجتماع المقترن"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_calendar
@@ -1229,7 +1844,7 @@ msgstr "الاجتماعات"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "الرسالة"
 
 #. module: calendar
 #: field:calendar.event,message_ids:0
@@ -1249,17 +1864,17 @@ msgstr "الدقائق"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Misc"
-msgstr ""
+msgstr "متفرقات"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_model
 msgid "Models"
-msgstr "نماذج"
+msgstr "الكائنات"
 
 #. module: calendar
 #: field:calendar.event,mo:0
 msgid "Mon"
-msgstr "الإثنين"
+msgstr "إثنين"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1269,17 +1884,17 @@ msgstr "الإثنين"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "الشهور"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Events"
-msgstr "أحداثي"
+msgstr "مناسباتي"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "اجتماعاتي"
 
 #. module: calendar
 #: field:calendar.alarm,name:0
@@ -1298,44 +1913,44 @@ msgstr "يتطلّب إجراء"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:46
 #, python-format
 msgid "No I'm not going."
-msgstr ""
+msgstr "لا، لن أحضر."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "Notification"
-msgstr ""
+msgstr "الإخطارات"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr "عدد التكرر"
+msgstr "مرات التكرار"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:20
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "موافق"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet3
 msgid "Off-site Meeting"
-msgstr "اجتماعات خارج الموقع"
+msgstr "اجتماع خارجي"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet4
 msgid "Open Discussion"
-msgstr ""
+msgstr "المناقشات المفتوحة"
 
 #. module: calendar
 #: field:calendar.event,month_by:0
 msgid "Option"
-msgstr "خيار"
+msgstr "الخيار"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Options"
-msgstr "خيارات"
+msgstr "الخيارات"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1345,7 +1960,7 @@ msgstr "المالِك"
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "الشريك"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -1372,12 +1987,12 @@ msgstr "عام لكل الموظفيين"
 #. module: calendar
 #: field:calendar.event,end_type:0
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "إنهاء التكرار"
 
 #. module: calendar
 #: field:calendar.event,rrule_type:0
 msgid "Recurrency"
-msgstr "إعادة العملة"
+msgstr "التكرار"
 
 #. module: calendar
 #: field:calendar.event,recurrency:0
@@ -1392,7 +2007,7 @@ msgstr "معرّف التكرار"
 #. module: calendar
 #: field:calendar.event,recurrent_id_date:0
 msgid "Recurrent ID date"
-msgstr "تاريخ الهوية المكررة"
+msgstr "تاريخ معرف التكرار"
 
 #. module: calendar
 #: help:calendar.event,recurrency:0
@@ -1407,24 +2022,24 @@ msgstr "قاعدة التكرار"
 #. module: calendar
 #: field:calendar.event,alarm_ids:0
 msgid "Reminders"
-msgstr ""
+msgstr "التذكيرات"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:80
 #, python-format
 msgid "Remove this favorite from the list"
-msgstr ""
+msgstr "إزالة من قائمة المفضلات"
 
 #. module: calendar
 #: field:calendar.event,count:0
 msgid "Repeat"
-msgstr "تكرار"
+msgstr "التكرار"
 
 #. module: calendar
 #: field:calendar.event,interval:0
 msgid "Repeat Every"
-msgstr "كرر لكل"
+msgstr "تكرار كل"
 
 #. module: calendar
 #: field:calendar.event,final_date:0
@@ -1445,12 +2060,12 @@ msgstr "تكرار س مرات"
 #: view:calendar.event:calendar.view_calendar_event_search
 #: field:calendar.event,user_id:0
 msgid "Responsible"
-msgstr "مسئول"
+msgstr "المسئول"
 
 #. module: calendar
 #: field:calendar.event,sa:0
 msgid "Sat"
-msgstr "السبت"
+msgstr "سبت"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1475,7 +2090,7 @@ msgstr "اختر أيام الأسبوع"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "إرسال بريد"
 
 #. module: calendar
 #: field:calendar.event,show_as:0
@@ -1487,7 +2102,7 @@ msgstr "عرض الوقت كـ"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:22
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "تأجيل"
 
 #. module: calendar
 #: field:calendar.event,start_date:0
@@ -1497,13 +2112,13 @@ msgstr "تاريخ البدء"
 #. module: calendar
 #: field:calendar.event,start_datetime:0
 msgid "Start DateTime"
-msgstr ""
+msgstr "وقت-تاريخ البداية"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 #: view:calendar.event:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr "ابتداء من"
+msgstr "بدءاً من"
 
 #. module: calendar
 #: field:calendar.attendee,state:0
@@ -1514,7 +2129,7 @@ msgstr "الحالة"
 #. module: calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr "حالة مشاركة الحضور"
+msgstr "حالة مشاركة الحاضرين"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -1524,12 +2139,12 @@ msgstr "الموضوع"
 #. module: calendar
 #: field:calendar.event,message_summary:0
 msgid "Summary"
-msgstr "الملخّص"
+msgstr "الملخص"
 
 #. module: calendar
 #: field:calendar.event,su:0
 msgid "Sun"
-msgstr "الأحد"
+msgstr "أحد"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1544,7 +2159,7 @@ msgstr "الوسوم"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "The"
-msgstr "الـ"
+msgstr ""
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1377
@@ -1560,12 +2175,12 @@ msgstr "ثالثاً"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence..."
-msgstr ""
+msgstr "هذه المناسبة مقترنة بتكرار..."
 
 #. module: calendar
 #: field:calendar.event,th:0
 msgid "Thu"
-msgstr "الخميس"
+msgstr "خميس"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1575,7 +2190,7 @@ msgstr "الخميس"
 #. module: calendar
 #: field:calendar.event,tu:0
 msgid "Tue"
-msgstr "الثلاثاء"
+msgstr "ثلاثاء"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1585,14 +2200,14 @@ msgstr "الثلاثاء"
 #. module: calendar
 #: field:calendar.alarm,type:0
 msgid "Type"
-msgstr ""
+msgstr "النوع"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: view:calendar.event:calendar.view_calendar_event_form
 #: selection:calendar.event,attendee_status:0
 msgid "Uncertain"
-msgstr "غير مؤكد"
+msgstr "غير متيقن"
 
 #. module: calendar
 #: selection:calendar.event,state:0
@@ -1602,7 +2217,7 @@ msgstr "غير مؤكد"
 #. module: calendar
 #: field:calendar.alarm,interval:0
 msgid "Unit"
-msgstr ""
+msgstr "الوحدة"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -1618,7 +2233,7 @@ msgstr "حتى"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "تحديث هذه المرة فقط."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104
@@ -1632,12 +2247,12 @@ msgstr "تحذير!"
 #: model:mail.message.subtype,description:calendar.subtype_invitation
 msgid ""
 "Warning, a mandatory field has been modified since the creation of this event"
-msgstr ""
+msgstr "تحذير! تغير أحد الحقول الرئيسية منذ إنشاء هذه المناسبة"
 
 #. module: calendar
 #: field:calendar.event,we:0
 msgid "Wed"
-msgstr "الأربعاء"
+msgstr "أربعاء"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1647,82 +2262,82 @@ msgstr "الأربعاء"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr "أسبوع (أسابيع)"
+msgstr "أسبوع"
 
 #. module: calendar
 #: field:calendar.event,week_list:0
 msgid "Weekday"
-msgstr "يوم العمل"
+msgstr "أيام العمل"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:54
 #, python-format
 msgid "When"
-msgstr ""
+msgstr "الزمان"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:58
 #, python-format
 msgid "Where"
-msgstr ""
+msgstr "المكان"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:62
 #, python-format
 msgid "Who"
-msgstr ""
+msgstr "الأشخاص"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
-msgstr "سنة(سنين)"
+msgstr "سنة"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:45
 #, python-format
 msgid "Yes I'm going."
-msgstr ""
+msgstr "أجل، سأحضر"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "لا يمكنك استخدام رزنامة أحد الحاضرين."
 
 #. module: calendar
 #: field:calendar.contacts,active:0
 msgid "active"
-msgstr ""
+msgstr "نشط"
 
 #. module: calendar
 #: field:calendar.event,color_partner_id:0
 msgid "colorize"
-msgstr ""
+msgstr "تلوين"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1247
 #, python-format
 msgid "count cannot be negative or 0."
-msgstr ""
+msgstr "لا يمكن للعدد أن يكون صفراً أو قيمة سالبة."
 
 #. module: calendar
 #: field:calendar.alarm,duration_minutes:0
 msgid "duration_minutes"
-msgstr ""
+msgstr "duration_minutes"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1245
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "لا يمكن أن تكون الفترة سالبة.."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1245
 #: code:addons/calendar/calendar.py:1247
 #, python-format
 msgid "warning!"
-msgstr ""
+msgstr "تحذير!"

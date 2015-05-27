@@ -201,7 +201,11 @@ class WebRequest(object):
     def env(self):
         """
         The :class:`~openerp.api.Environment` bound to current request.
+        Raises a :class:`RuntimeError` if the current requests is not bound
+        to a database.
         """
+        if not self.db:
+            return RuntimeError('request not bound to a database')
         return openerp.api.Environment(self.cr, self.uid, self.context)
 
     @lazy_property
@@ -236,6 +240,8 @@ class WebRequest(object):
         """
         # can not be a lazy_property because manual rollback in _call_function
         # if already set (?)
+        if not self.db:
+            return RuntimeError('request not bound to a database')
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
@@ -913,11 +919,11 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def __init__(self, *args, **kwargs):
         self.inited = False
         self.modified = False
+        self.rotate = False
         super(OpenERPSession, self).__init__(*args, **kwargs)
         self.inited = True
         self._default_values()
         self.modified = False
-        self.rotate = False
 
     def __getattr__(self, attr):
         return self.get(attr, None)

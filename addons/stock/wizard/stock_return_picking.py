@@ -147,6 +147,8 @@ class stock_return_picking(osv.osv_memory):
                     'state': 'draft',
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': move.location_id.id,
+                    'picking_type_id': pick_type_id,
+                    'warehouse_id': pick.picking_type_id.warehouse_id.id,
                     'origin_returned_move_id': move.id,
                     'procure_method': 'make_to_stock',
                     'restrict_lot_id': data_get.lot_id.id,

@@ -42,13 +42,13 @@ class stock_invoice_onshipping(osv.osv_memory):
         src_usage = pick.move_lines[0].location_id.usage
         dest_usage = pick.move_lines[0].location_dest_id.usage
         type = pick.picking_type_id.code
-        if type == 'outgoing' and dest_usage == 'supplier':
+        if type == 'outgoing' and dest_usage in ('supplier', 'transit'):
             journal_type = 'purchase_refund'
-        elif type == 'outgoing' and dest_usage == 'customer':
+        elif type == 'outgoing' and dest_usage in ('customer', 'transit'):
             journal_type = 'sale'
-        elif type == 'incoming' and src_usage == 'supplier':
+        elif type == 'incoming' and src_usage in ('supplier', 'transit'):
             journal_type = 'purchase'
-        elif type == 'incoming' and src_usage == 'customer':
+        elif type == 'incoming' and src_usage in ('customer', 'transit'):
             journal_type = 'sale_refund'
         else:
             journal_type = 'sale'
