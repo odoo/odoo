@@ -31,8 +31,9 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_marketing_campaign_configuration" name="Lead Automation" parent="base.menu_config"
-            sequence="14"/>
+        <menuitem name="Lead Automation" id="menu_marketing_campaign_root" groups="marketing.group_marketing_user,marketing.group_marketing_manager" sequence="10"/>
+        <menuitem id="menu_marketing_campaign_configuration" name="Configuration" parent="menu_marketing_campaign_root"
+            sequence="100" groups="base.group_configuration"/>
         <menuitem id="menu_marketing_campaign_settings" name="Settings" 
             parent="menu_marketing_campaign_configuration" sequence="0" action="action_marketing_campaign_configuration"/>
 
