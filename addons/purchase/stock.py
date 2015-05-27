@@ -119,12 +119,20 @@ class stock_move(osv.osv):
             res['price_unit'] = purchase_line.price_unit
         return res
 
-    def _get_moves_taxes(self, cr, uid, moves, context=None):
-        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, context=context)
-        for move in moves:
-            if move.purchase_line_id:
-                is_extra_move[move.id] = False
-                extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.purchase_line_id.taxes_id])]
+    def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
+        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, inv_type, context=context)
+        if inv_type == 'in_invoice':
+            for move in moves:
+                if move.purchase_line_id:
+                    is_extra_move[move.id] = False
+                    extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.purchase_line_id.taxes_id])]
+                elif move.product_id.product_tmpl_id.supplier_taxes_id:
+                    mov_id = self.search(cr, uid, [('purchase_line_id', '!=', False), ('picking_id', '=', move.picking_id.id)], limit=1, context=context)
+                    if mov_id:
+                        mov = self.browse(cr, uid, mov_id[0], context=context)
+                        fp = mov.purchase_line_id.order_id.fiscal_position
+                        res = self.pool.get("account.invoice.line").product_id_change(cr, uid, [], move.product_id.id, None, partner_id=move.picking_id.partner_id.id, fposition_id=(fp and fp.id), type='in_invoice', context=context)
+                        extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_id'])]
         return (is_extra_move, extra_move_tax)
 
 
