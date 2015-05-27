@@ -2826,9 +2826,11 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
+        var nospace = /[\x09\x0A\x0B\x0C\x0D\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]/gm;
         this.values = _(this.field.selection).chain()
             .reject(function (v) { return v[0] === false && v[1] === ''; })
             .unshift([false, ''])
+            .map(function(x){x[1] = x[1].replace(nospace, "");return x;})
             .value();
     },
     initialize_content: function() {
