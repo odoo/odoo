@@ -1,4 +1,4 @@
-VietNam, 2015-05-27
+Vietnam, 2015-05-27
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Tam tamvu89@gmail.com https://github.com/vuamitom
+Tam Vu vumhtam@gmail.com https://github.com/vuamitom
