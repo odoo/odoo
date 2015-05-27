@@ -1202,7 +1202,6 @@ instance.web.WebClient = instance.web.Client.extend({
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
 
-
         return $.when(this._super()).then(function() {
             if (jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 self.to_kitten();
@@ -1214,10 +1213,6 @@ instance.web.WebClient = instance.web.Client.extend({
                 self.action_manager.do_action(self.client_options.action);
                 delete(self.client_options.action);
             }
-            instance.web.cordova.ready();
-            instance.web.cordova.on('back', self, function() {
-                self.do_action('history_back');
-            });
         });
     },
     to_kitten: function() {
@@ -1373,7 +1368,6 @@ instance.web.WebClient = instance.web.Client.extend({
     on_logout: function() {
         var self = this;
         if (!this.has_uncommitted_changes()) {
-            instance.web.cordova.logout();
             self.action_manager.do_action('logout');
         }
     },
