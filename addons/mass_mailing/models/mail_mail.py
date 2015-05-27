@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import re
 import urllib
 import urlparse
 
@@ -78,6 +79,12 @@ class MailMail(osv.Model):
         domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
         base = "<base href='%s'>" % domain
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
+
+        # append database query parameter to inline images
+        if mail.mailing_id and body:
+            regex_inline_image = '(<img src="(?:'+re.escape(domain)+')?/website/image)(/ir\.attachment/\d+_[\da-f]+/datas)">'
+            db_query_param = urllib.urlencode({'db': cr.dbname}).replace('\\', '\\\\')
+            body = re.sub(regex_inline_image, '\\1_kw\\2?%s">' % db_query_param, body)
 
         # generate tracking URL
         if mail.statistics_ids:
