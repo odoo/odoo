@@ -55,7 +55,7 @@ editor.reload = function () {
 /* ----- TOP EDITOR BAR FOR ADMIN ---- */
 
 base.ready().then(function () {
-    if (editor.editable && location.search.indexOf("enable_editor") >= 0 && !editor.no_editor) {
+    if (editor.editable && location.search.indexOf("enable_editor") >= 0) {
         editor.editor_bar = new editor.Class();
         editor.editor_bar.prependTo(document.body);
     }
@@ -90,7 +90,7 @@ editor.Class = Widget.extend({
 
         var flag = false;
         window.onbeforeunload = function(event) {
-            if ($('.o_editable.o_dirty').length && !flag) {
+            if (rte.history.getEditableHasUndo().length && !flag) {
                 flag = true;
                 setTimeout(function () {flag=false;},0);
                 return _t('This document is not saved!');

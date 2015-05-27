@@ -66,7 +66,7 @@ li > p {
 }
 
 font[style*='background'], font[class*='bg-'] {
-  padding: 0 2px
+  padding: 0 2px;
 }
 
 .o_ul_toggle_self, .o_ul_toggle_next {
@@ -179,7 +179,6 @@ body > nav.navbar {
     padding-top: 34px;
   }
 }
-
 /* ----- BOOTSTRAP FIX ----- */
 .col-md-12 {
   float: left;
@@ -754,21 +753,25 @@ div.carousel .item.text_only .container > .carousel-image {
 #oe_main_menu_navbar .navbar-nav.navbar-right:last-child {
   margin-right: 0 !important;
 }
+
 .container nav#oe_main_menu_navbar {
   position: inherit;
 }
+
 .oe_search_clear {
   position: absolute;
-  display:none;
   cursor: pointer;
   z-index: 2;
   right: 42px;
   color: #939393;
   padding: 10px 0;
   top: 1px;
-  }
+}
 
 .oe_search_box {
-    padding-right: 23px;
+  padding-right: 23px;
 }
-/*# sourceMappingURL=website.css.map */
+
+.note-editor button {
+  height: 30px;
+}
