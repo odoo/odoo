@@ -45,7 +45,7 @@ class ir_filters(osv.osv):
         filter_ids = self.search(cr, uid, action_domain +
             [('model_id','=',model),('user_id','in',[uid, False])])
         my_filters = self.read(cr, uid, filter_ids,
-            ['name', 'is_default', 'domain', 'context', 'user_id'], context=context)
+            ['name', 'is_default', 'domain', 'context', 'user_id', 'sort'], context=context)
         return my_filters
 
     def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
@@ -139,6 +139,7 @@ class ir_filters(osv.osv):
                                         "and available to all users."),
         'domain': fields.text('Domain', required=True),
         'context': fields.text('Context', required=True),
+        'sort': fields.text('Sort', required=True),
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
         'is_default': fields.boolean('Default filter'),
         'action_id': fields.many2one('ir.actions.actions', 'Action', ondelete='cascade',
@@ -149,6 +150,7 @@ class ir_filters(osv.osv):
     _defaults = {
         'domain': '[]',
         'context':'{}',
+        'sort': '[]',
         'user_id': lambda self,cr,uid,context=None: uid,
         'is_default': False
     }
