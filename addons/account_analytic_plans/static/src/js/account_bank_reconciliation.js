@@ -1,7 +1,7 @@
 odoo.define('account_analytic_plans.custom', function (require) {
 "use strict";
 
-var widgets = require('account.widgets');
+var widgets = require('account.reconciliation');
 var core = require('web.core');
 
 var _t = core._t;
