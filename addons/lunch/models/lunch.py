@@ -81,7 +81,12 @@ class LunchOrder(models.Model):
         balance = sum(cashmove.amount for cashmove in prev_cashmove)
 
         if self.total > balance:
-            raise UserError('%s (%s %s)' % (_('Insufficient balance. The total amount of the order is larger than the available balance'), balance, self.currency_id.name))
+            return {
+                'warning': {
+                    'title': _('Insufficient balance'),
+                    'message': ('%s (%s %s)' % (_('The total amount of the order is larger than the available balance'), balance, self.currency_id.name)),
+                },
+            }
 
     @api.one
     @api.constrains('date')
