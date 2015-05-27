@@ -10,7 +10,6 @@
                     <field name="payment_date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
-                    <field name="payment_type"/>
                     <field name="payment_method"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="amount"/>
@@ -30,7 +29,6 @@
                     <field name="payment_date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
-                    <field name="payment_type"/>
                     <field name="payment_method"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="amount"/>
@@ -63,7 +61,7 @@
                     <separator/>
                     <filter string="Partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Journal" domain="[]" context="{'group_by': 'journal_id'}"/>
-                    <filter string="Payment Type" domain="[]" context="{'group_by': 'payment_type'}"/>
+                    <filter string="Payment Method" domain="[]" context="{'group_by': 'payment_method'}"/>
                     <filter string="State" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
                     <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
@@ -103,7 +101,7 @@
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
-                                <field name="payment_method" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}" String="Payment Mode"/>
+                                <field name="payment_method" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="payment_method_code" invisible="1"/>
                                 <label for="amount"/>
                                 <div name="amount_div">
@@ -245,11 +243,8 @@
                             <field name="hide_payment_method" invisible="1"/>
                             <field name="payment_method" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
                             <field name="payment_method_code" invisible="1"/>
-                            <label for="amount" />
-                            <div>
-                                <field name="amount" class="oe_inline"/>
-                                <field name="currency_id" groups="base.group_multi_currency" class="oe_inline"/>
-                            </div>
+                            <field name="amount" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="payment_date"/>

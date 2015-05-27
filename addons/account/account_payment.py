@@ -150,21 +150,24 @@ class account_register_payments(models.TransientModel):
         })
         return rec
 
-    @api.multi
-    def create_payment(self):
-        invoices = self._get_invoices()
-        payment = self.env['account.payment'].create({
+    def get_payment_vals(self):
+        """ Hook for extension """
+        return {
             'journal_id': self.journal_id.id,
             'payment_method': self.payment_method.id,
             'payment_date': self.payment_date,
             'communication': self.communication,
-            'invoice_ids': [(4, inv.id, None) for inv in invoices],
+            'invoice_ids': [(4, inv.id, None) for inv in self._get_invoices()],
             'payment_type': self.payment_type,
             'amount': self._compute_total_invoices_amount(),
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_type': self.partner_type,
-        })
+        }
+
+    @api.multi
+    def create_payment(self):
+        payment = self.env['account.payment'].create(self.get_payment_vals())
         payment.post()
         return {'type': 'ir.actions.act_window_close'}
 
@@ -190,6 +193,8 @@ class account_payment(models.Model):
             self.payment_difference = 0
         else:
             self.payment_difference = self._compute_total_invoices_amount() - self.amount
+
+    company_id = fields.Many2one(store=True)
 
     name = fields.Char(readonly=True, copy=False)
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')], readonly=True, default='draft', copy=False, string="Status")
