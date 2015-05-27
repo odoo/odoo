@@ -120,10 +120,10 @@
             <field name="view_id"></field>  <!-- force empty -->
         </record>
 
-        <menuitem id="timesheet_menu_root" name="Timesheets" sequence="10" icon="fa-user" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+        <menuitem id="timesheet_menu_root" name="Timesheets" sequence="55" icon="fa-user" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
         <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="timesheet_menu_root" sequence="5" />
 
-        <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="29" groups="base.group_hr_attendance"/>
+        <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="90" groups="base.group_hr_attendance"/>
 
         <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance_root" sequence="20" groups="base.group_hr_attendance"/>
 
