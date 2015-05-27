@@ -70,7 +70,6 @@
             </html>
         </template>
 
-
         <!-- Template rendering all the scripts required to execute the Livechat from an external page (which not contain Odoo) -->
         <template id="external_loader" name="All the scripts to launch the LiveSupport from an external Web Page">
             <!-- css style -->
@@ -78,23 +77,14 @@
             <!-- js of all the required lib (internal and external) -->
             <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript"/>
             <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript"/>
-        </template>
-
-        <!-- Template rendering all the scripts required to execute the Livechat from a page containing Odoo -->
-        <template id="internal_loader" name="All the scripts to launch the LiveSupport from an internal Web Page">
-            <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, dbname, channel)"/>
-            <t t-if="info" t-translate="off">
-                <script type="text/javascript">
-                    <t t-call="im_livechat.loader"/>
-                </script>
-            </t>
+            <script t-att-src="'%s/im_livechat/loader/%i' % (url, channel)" type="text/javascript"/>
         </template>
 
         <!-- Template registering all the assets required to execute the Livechat from a page containing Odoo -->
         <template id="assets_common" name="All the assets to launch the LiveSupport from an internal Web Page" inherit_id="web.assets_common">
             <xpath expr="." position="inside">
-                <t t-call="im_livechat.internal_lib"/>
+                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
+                <link rel="stylesheet" href="/im_livechat/static/src/css/im_livechat.css"/>
             </xpath>
         </template>
 
@@ -108,12 +98,7 @@
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
-            <!-- add the internal lib -->
-            <t t-call="im_livechat.internal_lib"/>
-        </template>
 
-        <!-- Bundle of Librairies of the Bus, Chat, Livechat -->
-        <template id="internal_lib" name="Librairies of the Livechat">
             <!-- IM module -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
             <script type="text/javascript" src="/im_chat/static/src/js/im_chat.js"></script>
@@ -125,7 +110,8 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Javascript initializing the LiveSupport">
-            <t t-translate="off">
+            <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, request.cr.dbname, channel)"/>
+            <t t-if="info" t-translate="off">
                 (function() {
                     window.livesupport = new openerp.im_livechat.LiveSupport(
                         "<t t-esc="info['url']"/>",
@@ -143,6 +129,7 @@
                 })();
             </t>
         </template>
+
 
     </data>
 </openerp>

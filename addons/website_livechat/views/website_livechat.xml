@@ -5,11 +5,11 @@
         <template id="header" inherit_id="website.layout" name="LiveChat Import (internal) Scripts">
             <xpath expr="//body" position="inside">
                 <t t-if="website and website.channel_id">
-                    <t t-call="im_livechat.internal_loader">
-                        <t t-set="url" t-value="website_livechat_url"/>
-                        <t t-set="dbname" t-value="website_livechat_dbname"/>
-                        <t t-set="channel" t-value="website_livechat_channel"/>
-                    </t>
+                    <script>
+                        <t t-call="im_livechat.loader">
+                            <t t-set="channel" t-value="wesbite.channel_id"/>
+                        </t>
+                    </script>
                 </t>
             </xpath>
         </template>

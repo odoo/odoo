@@ -9,20 +9,15 @@ from openerp.http import request
 
 class LivechatController(http.Controller):
 
-    @http.route('/im_livechat/support/<string:dbname>/<int:channel_id>', type='http', auth='none')
-    def support_page(self, dbname, channel_id, **kwargs):
-        registry, cr, uid, context = openerp.modules.registry.RegistryManager.get(dbname), request.cr, openerp.SUPERUSER_ID, request.context
-        info = registry.get('im_livechat.channel').get_info_for_chat_src(cr, uid, channel_id)
-        info["dbname"] = dbname
+    @http.route('/im_livechat/support/<im_livechat.channel:channel_id>', type='http', auth='none')
+    def support_page(self, channel_id, **kwargs):
         info["channel"] = channel_id
-        info["channel_name"] = registry.get('im_livechat.channel').read(cr, uid, channel_id, ['name'], context=context)["name"]
         return request.render('im_livechat.support_page', info)
 
-    @http.route('/im_livechat/loader/<string:dbname>/<int:channel_id>', type='http', auth='none')
+    @http.route('/im_livechat/loader/<im_livechat.channel:channel_id>', type='http', auth='none')
     def loader(self, dbname, channel_id, **kwargs):
-        registry = openerp.modules.registry.RegistryManager.get(dbname)
         username = kwargs.get("username", "Visitor")
-        info = registry.get('im_livechat.channel').match_rules(request.cr, request.uid, request, dbname, channel_id, username=username, context=request.context)
+        info = request.env['im_livechat.channel'].match_rules(request, channel_id, username=username)
         return request.render('im_livechat.loader', {'info': info}) if info else False
 
     @http.route('/im_livechat/get_session', type="json", auth="none")
@@ -38,9 +33,6 @@ class LivechatController(http.Controller):
         return reg.get("im_livechat.channel").get_channel_session(cr, uid, channel_id, anonymous_name, context=context)
 
     @http.route('/im_livechat/available', type='json', auth="none")
-    def available(self, db, channel):
-        cr, uid, context, db = request.cr, request.session.uid or openerp.SUPERUSER_ID, request.context, request.db
-        reg = openerp.modules.registry.RegistryManager.get(db)
-        with reg.cursor() as cr:
-            return len(reg.get('im_livechat.channel').get_available_users(cr, uid, channel)) > 0
+    def available(self, channel):
+        request.env['im_livechat.channel'].get_available_users(channel) > 0
 

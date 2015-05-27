@@ -57,7 +57,6 @@ class im_livechat_channel(osv.Model):
     def _script_external(self, cr, uid, ids, name, arg, context=None):
         values = {
             "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url'),
-            "dbname":cr.dbname
         }
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
@@ -65,22 +64,11 @@ class im_livechat_channel(osv.Model):
             res[record.id] = self.pool['ir.ui.view'].render(cr, uid, 'im_livechat.external_loader', values, context=context)
         return res
 
-    def _script_internal(self, cr, uid, ids, name, arg, context=None):
-        values = {
-            "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url'),
-            "dbname":cr.dbname
-        }
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            values["channel"] = record.id
-            res[record.id] = self.pool['ir.ui.view'].render(cr, uid, 'im_livechat.internal_loader', values, context=context)
-        return res
-
     def _web_page(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url') + \
-                "/im_livechat/support/%s/%i" % (cr.dbname, record.id)
+                "/im_livechat/support/%i" % (record.id)
         return res
 
     def _compute_nbr_session(self, cr, uid, ids, name, arg, context=None):
@@ -112,15 +100,13 @@ class im_livechat_channel(osv.Model):
         'name': fields.char(string="Channel Name", size=200, required=True),
         'user_ids': fields.many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string="Users"),
         'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
-        'script_internal': fields.function(_script_internal, type='text', string='Script (internal)', store=False),
         'script_external': fields.function(_script_external, type='text', string='Script (external)', store=False),
         'web_page': fields.function(_web_page, type='char', string='Web Page', store=False),
         'button_text': fields.char(string="Text of the Button"),
         'input_placeholder': fields.char(string="Chat Input Placeholder"),
         'default_message': fields.char(string="Welcome Message", help="This is an automated 'welcome' message that your visitor will see when they initiate a new chat session."),
         # image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Photo",
-            help="This field holds the image used as photo for the group, limited to 1024x1024px."),
+        'image': fields.binary("Photo", help="This field holds the image used as photo for the group, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
             store={
@@ -155,10 +141,9 @@ class im_livechat_channel(osv.Model):
         'image': _get_default_image,
     }
 
-    def match_rules(self, cr, uid, request, dbname, channel_id, username='Visitor', context=None):
+    def match_rules(self, cr, uid, request, channel_id, username='Visitor', context=None):
         uid = openerp.SUPERUSER_ID
         info = self.get_info_for_chat_src(cr, uid, channel_id)
-        info["dbname"] = dbname
         info["channel"] = channel_id
         info["username"] = username
         # find the country from the request
@@ -341,13 +326,11 @@ class im_chat_session(osv.Model):
             else:
                 return super(im_chat_session, self).quit_user(cr, uid, session.id, context=context)
 
-
     def cron_remove_empty_session(self, cr, uid, context=None):
         groups = self.pool['im_chat.message'].read_group(cr, uid, [], ['to_id'], ['to_id'], context=context)
         not_empty_session_ids = [group['to_id'][0] for group in groups]
         empty_session_ids = self.search(cr, uid, [('id', 'not in', not_empty_session_ids), ('channel_id', '!=', False)], context=context)
         self.unlink(cr, uid, empty_session_ids, context=context)
-
 
 
 class Rating(models.Model):
