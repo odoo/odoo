@@ -387,9 +387,9 @@
                                             </a>
                                         </span> <!-- *** author *** -->
 
-                                        <span class="o_timeline_parent_followers" t-if="widget.nb_followers > 0"> <!-- *** followers *** -->
-                                            <span title="Number of followers"> <t t-raw="widget.nb_followers"/> </span>
-                                            <i class="oe_follwrs fa fa-users"></i>
+                                        <span class="o_timeline_parent_followers"> <!-- *** followers *** -->
+                                            <span t-if="widget.nb_followers > 0" title="Number of followers"> <t t-raw="widget.nb_followers"/> </span>
+                                            <i t-if="widget.nb_followers > 0" class="oe_follwrs fa fa-users"></i>
                                         </span> <!-- *** followers *** -->
 
                                         <span class="o_timeline_msg_icons" t-if="!options.readonly"> <!-- *** repy *** -->
