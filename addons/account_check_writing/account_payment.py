@@ -4,7 +4,7 @@ import math
 
 from openerp import models, fields, api, _
 from openerp.tools import amount_to_text_en, float_round
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 
 class account_register_payments(models.TransientModel):
     _inherit = "account.register.payments"
@@ -31,13 +31,16 @@ class account_register_payments(models.TransientModel):
         check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
         decimals = self.amount % 1
         if decimals >= 10**-2:
-            check_amount_in_words += _(' and %s/100') % str(int(float_round(decimals, precision_rounding=0.01)*100))
+            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
         self.check_amount_in_words = check_amount_in_words
 
-    @api.multi
     def get_payment_vals(self):
         res = super(account_register_payments, self).get_payment_vals()
-        res.update({'check_amount_in_words': self.check_amount_in_words})
+        if self.payment_method == self.env.ref('account_check_writing.account_payment_method_check_writing'):
+            res.update({
+                'check_amount_in_words': self.check_amount_in_words,
+                'check_manual_sequencing': self.check_manual_sequencing,
+            })
         return res
 
 
@@ -65,12 +68,21 @@ class account_payment(models.Model):
         check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
         decimals = self.amount % 1
         if decimals >= 10**-2:
-            check_amount_in_words += _(' and %s/100') % str(int(float_round(decimals, precision_rounding=0.01)*100))
+            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
         self.check_amount_in_words = check_amount_in_words
+
+    def _check_communication(self, payment_method_id, communication):
+        super(account_payment, self)._check_communication(payment_method_id, communication)
+        if payment_method_id == self.env.ref('account_check_writing.account_payment_method_check_writing').id:
+            if not communication:
+                return
+            if len(communication) > 60:
+                raise ValidationError(_("A check memo cannot exceed 60 characters."))
 
     @api.model
     def create(self, vals):
-        if vals.get('check_manual_sequencing'):
+        if vals['payment_method'] == self.env.ref('account_check_writing.account_payment_method_check_writing').id\
+                and vals.get('check_manual_sequencing'):
             sequence = self.env['account.journal'].browse(vals['journal_id']).check_sequence_id
             vals.update({'check_number': sequence.next_by_id()})
         return super(account_payment, self.sudo()).create(vals)
