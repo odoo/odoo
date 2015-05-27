@@ -748,6 +748,7 @@ class Escpos:
                     'cp866': TXT_ENC_PC866,
                     'cp862': TXT_ENC_PC862,
                     'cp720': TXT_ENC_PC720,
+                    'cp936': TXT_ENC_PC936,
                     'iso8859_2': TXT_ENC_8859_2,
                     'iso8859_7': TXT_ENC_8859_7,
                     'iso8859_9': TXT_ENC_8859_9,
