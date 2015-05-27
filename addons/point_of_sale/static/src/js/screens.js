@@ -257,7 +257,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
             }
         };
 
-        $('body').on('keyup',this.hotkey_handler);
+        $('body').on('keypress',this.hotkey_handler);
 
         this.$('.back').click(function(){
             self.gui.show_screen(self.previous_screen);
@@ -315,7 +315,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
     },
     close: function(){
         this._super();
-        $('body').off('keyup',this.hotkey_handler);
+        $('body').off('keypress',this.hotkey_handler);
 
         this.pos.proxy_queue.clear();
     },
@@ -693,7 +693,7 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
         var products = this.pos.db.get_product_by_category(this.category.id); 
         this.product_list_widget.set_product_list(products); // FIXME: this should be moved elsewhere ... 
 
-        this.el.querySelector('.searchbox input').addEventListener('keyup',this.search_handler);
+        this.el.querySelector('.searchbox input').addEventListener('keypress',this.search_handler);
 
         this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
 
@@ -992,7 +992,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.chrome.widget.keyboard.connect(this.$('.searchbox input'));
         }
 
-        this.$('.searchbox input').on('keyup',function(event){
+        this.$('.searchbox input').on('keypress',function(event){
             clearTimeout(search_timeout);
 
             var query = this.value;
@@ -1480,6 +1480,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.keyboard_no_backnav = function(event){
             if (event.keyCode === 8) {  // Backspace
                 event.preventDefault();
+
+                // Preventdefault on keydown will cancel the keypress
+                // event which normally follows. The handler listen
+                // for keypresses, so we need to call it explicitly to
+                // make sure that we can backspace eg. payment amounts
+                // on the paymentscreen.
+                self.keyboard_handler(event);
             }
         };
         
@@ -1718,12 +1725,12 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.reset_input();
         this.render_paymentlines();
         this.order_changes();
-        window.document.body.addEventListener('keyup',this.keyboard_handler);
+        window.document.body.addEventListener('keypress',this.keyboard_handler);
         window.document.body.addEventListener('keydown',this.keyboard_no_backnav);
         this._super();
     },
     hide: function(){
-        window.document.body.removeEventListener('keyup',this.keyboard_handler);
+        window.document.body.removeEventListener('keypress',this.keyboard_handler);
         window.document.body.removeEventListener('keydown',this.keyboard_no_backnav);
         this._super();
     },

@@ -3,6 +3,7 @@ odoo.define('point_of_sale.devices', function (require) {
 
 var core = require('web.core');
 var Session = require('web.Session');
+var web_client = require('web.web_client');
 
 var _t = core._t;
 
@@ -462,6 +463,11 @@ var BarcodeReader = core.Class.extend({
         this.barcode_parser = attributes.barcode_parser;
 
         this.action_callback_stack = [];
+
+        core.bus.on('barcode_scanned', this, function (barcode) {
+            console.log("got core.bus:" + barcode);
+            this.scan(barcode);
+        });
     },
 
     set_barcode_parser: function(barcode_parser) {
@@ -532,54 +538,20 @@ var BarcodeReader = core.Class.extend({
         }
     },
 
-    // starts catching keyboard events and tries to interpret codebar 
+    // starts catching keyboard events and tries to interpret codebar
     // calling the callbacks when needed.
     connect: function(){
-
-        var self = this;
-        var code = "";
-        var timeStamp  = 0;
-        var timeout = null;
-
-        this.handler = function(e){
-
-            if(e.which === 13){ //ignore returns
-                e.preventDefault();
-                return;
-            }
-
-            if(timeStamp + 50 < new Date().getTime()){
-                code = "";
-            }
-
-            timeStamp = new Date().getTime();
-            clearTimeout(timeout);
-
-            code += String.fromCharCode(e.which);
-
-            // we wait for a while after the last input to be sure that we are not mistakingly
-            // returning a code which is a prefix of a bigger one :
-            // Internal Ref 5449 vs EAN13 5449000...
-
-            timeout = setTimeout(function(){
-                if(code.length >= 3){
-                    self.scan(code);
-                }
-                code = "";
-            },100);
-        };
-
-        $('body').on('keypress', this.handler);
+        web_client.get_barcode_events().start();
     },
 
-    // stops catching keyboard events 
+    // stops catching keyboard events
     disconnect: function(){
-        $('body').off('keypress', this.handler);
+        web_client.get_barcode_events().stop();
     },
 
-    // the barcode scanner will listen on the hw_proxy/scanner interface for 
+    // the barcode scanner will listen on the hw_proxy/scanner interface for
     // scan events until disconnect_from_proxy is called
-    connect_to_proxy: function(){ 
+    connect_to_proxy: function(){
         var self = this;
         this.remote_scanning = true;
         if(this.remote_active >= 1){
