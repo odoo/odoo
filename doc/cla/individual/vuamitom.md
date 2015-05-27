@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Vu Minh Tam tamvu89@gmail.com https://github.com/vuamitom
+Tam tamvu89@gmail.com https://github.com/vuamitom
