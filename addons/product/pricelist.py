@@ -42,7 +42,8 @@ class price_type(osv.osv):
         ids = mf.search(cr, uid, [('model','in', (('product.product'),('product.template'))), ('ttype','=','float')], context=context)
         res = []
         for field in mf.browse(cr, uid, ids, context=context):
-            res.append((field.name, field.field_description))
+            if not (field.name, field.field_description) in res:
+                res.append((field.name, field.field_description))
         return res
 
     def _get_field_currency(self, cr, uid, fname, ctx):
