@@ -73,6 +73,20 @@ odoo.define('web.BarcodeEvents', function(require) {
             return $(element).is('input,textarea,[contenteditable="true"]');
         },
 
+        // This checks that a keypress event is either ESC, TAB or an
+        // arrow key. This is Firefox specific, in Chrom{e,ium}
+        // keypress events are not fired for these types of keys, only
+        // keyup/keydown.
+        is_special_key: function(e) {
+            if (e.key === "ArrowLeft" || e.key === "ArrowRight" ||
+                e.key === "ArrowUp" || e.key === "ArrowDown" ||
+                e.key === "Escape" || e.key === "Tab") {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
         // The keydown and keyup handlers are here to disallow key
         // repeat. When preventDefault() is called on a keydown event
         // the keypress that normally follows is cancelled.
@@ -89,21 +103,19 @@ odoo.define('web.BarcodeEvents', function(require) {
         },
 
         handler: function(e){
-            if (! e.dispatched_by_barcode_reader) {
-                // We only stop events targeting body (meaning nothing is
-                // focused). We do not stop events targeting other elements
-                // because we have no way of redispatching 'genuine' key events
-                // that trigger native event handlers of elements. So this means
-                // that our fake events will not appear in eg. an <input>
-                // element. The addition of the contentEditable attribute in HTML5
-                // means that this is not only limited to <input>, <textarea>,...
+            if (! e.dispatched_by_barcode_reader && ! this.is_special_key(e)) {
+                // We only stop events targeting elements that are editable. We
+                // do not stop events targeting other elements because we have
+                // no way of redispatching 'genuine' key events that trigger
+                // native event handlers of elements. So this means that our
+                // fake events will not appear in eg. an <input> element.
                 if (! this.element_is_editable(e.target) || e.target.getAttribute("barcode_events") === "true") {
                     this.buffered_key_events.push(e);
                     e.preventDefault();
                     e.stopImmediatePropagation();
 
                     clearTimeout(this.timeout);
-                    this.timeout = setTimeout(this.handle_buffered_keys.bind(this), 100);
+                    this.timeout = setTimeout(this.handle_buffered_keys.bind(this), 50);
                 }
             }
         },
