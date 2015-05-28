@@ -213,6 +213,10 @@ li > p {
   margin: 0;
 }
 
+font[style*='background'], font[class*='bg-'] {
+  padding: 0 2px
+}
+
 .o_ul_toggle_self, .o_ul_toggle_next {
   display: none;
 }
@@ -342,8 +346,10 @@ body > nav.navbar {
   z-index: 10000;
 }
 
-nav.navbar + #wrapwrap {
-  padding-top: 34px;
+@media (min-width: 767px) {
+  nav.navbar + #wrapwrap {
+    padding-top: 34px;
+  }
 }
 
 /* ----- BOOTSTRAP FIX ----- */

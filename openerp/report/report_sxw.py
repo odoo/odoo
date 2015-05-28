@@ -39,6 +39,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
@@ -242,9 +243,9 @@ class rml_parse(object):
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
         if currency_obj:
             if currency_obj.position == 'after':
-                res='%s %s'%(res,currency_obj.symbol)
+                res = u'%s\N{NO-BREAK SPACE}%s' % (res, currency_obj.symbol)
             elif currency_obj and currency_obj.position == 'before':
-                res='%s %s'%(currency_obj.symbol, res)
+                res = u'%s\N{NO-BREAK SPACE}%s' % (currency_obj.symbol, res)
         return res
 
     def display_address(self, address_record, without_company=False):

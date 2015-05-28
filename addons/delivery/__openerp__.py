@@ -43,7 +43,8 @@ invoices from picking, OpenERP is able to add and compute the shipping line.
     'demo': ['delivery_demo.xml'],
     'test': [
         '../account/test/account_minimal_test.xml',
-        'test/delivery_cost.yml'
+        'test/delivery_cost.yml',
+        'test/stock_move_values_with_invoice_before_delivery.yml',
     ],
     'installable': True,
     'auto_install': False,

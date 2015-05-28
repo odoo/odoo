@@ -216,7 +216,7 @@ class MailComposer(models.TransientModel):
             if wizard.template_id:
                 # template user_signature is added when generating body_html
                 # mass mailing: use template auto_delete value -> note, for emails mass mailing only
-                Mail = Mail.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete)
+                Mail = Mail.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete, mail_server_id=wizard.template_id.mail_server_id.id)
             if wizard.attachment_ids and wizard.composition_mode != 'mass_mail' and wizard.template_id:
                 new_attachment_ids = []
                 for attachment in wizard.attachment_ids:
@@ -285,7 +285,7 @@ class MailComposer(models.TransientModel):
             # static wizard (mail.message) values
             mail_values = {
                 'subject': self.subject,
-                'body': self.body,
+                'body': self.body or '',
                 'parent_id': self.parent_id and self.parent_id.id,
                 'partner_ids': [partner.id for partner in self.partner_ids],
                 'attachment_ids': [attach.id for attach in self.attachment_ids],

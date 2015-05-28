@@ -43,6 +43,7 @@ import pytz
 import re
 import xmlrpclib
 from operator import itemgetter
+from contextlib import contextmanager
 from psycopg2 import Binary
 
 import openerp
@@ -51,6 +52,23 @@ from openerp.tools.translate import _
 from openerp.tools import float_repr, float_round, frozendict, html_sanitize
 import simplejson
 from openerp import SUPERUSER_ID, registry
+
+@contextmanager
+def _get_cursor():
+    # yield a valid cursor from any environment or create a new one if none found
+    from openerp.api import Environment
+    from openerp.http import request
+    try:
+        request.env     # force request's env to be computed
+    except RuntimeError:
+        pass    # ignore if not in a request
+    for env in Environment.envs:
+        if not env.cr.closed:
+            yield env.cr
+            break
+    else:
+        with registry().cursor() as cr:
+            yield cr
 
 EMPTY_DICT = frozendict()
 
@@ -151,6 +169,8 @@ class _column(object):
 
     def __getattr__(self, name):
         """ Access a non-slot attribute. """
+        if name == '_args':
+            raise AttributeError(name)
         try:
             return self._args[name]
         except KeyError:
@@ -386,7 +406,7 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with registry().cursor() as cr:
+            with _get_cursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits
@@ -1316,7 +1336,7 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with registry().cursor() as cr:
+            with _get_cursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits

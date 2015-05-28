@@ -95,7 +95,7 @@ class AccountInvoice(models.Model):
             if line.account_id.internal_type in ('receivable', 'payable'):
                 residual_signed += line.amount_residual * sign
                 if line.currency_id == self.currency_id:
-                    residual += line.currency_id and line.amount_residual_currency or line.amount_residual
+                    residual += line.amount_residual_currency if line.currency_id else line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)

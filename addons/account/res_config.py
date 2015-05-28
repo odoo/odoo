@@ -83,9 +83,11 @@ class AccountConfigSettings(models.TransientModel):
     module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
         help="""If you do not check this box, you will be able to do invoicing & payments,
              but not accounting (Journal Items, Chart of  Accounts, ...)""")
-    module_account_asset = fields.Boolean(string='Assets management',
-        help='This allows you to manage the assets owned by a company or a person.\n'
-             'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n'
+    module_account_asset = fields.Boolean(string='Assets management & Revenue recognition',
+        help='Asset management: This allows you to manage the assets owned by a company or a person.'
+                 'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
+                 'Revenue recognition: This allows you to manage the Revenue recognition on selling product.'
+                 'It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n'
              '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
              'but not accounting (Journal Items, Chart of Accounts, ...)')
     module_account_budget = fields.Boolean(string='Budget management',

@@ -87,7 +87,7 @@ var SystrayMenu = Widget.extend({
                 framework.redirect('https://accounts.odoo.com/oauth2/auth?'+$.param(params));
             }).fail(function(result, ev){
                 ev.preventDefault();
-                framework.redirect('https://accounts.odoo.com/web');
+                framework.redirect('https://accounts.odoo.com/account');
             });
         }
     },

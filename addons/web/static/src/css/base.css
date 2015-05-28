@@ -52,6 +52,7 @@
   box-shadow: 0 0 1px black;
   left: 50%;
   transform: translate(-50%, 0);
+  -webkit-filter: blur(0);
 }
 
 .oe_notification {
@@ -3048,6 +3049,12 @@ body.oe_single_form .oe_single_form_container {
 @media print {
   body {
     height: auto !important;
+    overflow: visible !important;
+  }
+
+  tr, td {
+    page-break-inside: avoid;
+    page-break-after: auto;
   }
 
   .openerp#announcement_bar_table {
@@ -3056,6 +3063,13 @@ body.oe_single_form .oe_single_form_container {
 
   .openerp {
     text-shadow: none;
+  }
+  .openerp.openerp_webclient_container {
+    display: block;
+    height: auto !important;
+  }
+  .openerp .oe-view-manager {
+    display: block;
   }
   .openerp .oe_application, .openerp .oe_view_manager_wrapper {
     height: auto !important;
@@ -3082,6 +3096,9 @@ body.oe_single_form .oe_single_form_container {
   .openerp .oe_notebook > li.ui-tabs-selected {
     display: block;
   }
+  .openerp .oe_application {
+    width: auto;
+  }
   .openerp .oe_application .oe_form_sheet, .openerp .oe_application .oe_form_sheetbg {
     border: 0px !important;
     box-shadow: 0px 0px 0px;
@@ -3098,6 +3115,9 @@ body.oe_single_form .oe_single_form_container {
   }
   .openerp .openerp div.oe_mail_wall {
     overflow: hidden !important;
+  }
+  .openerp .oe-view-manager .oe-view-manager-content {
+    overflow: visible;
   }
 
   .openerp.openerp_webclient_container {

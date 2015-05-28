@@ -147,6 +147,9 @@ class stock_move(osv.osv):
         if move.product_uos:
             uos_id = move.product_uos.id
             quantity = move.product_uos_qty
+
+        taxes_ids = self._get_taxes(cr, uid, move, context=context)
+
         return {
             'name': move.name,
             'account_id': account_id,
@@ -154,6 +157,7 @@ class stock_move(osv.osv):
             'uos_id': uos_id,
             'quantity': quantity,
             'price_unit': self._get_price_unit_invoice(cr, uid, move, inv_type),
+            'invoice_line_tax_ids': [(6, 0, taxes_ids)],
             'discount': 0.0,
             'account_analytic_id': False,
             'move_id': move.id,
@@ -306,6 +310,7 @@ class stock_picking(osv.osv):
         move_obj = self.pool.get('stock.move')
         invoices = {}
         is_extra_move, extra_move_tax = move_obj._get_moves_taxes(cr, uid, moves, context=context)
+        product_price_unit = {}
         for move in moves:
             company = move.company_id
             origin = move.picking_id.name
@@ -331,8 +336,12 @@ class stock_picking(osv.osv):
             invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
             invoice_line_vals['invoice_id'] = invoices[key]
             invoice_line_vals['origin'] = origin
+            if not is_extra_move[move.id]:
+                product_price_unit[invoice_line_vals['product_id']] = invoice_line_vals['price_unit']
+            if is_extra_move[move.id] and invoice_line_vals['product_id'] in product_price_unit:
+                invoice_line_vals['price_unit'] = product_price_unit[invoice_line_vals['product_id']]
             if is_extra_move[move.id] and extra_move_tax[move.picking_id, move.product_id]:
-                invoice_line_vals['invoice_line_tax_id'] = extra_move_tax[move.picking_id, move.product_id]
+                invoice_line_vals['invoice_line_tax_ids'] = extra_move_tax[move.picking_id, move.product_id]
 
             move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
             move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)

@@ -8,6 +8,7 @@ from openerp import _, api, fields, models, SUPERUSER_ID
 from openerp.exceptions import UserError
 from openerp.modules.registry import RegistryManager
 from openerp.tools import ustr
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

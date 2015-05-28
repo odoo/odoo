@@ -100,7 +100,7 @@ class website_links(models.Model):
             if attr:
                 utms[key] = attr
 
-        self.redirected_url = '%s://%s%s?%s%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, urlencode(utms), parsed.query, parsed.fragment)
+        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, urlencode(utms), parsed.query, parsed.fragment)
 
     @api.model
     @api.depends('url')

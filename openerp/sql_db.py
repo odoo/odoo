@@ -265,7 +265,7 @@ class Cursor(object):
     def split_for_in_conditions(self, ids):
         """Split a list of identifiers into one or more smaller tuples
            safe for IN conditions, after uniquifying them."""
-        return tools.misc.split_every(self.IN_MAX, set(ids))
+        return tools.misc.split_every(self.IN_MAX, ids)
 
     def print_log(self):
         global sql_counter
@@ -401,6 +401,10 @@ class Cursor(object):
     @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
+
+    @property
+    def closed(self):
+        return self._closed
 
 class TestCursor(Cursor):
     """ A cursor to be used for tests. It keeps the transaction open across
