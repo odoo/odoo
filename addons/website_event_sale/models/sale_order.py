@@ -44,6 +44,10 @@ class sale_order(osv.Model):
             values['price_unit'] = ticket.price
             values['name'] = "%s\n%s" % (ticket.event_id.display_name, ticket.name)
 
+        # avoid writing related values that end up locking the product record
+        values.pop('event_type_id', None)
+        values.pop('event_ok', None)
+
         return values
 
     def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
