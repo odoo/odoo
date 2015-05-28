@@ -140,33 +140,37 @@ class TestReconciliation(TransactionCase):
         self.check_results(supplier_move_lines, {
             self.account_usd_id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
             self.account_rcv_id: {'debit': 32.70, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
-            self.account_fx_income_id: {'debit': 7.30, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': self.currency_usd_id},
+            self.account_fx_expense_id: {'debit': 7.30, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': self.currency_usd_id},
         })
 
     def test_statement_usd_invoice_chf_transaction_chf(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_swiss_id, self.bank_journal_usd_id, 42, 50, self.currency_swiss_id)
         self.check_results(customer_move_lines, {
             self.account_usd_id: {'debit': 27.47, 'credit': 0.0, 'amount_currency': 42, 'currency_id': self.currency_usd_id},
-            self.account_rcv_id: {'debit': 0.0, 'credit': 38.21, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
-            self.account_fx_income_id: {'debit': 10.74, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': self.currency_usd_id},
+            self.account_rcv_id: {'debit': 0.0, 'credit': 27.47, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
+            self.account_fx_income_id: {'debit': 0.0, 'credit': 10.74, 'amount_currency': 0.0, 'currency_id': self.currency_usd_id},
+            self.account_fx_expense_id: {'debit': 10.74, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': self.currency_usd_id},
         })
         self.check_results(supplier_move_lines, {
             self.account_usd_id: {'debit': 0.0, 'credit': 27.47, 'amount_currency': -42, 'currency_id': self.currency_usd_id},
-            self.account_rcv_id: {'debit': 38.21, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
+            self.account_rcv_id: {'debit': 27.47, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
             self.account_fx_income_id: {'debit': 0.0, 'credit': 10.74, 'amount_currency': 0.0, 'currency_id': self.currency_usd_id},
+            self.account_fx_expense_id: {'debit': 10.74, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': self.currency_usd_id},
         })
 
     def test_statement_eur_invoice_usd_transaction_usd(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, self.bank_journal_euro_id, 40, 50, self.currency_usd_id)
         self.check_results(customer_move_lines, {
             self.account_euro_id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
-            self.account_rcv_id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
+            self.account_rcv_id: {'debit': 0.0, 'credit': 40, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
             self.account_fx_income_id: {'debit': 0.0, 'credit': 7.30, 'amount_currency': 0.0, 'currency_id': False},
+            self.account_fx_expense_id: {'debit': 7.30, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
         })
         self.check_results(supplier_move_lines, {
             self.account_euro_id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
-            self.account_rcv_id: {'debit': 32.7, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
-            self.account_fx_income_id: {'debit': 7.30, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+            self.account_rcv_id: {'debit': 40, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
+            self.account_fx_income_id: {'debit': 0.0, 'credit': 7.30, 'amount_currency': 0.0, 'currency_id': False},
+            self.account_fx_expense_id: {'debit': 7.30, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
         })
 
     def test_statement_eur_invoice_usd_transaction_eur(self):
@@ -184,13 +188,15 @@ class TestReconciliation(TransactionCase):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, self.bank_journal_euro_id, 42, 50, self.currency_swiss_id)
         self.check_results(customer_move_lines, {
             self.account_euro_id: {'debit': 42.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
-            self.account_rcv_id: {'debit': 0.0, 'credit': 38.21, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
+            self.account_rcv_id: {'debit': 0.0, 'credit': 42, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
             self.account_fx_income_id: {'debit': 0.0, 'credit': 3.79, 'amount_currency': 0.0, 'currency_id': False},
+            self.account_fx_expense_id: {'debit': 3.79, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
         })
         self.check_results(supplier_move_lines, {
             self.account_euro_id: {'debit': 0.0, 'credit': 42.0, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
-            self.account_rcv_id: {'debit': 38.21, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
-            self.account_fx_income_id: {'debit': 3.79, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+            self.account_rcv_id: {'debit': 42, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
+            self.account_fx_income_id: {'debit': 0.0, 'credit': 3.79, 'amount_currency': 0.0, 'currency_id': False},
+            self.account_fx_expense_id: {'debit': 3.79, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
         })
 
     def test_balanced_exchanges_gain_loss(self):
