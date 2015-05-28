@@ -94,9 +94,6 @@ class MailComposer(models.TransientModel):
             result['model'] = 'res.partner'
             result['res_id'] = self.env.user.partner_id.id
 
-        if fields is not None:
-            [result.pop(field, None) for field in result.keys() if field not in fields]
-
         # Override to pre-fill the data when having a template in single-email mode
         # and not going through the view: the on_change is not called in that case.
         if result.get('composition_mode') != 'mass_mail' and self._context.get('default_template_id') and result.get('model') and result.get('res_id'):
