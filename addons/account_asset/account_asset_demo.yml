@@ -14,7 +14,7 @@
                 'method_number': 3,
                 'account_asset_id': xfa_account_id[0],
                 'account_depreciation_id': xfa_account_id[0],
-                'account_expense_depreciation_id': expense_account_id[0],
+                'account_income_recognition_id': expense_account_id[0],
             }
             self._update(cr, uid, 'account.asset.category', 'account_asset', vals, 'account_asset_category_fixedassets0')
             vals = {
@@ -23,7 +23,7 @@
                 'method_number': 5,
                 'account_asset_id': xfa_account_id[0],
                 'account_depreciation_id': xfa_account_id[0],
-                'account_expense_depreciation_id': expense_account_id[0],
+                'account_income_recognition_id': expense_account_id[0],
             }
             self._update(cr, uid, 'account.asset.category', 'account_asset', vals, 'account_asset_category_fixedassets1')
             vals = {
@@ -32,7 +32,7 @@
                 'method_period': 12,
                 'method_number': 5,
                 'name': "CEO's car",
-                'purchase_value': 12000.0,
+                'value': 12000.0,
                 'category_id': ref('account_asset_category_fixedassets0'),
             }
             self._update(cr, uid, 'account.asset.asset', 'account_asset', vals, 'account_asset_asset_vehicles0')
@@ -41,7 +41,7 @@
                 'salvage_value': 0.0,
                 'method_time': 'end',
                 'name': 'V6 Engine and 10 inches tires',
-                'purchase_value': 2800.0,
+                'value': 2800.0,
                 'category_id': ref('account_asset_category_fixedassets0'),
             }
             self._update(cr, uid, 'account.asset.asset', 'account_asset', vals, 'account_asset_asset_cab0')
@@ -51,9 +51,9 @@
                 'state': 'open',
                 'method_period': 12,
                 'method_number': 20,
-                'purchase_date': time.strftime('%Y-01-01'),
+                'date': time.strftime('%Y-01-01'),
                 'name': 'Office',
-                'purchase_value': 500000.0,
+                'value': 500000.0,
                 'category_id': ref('account_asset_category_fixedassets0'),
             }
             self._update(cr, uid, 'account.asset.asset', 'account_asset', vals, 'account_asset_asset_office0')
@@ -67,6 +67,6 @@
                 'method_number': 6,
                 'account_asset_id': xfa_account_id[0],
                 'account_depreciation_id': xfa_account_id[0],
-                'account_expense_depreciation_id': sale_account_id[0],
+                'account_income_recognition_id': sale_account_id[0],
             }
             self._update(cr, uid, 'account.asset.category', 'account_asset', vals, 'account_asset_category_sale')

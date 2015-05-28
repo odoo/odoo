@@ -130,6 +130,9 @@ li > * > li > * > li > * > li > * > li > * > li > ol
 li > p
     margin: 0
 
+font[style*='background'], font[class*='bg-']
+    padding: 0 2px
+
 .o_ul_toggle_self, .o_ul_toggle_next
     display: none
 .o_ul_folded
@@ -238,8 +241,9 @@ body > nav.navbar
     width: 100%
     position: absolute
     z-index: 10000
-nav.navbar + #wrapwrap
-    padding-top: 34px
+@media (max-min: 767px)
+    nav.navbar + #wrapwrap
+        padding-top: 34px
 
 /* ----- BOOTSTRAP FIX ----- */
 

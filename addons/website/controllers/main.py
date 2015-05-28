@@ -70,7 +70,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         redirect.set_cookie('website_lang', lang)
         return redirect
 
-    @http.route('/page/<page:page>', type='http', auth="public", website=True)
+    @http.route('/page/<page:page>', type='http', auth="public", website=True, cache=300)
     def page(self, page, **opt):
         values = {
             'path': page,

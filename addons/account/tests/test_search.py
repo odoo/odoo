@@ -54,3 +54,18 @@ class TestSearch(AccountTestUsers):
 
         asale_ids = self.account_model.name_search(name='XX200', operator='ilike', args=[('id', 'in', self.all_ids)])
         self.assertEqual(set([self.asale[0]]), set([a[0] for a in asale_ids]), "name_search 'ilike XX200' should have returned Product Sales account only")
+
+    def test_property_unset_search(self):
+        cr, uid = self.cr, self.uid
+        res_partner_model = self.registry('res.partner')
+        account_payment_term_model = self.registry('account.payment.term')
+
+        a_partner = res_partner_model.create(cr, uid, {'name': 'test partner'})
+        a_payment_term = account_payment_term_model.create(cr, uid, {'name': 'test payment term'})
+
+        partner_ids = res_partner_model.search(cr, uid, [('property_payment_term', '=', False), ('id', '=', a_partner)])
+        self.assertTrue(partner_ids, "unset property field 'propety_payment_term' should have been found")
+
+        res_partner_model.write(cr, uid, [a_partner], {'property_payment_term': a_payment_term})
+        partner_ids = res_partner_model.search(cr, uid, [('property_payment_term', '=', False), ('id', '=', a_partner)])
+        self.assertFalse(partner_ids, "set property field 'propety_payment_term' should not have been found")

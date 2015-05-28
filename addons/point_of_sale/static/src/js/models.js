@@ -153,7 +153,7 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self,users){ self.user = users[0]; },
     },{ 
         model:  'res.company',
-        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id'],
+        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'tax_calculation_rounding_method'],
         ids:    function(self){ return [self.user.company_id[0]]; },
         loaded: function(self,companies){ self.company = companies[0]; },
     },{
@@ -1284,6 +1284,9 @@ exports.Orderline = Backbone.Model.extend({
         var total_included = total_excluded;
         var base = total_excluded;
         var list_taxes = [];
+        if (this.pos.company.tax_calculation_rounding_method == "round_globally"){
+           currency_rounding = currency_rounding * 0.00001;
+        }
         _(taxes).each(function(tax) {
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
@@ -1811,34 +1814,34 @@ exports.Order = Backbone.Model.extend({
     },
     /* ---- Payment Status --- */
     get_subtotal : function(){
-        return this.orderlines.reduce((function(sum, orderLine){
+        return round_pr(this.orderlines.reduce((function(sum, orderLine){
             return sum + orderLine.get_display_price();
-        }), 0);
+        }), 0), this.pos.currency.rounding);
     },
     get_total_with_tax: function() {
-        return this.orderlines.reduce((function(sum, orderLine) {
+        return round_pr(this.orderlines.reduce((function(sum, orderLine) {
             return sum + orderLine.get_price_with_tax();
-        }), 0);
+        }), 0), this.pos.currency.rounding);
     },
     get_total_without_tax: function() {
-        return this.orderlines.reduce((function(sum, orderLine) {
+        return round_pr(this.orderlines.reduce((function(sum, orderLine) {
             return sum + orderLine.get_price_without_tax();
-        }), 0);
+        }), 0), this.pos.currency.rounding);
     },
     get_total_discount: function() {
-        return this.orderlines.reduce((function(sum, orderLine) {
+        return round_pr(this.orderlines.reduce((function(sum, orderLine) {
             return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
-        }), 0);
+        }), 0), this.pos.currency.rounding);
     },
     get_total_tax: function() {
-        return this.orderlines.reduce((function(sum, orderLine) {
+        return round_pr(this.orderlines.reduce((function(sum, orderLine) {
             return sum + orderLine.get_tax();
-        }), 0);
+        }), 0), this.pos.currency.rounding);
     },
     get_total_paid: function() {
-        return this.paymentlines.reduce((function(sum, paymentLine) {
+        return round_pr(this.paymentlines.reduce((function(sum, paymentLine) {
             return sum + paymentLine.get_amount();
-        }), 0);
+        }), 0), this.pos.currency.rounding);
     },
     get_tax_details: function(){
         var details = {};

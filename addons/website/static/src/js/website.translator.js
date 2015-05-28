@@ -67,7 +67,10 @@ editor.EditorBar.include({
         var link = $('.js_language_selector a[data-default-lang]')[0];
         if (link) {
             link.search += (link.search ? '&' : '?') + 'enable_editor=1';
-            window.location = link.attributes.href.value;
+            var url = link.pathname + link.search + window.location.hash;
+            link.pathname = '/website/lang/default';
+            link.search = '?' + $.param({r: url});
+            window.location = link.href;
         }
     },
     translate: function () {
@@ -89,7 +92,8 @@ editor.EditorBar.include({
         var $editables = $('[data-oe-model="ir.ui.view"]')
                 .not('link, script')
                 .not('.oe_snippets,.oe_snippet, .oe_snippet *, .navbar-toggle')
-                .not('[data-oe-type]');
+                .not('[data-oe-type]')
+                .add($('[data-oe-translate="1"]:not([data-oe-model="ir.ui.view"])').addClass('o_editable'));
 
         $editables.each(function () {
             var $node = $(this);
@@ -112,7 +116,7 @@ editor.EditorBar.include({
                     self.sanitizeNode($node[0]);
                 }
                 if (self.getInitialContent($node[0]) !== $node.text()) {
-                    $node.addClass('oe_dirty').removeClass('oe_translatable_todo oe_translatable_inprogress');
+                    $node.addClass('o_dirty').removeClass('oe_translatable_todo oe_translatable_inprogress');
                 }
             }, 0);
         });
@@ -133,7 +137,7 @@ editor.EditorBar.include({
         // TODO: link nodes with same content
         node.className += ' oe_translatable_text';
         node.setAttribute('data-oe-translation-view-id', view_id);
-        var content = node.childNodes[0].data.trim();
+        var content = $(node).text().trim();
         var trans = this.translations.filter(function (t) {
             return t.res_id === view_id && t.value.trim() === content;
         });
@@ -152,10 +156,9 @@ editor.EditorBar.include({
     },
     save: function () {
         var self = this;
-        var mysuper = this._super;
         var trans = {};
         // this._super.apply(this, arguments);
-        $('.oe_translatable_text.oe_dirty').each(function () {
+        $('.oe_translatable_text.o_dirty').each(function () {
             var $node = $(this);
             var data = $node.data();
             if (!trans[data.oeTranslationViewId]) {
@@ -171,8 +174,7 @@ editor.EditorBar.include({
             'data': trans,
             'lang': website.get_context()['lang'],
         }).then(function () {
-            window.onbeforeunload = null;
-            website.reload();
+            self._save();
         }).fail(function () {
             // TODO: bootstrap alert with error message
             alert("Could not save translation");
@@ -185,6 +187,7 @@ editor.EditorBar.include({
             if (node.attributes['data-oe-translate'].value == '1') {
                 node.className += ' oe_translatable_field';
             }
+                this.markTranslatableNode(node, view_id);
         } else if (node.childNodes.length === 1
                 && this.isTextNode(node.childNodes[0])
                 && !node.getAttribute('data-oe-model')) {

@@ -1230,9 +1230,11 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     set_filename: function(value) {
         var filename = this.node.attrs.filename;
         if (filename) {
-            var tmp = {};
-            tmp[filename] = value;
-            this.field_manager.set_values(tmp);
+            var field = this.field_manager.fields[filename];
+            if (field) {
+                field.set_value(value);
+                field._dirty_flag = true;
+            }
         }
     },
     on_clear: function() {
@@ -1279,10 +1281,10 @@ var FieldBinaryFile = FieldBinary.extend({
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.binary_value = true;
+        this.set_filename(name);
         this.internal_set_value(file_base64);
         var show_value = name + " (" + utils.human_size(size) + ")";
         this.$el.find('input').eq(0).val(show_value);
-        this.set_filename(name);
     },
     on_clear: function() {
         this._super.apply(this, arguments);

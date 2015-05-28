@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from openerp import api, models, _
+from openerp.tools.safe_eval import safe_eval as eval
 #
 # Use period and Journal for selection or resources
 #
@@ -38,7 +39,7 @@ class ReportAssertAccount(models.AbstractModel):
             'result': None,  # used to store the result of the test
             'column_order': None,  # used to choose the display order of columns (in case you are returning a list of dict)
         }
-        exec code_exec in localdict
+        eval(code_exec, localdict, mode="exec", nocopy=True)
         result = localdict['result']
         column_order = localdict.get('column_order', None)
 

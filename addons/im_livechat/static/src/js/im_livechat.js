@@ -203,12 +203,13 @@ var ChatButton = Widget.extend({
         if(this.session.users.length > 0){
             if (self.options.defaultMessage) {
                 setTimeout(function(){
+                    var operator = _.last(_.filter(self.session.users, function(user){return user.is_operator}));
                     self.conv.message_receive({
                         id : 1,
                         type: "message",
                         message: self.options.defaultMessage,
                         create_date: time.datetime_to_str(new Date()),
-                        from_id: [self.session.users[0].id, self.session.users[0].name],
+                        from_id: [operator.id, operator.name],
                         to_id: [0, self.session.uuid]
                     });
                 }, 1000);

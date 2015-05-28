@@ -499,7 +499,7 @@ var Configurator = Widget.extend({
     descriptionChanged: function () {
         var self = this;
         setTimeout(function () {
-            var description = self.$('textarea[name=seo_page_description]').attr('value');
+            var description = self.$('textarea[name=seo_page_description]').val();
             self.htmlPage.changeDescription(description);
             self.renderPreview();
         }, 0);

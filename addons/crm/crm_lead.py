@@ -82,30 +82,10 @@ class crm_lead(format_address, osv.osv):
         context['empty_list_help_document_name'] = _("leads")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
-    def _get_default_team_id(self, cr, uid, user_id=False, context=None):
-        """ Gives default team by checking if present in the context """
-        team_id = self._resolve_team_id_from_context(cr, uid, context=context) or False
-        return team_id
-
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        team_id = self._get_default_team_id(cr, uid, context=context)
+        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context)
         return self.stage_find(cr, uid, [], team_id, [('fold', '=', False)], context=context)
-
-    def _resolve_team_id_from_context(self, cr, uid, context=None):
-        """ Returns ID of team based on the value of 'team_id'
-            context key, or None if it cannot be resolved to a single
-            Sales Team.
-        """
-        if context is None:
-            context = {}
-        if type(context.get('default_team_id')) in (int, long):
-            return context.get('default_team_id')
-        if isinstance(context.get('default_team_id'), basestring):
-            team_ids = self.pool.get('crm.team').name_search(cr, uid, name=context['default_team_id'], context=context)
-            if len(team_ids) == 1:
-                return int(team_ids[0][0])
-        return None
 
     def _resolve_type_from_context(self, cr, uid, context=None):
         """ Returns the type (lead or opportunity) from the type context
@@ -127,7 +107,7 @@ class crm_lead(format_address, osv.osv):
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         search_domain = []
-        team_id = self._resolve_team_id_from_context(cr, uid, context=context)
+        team_id = self.pool['crm.team']._resolve_team_id_from_context(cr, uid, context=context)
         if team_id:
             search_domain += ['|', ('team_ids', '=', team_id)]
             search_domain += [('id', 'in', ids)]
@@ -282,7 +262,7 @@ class crm_lead(format_address, osv.osv):
         'type': 'lead',
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'team_id': lambda s, cr, uid, c: s._get_default_team_id(cr, uid, context=c),
+        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[0][0],
         'color': 0,
@@ -329,7 +309,7 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
-        team_id = self._get_default_team_id(cr, uid, context=context)
+        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, user_id=user_id, context=context)
         if user_id and not team_id and self.pool['res.users'].has_group(cr, uid, 'base.group_multi_salesteams'):
             team_ids = self.pool.get('crm.team').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if team_ids:
@@ -910,6 +890,7 @@ class crm_lead(format_address, osv.osv):
         if lead.partner_id:
             partner_ids.append(lead.partner_id.id)
         res['context'] = {
+            'search_default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
             'default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
             'default_partner_id': lead.partner_id and lead.partner_id.id or False,
             'default_partner_ids': partner_ids,

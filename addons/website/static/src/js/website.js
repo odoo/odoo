@@ -4,6 +4,7 @@ odoo.define('website.website', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var session = require('web.session');
+var Tour = require('web.Tour');
 
 var _t = core._t;
 
@@ -169,16 +170,6 @@ function prompt(options, qweb) {
     return def;
 }
 
-function error(data, url) {
-    var $error = $(core.qweb.render('website.error_dialog', {
-        'title': data.data ? data.data.arguments[0] : "",
-        'message': data.data ? data.data.arguments[1] : data.statusText,
-        'backend_url': url
-    }));
-    $error.appendTo("body");
-    $error.modal('show');
-}
-
 function form(url, method, params) {
     var htmlform = document.createElement('form');
     htmlform.setAttribute('action', url);
@@ -269,8 +260,6 @@ function add_template_file(template) {
     });
     return def;
 }
-
-add_template_file('/website/static/src/xml/website.xml');
 
 var dom_ready = $.Deferred();
 $(document).ready(function () {
@@ -402,6 +391,11 @@ dom_ready.then(function () {
     $('#oe_applications').before($collapse);
     $collapse.wrap('<div class="visible-xs"/>');
     $('[data-target="#oe_applications"]').attr("data-target", "#oe_applications_collapse");
+    });
+
+    Tour.autoRunning = false;
+    ready().then(function () {
+        setTimeout(Tour.running,0);
 });
 
 return {
@@ -412,7 +406,6 @@ return {
     parseHash: parseHash,
     reload: reload,
     prompt: prompt,
-    error: error,
     form: form,
     init_kanban: init_kanban,
     add_template_file: add_template_file,

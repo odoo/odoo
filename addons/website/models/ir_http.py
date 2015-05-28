@@ -2,6 +2,7 @@
 import logging
 import os
 import re
+import time
 import traceback
 
 import werkzeug
@@ -15,6 +16,7 @@ from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
 from openerp.tools import config
 from openerp.osv import orm
+from openerp.tools.safe_eval import safe_eval as eval
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
-    geo_ip_resolver = None
+    _geoip_resolver = None
 
     def _get_converters(self):
         return dict(
@@ -45,7 +47,7 @@ class ir_http(orm.AbstractModel):
         else:
             request.uid = request.session.uid
 
-    bots = "bot|crawl|slurp|spider|curl|wget".split("|")
+    bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
     def is_a_bot(self):
         # We don't use regexp and ustr voluntarily
         # timeit has been done to check the optimum method
@@ -54,6 +56,39 @@ class ir_http(orm.AbstractModel):
             return any(bot in ua for bot in self.bots)
         except UnicodeDecodeError:
             return any(bot in ua.encode('ascii', 'ignore') for bot in self.bots)
+
+    def get_nearest_lang(self, lang):
+        # Try to find a similar lang. Eg: fr_BE and fr_FR
+        if lang in request.website.get_languages():
+            return lang
+
+        short = lang.split('_')[0]
+        for code, name in request.website.get_languages():
+            if code.startswith(short):
+                return code
+        return False
+
+    def _geoip_setup_resolver(self):
+        if self._geoip_resolver is None:
+            try:
+                import GeoIP
+                # updated database can be downloaded on MaxMind website
+                # http://dev.maxmind.com/geoip/legacy/install/city/
+                geofile = config.get('geoip_database')
+                if os.path.exists(geofile):
+                    self._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
+                else:
+                    self._geoip_resolver = False
+                    logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
+            except ImportError:
+                self._geoip_resolver = False
+
+    def _geoip_resolve(self):
+        if 'geoip' not in request.session:
+            record = {}
+            if self._geoip_resolver and request.httprequest.remote_addr:
+                record = self._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+            request.session['geoip'] = record
 
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
@@ -75,24 +110,8 @@ class ir_http(orm.AbstractModel):
             func and func.routing.get('multilang', func.routing['type'] == 'http')
         )
 
-        if 'geoip' not in request.session:
-            record = {}
-            if self.geo_ip_resolver is None:
-                try:
-                    import GeoIP
-                    # updated database can be downloaded on MaxMind website
-                    # http://dev.maxmind.com/geoip/legacy/install/city/
-                    geofile = config.get('geoip_database')
-                    if os.path.exists(geofile):
-                        self.geo_ip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
-                    else:
-                        self.geo_ip_resolver = False
-                        logger.warning('GeoIP database file %r does not exists', geofile)
-                except ImportError:
-                    self.geo_ip_resolver = False
-            if self.geo_ip_resolver and request.httprequest.remote_addr:
-                record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
-            request.session['geoip'] = record
+        self._geoip_setup_resolver()
+        self._geoip_resolve()
 
         cook_lang = request.httprequest.cookies.get('website_lang')
         if request.website_enabled:
@@ -109,50 +128,64 @@ class ir_http(orm.AbstractModel):
             request.context['website_id'] = request.website.id
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
-
             if first_pass:
-                if request.website_multilang:
-                    is_a_bot = self.is_a_bot()
-                    # If the url doesn't contains the lang and that it's the first connection, we to retreive the user preference if it exists.
-                    if not path[1] in langs and not is_a_bot:
-                        request.lang = cook_lang or request.lang
-                        if request.lang not in langs:
-                            # Try to find a similar lang. Eg: fr_BE and fr_FR
-                            short = request.lang.split('_')[0]
-                            langs_withshort = [lg[0] for lg in request.website.get_languages() if lg[0].startswith(short)]
-                            if len(langs_withshort):
-                                request.lang = langs_withshort[0]
-                            else:
-                                request.lang = request.website.default_lang_code
-                    else:
-                        request.lang = request.website.default_lang_code
+                nearest_lang = not func and self.get_nearest_lang(path[1])
+                url_lang = nearest_lang and path[1]
+                preferred_lang = ((cook_lang if cook_lang in langs else False)
+                                  or self.get_nearest_lang(request.lang)
+                                  or request.website.default_lang_code)
 
+                is_a_bot = self.is_a_bot()
+
+                request.lang = request.context['lang'] = nearest_lang or preferred_lang
+                # if lang in url but not the displayed or default language --> change or remove
+                # or no lang in url, and lang to dispay not the default language --> add lang
+                # and not a POST request
+                # and not a bot or bot but default lang in url
+                if ((url_lang and (url_lang != request.lang or url_lang == request.website.default_lang_code))
+                        or (not url_lang and request.website_multilang and request.lang != request.website.default_lang_code)
+                        and request.httprequest.method != 'POST') \
+                        and (not is_a_bot or (url_lang and url_lang == request.website.default_lang_code)):
+                    if url_lang:
+                        path.pop(1)
                     if request.lang != request.website.default_lang_code:
                         path.insert(1, request.lang)
-                        path = '/'.join(path) or '/'
-                        redirect = request.redirect(path + '?' + request.httprequest.query_string)
-                        redirect.set_cookie('website_lang', request.lang)
-                        return redirect
+                    path = '/'.join(path) or '/'
+                    redirect = request.redirect(path + '?' + request.httprequest.query_string)
+                    redirect.set_cookie('website_lang', request.lang)
+                    return redirect
+                elif url_lang:
+                    path.pop(1)
+                    return self.reroute('/'.join(path) or '/')
 
-            request.context['lang'] = request.lang
             if not request.context.get('tz'):
                 request.context['tz'] = request.session['geoip'].get('time_zone')
-            if not func:
-                if path[1] in langs:
-                    request.lang = request.context['lang'] = path.pop(1)
-                    path = '/'.join(path) or '/'
-                    if request.lang == request.website.default_lang_code:
-                        # If language is in the url and it is the default language, redirect
-                        # to url without language so google doesn't see duplicate content
-                        resp = request.redirect(path + '?' + request.httprequest.query_string, code=301)
-                        if cook_lang != request.lang:  # If default lang setted in url directly
-                            resp.set_cookie('website_lang', request.lang)
-                        return resp
-                    return self.reroute(path)
             # bind modified context
             request.website = request.website.with_context(request.context)
-        resp = super(ir_http, self)._dispatch()
-        if not cook_lang:
+
+        # cache for auth public
+        cache_time = getattr(func, 'routing', {}).get('cache')
+        cache_enable = cache_time and request.httprequest.method == "GET" and request.website.user_id.id == request.uid
+        cache_response = None
+        if cache_enable:
+            key = (self._name, "cache", request.uid, request.lang, request.httprequest.full_path)
+            try:
+                r = self.pool.cache[key]
+                if r['time'] + cache_time > time.time():
+                    cache_response = openerp.http.Response(r['content'], mimetype=r['mimetype'])
+                else:
+                    del self.pool.cache[key]
+            except KeyError:
+                pass
+
+        if cache_response:
+            request.cache_save = False
+            resp = cache_response
+        else:
+            request.cache_save = key if cache_enable else False
+            resp = super(ir_http, self)._dispatch()
+
+        if request.website_enabled and cook_lang != request.lang and hasattr(resp, 'set_cookie'):
             resp.set_cookie('website_lang', request.lang)
         return resp
 

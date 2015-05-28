@@ -1,64 +1,46 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+from openerp import fields, models, tools
 
-from openerp import tools
-from openerp.osv import fields, osv
 
-class asset_asset_report(osv.osv):
+class AssetAssetReport(models.Model):
     _name = "asset.asset.report"
     _description = "Assets Analysis"
     _auto = False
-    _columns = {
-        'name': fields.char('Year', required=False, readonly=True),
-        'purchase_date': fields.date('Purchase Date', readonly=True),
-        'depreciation_date': fields.date('Depreciation Date', readonly=True),
-        'asset_id': fields.many2one('account.asset.asset', string='Asset', readonly=True),
-        'asset_category_id': fields.many2one('account.asset.category',string='Asset category'),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', readonly=True),
-        'depreciation_value': fields.float('Amount of Depreciation Lines', readonly=True),
-        'move_check': fields.boolean('Posted', readonly=True),
-        'nbr': fields.integer('# of Depreciation Lines', readonly=True),
-        'gross_value': fields.float('Gross Amount', readonly=True),
-        'posted_value': fields.float('Posted Amount', readonly=True),
-        'unposted_value': fields.float('Unposted Amount', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-    }
-    
+
+    name = fields.Char(string='Year', required=False, readonly=True)
+    date = fields.Date(readonly=True)
+    depreciation_date = fields.Date(string='Depreciation Date', readonly=True)
+    asset_id = fields.Many2one('account.asset.asset', string='Asset', readonly=True)
+    asset_category_id = fields.Many2one('account.asset.category', string='Asset category', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    state = fields.Selection([('draft', 'Draft'), ('open', 'Running'), ('close', 'Close')], string='Status', readonly=True)
+    depreciation_value = fields.Float(string='Amount of Depreciation Lines', readonly=True)
+    installment_value = fields.Float(string='Amount of Installment Lines', readonly=True)
+    move_check = fields.Boolean(string='Posted', readonly=True)
+    installment_nbr = fields.Integer(string='# of Installment Lines', readonly=True)
+    depreciation_nbr = fields.Integer(string='# of Depreciation Lines', readonly=True)
+    gross_value = fields.Float(string='Gross Amount', readonly=True)
+    posted_value = fields.Float(string='Posted Amount', readonly=True)
+    unposted_value = fields.Float(string='Unposted Amount', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+
     def init(self, cr):
-    	tools.drop_view_if_exists(cr, 'asset_asset_report')
-     	cr.execute("""
-    	    create or replace view asset_asset_report as (
-                select 
+        tools.drop_view_if_exists(cr, 'asset_asset_report')
+        cr.execute("""
+            create or replace view asset_asset_report as (
+                select
                     min(dl.id) as id,
                     dl.name as name,
                     dl.depreciation_date as depreciation_date,
-                    a.purchase_date as purchase_date,
+                    a.date as date,
                     (CASE WHEN (select min(d.id) from account_asset_depreciation_line as d
                                 left join account_asset_asset as ac ON (ac.id=d.asset_id)
                                 where a.id=ac.id) = min(dl.id)
-                      THEN a.purchase_value
+                      THEN a.value
                       ELSE 0
                       END) as gross_value,
-                    dl.amount as depreciation_value, 
+                    dl.amount as depreciation_value,
+                    dl.amount as installment_value,
                     (CASE WHEN dl.move_check
                       THEN dl.amount
                       ELSE 0
@@ -72,13 +54,13 @@ class asset_asset_report(osv.osv):
                     a.category_id as asset_category_id,
                     a.partner_id as partner_id,
                     a.state as state,
-                    count(dl.*) as nbr,
+                    count(dl.*) as installment_nbr,
+                    count(dl.*) as depreciation_nbr,
                     a.company_id as company_id
                 from account_asset_depreciation_line dl
                     left join account_asset_asset a on (dl.asset_id=a.id)
-                group by 
+                group by
                     dl.amount,dl.asset_id,dl.depreciation_date,dl.name,
-                    a.purchase_date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
-                    a.purchase_value, a.id, a.salvage_value
+                    a.date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
+                    a.value, a.id, a.salvage_value
         )""")
-	
