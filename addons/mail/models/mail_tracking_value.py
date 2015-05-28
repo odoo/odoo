@@ -72,7 +72,7 @@ class MailTracking(models.Model):
                 result.append(getattr(record, 'old_value_%s' % record.field_type))
             elif record.field_type == 'date':
                 if record.old_value_datetime:
-                    result.append(datetime.strptime(record.old_value_integer, tools.DEFAULT_SERVER_DATETIME_FORMAT).date())
+                    result.append(datetime.strptime(record.old_value_datetime, tools.DEFAULT_SERVER_DATETIME_FORMAT).date())
                 else:
                     result.append(record.old_value_datetime)
             elif record.field_type == 'boolean':
@@ -91,7 +91,7 @@ class MailTracking(models.Model):
                 result.append(getattr(record, 'new_value_%s' % record.field_type))
             elif record.field_type == 'date':
                 if record.new_value_datetime:
-                    result.append(datetime.strptime(record.old_value_integer, tools.DEFAULT_SERVER_DATETIME_FORMAT).date())
+                    result.append(datetime.strptime(record.new_value_datetime, tools.DEFAULT_SERVER_DATETIME_FORMAT).date())
                 else:
                     result.append(record.new_value_datetime)
             elif record.field_type == 'boolean':
