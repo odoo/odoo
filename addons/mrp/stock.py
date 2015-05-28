@@ -32,7 +32,7 @@ class StockMove(osv.osv):
     _inherit = 'stock.move'
 
     _columns = {
-        'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True, copy=False),
+        'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True),
         'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
         'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
     }

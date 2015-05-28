@@ -1059,11 +1059,20 @@ class stock_picking(osv.osv):
 
         # If we encounter an UoM that is smaller than the default UoM or the one already chosen, use the new one instead.
         product_uom = {} # Determines UoM used in pack operations
+        location_dest_id = None
+        location_id = None
         for move in [x for x in picking.move_lines if x.state not in ('done', 'cancel')]:
             if not product_uom.get(move.product_id.id):
                 product_uom[move.product_id.id] = move.product_id.uom_id
             if move.product_uom.id != move.product_id.uom_id.id and move.product_uom.factor > product_uom[move.product_id.id].factor:
                 product_uom[move.product_id.id] = move.product_uom
+            if not move.scrapped:
+                if location_dest_id and move.location_dest_id.id != location_dest_id:
+                    raise UserError(_('The destination location must be the same for all the moves of the picking.'))
+                location_dest_id = move.location_dest_id.id
+                if location_id and move.location_id.id != location_id:
+                    raise UserError(_('The source location must be the same for all the moves of the picking.'))
+                location_id = move.location_id.id
 
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
@@ -1175,7 +1184,7 @@ class stock_picking(osv.osv):
             picking_quants = []
             #Calculate packages, reserved quants, qtys of this picking's moves
             for move in picking.move_lines:
-                if move.state not in ('assigned', 'confirmed'):
+                if move.state not in ('assigned', 'confirmed', 'waiting'):
                     continue
                 move_quants = move.reserved_quant_ids
                 picking_quants += move_quants
@@ -1345,6 +1354,8 @@ class stock_picking(osv.osv):
                 #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
                 qty = uom_obj._compute_qty_obj(cr, uid, product.uom_id, remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
         picking = op.picking_id
+        ref = product.default_code
+        name = '[' + ref + ']' + ' ' + product.name if ref else product.name
         res = {
             'picking_id': picking.id,
             'location_id': picking.location_id.id,
@@ -1352,7 +1363,7 @@ class stock_picking(osv.osv):
             'product_id': product.id,
             'product_uom': uom_id,
             'product_uom_qty': qty,
-            'name': _('Extra Move: ') + product.name,
+            'name': _('Extra Move: ') + name,
             'state': 'draft',
             }
         return res
@@ -1856,6 +1867,13 @@ class stock_move(osv.osv):
     def _default_destination_address(self, cr, uid, context=None):
         return False
 
+    def _default_group_id(self, cr, uid, context=None):
+        context = context or {}
+        if context.get('default_picking_id', False):
+            picking = self.pool.get('stock.picking').browse(cr, uid, context['default_picking_id'], context=context)
+            return picking.group_id.id
+        return False
+
     _defaults = {
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
@@ -1871,6 +1889,7 @@ class stock_move(osv.osv):
         'procure_method': 'make_to_stock',
         'propagate': True,
         'partially_available': False,
+        'group_id': _default_group_id,
     }
 
     def _check_uom(self, cr, uid, ids, context=None):

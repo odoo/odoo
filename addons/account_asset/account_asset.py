@@ -355,8 +355,8 @@ class AccountAssetDepreciationLine(models.Model):
             current_currency = line.asset_id.currency_id
             amount = company_currency.compute(line.amount, current_currency)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
-            asset_name = line.asset_id.name
-            reference = line.name
+            asset_name = "/"
+            reference = line.asset_id.name
             move_vals = {
                 'name': asset_name,
                 'date': depreciation_date,
