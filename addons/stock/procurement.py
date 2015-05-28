@@ -167,16 +167,24 @@ class procurement_order(osv.osv):
         old_proc = False
         key = tuple()
         key_routes = {}
+        proc = False
         for proc, route in product_routes:
-            key += (route,)
-            if old_proc != proc:
-                if key:
-                    if key_routes.get(key):
-                        key_routes[key] += [proc]
-                    else:
-                        key_routes[key] = [proc]
+            if not old_proc:
                 old_proc = proc
-                key = tuple()
+            if old_proc == proc:
+                key += (route,)
+            else:
+                if key_routes.get(key):
+                    key_routes[key] += [old_proc]
+                else:
+                    key_routes[key] = [old_proc]
+                old_proc = proc
+                key = (route,)
+        if proc: #do not forget last one as we passed through it
+            if key_routes.get(key):
+                key_routes[key] += [proc]
+            else:
+                key_routes[key] = [proc]
         return key_routes
 
 
@@ -210,7 +218,6 @@ class procurement_order(osv.osv):
                 res = pull_obj.search(cr, uid, loc_domain + [('route_id', 'in', procurement_route_ids)], order='route_sequence, sequence', context=context)
                 if res and res[0]:
                     results_dict[procurement.id] = res[0]
-
 
         procurements_to_check = [x for x in procurements if x.id not in results_dict.keys()]
         #group by warehouse_id:
