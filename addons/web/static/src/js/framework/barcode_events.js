@@ -8,6 +8,8 @@ odoo.define('web.BarcodeEvents', function(require) {
         timeout: null,
         key_pressed: {},
         buffered_key_events: [],
+        min_barcode_keys: 3, // minimum barcode length
+        max_time_between_keys_in_ms: 50, // max time between keys to be detected as a barcode
 
         init: function(parent) {
             mixins.PropertiesMixin.init.call(this);
@@ -16,7 +18,7 @@ odoo.define('web.BarcodeEvents', function(require) {
         handle_buffered_keys: function() {
             var code = "";
 
-            if (this.buffered_key_events.length >= 3) {
+            if (this.buffered_key_events.length >= this.min_barcode_keys) {
                 for (var i = 0; i < this.buffered_key_events.length; i++) {
                     code += String.fromCharCode(this.buffered_key_events[i].which);
                 }
@@ -115,7 +117,7 @@ odoo.define('web.BarcodeEvents', function(require) {
                     e.stopImmediatePropagation();
 
                     clearTimeout(this.timeout);
-                    this.timeout = setTimeout(this.handle_buffered_keys.bind(this), 50);
+                    this.timeout = setTimeout(this.handle_buffered_keys.bind(this), this.max_time_between_keys_in_ms);
                 }
             }
         },
