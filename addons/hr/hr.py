@@ -266,15 +266,6 @@ class hr_employee(osv.osv):
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
 
-    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
-        """Show the suggestion of employees if display_employees_suggestions if the
-        user perference allows it. """
-        user = self.pool.get('res.users').browse(cr, uid, uid, context)
-        if not user.display_employees_suggestions:
-            return []
-        else:
-            return super(hr_employee, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
-
     def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=None, context=None):
         """ Overwrite of the original method to always follow user_id field,
         even when not track_visibility so that a user will follow it's employee

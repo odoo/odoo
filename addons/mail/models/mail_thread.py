@@ -1840,29 +1840,6 @@ class MailThread(models.AbstractModel):
         self.env['mail.notification'].invalidate_cache(['is_read'])
         return True
 
-    @api.model
-    def get_suggested_thread(self, removed_suggested_threads=None):
-        """Return a list of suggested threads, sorted by the numbers of followers"""
-        # TDE HACK: originally by MAT from portal/mail_mail.py but not working until the inheritance graph bug is not solved in trunk
-        # TDE FIXME: relocate in portal when it won't be necessary to reload the hr.employee model in an additional bridge module
-        if 'is_portal' in self.pool['res.groups']._fields:
-            if any(group.is_portal for group in self.env.user.sudo().groups_id):
-                return []
-
-        threads = []
-        if removed_suggested_threads is None:
-            removed_suggested_threads = []
-
-        for thread in self.search([('id', 'not in', removed_suggested_threads), ('message_is_follower', '=', False)]):
-            data = {
-                'id': thread.id,
-                'popularity': len(thread.message_follower_ids),
-                'name': thread.name,
-                'image_small': thread.image_small
-            }
-            threads.append(data)
-        return sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]
-
     @api.multi
     def message_change_thread(self, new_thread):
         """

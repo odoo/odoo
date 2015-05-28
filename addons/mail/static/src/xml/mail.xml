@@ -26,9 +26,6 @@
 <div t-name="TimelineWall" t-attf-class="o_timeline #{widget.options.view_inbox ? 'o_timeline_inbox' : 'o_timeline_chatter'}">
     <div class="o_timeline_buttons"/>
     <div class="o_timeline-placeholder"></div>
-    <t t-if="widget.options.view_inbox">
-        <aside class="o_timeline_inbox_aside"></aside>
-    </t>
 </div>
 
 <t t-name="ComposeMessage">
@@ -244,10 +241,6 @@
 
 <t t-name="NoMessage">
     <div class="oe_view_nocontent">No message.</div>
-</t>
-
-<t t-name="TimelineSidebar">
-    <div class="o_timeline_sidebar"></div>
 </t>
 
 <!--

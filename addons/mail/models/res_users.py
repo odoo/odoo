@@ -18,7 +18,6 @@ class Users(models.Model):
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
-    display_groups_suggestions = fields.Boolean("Display Groups Suggestions", default=True)
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -28,10 +27,10 @@ class Users(models.Model):
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.extend(['notify_email', 'display_groups_suggestions'])
+        self.SELF_WRITEABLE_FIELDS.extend(['notify_email'])
         # duplicate list to avoid modifying the original reference
         self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        self.SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name', 'display_groups_suggestions'])
+        self.SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name'])
         return init_res
 
     def _auto_init(self, cr, context=None):
@@ -122,9 +121,6 @@ class Users(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         return dict((res_id, list()) for res_id in self._ids)
-
-    def stop_showing_groups_suggestions(self):
-        self.write({"display_groups_suggestions": False})
 
 
 class res_users_mail_group(models.Model):

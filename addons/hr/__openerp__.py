@@ -46,7 +46,6 @@ You can manage:
         'hr_tip_data.xml',
         'res_config_view.xml',
         'mail_hr_view.xml',
-        'res_users_view.xml',
         'views/hr.xml',
         'hr_dashboard.xml',
     ],
@@ -59,5 +58,5 @@ You can manage:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': ['static/src/xml/suggestions.xml'],
+    'qweb': [],
 }

@@ -119,12 +119,4 @@ var Sidebar = Widget.extend({
     }
 });
 
-mail.TimelineView.include({
-    start: function() {
-        this._super();
-        var sidebar = new Sidebar(this);
-        sidebar.appendTo($('.o_timeline__inbox_aside'));
-    },
-});
-
 });

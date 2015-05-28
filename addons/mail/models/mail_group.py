@@ -164,14 +164,6 @@ class MailGroup(models.Model):
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users()
 
-    @api.model
-    def get_suggested_thread(self, removed_suggested_threads=None):
-        """Show the suggestion of groups if display_groups_suggestions if the
-        user perference allows it."""
-        if not self.env.user.display_groups_suggestions:
-            return []
-        return super(MailGroup, self).get_suggested_thread(removed_suggested_threads)
-
     @api.multi
     def message_get_email_values(self, notif_mail=None):
         self.ensure_one()
