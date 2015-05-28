@@ -13,6 +13,7 @@ odoo.define('web.BarcodeEvents', function(require) {
 
         init: function(parent) {
             mixins.PropertiesMixin.init.call(this);
+            this.setParent(parent);
         },
 
         handle_buffered_keys: function() {

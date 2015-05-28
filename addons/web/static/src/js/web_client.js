@@ -37,7 +37,7 @@ var WebClient = Widget.extend({
         this.menu_dm = new utils.DropMisordered();
         this.action_mutex = new utils.Mutex();
         this.set('title_part', {"zopenerp": "Odoo"});
-        this.barcode_events = new BarcodeEvents();
+        this.barcode_events = new BarcodeEvents(this);
     },
     start: function() {
         var self = this;
