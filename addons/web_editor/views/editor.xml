@@ -112,6 +112,7 @@
 
 <template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
     <xpath expr="." position="inside">
+        <link rel="stylesheet" href='/web_editor/static/src/css/web_editor.css'/>
         <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
     </xpath>
@@ -121,7 +122,6 @@
     <t t-call="web.assets_common"/>
     <t t-call="web.bootstrap"/>
     <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-    <link rel="stylesheet" href='/web_editor/static/src/css/web_editor.css'/>
     <t t-call="web_editor.summernote"/>
     <t t-call="web_editor.editor"/>
 </template>
