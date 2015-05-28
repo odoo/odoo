@@ -23,7 +23,7 @@
         'views/theme/airmail_snippets.xml',
         'views/theme/zenflat_snippets.xml',
         'views/theme/cleave_snippets.xml',
-        'data/mail_groups.xml',
+        'data/mail_channels.xml',
     ],
     'qweb': [
         'static/src/xml/website_mail.xml'

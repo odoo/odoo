@@ -10,16 +10,16 @@
 
 <template id="head" inherit_id="website.assets_frontend" name="Mail Group Snippet">
     <xpath expr="/t" position="inside">
-        <link rel="stylesheet" href="/website_mail_group/static/src/css/website_mail_group.css"/>
-        <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"/>
+        <link rel="stylesheet" href="/website_mail_channel/static/src/css/website_mail_channel.css"/>
+        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.js"/>
 
-        <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.snippet.js"></script>
+        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.snippet.js"></script>
     </xpath>
 </template>
 
 <template id="editor" inherit_id="website.assets_editor" name="Mail Group Editor">
     <xpath expr="/t" position="inside">
-        <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.editor.js" groups="base.group_website_publisher"></script>
+        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.editor.js" groups="base.group_website_publisher"></script>
     </xpath>
 </template>
 
@@ -106,7 +106,7 @@
                     <div>
                         <t t-call="website.pager"/>
                     </div>
-                    <t t-call="website_mail_group.messages_short">
+                    <t t-call="website_mail_channel.messages_short">
                         <t t-set="messages" t-value="messages"/>
                         <t t-set="msg_more_count" t-value="0"/>
                         <t t-set="thread_header" t-value="None"/>
@@ -225,7 +225,7 @@
                     </div>
                     <div t-if="message.child_ids" class="o_mg_replies">
                         <h4 class="page-header">Follow-Ups</h4>
-                        <t t-call="website_mail_group.messages_short">
+                        <t t-call="website_mail_channel.messages_short">
                             <t t-set="messages" t-value="message.child_ids[:replies_per_page]"/>
                             <t t-set="msg_more_count" t-value="len(message.child_ids) - replies_per_page"/>
                             <t t-set="thread_header" t-value="message"/>
@@ -233,7 +233,7 @@
                     </div>
                     <div t-if="message.parent_id">
                         <h4 class="page-header">Reference</h4>
-                        <t t-call="website_mail_group.messages_short">
+                        <t t-call="website_mail_channel.messages_short">
                             <t t-set="messages" t-value="[message.parent_id]"/>
                         </t>
                     </div>
@@ -274,7 +274,7 @@
                         </a>
                     </p>
                     <div class="o_mg_link_content o_mg_replies">
-                        <t t-call="website_mail_group.messages_short">
+                        <t t-call="website_mail_channel.messages_short">
                             <t t-set="messages" t-value="thread.child_ids[:replies_per_page]"/>
                             <t t-set="msg_more_count" t-value="len(thread.child_ids) - replies_per_page"/>
                             <t t-set="thread_header" t-value="thread"/>

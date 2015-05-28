@@ -47,7 +47,7 @@ class MailGroup(http.Controller):
             group_data[group.id] = {'monthly_message_nbr': result.get(group.id, 0)}
 
         values = {'groups': groups, 'group_data': group_data}
-        return request.website.render('website_mail_group.mail_groups', values)
+        return request.website.render('website_mail_channel.mail_groups', values)
 
     @http.route(["/groups/subscription/"], type='json', auth="user")
     def subscription(self, group_id=0, action=False, **post):
@@ -94,7 +94,7 @@ class MailGroup(http.Controller):
             'date_end': date_end,
             'replies_per_page': self._replies_per_page,
         }
-        return request.website.render('website_mail_group.group_messages', values)
+        return request.website.render('website_mail_channel.group_messages', values)
 
     @http.route([
         '''/groups/<model('mail.group'):group>/<model('mail.message', "[('model','=','mail.group'), ('res_id','=',group[0])]"):message>''',
@@ -125,7 +125,7 @@ class MailGroup(http.Controller):
             'next_message': next_message,
             'prev_message': prev_message,
         }
-        return request.website.render('website_mail_group.group_message', values)
+        return request.website.render('website_mail_channel.group_message', values)
 
     @http.route(
         '''/groups/<model('mail.group'):group>/<model('mail.message', "[('model','=','mail.group'), ('res_id','=',group[0])]"):message>/get_replies''',
@@ -146,7 +146,7 @@ class MailGroup(http.Controller):
             'msg_more_count': msg_count - self._replies_per_page,
             'replies_per_page': self._replies_per_page,
         }
-        return request.registry['ir.ui.view'].render(request.cr, request.uid, 'website_mail_group.messages_short', values, engine='ir.qweb', context=request.context)
+        return request.registry['ir.ui.view'].render(request.cr, request.uid, 'website_mail_channel.messages_short', values, engine='ir.qweb', context=request.context)
 
     @http.route("/groups/<model('mail.group'):group>/get_alias_info", type='json', auth='public', website=True)
     def get_alias_info(self, group, **post):

@@ -1,4 +1,4 @@
-odoo.define('website_mail_group', function (require) {
+odoo.define('website_mail_channel', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
