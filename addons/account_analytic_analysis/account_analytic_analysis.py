@@ -20,7 +20,6 @@
 ##############################################################################
 import datetime
 import logging
-import time
 
 from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
@@ -522,10 +521,25 @@ class account_analytic_account(osv.osv):
         fill_remind("old", [('state', 'in', ['pending'])])
 
         # Expires now
-        fill_remind("new", [('state', 'in', ['draft', 'open']), '|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)], True)
+        fill_remind(
+            "new", [
+                ('state', 'in', ['draft', 'open']),
+                '|', '&',
+                ('date', '!=', False),
+                ('date', '<=', fields.date.context_today(self, cr, uid, context=context)),
+                ('is_overdue_quantity', '=', True),
+            ], True)
 
         # Expires in less than 30 days
-        fill_remind("future", [('state', 'in', ['draft', 'open']), ('date', '!=', False), ('date', '<', (datetime.datetime.now() + datetime.timedelta(30)).strftime("%Y-%m-%d"))])
+        fill_remind(
+            "future", [
+                ('state', 'in', ['draft', 'open']),
+                ('date', '!=', False),
+                ('date', '<', fields.date.context_today(
+                    self, cr, uid,
+                    timestamp=datetime.datetime.now() + datetime.timedelta(30),
+                    context=context)),
+            ])
 
         context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         context['action_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'action_account_analytic_overdue_all')[1]

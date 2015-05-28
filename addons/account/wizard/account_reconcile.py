@@ -19,11 +19,10 @@
 #
 ##############################################################################
 
-import time
-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+
 
 class account_move_line_reconcile(osv.osv_memory):
     """
@@ -56,15 +55,25 @@ class account_move_line_reconcile(osv.osv_memory):
         if context is None:
             context = {}
         credit = debit = 0
-        account_id = False
+        account = False
         count = 0
         for line in account_move_line_obj.browse(cr, uid, context['active_ids'], context=context):
             if not line.reconcile_id and not line.reconcile_id.id:
                 count += 1
                 credit += line.credit
                 debit += line.debit
-                account_id = line.account_id.id
-        return {'trans_nbr': count, 'account_id': account_id, 'credit': credit, 'debit': debit, 'writeoff': debit - credit}
+                account = line.account_id
+        writeoff = debit - credit
+        # If the write-off is lower than the account precision,
+        # set it to 0.
+        if not account:
+            return {'trans_nbr': count, 'account_id': False,
+                    'credit': credit, 'debit': debit, 'writeoff': writeoff}
+        currency = account.company_id.currency_id
+        if self.pool['res.currency'].is_zero(cr, uid, currency, writeoff):
+            writeoff = 0.0
+        return {'trans_nbr': count, 'account_id': account.id,
+                'credit': credit, 'debit': debit, 'writeoff': writeoff}
 
     def trans_rec_addendum_writeoff(self, cr, uid, ids, context=None):
         return self.pool.get('account.move.line.reconcile.writeoff').trans_rec_addendum(cr, uid, ids, context)
@@ -83,7 +92,7 @@ class account_move_line_reconcile(osv.osv_memory):
         if context is None:
             context = {}
 
-        date = time.strftime('%Y-%m-%d')
+        date = fields.date.context_today(self, cr, uid, context=context)
         ctx = dict(context or {}, account_period_prefer_normal=True)
         ids = period_obj.find(cr, uid, dt=date, context=ctx)
         if ids:
@@ -108,7 +117,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
     }
     _defaults = {
-        'date_p': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_p': fields.date.context_today,
         'comment': 'Write-off',
     }
 
@@ -154,7 +163,6 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         ids = period_obj.find(cr, uid, dt=date, context=context)
         if ids:
             period_id = ids[0]
-
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                 period_id, journal_id, context=context)
         return {'type': 'ir.actions.act_window_close'}

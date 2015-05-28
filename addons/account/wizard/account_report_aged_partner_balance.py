@@ -39,7 +39,7 @@ class account_aged_trial_balance(osv.osv_memory):
     }
     _defaults = {
         'period_length': 30,
-        'date_from': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_from': fields.date.context_today,
         'direction_selection': 'past',
     }
 
@@ -49,6 +49,8 @@ class account_aged_trial_balance(osv.osv_memory):
             context = {}
 
         data = self.pre_print_report(cr, uid, ids, data, context=context)
+        data['ids'] = context.get('active_ids', [])
+        data['model'] = context.get('active_model', 'ir.ui.menu')
         data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection'])[0])
 
         period_length = data['form']['period_length']
@@ -78,8 +80,6 @@ class account_aged_trial_balance(osv.osv_memory):
                 }
                 start = stop + relativedelta(days=1)
         data['form'].update(res)
-        if data.get('form',False):
-            data['ids']=[data['form'].get('chart_account_id',False)]
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.aged_trial_balance',

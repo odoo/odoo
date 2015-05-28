@@ -495,7 +495,7 @@ class account_move_line(osv.osv):
         if context is None:
             context or {}
         period_obj = self.pool.get('account.period')
-        dt = time.strftime('%Y-%m-%d')
+        dt = fields.date.context_today(self, cr, uid, context=context)
         if context.get('journal_id') and context.get('period_id'):
             cr.execute('SELECT date FROM account_move_line ' \
                     'WHERE journal_id = %s AND period_id = %s ' \
@@ -567,8 +567,10 @@ class account_move_line(osv.osv):
     }
     _order = "date desc, id desc"
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
-        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
+        ('credit_debit1', 'CHECK ((credit * debit) = 0::numeric)',
+         'Wrong credit or debit value in accounting entry !'),
+        ('credit_debit2', 'CHECK ((credit + debit) >= 0::numeric)',
+         'Wrong credit or debit value in accounting entry !'),
     ]
 
     def _auto_init(self, cr, context=None):
@@ -682,7 +684,7 @@ class account_move_line(osv.osv):
         if not partner_id:
             return {'value':val}
         if not date:
-            date = datetime.now().strftime('%Y-%m-%d')
+            date = fields.date.context_today(self, cr, uid, context=context)
         jt = False
         if journal:
             jt = journal_obj.browse(cr, uid, journal, context=context).type
@@ -863,7 +865,7 @@ class account_move_line(osv.osv):
         if context.has_key('date_p') and context['date_p']:
             date=context['date_p']
         else:
-            date = time.strftime('%Y-%m-%d')
+            date = fields.date.context_today(self, cr, uid, context=context)
 
         cr.execute('SELECT account_id, reconcile_id '\
                    'FROM account_move_line '\
@@ -1207,7 +1209,8 @@ class account_move_line(osv.osv):
                 if journal.sequence_id:
                     #name = self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id)
                     v = {
-                        'date': vals.get('date', time.strftime('%Y-%m-%d')),
+                        'date': vals.get('date', fields.date.context_today(
+                            self, cr, uid, context=context)),
                         'period_id': context['period_id'],
                         'journal_id': context['journal_id']
                     }

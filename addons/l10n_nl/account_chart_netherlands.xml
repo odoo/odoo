@@ -3893,54 +3893,64 @@
         <record id="btw_code_chart_root" model="account.tax.code.template">
             <field name="name">Nederlands BTW Plan</field>
             <field name="parent_id" eval="False"/>
+            <field name="sequence" eval="1"/>
         </record>
 <!-- De gegevens voor de BTW (gegevens voor omzetbedragen staan verderop) -->
         <record id="btw_totaal" model="account.tax.code.template">
             <field name="code">B</field>
             <field name="name">Gegevens omzetbelasting (BTW)</field>
             <field name="parent_id" ref="btw_code_chart_root"/>
+            <field name="sequence" eval="5"/>
         </record>
 <!-- 1 Leveringen en/of diensten binnenland -->
         <record id="btw_code_binnenland" model="account.tax.code.template">
             <field name="code">1</field>
             <field name="name">Leveringen en/of diensten binnenland (BTW)</field>
             <field name="parent_id" ref="btw_totaal"/>
+            <field name="sequence" eval="10"/>
         </record>
         <record id="btw_code_1a" model="account.tax.code.template">
             <field name="code">1a</field>
             <field name="parent_id" ref="btw_code_binnenland"/>
             <field name="name">Leveringen/diensten belast met 21% (BTW)</field>
+            <field name="sequence" eval="11"/>
         </record>
         <record id="btw_code_1b" model="account.tax.code.template">
             <field name="code">1b</field>
             <field name="parent_id" ref="btw_code_binnenland"/>
             <field name="name">Leveringen/diensten belast met 6% (BTW)</field>
+            <field name="sequence" eval="12"/>
         </record>
         <record id="btw_code_1c" model="account.tax.code.template">
             <field name="code">1c</field>
             <field name="parent_id" ref="btw_code_binnenland"/>
             <field name="name">Leveringen/diensten belast met overige tarieven behalve 0% (BTW)</field>
+            <field name="sequence" eval="13"/>
         </record>
         <record id="btw_code_1d" model="account.tax.code.template">
             <field name="code">1d</field>
             <field name="parent_id" ref="btw_code_binnenland"/>
             <field name="name">Prive-gebruik (BTW)</field>
+            <field name="sequence" eval="14"/>
         </record>
         <record id="btw_code_1e" model="account.tax.code.template">
             <field name="code">1e</field>
             <field name="parent_id" ref="btw_code_binnenland"/>
             <field name="name">Leveringen/diensten belast met 0% of niet bij u belast (BTW)</field>
+            <field name="sequence" eval="15"/>
         </record>
 <!-- 2. Verleggingsregeling -->
         <record id="btw_code_verlegging" model="account.tax.code.template">
             <field name="code">2</field>
             <field name="name">Verleggingsregelingen: BTW naar u verlegd (BTW)</field>
             <field name="parent_id" ref="btw_totaal"/>
+            <field name="sequence" eval="20"/>
         </record>
         <record id="btw_code_2a" model="account.tax.code.template">
             <field name="code">2a</field>
             <field name="parent_id" ref="btw_code_verlegging"/>
             <field name="name">Heffing van omzetbelasting is naar u verlegd (BTW)</field>
+            <field name="sequence" eval="21"/>
         </record>
 <!-- Voor rubriek 3 hoeft geen omzetbelasting aangegeven te worden, wel het omzet bedrag, zie hiervoor verderop
      3. Leveringen naar het buitenland -->
@@ -3950,60 +3960,71 @@
             <field name="code">4</field>
             <field name="name">Leveringen vanuit het buitenland (BTW)</field>
             <field name="parent_id" ref="btw_totaal"/>
+            <field name="sequence" eval="40"/>
         </record>
         <record id="btw_code_4a" model="account.tax.code.template">
             <field name="code">4a</field>
             <field name="parent_id" ref="btw_code_vanuit_buitenland"/>
             <field name="name">Leveringen uit landen buiten de EU (invoer) (BTW)</field>
             <field name="sign" eval="-1" />
+            <field name="sequence" eval="41"/>
         </record>
         <record id="btw_code_4b" model="account.tax.code.template">
             <field name="code">4b</field>
             <field name="parent_id" ref="btw_code_vanuit_buitenland"/>
             <field name="name">Verwerving van goederen uit landen binnen de EU (BTW)</field>
             <field name="sign" eval="-1" />
+            <field name="sequence" eval="42"/>
         </record>
 <!-- 5. Voorbelasting, kleineondernemersregeling, schatting en eindtotaal -->
         <record id="btw_code_voorbelasting" model="account.tax.code.template">
             <field name="code">5</field>
             <field name="name">Voorbelasting, kleineondernemersregeling, schatting en eindtotaal (BTW)</field>
             <field name="parent_id" ref="btw_totaal"/>
+            <field name="sequence" eval="50"/>
         </record>
         <record id="btw_code_5a" model="account.tax.code.template">
             <field name="code">5a</field>
             <field name="parent_id" ref="btw_code_voorbelasting"/>
             <field name="name">Verschuldigde omzetbelasting (rubrieken 1a t/m 4b) (BTW)</field>
+            <field name="sequence" eval="51"/>
         </record>
         <record id="btw_code_5b" model="account.tax.code.template">
             <field name="code">5b</field>
         <field eval="-1" name="sign"/>
             <field name="parent_id" ref="btw_code_voorbelasting"/>
             <field name="name">Voorbelasting (BTW)</field>
+            <field name="sequence" eval="52"/>
         </record>
         <record id="btw_code_5c" model="account.tax.code.template">
             <field name="code">5c</field>
             <field name="parent_id" ref="btw_code_voorbelasting"/>
             <field name="name">Subtotaal (rubriek 5a min 5b) (BTW)</field>
+            <field name="sequence" eval="53"/>
         </record>
         <record id="btw_code_5d" model="account.tax.code.template">
             <field name="code">5d</field>
             <field name="parent_id" ref="btw_code_voorbelasting"/>
             <field name="name">Vermindering volgens de kleineondernemersregeling (BTW)</field>
+            <field name="sequence" eval="54"/>
         </record>
         <record id="btw_code_5e" model="account.tax.code.template">
             <field name="code">5e</field>
             <field name="parent_id" ref="btw_code_voorbelasting"/>
             <field name="name">Schatting vorige aangifte(n) (BTW)</field>
+            <field name="sequence" eval="55"/>
         </record>
         <record id="btw_code_5f" model="account.tax.code.template">
             <field name="code">5f</field>
             <field name="parent_id" ref="btw_code_voorbelasting"/>
             <field name="name">Schatting deze aangifte (BTW)</field>
+            <field name="sequence" eval="56"/>
         </record>
         <record id="btw_code_5g" model="account.tax.code.template">
             <field name="code">5g</field>
             <field name="parent_id" ref="btw_code_voorbelasting"/>
             <field name="name">Totaal te betalen/terug te vragen (BTW)</field>
+            <field name="sequence" eval="57"/>
         </record>
         
 <!-- De gegevens over de omzet -->
@@ -4011,85 +4032,101 @@
             <field name="code">A</field>
             <field name="name">Gegevens omzetbedragen</field>
             <field name="parent_id" ref="btw_code_chart_root"/>
+            <field name="sequence" eval="1"/>
         </record>
 <!-- 1 Leveringen en/of diensten binnenland -->
         <record id="omz_code_binnenland" model="account.tax.code.template">
             <field name="code">1</field>
             <field name="name">Leveringen en/of diensten binnenland (omzet)</field>
             <field name="parent_id" ref="omz_totaal"/>
+            <field name="sequence" eval="10"/>
         </record>
         <record id="omz_code_1a" model="account.tax.code.template">
             <field name="code">1a</field>
             <field name="parent_id" ref="omz_code_binnenland"/>
             <field name="name">Leveringen/diensten belast met 21% (omzet)</field>
+            <field name="sequence" eval="11"/>
         </record>
         <record id="omz_code_1b" model="account.tax.code.template">
             <field name="code">1b</field>
             <field name="parent_id" ref="omz_code_binnenland"/>
             <field name="name">Leveringen/diensten belast met 6% (omzet)</field>
+            <field name="sequence" eval="12"/>
         </record>
         <record id="omz_code_1c" model="account.tax.code.template">
             <field name="code">1c</field>
             <field name="parent_id" ref="omz_code_binnenland"/>
             <field name="name">Leveringen/diensten belast met overige tarieven behalve 0% (omzet)</field>
+            <field name="sequence" eval="13"/>
         </record>
         <record id="omz_code_1d" model="account.tax.code.template">
             <field name="code">1d</field>
             <field name="parent_id" ref="omz_code_binnenland"/>
             <field name="name">Prive-gebruik (omzet)</field>
+            <field name="sequence" eval="14"/>
         </record>
         <record id="omz_code_1e" model="account.tax.code.template">
             <field name="code">1e</field>
             <field name="parent_id" ref="omz_code_binnenland"/>
             <field name="name">Leveringen/diensten belast met 0% of niet bij u belast (omzet)</field>
+            <field name="sequence" eval="15"/>
         </record>
 <!-- 2. Verleggingsregeling -->
         <record id="omz_code_verlegging" model="account.tax.code.template">
             <field name="code">2</field>
             <field name="name">Verleggingsregelingen: BTW naar u verlegd (omzet)</field>
             <field name="parent_id" ref="omz_totaal"/>
+            <field name="sequence" eval="20"/>
         </record>
         <record id="omz_code_2a" model="account.tax.code.template">
             <field name="code">2a</field>
             <field name="parent_id" ref="omz_code_verlegging"/>
             <field name="name">Heffing van omzetbelasting is naar u verlegd (omzet)</field>
+            <field name="sequence" eval="21"/>
         </record>
 <!-- 3. Leveringen naar het buitenland -->
         <record id="omz_code_naar_buitenland" model="account.tax.code.template">
             <field name="code">3</field>
             <field name="name">Leveringen naar het buitenland (omzet)</field>
             <field name="parent_id" ref="omz_totaal"/>
+            <field name="sequence" eval="30"/>
         </record>
         <record id="omz_code_3a" model="account.tax.code.template">
             <field name="code">3a</field>
             <field name="parent_id" ref="omz_code_naar_buitenland"/>
             <field name="name">Leveringen naar landen buiten de EU (uitvoer) (omzet)</field>
+            <field name="sequence" eval="31"/>
         </record>
         <record id="omz_code_3b" model="account.tax.code.template">
             <field name="code">3b</field>
             <field name="parent_id" ref="omz_code_naar_buitenland"/>
             <field name="name">Leveringen naar landen binnen de EU (omzet)</field>
+            <field name="sequence" eval="32"/>
         </record>
         <record id="omz_code_3c" model="account.tax.code.template">
             <field name="code">3c</field>
             <field name="parent_id" ref="omz_code_naar_buitenland"/>
             <field name="name">Installatie/afstandsverkopen binnen de EU (omzet)</field>
+            <field name="sequence" eval="33"/>
         </record>
 <!-- 4. Leveringen vanuit het buitenland -->
         <record id="omz_code_vanuit_buitenland" model="account.tax.code.template">
             <field name="code">4</field>
             <field name="name">Leveringen vanuit het buitenland (omzet)</field>
             <field name="parent_id" ref="omz_totaal"/>
+            <field name="sequence" eval="40"/>
         </record>
         <record id="omz_code_4a" model="account.tax.code.template">
             <field name="code">4a</field>
             <field name="parent_id" ref="omz_code_vanuit_buitenland"/>
             <field name="name">Leveringen uit landen buiten de EU (invoer) (omzet)</field>
+            <field name="sequence" eval="41"/>
         </record>
         <record id="omz_code_4b" model="account.tax.code.template">
             <field name="code">4b</field>
             <field name="parent_id" ref="omz_code_vanuit_buitenland"/>
             <field name="name">Verwerving van goederen uit landen binnen de EU (omzet)</field>
+            <field name="sequence" eval="42"/>
         </record>
         
             <!-- Chart template -->

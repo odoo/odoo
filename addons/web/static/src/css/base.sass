@@ -9,7 +9,7 @@ $tag-border: #afafb6
 $tag-border-selected: #a6a6fe
 $hover-background: #f0f0fa
 $link-color: #7C7BAD
-$sheet-max-width: 860px
+$sheet-max-width: auto
 $sheet-min-width: 650px
 $sheet-padding: 16px
 // }}}
@@ -1648,6 +1648,15 @@ $sheet-padding: 16px
     .oe_form_dropdown_section
         position: relative
         display: inline-block
+    .oe_form_editable
+        .oe_form_required
+            &.oe_form_field_one2many, &.oe_form_field_many2many
+                table.oe_list_content
+                    background-color: #d2d2ff !important
+        .oe_form_invalid
+            &.oe_form_field_one2many, &.oe_form_field_many2many
+                table.oe_list_content
+                    background-color: #ff6666 !important
     .oe_form_invalid
         input, select, textarea
             background-color: #F66 !important
@@ -1687,7 +1696,7 @@ $sheet-padding: 16px
     .oe_form_sheet_width
         min-width: 650px
         max-width: $sheet-max-width
-        margin: 0 auto
+        margin: 16px
     .oe_form_sheet
         background: white
         min-height: 330px
@@ -1734,8 +1743,8 @@ $sheet-padding: 16px
         div.oe_chatter
             box-sizing: border-box
             min-width: $sheet-min-width + 2* $sheet-padding
-            max-width: $sheet-max-width + 2* $sheet-padding
-            margin: 0 auto
+            max-width: 0 auto
+            margin: 16px
             padding: 16px 16px 48px
         div.oe_form_configuration
             p, ul, ol
@@ -2168,6 +2177,7 @@ $sheet-padding: 16px
             display: none
     .oe_form_field_one2many,.oe_form_field_many2many
         // TODO: oe_form_field_one2many_list?
+        overflow-x: auto
         > .oe_view_manager
             .oe_list_pager_single_page
                 display: none !important
@@ -2628,7 +2638,7 @@ div.ui-widget-overlay
                     filter: alpha(opacity = 0)
                     border: none
                     width: 0
-                    border-right: none 
+                    border-right: none
         .label
             border-bottom: 1px solid #cacaca
             background: transparent

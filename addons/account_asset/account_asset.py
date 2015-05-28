@@ -177,7 +177,7 @@ class account_asset_asset(osv.osv):
                      'amount': amount,
                      'asset_id': asset.id,
                      'sequence': i,
-                     'name': str(asset.id) +'/' + str(i),
+                     'name': "%s/%s" %(i, undone_dotation_number),
                      'remaining_value': residual_amount,
                      'depreciated_value': (asset.purchase_value - asset.salvage_value) - (residual_amount + amount),
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
@@ -276,7 +276,7 @@ class account_asset_asset(osv.osv):
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
-        'purchase_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'purchase_date': fields.date.context_today,
         'active': True,
         'state': 'draft',
         'method': 'linear',
@@ -398,7 +398,10 @@ class account_asset_depreciation_line(osv.osv):
         created_move_ids = []
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            depreciation_date = context.get('depreciation_date') or line.depreciation_date or time.strftime('%Y-%m-%d')
+            depreciation_date = (
+                context.get('depreciation_date') or
+                line.depreciation_date or
+                fields.date.context_today(self, cr, uid, context=context))
             ctx = dict(context, account_period_prefer_normal=True)
             period_ids = period_obj.find(cr, uid, depreciation_date, context=ctx)
             company_currency = line.asset_id.company_id.currency_id.id
@@ -409,9 +412,8 @@ class account_asset_depreciation_line(osv.osv):
             asset_name = "/"
             reference = line.asset_id.name
             move_vals = {
-                'name': asset_name,
                 'date': depreciation_date,
-                'ref': reference,
+                'ref': "%s %s" %(line.asset_id.code or line.asset_id.name, line.name),
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
@@ -487,7 +489,7 @@ class account_asset_history(osv.osv):
     }
     _order = 'date desc'
     _defaults = {
-        'date': lambda *args: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'user_id': lambda self, cr, uid, ctx: uid
     }
 

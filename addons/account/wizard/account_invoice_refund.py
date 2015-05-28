@@ -63,7 +63,7 @@ class account_invoice_refund(osv.osv_memory):
             return ''
 
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'journal_id': _get_journal,
         'filter_refund': 'refund',
         'description': _get_reason,

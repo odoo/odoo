@@ -1,0 +1,174 @@
+-
+  First, create the analytic accounts
+-
+  !record {model: account.analytic.account, id: parent_project_account}:
+    name: Parent Account
+    code: PAR
+    type: view
+-
+  !record {model: account.analytic.account, id: child1_project_account}:
+    name: Child Account 1
+    code: C1
+    type: view
+-
+  I create a main project
+-
+  !record {model: project.project, id: project_project_parent}:
+    company_id: base.main_company
+    name: Parent Project
+    user_id: base.user_demo
+    parent_id: all_projects_account
+    analytic_account_id: parent_project_account
+    alias_model: project.task
+-
+  A first child project
+-
+  !record {model: project.project, id: project_project_child_1}:
+    company_id: base.main_company
+    name: Child Project 1
+    user_id: base.user_demo
+    parent_id: parent_project_account
+    analytic_account_id: child1_project_account
+    alias_model: project.task
+-
+  A second child project
+-
+  !record {model: project.project, id: project_project_child_2}:
+    company_id: base.main_company
+    name: Child Project 2
+    user_id: base.user_demo
+    parent_id: parent_project_account
+    alias_model: project.task
+-
+  A child of the first child project
+-
+  !record {model: project.project, id: project_project_child_1_1}:
+    company_id: base.main_company
+    name: Child Project 1 1
+    user_id: base.user_demo
+    parent_id: child1_project_account
+    alias_model: project.task
+-
+  A task for the main project, with 20 hours planned and 20 hours remaining
+-
+  !record {model: project.task, id: project_task_parent_project}:
+    date_start: !eval time.strftime('%Y-05-%d %H:%M:%S')
+    name: Task parent project
+    planned_hours: 20.0
+    remaining_hours: 20.0
+    project_id: project_project_parent
+    user_id: base.user_demo
+-
+  I test the hours
+-
+  !python {model: project.project}: |
+    project = self.browse(cr, uid, ref("project_project_parent"))
+    assert abs(project.planned_hours - 20.0) < 1e-4, "Planned hours are not correct! 20.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 20.0) < 1e-4, "Total hours are not correct! 20.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 0.0) < 1e-4, "Effective hours are not correct! 0.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 0.0) < 1e-4, "Progress rate is not correct! 0.0 != %s" % project.progress_rate
+-
+  A task for the first child project, with 30 hours planned and 30 hours remaining
+-
+  !record {model: project.task, id: project_task_child_project_1}:
+    date_start: !eval time.strftime('%Y-05-%d %H:%M:%S')
+    name: Task child project 1
+    planned_hours: 30.0
+    remaining_hours: 30.0
+    project_id: project_project_child_1
+    user_id: base.user_demo
+-
+  I test the hours
+-
+  !python {model: project.project}: |
+    project = self.browse(cr, uid, ref("project_project_parent"))
+    assert abs(project.planned_hours - 50.0) < 1e-4, "Planned hours are not correct! 50.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 50.0) < 1e-4, "Total hours are not correct! 50.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 0.0) < 1e-4, "Effective hours are not correct! 0.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 0.0) < 1e-4, "Progress rate is not correct! 0.0 != %s" % project.progress_rate
+    project = self.browse(cr, uid, ref("project_project_child_1"))
+    assert abs(project.planned_hours - 30.0) < 1e-4, "Planned hours are not correct! 30.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 30.0) < 1e-4, "Total hours are not correct! 30.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 0.0) < 1e-4, "Effective hours are not correct! 0.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 0.0) < 1e-4, "Progress rate is not correct! 0.0 != %s" % project.progress_rate
+-
+  A task for the second child project, with 40 hours planned and 10 hours remaining
+-
+  !record {model: project.task, id: project_task_child_project_2}:
+    date_start: !eval time.strftime('%Y-05-%d %H:%M:%S')
+    name: Task child project 2
+    planned_hours: 40.0
+    remaining_hours: 10.0
+    project_id: project_project_child_2
+    user_id: base.user_demo
+-
+  I test the hours
+-
+  !python {model: project.project}: |
+    project = self.browse(cr, uid, ref("project_project_parent"))
+    assert abs(project.planned_hours - 90.0) < 1e-4, "Planned hours are not correct! 90.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 60.0) < 1e-4, "Total hours are not correct! 60.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 0.0) < 1e-4, "Effective hours are not correct! 0.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 0.0) < 1e-4, "Progress rate is not correct! 0.0 != %s" % project.progress_rate
+    project = self.browse(cr, uid, ref("project_project_child_2"))
+    assert abs(project.planned_hours - 40.0) < 1e-4, "Planned hours are not correct! 40.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 10.0) < 1e-4, "Total hours are not correct! 10.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 0.0) < 1e-4, "Effective hours are not correct! 0.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 0.0) < 1e-4, "Progress rate is not correct! 0.0 != %s" % project.progress_rat
+-
+  A task for the child child project, with 50 hours planned and 50 hours remaining
+-
+  !record {model: project.task, id: project_task_child_project_1_1}:
+    date_start: !eval time.strftime('%Y-05-%d %H:%M:%S')
+    name: Task child project 1 1
+    planned_hours: 50.0
+    remaining_hours: 50.0
+    project_id: project_project_child_1_1
+    user_id: base.user_demo
+-
+  I test the hours
+-
+  !python {model: project.project}: |
+    project = self.browse(cr, uid, ref("project_project_parent"))
+    assert abs(project.planned_hours - 140.0) < 1e-4, "Planned hours are not correct! 140.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 110.0) < 1e-4, "Total hours are not correct! 110.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 0.0) < 1e-4, "Effective hours are not correct! 0.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 0.0) < 1e-4, "Progress rate is not correct! 0.0 != %s" % project.progress_rate
+    project = self.browse(cr, uid, ref("project_project_child_1"))
+    assert abs(project.planned_hours - 80.0) < 1e-4, "Planned hours are not correct! 80.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 80.0) < 1e-4, "Total hours are not correct! 80.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 0.0) < 1e-4, "Effective hours are not correct! 0.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 0.0) < 1e-4, "Progress rate is not correct! 0.0 != %s" % project.progress_rate
+    project = self.browse(cr, uid, ref("project_project_child_1_1"))
+    assert abs(project.planned_hours - 50.0) < 1e-4, "Planned hours are not correct! 50.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 50.0) < 1e-4, "Total hours are not correct! 50.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 0.0) < 1e-4, "Effective hours are not correct! 0.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 0.0) < 1e-4, "Progress rate is not correct! 0.0 != %s" % project.progress_rate
+-
+  I create a task work on child 1 task
+-
+  !record {model: project.task.work, id: project_child_1_work}:
+    name: test work
+    hours: 10.0
+    task_id: project_task_child_project_1
+    user_id: base.user_demo
+-
+  and refresh the task to account for it
+-
+  !record {model: project.task, id: project_task_child_project_1}:
+    planned_hours: 20.0
+-
+  I test the hours
+-
+  !python {model: project.project}: |
+    project = self.browse(cr, uid, ref("project_project_parent"))
+    assert abs(project.planned_hours - 130.0) < 1e-4, "Planned hours are not correct! 130.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 110.0) < 1e-4, "Total hours are not correct! 110.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 10.0) < 1e-4, "Effective hours are not correct! 10.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 9.09) < 1e-4, "Progress rate is not correct! 9.09 != %s" % project.progress_rate
+    project = self.browse(cr, uid, ref("project_project_child_1"))
+    assert abs(project.planned_hours - 70.0) < 1e-4, "Planned hours are not correct! 70.0 != %s" % project.planned_hours
+    assert abs(project.total_hours - 80.0) < 1e-4, "Total hours are not correct! 80.0 != %s" % project.total_hours
+    assert abs(project.effective_hours - 10.0) < 1e-4, "Effective hours are not correct! 10.0 != %s" % project.effective_hours
+    assert abs(project.progress_rate - 12.5) < 1e-4, "Progress rate is not correct! 12.5 != %s" % project.progress_rate
+

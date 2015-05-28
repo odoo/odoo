@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from lxml import etree
 
 from openerp.osv import fields, osv
@@ -310,7 +309,10 @@ class account_invoice_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
         res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context=context, company_id=company_id)
-        rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context=context)
+        rec = self.pool.get('account.analytic.default').account_get(
+            cr, uid, product, partner_id, uid,
+            fields.date.context_today(self, cr, uid, context=context),
+            context=context)
         if rec and rec.analytics_id:
             res_prod['value'].update({'analytics_id': rec.analytics_id.id})
         return res_prod
@@ -453,7 +455,11 @@ class sale_order_line(osv.osv):
         if ids:
             sale_line = self.browse(cr, uid, ids[0], context=context)
             for line in inv_line_obj.browse(cr, uid, create_ids, context=context):
-                rec = acct_anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+                rec = acct_anal_def_obj.account_get(
+                    cr, uid, line.product_id.id,
+                    sale_line.order_id.partner_id.id, uid,
+                    fields.date.context_today(self, cr, uid, context=context),
+                    context)
 
                 if rec:
                     inv_line_obj.write(cr, uid, [line.id], {'analytics_id': rec.analytics_id.id}, context=context)

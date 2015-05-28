@@ -21,7 +21,7 @@
 
 {
     'name': 'Warehouse Management',
-    'version': '1.1',
+    'version': '1.1.1',
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Storage',
     'description' : """
@@ -95,6 +95,7 @@ Dashboard / Reports for Warehouse Management will include:
         'test/opening_stock.yml',
         'test/shipment.yml',
         'test/stock_report.yml',
+        'test/stock_move_chain_validation.yml',
         'test/setlast_tracking.yml',
     ],
     'installable': True,
