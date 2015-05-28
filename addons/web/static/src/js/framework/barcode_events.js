@@ -6,7 +6,7 @@ odoo.define('web.BarcodeEvents', function(require) {
 
     return core.Class.extend(mixins.PropertiesMixin, {
         timeout: null,
-        key_released: true,
+        key_pressed: {},
         buffered_key_events: [],
 
         init: function(parent) {
@@ -73,20 +73,23 @@ odoo.define('web.BarcodeEvents', function(require) {
             return $(element).is('input,textarea,[contenteditable="true"]');
         },
 
+        // The keydown and keyup handlers are here to disallow key
+        // repeat. When preventDefault() is called on a keydown event
+        // the keypress that normally follows is cancelled.
+        keydown_handler: function(e){
+            if (this.key_pressed[e.which]) {
+                e.preventDefault();
+            } else {
+                this.key_pressed[e.which] = true;
+            }
+        },
+
         keyup_handler: function(e){
-            this.key_released = true;
+            this.key_pressed[e.which] = false;
         },
 
         handler: function(e){
             if (! e.dispatched_by_barcode_reader) {
-                if (! this.key_released) { // don't allow key repeat
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    return;
-                }
-
-                this.key_released = false;
-
                 // We only stop events targeting body (meaning nothing is
                 // focused). We do not stop events targeting other elements
                 // because we have no way of redispatching 'genuine' key events
@@ -106,13 +109,15 @@ odoo.define('web.BarcodeEvents', function(require) {
         },
 
         start: function(){
-            document.body.addEventListener('keypress', this.handler.bind(this), true);
+            document.body.addEventListener('keydown', this.keydown_handler.bind(this), true);
             document.body.addEventListener('keyup', this.keyup_handler.bind(this), true);
+            document.body.addEventListener('keypress', this.handler.bind(this), true);
         },
 
         stop: function(){
-            document.body.removeEventListener('keypress', this.handler.bind(this), true);
+            document.body.removeEventListener('keydown', this.keydown_handler.bind(this), true);
             document.body.removeEventListener('keyup', this.keyup_handler.bind(this), true);
+            document.body.removeEventListener('keypress', this.handler.bind(this), true);
         },
     });
 });
