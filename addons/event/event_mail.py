@@ -84,9 +84,13 @@ class EventMailScheduler(models.Model):
         return True
 
     @api.model
-    def run(self):
+    def run(self, autocommit=False):
         schedulers = self.search([('done', '=', False), ('scheduled_date', '<=', datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))])
-        return schedulers.execute()
+        for scheduler in schedulers:
+            scheduler.execute()
+            if autocommit:
+                self.env.cr.commit()
+        return True
 
 
 class EventMailRegistration(models.Model):
