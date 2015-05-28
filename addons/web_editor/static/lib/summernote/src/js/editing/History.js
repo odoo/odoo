@@ -54,8 +54,9 @@ define(['summernote/core/range', 'summernote/core/dom'], function (range, dom) {
 
     var last;
     this.recordUndo = function () {
-      var key = event;
-      if (event && !event.metaKey && !event.ctrlKey && !event.altKey && event.type === "keydown") {
+      // test event for firefox: remove stack of history because event doesn't exists
+      var key = typeof event !== 'undefined' ? event : false;
+      if (key && !event.metaKey && !event.ctrlKey && !event.altKey && event.type === "keydown") {
         key = event.type + "-";
         if (event.which === 8 || event.which === 46) key += 'delete';
         else if (event.which === 13) key += 'enter';
