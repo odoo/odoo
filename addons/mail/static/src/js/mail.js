@@ -1014,7 +1014,7 @@ var ComposeMessage = Attachment.extend ({
         'click .o_timeline_compose_post':'on_toggle_quick_composer',
         'click .o_timeline_compose_log':'on_toggle_quick_composer',
         'click .oe_post':'on_message_post',
-        'click .oe_full':'on_full',
+        'click .oe_full':'on_compose_fullmail',
         'click .o_timeline_msg_attachment_list .oe_delete': 'on_attachment_delete',
         'change input.oe_form_binary_file': 'on_attachment_change',
         'blur textarea':'on_toggle_quick_composer',
@@ -1314,11 +1314,7 @@ var ComposeMessage = Attachment.extend ({
         return check_done;
     },
 
-    on_full: function () {
-        return this.on_compose_fullmail(this.id ? 'reply' : 'comment');
-    },
-
-    on_compose_fullmail: function (default_composition_mode) {
+    on_compose_fullmail: function () {
         if (!this.do_check_attachment_upload())
             return false;
 
@@ -1344,7 +1340,7 @@ var ComposeMessage = Attachment.extend ({
                 'is_private': self.is_private,
             };
 
-            if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
+            if (self.context.default_model && self.context.default_res_id) {
                 context.default_model = self.context.default_model;
                 context.default_res_id = self.context.default_res_id;
             }
