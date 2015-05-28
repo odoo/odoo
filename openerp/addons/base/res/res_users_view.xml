@@ -117,7 +117,7 @@
             <field name="view_type">form</field>
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
-        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one"/>
+        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one" sequence="3"/>
 
         <!-- res.users -->
         <record id="view_users_simple_form" model="ir.ui.view">
@@ -266,7 +266,7 @@
             <field name="view_id" ref="view_users_form"/>
             <field name="act_window_id" ref="action_res_users"/>
         </record>
-        <menuitem action="action_res_users" id="menu_action_res_users" parent="base.menu_users"/>
+        <menuitem action="action_res_users" id="menu_action_res_users" parent="base.menu_users" sequence="0"/>
 
         <record id="view_users_form_simple_modif" model="ir.ui.view">
             <field name="name">res.users.preferences.form</field>
