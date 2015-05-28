@@ -331,7 +331,11 @@ class event_registration(models.Model):
             body=_('New registration confirmed: %s.') % (self.name or ''),
             subtype="event.mt_event_registration")
         self.state = 'open'
-        self.env['event.mail'].run()
+
+        # auto-trigger after_sub (on subscribe) mail schedulers, if needed
+        onsubscribe_schedulers = self.event_id.event_mail_ids.filtered(
+            lambda s: s.interval_type == 'after_sub')
+        onsubscribe_schedulers.execute()
 
     @api.one
     def button_reg_close(self):
