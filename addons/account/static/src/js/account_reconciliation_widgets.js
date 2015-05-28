@@ -1640,7 +1640,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
             this.getParent().excludeMoveLines(this, this.partner_id, context.reconciliation_proposition);
 
             // This is computed on mvLinesSelectedChanged, which is not triggered  if the widget is instanciated with a reconciliation proposition
-            this.is_rapprochement = this.get("mv_lines_selected").length > 0 && this.get("mv_lines_selected")[0].is_reconciled;
+            this.is_rapprochement = this.get("mv_lines_selected").length > 0 && this.get("mv_lines_selected")[0].already_paid;
         } else {
             this.st_line = undefined;
             this.partner_id = undefined;
@@ -1942,7 +1942,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
         self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
 
-        self.is_rapprochement = added_lines.length > 0 && added_lines[0].is_reconciled;
+        self.is_rapprochement = added_lines.length > 0 && added_lines[0].already_paid;
         if (self.is_rapprochement)
             self.set("lines_created", []);
 

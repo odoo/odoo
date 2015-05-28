@@ -272,14 +272,6 @@
 
     <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
 
-    <t t-name="bank_statement_reconciliation_move_line_details" t-extend="reconciliation_move_line_details">
-        <t t-jquery=".details" t-operation="append">
-            <tr class="one_line_info" t-if='line.is_reconciled'>
-                <td colspan="2">This item is already reconciled</td>
-            </tr>
-        </t>
-    </t>
-
     <!-- manual reconciliation -->
 
     <t t-name="show_mode_selector_option">

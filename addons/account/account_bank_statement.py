@@ -613,8 +613,8 @@ class AccountBankStatementLine(models.Model):
                 amount = aml.currency_id and aml.amount_residual_currency or aml.amount_residual
                 counterpart_aml_dicts.append({
                     'name': aml.name if aml.name != '/' else aml.move_id.name,
-                    'debit': amount < 0 and amount or 0,
-                    'credit': amount > 0 and -amount or 0,
+                    'debit': amount < 0 and -amount or 0,
+                    'credit': amount > 0 and amount or 0,
                     'move_line': aml
                 })
 
