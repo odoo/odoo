@@ -28,7 +28,7 @@ JOURNAL_TYPE_MAP = {
     ('outgoing', 'transit'): ['sale', 'purchase_refund'],
     ('incoming', 'supplier'): ['purchase'],
     ('incoming', 'customer'): ['sale_refund'],
-    ('incoming', 'transit'): ['purchase, sale_refund'],
+    ('incoming', 'transit'): ['purchase', 'sale_refund'],
 }
 
 
