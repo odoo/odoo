@@ -415,7 +415,15 @@ PaymentScreenWidget.include({
             }
         }
         else {
-            // display error popup
+            var def = new $.Deferred();
+
+            this.gui.show_popup('payment-transaction', {
+                transaction: def
+            });
+
+            def.resolve({
+                "message": "Order is already fully paid."
+            });
         }
     },
 
