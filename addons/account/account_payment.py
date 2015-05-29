@@ -30,7 +30,7 @@ class account_abstract_payment(models.AbstractModel):
     _name = "account.abstract.payment"
     _description = "Contains the logic shared between models which allows to register payments"
 
-    payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], default='outbound', required=True)
+    payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], default='outbound', string='Payment Type', required=True)
     payment_method = fields.Many2one('account.payment.method', string='Payment Method', required=True)
     payment_method_code = fields.Char(related='payment_method.code',
         help="Technical field used to adapt the interface to the payment method selected.")
@@ -75,6 +75,7 @@ class account_abstract_payment(models.AbstractModel):
             return {'domain': {'payment_method': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
         return {}
 
+    # FIXME : If you change the currency_id, invoice_ids is mysteriously obliterated 
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
         self._set_total_invoices_amount()
@@ -254,15 +255,19 @@ class account_payment(models.Model):
         res['domain']['journal_id'].append(('type', 'in', ('bank', 'cash')))
         return res
 
-    @api.onchange('invoice_ids')
-    def _onchange_invoice(self):
-        if len(self.invoice_ids) == 1:
-            self.communication = self.invoice_ids[0].reference
-            self.currency_id = self.invoice_ids[0].currency_id
-            self.payment_type = self.invoice_ids[0].type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
-            self.partner_type = MAP_INVOICE_TYPE_PARTNER_TYPE[self.invoice_ids[0].type]
-            self.partner_id = self.invoice_ids[0].partner_id
-        self._set_total_invoices_amount()
+    @api.model
+    def default_get(self, fields):
+        rec = super(account_payment, self).default_get(fields)
+        invoice_ids = rec.get('invoice_ids') and rec['invoice_ids'][0][2] or None
+        if invoice_ids and len(invoice_ids) == 1:
+            invoice = self.env['account.invoice'].browse(invoice_ids)
+            rec['communication'] = rec.get('communication', invoice.reference)
+            rec['currency_id'] = rec.get('currency_id', invoice.currency_id.id)
+            rec['payment_type'] = rec.get('payment_type', invoice.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound')
+            rec['partner_type'] = rec.get('partner_type', MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type])
+            rec['partner_id'] = rec.get('partner_id', invoice.partner_id.id)
+            rec['amount'] = rec.get('amount', invoice.residual_signed)
+        return rec
 
     def _get_invoices(self):
         return self.invoice_ids

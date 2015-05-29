@@ -221,7 +221,7 @@ class AccountJournal(models.Model):
     sequence = fields.Integer(help='Used to order Journals in the dashboard view')
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
-    currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', oldname='currency')
+    currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency", oldname='currency')
     company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
 

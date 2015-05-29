@@ -48,5 +48,17 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_payment_check_writing_search" model="ir.ui.view">
+            <field name="name">account.payment.check.writing.search</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='state_sent']" position="before">
+                    <filter string="Checks To Send" domain="[('payment_method.code', '=', 'check_writing'), ('state','=','posted')]" name="checks_to_send"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>

@@ -32,8 +32,8 @@
                     <field name="payment_method"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="amount"/>
-                    <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="partner_type" invisible="1"/>
                 </tree>
@@ -81,11 +81,11 @@
                     <sheet>
                         <div class="oe_right oe_button_box">
                             <button class="oe_inline oe_stat_button" name="button_journal_entries"
-                                    string="Journal Items" type="object"
+                                    string="Journal Items" type="object" groups="account.group_account_manager"
                                     attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                             <field name="move_line_ids" invisible="1"/>
                             <button class="oe_inline oe_stat_button" name="button_invoices"
-                                    string="Paid Invoices" type="object"
+                                    string="Invoices" type="object"
                                     attrs="{'invisible':[('has_invoices','=',False)]}" icon="fa-bars"/>
                             <field name="has_invoices" invisible="1"/>
                         </div>
@@ -101,12 +101,12 @@
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
-                                <field name="payment_method" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="payment_method" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="payment_method_code" invisible="1"/>
                                 <label for="amount"/>
                                 <div name="amount_div">
                                     <field name="amount" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="currency_id" groups="base.group_multi_currency" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </div>
                             </group>
                             <group>
@@ -190,7 +190,7 @@
                                 <label for="amount"/>
                                 <div name="amount_div">
                                     <field name="amount" class="oe_inline"/>
-                                    <field name="currency_id" groups="base.group_multi_currency" class="oe_inline"/>
+                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" class="oe_inline" invisible="1"/><!-- FIXME see account_abstract_payment._onchange_currency_id -->
                                 </div>
                             </group>
                             <group>
