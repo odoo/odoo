@@ -341,10 +341,12 @@ class account_invoice(models.Model):
 
         res = super(account_invoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
+        journal_type = context.get('journal_type')
+
         # adapt selection of field journal_id
         for field in res['fields']:
-            if field == 'journal_id' and type:
-                journal_select = self.env['account.journal']._name_search('', [('type', '=', type)], name_get_uid=1)
+            if field == 'journal_id' and journal_type:
+                journal_select = self.env['account.journal']._name_search('', [('type', '=', journal_type)], name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
 
         doc = etree.XML(res['arch'])
