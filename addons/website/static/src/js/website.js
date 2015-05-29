@@ -161,6 +161,16 @@
         return def;
     };
 
+    website.error = function(data, url) {
+        var $error = $(openerp.qweb.render('website.error_dialog', {
+            'title': data.data ? data.data.arguments[0] : "",
+            'message': data.data ? data.data.arguments[1] : data.statusText,
+            'backend_url': url
+        }));
+        $error.appendTo("body");
+        $error.modal('show');
+    };
+
     website.form = function (url, method, params) {
         var form = document.createElement('form');
         form.setAttribute('action', url);
@@ -251,6 +261,8 @@
         });
         return def;
     };
+
+    website.add_template_file('/website/static/src/xml/website.xml');
 
     website.dom_ready = $.Deferred();
     $(document).ready(function () {

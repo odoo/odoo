@@ -939,7 +939,6 @@ define(['summernote/summernote'], function () {
 
     website.no_editor = !!$(document.documentElement).data('editable-no-editor');
 
-    website.add_template_file('/website/static/src/xml/website.xml');
     website.add_template_file('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
         website.ready().then(website.init_editor);
@@ -967,16 +966,6 @@ define(['summernote/summernote'], function () {
             }
         });
     });
-
-    website.error = function(data, url) {
-        var $error = $(openerp.qweb.render('website.error_dialog', {
-            'title': data.data ? data.data.arguments[0] : "",
-            'message': data.data ? data.data.arguments[1] : data.statusText,
-            'backend_url': url
-        }));
-        $error.appendTo("body");
-        $error.modal('show');
-    };
 
     website.init_editor = function () {
         var editor = new website.EditorBar();
