@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-05-21 17:27+0000\n"
+"Last-Translator: Bogdan Lisnenko <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:15+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-22 05:11+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
@@ -101,6 +101,86 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Вітаємо ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>Для вас є новий рахунок: </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>ДЕТАЛІ</strong><br />\n"
+"       &nbsp;&nbsp;Номер рахунку: <strong>${object.number}</strong><br />\n"
+"       &nbsp;&nbsp;Загальна сума: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Дата рахунку: ${object.date_invoice}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Номер замовлення: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Ваш контакт: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Рахунок%20${object.number}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>  \n"
+"    \n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>Також є можливість оплатити напряму через Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"    \n"
+"    <br/>\n"
+"    <p>Якщо у вас виникли запитання, звертайтеся до нас.</p>\n"
+"    <p>Дякуємо, що обрали ${object.company_id.name or 'нас'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Телефон:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Веб :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -115,61 +195,73 @@ msgid ""
 "related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Статус 'Чернетка' використовується тоді, коли користувач отримує новий "
+"непідтверджений рахунок.\n"
+" * Статус 'Попередній' використовується тоді, коли рахунок ще не є "
+"остаточним і йому не присвоєно номер.\n"
+" * Статус 'Відкритий' використовується тоді, коли рахунок є остаточним і "
+"йому присвоєно номер. Рахунок залишається відкритим поки користувач не "
+"оплатить його.\n"
+" * Статус 'Оплачений' встановлюється автоматично після оплати рахунку. "
+"Пов’язані з ним записи в журналі можуть або не можуть бути уточненими.\n"
+" * Статус 'Скасований' використовується тоді, коли користувач скасував "
+"рахунок."
 
 #. module: account
 #: code:addons/account/account.py:1468
 #, python-format
 msgid " Centralisation"
-msgstr ""
+msgstr " Централізація"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "# Entries"
-msgstr ""
+msgstr "К-сть записів"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
 #: field:account.config.settings,code_digits:0
 #: field:wizard.multi.charts.accounts,code_digits:0
 msgid "# of Digits"
-msgstr ""
+msgstr "К-сть цифр"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Entries"
-msgstr ""
+msgstr "К-сть записів"
 
 #. module: account
 #: field:account.invoice.report,nbr:0
 msgid "# of Invoices"
-msgstr ""
+msgstr "К-сть рахунків"
 
 #. module: account
 #: field:account.entries.report,nbr:0
 msgid "# of Items"
-msgstr ""
+msgstr "К-сть пунктів"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Products Qty"
-msgstr ""
+msgstr "К-сть товару"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
 msgid "# of Transaction"
-msgstr "Операція №"
+msgstr "К-сть операцій"
 
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
 msgstr ""
+"${object.company_id.name|safe} Рахунок (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Копія)"
 
 #. module: account
 #: code:addons/account/account.py:635
@@ -177,12 +269,12 @@ msgstr ""
 #: code:addons/account/account.py:787
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (копія)"
 
 #. module: account
 #: view:website:account.report_partnerbalance
 msgid "(Account/Partner) Name"
-msgstr ""
+msgstr "Ім’я партнера (його обліковий запис)"
 
 #. module: account
 #: view:account.chart:account.view_account_chart
@@ -190,80 +282,83 @@ msgid ""
 "(If you do not select a specific fiscal year, all open fiscal years will be "
 "selected.)"
 msgstr ""
+"(Якщо ви не вибрали конкретний фінансовий рік, то будуть відібрані всі "
+"відкриті фінансові роки)"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid ""
 "(If you do not select a specific period, all open periods will be selected)"
 msgstr ""
+"(Якщо ви не виберіть певний період, всі відкриті періоди будуть обрані)"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(Інвойс має бути незвіреним, якщо ви хочете його відкрити)"
+msgstr "(Рахунок повинен бути неуточненим, якщо ви хочете відкрити його)"
 
 #. module: account
 #: view:account.analytic.chart:account.account_analytic_chart_view
 #: view:project.account.analytic.line:account.view_project_account_analytic_line_form
 msgid "(Keep empty to open the current situation)"
-msgstr ""
+msgstr "(Залиште порожнім для відображення поточного стану)"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "(change)"
-msgstr ""
+msgstr "(змінити)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "(update)"
-msgstr ""
+msgstr "(оновити)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ Операцій"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 Днів"
 
 #. module: account
 #: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "3 Monthly"
-msgstr ""
+msgstr "Щоквартально"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
 #: model:account.payment.term,note:account.account_payment_term
 msgid "30 Days End of Month"
-msgstr ""
+msgstr "30 днів від кінця місяця"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr ""
+msgstr "30 днів"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "30% Advance End 30 Days"
-msgstr ""
+msgstr "Аванс 30%, решта на протязі 30 днів"
 
 #. module: account
 #: view:website:account.report_generalledger
 msgid ": General ledger"
-msgstr ""
+msgstr "Головна книга бухгалтера"
 
 #. module: account
 #: view:website:account.report_trialbalance
 msgid ": Trial Balance"
-msgstr ""
+msgstr "Оборотно-сальдова відомість"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
@@ -276,6 +371,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб додати новий обліковий період.\n"
+"              </p><p>\n"
+"                Зазвичай обліковий період це місяць або квартал, що\n"
+"                відповідає періоду складання податкової звітності.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -295,6 +397,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб додати журнал обліку.\n"
+"              </p><p>\n"
+"                Журнал обліку використовується для запису усіх облікових "
+"операцій,\n"
+"                що виникають у повсякденній роботі.\n"
+"              </p><p>\n"
+"                Зазвичай компанія може використовувати по одному журналу на "
+"кожен спосіб\n"
+"                розрахунків(готівкою, по перерахунку, чеком), один журнал "
+"покупок, один журнал\n"
+"                продажу та один журнал для інших операцій.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -313,6 +429,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб створити рахунок.\n"
+"              </p><p>\n"
+"                Рахунок є частиною головної книги бухгалтера, що дозволяє\n"
+"                реєструвати всі види дебетових і кредитних операцій.\n"
+"                Компанії представлять свої річні звіти в двох основних "
+"частин:\n"
+"                баланс та звіт про фінансові результати.\n"
+"                Річний звіт компанії зобов'язані за законом\n"
+"                розкрити певну кількість інформації.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -330,6 +458,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб додати рахунок.\n"
+"              </p><p>\n"
+"                При виконанні мультивалютних операцій ви можете втратити\n"
+"                або заощадити певну суму грошей завдяки зміні курсу.\n"
+"                Це меню надає вам прогноз втрат або заощаджень якщо "
+"операція\n"
+"                буде виконана сьогодні. Тільки для рахунків, що мають "
+"додаткову валюту.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -348,6 +487,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб створити рахунок клієнту.\n"
+"              </p><p>\n"
+"                Електронні рахунки Odoo дозволяють полегшити та прискорити\n"
+"                отримання рахунків. Ваш клієнт отримує рахунок електронною "
+"поштою \n"
+"                і він може оплатити його онлайн або імпортувати в свою "
+"систему обліку. \n"
+"              </p><p>\n"
+"                Обговорення з вашим клієнтом автоматично відображається під "
+"кожним рахунком.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -364,6 +516,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб створити повернення коштів від клієнта.\n"
+"              </p><p>\n"
+"                Повернення коштів частково або повністю зменшує оплату по "
+"рахунку.\n"
+"              </p><p>\n"
+"                Натомість створення документа повернення грошей вручну ви "
+"можете\n"
+"                згенерувати його на основі відповідного рахунку.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -383,6 +546,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a journal entry.\n"
+"              </p><p>\n"
+"                Запис в журналі складається з кількох елементів журналу, "
+"кожен з яких\n"
+"                містить дебетову або кредитну операцію.\n"
+"              </p><p>\n"
+"                Odoo автоматично створює один запис в журналі для кожного\n"
+"                бухгалтерського документу: рахунку, повернення коштів,\n"
+"                оплата постачальнику, і т. д.\n"
+"                Таким чином ви повинні робити записи в журналі в ручному\n"
+"                режимі тільки в нестандартних випадках.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -401,6 +578,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб створити новий журнал руху готівки.\n"
+"              </p><p>\n"
+"                Каса дозволяє робити записи в журнал руху готівки.\n"
+"                Ця функція дозволяє легко стежити за щоденним рухом грошей.\n"
+"                Ви можете ввести які номінали є в касі, а потім робити "
+"записи коли\n"
+"                гроші надходять або виходять з каси.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -414,6 +601,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб створить шаблон операції банківської "
+"виписки.\n"
+"              </p><p>\n"
+"                Він може бути використаний для швидкого створення та "
+"редагування\n"
+"                рядків при узгодженні банківської виписки.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -432,6 +628,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб визначити новий тип рахунку.\n"
+"              </p><p>\n"
+"                Тип рахунку визначає як рахунок буде використовуватися в\n"
+"                журналах обліку. Метод закриття визначає спосіб закриття\n"
+"                рахунку в кінці року. Звіти такі як баланс та звіт про "
+"фінансові\n"
+"                результати використовують категорію рахунку "
+"(прибуток/збиток\n"
+"                або баланс).\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -449,6 +657,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб створити новий періодичний запис.\n"
+"              </p><p>\n"
+"                Періодичний запис створюється періодично, починаючи\n"
+"                з відповідної дати, що вказана в договорі або домовленості\n"
+"                з клієнтом або постачальником. Ви можете створити таки "
+"записи\n"
+"                для автоматизації введення інформації  в систему обліку.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -465,6 +683,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Натисніть, щоб створити новий вид податку.\n"
+"              </p><p>\n"
+"                В залежності від країни, вид податку це, як правило, одна\n"
+"                клітинка в податковій декларації. Odoo дозволяє визначити\n"
+"                податкову структуру і кожен податковий розрахунок буде\n"
+"                зареєстрований в одному або декількох видах податків.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2

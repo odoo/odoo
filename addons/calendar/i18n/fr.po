@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-28 12:57+0000\n"
+"PO-Revision-Date: 2015-05-21 13:38+0000\n"
 "Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-29 06:04+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-22 05:11+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #. module: calendar
 #: model:email.template,body_html:calendar.calendar_template_meeting_reminder
@@ -647,22 +647,22 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:20
 #, python-format
 msgid " [Me]"
-msgstr ""
+msgstr " [Moi]"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name}"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name} - Date has been updated"
-msgstr ""
+msgstr "${object.event_id.name} - La date a été modifiée"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - Rappel"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -693,7 +693,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1593
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
-msgstr ""
+msgstr "Un courriel a été envoyé pour notifier la date du rendez-vous !"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -738,13 +738,13 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1096
 #, python-format
 msgid "An invitation email has been sent to attendee %s"
-msgstr ""
+msgstr "Un courriel d'invitation a été envoyé au participant %s"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1407
 #, python-format
 msgid "An invitation email has been sent to attendee(s)"
-msgstr ""
+msgstr "Un courriel d'invitation a été envoyé au(x) participant(s)"
 
 #. module: calendar
 #: field:calendar.event,is_attendee:0
@@ -790,12 +790,12 @@ msgstr "Par jour"
 #. module: calendar
 #: field:calendar.event,start:0
 msgid "Calculated start"
-msgstr ""
+msgstr "Début prévu"
 
 #. module: calendar
 #: field:calendar.event,stop:0
 msgid "Calculated stop"
-msgstr ""
+msgstr "Fin prévue"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
@@ -808,12 +808,14 @@ msgstr "Calendrier"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:42
 #, python-format
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "Invitation (agenda)"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
 msgstr ""
+"Cliquer ici pour mettre à jour cette  instance seulement et non toutes les "
+"récurrences."
 
 #. module: calendar
 #: field:calendar.attendee,cn:0
@@ -918,7 +920,7 @@ msgstr "Détails"
 #: code:addons/calendar/static/src/js/base_calendar.js:124
 #, python-format
 msgid "Do you really want to delete this filter from favorite?"
-msgstr ""
+msgstr "Voulez-vous vraiment supprimer ce filtre sur les favoris ?"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form_popup
@@ -956,7 +958,7 @@ msgstr "Date de fin"
 #. module: calendar
 #: field:calendar.event,stop_datetime:0
 msgid "End Datetime"
-msgstr ""
+msgstr "Date de fin"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -966,7 +968,7 @@ msgstr "Date de fin"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "Se termine à"
 
 #. module: calendar
 #: constraint:calendar.event:0
@@ -993,14 +995,14 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "Alarme sur événement"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/base_calendar.js:30
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "Agendas partagés"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
@@ -1068,7 +1070,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "Routage HTTP"
 
 #. module: calendar
 #: help:calendar.event,message_summary:0
@@ -1121,7 +1123,7 @@ msgstr ""
 #. module: calendar
 #: field:calendar.attendee,access_token:0
 msgid "Invitation Token"
-msgstr ""
+msgstr "Ticket d'invitation"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1226,7 +1228,7 @@ msgstr "Types de réunion"
 #. module: calendar
 #: field:calendar.attendee,event_id:0
 msgid "Meeting linked"
-msgstr ""
+msgstr "Réunion liée"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_calendar
@@ -1311,7 +1313,7 @@ msgstr "Nécessite une action"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:46
 #, python-format
 msgid "No I'm not going."
-msgstr ""
+msgstr "Non, je ne participerai pas"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1488,7 +1490,7 @@ msgstr "Sélectionner les jours de la semaine"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "Envoi du courriel"
 
 #. module: calendar
 #: field:calendar.event,show_as:0
@@ -1510,7 +1512,7 @@ msgstr "Date de début"
 #. module: calendar
 #: field:calendar.event,start_datetime:0
 msgid "Start DateTime"
-msgstr ""
+msgstr "Date et heure de début"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1573,7 +1575,7 @@ msgstr "Troisième"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence..."
-msgstr ""
+msgstr "Cet événément est lié à une récurrence"
 
 #. module: calendar
 #: field:calendar.event,th:0
@@ -1631,7 +1633,7 @@ msgstr "Jusqu'à"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Ne mettre à jour que cette instance"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104
@@ -1646,6 +1648,8 @@ msgstr "Avertissement!"
 msgid ""
 "Warning, a mandatory field has been modified since the creation of this event"
 msgstr ""
+"Attention, un champ obligatoire a été modifié depuis la création de cet "
+"événement"
 
 #. module: calendar
 #: field:calendar.event,we:0
@@ -1679,7 +1683,7 @@ msgstr ""
 #: code:addons/calendar/static/src/xml/base_calendar.xml:58
 #, python-format
 msgid "Where"
-msgstr ""
+msgstr "Lieu"
 
 #. module: calendar
 #. openerp-web
@@ -1698,7 +1702,7 @@ msgstr "Année(s)"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:45
 #, python-format
 msgid "Yes I'm going."
-msgstr ""
+msgstr "Oui, je viens."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104
@@ -1714,28 +1718,28 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,color_partner_id:0
 msgid "colorize"
-msgstr ""
+msgstr "colorier"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1247
 #, python-format
 msgid "count cannot be negative or 0."
-msgstr ""
+msgstr "le compte ne peut être ni nul ni négatif"
 
 #. module: calendar
 #: field:calendar.alarm,duration_minutes:0
 msgid "duration_minutes"
-msgstr ""
+msgstr "durée en minutes"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1245
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "l'intervalle ne peut pas être négatif"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1245
 #: code:addons/calendar/calendar.py:1247
 #, python-format
 msgid "warning!"
-msgstr ""
+msgstr "attention !"

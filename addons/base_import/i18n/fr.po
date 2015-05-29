@@ -8,21 +8,21 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-13 15:10+0000\n"
-"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2015-05-20 23:33+0000\n"
+"Last-Translator: Olivier Dony (Odoo) <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-14 05:37+0000\n"
-"X-Generator: Launchpad (build 17423)\n"
+"X-Launchpad-Export-Date: 2015-05-22 05:11+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:437
 #, python-format
 msgid "(%d more)"
-msgstr ""
+msgstr "(%d autres)"
 
 #. module: base_import
 #. openerp-web
@@ -65,10 +65,10 @@ msgid ""
 "                        according to your need:"
 msgstr ""
 "Selon vos besoins, utilisez\n"
-"                        une de ces trois solutions pour référencer les "
+"                        une de ces trois méthodes pour référencer les "
 "enregistrements dans les relations.\n"
-"                        Voici comment utiliser l'une ou l'autre,\n"
-"                        selon vos besoins :"
+"                        Voici les différents cas d'utilisation de ces 3 "
+"méthodes :"
 
 #. module: base_import
 #. openerp-web
@@ -128,6 +128,20 @@ msgid ""
 "orignial \n"
 "                        database)."
 msgstr ""
+"Comme vous le constatez dans ce fichier, Fabien et Laurence \n"
+"                        sont employés par la société Bigees (company_1) et\n"
+"                        Eric par la société Organi. La relation entre les "
+"personnes\n"
+"                        et leur société est établie à l'aide de "
+"l'identifiant externe\n"
+"                        des sociétés.\n"
+"                        Il a fallu ajouter un préfixe aux identifiants "
+"externes\n"
+"                        pour éviter un conflit entre les personnes et les "
+"sociétés\n"
+"                        (ex: person_1 et company_1 avaient toutes deux l'ID "
+"1 dans\n"
+"                        la base de données d'origine)."
 
 #. module: base_import
 #. openerp-web
@@ -141,6 +155,14 @@ msgid ""
 "                        (displayed under the Browse CSV file bar after you \n"
 "                        select your file)."
 msgstr ""
+"Par défaut l'aperçu d'importation est configuré pour utiliser\n"
+"                       les virgules comme séparateur de champs, et les\n"
+"                       guillemets comme caractère de délimitation de texte.\n"
+"                       Si votre fichier CSV est dans un autre format, vous "
+"pouvez\n"
+"                       modifier les options de format de fichier (sous la "
+"barre\n"
+"                       de choix du fichier, après en avoir choisi un)."
 
 #. module: base_import
 #. openerp-web
@@ -182,7 +204,7 @@ msgstr "Puis-je importer plusieurs fois le même enregistrement ?"
 #: code:addons/base_import/static/src/xml/import.xml:20
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #. module: base_import
 #. openerp-web
@@ -199,9 +221,7 @@ msgstr "Virgule"
 msgid ""
 "Country/Database \n"
 "                        ID: 21"
-msgstr ""
-"Pays/Base de données \n"
-"id. : 21"
+msgstr "Pays/Id. base de données: 21"
 
 #. module: base_import
 #. openerp-web
@@ -211,13 +231,15 @@ msgid ""
 "Country/Database ID: the unique Odoo ID for a \n"
 "                        record, defined by the ID postgresql column"
 msgstr ""
+"Pays/Id. base de données: identifiant unique d'un enregistrement, défini par "
+"l'identifiant en base de données"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:159
 #, python-format
 msgid "Country/External ID: base.be"
-msgstr "Pays/Id. Externe : base.be"
+msgstr "Pays/Id. externe: base.be"
 
 #. module: base_import
 #. openerp-web
@@ -229,6 +251,8 @@ msgid ""
 "\n"
 "                        that imported it)"
 msgstr ""
+"Pays/Id. externe: l'identifiant externe de cet enregistrement, provenant "
+"d'une autre application (ou du fichier XML qui l'a importé)"
 
 #. module: base_import
 #. openerp-web
@@ -260,7 +284,7 @@ msgstr "Pays : le nom ou code du pays"
 #: field:base_import.tests.models.o2m.child,create_uid:0
 #: field:base_import.tests.models.preview,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Créé par"
 
 #. module: base_import
 #: field:base_import.import,create_date:0
@@ -278,14 +302,14 @@ msgstr ""
 #: field:base_import.tests.models.o2m.child,create_date:0
 #: field:base_import.tests.models.preview,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Créé le"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:243
 #, python-format
 msgid "Customers and their respective contacts"
-msgstr ""
+msgstr "Clients et leurs contacts respectifs"
 
 #. module: base_import
 #: code:addons/base_import/models.py:116
@@ -299,7 +323,7 @@ msgstr "Id. base de données"
 #: code:addons/base_import/static/src/js/import.js:288
 #, python-format
 msgid "Don't import"
-msgstr ""
+msgstr "Ne pas importer"
 
 #. module: base_import
 #. openerp-web
@@ -323,7 +347,7 @@ msgstr "Tout semble correct."
 #: code:addons/base_import/static/src/xml/import.xml:92
 #, python-format
 msgid "External ID"
-msgstr ""
+msgstr "Id. externe"
 
 #. module: base_import
 #. openerp-web
@@ -344,19 +368,19 @@ msgstr "Id. externe, Nom, Est une société"
 #. module: base_import
 #: field:base_import.import,file:0
 msgid "File"
-msgstr ""
+msgstr "Fichier"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:39
 #, python-format
 msgid "File Format Options…"
-msgstr ""
+msgstr "Options de format de fichier"
 
 #. module: base_import
 #: field:base_import.import,file_name:0
 msgid "File Name"
-msgstr ""
+msgstr "Nom de fichier"
 
 #. module: base_import
 #: field:base_import.import,file_type:0
@@ -368,7 +392,7 @@ msgstr "Type de fichier"
 #: code:addons/base_import/static/src/xml/import.xml:237
 #, python-format
 msgid "File for some Quotations"
-msgstr ""
+msgstr "Fichier d'exemples de devis"
 
 #. module: base_import
 #: help:base_import.import,file:0
@@ -384,6 +408,8 @@ msgid ""
 "                        reference the country of a contact, Odoo proposes \n"
 "                        you 3 different fields to import:"
 msgstr ""
+"Par exemple, pour indiquer le pays d'un contact, Odoo vous permet d'utiliser "
+"3 champs différents :"
 
 #. module: base_import
 #. openerp-web
@@ -402,7 +428,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:78
 #, python-format
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Foire aux questions"
 
 #. module: base_import
 #. openerp-web
@@ -416,7 +442,7 @@ msgstr "Obtenir toutes les valeurs possibles"
 #: code:addons/base_import/static/src/js/import.js:448
 #, python-format
 msgid "Here are the possible values:"
-msgstr "Voici les valeurs correctes :"
+msgstr "Voici les valeurs disponibles :"
 
 #. module: base_import
 #. openerp-web
@@ -444,6 +470,8 @@ msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
 msgstr ""
+"Comment importer un champ contenant une relation plusieurs-à-plusieurs (ex. "
+": un client qui a plusieurs mots-clés) ?"
 
 #. module: base_import
 #. openerp-web
@@ -453,6 +481,8 @@ msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
 msgstr ""
+"Comment importer une relation un-à-plusieurs (ex. : plusieurs lignes de "
+"commande dans une même commande) ?"
 
 #. module: base_import
 #. openerp-web
@@ -462,6 +492,8 @@ msgid ""
 "How to export/import different tables from an SQL \n"
 "                        application to Odoo?"
 msgstr ""
+"Comment exporter/importer un ensemble de plusieurs tables entre une "
+"application SQL et Odoo ?"
 
 #. module: base_import
 #. openerp-web
@@ -474,6 +506,9 @@ msgid ""
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
 msgstr ""
+"Par contre si vous préférez ne pas modifier les catégories de produits pour "
+"lever cette ambiguïté,\n"
+"vous devriez utiliser l'Id. externe unique pour désigner la catégorie."
 
 #. module: base_import
 #. openerp-web
@@ -495,7 +530,7 @@ msgstr ""
 #: field:base_import.tests.models.preview,id:0
 #, python-format
 msgid "ID"
-msgstr ""
+msgstr "Id."
 
 #. module: base_import
 #. openerp-web
@@ -517,6 +552,18 @@ msgid ""
 "category \n"
 "                        hierarchy."
 msgstr ""
+"Par exemple, si vous avec deux catégories de produits dont le nom est "
+"\"Vendable\" \n"
+"(ex: \"Catégorie A/Vendable\" et \"Catégorie B/Vendable\", la validation "
+"s'arrêtera mais\n"
+"l'importation sera possible malgré tout.\n"
+"Cependant il est préférable de ne pas forcer l'importation, car le système "
+"choisira\n"
+"systématiquement la première catégorie dont le nom correspond, et ce ne sera "
+"pas\n"
+"forcément la bonne. Le mieux serait de modifier le nom de vos catégories de "
+"produits\n"
+"pour éviter cette ambiguïté."
 
 #. module: base_import
 #. openerp-web
@@ -528,6 +575,11 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Si le fichier contient des en-têtes de colonnes, le système peut\n"
+"essayer de détecter automatiquement les champs correspondants.\n"
+"Ceci facilite l'importation, en particulier pour les fichiers contenant "
+"beaucoup\n"
+"de colonnes."
 
 #. module: base_import
 #. openerp-web
@@ -538,6 +590,10 @@ msgid ""
 "will set up subscriptions and send notifications                             "
 "during the import, but lead to a slower import."
 msgstr ""
+"Si le modèle est pourvu d'un historique de conversation, celui-ci portera la "
+"trace des modifications effectuées au cours de l'importation, prendra en "
+"compte les souscriptions automatiques, et enverra les notifications "
+"correspondantes. Ceci pourra ralentir l'importation."
 
 #. module: base_import
 #. openerp-web
@@ -552,6 +608,11 @@ msgid ""
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
 msgstr ""
+"Si certains champs ne sont pas présents du tout dans votre fichier CSV,\n"
+"le système appliquera les valeurs par défaut pour ceux qui manquent.\n"
+"Par contre si votre fichier contient des cellules vides pour certaines\n"
+"colonnes, leur valeur sera spécifiquement vidée, sans utiliser la valeur par "
+"défaut."
 
 #. module: base_import
 #. openerp-web
@@ -568,6 +629,13 @@ msgid ""
 "filter \n"
 "                        settings' > Save)."
 msgstr ""
+"Si vous modifiez et sauvegardez des fichiers CSV depuis un tableur,\n"
+"les paramètres régionaux de votre ordinateur seront d'application,\n"
+"notamment le séparateur et le caractère de délimitation.\n"
+"Il est recommandé d'utiliser OpenOffice ou LibreOffice Calc, car\n"
+"ces logiciels vous permettent de modifier ces options de format\n"
+"de fichier: dans la fenêtre de dialogue \"Enregistrer sous...\", cochez\n"
+"la case \"Modifier les paramètres\"."
 
 #. module: base_import
 #. openerp-web
@@ -588,6 +656,16 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"Si vous importez un fichier qui contient l'une des colonnes \"Id. externe\" "
+"ou \"Id. base de données\",\n"
+"les enregistrements préalablement importés qui ont ces identifiants seront "
+"mis à jour, plutôt que\n"
+"d'en importer une copie.\n"
+"Ceci permet d'importer le même fichier plusieurs fois en effectuant quelques "
+"ajustements dans \n"
+"le fichier, sans craindre une duplication des données. Le système créera ou "
+"mettra à jour les\n"
+"enregistrement automatiquement en fonction de leur existence."
 
 #. module: base_import
 #. openerp-web
@@ -603,6 +681,12 @@ msgid ""
 "                        link between each person and the company they work \n"
 "                        for)."
 msgstr ""
+"Si vous souhaitez importer des données provenant de plusieurs tables, il "
+"vous faudra rétablir\n"
+"les relations entre les enregistrements des ces différentes tables (ex: si "
+"vous importer des sociétés\n"
+"et des personnes, vous devrez rétablie le lien entre chaque personne et sa "
+"socitété)."
 
 #. module: base_import
 #. openerp-web
@@ -622,6 +706,14 @@ msgid ""
 "\n"
 "                        the fields relative to the order."
 msgstr ""
+"Si vous souhaitez importer un bon de commande contenant plusieurs lignes,\n"
+"vous devez placer une ligne dédiée dans le CSV pour chaque ligne de "
+"commande.\n"
+"Les données de la première ligne de commande figureront sur la même ligne "
+"que\n"
+"la commande elle-même, et les suivantes seront sur des lignes ne contenant "
+"que\n"
+"des cellules vides pour tout ce qui concerne la commande."
 
 #. module: base_import
 #. openerp-web
@@ -679,7 +771,7 @@ msgstr "Le fichier CSV suivant va être généré:"
 #: field:base_import.tests.models.o2m.child,write_uid:0
 #: field:base_import.tests.models.preview,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Mis à jour par"
 
 #. module: base_import
 #: field:base_import.import,write_date:0
@@ -697,14 +789,14 @@ msgstr ""
 #: field:base_import.tests.models.o2m.child,write_date:0
 #: field:base_import.tests.models.preview,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Mis à jour le"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:55
 #, python-format
 msgid "Map your data to Odoo"
-msgstr ""
+msgstr "Correspondance des données"
 
 #. module: base_import
 #. openerp-web
@@ -720,12 +812,12 @@ msgstr ""
 #. module: base_import
 #: field:base_import.import,res_model:0
 msgid "Model"
-msgstr ""
+msgstr "Modèle"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: base_import
 #. openerp-web
@@ -739,7 +831,7 @@ msgstr "Besoin d'importer des données d'une autre application ?"
 #: code:addons/base_import/static/src/js/import.js:336
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "Champs normaux"
 
 #. module: base_import
 #. openerp-web
@@ -800,14 +892,14 @@ msgstr "Choisir le"
 #: code:addons/base_import/static/src/js/import.js:180
 #, python-format
 msgid "Semicolon"
-msgstr ""
+msgstr "Point-virgule"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:78
 #, python-format
 msgid "Separator:"
-msgstr ""
+msgstr "Séparateur :"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,somevalue:0
@@ -835,14 +927,14 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import.js:182
 #, python-format
 msgid "Space"
-msgstr ""
+msgstr "Espace"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:181
 #, python-format
 msgid "Tab"
-msgstr ""
+msgstr "Tabulation"
 
 #. module: base_import
 #. openerp-web
@@ -868,6 +960,8 @@ msgid ""
 "The following CSV file shows how to import \n"
 "                        customers and their respective contacts"
 msgstr ""
+"Le fichier CSV suivant montre comment importer des clients et leurs contacts "
+"respectifs"
 
 #. module: base_import
 #. openerp-web
@@ -967,7 +1061,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:61
 #, python-format
 msgid "Track history during import"
-msgstr ""
+msgstr "Activer l'historique des modifications pendant l'importation"
 
 #. module: base_import
 #. openerp-web
@@ -1119,7 +1213,7 @@ msgstr "XXX/id. externe"
 #: code:addons/base_import/static/src/xml/import.xml:90
 #, python-format
 msgid "XXX/ID"
-msgstr ""
+msgstr "XXX/Id."
 
 #. module: base_import
 #: code:addons/base_import/models.py:271
@@ -1139,7 +1233,7 @@ msgstr "à la ligne %d"
 #: code:addons/base_import/static/src/js/import.js:433
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "entre les lignes %d et %d"
 
 #. module: base_import
 #. openerp-web
@@ -1163,14 +1257,14 @@ msgstr "company_1,Bigees,True"
 #: code:addons/base_import/static/src/xml/import.xml:314
 #, python-format
 msgid "company_2,Organi,True"
-msgstr ""
+msgstr "company_2,Organi,True"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:315
 #, python-format
 msgid "company_3,Boum,True"
-msgstr ""
+msgstr "company_3,Boum,True"
 
 #. module: base_import
 #. openerp-web
@@ -1184,6 +1278,12 @@ msgid ""
 "companies) TO \n"
 "                        '/tmp/company.csv' with CSV HEADER;"
 msgstr ""
+"copy \n"
+"                        (select 'company_'||id as \"Id "
+"externe\",company_name \n"
+"                        as \"Nom\",'True' as \"Est une société\" from "
+"companies) TO \n"
+"                        '/tmp/company.csv' with CSV HEADER;"
 
 #. module: base_import
 #. openerp-web
@@ -1198,13 +1298,19 @@ msgid ""
 "\n"
 "                        '/tmp/person.csv' with CSV"
 msgstr ""
+"copy (select \n"
+"                        'person_'||id as \"Id externe\",person_name as \n"
+"                        \"Nom\",'False' as \"Est une "
+"société\",'company_'||company_id\n"
+"                         as \"Société liée/Id externe\" from persons) TO \n"
+"                        '/tmp/person.csv' with CSV"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:303
 #, python-format
 msgid "dump of such a PostgreSQL database"
-msgstr ""
+msgstr "sauvegarde d'une base de données PostgreSQL de ce type"
 
 #. module: base_import
 #. openerp-web
@@ -1223,7 +1329,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:19
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: base_import
 #. openerp-web
@@ -1237,28 +1343,28 @@ msgstr "person_1,Fabien,False,company_1"
 #: code:addons/base_import/static/src/xml/import.xml:327
 #, python-format
 msgid "person_2,Laurence,False,company_1"
-msgstr ""
+msgstr "person_2,Laurence,False,company_1"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:328
 #, python-format
 msgid "person_3,Eric,False,company_2"
-msgstr ""
+msgstr "person_3,Eric,False,company_2"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:329
 #, python-format
 msgid "person_4,Ramsy,False,company_3"
-msgstr ""
+msgstr "person_4,Ramsy,False,company_3"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:90
 #, python-format
 msgid "to the original unique identifier."
-msgstr ""
+msgstr "faire référence à l'identifiant unique original."
 
 #. module: base_import
 #: field:base_import.tests.models.char,value:0

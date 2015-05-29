@@ -212,6 +212,8 @@ class mrp_bom(osv.osv):
         @param properties: List of related properties.
         @return: False or BoM id.
         """
+        if not context:
+            context = {}
         if properties is None:
             properties = []
         if product_id:
@@ -229,6 +231,8 @@ class mrp_bom(osv.osv):
         else:
             # neither product nor template, makes no sense to search
             return False
+        if context.get('company_id'):
+            domain = domain + [('company_id', '=', context['company_id'])]
         domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
                             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
         # order to prioritize bom with product_id over the one without

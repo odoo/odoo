@@ -38,6 +38,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

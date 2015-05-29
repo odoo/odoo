@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-05-21 02:51+0000\n"
+"Last-Translator: Mouz_Wy <www.905039976@qq.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:37+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-22 05:11+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #. module: crm_claim
 #: field:res.partner,claim_count:0
 msgid "# Claims"
-msgstr ""
+msgstr "# 投诉"
 
 #. module: crm_claim
 #: field:crm.claim.report,email:0
@@ -30,13 +30,13 @@ msgstr "电子邮件"
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
 msgid "# of Claims"
-msgstr ""
+msgstr "# 索赔"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:167
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (复制)"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
@@ -50,6 +50,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    "
+"记录和跟踪客户的投诉，投诉可以链接到一个或多个销售订单中。你可以发送带附件的邮件和保留一个投诉的所有日志（包括发送的邮件、措施类型等）。投诉可以使用电子邮"
+"件网关模块来自动发送电子邮件。\n"
+"                </p>\n"
+"            "
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
@@ -97,7 +103,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Action Description..."
-msgstr ""
+msgstr "动作描述..."
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0
@@ -153,7 +159,7 @@ msgstr "索赔日期"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Claim Date by Month"
-msgstr ""
+msgstr "投诉日期"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -164,7 +170,7 @@ msgstr "索陪说明"
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Claim Month"
-msgstr ""
+msgstr "投诉月份"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -263,12 +269,12 @@ msgstr "创建日期"
 #: field:crm.claim,create_uid:0
 #: field:crm.claim.stage,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: crm_claim
 #: field:crm.claim.stage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建在"
 
 #. module: crm_claim
 #: field:crm.claim,create_date:0
@@ -283,7 +289,7 @@ msgstr "结束日期"
 #. module: crm_claim
 #: help:crm.claim,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "发布在记录上的最近信息的日期"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -341,7 +347,7 @@ msgstr "关注者"
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Group By"
-msgstr ""
+msgstr "分组按"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
@@ -395,18 +401,18 @@ msgstr "是一个关注者"
 #. module: crm_claim
 #: field:crm.claim,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最近的消息日期"
 
 #. module: crm_claim
 #: field:crm.claim,write_uid:0
 #: field:crm.claim.stage,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新被"
 
 #. module: crm_claim
 #: field:crm.claim.stage,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后更新在"
 
 #. module: crm_claim
 #: help:crm.claim.stage,section_ids:0
@@ -699,17 +705,17 @@ msgstr "关注者的电子邮件"
 #. module: crm_claim
 #: field:crm.claim,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "网站消息"
 
 #. module: crm_claim
 #: help:crm.claim,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "网站沟通历史"
 
 #. module: crm_claim
 #: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload
 msgid "Workload"
-msgstr ""
+msgstr "工作量"
 
 #~ msgid "# of Cases"
 #~ msgstr "# 业务"

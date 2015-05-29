@@ -16,3 +16,4 @@ Moisés López moylop260@vauxoo.com https://github.com/moylop260
 Nhomar Hernández nhomar@vauxoo.com https://github.com/nhomar
 Sabirna Romero sabrina@vauxoo.com https://github.com/dsabrinarg
 Yanina Aular yanina.aular@vauxoo.com https://github.com/yaniaular
+Oscar Alcala oszckar@gmail.com.com https://github.com/oscarolar

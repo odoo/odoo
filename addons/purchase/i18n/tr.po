@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-11-15 18:09+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"PO-Revision-Date: 2015-05-07 12:22+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:15+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-08 05:33+0000\n"
+"X-Generator: Launchpad (build 17474)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -552,6 +552,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>Teklif talebi oluşturmak için tıklayın.</p>\n"
+"\n"
+"<p>Teklif talebi, tedarikçiniz ile olan geçmiş yazışmalar, tartışmalar, "
+"pazarlıklar ve anlaşmaları daha sonra takip edebilmenizi sağlar. "
+"Onaylandıktan sonra alım siparişine dönüşür.</p>\n"
+"\n"
+"<p>Stok ihtiyaç planlaması için gerekli veriler (Ürün kartı üzerinde "
+"tedarikçi ve min-max bilgileri) tanımlanmış ise Odoo alım teklifi "
+"taleplerini planlayıcı çalıştır butonuna bağlı olarak otomatik oluşturur. "
+"(Planlayıcı çalıştır butonu da bir ek modül ile otomatik hale "
+"getirilebilir)</p>\n"
+"\n"
+"<p>Ürün kartında Birebir Alım seçilmiş ise Odoo satış siparişlerindeki "
+"miktarlara göre otomatik birebir alım teklifi oluşturur. Her yeni satış "
+"siparişinde eklenen aynı ürünler için ilgili tedarikçiye ait alım teklifi "
+"içindeki ürün alım miktarını otomatik olarak arttırır ve satış siparişindeki "
+"satır ile alımı birebir ilişkilendirerek ürünü satış siparişine otomatik "
+"rezerve eder.</p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -858,6 +877,8 @@ msgid ""
 "Can not cancel this procurement as the related purchase order has been "
 "confirmed already.  Please cancel the purchase order first. "
 msgstr ""
+"Bir onaylı satınalma siparişi ile ilişkili talebi iptal edemezsiniz. Lütfen "
+"öncelikle alım siparişini iptal ediniz. "
 
 #. module: purchase
 #: code:addons/purchase/stock.py:195
@@ -1437,7 +1458,7 @@ msgstr "Konum & Depo"
 #: code:addons/purchase/purchase.py:159
 #, python-format
 msgid "Make sure you have at least an incoming picking type defined"
-msgstr ""
+msgstr "En az bir gelen malzeme çekme türü tanımlı olduğundan emin olun"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
@@ -2177,7 +2198,7 @@ msgstr "Sevkiyat İstisnası"
 #: view:website:purchase.report_purchaseorder_document
 #: view:website:purchase.report_purchasequotation_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "Teslimat adresi:"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -2576,7 +2597,7 @@ msgstr "ya da"
 #. module: purchase
 #: field:purchase.order,related_usage:0
 msgid "unknown"
-msgstr ""
+msgstr "bilinmeyen"
 
 #~ msgid "To Purchase"
 #~ msgstr "Satınalınacak"

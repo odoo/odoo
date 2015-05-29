@@ -211,7 +211,7 @@
                     <div t-foreach="track.speaker_ids" t-as="speaker" class="well mt32">
                         <div class="row">
                             <div class="col-sm-2">
-                                <span t-field="track.image"
+                                <span t-field="speaker.sudo().image_medium"
                                     t-field-options='{"widget": "image", "class": "img-circle"}'/>
                             </div><div class="col-sm-10">
                                <h4 t-field="speaker.name" class="mb4"/>
