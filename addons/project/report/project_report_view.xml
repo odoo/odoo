@@ -91,6 +91,22 @@
             <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
         </record>
 
+       <record id="action_project_task_user_tree_filtered" model="ir.actions.act_window">
+            <field name="name">Tasks Analysis</field>
+            <field name="res_model">report.project.task.user</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="view_task_project_user_search"/>
+            <field name="context">{
+                'group_by_no_leaf':1,
+                'group_by':[],
+                'search_default_project_id': [active_id],
+                'default_project_id': active_id,
+            }
+            </field>
+            <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
+        </record>
+
         <menuitem name="Tasks" action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
 
     </data>

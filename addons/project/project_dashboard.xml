@@ -36,13 +36,13 @@
                                             <a type="edit">Settings</a>
                                         </div>
                                         <div>
-                                            <a name="%(dblc_proj)d" type="action">Tasks</a>
+                                            <a name="%(action_project_task_user_tree_filtered)d" type="action">Tasks</a>
                                         </div>
                                         <div>
                                             <a name="%(action_view_task_history_cumulative_filter)d" type="action">Cumulative Flow</a>
                                         </div>
                                     </div>
-                                    <div t-if="widget.view.is_action_enabled('edit')" class="o_kanban_card_manage_settings">
+                                    <div t-if="widget.view.is_action_enabled('edit')" class="o_project_kanban_colorpicker">
                                         <div class="col-xs-12">
                                             <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                         </div>
@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="o_project_kanban_boxes">
-                                <a t-if="record.use_tasks.raw_value and record.task_count.raw_value" class="o_project_kanban_box" name="%(act_project_project_2_project_task_all)d" type="action">
+                                <a t-if="record.use_tasks.raw_value" class="o_project_kanban_box" name="%(act_project_project_2_project_task_all)d" type="action">
                                     <span class="o_value"><t t-esc="record.task_count.value"/></span>
                                     <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
                                 </a>
