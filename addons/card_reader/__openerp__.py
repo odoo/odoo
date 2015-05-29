@@ -20,7 +20,7 @@ It contains the following features:
         'data/card_reader_data.xml',
         'security/ir.model.access.csv',
         'views/templates.xml',
-        'views/mercury_transaction.xml',
+        'views/mercury_transactions.xml',
         'views/card_reader_config.xml',
     ],
     'qweb': [
