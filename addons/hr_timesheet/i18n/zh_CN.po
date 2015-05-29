@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-27 04:10+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-28 05:37+0000\n"
-"X-Generator: Launchpad (build 17528)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -34,24 +35,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record activities.\n"
 "              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
+"                You can register and track your workings hours by project every\n"
+"                day. Every time spent on a project will become a cost in the\n"
 "                analytic accounting/contract and can be re-invoiced to\n"
 "                customers if required.\n"
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击记录活动。\n"
-"              </p><p>\n"
-"                您可以登记和跟踪您每天在项目中的工时。\n"
-"                在项目中所有花费的时间都会成为辅助核算/合同\n"
-"                中的成本,如果需要可以\n"
-"                开票给客户。\n"
-"              </p>\n"
-"            "
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -60,47 +50,24 @@ msgid ""
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
 "                In Odoo, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to "
-"analyse\n"
+"                analytic account. So, you can track costs and revenues to analyse\n"
 "                your margins easily.\n"
 "              </p><p>\n"
-"                Costs will be created automatically when you register "
-"supplier\n"
+"                Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets.\n"
 "              </p><p>\n"
-"                Revenues will be created automatically when you create "
-"customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
 msgstr ""
-"<p>\n"
-"                此合同不在启动状态。\n"
-"              </p><p>\n"
-"                在Odoo里, 合同和项目都会使用\n"
-"                辅助核算。 所以, 您可以跟踪费用和收入来容易的分析you can track costs and revenues "
-"to analyse\n"
-"                您的毛利。\n"
-"              </p><p>\n"
-"                当您登记一个供应商发票、费用报销或计工单时\n"
-"                成本会被自动创建。\n"
-"              </p><p>\n"
-"                当您创建一个客户发票、收入会被自动创建。\n"
-"                 客户发票基于销售订单\n"
-"                (发票固定价格), 计工单 (基于已完成的工作) 或\n"
-"                费用报销 (例如. 交通费).\n"
-"              </p>\n"
-"            "
 
 #. module: hr_timesheet
-#: selection:hr.sign.in.project,state:0
-#: selection:hr.sign.out.project,state:0
+#: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
 msgid "Absent"
-msgstr "缺席："
+msgstr "缺勤"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -146,7 +113,7 @@ msgstr "修改工作"
 msgid ""
 "Changing the date will let this entry appear in the timesheet of the new "
 "date."
-msgstr "改变日期会让计工单中的相关区域同步更新一个新日期"
+msgstr ""
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
@@ -167,12 +134,12 @@ msgstr "公司"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
-msgstr "成本"
+msgstr "费用"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr "成本/收益"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
@@ -191,7 +158,7 @@ msgstr "创建人"
 #: field:hr.sign.in.project,create_date:0
 #: field:hr.sign.out.project,create_date:0
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -200,8 +167,7 @@ msgid "Current Date"
 msgstr "当前日期"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
+#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
 msgid "Current Status"
 msgstr "当前状态"
 
@@ -218,7 +184,7 @@ msgstr "设置分析结构"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,name:0
 msgid "Description"
-msgstr "描述"
+msgstr "说明"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -232,8 +198,7 @@ msgid "Employee"
 msgstr "员工"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
+#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
 msgstr "员工ID"
 
@@ -243,11 +208,10 @@ msgstr "员工ID"
 msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
-msgstr "此用户未关联员工。请创建一个。"
+msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
+#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
 msgid "Employee's Name"
 msgstr "员工姓名"
 
@@ -258,27 +222,21 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr ""
-"员工能记录在不同项目所花费的时间。\r\n"
-"一个项目是一个辅助核算項，而且该项目所花费的时间为这辅助核算項的成本。\r\n"
-"此功能允许记录其考勤和计工单。"
+msgstr "员工能记录在不同项目所花费的时间。\r\n一个项目是一个辅助核算項，而且该项目所花费的时间为这辅助核算項的成本。\r\n此功能允许记录其考勤和计工单。"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
 msgid ""
 "Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the "
-"analytic account. This feature allows to record at the same time the "
+"is an analytic account and the time spent on a project generate costs on the"
+" analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
-msgstr ""
-"员工能记录在不同项目所花费的时间。\r\n"
-"一个项目是一个辅助核算項，而且该项目所花费的时间为这辅助核算項的成本。\r\n"
-"此功能允许记录其考勤和计工单。"
+msgstr "员工能记录在不同项目所花费的时间。\r\n一个项目是一个辅助核算項，而且该项目所花费的时间为这辅助核算項的成本。\r\n此功能允许记录其考勤和计工单。"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Extended Filters..."
-msgstr "扩展过滤器..."
+msgstr "扩展的过滤器..."
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,general_account_id:0
@@ -294,13 +252,13 @@ msgstr "一般信息"
 #: code:addons/hr_timesheet/hr_timesheet.py:153
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "转到设置面板"
+msgstr "跳转到指定的控制面板"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
-msgstr "分组按"
+msgstr "分组"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -308,19 +266,17 @@ msgid "Group by month of date"
 msgstr "按月分组"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,id:0
-#: field:hr.sign.in.project,id:0
-#: field:hr.sign.out.project,id:0
-#: field:hr.timesheet.report,id:0
+#: field:hr.analytic.timesheet,id:0 field:hr.sign.in.project,id:0
+#: field:hr.sign.out.project,id:0 field:hr.timesheet.report,id:0
 msgid "ID"
-msgstr "ID"
+msgstr "标识"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
-msgstr "如果您想对员工工时开票，链接员工到一个确定成本价格的服务类产品（员工人力资源设置中）。"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -330,21 +286,20 @@ msgstr "信息"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr "分录"
+msgstr "凭证簿"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_uid:0
-#: field:hr.sign.in.project,write_uid:0
-#: field:hr.sign.out.project,write_uid:0
+#: field:hr.sign.in.project,write_uid:0 field:hr.sign.out.project,write_uid:0
 msgid "Last Updated by"
-msgstr "最近更新人"
+msgstr "最后更新"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_date:0
 #: field:hr.sign.in.project,write_date:0
 #: field:hr.sign.out.project,write_date:0
 msgid "Last Updated on"
-msgstr "最近更新于"
+msgstr "最后一次更新"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -363,8 +318,6 @@ msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
-"员工%s 没有定义 '辅助核算项' \n"
-"将员工关联到选择的用户并指定一个 '辅助核算项'！"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:191
@@ -372,9 +325,7 @@ msgstr ""
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr ""
-"项目未定义分析账户。\n"
-"请设置一个或设置为不自动填充时间表。"
+msgstr "项目未定义分析账户。\n请设置一个或设置为不自动填充时间表。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
@@ -382,9 +333,7 @@ msgstr ""
 msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
-msgstr ""
-"没有定义分析期间 '%s'\n"
-"你应该对雇员的表格指定分析期间。"
+msgstr "没有定义分析期间 '%s'\n你应该对雇员的表格指定分析期间。"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -404,16 +353,14 @@ msgid "Please define employee for your user."
 msgstr "请为你的用户定义员工信息。"
 
 #. module: hr_timesheet
-#: selection:hr.sign.in.project,state:0
-#: selection:hr.sign.out.project,state:0
+#: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
 msgid "Present"
 msgstr "出勤"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-#: field:hr.employee,product_id:0
-#: field:hr.timesheet.report,product_id:0
+#: field:hr.employee,product_id:0 field:hr.timesheet.report,product_id:0
 msgid "Product"
 msgstr "产品"
 
@@ -455,7 +402,7 @@ msgstr "签入/ 签出"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr "签入 / 签出 于项目"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -463,8 +410,7 @@ msgid "Start Working"
 msgstr "开始工作"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
+#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
 msgstr "开始日期"
 
@@ -476,7 +422,7 @@ msgstr "停止工作"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "This Month"
-msgstr "本月"
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,quantity:0
@@ -496,7 +442,7 @@ msgstr "计工单"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr "计工单账目"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -520,12 +466,12 @@ msgstr "计工单明细"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr "计工单月"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr "按月计工单"
+msgstr ""
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
@@ -558,7 +504,7 @@ msgstr "用户"
 #: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
 msgid "User Alert!"
-msgstr "用户警告！"
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -596,7 +542,7 @@ msgid ""
 "You should create an analytic account structure depending on your needs to "
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
-msgstr "根据您分析成本和分析的需要，您需要创建一个辅助核算项。在Odoo里，辅助核算项同样被用于跟踪客户合同。"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search

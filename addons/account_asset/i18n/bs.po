@@ -1,21 +1,22 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_asset
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-8/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:22+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_asset
 #: field:account.asset.asset,entry_count:0
@@ -31,22 +32,12 @@ msgstr "# stavaka amortizacije"
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview on all depreciation. "
-"The\n"
-"            tool search can also be used to personalise your Assets reports "
-"and\n"
+"            From this report, you can have an overview on all depreciation. The\n"
+"            tool search can also be used to personalise your Assets reports and\n"
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"            Iz ovog izvještaja, možete pregledati sve amortizacije. Alat za "
-"pretragu\n"
-"            također možete da koristite za personalizaciju izvještaja "
-"osnovnih \n"
-"            srestava.\n"
-"          </p>\n"
-"        "
+msgstr "<p>\n            Iz ovog izvještaja, možete pregledati sve amortizacije. Alat za pretragu\n            također možete da koristite za personalizaciju izvještaja osnovnih \n            srestava.\n          </p>\n        "
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
@@ -87,8 +78,7 @@ msgstr "Analitički konto"
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:account.asset.asset:account_asset.view_account_asset_search
 #: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
+#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 #: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -214,9 +204,7 @@ msgstr "Promjeni trajanje"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
-"Označite ovo ako želite da automatski potvrdite osnovna sredstva ove "
-"kategorije kada su kreirani od fakture."
+msgstr "Označite ovo ako želite da automatski potvrdite osnovna sredstva ove kategorije kada su kreirani od fakture."
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
@@ -224,46 +212,31 @@ msgid "Children Assets"
 msgstr "Podređeno osnovno sredstvo"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.asset,method:0 help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
-"Odaberite metodu za izračunavanje iznosa stavki amortizacije.\n"
-"  * Linearno: Izračunato na osnovu: Bruto vrijednosti / Broj amortizacija\n"
-"  * Silazno: Izračunato na osnovu: Preostala vrijednost * Silazni faktor"
+msgstr "Odaberite metodu za izračunavanje iznosa stavki amortizacije.\n  * Linearno: Izračunato na osnovu: Bruto vrijednosti / Broj amortizacija\n  * Silazno: Izračunato na osnovu: Preostala vrijednost * Silazni faktor"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
 #: help:account.asset.category,method_time:0
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Metoda korišćena za izračunavanje datuma i brojeva stavki amortizacije.\n"
-"  * Broj amortizacija: Fiksni broj stavki amortizacija i vrijeme između 2 "
-"amortizacije.\n"
-"  * Datum završetka: Odaberite vrijeme između 2 amortizacije i datum "
-"amortizacije koji neće ići preko."
+"Choose the method to use to compute the dates and number of depreciation lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Metoda korišćena za izračunavanje datuma i brojeva stavki amortizacije.\n  * Broj amortizacija: Fiksni broj stavki amortizacija i vrijeme između 2 amortizacije.\n  * Datum završetka: Odaberite vrijeme između 2 amortizacije i datum amortizacije koji neće ići preko."
 
 #. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr ""
-"Odaberite period za koji želite da automatski proknjižite stavke "
-"amortizacija osnovnih sredstava u toku"
+msgstr "Odaberite period za koji želite da automatski proknjižite stavke amortizacija osnovnih sredstava u toku"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Zatvori"
 
@@ -281,8 +254,7 @@ msgid "Company"
 msgstr "Kompanija"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
+#: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Metoda izračunavanja"
 
@@ -327,7 +299,7 @@ msgstr "Kreirana kretanja amortizacije"
 #: field:asset.depreciation.confirmation.wizard,create_uid:0
 #: field:asset.modify,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Kreirao"
 
 #. module: account_asset
 #: field:account.asset.asset,create_date:0
@@ -337,7 +309,7 @@ msgstr ""
 #: field:asset.depreciation.confirmation.wizard,create_date:0
 #: field:asset.modify,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Kreirano"
 
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
@@ -450,8 +422,7 @@ msgstr "Završni datum"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Završni datum"
 
@@ -496,7 +467,7 @@ msgstr "Bruto vrijednost"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupiši po"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -510,25 +481,19 @@ msgid "History name"
 msgstr "Istorijski naziv"
 
 #. module: account_asset
-#: field:account.asset.asset,id:0
-#: field:account.asset.category,id:0
-#: field:account.asset.depreciation.line,id:0
-#: field:account.asset.history,id:0
+#: field:account.asset.asset,id:0 field:account.asset.category,id:0
+#: field:account.asset.depreciation.line,id:0 field:account.asset.history,id:0
 #: field:asset.asset.report,id:0
-#: field:asset.depreciation.confirmation.wizard,id:0
-#: field:asset.modify,id:0
+#: field:asset.depreciation.confirmation.wizard,id:0 field:asset.modify,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
-"Indicira da je prvi zapis amortizacije za ovo osnovno sredstvo mora biti "
-"izvršeno od datuma nabavke umjesto prvog Januara"
+msgstr "Indicira da je prvi zapis amortizacije za ovo osnovno sredstvo mora biti izvršeno od datuma nabavke umjesto prvog Januara"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -606,8 +571,7 @@ msgid "Next Period Depreciation"
 msgstr "Sljedeći period amortizacije"
 
 #. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
+#: field:account.asset.asset,note:0 field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Zabilješka"
@@ -616,8 +580,7 @@ msgstr "Zabilješka"
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:account.asset.category:account_asset.view_account_asset_category_form
 #: view:account.asset.history:account_asset.view_account_asset_history_form
-#: view:asset.modify:account_asset.asset_modify_form
-#: field:asset.modify,note:0
+#: view:asset.modify:account_asset.asset_modify_form field:asset.modify,note:0
 msgid "Notes"
 msgstr "Zabilješke"
 
@@ -678,8 +641,7 @@ msgid "Posted depreciation lines"
 msgstr "Proknjižene stavke amortizacije"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr "Prorata Temporis"
 
@@ -688,8 +650,7 @@ msgstr "Prorata Temporis"
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr ""
-"Prorate temporis može biti primjenjena samo za metodu \"broj amortizacija\"."
+msgstr "Prorate temporis može biti primjenjena samo za metodu \"broj amortizacija\"."
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0
@@ -765,8 +726,7 @@ msgid "State of Asset"
 msgstr "Stanje osnovnog sredstva"
 
 #. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
+#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -779,16 +739,9 @@ msgstr "Vremenski period između dvije amortizacije , u mjesecima"
 #: help:account.asset.history,method_time:0
 msgid ""
 "The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Metoda korišćena za izračunavanje datuma i brojeva stavki amortizacije.\n"
-"Broj amortizacija: Fiksni broj stavki amortizacija i vrijeme između 2 "
-"amortizacije.\n"
-"Datum završetka: Odaberite vrijeme između 2 amortizacije i datum "
-"amortizacije koji neće ići preko."
+"Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Metoda korišćena za izračunavanje datuma i brojeva stavki amortizacije.\nBroj amortizacija: Fiksni broj stavki amortizacija i vrijeme između 2 amortizacije.\nDatum završetka: Odaberite vrijeme između 2 amortizacije i datum amortizacije koji neće ići preko."
 
 #. module: account_asset
 #: help:account.asset.asset,method_number:0
@@ -823,17 +776,9 @@ msgstr "Korisnik"
 #: help:account.asset.asset,state:0
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-"Kada je osnovno sredstvo kreirano, nalazi se u statusu 'U pripremi'.\n"
-"Ako je osnovno sredstvo potvrđeno, status prelazi u 'U toku' i stavke "
-"amortizacije mogu biti knjižene u računovodstvu.\n"
-"Možete ručno da zatvorite osnovno sredstvo kada je amortizavija završena. "
-"Ako je zadnja stavka amortizavije knjižena, osnovno sredstvo automatski "
-"odlazi u taj status."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
+msgstr "Kada je osnovno sredstvo kreirano, nalazi se u statusu 'U pripremi'.\nAko je osnovno sredstvo potvrđeno, status prelazi u 'U toku' i stavke amortizacije mogu biti knjižene u računovodstvu.\nMožete ručno da zatvorite osnovno sredstvo kada je amortizavija završena. Ako je zadnja stavka amortizavije knjižena, osnovno sredstvo automatski odlazi u taj status."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -844,9 +789,7 @@ msgstr "Godina"
 #: code:addons/account_asset/account_asset.py:81
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
-"Ne možete obrisati osnovno sredstvo koje sadrži proknjižene stavke "
-"amortizacije."
+msgstr "Ne možete obrisati osnovno sredstvo koje sadrži proknjižene stavke amortizacije."
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form

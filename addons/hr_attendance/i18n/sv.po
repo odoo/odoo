@@ -1,37 +1,33 @@
-# Swedish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Swedish (http://www.transifex.com/projects/p/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:45+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) en negativ försening betyder att den anställde arbetade mer än "
-"registrerat."
+msgid "(*) A negative delay means that the employee worked more than encoded."
+msgstr "(*) en negativ försening betyder att den anställde arbetade mer än registrerat."
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Ett positiv uppehåll innebär att den anställde arbetat mindre än "
-"registrerat."
+msgstr "(*) Ett positiv uppehåll innebär att den anställde arbetat mindre än registrerat."
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -39,8 +35,7 @@ msgid "Absent"
 msgstr "Frånvarande"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
+#: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
 msgstr "Åtgärd"
 
@@ -131,18 +126,16 @@ msgid "Click to Sign In at %s."
 msgstr "Klicka för instämpling vid %s."
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_uid:0
-#: field:hr.attendance,create_uid:0
+#: field:hr.action.reason,create_uid:0 field:hr.attendance,create_uid:0
 #: field:hr.attendance.error,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Skapad av"
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_date:0
-#: field:hr.attendance,create_date:0
+#: field:hr.action.reason,create_date:0 field:hr.attendance,create_date:0
 #: field:hr.attendance.error,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Skapad den"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -196,14 +189,12 @@ msgstr "Slutdatum"
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Fel ! Stämpla in (resp stämpla ut) måste följas av utstämpling (resp "
-"instämpling)"
+msgstr "Fel ! Stämpla in (resp stämpla ut) måste följas av utstämpling (resp instämpling)"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "Group By"
-msgstr ""
+msgstr "Gruppera efter"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -211,12 +202,11 @@ msgid "Hr Attendance Search"
 msgstr "Närvarosökning"
 
 #. module: hr_attendance
-#: field:hr.action.reason,id:0
-#: field:hr.attendance,id:0
+#: field:hr.action.reason,id:0 field:hr.attendance,id:0
 #: field:hr.attendance.error,id:0
 #: field:report.hr_attendance.report_attendanceerrors,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
@@ -224,18 +214,16 @@ msgid "Last Sign"
 msgstr "Senaste stämpling"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_uid:0
-#: field:hr.attendance,write_uid:0
+#: field:hr.action.reason,write_uid:0 field:hr.attendance,write_uid:0
 #: field:hr.attendance.error,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Senast uppdaterad av"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_date:0
-#: field:hr.attendance,write_date:0
+#: field:hr.action.reason,write_date:0 field:hr.attendance,write_date:0
 #: field:hr.attendance.error,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Senast uppdaterad"
 
 #. module: hr_attendance
 #. openerp-web
@@ -393,9 +381,7 @@ msgstr ""
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
-"Du försökte %s med ett datum som föregår en annan händelse!\n"
-"Försök att kontakta personalansvarig för att korrigera närvaro."
+msgstr "Du försökte %s med ett datum som föregår en annan händelse!\nFörsök att kontakta personalansvarig för att korrigera närvaro."
 
 #. module: hr_attendance
 #: view:hr.attendance.error:hr_attendance.view_hr_attendance_error

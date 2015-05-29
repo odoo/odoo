@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-21 02:03+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-22 05:11+0000\n"
-"X-Generator: Launchpad (build 17514)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
@@ -35,7 +36,7 @@ msgstr "# 产品"
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "(Date and signature)."
-msgstr "(日期与签名)."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -45,10 +46,6 @@ msgid ""
 "             </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击创建一个新的费用分类. \n"
-"             </p>\n"
-"            "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
@@ -57,22 +54,12 @@ msgid ""
 "                Click to register new expenses. \n"
 "              </p><p>\n"
 "                Odoo will ensure the whole process is followed; the expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
+"                sheet is validated by manager(s), the employee is reimbursed\n"
 "                from his expenses, some expenses must be re-invoiced to the\n"
 "                customers.\n"
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击新建费用报销。 \n"
-"              </p><p>\n"
-"                Odoo会确保整个流程遵循：\n"
-"               报销单由经理验证， 员工\n"
-"                报销自己的费用, 一些支出必须开票\n"
-"                给客户。\n"
-"              </p>\n"
-"            "
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -173,19 +160,17 @@ msgstr "已确认费用"
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Create Month"
-msgstr "创建月份"
+msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_uid:0
-#: field:hr.expense.line,create_uid:0
+#: field:hr.expense.expense,create_uid:0 field:hr.expense.line,create_uid:0
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_date:0
-#: field:hr.expense.line,create_date:0
+#: field:hr.expense.expense,create_date:0 field:hr.expense.line,create_date:0
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
@@ -200,8 +185,7 @@ msgid "Currency"
 msgstr "币种"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date:0
-#: field:hr.expense.line,date_value:0
+#: field:hr.expense.expense,date:0 field:hr.expense.line,date_value:0
 #: view:website:hr_expense.report_expense
 msgid "Date"
 msgstr "日期"
@@ -228,7 +212,7 @@ msgstr "费用表的确认日期，它填满时按下确认按钮"
 #. module: hr_expense
 #: help:hr.expense.expense,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "最新信息记录的日期。"
+msgstr "发布到记录上的最后信息的日期"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -243,9 +227,7 @@ msgid ""
 "rate, set a cost and a unit of measure on the product. If you reimburse "
 "based on real costs, set the cost at 0.00. The user will set the real price "
 "when recording his expense sheet."
-msgstr ""
-"为员工可以使用的每个费用类型设置一个产品（交通费、住宿费、餐费等）。如果你报销固定费用，设置产品的成本和单位。如果实报实销，设置成本为0。用户在输入报销单"
-"时会输入实际金额。"
+msgstr "为员工可以使用的每个费用类型设置一个产品（交通费、住宿费、餐费等）。如果你报销固定费用，设置产品的成本和单位。如果实报实销，设置成本为0。用户在输入报销单时会输入实际金额。"
 
 #. module: hr_expense
 #: field:hr.expense.report,delay_confirm:0
@@ -267,15 +249,14 @@ msgstr "部门"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
-#: field:hr.expense.expense,name:0
-#: field:hr.expense.line,description:0
+#: field:hr.expense.expense,name:0 field:hr.expense.line,description:0
 msgid "Description"
 msgstr "说明"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "Description:"
-msgstr "描述："
+msgstr "说明："
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
@@ -286,7 +267,7 @@ msgstr "已完成"
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Done Expenses"
-msgstr "已完成的费用报销"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -307,7 +288,7 @@ msgstr "员工姓名"
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "Employee:"
-msgstr "员工："
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:167
@@ -330,18 +311,18 @@ msgstr "费用"
 #: code:addons/hr_expense/hr_expense.py:373
 #, python-format
 msgid "Expense Account Move"
-msgstr "费用凭证"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Expense Categories"
-msgstr "费用类型"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Expense Date"
-msgstr "费用日期"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -368,7 +349,7 @@ msgstr "支付已批准"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense confirmed, waiting confirmation"
-msgstr "费用已确认，等待审核"
+msgstr ""
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
@@ -397,7 +378,7 @@ msgstr "费用分析"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "Expenses Month"
-msgstr "费用发生月"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
@@ -412,7 +393,7 @@ msgstr "费用统计"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "Expenses by Month"
-msgstr "费用按月分组"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -430,20 +411,19 @@ msgid "Followers"
 msgstr "关注者"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "强制的账薄"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Free Notes"
-msgstr "备注"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Generate Accounting Entries"
-msgstr "生成会计分录"
+msgstr ""
 
 #. module: hr_expense
 #: help:hr.expense.line,sequence:0
@@ -454,12 +434,12 @@ msgstr "当显示费用明细时指定一个序列顺序。"
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Group By"
-msgstr "分组按"
+msgstr "分组"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
 msgid "HR Expense"
-msgstr "人力资源费用"
+msgstr ""
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -471,7 +451,7 @@ msgstr "人力资源费用"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "不要做繁琐的摘要(消息数量等等)。这个摘要会以html的形式放到看板中显示。"
+msgstr "保存聊天摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是HTML格式。"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.hotel_rent_product_template
@@ -479,11 +459,10 @@ msgid "Hotel Accommodation"
 msgstr "酒店住宿"
 
 #. module: hr_expense
-#: field:hr.expense.expense,id:0
-#: field:hr.expense.line,id:0
+#: field:hr.expense.expense,id:0 field:hr.expense.line,id:0
 #: field:hr.expense.report,id:0
 msgid "ID"
-msgstr "ID"
+msgstr "标识"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
@@ -503,19 +482,17 @@ msgstr "分录明细"
 #. module: hr_expense
 #: field:hr.expense.expense,message_last_post:0
 msgid "Last Message Date"
-msgstr "最新消息日期"
+msgstr "最后信息日期"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_uid:0
-#: field:hr.expense.line,write_uid:0
+#: field:hr.expense.expense,write_uid:0 field:hr.expense.line,write_uid:0
 msgid "Last Updated by"
-msgstr "最近更新者"
+msgstr "最后更新"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_date:0
-#: field:hr.expense.line,write_date:0
+#: field:hr.expense.expense,write_date:0 field:hr.expense.line,write_date:0
 msgid "Last Updated on"
-msgstr "最近更新日期"
+msgstr "最后一次更新"
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
@@ -530,7 +507,7 @@ msgstr "消息"
 #. module: hr_expense
 #: help:hr.expense.expense,message_ids:0
 msgid "Messages and communication history"
-msgstr "消息和沟通记录"
+msgstr "消息和通信历史"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -559,7 +536,7 @@ msgstr "新建报销单"
 msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
-msgstr "找不到费用账簿。请确认您设置了采购类型账簿。"
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:344
@@ -567,7 +544,7 @@ msgstr "找不到费用账簿。请确认您设置了采购类型账簿。"
 msgid ""
 "No purchase account found for the product %s (or for his category), please "
 "configure one."
-msgstr "在产品 %s（或它所属的分类）上没有找到采购科目，请进行设置。"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -582,12 +559,12 @@ msgstr "备注"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Open Accounting Entries"
-msgstr "打开会计分录"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Paid"
-msgstr "已付款"
+msgstr "已付"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:348
@@ -595,7 +572,7 @@ msgstr "已付款"
 msgid ""
 "Please configure Default Expense account for Product purchase: "
 "`property_account_expense_categ`."
-msgstr "请配置产品采购的默认费用科目: `property_account_expense_categ`。"
+msgstr ""
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -665,9 +642,9 @@ msgstr "查看你的费用产品"
 #: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
-msgstr "选择的计量单位不属于产品计量单位相同的分类。"
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -682,7 +659,7 @@ msgstr "设为草稿"
 #. module: hr_expense
 #: help:product.template,hr_expense_ok:0
 msgid "Specify if the product can be selected in an HR expense line."
-msgstr "在HR费用明细中，需指定一个可以选择的产品。"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.expense,state:0
@@ -705,23 +682,23 @@ msgstr "摘要"
 #: code:addons/hr_expense/hr_expense.py:230
 #, python-format
 msgid "The employee must have a home address."
-msgstr "员工必须设置家庭地址。"
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:232
 #, python-format
 msgid "The employee must have a payable account set on his home address."
-msgstr "员工必须在家庭地址上设置贝宝账户。"
+msgstr ""
 
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is done."
-msgstr "账簿在费用完成时会用到。"
+msgstr ""
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr "为了报销此文档必须有日期和签名。"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -737,8 +714,7 @@ msgstr "支付"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 #: view:hr.expense.line:hr_expense.view_expenses_line_tree
-#: field:hr.expense.line,total_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,total_amount:0 view:website:hr_expense.report_expense
 msgid "Total"
 msgstr "合计"
 
@@ -754,8 +730,7 @@ msgid "Total Price"
 msgstr "总价格"
 
 #. module: hr_expense
-#: field:hr.expense.line,unit_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,unit_amount:0 view:website:hr_expense.report_expense
 msgid "Unit Price"
 msgstr "单价"
 
@@ -783,11 +758,10 @@ msgstr "审核人："
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
 msgid "Validation By"
-msgstr "审核人"
+msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "审核日期"
 
@@ -810,7 +784,7 @@ msgstr "等待审批"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting Payment"
-msgstr "等待付款"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -843,19 +817,13 @@ msgstr "网站沟通记录"
 #: help:hr.expense.expense,state:0
 msgid ""
 "When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
+" It is confirmed by the user and request is sent to admin, the status is 'Waiting Confirmation'.            \n"
 "If the admin accepts it, the status is 'Accepted'.\n"
-" If the accounting entries are made for the expense request, the status is "
-"'Waiting Payment'."
+" If the accounting entries are made for the expense request, the status is 'Waiting Payment'."
 msgstr ""
-"生成费用请求时，状态是'草稿'。\n"
-" 如果用户确认此单据，费用请求被发送到管理者，单据状态变成'等待确认'。           \n"
-"如果管理者同意了，状态变成'已审批'。\n"
-"如果为费用请求生成了会计分录，状态就会变成'等待付款'."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "You can only delete draft expenses!"
-msgstr "您只能删除草稿状态的费用单！"
+msgstr ""
