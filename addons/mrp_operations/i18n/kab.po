@@ -1,37 +1,34 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-22 05:09+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:32+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-23 05:27+0000\n"
-"X-Generator: Launchpad (build 17405)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_tree_view_inherit
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_graph
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 msgid "Work Orders"
-msgstr ""
+msgstr "Tiludna n umahil"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:464
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Operation is already finished!"
-msgstr "Tamhalt tfuk yakan!"
+msgstr "Tamhelt tfuk yakan!"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
@@ -44,10 +41,9 @@ msgid "mrp_operations.operation.code"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 msgid "Group By..."
-msgstr ""
+msgstr "Sdukel s..."
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
@@ -57,12 +53,12 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Aferdis n usɣel"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "March"
-msgstr ""
+msgstr "Meɣres"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
@@ -70,27 +66,25 @@ msgid "Work Centers"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:0
 msgid "Product to Produce"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp_operations.operation:mrp_operations.mrp_production_operation_tree_view
+#: view:mrp_operations.operation:0
 msgid "Production Operation"
-msgstr ""
+msgstr "Tamhelt n Ufares"
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Rrit d arewway"
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
@@ -108,26 +102,25 @@ msgid "Mrp Operations"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
+#: code:addons/mrp_operations/mrp_operations.py:134
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
-msgstr ""
+msgstr "Taladna n Ufares ur tezmirr ara attebdu deg addad \"%s\"!"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,day:0
+#: view:mrp.workorder:0 field:mrp.workorder,day:0
 msgid "Day"
-msgstr ""
+msgstr "Ass"
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:0
 msgid "Cancel Order"
 msgstr "Sefsax taladna"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_productionorder0
 msgid "Production Order"
-msgstr ""
+msgstr "Taladna n Ufares"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -145,11 +138,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
-#: code:addons/mrp_operations/mrp_operations.py:445
-#: code:addons/mrp_operations/mrp_operations.py:449
-#: code:addons/mrp_operations/mrp_operations.py:461
-#: code:addons/mrp_operations/mrp_operations.py:464
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:469
+#: code:addons/mrp_operations/mrp_operations.py:481
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Error!"
 msgstr "Tuccḍa!"
@@ -162,31 +155,30 @@ msgid "Cancelled"
 msgstr "Ifsax"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:457
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Operation is Already Cancelled!"
-msgstr "Tamhalt tefsax yakan!"
+msgstr "Tamhelt tefsax yakan!"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
-#: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_calendar
-#: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_gantt
+#: view:mrp.production.workcenter.line:0
 msgid "Operations"
-msgstr ""
+msgstr "Timhalin"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Amussu n uselɣas"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:481
 #, python-format
 msgid "No operation to cancel."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:454
+#: code:addons/mrp_operations/mrp_operations.py:474
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
@@ -198,7 +190,7 @@ msgid "# of Lines"
 msgstr "Amḍan n  izrigen"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,production_state:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
@@ -206,7 +198,7 @@ msgid "Draft"
 msgstr "Arewway"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:0
 msgid "Actual Production Date"
 msgstr ""
 
@@ -214,17 +206,14 @@ msgstr ""
 #: help:mrp.production.workcenter.line,state:0
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
+"* When order is completely processed that time it is set in 'Finished' status."
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
 msgstr ""
 
@@ -244,7 +233,7 @@ msgstr "Deg ufares"
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr ""
+msgstr "Taladna n umahil"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_workstartoperation0
@@ -256,41 +245,40 @@ msgstr ""
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
 msgid "Work Order Analysis"
-msgstr ""
+msgstr "Tasleṭ n tludna n umahil"
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "Tiludna n umahil s teɣbalut"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:0
 msgid "Planned Date"
-msgstr ""
+msgstr "Date prévu"
 
 #. module: mrp_operations
-#: field:mrp.workorder,product_qty:0
+#: view:mrp.workorder:0 field:mrp.workorder,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "Tanecta n ufaris"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "July"
-msgstr ""
+msgstr "Yulyu"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
 msgid "Operation Name"
-msgstr "Isem n temhalt"
+msgstr "Isem n temhelt"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
-#: field:mrp.production.workcenter.line,state:0
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: view:mrp.production.workcenter.line:0
+#: field:mrp.production.workcenter.line,state:0 view:mrp.workorder:0
 #: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
-msgstr ""
+msgstr "Addad"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -300,15 +288,15 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Azemz n tladna"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
 msgid "Future Work Orders"
-msgstr "Tiludna n Umahil di teddun"
+msgstr "Tiludna n Umahil d iteddun"
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:0
 msgid "Finish Order"
 msgstr "Fak Taladna"
 
@@ -322,8 +310,7 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
+"            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced.\n"
 "          </p>\n"
 "        "
@@ -340,25 +327,24 @@ msgid "Operation Cancelled"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:0
 msgid "Pause Work Order"
 msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "September"
-msgstr ""
+msgstr "Ctember"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "December"
-msgstr ""
+msgstr "Bujember"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,month:0
+#: view:mrp.workorder:0 field:mrp.workorder,month:0
 msgid "Month"
-msgstr ""
+msgstr "Aggur"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -373,13 +359,13 @@ msgstr ""
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
 msgid "Work Order Report"
-msgstr ""
+msgstr "Assaɣ n tludna n umahil"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Azemz n tazwara"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -389,7 +375,7 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr ""
+msgstr "Addad n Ufares"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
@@ -398,35 +384,33 @@ msgid "Pause"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "In Progress"
 msgstr "Anazzal"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:445
+#: code:addons/mrp_operations/mrp_operations.py:465
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:449
+#: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
-msgstr ""
+msgstr "Bdu"
 
 #. module: mrp_operations
-#: view:mrp_operations.operation:mrp_operations.operation_calendar_view
+#: view:mrp_operations.operation:0
 msgid "Calendar View"
 msgstr "Timeẓri awitay"
 
@@ -438,29 +422,23 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 msgid "Set Draft"
-msgstr ""
+msgstr "Rrit d arewway"
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Iţraǧu"
 
 #. module: mrp_operations
-#: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_form_view
-#: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_tree_view
+#: view:mrp_operations.operation.code:0
 msgid "Production Operation Code"
-msgstr ""
+msgstr "Tangalt n Temhelt n Ufares"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:441
+#: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
@@ -470,15 +448,15 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "August"
-msgstr ""
+msgstr "Ɣuct"
 
 #. module: mrp_operations
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: view:mrp.workorder:0
 msgid "Started"
-msgstr ""
+msgstr "Ibda"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.production.workcenter.line:0
 msgid "Production started late"
 msgstr ""
 
@@ -490,10 +468,10 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "June"
-msgstr ""
+msgstr "Yunyu"
 
 #. module: mrp_operations
-#: field:mrp.workorder,total_cycles:0
+#: view:mrp.workorder:0 field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
 msgstr ""
 
@@ -505,40 +483,40 @@ msgstr ""
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
-msgstr ""
+msgstr "Imussuten arrac"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
 msgid "Work Orders Planning"
-msgstr ""
+msgstr "Asɣiwes n Tludna n Umahil"
 
 #. module: mrp_operations
-#: field:mrp.workorder,date:0
+#: view:mrp.production.workcenter.line:0 field:mrp.workorder,date:0
 msgid "Date"
 msgstr "Azemz"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "November"
-msgstr ""
+msgstr "Number"
 
 #. module: mrp_operations
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: view:mrp.workorder:0
 msgid "Search"
-msgstr ""
+msgstr "Nnadi"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "October"
-msgstr ""
+msgstr "Tuber"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "January"
-msgstr ""
+msgstr "Yennayer"
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:0
 msgid "Resume Work Order"
 msgstr ""
 
@@ -553,16 +531,16 @@ msgid "Information from the production order."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:434
-#: code:addons/mrp_operations/mrp_operations.py:441
 #: code:addons/mrp_operations/mrp_operations.py:454
-#: code:addons/mrp_operations/mrp_operations.py:457
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Sorry!"
-msgstr ""
+msgstr "Suref iyi!"
 
 #. module: mrp_operations
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: view:mrp.workorder:0
 msgid "Current"
 msgstr "Anazzal"
 
@@ -575,7 +553,7 @@ msgstr "Tangalt"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
 msgid "Confirmed Work Orders"
-msgstr "Sentem Tiludna n Umahil"
+msgstr "Tiludna n Umahil intemen"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
@@ -585,7 +563,7 @@ msgstr "Tingalin n temhalt"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
 msgid "Qty"
-msgstr ""
+msgstr "Tanecta"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_doneoperation0
@@ -594,8 +572,7 @@ msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
-#: selection:mrp_operations.operation.code,start_stop:0
+#: view:mrp.workorder:0 selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
 msgstr "Immed"
 
@@ -605,15 +582,15 @@ msgid "Start/Stop Barcode"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:0
 msgid "Cancel"
 msgstr "Sefsax"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:434
+#: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet!"
-msgstr ""
+msgstr "Tamhelt ur tebda ara yakan!"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -621,9 +598,9 @@ msgid "Start Operation"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:0
 msgid "Information"
-msgstr "Talɣut"
+msgstr "Information"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -632,10 +609,8 @@ msgid ""
 "            Click to start a new work order.\n"
 "          </p><p>\n"
 "            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
@@ -648,7 +623,7 @@ msgid "Work Centers Barcode"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.production.workcenter.line:0
 msgid "Late"
 msgstr ""
 
@@ -658,42 +633,40 @@ msgid "Delay"
 msgstr "Amenḍaṛ"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
-msgstr ""
+msgstr "Afares"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.production.workcenter.line:0
 msgid "Search Work Orders"
-msgstr ""
+msgstr "Nnadi tiludna n umahil"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 #: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
+#: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
 msgstr ""
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Azemz iɣiwsen"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,product:0
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: field:mrp.production.workcenter.line,product:0 view:mrp.workorder:0
 #: field:mrp.workorder,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Afaris"
 
 #. module: mrp_operations
-#: field:mrp.workorder,total_hours:0
+#: view:mrp.workorder:0 field:mrp.workorder,total_hours:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Asemday n isragen"
 
 #. module: mrp_operations
 #: help:mrp.production,allow_reorder:0
@@ -705,36 +678,34 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "May"
-msgstr ""
+msgstr "Maggu"
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
 msgstr "Ifuk"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.graph_in_hrs_workcenter
+#: view:mrp.production.workcenter.line:0
 msgid "Hours by Work Center"
 msgstr ""
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
 msgid "Working Hours"
-msgstr ""
+msgstr "Isragen n umahil"
 
 #. module: mrp_operations
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: view:mrp.workorder:0
 msgid "Planned Month"
-msgstr ""
+msgstr "Aggur iɣiwsen"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "February"
-msgstr ""
+msgstr "Furar"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
@@ -749,7 +720,7 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "April"
-msgstr ""
+msgstr "Yebrir"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
@@ -762,15 +733,15 @@ msgid "#Line Orders"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:0
 msgid "Start Working"
-msgstr ""
+msgstr "Bdu amahil"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
 msgid ""
-"When the operation is finished, the operator updates the system by finishing "
-"the work order."
+"When the operation is finished, the operator updates the system by finishing"
+" the work order."
 msgstr ""
 
 #. module: mrp_operations
@@ -779,12 +750,11 @@ msgid "Details of the work order"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,year:0
+#: view:mrp.workorder:0 field:mrp.workorder,year:0
 msgid "Year"
-msgstr ""
+msgstr "Aseggawas"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "Timirt"

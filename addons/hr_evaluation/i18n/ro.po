@@ -1,21 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_evaluation
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-03-07 18:56+0000\n"
-"Last-Translator: ERPSystems.ro <Unknown>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:11+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -28,8 +29,7 @@ msgid "Start Appraisal"
 msgstr "Incepeti Evaluarea"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr.evaluation.report:0
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Grupati dupa..."
@@ -61,8 +61,7 @@ msgid "Appraisal that are in waiting appreciation state"
 msgstr "Evaluari care se afla in starea de asteptare a aprecierii"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,company_id:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,company_id:0
 #: field:hr_evaluation.plan.phase,company_id:0
 msgid "Company"
 msgstr "Compania"
@@ -74,14 +73,12 @@ msgid "Appraisal Form"
 msgstr "Formular de evaluare"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,day:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,day:0
 msgid "Day"
 msgstr "Zi"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,phase_ids:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,phase_ids:0
 msgid "Appraisal Phases"
 msgstr "Etapele Evaluarii"
 
@@ -95,9 +92,7 @@ msgstr "Trimite Solicitarea"
 msgid ""
 "This number of months will be used to schedule the first evaluation date of "
 "the employee when selecting an evaluation plan. "
-msgstr ""
-"Acest numar de luni va fi folosit pentru a programa data primei evaluari a "
-"angajatului cand se selecteaza un plan de evaluare. "
+msgstr "Acest numar de luni va fi folosit pentru a programa data primei evaluari a angajatului cand se selecteaza un plan de evaluare. "
 
 #. module: hr_evaluation
 #: view:hr.employee:0
@@ -195,22 +190,7 @@ msgid ""
 "%(user_signature)s\n"
 "\n"
 "        "
-msgstr ""
-"\n"
-"Date: %(date)s\n"
-"\n"
-"Stimate %(employee_name)s (nume_angajat)s,\n"
-"\n"
-"Efectuez o evaluare in legatura cu %(eval_name)s (nume_evaluare)s.\n"
-"\n"
-"Fiti amabil si trimiteti-ne raspunsul dumneavoastra.\n"
-"\n"
-"\n"
-"Cu multumiri,\n"
-"--\n"
-"%(user_signature)s (semnatura_utilizator)s\n"
-"\n"
-"        "
+msgstr "\nDate: %(date)s\n\nStimate %(employee_name)s (nume_angajat)s,\n\nEfectuez o evaluare in legatura cu %(eval_name)s (nume_evaluare)s.\n\nFiti amabil si trimiteti-ne raspunsul dumneavoastra.\n\n\nCu multumiri,\n--\n%(user_signature)s (semnatura_utilizator)s\n\n        "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -223,9 +203,7 @@ msgstr "Evaluari care sunt in Plan in starea In desfasurare"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
-"in format HTML, cu scopul de a se introduce in vizualizari kanban."
+msgstr "Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -288,8 +266,7 @@ msgid "Unread Messages"
 msgstr "Mesaje Necitite"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,employee_id:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,employee_id:0
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,employee_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_employee
@@ -316,9 +293,7 @@ msgstr "Depaseste asteptarile"
 #: help:hr_evaluation.plan.phase,mail_feature:0
 msgid ""
 "Check this box if you want to send mail to employees coming under this phase"
-msgstr ""
-"Bifati aceasta casuta daca doriti sa trimiteti email angajatilor care intra "
-"sub incidenta acestei etape"
+msgstr "Bifati aceasta casuta daca doriti sa trimiteti email angajatilor care intra sub incidenta acestei etape"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -347,8 +322,7 @@ msgid "Send Reminder Email"
 msgstr "Trimiteti Memento prin e-mail"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr_evaluation.evaluation,rating:0
+#: view:hr.evaluation.report:0 field:hr_evaluation.evaluation,rating:0
 msgid "Appreciation"
 msgstr "Apreciere"
 
@@ -369,8 +343,7 @@ msgid "Meet expectations"
 msgstr "Conform asteptarilor"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,nbr:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,nbr:0
 msgid "# of Requests"
 msgstr "# de Cereri"
 
@@ -380,10 +353,8 @@ msgid "July"
 msgstr "Iulie"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,state:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: field:hr.evaluation.report,state:0 view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,state:0
 msgid "Status"
 msgstr "Stare"
@@ -400,26 +371,12 @@ msgid ""
 "                Click to define a new appraisal plan.\n"
 "              </p><p>\n"
 "                You can define appraisal plans (ex: first interview after 6\n"
-"                months, then every year). Then, each employee can be linked "
-"to\n"
-"                an appraisal plan so that OpenERP can automatically "
-"generate\n"
+"                months, then every year). Then, each employee can be linked to\n"
+"                an appraisal plan so that OpenERP can automatically generate\n"
 "                interview requests to managers and/or subordinates.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                FAceti click pentru a defini un nou plan de evaluare.\n"
-"              </p><p>\n"
-"                Puteti defini planuri de evaluare (de exemplu: primul "
-"interviu dupa 6\n"
-"                luni, apoi in fiecare an). Apoi, fiecare angajat poate fi "
-"asociat unui\n"
-"                plan de evaluare astfel incat OpenERP poate sa genereze "
-"automat\n"
-"                cereri pentru interviuri managerilor si/sau subordonatilor.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                FAceti click pentru a defini un nou plan de evaluare.\n              </p><p>\n                Puteti defini planuri de evaluare (de exemplu: primul interviu dupa 6\n                luni, apoi in fiecare an). Apoi, fiecare angajat poate fi asociat unui\n                plan de evaluare astfel incat OpenERP poate sa genereze automat\n                cereri pentru interviuri managerilor si/sau subordonatilor.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -464,8 +421,7 @@ msgid "All Answers"
 msgstr "Toate raspunsurile"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Answer Survey"
 msgstr "Raspunde la Sondaj"
 
@@ -480,8 +436,7 @@ msgid "December"
 msgstr "Decembrie"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,month:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,month:0
 msgid "Month"
 msgstr "Luna"
 
@@ -505,9 +460,7 @@ msgstr "Memento-uri Evaluari"
 msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
 "before launching this phase."
-msgstr ""
-"Bifati aceasta casuta daca doriti ca toate etapele anterioare sa fie "
-"incheiate inainte de a lansa aceasta etapa."
+msgstr "Bifati aceasta casuta daca doriti ca toate etapele anterioare sa fie incheiate inainte de a lansa aceasta etapa."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -519,8 +472,7 @@ msgstr "Legenda"
 msgid ""
 "If the evaluation does not meet the expectations, you can proposean action "
 "plan"
-msgstr ""
-"Daca evaluarea nu raspunde asteptarilor, puteti propune un plan de actiune"
+msgstr "Daca evaluarea nu raspunde asteptarilor, puteti propune un plan de actiune"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -539,10 +491,8 @@ msgid "Pending"
 msgstr "In asteptare"
 
 #. module: hr_evaluation
-#: field:hr.employee,evaluation_plan_id:0
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,name:0
+#: field:hr.employee,evaluation_plan_id:0 view:hr.evaluation.interview:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,name:0
 #: field:hr_evaluation.plan.phase,plan_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Appraisal Plan"
@@ -586,10 +536,8 @@ msgid "Is a Follower"
 msgstr "Este un adept"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,plan_id:0
-#: view:hr_evaluation.evaluation:0
-#: field:hr_evaluation.evaluation,plan_id:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,plan_id:0
+#: view:hr_evaluation.evaluation:0 field:hr_evaluation.evaluation,plan_id:0
 msgid "Plan"
 msgstr "Plan"
 
@@ -650,8 +598,7 @@ msgid "Action"
 msgstr "Actiune"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: selection:hr.evaluation.report,state:0
+#: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
 msgid "Final Validation"
 msgstr "Validare finala"
 
@@ -678,8 +625,7 @@ msgid "Overall Rating"
 msgstr "Rating global"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Interviewer"
 msgstr "Intervievator"
 
@@ -714,10 +660,8 @@ msgid "Send all answers to the employee"
 msgstr "Trimiteti toate raspunsurile angajatilor"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr.evaluation.report:0
-#: selection:hr.evaluation.report,state:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: selection:hr.evaluation.report,state:0 view:hr_evaluation.evaluation:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Done"
 msgstr "Efectuat"
@@ -769,9 +713,7 @@ msgstr "Octombrie"
 msgid ""
 "The date of the next appraisal is computed by the appraisal plan's dates "
 "(first appraisal + periodicity)."
-msgstr ""
-"Data urmatoarei evaluari este calculata de datele planului de evaluare "
-"(prima evaluare + periodicitate)."
+msgstr "Data urmatoarei evaluari este calculata de datele planului de evaluare (prima evaluare + periodicitate)."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
@@ -783,9 +725,7 @@ msgstr "Termen limita depasit"
 msgid ""
 "The number of month that depicts the delay between each evaluation of this "
 "plan (after the first one)."
-msgstr ""
-"Numarul lunii care descrie intarzierea dintre fiecare evaluare a acestei "
-"planificari (dupa prima)."
+msgstr "Numarul lunii care descrie intarzierea dintre fiecare evaluare a acestei planificari (dupa prima)."
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
@@ -809,32 +749,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new appraisal.\n"
 "              </p><p>\n"
-"                Each employee may be assigned an Appraisal Plan. Such a "
-"plan\n"
+"                Each employee may be assigned an Appraisal Plan. Such a plan\n"
 "                defines the frequency and the way you manage your periodic\n"
 "                personnel evaluation. You will be able to define steps and\n"
-"                attach interviews to each step. OpenERP manages all kinds "
-"of\n"
+"                attach interviews to each step. OpenERP manages all kinds of\n"
 "                evaluations: bottom-up, top-down, self-evaluation and final\n"
 "                evaluation by the manager.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Faceti click pentru a crea o evaluare noua.\n"
-"              </p><p>\n"
-"                Fiecarui angajat i se poate atribui un Plan de Evaluare. Un "
-"asemenea plan\n"
-"                defineste frecventa si modul in care va gestionati "
-"evaluarile\n"
-"                periodice ale personalului. Veti putea sa definiti pasi si\n"
-"                sa atasati interviuri fiecarui pas. OpenERP gestioneaza tot "
-"tipul de\n"
-"                evaluari: de jos in sus, de sus in jos, autoevaluari si "
-"evaluarea\n"
-"                finala de catre manager.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Faceti click pentru a crea o evaluare noua.\n              </p><p>\n                Fiecarui angajat i se poate atribui un Plan de Evaluare. Un asemenea plan\n                defineste frecventa si modul in care va gestionati evaluarile\n                periodice ale personalului. Veti putea sa definiti pasi si\n                sa atasati interviuri fiecarui pas. OpenERP gestioneaza tot tipul de\n                evaluari: de jos in sus, de sus in jos, autoevaluari si evaluarea\n                finala de catre manager.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -862,8 +785,7 @@ msgid "February"
 msgstr "Februarie"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Interview Appraisal"
 msgstr "Interviu Evaluare"
 
@@ -894,9 +816,7 @@ msgstr "Angajatul care va fi intervievat"
 msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
 "draft state."
-msgstr ""
-"Nu puteti modifica starea, deoarece unele evaluari sunt in asteptarea "
-"raspunsului sau in starea ciorna."
+msgstr "Nu puteti modifica starea, deoarece unele evaluari sunt in asteptarea raspunsului sau in starea ciorna."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -912,28 +832,15 @@ msgstr "Etapele Planului de Apreciere"
 #: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new interview request related to a "
-"personal evaluation. \n"
+"                Click to create a new interview request related to a personal evaluation. \n"
 "              </p><p>\n"
 "                Interview requests are usually generated automatically by\n"
-"                OpenERP according to an employee's appraisal plan. Each "
-"user\n"
+"                OpenERP according to an employee's appraisal plan. Each user\n"
 "                receives automatic emails and requests to evaluate their\n"
 "                colleagues periodically.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontnut_creeaza\">\n"
-"                Faceti click pentru a crea o noua cerere pentru interviu, in "
-"legatura cu o evaluare a personalului. \n"
-"              </p><p>\n"
-"                Cererile pentru interviu sunt de obicei generate automat de\n"
-"                OpenERP in functie de planul de evaluare al angajatului. "
-"Fiecare utilizator\n"
-"                primeste email-uri si cereri automate pentru a-si evalua\n"
-"                colegii periodic.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontnut_creeaza\">\n                Faceti click pentru a crea o noua cerere pentru interviu, in legatura cu o evaluare a personalului. \n              </p><p>\n                Cererile pentru interviu sunt de obicei generate automat de\n                OpenERP in functie de planul de evaluare al angajatului. Fiecare utilizator\n                primeste email-uri si cereri automate pentru a-si evalua\n                colegii periodic.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_ids:0
@@ -942,8 +849,7 @@ msgid "Messages and communication history"
 msgstr "Istoric mesaje si conversatii"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Search Appraisal"
 msgstr "Cautati Aprecierea"
 
@@ -971,8 +877,7 @@ msgid "Create Date"
 msgstr "Data Crearii"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,year:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,year:0
 msgid "Year"
 msgstr "An"
 
@@ -990,6 +895,3 @@ msgstr "Data Urmatoarei Aprecieri"
 #: view:hr_evaluation.evaluation:0
 msgid "Action Plan..."
 msgstr "Plan de Actiune..."
-
-#~ msgid "Cancel"
-#~ msgstr "Anulati"

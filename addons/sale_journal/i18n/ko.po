@@ -1,21 +1,22 @@
-# Korean translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_journal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-03-28 07:38+0000\n"
-"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:34+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -30,8 +31,9 @@ msgstr "송장 발행 유형"
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
+"This invoicing type will be used, by default, to invoice the current "
+"partner."
+msgstr "현재 협력업체에게 청구서를 발행하기 위해 청구서 발행 유형이 기본으로 사용됩니다."
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -46,14 +48,14 @@ msgstr "송장 발행"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "입고예정 배송"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
-msgstr ""
+msgstr "사용 중인 필드를 '아니오'로 설정할 경우, 청구서 유형을 제거하지 않고 숨길 수 있도록 합니다."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -91,9 +93,9 @@ msgstr "분류됨"
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
 msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
-"can create a specific invoicing journal to group your invoicing according to "
-"your customer's needs: daily, each Wednesday, monthly, etc."
-msgstr ""
+"can create a specific invoicing journal to group your invoicing according to"
+" your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr "청구서 유형은 협력업체, 판매주문 및 배송주문에 사용됩니다. 특정 청구서 발행일지를 생성하여 고객의 필요에 따라 청구서 발행을 그룹화할 수 있습니다: 일간, 매 수요일, 월간 등."
 
 #. module: sale_journal
 #: help:sale.order,invoice_type_id:0
@@ -101,16 +103,11 @@ msgid "Generate invoice based on the selected option."
 msgstr "선택한 옵션에 근거하여 송장을 생성"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
+#: view:sale.order:0 field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0 field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0 field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0 field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0 field:stock.picking.out,invoice_type_id:0
 msgid "Invoice Type"
 msgstr "송장 유형"
 

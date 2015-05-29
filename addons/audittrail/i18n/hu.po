@@ -1,21 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * audittrail
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-7/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:41+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -34,8 +35,7 @@ msgid "Log"
 msgstr "Napló"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-#: selection:audittrail.rule,state:0
+#: view:audittrail.rule:0 selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Feliratkozva"
 
@@ -53,14 +53,12 @@ msgid "Subscribed Rule"
 msgstr "Szabály a feliratkozáshoz"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-#: model:ir.model,name:audittrail.model_audittrail_rule
+#: view:audittrail.rule:0 model:ir.model,name:audittrail.model_audittrail_rule
 msgid "Audittrail Rule"
 msgstr "Szabály a sávvizsgálatra"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-#: field:audittrail.rule,state:0
+#: view:audittrail.rule:0 field:audittrail.rule,state:0
 msgid "Status"
 msgstr "Állapot"
 
@@ -72,8 +70,7 @@ msgid "Audit Logs"
 msgstr "Vizsgálati naplózások"
 
 #. module: audittrail
-#: view:audittrail.log:0
-#: view:audittrail.rule:0
+#: view:audittrail.log:0 view:audittrail.rule:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
 
@@ -83,8 +80,7 @@ msgid "_Subscribe"
 msgstr "_Feliratkozás"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-#: selection:audittrail.rule,state:0
+#: view:audittrail.rule:0 selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "Tervezet"
 
@@ -103,9 +99,7 @@ msgstr "Napló megjelenítése"
 msgid ""
 "Select this if you want to keep track of read/open on any record of the "
 "object of this rule"
-msgstr ""
-"Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely "
-"objektum rekord írását/olvasását"
+msgstr "Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely objektum rekord írását/olvasását"
 
 #. module: audittrail
 #: field:audittrail.log,method:0
@@ -137,9 +131,7 @@ msgstr "Ha nincs felhasználó hozzáadva akkor minden felhasználó hozzáférh
 msgid ""
 "Select this if you want to keep track of workflow on any record of the "
 "object of this rule"
-msgstr ""
-"Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely "
-"objektum rekord munkafolyamatát"
+msgstr "Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely objektum rekord munkafolyamatát"
 
 #. module: audittrail
 #: field:audittrail.rule,user_id:0
@@ -152,8 +144,7 @@ msgid "Log Lines"
 msgstr "Naplózási sorok"
 
 #. module: audittrail
-#: view:audittrail.log:0
-#: field:audittrail.log,object_id:0
+#: view:audittrail.log:0 field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
 msgstr "Tárgy"
@@ -195,8 +186,7 @@ msgid "Resource Name"
 msgstr "Erőforrás neve"
 
 #. module: audittrail
-#: view:audittrail.log:0
-#: field:audittrail.log,timestamp:0
+#: view:audittrail.log:0 field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Dátum"
 
@@ -205,9 +195,7 @@ msgstr "Dátum"
 msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "object of this rule"
-msgstr ""
-"Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely "
-"objektum rekord módosítását"
+msgstr "Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely objektum rekord módosítását"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -238,8 +226,7 @@ msgstr "Naplózza az olvasásokat"
 #: code:addons/audittrail/audittrail.py:77
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
-msgstr ""
-"Sávvizsgálat függőség megváltoztatása -- A szabály TERVEZET -re állítja"
+msgstr "Sávvizsgálat függőség megváltoztatása -- A szabály TERVEZET -re állítja"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
@@ -261,13 +248,10 @@ msgstr "Naplózza a létrehozásokat"
 msgid ""
 "Select this if you want to keep track of deletion on any record of the "
 "object of this rule"
-msgstr ""
-"Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely "
-"objektum rekord törlését"
+msgstr "Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely objektum rekord törlését"
 
 #. module: audittrail
-#: view:audittrail.log:0
-#: field:audittrail.log,user_id:0
+#: view:audittrail.log:0 field:audittrail.log,user_id:0
 msgid "User"
 msgstr "Felhasználó"
 
@@ -279,9 +263,7 @@ msgstr "Művelet ID"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Users (if User is not added then it will applicable for all users)"
-msgstr ""
-"Felhasználók (ha nincs felhasználó hozzáadva akkor az összes felhasználóra "
-"érvényes)"
+msgstr "Felhasználók (ha nincs felhasználó hozzáadva akkor az összes felhasználóra érvényes)"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -293,9 +275,7 @@ msgstr "Leiratkozás"
 msgid ""
 "There is already a rule defined on this object\n"
 " You cannot define another: please edit the existing one."
-msgstr ""
-"Erre az objektumra már van szabály\n"
-" Nem tud másikat meghatározni: kérem szerkessze a meglévőt."
+msgstr "Erre az objektumra már van szabály\n Nem tud másikat meghatározni: kérem szerkessze a meglévőt."
 
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
@@ -303,8 +283,7 @@ msgid "Log Deletes"
 msgstr "Naplók a törlésre"
 
 #. module: audittrail
-#: view:audittrail.log:0
-#: view:audittrail.rule:0
+#: view:audittrail.log:0 view:audittrail.rule:0
 msgid "Model"
 msgstr "Modell"
 
@@ -360,8 +339,7 @@ msgid "Draft  Rule"
 msgstr "Szabály tervezet"
 
 #. module: audittrail
-#: view:audittrail.log:0
-#: model:ir.model,name:audittrail.model_audittrail_log
+#: view:audittrail.log:0 model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr "Sávvizsgálati napló"
 
@@ -369,9 +347,7 @@ msgstr "Sávvizsgálati napló"
 #: help:audittrail.rule,log_action:0
 msgid ""
 "Select this if you want to keep track of actions on the object of this rule"
-msgstr ""
-"VVálassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely "
-"objektum rekord műveleteit"
+msgstr "VVálassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely objektum rekord műveleteit"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -413,6 +389,4 @@ msgstr "napló a műveletekre"
 msgid ""
 "Select this if you want to keep track of creation on any record of the "
 "object of this rule"
-msgstr ""
-"Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely "
-"objektum rekord létrehozását"
+msgstr "Válassza ezt, ha nyomon akarja követni ehhez a szabályhoz tartozó bármely objektum rekord létrehozását"

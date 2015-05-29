@@ -1,21 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-07 18:19+0000\n"
-"Last-Translator: ERPSystems.ro <Unknown>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:38+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,20 +24,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Faceti click pentru a crea un ordin de plata.\n"
-"              </p><p>\n"
-"                Un ordin de plata este o solicitare de plata din partea "
-"companiei cumneavoastra de a plati o\n"
-"                factura a furnizorului sau o rambursare clientului.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Faceti click pentru a crea un ordin de plata.\n              </p><p>\n                Un ordin de plata este o solicitare de plata din partea companiei cumneavoastra de a plati o\n                factura a furnizorului sau o rambursare clientului.\n              </p>\n            "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -54,8 +46,7 @@ msgid "Select the Payment Mode to be applied."
 msgstr "Selectati Modalitatea de plata care va fi aplicata."
 
 #. module: account_payment
-#: view:payment.mode:0
-#: view:payment.order:0
+#: view:payment.mode:0 view:payment.order:0
 msgid "Group By..."
 msgstr "Grupeaza dupa..."
 
@@ -65,15 +56,12 @@ msgid "Payment lines"
 msgstr "Linii plata"
 
 #. module: account_payment
-#: view:payment.line:0
-#: field:payment.line,info_owner:0
-#: view:payment.order:0
+#: view:payment.line:0 field:payment.line,info_owner:0 view:payment.order:0
 msgid "Owner Account"
 msgstr "Titularul contului"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Compania"
@@ -89,8 +77,7 @@ msgid "Free"
 msgstr "Gratuit"
 
 #. module: account_payment
-#: view:payment.order.create:0
-#: field:payment.order.create,entries:0
+#: view:payment.order.create:0 field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Inregistrari"
 
@@ -100,8 +87,7 @@ msgid "Used Account"
 msgstr "Cont folosit"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Data scadentei"
 
@@ -122,9 +108,7 @@ msgstr "Plata Completare extras"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
-"Nu puteti anula o factura care a fost deja importata intr-un ordin de plata. "
-"Stergeti-o din urmatorul ordin de plata : %s."
+msgstr "Nu puteti anula o factura care a fost deja importata intr-un ordin de plata. Stergeti-o din urmatorul ordin de plata : %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -134,8 +118,7 @@ msgid "Error!"
 msgstr "Eroare!"
 
 #. module: account_payment
-#: report:payment.order:0
-#: view:payment.order:0
+#: report:payment.order:0 view:payment.order:0
 msgid "Amount"
 msgstr "Suma"
 
@@ -155,8 +138,7 @@ msgid "New Payment Order"
 msgstr "Ordin de Plata Nou"
 
 #. module: account_payment
-#: report:payment.order:0
-#: field:payment.order,reference:0
+#: report:payment.order:0 field:payment.order,reference:0
 msgid "Reference"
 msgstr "Referinta"
 
@@ -178,8 +160,7 @@ msgstr "Direct"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
+#: model:ir.model,name:account_payment.model_payment_line view:payment.line:0
 #: view:payment.order:0
 msgid "Payment Line"
 msgstr "Linie de plata"
@@ -195,14 +176,10 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
-"Atunci cand este emis un ordin, starea este 'Ciorna'.\n"
-" Odata ce banca il confirma, starea este setata pe 'Confirmat'.\n"
-" Atunci cand ordinul este platit, starea este 'Efectuat'."
+msgstr "Atunci cand este emis un ordin, starea este 'Ciorna'.\n Odata ce banca il confirma, starea este setata pe 'Confirmat'.\n Atunci cand ordinul este platit, starea este 'Efectuat'."
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Confirmed"
 msgstr "Confirmat(a)"
 
@@ -227,8 +204,7 @@ msgid "Import Payment Lines"
 msgstr "Importa Liniile Platii"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Transaction Information"
 msgstr "Informatii despre Tranzactie"
 
@@ -236,9 +212,7 @@ msgstr "Informatii despre Tranzactie"
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
 #: model:ir.model,name:account_payment.model_payment_mode
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0
-#: view:payment.order:0
-#: field:payment.order,mode:0
+#: view:payment.mode:0 view:payment.order:0 field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Modalitatea de plata"
 
@@ -258,10 +232,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"Alegeti o optiune pentru Ordinul de plata: 'Fix' inseamna o data specificata "
-"de catre d-voastra.'Direct' inseamna executare directa. 'Data scadenta' "
-"inseamna data planificata pentru executare."
+msgstr "Alegeti o optiune pentru Ordinul de plata: 'Fix' inseamna o data specificata de catre d-voastra.'Direct' inseamna executare directa. 'Data scadenta' inseamna data planificata pentru executare."
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -279,8 +250,7 @@ msgid "Fixed date"
 msgstr "Data stabilita"
 
 #. module: account_payment
-#: field:payment.line,info_partner:0
-#: view:payment.order:0
+#: field:payment.line,info_partner:0 view:payment.order:0
 msgid "Destination Account"
 msgstr "Cont destinatie"
 
@@ -320,8 +290,7 @@ msgid "Communication Type"
 msgstr "Tip de comunicare"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
 msgstr "Partener"
@@ -361,9 +330,7 @@ msgstr "Adresa Partenerului Principal"
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr ""
-"Daca nu se specifica nicio data pentru plata, banca va trata direct aceasta "
-"plata"
+msgstr "Daca nu se specifica nicio data pentru plata, banca va trata direct aceasta plata"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -397,14 +364,12 @@ msgid "Payment amount in the partner currency"
 msgstr "Suma de plata in valuta partenerului"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Draft"
 msgstr "Ciorna"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
+#: view:payment.order:0 field:payment.order,state:0
 msgid "Status"
 msgstr "Stare"
 
@@ -443,9 +408,7 @@ msgstr "Elementele Jurnalului"
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr ""
-"Aceasta linie a inregistrarii va fi folosita ca referinta pentru "
-"informatiile legate de clientul care face comanda."
+msgstr "Aceasta linie a inregistrarii va fi folosita ca referinta pentru informatiile legate de clientul care face comanda."
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -518,14 +481,12 @@ msgid "Payment order"
 msgstr "Ordin de plata"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "General Information"
 msgstr "Informatii Generale"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Done"
 msgstr "Efectuat"
 
@@ -541,8 +502,7 @@ msgstr "Comunicare"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "Cancel"
 msgstr "Anuleaza"
 
@@ -552,8 +512,7 @@ msgid "Destination Bank Account"
 msgstr "Destinatie Cont bancar"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Information"
 msgstr "Informatii"
 
@@ -595,8 +554,7 @@ msgid "Are you sure you want to make payment?"
 msgstr "Sunteti sigur ca doriti sa faceti plata?"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
+#: view:payment.mode:0 field:payment.mode,journal:0
 msgid "Journal"
 msgstr "Registru"
 
@@ -611,14 +569,12 @@ msgid "Confirm Payments"
 msgstr "Confirmati Platile"
 
 #. module: account_payment
-#: field:payment.line,company_currency:0
-#: report:payment.order:0
+#: field:payment.line,company_currency:0 report:payment.order:0
 msgid "Company Currency"
 msgstr "Moneda Companiei"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment
-#: view:payment.line:0
+#: model:ir.ui.menu,name:account_payment.menu_main_payment view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
 msgstr "Plata"
@@ -638,10 +594,7 @@ msgstr "Linie inregistrare"
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"Utilizat ca mesaj intre clientul care face comanda si compania curenta. "
-"Reprezinta 'Ce vreti sa ii spuneti beneficiarului in legatura cu aceasta "
-"comanda ?'"
+msgstr "Utilizat ca mesaj intre clientul care face comanda si compania curenta. Reprezinta 'Ce vreti sa ii spuneti beneficiarului in legatura cu aceasta comanda ?'"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -654,8 +607,7 @@ msgid "Bank Account"
 msgstr "Cont bancar"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Entry Information"
 msgstr "Informatii Inregistrare"
 
@@ -683,7 +635,7 @@ msgstr "Total"
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr ""
+msgstr "Linii Inregistrari"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -703,8 +655,7 @@ msgstr "Data Preferata"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "or"
 msgstr "sau"
 
@@ -712,10 +663,3 @@ msgstr "sau"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Contul bancar pentru Modalitatea de plata"
-
-#~ msgid ""
-#~ "The amount which should be paid at the current date\n"
-#~ "minus the amount which is already in payment order"
-#~ msgstr ""
-#~ "Suma care trebuie platita la data curenta\n"
-#~ "minus suma care este deja in ordinul de plata"

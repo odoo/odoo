@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * membership
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:20+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -40,8 +41,7 @@ msgid "This will display waiting, invoiced and total pending columns"
 msgstr "これは待機中、請求済の合計保留中列を表示します。"
 
 #. module: membership
-#: view:report.membership:0
-#: view:res.partner:0
+#: view:report.membership:0 view:res.partner:0
 msgid "Group By..."
 msgstr "グループ化…"
 
@@ -76,8 +76,7 @@ msgid "Invoice is be paid."
 msgstr "請求書は支払済です。"
 
 #. module: membership
-#: field:membership.membership_line,company_id:0
-#: view:report.membership:0
+#: field:membership.membership_line,company_id:0 view:report.membership:0
 #: field:report.membership,company_id:0
 msgid "Company"
 msgstr "会社"
@@ -85,8 +84,7 @@ msgstr "会社"
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
-#: field:res.partner,free_member:0
-#: selection:res.partner,membership_state:0
+#: field:res.partner,free_member:0 selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr "無料会員"
 
@@ -107,11 +105,10 @@ msgid "Membership End Date"
 msgstr ""
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,user_id:0
+#: view:report.membership:0 field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesperson"
-msgstr ""
+msgstr "営業担当者"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
@@ -138,7 +135,7 @@ msgstr "非会員"
 #. module: membership
 #: view:product.product:0
 msgid "Taxes"
-msgstr ""
+msgstr "税金"
 
 #. module: membership
 #: view:res.partner:0
@@ -155,7 +152,7 @@ msgstr ""
 #: code:addons/membership/membership.py:413
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "エラー！"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -268,8 +265,7 @@ msgstr "待機数"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
-#: model:ir.ui.menu,name:membership.menu_membership
-#: view:res.partner:0
+#: model:ir.ui.menu,name:membership.menu_membership view:res.partner:0
 msgid "Members"
 msgstr "会員"
 
@@ -301,8 +297,7 @@ msgid ""
 msgstr "あなたが関連付けたい会員。それは会員の関係性の会員状態を考慮します。"
 
 #. module: membership
-#: view:product.product:0
-#: view:report.membership:0
+#: view:product.product:0 view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
 msgstr "会員の製品"
@@ -336,7 +331,7 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Add a description..."
-msgstr ""
+msgstr "説明を追加..."
 
 #. module: membership
 #: field:membership.membership_line,date:0
@@ -379,8 +374,7 @@ msgid "Invoice Line"
 msgstr "請求書行"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,month:0
+#: view:report.membership:0 field:report.membership,month:0
 msgid "Month"
 msgstr "月"
 
@@ -401,8 +395,7 @@ msgid "Buy Membership"
 msgstr ""
 
 #. module: membership
-#: field:report.membership,associate_member_id:0
-#: view:res.partner:0
+#: field:report.membership,associate_member_id:0 view:res.partner:0
 #: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr "関連会員"
@@ -437,7 +430,7 @@ msgstr "分類"
 #. module: membership
 #: view:res.partner:0
 msgid "Contacts"
-msgstr ""
+msgstr "連絡先"
 
 #. module: membership
 #: view:report.membership:0
@@ -477,7 +470,7 @@ msgstr "顧客"
 #. module: membership
 #: view:membership.invoice:0
 msgid "or"
-msgstr ""
+msgstr "または"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -515,12 +508,9 @@ msgstr "請求済会員"
 
 #. module: membership
 #: field:membership.invoice,product_id:0
-#: field:membership.membership_line,membership_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
+#: field:membership.membership_line,membership_id:0 view:product.product:0
+#: field:product.product,membership:0 view:report.membership:0
+#: view:res.partner:0 field:res.partner,member_lines:0
 msgid "Membership"
 msgstr "会員"
 
@@ -537,8 +527,7 @@ msgid "Association Partner"
 msgstr "関連パートナ"
 
 #. module: membership
-#: field:report.membership,date_from:0
-#: view:res.partner:0
+#: field:report.membership,date_from:0 view:res.partner:0
 msgid "Start Date"
 msgstr "開始日"
 
@@ -556,16 +545,11 @@ msgstr "10月"
 #: help:res.partner,membership_state:0
 msgid ""
 "It indicates the membership state.\n"
-"                    -Non Member: A partner who has not applied for any "
-"membership.\n"
-"                    -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                    -Old Member: A member whose membership date has "
-"expired.\n"
-"                    -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                    -Invoiced Member: A member whose invoice has been "
-"created.\n"
+"                    -Non Member: A partner who has not applied for any membership.\n"
+"                    -Cancelled Member: A member who has cancelled his membership.\n"
+"                    -Old Member: A member whose membership date has expired.\n"
+"                    -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been created.\n"
 "                    -Paying member: A member who has paid the membership fee."
 msgstr ""
 
@@ -580,8 +564,7 @@ msgid "Membership Partners"
 msgstr "会員パートナ"
 
 #. module: membership
-#: field:membership.membership_line,member_price:0
-#: view:product.product:0
+#: field:membership.membership_line,member_price:0 view:product.product:0
 msgid "Membership Fee"
 msgstr "会員料金"
 
@@ -613,8 +596,7 @@ msgid "To"
 msgstr "終了"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,membership_state:0
+#: view:report.membership:0 field:report.membership,membership_state:0
 msgid "Current Membership State"
 msgstr "現在の会員状態"
 
@@ -622,18 +604,12 @@ msgstr "現在の会員状態"
 #: help:membership.membership_line,state:0
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
+"                        -Non Member: A member who has not applied for any membership.\n"
+"                        -Cancelled Member: A member who has cancelled his membership.\n"
+"                        -Old Member: A member whose membership date has expired.\n"
+"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been created.\n"
+"                        -Paid Member: A member who has paid the membership amount."
 msgstr ""
 
 #. module: membership
@@ -655,7 +631,7 @@ msgstr "請求書"
 #. module: membership
 #: view:membership.invoice:0
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. module: membership
 #: view:res.partner:0
@@ -709,8 +685,7 @@ msgid "Membership Amount"
 msgstr ""
 
 #. module: membership
-#: field:report.membership,date_to:0
-#: view:res.partner:0
+#: field:report.membership,date_to:0 view:res.partner:0
 msgid "End Date"
 msgstr "終了日"
 
@@ -778,15 +753,14 @@ msgid "Cancelled Member"
 msgstr "キャンセル済会員"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,year:0
+#: view:report.membership:0 field:report.membership,year:0
 msgid "Year"
 msgstr "年"
 
 #. module: membership
 #: view:product.product:0
 msgid "Accounting"
-msgstr ""
+msgstr "会計"
 
 #. module: membership
 #: view:report.membership:0

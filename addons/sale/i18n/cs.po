@@ -1,21 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#   * sale
-#
+# * sale
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-09-22 16:35+0000\n"
-"Last-Translator: Jan Grmela <Unknown>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-7/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:21+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
 "Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -28,13 +28,9 @@ msgid "UoS"
 msgstr "?!?Prodejní jednotky"
 
 #. module: sale
-#: report:sale.order:0
-#: view:sale.order:0
-#: field:sale.order,user_id:0
-#: view:sale.order.line:0
-#: field:sale.order.line,salesman_id:0
-#: view:sale.report:0
-#: field:sale.report,user_id:0
+#: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
+#: view:sale.order.line:0 field:sale.order.line,salesman_id:0
+#: view:sale.report:0 field:sale.report,user_id:0
 msgid "Salesperson"
 msgstr "Obchodník"
 
@@ -44,8 +40,7 @@ msgid "Pricelist for current sales order."
 msgstr "Ceník pro aktuální zakázku."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,day:0
+#: view:sale.report:0 field:sale.report,day:0
 msgid "Day"
 msgstr "Den"
 
@@ -96,22 +91,12 @@ msgstr "Daň"
 #: help:sale.order,state:0
 msgid ""
 "Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs     "
-"          in the invoice validation (Invoice Exception) or in the picking "
-"list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed           "
-"    but waiting for the scheduler to run on the order date."
-msgstr ""
-"Poskytuje stav vystavených nabídek nebo zakázek.              \n"
-"Stav 'Výjimka' se nastaví automaticky při zrušení operace                při "
-"ověření faktury (Fakturační výjimka) nebo v průběhu vyzvednutí (Přepravní "
-"výjimka).\n"
-"Stav 'Harmonogram čekající' se nastaví při potvrzení faktury               "
-"ale čeká na časovač pro spuštění v datu objednání."
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
+msgstr "Poskytuje stav vystavených nabídek nebo zakázek.              \nStav 'Výjimka' se nastaví automaticky při zrušení operace                při ověření faktury (Fakturační výjimka) nebo v průběhu vyzvednutí (Přepravní výjimka).\nStav 'Harmonogram čekající' se nastaví při potvrzení faktury               ale čeká na časovač pro spuštění v datu objednání."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,analytic_account_id:0
+#: view:sale.report:0 field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Analytický účet"
@@ -121,19 +106,15 @@ msgstr "Analytický účet"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Udržuje souhrn klábosení (počet zpráv, …). Tento souhrn je přímo ve formátu "
-"HTML aby jej bylo možné vložit do pohledů kanban."
+msgstr "Udržuje souhrn klábosení (počet zpráv, …). Tento souhrn je přímo ve formátu HTML aby jej bylo možné vložit do pohledů kanban."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,product_uom_qty:0
+#: view:sale.report:0 field:sale.report,product_uom_qty:0
 msgid "# of Qty"
 msgstr "# množ."
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
-#: view:sale.report:0
+#: model:ir.model,name:sale.model_res_partner view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "Kontakt"
@@ -143,10 +124,7 @@ msgstr "Kontakt"
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-"Umožňuje spravovat různé ceny na základě pravidel pro jednotlivé kategorie "
-"zákazníků.Například: 10% sleva pro maloobchod, zaváděcí sleva 100 Kč pro "
-"tomto produkt, apod."
+msgstr "Umožňuje spravovat různé ceny na základě pravidel pro jednotlivé kategorie zákazníků.Například: 10% sleva pro maloobchod, zaváděcí sleva 100 Kč pro tomto produkt, apod."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -180,8 +158,7 @@ msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Nastavte prosím výnosový účet pro tento produkt: \"%s\" (id: %d)."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,price_total:0
+#: view:sale.report:0 field:sale.report,price_total:0
 msgid "Total Price"
 msgstr "Celková cena"
 
@@ -198,17 +175,10 @@ msgstr "Zaškrtněte políčko pro seskupení faktůr pro stejného zákazníka"
 #. module: sale
 #: help:sale.config.settings,timesheet:0
 msgid ""
-"For modifying account analytic view to show important data to project "
-"manager of services companies.\n"
-"                You can also view the report of account analytic summary "
-"user-wise as well as month wise.\n"
+"For modifying account analytic view to show important data to project manager of services companies.\n"
+"                You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "                This installs the module account_analytic_analysis."
-msgstr ""
-"Pro modifikaci zobrazení analytických účtů, aby byla zobrazována důležitá "
-"data pro projektového manažera společností zabývajících se službami.\n"
-"                Můžete také zobrazit hlášení účetních analytických sumářů "
-"podle uživatelů nebo podle měsíců.\n"
-"                Nainstaluje se modul account_analytic_analysis."
+msgstr "Pro modifikaci zobrazení analytických účtů, aby byla zobrazována důležitá data pro projektového manažera společností zabývajících se službami.\n                Můžete také zobrazit hlášení účetních analytických sumářů podle uživatelů nebo podle měsíců.\n                Nainstaluje se modul account_analytic_analysis."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -216,8 +186,7 @@ msgid "Ordered Quantities"
 msgstr "Objednané množství"
 
 #. module: sale
-#: field:sale.order,name:0
-#: field:sale.order.line,order_id:0
+#: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Odkaz objednávky"
 
@@ -303,23 +272,13 @@ msgstr "Nemůžete potvrdit zakázku, která nemá žádnou položku."
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
 msgid ""
 "<p>\n"
-"                Here is a list of each sales order line to be invoiced. You "
-"can\n"
-"                invoice sales orders partially, by lines of sales order. You "
-"do\n"
-"                not need this list if you invoice from the delivery orders "
-"or\n"
+"                Here is a list of each sales order line to be invoiced. You can\n"
+"                invoice sales orders partially, by lines of sales order. You do\n"
+"                not need this list if you invoice from the delivery orders or\n"
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Seznam položek zakázky k fakturaci. Zakázku můžete\n"
-"                fakturovat po částech, po jednotlivých položkách. Nemusíte\n"
-"                použít tento seznam, pokud fakturujete podle dodacích listů\n"
-"                nebo pokud fakturujete celou objednávku najednou.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Seznam položek zakázky k fakturaci. Zakázku můžete\n                fakturovat po částech, po jednotlivých položkách. Nemusíte\n                použít tento seznam, pokud fakturujete podle dodacích listů\n                nebo pokud fakturujete celou objednávku najednou.\n              </p>\n            "
 
 #. module: sale
 #: view:sale.order:0
@@ -343,11 +302,8 @@ msgid "A partner to whom the particular product needs to be allotted."
 msgstr "Kontakt, kterému mají být přiděleny konkrétní výrobky."
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,state:0
-#: view:sale.order.line:0
-#: field:sale.order.line,state:0
-#: view:sale.report:0
+#: view:sale.order:0 field:sale.order,state:0 view:sale.order.line:0
+#: field:sale.order.line,state:0 view:sale.report:0
 msgid "Status"
 msgstr "Stav"
 
@@ -380,38 +336,21 @@ msgstr "Říjen"
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sales "
-"flow:\n"
+"                OpenERP will help you efficiently handle the complete sales flow:\n"
 "                quotation, sales order, delivery, invoicing and payment.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klepnutím vytvoříte nabídku, která může být později "
-"převedena \n"
-"                na zakázku.\n"
-"              </p><p>\n"
-"                OpenERP umožňuje efektivně řídit celý prodejní proces:\n"
-"                nabídky, zakázky, expedici, fakturaci a platby.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klepnutím vytvoříte nabídku, která může být později převedena \n                na zakázku.\n              </p><p>\n                OpenERP umožňuje efektivně řídit celý prodejní proces:\n                nabídky, zakázky, expedici, fakturaci a platby.\n              </p>\n            "
 
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid ""
-"All items in these order lines will be invoiced. You can also invoice a "
-"percentage of the sales order\n"
-"                    or a fixed price (for advances) directly from the sales "
-"order form if you prefer."
-msgstr ""
-"Fakturovány bude celý obsah těchto položek objednávky. Můžete také "
-"fakturovat poměrnou část\n"
-"                    objednávky nebo pevnou částku (jako zálohu) přímo z "
-"objednávkového formuláře."
+"All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
+"                    or a fixed price (for advances) directly from the sales order form if you prefer."
+msgstr "Fakturovány bude celý obsah těchto položek objednávky. Můžete také fakturovat poměrnou část\n                    objednávky nebo pevnou částku (jako zálohu) přímo z objednávkového formuláře."
 
 #. module: sale
 #: field:sale.order,message_summary:0
@@ -432,15 +371,13 @@ msgstr "Předem %s %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_quotations view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
 msgstr "Nabídky"
 
 #. module: sale
-#: field:sale.advance.payment.inv,qtty:0
-#: report:sale.order:0
+#: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Množství"
@@ -476,13 +413,8 @@ msgid ""
 "Use All to create the final invoice.\n"
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
-"                Use Some Order Lines to invoice a selection of the sales "
-"order lines."
-msgstr ""
-"Použijte 'Vše' pro celkovou fakturu.\n"
-"Použijte 'Částečně' pro fakturaci jen procentuální části.\n"
-"Použijte 'Pevná cena' pro fakturaci speciální ceny.\n"
-"Použijte 'Vybrané položky' pro fakturaci jen některých položek zakázky."
+"                Use Some Order Lines to invoice a selection of the sales order lines."
+msgstr "Použijte 'Vše' pro celkovou fakturu.\nPoužijte 'Částečně' pro fakturaci jen procentuální části.\nPoužijte 'Pevná cena' pro fakturaci speciální ceny.\nPoužijte 'Vybrané položky' pro fakturaci jen některých položek zakázky."
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -494,9 +426,7 @@ msgstr "Probíhá"
 msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
-msgstr ""
-"Obchodník potvrdí nabídku. Stav zakázky přejde na 'Probíhá' nebo 'Probíhá "
-"ručně'."
+msgstr "Obchodník potvrdí nabídku. Stav zakázky přejde na 'Probíhá' nebo 'Probíhá ručně'."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -509,9 +439,7 @@ msgstr "Položky zakázky připravené k fakturaci"
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
-msgstr ""
-"Změníte-li ceník pro tuto objednávku ( a případně i měnu), ceny jednotlivých "
-"položek se neaktualizují."
+msgstr "Změníte-li ceník pro tuto objednávku ( a případně i měnu), ceny jednotlivých položek se neaktualizují."
 
 #. module: sale
 #: report:sale.order:0
@@ -546,9 +474,7 @@ msgstr "Před dodáním"
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
-msgstr ""
-"Není nastavena žádná účetní směrnice ani příjmový účet jako výchozí hodnota "
-"pro kategorii produktů."
+msgstr "Není nastavena žádná účetní směrnice ani příjmový účet jako výchozí hodnota pro kategorii produktů."
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -565,12 +491,10 @@ msgstr "Měsíc objednání zakázky"
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
-"Není možno seskupit obchody vystavené jednomu kontaktu v různých měnách."
+msgstr "Není možno seskupit obchody vystavené jednomu kontaktu v různých měnách."
 
 #. module: sale
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
+#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "or"
 msgstr "nebo"
@@ -582,8 +506,7 @@ msgid "Quotation sent"
 msgstr "Nabídka odeslána"
 
 #. module: sale
-#: field:sale.order,invoice_exists:0
-#: field:sale.order.line,invoiced:0
+#: field:sale.order,invoice_exists:0 field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Fakturováno"
 
@@ -621,8 +544,7 @@ msgstr "Celkové množství"
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr ""
-"Umožnit hromadnou fakturaci a objednávky dopravy prostřednictvím deníků"
+msgstr "Umožnit hromadnou fakturaci a objednávky dopravy prostřednictvím deníků"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -660,8 +582,7 @@ msgid "Quotation / Order"
 msgstr "Nabídka / Objednávka"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,nbr:0
+#: view:sale.report:0 field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# položek"
 
@@ -691,8 +612,7 @@ msgid "Order N°"
 msgstr "Objednávka N° :"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,order_line:0
+#: view:sale.order:0 field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Položky objednávky"
 
@@ -704,15 +624,10 @@ msgstr "Používat více analytických účtů pro prodej"
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
 msgid ""
-"Allows you to categorize your sales and deliveries (picking lists) between "
-"different journals,\n"
+"Allows you to categorize your sales and deliveries (picking lists) between different journals,\n"
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
-msgstr ""
-"Umožňuje kategorizaci prodeje a dopravy (sběrné seznamy) mezi různými "
-"deníky, \n"
-"                 a provádět dávkové operace pomocí deníků. \n"
-"                 Nainstaluje se modul sale_journal."
+msgstr "Umožňuje kategorizaci prodeje a dopravy (sběrné seznamy) mezi různými deníky, \n                 a provádět dávkové operace pomocí deníků. \n                 Nainstaluje se modul sale_journal."
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -740,8 +655,7 @@ msgid "My Sales"
 msgstr "Moje prodeje"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.report,pricelist_id:0
+#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Ceník"
@@ -749,25 +663,12 @@ msgstr "Ceník"
 #. module: sale
 #: help:sale.order.line,state:0
 msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.    "
-"                 \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.   "
-"                  \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.        "
-"             \n"
+"* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
-"* Stav 'Návrh'  je nastaven, je-li příslušná zakázka ve stadiu návrhu.       "
-"              \n"
-"* Stav 'Potvrzeno' je nastaven, je-li zakázka potvrzena.                     "
-"\n"
-"* Stav 'Výjimka' je v případě, je-li příslušná zakázka nastavena jako "
-"výjimka.                     \n"
-"* Stav 'Hotovo' je nastaven po zpracování příslušné položky zakázky.         "
-"            \n"
-"* Stav 'Zrušeno' je nataven, zruší-li uživatel příslušnou zakázku."
+msgstr "* Stav 'Návrh'  je nastaven, je-li příslušná zakázka ve stadiu návrhu.                     \n* Stav 'Potvrzeno' je nastaven, je-li zakázka potvrzena.                     \n* Stav 'Výjimka' je v případě, je-li příslušná zakázka nastavena jako výjimka.                     \n* Stav 'Hotovo' je nastaven po zpracování příslušné položky zakázky.                     \n* Stav 'Zrušeno' je nataven, zruší-li uživatel příslušnou zakázku."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:93
@@ -830,13 +731,10 @@ msgstr "Měna"
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr ""
-"Musíte vybrat ceník nebo zákazníka!\n"
-"Nastavte jedno z toho ještě před výběrem produktu."
+msgstr "Musíte vybrat ceník nebo zákazníka!\nNastavte jedno z toho ještě před výběrem produktu."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,categ_id:0
+#: view:sale.report:0 field:sale.report,categ_id:0
 msgid "Category of Product"
 msgstr "Kategorie výrobku"
 
@@ -859,46 +757,29 @@ msgstr "Daně:"
 #. module: sale
 #: code:addons/sale/sale.py:279
 #, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before!"
+msgid "In order to delete a confirmed sales order, you must cancel it before!"
 msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation or sales order for this "
-"customer.\n"
+"                Click to create a quotation or sales order for this customer.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sale "
-"flow:\n"
+"                OpenERP will help you efficiently handle the complete sale flow:\n"
 "                quotation, sales order, delivery, invoicing and\n"
 "                payment.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customer to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customer to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klepnutím vytvoříte nabídku nebo přijatou objednávku.\n"
-"              </p><p>\n"
-"                OpenERP může pomoci zvládnout kompletní prodejní operace:\n"
-"                nabídku, přijatou objednávku, dodávku, fakturaci a platbu\n"
-"              </p><p>\n"
-"                Sociální funkce pomáhá organizovat diskuze ohledně "
-"objednávek\n"
-"                a umožňuje zákazníkovi sledovat vývoj jeho objednávky.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klepnutím vytvoříte nabídku nebo přijatou objednávku.\n              </p><p>\n                OpenERP může pomoci zvládnout kompletní prodejní operace:\n                nabídku, přijatou objednávku, dodávku, fakturaci a platbu\n              </p><p>\n                Sociální funkce pomáhá organizovat diskuze ohledně objednávek\n                a umožňuje zákazníkovi sledovat vývoj jeho objednávky.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.ui.menu,name:sale.menu_sale_order
-#: view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
 msgid "Sales Orders"
 msgstr "Zakázky"
 
@@ -914,22 +795,11 @@ msgid ""
 "                Click to define a new sale shop.\n"
 "              </p><p>\n"
 "                Each quotation or sales order must be linked to a shop. The\n"
-"                shop also defines the warehouse from which the products will "
-"be\n"
+"                shop also defines the warehouse from which the products will be\n"
 "                delivered for each particular sales.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klepnutím nastavíte novou prodejnu.\n"
-"              </p><p>\n"
-"                Všechny vystavené nabídky a zakázky musí být přiřazeny\n"
-"                nějaké prodejně. Nastavením prodejny se zároveň definuje "
-"sklad,\n"
-"                ze kterého se budou odebírat položky v jednotlivých "
-"obchodních případech.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klepnutím nastavíte novou prodejnu.\n              </p><p>\n                Všechny vystavené nabídky a zakázky musí být přiřazeny\n                nějaké prodejně. Nastavením prodejny se zároveň definuje sklad,\n                ze kterého se budou odebírat položky v jednotlivých obchodních případech.\n              </p>\n            "
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -952,8 +822,7 @@ msgid "Exception"
 msgstr "Výjimka"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop
-#: view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
 msgid "Sales Shop"
 msgstr "Prodejna"
 
@@ -961,26 +830,16 @@ msgstr "Prodejna"
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
-"                You may have to create it and set it as a default value on "
-"this field."
-msgstr ""
-"Vyberte produkt nebo druh služby označované jako 'Advance Product'.\n"
-"              Měl by být vytvořen a nastaven jako výchozí hodnota pro toto "
-"pole."
+"                You may have to create it and set it as a default value on this field."
+msgstr "Vyberte produkt nebo druh služby označované jako 'Advance Product'.\n              Měl by být vytvořen a nastaven jako výchozí hodnota pro toto pole."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to sale a given product or a given customer.\n"
+"Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
-msgstr ""
-"Umožnit nastavení upozornění na produkt v okamžiku, když má být prodán "
-"určitý výrobek nebo určitému zákazníkovi.\n"
-"Například: Produkt: tento produkt se už nepoužívá, nenakupuje se více než 5 "
-"ks. \n"
-"                 Dodavatel: nezapomeňte požádat o expresní dodávku."
+msgstr "Umožnit nastavení upozornění na produkt v okamžiku, když má být prodán určitý výrobek nebo určitému zákazníkovi.\nNapříklad: Produkt: tento produkt se už nepoužívá, nenakupuje se více než 5 ks. \n                 Dodavatel: nezapomeňte požádat o expresní dodávku."
 
 #. module: sale
 #: code:addons/sale/sale.py:961
@@ -999,9 +858,7 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr ""
-"Seznam faktur, které byly pro tuto zakázku vystaveny. Zakázka může být "
-"fakturována na vícekrát (např. po položkách)."
+msgstr "Seznam faktur, které byly pro tuto zakázku vystaveny. Zakázka může být fakturována na vícekrát (např. po položkách)."
 
 #. module: sale
 #: report:sale.order:0
@@ -1020,8 +877,7 @@ msgstr "Mé položky zakázky"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
+#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Zrušit"
@@ -1037,18 +893,13 @@ msgstr "?!?Reference objednávky musí být jedinečná pro společnost!"
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
-"Nepodařilo se vyhledat položku ceníku odpovídající tomuto produktu a "
-"množství.\n"
-"Musíte změnit buď produkt nebo množství v ceníku."
+msgstr "Nepodařilo se vyhledat položku ceníku odpovídající tomuto produktu a množství.\nMusíte změnit buď produkt nebo množství v ceníku."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
-#: view:sale.order.line:0
+#: view:sale.advance.payment.inv:0 view:sale.order:0
+#: field:sale.order,order_policy:0 view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Vytvořit fakturu"
 
@@ -1060,13 +911,9 @@ msgstr "Reference objednávky"
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
 msgid ""
-"Allows you to Make Quotation, Sale Order using different Order policy and "
-"Manage Related Stock.\n"
+"Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "                    This installs the module sale_stock."
-msgstr ""
-"Umožňuje vytvářet cenové nabídky a přijaté objednávky s použitím různých "
-"obchodních podmínek a spravovat související sklad.\n"
-"                    Nainstaluje se modul sale_stock."
+msgstr "Umožňuje vytvářet cenové nabídky a přijaté objednávky s použitím různých obchodních podmínek a spravovat související sklad.\n                    Nainstaluje se modul sale_stock."
 
 #. module: sale
 #: report:sale.order:0
@@ -1084,31 +931,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a quotation, the first step of a new sale.\n"
 "              </p><p>\n"
-"                OpenERP will help you handle efficiently the complete sale "
-"flow:\n"
+"                OpenERP will help you handle efficiently the complete sale flow:\n"
 "                from the quotation to the sales order, the\n"
 "                delivery, the invoicing and the payment collection.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customers to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customers to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klepnutím vytvoříte nabídku, první krok nového obchodu.\n"
-"              </p><p>\n"
-"                OpenERP umožňuje efektivně řídit celý prodejní proces:\n"
-"                od nabídky přes objednávku, odeslání zákazníkovi,\n"
-"                fakturaci a úhradu faktury.\n"
-"              </p><p>\n"
-"                Sociální prvky systému pomáhají vést diskuze o obchodu, "
-"zakázkách\n"
-"                a umožňují zákazníkům sledovat průběh jejich zakázky.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klepnutím vytvoříte nabídku, první krok nového obchodu.\n              </p><p>\n                OpenERP umožňuje efektivně řídit celý prodejní proces:\n                od nabídky přes objednávku, odeslání zákazníkovi,\n                fakturaci a úhradu faktury.\n              </p><p>\n                Sociální prvky systému pomáhají vést diskuze o obchodu, zakázkách\n                a umožňují zákazníkům sledovat průběh jejich zakázky.\n              </p>\n            "
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1157,9 +989,7 @@ msgstr "Vlastnosti položek"
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
-msgstr ""
-"Než vyberete produkt, \n"
-"zvolte ve formuláři zákazníka."
+msgstr "Než vyberete produkt, \nzvolte ve formuláři zákazníka."
 
 #. module: sale
 #: view:sale.order:0
@@ -1195,9 +1025,7 @@ msgid "Order Lines to Invoice"
 msgstr "Položky objednávky k fakturaci"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.report:0
+#: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
 msgid "Group By..."
 msgstr "Seskupit podle..."
 
@@ -1207,14 +1035,12 @@ msgid "Product Features"
 msgstr "Vlastnosti výrobku"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Čekací rozvrh"
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.report,product_uom:0
+#: view:sale.order.line:0 field:sale.report,product_uom:0
 msgid "Unit of Measure"
 msgstr "Jednotka množství"
 
@@ -1224,8 +1050,7 @@ msgid "Procurement Method"
 msgstr "Metoda zásobování"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,message_unread:0
+#: view:sale.order:0 field:sale.order,message_unread:0
 msgid "Unread Messages"
 msgstr "Nepřečtené zprávy"
 
@@ -1240,8 +1065,7 @@ msgid "Draft Quotation"
 msgstr "Návrh nabídky"
 
 #. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Daně"
 
@@ -1253,20 +1077,11 @@ msgstr "zakázka připravena k fakturaci"
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
 msgid ""
-"Allows you to define what is the default function of a specific user on a "
-"given account.\n"
-"                This is mostly used when a user encodes his timesheet. The "
-"values are retrieved and the fields are auto-filled.\n"
-"                But the possibility to change these values is still "
-"available.\n"
+"Allows you to define what is the default function of a specific user on a given account.\n"
+"                This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.\n"
+"                But the possibility to change these values is still available.\n"
 "                This installs the module analytic_user_function."
-msgstr ""
-"Umožňuje definovat, co je standardní funkce určitého uživatele na daném "
-"účtu. \n"
-"                 Většinou se používá, pokud uživatel šifruje své časové "
-"rozvrhy. Hodnoty jsou načítány a pole automaticky vyplněna.\n"
-"                 Hodnoty je možno dále upravovat. \n"
-"                 Nainstaluje se modul analytic_user_function."
+msgstr "Umožňuje definovat, co je standardní funkce určitého uživatele na daném účtu. \n                 Většinou se používá, pokud uživatel šifruje své časové rozvrhy. Hodnoty jsou načítány a pole automaticky vyplněna.\n                 Hodnoty je možno dále upravovat. \n                 Nainstaluje se modul analytic_user_function."
 
 #. module: sale
 #: help:sale.order,create_date:0
@@ -1279,14 +1094,12 @@ msgid "Terms and conditions..."
 msgstr "Podmínky..."
 
 #. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
 msgstr "Vytvořit faktury"
 
 #. module: sale
-#: code:addons/sale/sale.py:279
-#: code:addons/sale/sale.py:826
+#: code:addons/sale/sale.py:279 code:addons/sale/sale.py:826
 #: code:addons/sale/sale.py:989
 #, python-format
 msgid "Invalid Action!"
@@ -1318,10 +1131,7 @@ msgid ""
 "The sales order will automatically create the invoice proposition (draft "
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
-msgstr ""
-"Ze zakázkového listu budou automaticky vytvořeny pokyny k fakturaci (návrh "
-"faktury).                                             Musíte vybrat, mají-li "
-"být vaše faktury vytvářeny podle zakázky "
+msgstr "Ze zakázkového listu budou automaticky vytvořeny pokyny k fakturaci (návrh faktury).                                             Musíte vybrat, mají-li být vaše faktury vytvářeny podle zakázky "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1335,8 +1145,7 @@ msgid "Allows you to specify an analytic account on sales orders."
 msgstr "Umožňuje zadat analytický účet přímo v zakázce."
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "To Invoice"
 msgstr "K fakturaci"
 
@@ -1355,9 +1164,7 @@ msgstr "Červenec"
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr ""
-"Po klepnutí na tlačítko \"Zobrazit položky k fakturaci\", vyberte položky a "
-"vystavte fakturu z rozbalovací nabídky \"Více\"."
+msgstr "Po klepnutí na tlačítko \"Zobrazit položky k fakturaci\", vyberte položky a vystavte fakturu z rozbalovací nabídky \"Více\"."
 
 #. module: sale
 #: view:sale.order:0
@@ -1365,8 +1172,7 @@ msgid "Cancel Quotation"
 msgstr "Zrušit nabídku"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Shipping Exception"
 msgstr "Výjimka přepravy"
 
@@ -1381,8 +1187,7 @@ msgid "Contracts Management"
 msgstr "Správa smluv"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,month:0
+#: view:sale.report:0 field:sale.report,month:0
 msgid "Month"
 msgstr "Měsíc"
 
@@ -1397,8 +1202,7 @@ msgid "My Sales Orders"
 msgstr "Mé zakázky"
 
 #. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create invoices"
 msgstr "Vytvořit faktury"
 
@@ -1419,14 +1223,12 @@ msgstr "Uhrazeno"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
-#: model:ir.ui.menu,name:sale.menu_report_product_all
-#: view:sale.report:0
+#: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
 msgid "Sales Analysis"
 msgstr "Analýza prodeje"
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_quotation0 view:sale.order:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Cenová nabídka"
@@ -1434,13 +1236,10 @@ msgstr "Cenová nabídka"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
 msgid ""
-"The Salesman creates an invoice manually, if the sales order shipping policy "
-"is 'Shipping and Manual in Progress'. The invoice is created automatically "
+"The Salesman creates an invoice manually, if the sales order shipping policy"
+" is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
-msgstr ""
-"Obchodník vytvoří fakturu ručně, pokud je v přepravních podmínkách uvedeno "
-"'Přeprava a Probíhá ručně'. Faktura se vytvoření automaticky, pokud "
-"přepravní podmínky obsahují 'Platbu před doručením'."
+msgstr "Obchodník vytvoří fakturu ručně, pokud je v přepravních podmínkách uvedeno 'Přeprava a Probíhá ručně'. Faktura se vytvoření automaticky, pokud přepravní podmínky obsahují 'Platbu před doručením'."
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -1473,9 +1272,7 @@ msgstr "Faktury zákazníka"
 #: model:ir.actions.act_window,name:sale.open_board_sales
 #: model:ir.ui.menu,name:sale.menu_dashboard_sales
 #: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
-#: view:sale.order:0
-#: view:sale.report:0
+#: view:res.partner:0 view:sale.order:0 view:sale.report:0
 msgid "Sales"
 msgstr "Prodej"
 
@@ -1483,35 +1280,25 @@ msgstr "Prodej"
 #: help:sale.config.settings,module_sale_margin:0
 msgid ""
 "This adds the 'Margin' on sales order.\n"
-"                This gives the profitability by calculating the difference "
-"between the Unit Price and Cost Price.\n"
+"                This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
-msgstr ""
-"Do zakázky se přidá 'Marže'.\n"
-"Bude vidět ziskovost jakožto rozdíl mezi jednotkovou cenou a pořizovací "
-"cenou.\n"
-"Nainstaluje se modul sale_margin."
+msgstr "Do zakázky se přidá 'Marže'.\nBude vidět ziskovost jakožto rozdíl mezi jednotkovou cenou a pořizovací cenou.\nNainstaluje se modul sale_margin."
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
+#: report:sale.order:0 field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Jednotková cena"
 
 #. module: sale
-#: view:sale.order:0
-#: selection:sale.order,state:0
-#: view:sale.order.line:0
-#: selection:sale.order.line,state:0
-#: selection:sale.report,state:0
+#: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order.line,state:0 selection:sale.report,state:0
 msgid "Done"
 msgstr "Dokončeno"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:120
 #: model:ir.model,name:sale.model_account_invoice
-#: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_invoice0 view:sale.order:0
 #, python-format
 msgid "Invoice"
 msgstr "Faktura"
@@ -1545,19 +1332,16 @@ msgstr "Prodejní platba faktury dopředu"
 #: model:email.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -1566,8 +1350,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
 "       % endif\n"
 "       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -1575,8 +1358,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -1585,16 +1367,11 @@ msgid ""
 "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -1606,142 +1383,41 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Dobrý den ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Zde je vaše ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} od ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>SHRNUTÍ</strong><br />\n"
-"       &nbsp;&nbsp;Číslo objednávky: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Celková částka objednávky: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Datum objednání: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Vaše reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Váš kontakt: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>Platbu je možno provést prostřednictvím Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>Neváhejte obrátit se na nás v případě jakýchkoliv dotazů.</p>\n"
-"    <p>Děkujeme, že jste si vybrali ${object.company_id.name or 'naši "
-"společnost'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Telefon:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Dobrý den ${object.partner_id.name},</p>\n    \n    <p>Zde je vaše ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} od ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>SHRNUTÍ</strong><br />\n       &nbsp;&nbsp;Číslo objednávky: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Celková částka objednávky: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Datum objednání: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Vaše reference: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Váš kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    % if object.paypal_url:\n    <br/>\n    <p>Platbu je možno provést prostřednictvím Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Neváhejte obrátit se na nás v případě jakýchkoliv dotazů.</p>\n    <p>Děkujeme, že jste si vybrali ${object.company_id.name or 'naši společnost'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.order.line,product_id:0
-#: view:sale.report:0
-#: field:sale.report,product_id:0
+#: view:sale.order.line:0 field:sale.order.line,product_id:0
+#: view:sale.report:0 field:sale.report,product_id:0
 msgid "Product"
 msgstr "Výrobek"
 
 #. module: sale
 #: help:sale.order,order_policy:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. "
-"\n"
-"On delivery order: A draft invoice can be created from the delivery order "
-"when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be "
-"paid before the products can be delivered."
-msgstr ""
-"Dle potřeby: Faktura může být vytvořen ze zakázky dle potřeby. \n"
-"Při dodání: faktura může být vytvořena podle dodacího listu po dodání "
-"produktu. \n"
-"Před dodáním: Faktura je vytvořen ze zakázkového listu musí být uhrazena "
-"před dodáním produktu."
+"On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr "Dle potřeby: Faktura může být vytvořen ze zakázky dle potřeby. \nPři dodání: faktura může být vytvořena podle dodacího listu po dodání produktu. \nPřed dodáním: Faktura je vytvořen ze zakázkového listu musí být uhrazena před dodáním produktu."
 
 #. module: sale
-#: view:account.invoice.report:0
-#: view:board.board:0
+#: view:account.invoice.report:0 view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
 msgstr "Měsíční obrat"
@@ -1798,10 +1474,7 @@ msgid ""
 "based on delivered or on ordered quantities. Thus, a sales order can "
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
-msgstr ""
-"V závislosti na řízení fakturace může být faktura vystavena buď podle "
-"odesílaného nebo podle objednaného množství. Ze zakázky se tudíž může "
-"generovat faktura nebo dodací list, jakmile to bude potvrzeno obchodníkem."
+msgstr "V závislosti na řízení fakturace může být faktura vystavena buď podle odesílaného nebo podle objednaného množství. Ze zakázky se tudíž může generovat faktura nebo dodací list, jakmile to bude potvrzeno obchodníkem."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1824,8 +1497,7 @@ msgid "Customer Reference"
 msgstr "Reference zákazníka"
 
 #. module: sale
-#: field:sale.order,amount_total:0
-#: view:sale.order.line:0
+#: field:sale.order,amount_total:0 view:sale.order.line:0
 msgid "Total"
 msgstr "Celkem"
 
@@ -1835,10 +1507,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr ""
-"Vyberte, jak chcete fakturovat tuto objednávku.\n"
-"                     Vytvoří se návrh faktury, který bude možno\n"
-"                     před ověřením upravit."
+msgstr "Vyberte, jak chcete fakturovat tuto objednávku.\n                     Vytvoří se návrh faktury, který bude možno\n                     před ověřením upravit."
 
 #. module: sale
 #: view:board.board:0
@@ -1854,30 +1523,18 @@ msgstr "Položky zakázky ve stavu 'hotovo'"
 #: help:sale.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allows to define your customer contracts conditions: invoicing\n"
-"            method (fixed price, on timesheet, advance invoice), the exact "
-"pricing\n"
-"            (650€/day for a developer), the duration (one year support "
-"contract).\n"
-"            You will be able to follow the progress of the contract and "
-"invoice automatically.\n"
+"            method (fixed price, on timesheet, advance invoice), the exact pricing\n"
+"            (650€/day for a developer), the duration (one year support contract).\n"
+"            You will be able to follow the progress of the contract and invoice automatically.\n"
 "            It installs the account_analytic_analysis module."
-msgstr ""
-"Umožňuje nastavit obchodní podmínky pro zákazníka: způsob\n"
-"            fakturace (pevná cena, dle časového výkazu, zálohová faktura), "
-"pevné ceny\n"
-"            (1200 Kč/den pro vývojáře), dobu trvání (roční podpora).\n"
-"            Budete mít možnost automaticky sledovat průběh zakázky a "
-"fakturaci.\n"
-"            Tato volba nainstaluje modul account_analytic_analysis."
+msgstr "Umožňuje nastavit obchodní podmínky pro zákazníka: způsob\n            fakturace (pevná cena, dle časového výkazu, zálohová faktura), pevné ceny\n            (1200 Kč/den pro vývojáře), dobu trvání (roční podpora).\n            Budete mít možnost automaticky sledovat průběh zakázky a fakturaci.\n            Tato volba nainstaluje modul account_analytic_analysis."
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -1891,10 +1548,8 @@ msgid "First cancel all invoices attached to this sales order."
 msgstr "Nejprve zrušte všechny faktury připojené k této zakázce."
 
 #. module: sale
-#: field:sale.order,company_id:0
-#: field:sale.order.line,company_id:0
-#: view:sale.report:0
-#: field:sale.report,company_id:0
+#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
+#: view:sale.report:0 field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
 msgstr "Společnost"
@@ -1910,8 +1565,7 @@ msgid "The amount to be invoiced in advance."
 msgstr "Částka, která je fakturována dopředu."
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Invoice Exception"
 msgstr "Vyjímka faktury"
 
@@ -1946,12 +1600,9 @@ msgid "Project"
 msgstr "Projekt"
 
 #. module: sale
-#: code:addons/sale/sale.py:187
-#: code:addons/sale/sale.py:365
-#: code:addons/sale/sale.py:506
-#: code:addons/sale/sale.py:604
-#: code:addons/sale/sale.py:769
-#: code:addons/sale/sale.py:786
+#: code:addons/sale/sale.py:187 code:addons/sale/sale.py:365
+#: code:addons/sale/sale.py:506 code:addons/sale/sale.py:604
+#: code:addons/sale/sale.py:769 code:addons/sale/sale.py:786
 #, python-format
 msgid "Error!"
 msgstr "Chyba!"
@@ -1964,17 +1615,12 @@ msgstr "Celkem k úhradě:"
 #. module: sale
 #: help:sale.order.line,type:0
 msgid ""
-"From stock: When needed, the product is taken from the stock or we wait for "
-"replenishment.\n"
+"From stock: When needed, the product is taken from the stock or we wait for replenishment.\n"
 "On order: When needed, the product is purchased or produced."
-msgstr ""
-"Ze skladu: V případě potřeby se produkt odebere ze skladu nebo se počká na "
-"jeho naskladnění. \n"
-"Na objednávku: V případě potřeby se produkt zakoupí nebo vyrobí."
+msgstr "Ze skladu: V případě potřeby se produkt odebere ze skladu nebo se počká na jeho naskladnění. \nNa objednávku: V případě potřeby se produkt zakoupí nebo vyrobí."
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
+#: selection:sale.order,state:0 selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
 msgstr "Zrušeno"
@@ -1996,9 +1642,7 @@ msgstr "Průvodce vytvořením e-mailu"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: field:sale.order,shop_id:0
-#: view:sale.report:0
-#: field:sale.report,shop_id:0
+#: field:sale.order,shop_id:0 view:sale.report:0 field:sale.report,shop_id:0
 msgid "Shop"
 msgstr "Prodejna"
 
@@ -2019,14 +1663,12 @@ msgid "Contract Features"
 msgstr "Vlastnosti kontraktu"
 
 #. module: sale
-#: code:addons/sale/sale.py:289
-#: code:addons/sale/sale.py:590
+#: code:addons/sale/sale.py:289 code:addons/sale/sale.py:590
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
 #: field:res.partner,sale_order_ids:0
-#: model:res.request.link,name:sale.req_link_sale_order
-#: view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
 #: selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
@@ -2070,8 +1712,7 @@ msgstr "Položky faktury"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Sales Order Lines"
 msgstr "Položky zakázky"
 
@@ -2115,14 +1756,10 @@ msgstr "Hotové položky zakázky"
 #: code:addons/sale/wizard/sale_line_invoice.py:106
 #, python-format
 msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
+"Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
-msgstr ""
-"Tuto položku zakázky nelze fakturovat pro některý z těchto důvodů:\n"
-"1. Stav této položky je buď \"návrh\" nebo \"zrušeno\"!\n"
-"2. Tato položka je již vyfakturována!"
+msgstr "Tuto položku zakázky nelze fakturovat pro některý z těchto důvodů:\n1. Stav této položky je buď \"návrh\" nebo \"zrušeno\"!\n2. Tato položka je již vyfakturována!"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2199,20 +1836,16 @@ msgstr "Šablony e-mailů"
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
 msgid ""
-"To allow your salesman to make invoices for sales order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-"Umožní obchodníkovi vytvářet faktury z položek zakázky (menu 'fakturovat "
-"položky')."
+"To allow your salesman to make invoices for sales order lines using the menu"
+" 'Lines to Invoice'."
+msgstr "Umožní obchodníkovi vytvářet faktury z položek zakázky (menu 'fakturovat položky')."
 
 #. module: sale
 #: view:sale.order.line:0
 msgid ""
-"Sales Order Lines that are confirmed, done or in exception state and haven't "
-"yet been invoiced"
-msgstr ""
-"Položky zakázky, které jsou potvrzeny, hotovy nebo ve stavu výjimky, ale "
-"nebyly dosud fakturovány"
+"Sales Order Lines that are confirmed, done or in exception state and haven't"
+" yet been invoiced"
+msgstr "Položky zakázky, které jsou potvrzeny, hotovy nebo ve stavu výjimky, ale nebyly dosud fakturovány"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2250,8 +1883,7 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "Odkaz na dokument, který generoval tento požadavek zakázky."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,delay:0
+#: view:sale.report:0 field:sale.report,delay:0
 msgid "Commitment Delay"
 msgstr "Zpoždění závazku"
 
@@ -2307,8 +1939,7 @@ msgid "It indicates that an invoice has been paid."
 msgstr "Indikuje, že faktura již byla zaplacena."
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,name:0
+#: report:sale.order:0 field:sale.order.line,name:0
 msgid "Description"
 msgstr "Popis"
 
@@ -2328,8 +1959,7 @@ msgid "Order Number"
 msgstr "Číslo objednávky přijaté"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,partner_id:0
+#: view:sale.order:0 field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Zákazník"
@@ -2353,16 +1983,12 @@ msgstr "Duben"
 #: view:sale.config.settings:0
 msgid ""
 "Use contract to be able to manage your services with\n"
-"                        multiple invoicing as part of the same contract "
-"with\n"
+"                        multiple invoicing as part of the same contract with\n"
 "                        your customer."
-msgstr ""
-"Uzavřete se zákazníkem smlouvu, abyste byli schopni spravovat zakázku s více "
-"fakturacemi."
+msgstr "Uzavřete se zákazníkem smlouvu, abyste byli schopni spravovat zakázku s více fakturacemi."
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Search Sales Order"
 msgstr "Hledat zakázku"
 
@@ -2382,8 +2008,7 @@ msgid "Sequence"
 msgstr "Pořadí"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order,payment_term:0
+#: report:sale.order:0 field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Splatnost faktury"
 
@@ -2396,15 +2021,11 @@ msgstr "Umožní instalaci modulu sale_analytic_plans."
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr ""
-"Tato sestava analyzuje nabídky a zakázky. Kontrolují se tržby a řadí se do "
-"skupin podle různých kritérií (obchodník, kontakt, produkt, atd.). "
-"Zohledňují se dosud nefakturované zakázky. Pokud chcete analyzovat váš "
-"obrat, měli byste použít sestavu Analýza fakturace v účetnictví."
+msgstr "Tato sestava analyzuje nabídky a zakázky. Kontrolují se tržby a řadí se do skupin podle různých kritérií (obchodník, kontakt, produkt, atd.). Zohledňují se dosud nefakturované zakázky. Pokud chcete analyzovat váš obrat, měli byste použít sestavu Analýza fakturace v účetnictví."
 
 #. module: sale
 #: report:sale.order:0
@@ -2417,26 +2038,6 @@ msgid "Picked"
 msgstr "Naskladněno"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,year:0
+#: view:sale.report:0 field:sale.report,year:0
 msgid "Year"
 msgstr "Rok"
-
-#, python-format
-#~ msgid "No Customer Defined !"
-#~ msgstr "Neurčen zákazník !"
-
-#, python-format
-#~ msgid ""
-#~ "In order to delete a confirmed sales order, you must cancel it before !"
-#~ msgstr "Pro vymazání již potvrzené zakázky ji nejprve musíte zrušit!"
-
-#~ msgid "Quotation send"
-#~ msgstr "Odeslání nabídku"
-
-#~ msgid ""
-#~ "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name} ${object.state in ('draft', 'sent') and 'Nabídka' "
-#~ "or 'Objednávka'} (Ref ${object.name or 'n/a' })"

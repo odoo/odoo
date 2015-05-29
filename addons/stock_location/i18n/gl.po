@@ -1,21 +1,22 @@
-# Galician translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * stock_location
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Galician <gl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Galician (http://www.transifex.com/projects/p/odoo-7/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: gl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -57,8 +58,7 @@ msgstr "Lugar de orixe"
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr ""
-"Permítelle anular movementos relacionados co fluxo de arrastre do produto."
+msgstr "Permítelle anular movementos relacionados co fluxo de arrastre do produto."
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
@@ -88,9 +88,7 @@ msgstr "Interno"
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
-msgstr ""
-"Abastecemento arrastrado procedente do lugar orixinal %s, regra de arrastre "
-"%s, mediante abastecemento orixinal %s (#%d)"
+msgstr "Abastecemento arrastrado procedente do lugar orixinal %s, regra de arrastre %s, mediante abastecemento orixinal %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -106,18 +104,9 @@ msgstr "Estado factura"
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
-"This is used to define paths the product has to follow within the location "
-"tree.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
-msgstr ""
-"Utilízase para definir as rutas que o produto debe seguir dentro da árbore "
-"de lugares. A opción 'Movemento automático' creará un movemento de stock "
-"despois do actual que se validará automaticamente. Con 'Operación manual', o "
-"movemento de stock debe ser validado por un traballador. Con 'Automático, "
-"paso non engadido', o lugar substitúese no movemento orixinal."
+"This is used to define paths the product has to follow within the location tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+msgstr "Utilízase para definir as rutas que o produto debe seguir dentro da árbore de lugares. A opción 'Movemento automático' creará un movemento de stock despois do actual que se validará automaticamente. Con 'Operación manual', o movemento de stock debe ser validado por un traballador. Con 'Automático, paso non engadido', o lugar substitúese no movemento orixinal."
 
 #. module: stock_location
 #: view:product.product:0
@@ -173,9 +162,7 @@ msgstr "Movemento de stock"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
-"Se está marcado, cando este movemento se anula, tamén anula o movemento "
-"relacionado."
+msgstr "Se está marcado, cando este movemento se anula, tamén anula o movemento relacionado."
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -233,8 +220,7 @@ msgstr "Nome"
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr ""
-"Estas regras fixan a ruta correcta do produto en toda a árbore de lugares."
+msgstr "Estas regras fixan a ruta correcta do produto en toda a árbore de lugares."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -259,10 +245,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"'Obter para stock': Cando sexa necesario, coller do stock ou agardar ata que "
-"se volva subministrar. 'Obter baixo pedido': Cando sexa necesario, mercar ou "
-"producir para a solicitude de abastecemento."
+msgstr "'Obter para stock': Cando sexa necesario, coller do stock ou agardar ata que se volva subministrar. 'Obter baixo pedido': Cando sexa necesario, mercar ou producir para a solicitude de abastecemento."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -296,9 +279,7 @@ msgstr "Atraso (días)"
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
-msgstr ""
-"Albará para abastecemento arrastrado procedente do lugar orixinal %s, regra "
-"de arrastre %s, mediante abastecemento orixinal %s (#%d)"
+msgstr "Albará para abastecemento arrastrado procedente do lugar orixinal %s, regra de arrastre %s, mediante abastecemento orixinal %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -311,9 +292,7 @@ msgstr "Fluxo empuxado"
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
-msgstr ""
-"Movemento para abastecemento arrastrado procedente do lugar orixinal %s, "
-"regra de arrastre %s, mediante abastecemento orixinal %s (#%d)"
+msgstr "Movemento para abastecemento arrastrado procedente do lugar orixinal %s, regra de arrastre %s, mediante abastecemento orixinal %s (#%d)"
 
 #. module: stock_location
 #: view:product.product:0
@@ -337,8 +316,7 @@ msgid "Destination Location"
 msgstr "Lugar destino"
 
 #. module: stock_location
-#: field:stock.location.path,auto:0
-#: selection:stock.location.path,auto:0
+#: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
 msgid "Automatic Move"
 msgstr "Movemento automático"
 
@@ -369,8 +347,7 @@ msgstr "Método de adquisición"
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
-"Segundo a compañía, seleccionar se desexa recibir ou enviar produtos."
+msgstr "Segundo a compañía, seleccionar se desexa recibir ou enviar produtos."
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order

@@ -1,21 +1,22 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_journal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-22 16:04+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-7/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:34+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -25,13 +26,14 @@ msgstr "Uwaga"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr ""
+msgstr "Typ faktury"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
+"This invoicing type will be used, by default, to invoice the current "
+"partner."
+msgstr "Ten typ fakturowania będzie używany domyślnie dla tego klienta."
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -41,19 +43,19 @@ msgstr "Sprzedaż i zakupy"
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Fakturowanie"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Przyjęcia zewnętrzne"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
-msgstr ""
+msgstr "Jeśli pole jest odznaczone - ukrywa typ faktury, nie usuwając go."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -68,7 +70,7 @@ msgstr "Metoda fakturowania"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Pobranie"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -91,26 +93,21 @@ msgstr "Zgrupowane"
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
 msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
-"can create a specific invoicing journal to group your invoicing according to "
-"your customer's needs: daily, each Wednesday, monthly, etc."
+"can create a specific invoicing journal to group your invoicing according to"
+" your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
 
 #. module: sale_journal
 #: help:sale.order,invoice_type_id:0
 msgid "Generate invoice based on the selected option."
-msgstr ""
+msgstr "Tworzy fakturę w zależności od wybranej opcji."
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
+#: view:sale.order:0 field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0 field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0 field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0 field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0 field:stock.picking.out,invoice_type_id:0
 msgid "Invoice Type"
 msgstr "Typ faktury"
 
@@ -122,14 +119,14 @@ msgstr "Aktywne"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Kontrahent"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Zamówienie sprzedaży"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Zlecenie dostawy"

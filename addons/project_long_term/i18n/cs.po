@@ -1,21 +1,21 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_long_term
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-03-31 16:54+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-7/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -23,10 +23,9 @@ msgid "force the phase to finish before this date"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Probíhá"
 
 #. module: project_long_term
 #: field:account.analytic.account,use_phases:0
@@ -38,8 +37,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
+#: view:project.phase:0 view:project.user.allocation:0
 msgid "Team Planning"
 msgstr ""
 
@@ -49,8 +47,7 @@ msgid "Assigned Users"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,next_phase_ids:0
+#: view:project.phase:0 field:project.phase,next_phase_ids:0
 msgid "Next Phases"
 msgstr ""
 
@@ -67,15 +64,14 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
 msgid ""
-"To schedule phases of all or a specified project. It then open a gantt "
-"view.\n"
+"To schedule phases of all or a specified project. It then open a gantt view.\n"
 "               "
 msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Projektové úkoly"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
@@ -87,12 +83,12 @@ msgstr ""
 #. module: project_long_term
 #: field:project.phase,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Pořadí"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Action"
-msgstr ""
+msgstr "Akce"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -102,24 +98,22 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Úkol"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Draft"
-msgstr ""
+msgstr "Koncept"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "C_ompute"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "New"
-msgstr ""
+msgstr "Nové"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
@@ -129,13 +123,12 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Úroveň zásob"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Čekající"
 
 #. module: project_long_term
 #: help:project.phase,progress:0
@@ -151,7 +144,7 @@ msgstr ""
 #: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
@@ -160,15 +153,14 @@ msgid "Please specify a project to schedule."
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: view:project.user.allocation:0
+#: view:project.phase:0 view:project.user.allocation:0
 msgid "Group By..."
-msgstr ""
+msgstr "Seskupit podle..."
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Zbývající hodiny"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
@@ -202,30 +194,28 @@ msgstr ""
 msgid ""
 "If the phase is created the status 'Draft'.\n"
 " If the phase is started, the status becomes 'In Progress'.\n"
-" If review is needed the phase is in 'Pending' status.                       "
-"           \n"
+" If review is needed the phase is in 'Pending' status.                                  \n"
 " If the phase is over, the status is set to 'Done'."
 msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "Průběh"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
 msgid "Resources"
-msgstr ""
+msgstr "Zdroje"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "My Projects"
-msgstr ""
+msgstr "Mé projekty"
 
 #. module: project_long_term
-#: view:project.project:0
-#: view:project.user.allocation:0
+#: view:project.project:0 view:project.user.allocation:0
 msgid "Phase"
 msgstr ""
 
@@ -237,7 +227,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
 msgid "Working Time"
-msgstr ""
+msgstr "Pracovní čas"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -247,7 +237,7 @@ msgstr ""
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Počáteční datum"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -260,10 +250,9 @@ msgid "Start Month"
 msgstr ""
 
 #. module: project_long_term
-#: field:project.phase,date_end:0
-#: field:project.user.allocation,date_end:0
+#: field:project.phase,date_end:0 field:project.user.allocation,date_end:0
 msgid "End Date"
-msgstr ""
+msgstr "Datum ukončení"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
@@ -287,8 +276,7 @@ msgid "Compute a Single Project"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,previous_phase_ids:0
+#: view:project.phase:0 field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
 msgstr ""
 
@@ -310,7 +298,8 @@ msgstr ""
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
-" It's computed by the scheduler according to the start date and the duration."
+" It's computed by the scheduler according to the start date and the "
+"duration."
 msgstr ""
 
 #. module: project_long_term
@@ -319,28 +308,23 @@ msgid "Loops in phases not allowed"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.user.allocation:0
-#: field:project.user.allocation,user_id:0
+#: view:project.user.allocation:0 field:project.user.allocation,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
 #: field:project.compute.phases,project_id:0
-#: field:project.compute.tasks,project_id:0
-#: view:project.phase:0
-#: field:project.phase,project_id:0
-#: view:project.task:0
-#: view:project.user.allocation:0
-#: field:project.user.allocation,project_id:0
+#: field:project.compute.tasks,project_id:0 view:project.phase:0
+#: field:project.phase,project_id:0 view:project.task:0
+#: view:project.user.allocation:0 field:project.user.allocation,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "Cancel"
-msgstr ""
+msgstr "Storno"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -349,9 +333,7 @@ msgstr ""
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
-#: view:project.phase:0
-#: view:project.task:0
-#: field:project.task,phase_id:0
+#: view:project.phase:0 view:project.task:0 field:project.task,phase_id:0
 #: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr ""
@@ -369,12 +351,12 @@ msgstr ""
 #. module: project_long_term
 #: selection:project.phase,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Celkem hodin"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -382,10 +364,9 @@ msgid "Project Compute Phases"
 msgstr ""
 
 #. module: project_long_term
-#: field:project.phase,date_start:0
-#: field:project.user.allocation,date_start:0
+#: field:project.phase,date_start:0 field:project.user.allocation,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Počáteční datum"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -393,10 +374,9 @@ msgid "Constraints"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,state:0
+#: view:project.phase:0 field:project.phase,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
@@ -406,24 +386,24 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Tasks"
-msgstr ""
+msgstr "Úkoly"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Koncové datum"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Chyba!"
 
 #. module: project_long_term
 #: help:project.phase,date_start:0
 msgid ""
-"It's computed by the scheduler according the project date or the end date of "
-"the previous phase."
+"It's computed by the scheduler according the project date or the end date of"
+" the previous phase."
 msgstr ""
 
 #. module: project_long_term
@@ -431,8 +411,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
-#: view:project.phase:0
-#: field:project.project,phase_ids:0
+#: view:project.phase:0 field:project.project,phase_ids:0
 msgid "Project Phases"
 msgstr ""
 
@@ -444,17 +423,17 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Month"
-msgstr ""
+msgstr "Měsíc"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analytický účet"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
-msgstr ""
+msgstr "Končný termín"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
@@ -469,10 +448,9 @@ msgid "Schedule Tasks"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "Done"
-msgstr ""
+msgstr "Dokončeno"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -485,23 +463,21 @@ msgid "Force Assigned Users"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,duration:0
+#: view:project.phase:0 field:project.phase,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Trvání"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Users"
-msgstr ""
+msgstr "Uživatelé"
 
 #. module: project_long_term
 #: field:project.phase,name:0
 msgid "Name"
-msgstr ""
+msgstr "Jméno"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "or"
-msgstr ""
+msgstr "nebo"

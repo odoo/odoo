@@ -1,21 +1,22 @@
-# German translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-01-25 18:02+0000\n"
-"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: German (http://www.transifex.com/projects/p/odoo-7/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:10+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -32,17 +33,9 @@ msgstr "Bitte wählen Sie mindestens einen Benutzer zur Freigabe"
 #: view:portal.wizard:0
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
-msgstr ""
-"Wählen Sie die Kontakte aus der Liste, die auf das Portal zugreifen können "
-"sollen.\n"
-"                       Die E-Mail Adresse jedes ausgewählten Kontakt muss "
-"gültig und einmalig sein.\n"
-"                       Wenn nötig, können Sie die E-Mail Adressen der "
-"Kontakte direkt in der Liste korrigiert werden."
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr "Wählen Sie die Kontakte aus der Liste, die auf das Portal zugreifen können sollen.\n                       Die E-Mail Adresse jedes ausgewählten Kontakt muss gültig und einmalig sein.\n                       Wenn nötig, können Sie die E-Mail Adressen der Kontakte direkt in der Liste korrigiert werden."
 
 #. module: portal
 #: model:mail.group,name:portal.company_jobs
@@ -62,13 +55,10 @@ msgstr "Kontakte"
 #. module: portal
 #: view:portal.wizard:0
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
-"Dieser Text wird an die E-Mail angefügt, die dem neuen Portal-Usern "
-"geschickt wird."
+msgstr "Dieser Text wird an die E-Mail angefügt, die dem neuen Portal-Usern geschickt wird."
 
 #. module: portal
-#: view:share.wizard:0
-#: field:share.wizard,group_ids:0
+#: view:share.wizard:0 field:share.wizard,group_ids:0
 msgid "Existing groups"
 msgstr "Vorhandene Gruppen"
 
@@ -90,8 +80,7 @@ msgstr "Einladungsnachricht"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:0
+#: model:ir.model,name:portal.model_portal_wizard view:portal.wizard:0
 msgid "Portal Access Management"
 msgstr "Portal-Zugriffsverwaltung"
 
@@ -143,9 +132,7 @@ msgstr ""
 msgid ""
 ", so it may use Mako expressions.\n"
 "                                The Mako evaluation context provides:"
-msgstr ""
-", es können Mako Ausdrücke verwendet werden.\n"
-"                                    Der Mako Renderkontext stellt bereit:"
+msgstr ", es können Mako Ausdrücke verwendet werden.\n                                    Der Mako Renderkontext stellt bereit:"
 
 #. module: portal
 #: field:portal.wizard.user,email:0
@@ -168,9 +155,7 @@ msgstr "To-Do"
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr ""
-"Sie müssen Ihre  E-Mail Adresse in den Benutzereinstellungen erfassen, um E-"
-"Mails senden zu können."
+msgstr "Sie müssen Ihre  E-Mail Adresse in den Benutzereinstellungen erfassen, um E-Mails senden zu können."
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_jobs
@@ -179,8 +164,7 @@ msgid "Jobs"
 msgstr "Arbeitsstellen"
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_users
-#: field:portal.wizard,user_ids:0
+#: model:ir.model,name:portal.model_res_users field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Benutzer"
 
@@ -200,15 +184,10 @@ msgstr "Kein Online-Zahlungsanbieter vorkonfiguriert"
 #: code:addons/portal/mail_message.py:60
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. "
-"Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
-"Der gewünschte Vorgang kann aufgrund von Sicherheitsbeschränkungen nicht "
-"ausgeführt werden. Bitte kontaktieren Sie den Systemadministrator.\n"
-"\n"
-"(Dokumenten Typ: %s, Vorgang: %s)"
+msgstr "Der gewünschte Vorgang kann aufgrund von Sicherheitsbeschränkungen nicht ausgeführt werden. Bitte kontaktieren Sie den Systemadministrator.\n\n(Dokumenten Typ: %s, Vorgang: %s)"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -235,27 +214,14 @@ msgid ""
 "                    No message found and no message sent yet.\n"
 "                </p><p>\n"
 "                    Click on the top-right icon to compose a message. This\n"
-"                    message will be sent by email if it's an internal "
-"contact.\n"
+"                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                     Es wurde keine Nachricht gefunden und auch keine "
-"Mitteilung gesendet.\n"
-"                 </ p>\n"
-"                     Klicken Sie auf den \"E-Mail schreiben\" Button , um "
-"eine Nachricht zu verfassen. Diese\n"
-"                     Mitteilung wird per E-Mail gesendet, wenn es sich um "
-"einen internen Kontakt handelt.\n"
-"                 </ p>\n"
-"            "
+msgstr "<p>\n                     Es wurde keine Nachricht gefunden und auch keine Mitteilung gesendet.\n                 </ p>\n                     Klicken Sie auf den \"E-Mail schreiben\" Button , um eine Nachricht zu verfassen. Diese\n                     Mitteilung wird per E-Mail gesendet, wenn es sich um einen internen Kontakt handelt.\n                 </ p>\n            "
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_menu
-#: field:portal.wizard,portal_id:0
-#: field:res.groups,is_portal:0
-#: model:res.groups,name:portal.group_portal
+#: model:ir.ui.menu,name:portal.portal_menu field:portal.wizard,portal_id:0
+#: field:res.groups,is_portal:0 model:res.groups,name:portal.group_portal
 msgid "Portal"
 msgstr "Portal"
 
@@ -296,14 +262,9 @@ msgstr "Posteingang"
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
 msgid ""
-"Portal members have specific access rights (such as record rules and "
-"restricted menus).\n"
+"Portal members have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
-msgstr ""
-"Portalbenutzer haben gesonderte Zugriffsrechte (wie z.B. Datensatz Regeln "
-"und eingeschränkte Menuzugriffe).\n"
-"                Gewöhnlicherweise sind sie nicht Mitglieder in internen "
-"OpenERP Gruppen."
+msgstr "Portalbenutzer haben gesonderte Zugriffsrechte (wie z.B. Datensatz Regeln und eingeschränkte Menuzugriffe).\n                Gewöhnlicherweise sind sie nicht Mitglieder in internen OpenERP Gruppen."
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.action_acquirer_list
@@ -323,8 +284,7 @@ msgid "Existing Groups (e.g Portal Groups)"
 msgstr "Bestehende Gruppen (z.B. Portalgruppen)"
 
 #. module: portal
-#: view:share.wizard:0
-#: field:share.wizard,user_ids:0
+#: view:share.wizard:0 field:share.wizard,user_ids:0
 msgid "Existing users"
 msgstr "Bestehende Benutzer"
 
@@ -351,20 +311,16 @@ msgstr "Nachricht"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
-msgstr ""
-"Typ: Typ des Dokumentes auf dessen Basis das Zahlungsformular gerendert wird "
-"(übersetzt in die Sprache des Benutzers, z.B. \"Rechnung\")"
+"kind: the kind of document on which the payment form is rendered (translated"
+" to user language, e.g. \"Invoice\")"
+msgstr "Typ: Typ des Dokumentes auf dessen Basis das Zahlungsformular gerendert wird (übersetzt in die Sprache des Benutzers, z.B. \"Rechnung\")"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
-msgstr ""
-"quote(): eine Methode zur Ausgabe von besonderen Strings, um sie in einer "
-"URL ausgeben zu können."
+msgstr "quote(): eine Methode zur Ausgabe von besonderen Strings, um sie in einer URL ausgeben zu können."
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -377,9 +333,7 @@ msgstr "amount: Der zu zahlende Gesamtbetrag, als float"
 msgid ""
 "<p>Access your messages and personal documents through <a href=\"%s\">our "
 "Customer Portal</a></p>"
-msgstr ""
-"<p>Öffnen Sie Ihre Nachrichten und unternehmensbezogenen Dokumente <a "
-"href=\"%s\">direkt in unserem Kundenportal</a></p>"
+msgstr "<p>Öffnen Sie Ihre Nachrichten und unternehmensbezogenen Dokumente <a href=\"%s\">direkt in unserem Kundenportal</a></p>"
 
 #. module: portal
 #: field:portal.wizard.user,partner_id:0
@@ -409,14 +363,9 @@ msgstr "uid: Die User ID des angemeldeten Benutzers"
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
 msgid ""
-"Anonymous users have specific access rights (such as record rules and "
-"restricted menus).\n"
+"Anonymous users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
-msgstr ""
-"Der Benutzer 'Anonymous' hat spezifische Rechte (z.B. zur Modifikation von "
-"Berechtigungen und Einstellung von Menüzugriff).\n"
-"                  Üblicherweise wird diesen Benutzern nicht eine der sonst "
-"üblichen OpenERP Anwendergruppen zugewiesen."
+msgstr "Der Benutzer 'Anonymous' hat spezifische Rechte (z.B. zur Modifikation von Berechtigungen und Einstellung von Menüzugriff).\n                  Üblicherweise wird diesen Benutzern nicht eine der sonst üblichen OpenERP Anwendergruppen zugewiesen."
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
@@ -437,10 +386,9 @@ msgstr "Unternehmensnachrichten"
 #: code:addons/portal/acquirer.py:76
 #, python-format
 msgid ""
-"You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
-msgstr ""
-"Sie können die Konfiguration mit <a href=\"%s\">Bank&Kasse Einstellungen</a> "
-"beenden"
+"You can finish the configuration in the <a href=\"%s\">Bank&Cash "
+"settings</a>"
+msgstr "Sie können die Konfiguration mit <a href=\"%s\">Bank&Kasse Einstellungen</a> beenden"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -453,30 +401,17 @@ msgid ""
 "<p>\n"
 "                    <b>Good Job!</b> Your inbox is empty.\n"
 "                </p><p>\n"
-"                    Your inbox contains private messages or emails sent to "
-"you\n"
-"                    as well as information related to documents or people "
-"you\n"
+"                    Your inbox contains private messages or emails sent to you\n"
+"                    as well as information related to documents or people you\n"
 "                    follow.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    <b>Gute Arbeit!</b>Ihr Posteingang ist leer.\n"
-"                </p><p>\n"
-"                    Ihr Posteingang enthält private Nachrichten oder E-"
-"Mails\n"
-"                    als auch Informationen zu Dokumenten oder Benutzern, \n"
-"                    denen Sie folgen.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    <b>Gute Arbeit!</b>Ihr Posteingang ist leer.\n                </p><p>\n                    Ihr Posteingang enthält private Nachrichten oder E-Mails\n                    als auch Informationen zu Dokumenten oder Benutzern, \n                    denen Sie folgen.\n                </p>\n            "
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
-"Dieser Text wird an jede E-Mail angehängt, die an neue Benutzer des Portals "
-"geschickt werden."
+msgstr "Dieser Text wird an jede E-Mail angehängt, die an neue Benutzer des Portals geschickt werden."
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_company
@@ -513,71 +448,31 @@ msgid ""
 "--\n"
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
-msgstr ""
-"Sehr geehrte(r) %(name)s,\n"
-"\n"
-"Ihr Zugang zum Portal: %(portal)s wurde aktiviert.\n"
-"\n"
-"Ihre Anmeldedaten:\n"
-"Datenbank: %(db)s\n"
-"Benutzername: %(login)s\n"
-"\n"
-"Um den Anmeldeprozess abzuschliessen, klicken Sie bitte auf diesen Link:\n"
-"%(url)s\n"
-"\n"
-"%(welcome_message)s\n"
-"\n"
-"--\n"
-"OpenERP - Open Source Business Applications\n"
-"http://www.openerp.com\n"
+msgstr "Sehr geehrte(r) %(name)s,\n\nIhr Zugang zum Portal: %(portal)s wurde aktiviert.\n\nIhre Anmeldedaten:\nDatenbank: %(db)s\nBenutzername: %(login)s\n\nUm den Anmeldeprozess abzuschliessen, klicken Sie bitte auf diesen Link:\n%(url)s\n\n%(welcome_message)s\n\n--\nOpenERP - Open Source Business Applications\nhttp://www.openerp.com\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
 "currency: the currency record in which the document is issued (e.g. "
 "currency.name could be EUR)"
-msgstr ""
-"currency: Der Währungsdatensatz, in dem die Währung des Dokuments definiert "
-"ist (z.B.: currency.name ist EUR)"
+msgstr "currency: Der Währungsdatensatz, in dem die Währung des Dokuments definiert ist (z.B.: currency.name ist EUR)"
 
 #. module: portal
 #: model:portal.payment.acquirer,form_template:portal.paypal_acquirer
 msgid ""
 "\n"
 "% if object.company_id.paypal_account:\n"
-"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
-"target=\"_blank\">\n"
+"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" target=\"_blank\">\n"
 "  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
-"  <input type=\"hidden\" name=\"business\" "
-"value=\"${object.company_id.paypal_account}\"/>\n"
-"  <input type=\"hidden\" name=\"item_name\" "
-"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
+"  <input type=\"hidden\" name=\"business\" value=\"${object.company_id.paypal_account}\"/>\n"
+"  <input type=\"hidden\" name=\"item_name\" value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
 "  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
-"  <input type=\"hidden\" name=\"currency_code\" "
-"value=\"${currency.name}\"/>\n"
-"  <input type=\"image\" name=\"submit\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"  <input type=\"hidden\" name=\"currency_code\" value=\"${currency.name}\"/>\n"
+"  <input type=\"image\" name=\"submit\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "</form>\n"
 "% endif\n"
 "            "
-msgstr ""
-"\n"
-"% if object.company_id.paypal_account:\n"
-"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
-"target=\"_blank\">\n"
-"  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
-"  <input type=\"hidden\" name=\"business\" "
-"value=\"${object.company_id.paypal_account}\"/>\n"
-"  <input type=\"hidden\" name=\"item_name\" "
-"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
-"  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
-"  <input type=\"hidden\" name=\"currency_code\" "
-"value=\"${currency.name}\"/>\n"
-"  <input type=\"image\" name=\"submit\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"</form>\n"
-"% endif\n"
-"            "
+msgstr "\n% if object.company_id.paypal_account:\n<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" target=\"_blank\">\n  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n  <input type=\"hidden\" name=\"business\" value=\"${object.company_id.paypal_account}\"/>\n  <input type=\"hidden\" name=\"item_name\" value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n  <input type=\"hidden\" name=\"currency_code\" value=\"${currency.name}\"/>\n  <input type=\"image\" name=\"submit\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n</form>\n% endif\n            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -589,9 +484,7 @@ msgstr "Portalbenutzer Konfiguration"
 msgid ""
 "If the template renders to an empty result in a certain context it will be "
 "ignored, as if it was inactive."
-msgstr ""
-"Wenn die Vorlage unter Umständen ein leeres Ergebnis rendert, wird es "
-"behandelt wie eine inaktive Vorlage."
+msgstr "Wenn die Vorlage unter Umständen ein leeres Ergebnis rendert, wird es behandelt wie eine inaktive Vorlage."
 
 #. module: portal
 #: field:portal.payment.acquirer,visible:0
@@ -602,7 +495,7 @@ msgstr "Sichtbar"
 #: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
 msgid "Email Required"
-msgstr ""
+msgstr "E-Mail benötigt"
 
 #. module: portal
 #: view:portal.wizard:0
@@ -633,9 +526,7 @@ msgstr "ctx: das aktuelle Kontext Dictionary"
 msgid ""
 "This is an HTML form template to submit a payment through this acquirer.\n"
 "                                The template will be rendered with"
-msgstr ""
-"Es handelt sich um eine html Vorlage, mit der in diesem Formular Bezahlungen "
-"durch einen externen  Zahlungsanbieter abgesichert werden."
+msgstr "Es handelt sich um eine html Vorlage, mit der in diesem Formular Bezahlungen durch einen externen  Zahlungsanbieter abgesichert werden."
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
@@ -643,22 +534,11 @@ msgid ""
 "<p>\n"
 "                    <b>No todo.</b>\n"
 "                </p><p>\n"
-"                    When you process messages in your inbox, you can mark "
-"some\n"
-"                    as <i>todo</i>. From this menu, you can process all your "
-"todo.\n"
+"                    When you process messages in your inbox, you can mark some\n"
+"                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    <b>Keine zu erledigenden Nachrichten</b>\n"
-"                </p><p>\n"
-"                    Wenn Sie die Nachrichten in Ihrem Posteingang "
-"bearbeiten, können Sie diese als\n"
-"                    <i>zu erledigen</i> markieren. Mit diesem Menu können "
-"Sie alle zu erledigenden Nachrichten bearbeiten.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    <b>Keine zu erledigenden Nachrichten</b>\n                </p><p>\n                    Wenn Sie die Nachrichten in Ihrem Posteingang bearbeiten, können Sie diese als\n                    <i>zu erledigen</i> markieren. Mit diesem Menu können Sie alle zu erledigenden Nachrichten bearbeiten.\n                </p>\n            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -669,39 +549,3 @@ msgstr "Formularvorlage"
 #: view:share.wizard:0
 msgid "Details"
 msgstr "Details"
-
-#, python-format
-#~ msgid "Email required"
-#~ msgstr "E-Mail ist erforderlich"
-
-#~ msgid "Quotations and Sales Orders"
-#~ msgstr "Angebote und Aufträge"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                    Youd don't have unread company's news.\n"
-#~ "                </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                    Sie haben keine ungelesenen Unternehmensnachrichten.\n"
-#~ "                </p>\n"
-#~ "            "
-
-#, python-format
-#~ msgid ""
-#~ "Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
-#~ msgstr ""
-#~ "Erhalten Sie Zugriff auf Ihre Dokumente über <a href=\"%s\">unser Kunden "
-#~ "Portal</a>"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                    Youd don't have unread job offers.\n"
-#~ "                </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                    Sie haben keine ungelesenen Stellenangebote.\n"
-#~ "                </p>\n"
-#~ "            "

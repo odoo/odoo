@@ -1,25 +1,25 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * event
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-05-24 15:42+0000\n"
-"Last-Translator: Simonel Criste <simi@erpsystems.ro>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
+#: view:event.event:0 view:report.event.registration:0
 msgid "My Events"
 msgstr "Evenimentele mele"
 
@@ -39,8 +39,7 @@ msgid "Main Speaker"
 msgstr "Vorbitor principal"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 #: view:report.event.registration:0
 msgid "Group By..."
 msgstr "Grupeaza dupa..."
@@ -56,10 +55,7 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
-"Puteti defini un nivel minim de inregistrare pentru fiecare nivel. Daca nu "
-"aveti destul inregistrari, nu veti putea sa confirmati evenimentul. "
-"(introduceti 0 pentur a ignora aceasta regula )"
+msgstr "Puteti defini un nivel minim de inregistrare pentru fiecare nivel. Daca nu aveti destul inregistrari, nu veti putea sa confirmati evenimentul. (introduceti 0 pentur a ignora aceasta regula )"
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -77,8 +73,7 @@ msgid "Concert of Bon Jovi"
 msgstr "Concertul lui Bon Jovi"
 
 #. module: event
-#: view:event.registration:0
-#: selection:event.registration,state:0
+#: view:event.registration:0 selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
 msgstr "Participare"
@@ -94,8 +89,7 @@ msgid "Send Email"
 msgstr "Trimite Email"
 
 #. module: event
-#: field:event.event,company_id:0
-#: field:event.registration,company_id:0
+#: field:event.event,company_id:0 field:event.registration,company_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,company_id:0
 msgid "Company"
@@ -169,9 +163,7 @@ msgstr "Analiza evenimentelor"
 #. module: event
 #: help:event.type,default_registration_max:0
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
-"Va selecta aceasta valoare maxima implicita atunci cand alegeti acest "
-"eveniment"
+msgstr "Va selecta aceasta valoare maxima implicita atunci cand alegeti acest eveniment"
 
 #. module: event
 #: view:report.event.registration:0
@@ -180,24 +172,20 @@ msgid "Register"
 msgstr "Inregistrati"
 
 #. module: event
-#: field:event.event,message_ids:0
-#: field:event.registration,message_ids:0
+#: field:event.event,message_ids:0 field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Mesaje"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,registration_ids:0
+#: view:event.event:0 field:event.event,registration_ids:0
 #: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration
-#: view:res.partner:0
+#: model:ir.ui.menu,name:event.menu_action_registration view:res.partner:0
 msgid "Registrations"
 msgstr "Inregistrari"
 
 #. module: event
-#: code:addons/event/event.py:89
-#: code:addons/event/event.py:100
+#: code:addons/event/event.py:89 code:addons/event/event.py:100
 #: code:addons/event/event.py:357
 #, python-format
 msgid "Error!"
@@ -209,14 +197,12 @@ msgid "Confirm Event"
 msgstr "Confirma evenimentul"
 
 #. module: event
-#: view:board.board:0
-#: model:ir.actions.act_window,name:event.act_event_view
+#: view:board.board:0 model:ir.actions.act_window,name:event.act_event_view
 msgid "Next Events"
 msgstr "Evenimentele urmatoare"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
+#: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
@@ -233,8 +219,7 @@ msgid "Opera of Verdi"
 msgstr "Opera lui Verdi"
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
+#: help:event.event,message_unread:0 help:event.registration,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
 
@@ -270,9 +255,7 @@ msgstr "Data de Sfarsit a Evenimentului"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
-"in format HTML, cu scopul de a se introduce in vizualizari kanban."
+msgstr "Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: event
 #: view:report.event.registration:0
@@ -280,21 +263,18 @@ msgid "Registrations in confirmed or done state"
 msgstr "Inregistrari in starea confirmat sau efectuat"
 
 #. module: event
-#: code:addons/event/event.py:106
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:106 code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr "Avertizare!"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Registration"
 msgstr "Inregistrare"
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,partner_id:0
+#: view:event.registration:0 field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
 msgid "Partner"
 msgstr "Partener"
@@ -302,9 +282,7 @@ msgstr "Partener"
 #. module: event
 #: help:event.type,default_registration_min:0
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-"Va selecta aceasta valoare minimia implicita atunci cand alegeti acest "
-"eveniment"
+msgstr "Va selecta aceasta valoare minimia implicita atunci cand alegeti acest eveniment"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -312,19 +290,15 @@ msgid " Event Type "
 msgstr " Tipul evenimentului "
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,event_id:0
+#: view:event.registration:0 field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: view:report.event.registration:0
-#: field:report.event.registration,event_id:0
+#: view:report.event.registration:0 field:report.event.registration,event_id:0
 #: view:res.partner:0
 msgid "Event"
 msgstr "Eveniment"
 
 #. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
-#: view:event.registration:0
+#: view:event.event:0 selection:event.event,state:0 view:event.registration:0
 #: selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
@@ -337,8 +311,7 @@ msgid "Participant"
 msgstr "Participant"
 
 #. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: view:event.registration:0 view:report.event.registration:0
 msgid "Confirm"
 msgstr "Confirma"
 
@@ -357,9 +330,7 @@ msgstr "Inregistrati cu acest eveniment"
 msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
-msgstr ""
-"Va selecta aceasta valoare a confirmarii inregistrarii prin email atunci "
-"cand alegeti acest eveniment"
+msgstr "Va selecta aceasta valoare a confirmarii inregistrarii prin email atunci cand alegeti acest eveniment"
 
 #. module: event
 #: view:event.event:0
@@ -378,16 +349,13 @@ msgid "Location"
 msgstr "Locatie"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,message_unread:0
-#: view:event.registration:0
-#: field:event.registration,message_unread:0
+#: view:event.event:0 field:event.event,message_unread:0
+#: view:event.registration:0 field:event.registration,message_unread:0
 msgid "Unread Messages"
 msgstr "Mesaje Necitite"
 
 #. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: view:event.registration:0 view:report.event.registration:0
 msgid "New"
 msgstr "Nou(a)"
 
@@ -418,15 +386,12 @@ msgid "Creation Date"
 msgstr "Data crearii"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
+#: view:report.event.registration:0 field:report.event.registration,user_id:0
 msgid "Event Responsible"
 msgstr "Responsabil cu Evenimentul"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
+#: view:event.event:0 view:event.registration:0 view:res.partner:0
 msgid "Cancel Registration"
 msgstr "Anuleaza Inregistrarea"
 
@@ -503,8 +468,7 @@ msgid "Logs"
 msgstr "Jurnale"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state_id:0
+#: view:event.event:0 field:event.event,state_id:0
 msgid "State"
 msgstr "Stare"
 
@@ -535,8 +499,7 @@ msgid "Registration Confirmation Email"
 msgstr "Email de Confirmare a Inregistrarii"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,month:0
+#: view:report.event.registration:0 field:report.event.registration,month:0
 msgid "Month"
 msgstr "Luna"
 
@@ -585,14 +548,10 @@ msgstr "Nu mai sunt Bilete Disponibile!"
 #: help:event.event,state:0
 msgid ""
 "If event is created, the status is 'Draft'.If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'.If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'.If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr ""
-"Daca evenimentul este creat, starea este 'Ciorna'.Daca evenimentul este "
-"confirmat pentru datele respective, starea este 'Confirmat'. Daca "
-"evenimentul este incheiat, starea este setata pe 'Efectuat'.Daca evenimentul "
-"este anulat, starea este setata pe 'Anulat'."
+msgstr "Daca evenimentul este creat, starea este 'Ciorna'.Daca evenimentul este confirmat pentru datele respective, starea este 'Confirmat'. Daca evenimentul este incheiat, starea este setata pe 'Efectuat'.Daca evenimentul este anulat, starea este setata pe 'Anulat'."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -600,24 +559,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "               Click to add a new event.\n"
 "             </p><p>\n"
-"               OpenERP helps you schedule and efficiently organize your "
-"events:\n"
-"               track subscriptions and participations, automate the "
-"confirmation emails,\n"
+"               OpenERP helps you schedule and efficiently organize your events:\n"
+"               track subscriptions and participations, automate the confirmation emails,\n"
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"               Faceti click pentru a adauga un eveniment nou.\n"
-"             </p><p>\n"
-"               OpenERP va ajuta sa planificati si sa va organizati "
-"evenimentele eficient:\n"
-"               urmariti abonarile si participarile, automatizati email-urile "
-"de confirmare,\n"
-"               vindeti bilete, etc.\n"
-"             </p>\n"
-"           "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n               Faceti click pentru a adauga un eveniment nou.\n             </p><p>\n               OpenERP va ajuta sa planificati si sa va organizati evenimentele eficient:\n               urmariti abonarile si participarile, automatizati email-urile de confirmare,\n               vindeti bilete, etc.\n             </p>\n           "
 
 #. module: event
 #: help:event.event,register_max:0
@@ -625,10 +572,7 @@ msgid ""
 "You can for each event define a maximum registration level. If you have too "
 "much registrations you are not able to confirm your event. (put 0 to ignore "
 "this rule )"
-msgstr ""
-"Pentru fiecare eveniment puteti defini un nivel maxim de inregistrari. Daca "
-"aveti prea multe inregistrari, nu veti putea confirma evenimentul. "
-"(introduceti 0 pentru a ignora aceasta regula )"
+msgstr "Pentru fiecare eveniment puteti defini un nivel maxim de inregistrari. Daca aveti prea multe inregistrari, nu veti putea confirma evenimentul. (introduceti 0 pentru a ignora aceasta regula )"
 
 #. module: event
 #: code:addons/event/event.py:106
@@ -643,19 +587,14 @@ msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
 "expected minimum/maximum. Please reconsider those limits before going "
 "further."
-msgstr ""
-"Totalul inregistrarilor confirmate pentru evenimentul '%s' nu intruneste "
-"minimul/maximul asteptat. Va rugam sa reconsiderati acele limite inainte de "
-"a merge mai departe."
+msgstr "Totalul inregistrarilor confirmate pentru evenimentul '%s' nu intruneste minimul/maximul asteptat. Va rugam sa reconsiderati acele limite inainte de a merge mai departe."
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
 msgid ""
 "If you set an email template, each participant will receive this email "
 "announcing the confirmation of the event."
-msgstr ""
-"Daca setati un sablon de email, fiecare participant va primi acest email "
-"care anunta confirmarea evenimentului."
+msgstr "Daca setati un sablon de email, fiecare participant va primi acest email care anunta confirmarea evenimentului."
 
 #. module: event
 #: view:board.board:0
@@ -679,22 +618,18 @@ msgid "Events which are in New state"
 msgstr "Evenimente care se afla in stare Nou"
 
 #. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.action_event_view
+#: view:event.event:0 model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.actions.act_window,name:event.open_board_associations_manager
 #: model:ir.module.category,name:event.module_category_event_management
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_reporting_events
-#: view:res.partner:0
+#: model:ir.ui.menu,name:event.menu_reporting_events view:res.partner:0
 msgid "Events"
 msgstr "Evenimente"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
+#: view:event.event:0 field:event.event,state:0 view:event.registration:0
 #: field:event.registration,state:0
 msgid "Status"
 msgstr "Stare"
@@ -715,8 +650,7 @@ msgid "zip"
 msgstr "cod postal"
 
 #. module: event
-#: field:res.partner,event_ids:0
-#: field:res.partner,event_registration_ids:0
+#: field:res.partner,event_ids:0 field:res.partner,event_registration_ids:0
 msgid "unknown"
 msgstr "necunoscut(a)"
 
@@ -736,15 +670,10 @@ msgid ""
 "The email address of the organizer which is put in the 'Reply-To' of all "
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
-msgstr ""
-"Adresa de email a organizatorului care este introdusa la 'Raspunde' in toate "
-"email-urile trimise automat la confirmarea evenimentului sau a "
-"inregistrarilor. De asemenea, puteti sa introduceti adresa dumneavoastra de "
-"email din mail gateway daca folositi una."
+msgstr "Adresa de email a organizatorului care este introdusa la 'Raspunde' in toate email-urile trimise automat la confirmarea evenimentului sau a inregistrarilor. De asemenea, puteti sa introduceti adresa dumneavoastra de email din mail gateway daca folositi una."
 
 #. module: event
-#: help:event.event,message_ids:0
-#: help:event.registration,message_ids:0
+#: help:event.event,message_ids:0 help:event.registration,message_ids:0
 msgid "Messages and communication history"
 msgstr "Istoric mesaje si conversatii"
 
@@ -758,23 +687,11 @@ msgstr "Telefon"
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from ${object.event_id.date_begin} to "
-"${object.event_id.date_end}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}.\n"
+"        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Buna ziua ${obiect.nume},</p>\n"
-"        <p>Evenimentul ${obiect.eveniment_id.nume} la care v-ati inregistrat "
-"este confirmat si va fi tinut de la ${obiect.eveniment_id.data_de_inceput} "
-"la ${obiect.eveniment_id.data_de_sfarsit}.\n"
-"        Pentru informatii suplimentare, va rugam sa contactati departamentul "
-"nostru de evenimente.</p>\n"
-"        <p>Va multumim pentru participare!</p>\n"
-"        <p>Cu stima</p>"
+msgstr "\n        <p>Buna ziua ${obiect.nume},</p>\n        <p>Evenimentul ${obiect.eveniment_id.nume} la care v-ati inregistrat este confirmat si va fi tinut de la ${obiect.eveniment_id.data_de_inceput} la ${obiect.eveniment_id.data_de_sfarsit}.\n        Pentru informatii suplimentare, va rugam sa contactati departamentul nostru de evenimente.</p>\n        <p>Va multumim pentru participare!</p>\n        <p>Cu stima</p>"
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -793,9 +710,7 @@ msgstr "Utilizator"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr ""
-"Avertisment: Acest eveniment nu a atins Limita Minima de Inregistrari. "
-"Sunteti sigur(a) ca doriti sa il confirmati?"
+msgstr "Avertisment: Acest eveniment nu a atins Limita Minima de Inregistrari. Sunteti sigur(a) ca doriti sa il confirmati?"
 
 #. module: event
 #: view:event.event:0
@@ -838,9 +753,7 @@ msgid "Set To Draft"
 msgstr "Setare ca Ciorna"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
+#: view:event.event:0 view:event.registration:0 view:res.partner:0
 msgid "Confirm Registration"
 msgstr "Confirma Inregistrarea"
 
@@ -850,9 +763,7 @@ msgstr "Confirma Inregistrarea"
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
-"Ati setat deja o inregistrare pentru acest eveniment ca 'Participare'. Va "
-"rugam sa il resetati pe ciorna daca doriti sa anulati acest eveniment."
+msgstr "Ati setat deja o inregistrare pentru acest eveniment ca 'Participare'. Va rugam sa il resetati pe ciorna daca doriti sa anulati acest eveniment."
 
 #. module: event
 #: view:res.partner:0
@@ -883,31 +794,25 @@ msgstr "Tipuri de evenimente"
 #. module: event
 #: help:event.event,email_registration_id:0
 msgid ""
-"This field contains the template of the mail that will be automatically sent "
-"each time a registration for this event is confirmed."
-msgstr ""
-"Acest camp contine sablonul email-ului care va fi trimis automat de fiecare "
-"data cand este confirmata o inregistrare a acestui eveniment."
+"This field contains the template of the mail that will be automatically sent"
+" each time a registration for this event is confirmed."
+msgstr "Acest camp contine sablonul email-ului care va fi trimis automat de fiecare data cand este confirmata o inregistrare a acestui eveniment."
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Attended the Event"
 msgstr "Participare la Eveniment"
 
 #. module: event
 #: constraint:event.event:0
 msgid "Error ! Closing Date cannot be set before Beginning Date."
-msgstr ""
-"Eroare ! Data de inchidere nu poate fi setata inaintea Datei de incepere."
+msgstr "Eroare ! Data de inchidere nu poate fi setata inaintea Datei de incepere."
 
 #. module: event
 #: code:addons/event/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr ""
-"Trebuie sa asteptati ziua de inceput a evenimentului pentru a efectua "
-"aceasta actiune."
+msgstr "Trebuie sa asteptati ziua de inceput a evenimentului pentru a efectua aceasta actiune."
 
 #. module: event
 #: field:event.event,user_id:0
@@ -952,8 +857,7 @@ msgid "Set To Unconfirmed"
 msgstr "Setati pe Neconfirmat"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,is_subscribed:0
+#: view:event.event:0 field:event.event,is_subscribed:0
 msgid "Subscribed"
 msgstr "Abonat"
 
@@ -963,8 +867,7 @@ msgid "Unsubscribe"
 msgstr "Dezabonare"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Responsible"
 msgstr "Responsabil"
 
@@ -975,8 +878,7 @@ msgstr "Contact inregistrare"
 
 #. module: event
 #: view:report.event.registration:0
-#: field:report.event.registration,speaker_id:0
-#: field:res.partner,speaker:0
+#: field:report.event.registration,speaker_id:0 field:res.partner,speaker:0
 msgid "Speaker"
 msgstr "Vorbitor"
 
@@ -1033,8 +935,7 @@ msgid "Maximum Registrations"
 msgstr "Inregistrari Maxime"
 
 #. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
+#: view:event.event:0 selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Neconfirmat"
@@ -1055,15 +956,12 @@ msgid "Association Dashboard"
 msgstr "Tablou de bord asociatie"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,name:0
-#: field:event.registration,name:0
+#: view:event.event:0 field:event.event,name:0 field:event.registration,name:0
 msgid "Name"
 msgstr "Nume"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,country_id:0
+#: view:event.event:0 field:event.event,country_id:0
 msgid "Country"
 msgstr "Tara"
 
@@ -1087,9 +985,7 @@ msgstr "Aprilie"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr ""
-"Va selecta aceasta valoare a confirmarii implicite a evenimentului prin "
-"email atunci cand alegeti acest eveniment"
+msgstr "Va selecta aceasta valoare a confirmarii implicite a evenimentului prin email atunci cand alegeti acest eveniment"
 
 #. module: event
 #: view:report.event.registration:0
@@ -1097,9 +993,7 @@ msgid "Events which are in confirm state"
 msgstr "Evenimente care sunt in starea confirmat"
 
 #. module: event
-#: view:event.event:0
-#: view:event.type:0
-#: field:event.type,name:0
+#: view:event.event:0 view:event.type:0 field:event.type,name:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_type:0
 msgid "Event Type"
@@ -1147,36 +1041,20 @@ msgstr "Inregistrari curente"
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
+"        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Buna ziua ${object.name},</p>\n"
-"        <p>Confirmam faptul ca a fost facuta inregistrarea dumenavoastra la "
-"eveniment. ${object.event_id.name} .\n"
-"        Veti primi automat un email care va ofera mai multe informatii "
-"practice (precum programul, ordinea de zi...) de indata ce evenimentul este "
-"confirmat.</p>\n"
-"        <p>Va multumim pentru participare!</p>\n"
-"        <p>Cu stima</p>"
+msgstr "\n        <p>Buna ziua ${object.name},</p>\n        <p>Confirmam faptul ca a fost facuta inregistrarea dumenavoastra la eveniment. ${object.event_id.name} .\n        Veti primi automat un email care va ofera mai multe informatii practice (precum programul, ordinea de zi...) de indata ce evenimentul este confirmat.</p>\n        <p>Va multumim pentru participare!</p>\n        <p>Cu stima</p>"
 
 #. module: event
 #: help:event.event,reply_to:0
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr ""
-"Adresa de email a organizatorului este probabil sa fie introdusa aici, "
-"pentru a fi introdusa in rubrica 'Raspunde' a email-urilor trimise automat "
-"la confirmarea evenimentului sau a inregistrarii. De asemenea, puteti "
-"introduce adresa de email din email gateway daca folositi una."
+msgstr "Adresa de email a organizatorului este probabil sa fie introdusa aici, pentru a fi introdusa in rubrica 'Raspunde' a email-urilor trimise automat la confirmarea evenimentului sau a inregistrarii. De asemenea, puteti introduce adresa de email din email gateway daca folositi una."
 
 #. module: event
 #: view:event.event:0
@@ -1202,8 +1080,7 @@ msgid "Event Confirmation"
 msgstr "Confirmarea evenimentului"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
+#: view:report.event.registration:0 field:report.event.registration,year:0
 msgid "Year"
 msgstr "An"
 
@@ -1211,6 +1088,3 @@ msgstr "An"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Vorbitor Confirmat"
-
-#~ msgid "Number Of Events"
-#~ msgstr "Numar de evenimente"

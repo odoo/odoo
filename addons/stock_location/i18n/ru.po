@@ -1,27 +1,26 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* stock_location
-#
+# * stock_location
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
-msgstr ""
-"Используется , чтобы узнать, к какой компании принадлежат комплектования и "
-"перемещения."
+msgstr "Используется , чтобы узнать, к какой компании принадлежат комплектования и перемещения."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -58,8 +57,7 @@ msgstr "Место хранения источника"
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr ""
-"Позволяет вам отменить перемещения связанные с входящим потоком продукции"
+msgstr "Позволяет вам отменить перемещения связанные с входящим потоком продукции"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
@@ -89,9 +87,7 @@ msgstr "Внутреннее"
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
-msgstr ""
-"Входящее снабжение поступающее из исходного места %s, правило прихода %s, "
-"через исходное снабжение %s (#%d)"
+msgstr "Входящее снабжение поступающее из исходного места %s, правило прихода %s, через исходное снабжение %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -107,19 +103,9 @@ msgstr "Статус счета"
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
-"This is used to define paths the product has to follow within the location "
-"tree.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
-msgstr ""
-"Это используется для определения путей следования продукта в дереве мест "
-"хранения.\n"
-"Значение 'Автоматическое перемещение' создаст перемещение текущего запаса "
-"после чего будет автоматически подтверждено. 'Ручная операция' - перемещение "
-"должно быть подтверждено работником.'Автоматически без добавления шагов' - "
-"место хранения замещено в исходном перемещении."
+"This is used to define paths the product has to follow within the location tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+msgstr "Это используется для определения путей следования продукта в дереве мест хранения.\nЗначение 'Автоматическое перемещение' создаст перемещение текущего запаса после чего будет автоматически подтверждено. 'Ручная операция' - перемещение должно быть подтверждено работником.'Автоматически без добавления шагов' - место хранения замещено в исходном перемещении."
 
 #. module: stock_location
 #: view:product.product:0
@@ -175,9 +161,7 @@ msgstr "Движение запасов"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
-"Если отмечено, то это перемещение отменено, связанные перемещения тоже "
-"отменяются"
+msgstr "Если отмечено, то это перемещение отменено, связанные перемещения тоже отменяются"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -219,9 +203,7 @@ msgstr "Количество дней для перемещения"
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
-msgstr ""
-"Это поле будет заполнять происхождение комплектования и название его "
-"перемещений"
+msgstr "Это поле будет заполнять происхождение комплектования и название его перемещений"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -237,9 +219,7 @@ msgstr "Название"
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr ""
-"Эти правила устанавливают правильный путь ТМЦ во всей структуре мест "
-"хранения."
+msgstr "Эти правила устанавливают правильный путь ТМЦ во всей структуре мест хранения."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -264,10 +244,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"'Изготовить на склад':при необходимости, взять со склада или ждать поставки. "
-"'Изготовить на заказ': при необходимости, закупить или произвести по запросу "
-"на снабжение."
+msgstr "'Изготовить на склад':при необходимости, взять со склада или ждать поставки. 'Изготовить на заказ': при необходимости, закупить или произвести по запросу на снабжение."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -301,9 +278,7 @@ msgstr "Задержка (в днях)"
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
-msgstr ""
-"Комплектование для входящего снабжения приходящего из исходного места "
-"хранения %s, правило поступления %s, через исходное снабжение %s (#%d)"
+msgstr "Комплектование для входящего снабжения приходящего из исходного места хранения %s, правило поступления %s, через исходное снабжение %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -316,9 +291,7 @@ msgstr "Исходящий поток"
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
-msgstr ""
-"Перемещение для входящего снабжения поступающего из исходного места хранения "
-"%s, правило прихода %s, через исходное снабжение %s (#%d)"
+msgstr "Перемещение для входящего снабжения поступающего из исходного места хранения %s, правило прихода %s, через исходное снабжение %s (#%d)"
 
 #. module: stock_location
 #: view:product.product:0
@@ -342,8 +315,7 @@ msgid "Destination Location"
 msgstr "Место назначения"
 
 #. module: stock_location
-#: field:stock.location.path,auto:0
-#: selection:stock.location.path,auto:0
+#: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
 msgid "Automatic Move"
 msgstr "Автоматическое перемещение"
 
@@ -374,9 +346,7 @@ msgstr "Метод снабжения"
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
-"В зависимости от компании, выберите, что вы хотите: принимать или отправлять "
-"продукцию"
+msgstr "В зависимости от компании, выберите, что вы хотите: принимать или отправлять продукцию"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order

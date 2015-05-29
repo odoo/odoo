@@ -1,25 +1,25 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * product_margin
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:28+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,turnover:0
+#: view:product.product:0 field:product.product,turnover:0
 msgid "Turnover"
 msgstr "Оборот"
 
@@ -37,7 +37,7 @@ msgstr "С"
 #: help:product.product,total_cost:0
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
-msgstr ""
+msgstr "Произведение фактурной цены и количества счетов поставщика "
 
 #. module: product_margin
 #: field:product.margin,to_date:0
@@ -47,12 +47,12 @@ msgstr "До"
 #. module: product_margin
 #: help:product.product,total_margin:0
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "Оборот - Стандартная цена"
 
 #. module: product_margin
 #: field:product.product,total_margin_rate:0
 msgid "Total Margin Rate(%)"
-msgstr ""
+msgstr "Общий размер маржи(%)"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -78,7 +78,7 @@ msgstr "Средняя цена единицы"
 #. module: product_margin
 #: field:product.product,sale_num_invoiced:0
 msgid "# Invoiced in Sale"
-msgstr ""
+msgstr "Счет выставлен в продаже"
 
 #. module: product_margin
 #: view:product.product:0
@@ -92,8 +92,7 @@ msgid "Paid"
 msgstr "Оплачено"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
+#: view:product.product:0 field:product.product,sales_gap:0
 msgid "Sales Gap"
 msgstr "Отставание продаж"
 
@@ -120,7 +119,7 @@ msgstr "Сумма количеств в счетах поставщика"
 #. module: product_margin
 #: field:product.product,date_to:0
 msgid "Margin Date To"
-msgstr ""
+msgstr "Дата маржи до"
 
 #. module: product_margin
 #: view:product.product:0
@@ -128,15 +127,14 @@ msgid "Analysis Criteria"
 msgstr "Критерии анализа"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,total_cost:0
+#: view:product.product:0 field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Общая стоимость"
 
 #. module: product_margin
 #: help:product.product,normal_cost:0
 msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
-msgstr ""
+msgstr "Произведение цены и количества счетов поставщика"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -156,7 +154,7 @@ msgstr "Ожидаемая маржа * 100 / Ожидаемые продажи"
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Средняя цена в счетах клиента."
 
 #. module: product_margin
 #: help:product.product,purchase_avg_price:0
@@ -164,8 +162,7 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Средняя цена в счетах поставщика "
 
 #. module: product_margin
-#: field:product.margin,invoice_state:0
-#: field:product.product,invoice_state:0
+#: field:product.margin,invoice_state:0 field:product.product,invoice_state:0
 msgid "Invoice State"
 msgstr "Состояние счёта"
 
@@ -177,8 +174,9 @@ msgstr "Нормальная цена — Общая цена"
 #. module: product_margin
 #: help:product.product,sale_expected:0
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
+msgstr "Произведение цены по каталогу продаж и количества счетов клиента"
 
 #. module: product_margin
 #: field:product.product,total_margin:0
@@ -188,13 +186,13 @@ msgstr "Общая маржа"
 #. module: product_margin
 #: field:product.product,date_from:0
 msgid "Margin Date From"
-msgstr ""
+msgstr "Дата маржи от"
 
 #. module: product_margin
 #: help:product.product,turnover:0
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
+msgstr "Произведение фактурной цены и количества счетов клиента"
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
@@ -209,7 +207,7 @@ msgstr "Закупки"
 #. module: product_margin
 #: field:product.product,purchase_num_invoiced:0
 msgid "# Invoiced in Purchase"
-msgstr ""
+msgstr "Счет выставлен в покупке"
 
 #. module: product_margin
 #: help:product.product,expected_margin:0

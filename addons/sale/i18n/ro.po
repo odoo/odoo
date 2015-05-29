@@ -1,195 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-01-03 08:23+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:22+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: sale
-#: model:email.template,body_html:sale.email_template_edi_sale
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Buna ziua ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Aici este ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} pentru ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERINTE</strong><br />\n"
-"       &nbsp;&nbsp;Numar comanda: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Total comanda: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Data comenzii: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Referinta comanda: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Contactul dumneavoastra: <a "
-"href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>De asemenea, puteti plati direct cu Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>Daca aveti intrebari, nu ezitati sa ne contactati.</p>\n"
-"    <p>Va multumim ca ati ales ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Telefon:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -202,13 +29,9 @@ msgid "UoS"
 msgstr "UdV"
 
 #. module: sale
-#: report:sale.order:0
-#: view:sale.order:0
-#: field:sale.order,user_id:0
-#: view:sale.order.line:0
-#: field:sale.order.line,salesman_id:0
-#: view:sale.report:0
-#: field:sale.report,user_id:0
+#: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
+#: view:sale.order.line:0 field:sale.order.line,salesman_id:0
+#: view:sale.report:0 field:sale.report,user_id:0
 msgid "Salesperson"
 msgstr "Agent de vânzări"
 
@@ -218,8 +41,7 @@ msgid "Pricelist for current sales order."
 msgstr "Lista de prețuri pentru comanda curentă de vânzări."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,day:0
+#: view:sale.report:0 field:sale.report,day:0
 msgid "Day"
 msgstr "Zi"
 
@@ -270,18 +92,12 @@ msgstr "Taxa"
 #: help:sale.order,state:0
 msgid ""
 "Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs     "
-"          in the invoice validation (Invoice Exception) or in the picking "
-"list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed           "
-"    but waiting for the scheduler to run on the order date."
-msgstr ""
-"Prezinta starea cotatiei sau al comenzii de vanzare.              \n"
-"Starea exceptie este setata automat"
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
+msgstr "Prezinta starea cotatiei sau al comenzii de vanzare.              \nStarea exceptie este setata automat"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,analytic_account_id:0
+#: view:sale.report:0 field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Cont analitic"
@@ -291,19 +107,15 @@ msgstr "Cont analitic"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Conține rezumatul Chatter (număr de mesaje, ...). Acest rezumat este direct "
-"în format HTML, cu scopul de a se introduce în vizualizări kanban."
+msgstr "Conține rezumatul Chatter (număr de mesaje, ...). Acest rezumat este direct în format HTML, cu scopul de a se introduce în vizualizări kanban."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,product_uom_qty:0
+#: view:sale.report:0 field:sale.report,product_uom_qty:0
 msgid "# of Qty"
 msgstr "# a cantitătii"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
-#: view:sale.report:0
+#: model:ir.model,name:sale.model_res_partner view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "Partener"
@@ -313,11 +125,7 @@ msgstr "Partener"
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-"Permite gestionarea diferitelor preturi pe baza regulilor pentru fiecare "
-"categorie de clienti.\n"
-"Exemplu: 10% pentru comerciantii cu amanuntul, promotie de 5 EUR la acest "
-"produs, etc."
+msgstr "Permite gestionarea diferitelor preturi pe baza regulilor pentru fiecare categorie de clienti.\nExemplu: 10% pentru comerciantii cu amanuntul, promotie de 5 EUR la acest produs, etc."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -348,12 +156,10 @@ msgstr "Discount (%)"
 #: code:addons/sale/sale.py:770
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
-"Va rugam sa definiti contul de venituri pentru acest produs: \"%s\" (id:%d)."
+msgstr "Va rugam sa definiti contul de venituri pentru acest produs: \"%s\" (id:%d)."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,price_total:0
+#: view:sale.report:0 field:sale.report,price_total:0
 msgid "Total Price"
 msgstr "Preț total"
 
@@ -370,17 +176,10 @@ msgstr "Bifati casuta pentru a grupa facturile pentru aceiasi clienti"
 #. module: sale
 #: help:sale.config.settings,timesheet:0
 msgid ""
-"For modifying account analytic view to show important data to project "
-"manager of services companies.\n"
-"                You can also view the report of account analytic summary "
-"user-wise as well as month wise.\n"
+"For modifying account analytic view to show important data to project manager of services companies.\n"
+"                You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "                This installs the module account_analytic_analysis."
-msgstr ""
-"Pentru modificarea vizualizarii contului analitic ca sa afiseze date "
-"importante managerului de proiecte al companiilor de servicii.\n"
-"                Puteti de asemenea sa vizualizati raportul sinteza al "
-"contului analitic in functie de utilizator, precum si in functie de luna.\n"
-"                Instaleaza modulul account_analytic_analysis."
+msgstr "Pentru modificarea vizualizarii contului analitic ca sa afiseze date importante managerului de proiecte al companiilor de servicii.\n                Puteti de asemenea sa vizualizati raportul sinteza al contului analitic in functie de utilizator, precum si in functie de luna.\n                Instaleaza modulul account_analytic_analysis."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -388,8 +187,7 @@ msgid "Ordered Quantities"
 msgstr "Cantitățile comandate"
 
 #. module: sale
-#: field:sale.order,name:0
-#: field:sale.order.line,order_id:0
+#: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Referință comandă"
 
@@ -426,9 +224,7 @@ msgstr "Cotații și Vânzări"
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
-"Vă permite să selectați și să mențineți diferite unități de măsură pentru "
-"produse."
+msgstr "Vă permite să selectați și să mențineți diferite unități de măsură pentru produse."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -477,25 +273,13 @@ msgstr "Nu puteti confirma o comanda de vanzare care nu are nicio linie."
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
 msgid ""
 "<p>\n"
-"                Here is a list of each sales order line to be invoiced. You "
-"can\n"
-"                invoice sales orders partially, by lines of sales order. You "
-"do\n"
-"                not need this list if you invoice from the delivery orders "
-"or\n"
+"                Here is a list of each sales order line to be invoiced. You can\n"
+"                invoice sales orders partially, by lines of sales order. You do\n"
+"                not need this list if you invoice from the delivery orders or\n"
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Aici este lista cu liniile din comenzile de vânzare ce "
-"trebuie facturate. Puteți să\n"
-"                facturați parțial comenzi de vânzare  după linii. Nu aveți "
-"nevoie de această listă\n"
-"               dacă facturați din comenzile de livrare sau dacă facturați "
-"vânzările complet.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Aici este lista cu liniile din comenzile de vânzare ce trebuie facturate. Puteți să\n                facturați parțial comenzi de vânzare  după linii. Nu aveți nevoie de această listă\n               dacă facturați din comenzile de livrare sau dacă facturați vânzările complet.\n              </p>\n            "
 
 #. module: sale
 #: view:sale.order:0
@@ -519,11 +303,8 @@ msgid "A partner to whom the particular product needs to be allotted."
 msgstr "Un partener caruia trebuie sa ii fie alocat produsul."
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,state:0
-#: view:sale.order.line:0
-#: field:sale.order.line,state:0
-#: view:sale.report:0
+#: view:sale.order:0 field:sale.order,state:0 view:sale.order.line:0
+#: field:sale.order.line,state:0 view:sale.report:0
 msgid "Status"
 msgstr "Stare"
 
@@ -556,40 +337,21 @@ msgstr "Octombrie"
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sales "
-"flow:\n"
+"                OpenERP will help you efficiently handle the complete sales flow:\n"
 "                quotation, sales order, delivery, invoicing and payment.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a crea o ofertă care poate fi transformata într-"
-"o comandă de\n"
-"                vânzare.\n"
-"              </p><p>\n"
-"                OpenERP vă va ajuta să gestionați eficient fluxul complet de "
-"vânzare:\n"
-"                ofertă, comanda de vânzare, livrare, facturare și plată.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o ofertă care poate fi transformata într-o comandă de\n                vânzare.\n              </p><p>\n                OpenERP vă va ajuta să gestionați eficient fluxul complet de vânzare:\n                ofertă, comanda de vânzare, livrare, facturare și plată.\n              </p>\n            "
 
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid ""
-"All items in these order lines will be invoiced. You can also invoice a "
-"percentage of the sales order\n"
-"                    or a fixed price (for advances) directly from the sales "
-"order form if you prefer."
-msgstr ""
-"Toate elementele din aceste linii ale comenzii vor fi facturate. Daca "
-"preferati, puteti de asemenea sa facturati un procent al comenzii de "
-"vanzare\n"
-"                    sau un pret fix (pentru avans) direct din formularul "
-"comenzii de vanzare."
+"All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
+"                    or a fixed price (for advances) directly from the sales order form if you prefer."
+msgstr "Toate elementele din aceste linii ale comenzii vor fi facturate. Daca preferati, puteti de asemenea sa facturati un procent al comenzii de vanzare\n                    sau un pret fix (pentru avans) direct din formularul comenzii de vanzare."
 
 #. module: sale
 #: field:sale.order,message_summary:0
@@ -610,15 +372,13 @@ msgstr "Avans %s %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_quotations view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
 msgstr "Cotații (oferte)"
 
 #. module: sale
-#: field:sale.advance.payment.inv,qtty:0
-#: report:sale.order:0
+#: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Cantitate"
@@ -654,15 +414,8 @@ msgid ""
 "Use All to create the final invoice.\n"
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
-"                Use Some Order Lines to invoice a selection of the sales "
-"order lines."
-msgstr ""
-"Folositi Tot pentru a crea factura finala.\n"
-"                Folositi Procent pentru a factura un procent din suma "
-"totala.\n"
-"                Folositi Pret Fix pentru a factura o anumita suma in avans.\n"
-"                Folositi Niste Linii ale Comenzii pentru a factura o "
-"selectie a liniilor comenzii de vanzare."
+"                Use Some Order Lines to invoice a selection of the sales order lines."
+msgstr "Folositi Tot pentru a crea factura finala.\n                Folositi Procent pentru a factura un procent din suma totala.\n                Folositi Pret Fix pentru a factura o anumita suma in avans.\n                Folositi Niste Linii ale Comenzii pentru a factura o selectie a liniilor comenzii de vanzare."
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -674,9 +427,7 @@ msgstr "În desfășurare"
 msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
-msgstr ""
-"Agentul de vanzari confirma cotatia. Starea comenzii de vanzare devine 'In "
-"curs' sau 'Manual în desfasurare'."
+msgstr "Agentul de vanzari confirma cotatia. Starea comenzii de vanzare devine 'In curs' sau 'Manual în desfasurare'."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -689,9 +440,7 @@ msgstr "Liniile din comenzile de vânzare pregătite să fie facturate"
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
-msgstr ""
-"Daca schimbati lista de preturi a acestei comenzi (si eventual moneda), "
-"preturile liniilor comenzii existente nu vor fi actualizate."
+msgstr "Daca schimbati lista de preturi a acestei comenzi (si eventual moneda), preturile liniilor comenzii existente nu vor fi actualizate."
 
 #. module: sale
 #: report:sale.order:0
@@ -703,7 +452,7 @@ msgstr "Tel. :"
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Ofertă' or 'Comandă'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -726,9 +475,7 @@ msgstr "Înainte de Livrare"
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
-msgstr ""
-"Nu exista nicio Pozitie Fiscala definita sau un Cont pentru categoria "
-"venituri definit pentru proprietatile implicite ale Categoriei de produse."
+msgstr "Nu exista nicio Pozitie Fiscala definita sau un Cont pentru categoria venituri definit pentru proprietatile implicite ale Categoriei de produse."
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -745,12 +492,10 @@ msgstr "Luna comandata a comenzii de vanzare"
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
-"Nu puteti grupa vanzarile care au valute diferite pentru acelasi partener."
+msgstr "Nu puteti grupa vanzarile care au valute diferite pentru acelasi partener."
 
 #. module: sale
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
+#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "or"
 msgstr "sau"
@@ -759,11 +504,10 @@ msgstr "sau"
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Ofertă trimisă"
 
 #. module: sale
-#: field:sale.order,invoice_exists:0
-#: field:sale.order.line,invoiced:0
+#: field:sale.order,invoice_exists:0 field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Facturat"
 
@@ -831,8 +575,7 @@ msgstr "Adresa de facturare"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
-"Liniile Comenzii de vanzare asociate unei Comenzi de vanzare de-a mea"
+msgstr "Liniile Comenzii de vanzare asociate unei Comenzi de vanzare de-a mea"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
@@ -840,8 +583,7 @@ msgid "Quotation / Order"
 msgstr "Cotație / Comandă"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,nbr:0
+#: view:sale.report:0 field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# de Linii"
 
@@ -871,8 +613,7 @@ msgid "Order N°"
 msgstr "Nr Comandă"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,order_line:0
+#: view:sale.order:0 field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Linii comandă"
 
@@ -884,15 +625,10 @@ msgstr "Folosții conturi analitice multiple pentru vânzări"
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
 msgid ""
-"Allows you to categorize your sales and deliveries (picking lists) between "
-"different journals,\n"
+"Allows you to categorize your sales and deliveries (picking lists) between different journals,\n"
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
-msgstr ""
-"Va permite sa va clasificati vanzarile si livrarile (liste de ridicare) "
-"intre registre diferite,\n"
-"                si sa efectuati operatiuni in serie in registre.\n"
-"                Instaleaza modulul sale_journal."
+msgstr "Va permite sa va clasificati vanzarile si livrarile (liste de ridicare) intre registre diferite,\n                si sa efectuati operatiuni in serie in registre.\n                Instaleaza modulul sale_journal."
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -920,8 +656,7 @@ msgid "My Sales"
 msgstr "Vânzările mele"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.report,pricelist_id:0
+#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Listă de prețuri"
@@ -929,26 +664,12 @@ msgstr "Listă de prețuri"
 #. module: sale
 #: help:sale.order.line,state:0
 msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.    "
-"                 \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.   "
-"                  \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.        "
-"             \n"
+"* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
-"* Starea 'Ciorna' este setata atunci cand comanda de vanzare asociata se "
-"afla in starea de ciorna.                     \n"
-"* Starea 'Confirmat' este seatata atunci cand comanda de vanzare asociata "
-"este confirmata.                     \n"
-"* Starea 'Exceptie' este setata atunci cand comanda de vanzare asociata este "
-"setata ca exceptie.                     \n"
-"* Starea 'Efectuat' este setata atunci cand linia comenzii de vanzare a fost "
-"ridicata.                     \n"
-"* Starea 'Anulat' este setata atunci cand un utilizator anuleaza comanda de "
-"vanzare respectiva."
+msgstr "* Starea 'Ciorna' este setata atunci cand comanda de vanzare asociata se afla in starea de ciorna.                     \n* Starea 'Confirmat' este seatata atunci cand comanda de vanzare asociata este confirmata.                     \n* Starea 'Exceptie' este setata atunci cand comanda de vanzare asociata este setata ca exceptie.                     \n* Starea 'Efectuat' este setata atunci cand linia comenzii de vanzare a fost ridicata.                     \n* Starea 'Anulat' este setata atunci cand un utilizator anuleaza comanda de vanzare respectiva."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:93
@@ -1011,14 +732,10 @@ msgstr "Moneda"
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr ""
-"Trebuie sa selectati o lista de preturi sau un client in formularul de "
-"vanzare !\n"
-"Va rugam sa setati una/unul inainte de a alege un produs."
+msgstr "Trebuie sa selectati o lista de preturi sau un client in formularul de vanzare !\nVa rugam sa setati una/unul inainte de a alege un produs."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,categ_id:0
+#: view:sale.report:0 field:sale.report,categ_id:0
 msgid "Category of Product"
 msgstr "Categoria Produsului"
 
@@ -1041,51 +758,29 @@ msgstr "Taxe :"
 #. module: sale
 #: code:addons/sale/sale.py:279
 #, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgid "In order to delete a confirmed sales order, you must cancel it before!"
+msgstr "Pentru a șterge o comandă de vânzări confirmată, trebuie să o anulați înainte!"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation or sales order for this "
-"customer.\n"
+"                Click to create a quotation or sales order for this customer.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sale "
-"flow:\n"
+"                OpenERP will help you efficiently handle the complete sale flow:\n"
 "                quotation, sales order, delivery, invoicing and\n"
 "                payment.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customer to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customer to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a crea o oferta sau o comanda de vanzare pentru "
-"acest client.\n"
-"              </p><p>\n"
-"                OpenERP va va ajuta sa gestionati eficient fluxul complet de "
-"vanzare:\n"
-"                oferta, comanda de vanzare, livrare, facturare si\n"
-"                plata.\n"
-"              </p><p>\n"
-"                Caracteristica sociala va ajuta sa organizati discutiile in "
-"fiecare comanda de\n"
-"                vanzare, si ii permite clientului dumneavoastra sa tina "
-"evidenta evolutiei\n"
-"                comenzii de vanzare.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o oferta sau o comanda de vanzare pentru acest client.\n              </p><p>\n                OpenERP va va ajuta sa gestionati eficient fluxul complet de vanzare:\n                oferta, comanda de vanzare, livrare, facturare si\n                plata.\n              </p><p>\n                Caracteristica sociala va ajuta sa organizati discutiile in fiecare comanda de\n                vanzare, si ii permite clientului dumneavoastra sa tina evidenta evolutiei\n                comenzii de vanzare.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.ui.menu,name:sale.menu_sale_order
-#: view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
 msgid "Sales Orders"
 msgstr "Comenzi de vânzări"
 
@@ -1101,21 +796,11 @@ msgid ""
 "                Click to define a new sale shop.\n"
 "              </p><p>\n"
 "                Each quotation or sales order must be linked to a shop. The\n"
-"                shop also defines the warehouse from which the products will "
-"be\n"
+"                shop also defines the warehouse from which the products will be\n"
 "                delivered for each particular sales.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a defini un nou magazin de vanzare.\n"
-"              </p><p>\n"
-"                Fiecare cotatie sau comanda de vanzare trebuie sa fie "
-"asociata unui magazin. Magazinul\n"
-"                defineste, de asemenea, depozitul de unde produsele vor fi\n"
-"                livrate pentru fiecare vanzare in parte.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a defini un nou magazin de vanzare.\n              </p><p>\n                Fiecare cotatie sau comanda de vanzare trebuie sa fie asociata unui magazin. Magazinul\n                defineste, de asemenea, depozitul de unde produsele vor fi\n                livrate pentru fiecare vanzare in parte.\n              </p>\n            "
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -1138,8 +823,7 @@ msgid "Exception"
 msgstr "Excepție"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop
-#: view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
 msgid "Sales Shop"
 msgstr "Magazin Vânzări"
 
@@ -1147,26 +831,16 @@ msgstr "Magazin Vânzări"
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
-"                You may have to create it and set it as a default value on "
-"this field."
-msgstr ""
-"Selectati un produs de tip serviciu care se numeste 'Produs in Avans'.\n"
-"                Este posibil sa trebuiasca sa il creati dumneavoastra si sa "
-"il setati ca valoarea implicita a acestui domeniu."
+"                You may have to create it and set it as a default value on this field."
+msgstr "Selectati un produs de tip serviciu care se numeste 'Produs in Avans'.\n                Este posibil sa trebuiasca sa il creati dumneavoastra si sa il setati ca valoarea implicita a acestui domeniu."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to sale a given product or a given customer.\n"
+"Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
-msgstr ""
-"Permite configurarea notificarilor privind produsele si le declanseaza "
-"atunci cand un utilizator doreste sa vanda un anumit produs sau un anumit "
-"client.\n"
-"Exemplu: Produs: acest produs este invechit, nu cumparati mai mult de 5.\n"
-"                Furnizor: nu uitati sa cereti livrare expresa."
+msgstr "Permite configurarea notificarilor privind produsele si le declanseaza atunci cand un utilizator doreste sa vanda un anumit produs sau un anumit client.\nExemplu: Produs: acest produs este invechit, nu cumparati mai mult de 5.\n                Furnizor: nu uitati sa cereti livrare expresa."
 
 #. module: sale
 #: code:addons/sale/sale.py:961
@@ -1185,10 +859,7 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr ""
-"Aceasta este lista de facturi care au fost generate pentru acesta comanda de "
-"vanzare. Este posibil ca aceeasi comanda de vanzare sa fi fost facturata in "
-"mai multe randuri (dupa linie, de exemplu)."
+msgstr "Aceasta este lista de facturi care au fost generate pentru acesta comanda de vanzare. Este posibil ca aceeasi comanda de vanzare sa fi fost facturata in mai multe randuri (dupa linie, de exemplu)."
 
 #. module: sale
 #: report:sale.order:0
@@ -1207,8 +878,7 @@ msgstr "Liniile comenzii mele de vânzare"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
+#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Anulează"
@@ -1224,18 +894,13 @@ msgstr "Referința comenzii trebuie să fie unică per Companie!"
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
-"Imposibil de gasit o linie a listei de preturi care sa se potriveasca cu "
-"acest produs si cu aceasta cantitate.\n"
-"Trebuie sa modificati fie produsul, fie cantitatea sau lista de preturi."
+msgstr "Imposibil de gasit o linie a listei de preturi care sa se potriveasca cu acest produs si cu aceasta cantitate.\nTrebuie sa modificati fie produsul, fie cantitatea sau lista de preturi."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
-#: view:sale.order.line:0
+#: view:sale.advance.payment.inv:0 view:sale.order:0
+#: field:sale.order,order_policy:0 view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Crează factura"
 
@@ -1247,13 +912,9 @@ msgstr "Referința comenzii"
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
 msgid ""
-"Allows you to Make Quotation, Sale Order using different Order policy and "
-"Manage Related Stock.\n"
+"Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "                    This installs the module sale_stock."
-msgstr ""
-"Va permite sa Faceti Oferta, Comanda de Vanzare folosind diferite politici "
-"ale comenzii si Gestionare a Stocului Asociat.\n"
-"                    Instaleaza modulul sale_stock."
+msgstr "Va permite sa Faceti Oferta, Comanda de Vanzare folosind diferite politici ale comenzii si Gestionare a Stocului Asociat.\n                    Instaleaza modulul sale_stock."
 
 #. module: sale
 #: report:sale.order:0
@@ -1271,35 +932,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a quotation, the first step of a new sale.\n"
 "              </p><p>\n"
-"                OpenERP will help you handle efficiently the complete sale "
-"flow:\n"
+"                OpenERP will help you handle efficiently the complete sale flow:\n"
 "                from the quotation to the sales order, the\n"
 "                delivery, the invoicing and the payment collection.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customers to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customers to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a crea o ofertă, primul pas al unei noi "
-"vânzări.\n"
-"              </p><p>\n"
-"                OpenERP vă va ajuta să gestionați eficient fluxul de vânzare "
-"complet:\n"
-"                de la ofertă la comanda de vânzare,\n"
-"                livrarea, facturarea și recuperarea plății.\n"
-"              </p><p>\n"
-"                Caracteristica socială vă ajută sa organizați discuțiile din "
-"fiecare comanda\n"
-"                de vânzare, și le permite clienților dumneavoastră să țină "
-"evidenta evoluției\n"
-"                comenzii de vânzare.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o ofertă, primul pas al unei noi vânzări.\n              </p><p>\n                OpenERP vă va ajuta să gestionați eficient fluxul de vânzare complet:\n                de la ofertă la comanda de vânzare,\n                livrarea, facturarea și recuperarea plății.\n              </p><p>\n                Caracteristica socială vă ajută sa organizați discuțiile din fiecare comanda\n                de vânzare, și le permite clienților dumneavoastră să țină evidenta evoluției\n                comenzii de vânzare.\n              </p>\n            "
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1335,9 +977,7 @@ msgstr "# Comenzii de Vânzare"
 #: code:addons/sale/sale.py:989
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
-"Nu poate fi stearsa o linie a comenzii de vanzare care se afla in starea "
-"'%s'."
+msgstr "Nu poate fi stearsa o linie a comenzii de vanzare care se afla in starea '%s'."
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1350,9 +990,7 @@ msgstr "Proprietati in linii"
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
-msgstr ""
-"Inainte de selectarea unui produs,\n"
-" selectati un client in formularul de vanzare."
+msgstr "Inainte de selectarea unui produs,\n selectati un client in formularul de vanzare."
 
 #. module: sale
 #: view:sale.order:0
@@ -1374,7 +1012,7 @@ msgstr "Data comandata a comenzii de vanzare"
 #: code:addons/sale/sale.py:871
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Nici un Client Definit!"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1388,9 +1026,7 @@ msgid "Order Lines to Invoice"
 msgstr "Liniile Comenzii de Facturat"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.report:0
+#: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
 msgid "Group By..."
 msgstr "Grupează după..."
 
@@ -1400,14 +1036,12 @@ msgid "Product Features"
 msgstr "Caracteristicile Produsului"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Programul de asteptare"
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.report,product_uom:0
+#: view:sale.order.line:0 field:sale.report,product_uom:0
 msgid "Unit of Measure"
 msgstr "Unitatea de măsură"
 
@@ -1417,8 +1051,7 @@ msgid "Procurement Method"
 msgstr "Metoda de aprovizionare"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,message_unread:0
+#: view:sale.order:0 field:sale.order,message_unread:0
 msgid "Unread Messages"
 msgstr "Mesaje necitite"
 
@@ -1433,8 +1066,7 @@ msgid "Draft Quotation"
 msgstr "Cotație Ciornă"
 
 #. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Taxe"
 
@@ -1446,21 +1078,11 @@ msgstr "Comanda de vanzare este gata de facturat"
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
 msgid ""
-"Allows you to define what is the default function of a specific user on a "
-"given account.\n"
-"                This is mostly used when a user encodes his timesheet. The "
-"values are retrieved and the fields are auto-filled.\n"
-"                But the possibility to change these values is still "
-"available.\n"
+"Allows you to define what is the default function of a specific user on a given account.\n"
+"                This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.\n"
+"                But the possibility to change these values is still available.\n"
 "                This installs the module analytic_user_function."
-msgstr ""
-"Va permite sa definiti care este functia implicita a unui anumit utilizator "
-"intr-un anumit cont.\n"
-"                Aceasta este utilizata de obicei atunci cand un utilizator "
-"isi inregistreaza fisa de pontaj. Valorile sunt recuperate, iar campurile "
-"sunt completate automat.\n"
-"                Dar aveti inca posibilitatea de a modifica aceste valori.\n"
-"                Instaleaza modulul analytic_user_function."
+msgstr "Va permite sa definiti care este functia implicita a unui anumit utilizator intr-un anumit cont.\n                Aceasta este utilizata de obicei atunci cand un utilizator isi inregistreaza fisa de pontaj. Valorile sunt recuperate, iar campurile sunt completate automat.\n                Dar aveti inca posibilitatea de a modifica aceste valori.\n                Instaleaza modulul analytic_user_function."
 
 #. module: sale
 #: help:sale.order,create_date:0
@@ -1473,14 +1095,12 @@ msgid "Terms and conditions..."
 msgstr "Termeni și condiții..."
 
 #. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
 msgstr "Crează facturi"
 
 #. module: sale
-#: code:addons/sale/sale.py:279
-#: code:addons/sale/sale.py:826
+#: code:addons/sale/sale.py:279 code:addons/sale/sale.py:826
 #: code:addons/sale/sale.py:989
 #, python-format
 msgid "Invalid Action!"
@@ -1512,9 +1132,7 @@ msgid ""
 "The sales order will automatically create the invoice proposition (draft "
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
-msgstr ""
-"Comanda de vanzare va crea automat propunerea de factura (factura ciorna). "
-"Trebuie sa alegeti daca doriti ca facturile sa fie bazate pe comanda "
+msgstr "Comanda de vanzare va crea automat propunerea de factura (factura ciorna). Trebuie sa alegeti daca doriti ca facturile sa fie bazate pe comanda "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1528,8 +1146,7 @@ msgid "Allows you to specify an analytic account on sales orders."
 msgstr "Va permite sa specificati un cont analitic in comenzile de vanzare."
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "To Invoice"
 msgstr "De facturat"
 
@@ -1548,9 +1165,7 @@ msgstr "Iulie"
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr ""
-"Dupa ce faceti clic pe 'Arata Liniile de Facturat', selectati liniile de "
-"facturat si creati factura din meniul vertical 'Mai mult(e)'"
+msgstr "Dupa ce faceti clic pe 'Arata Liniile de Facturat', selectati liniile de facturat si creati factura din meniul vertical 'Mai mult(e)'"
 
 #. module: sale
 #: view:sale.order:0
@@ -1558,8 +1173,7 @@ msgid "Cancel Quotation"
 msgstr "Anulați Oferta"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Shipping Exception"
 msgstr "Excepție la expediere"
 
@@ -1574,8 +1188,7 @@ msgid "Contracts Management"
 msgstr "Managementul Contractelor"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,month:0
+#: view:sale.report:0 field:sale.report,month:0
 msgid "Month"
 msgstr "Luna"
 
@@ -1590,8 +1203,7 @@ msgid "My Sales Orders"
 msgstr "Comenzile mele de vânzare"
 
 #. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create invoices"
 msgstr "Creează facturi"
 
@@ -1612,14 +1224,12 @@ msgstr "Plătit"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
-#: model:ir.ui.menu,name:sale.menu_report_product_all
-#: view:sale.report:0
+#: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
 msgid "Sales Analysis"
 msgstr "Analiza vânzărilor"
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_quotation0 view:sale.order:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Cotație"
@@ -1627,14 +1237,10 @@ msgstr "Cotație"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
 msgid ""
-"The Salesman creates an invoice manually, if the sales order shipping policy "
-"is 'Shipping and Manual in Progress'. The invoice is created automatically "
+"The Salesman creates an invoice manually, if the sales order shipping policy"
+" is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
-msgstr ""
-"Agentul de vanzari creeaza manual o factura, dacă politica de expediere a "
-"comenzii de vanzare este 'Expediere și Facturare Manuala in desfasurare'. "
-"Factura este creata in mod automat daca politica de expediere este 'Plata "
-"inainte de Livrare'."
+msgstr "Agentul de vanzari creeaza manual o factura, dacă politica de expediere a comenzii de vanzare este 'Expediere și Facturare Manuala in desfasurare'. Factura este creata in mod automat daca politica de expediere este 'Plata inainte de Livrare'."
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -1655,9 +1261,7 @@ msgstr "Folositi listele de preturi pentru a va adapta pretul per clienti"
 #: code:addons/sale/sale.py:187
 #, python-format
 msgid "There is no default shop for the current user's company!"
-msgstr ""
-"Nu exista nici un magazin implicit definit pentru compania utilizatorului "
-"actual!"
+msgstr "Nu exista nici un magazin implicit definit pentru compania utilizatorului actual!"
 
 #. module: sale
 #: code:addons/sale/sale.py:446
@@ -1669,9 +1273,7 @@ msgstr "Facturi clienți"
 #: model:ir.actions.act_window,name:sale.open_board_sales
 #: model:ir.ui.menu,name:sale.menu_dashboard_sales
 #: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
-#: view:sale.order:0
-#: view:sale.report:0
+#: view:res.partner:0 view:sale.order:0 view:sale.report:0
 msgid "Sales"
 msgstr "Vânzări"
 
@@ -1679,35 +1281,25 @@ msgstr "Vânzări"
 #: help:sale.config.settings,module_sale_margin:0
 msgid ""
 "This adds the 'Margin' on sales order.\n"
-"                This gives the profitability by calculating the difference "
-"between the Unit Price and Cost Price.\n"
+"                This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
-msgstr ""
-"Adauga 'Marja' pe comanda de vanzare.\n"
-"                Acesta da profitabilitatea prin calcularea diferentei dintre "
-"Pretul Unitar si Pretul de Cost.\n"
-"                Instaleaza modulul sale_margin."
+msgstr "Adauga 'Marja' pe comanda de vanzare.\n                Acesta da profitabilitatea prin calcularea diferentei dintre Pretul Unitar si Pretul de Cost.\n                Instaleaza modulul sale_margin."
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
+#: report:sale.order:0 field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Preț unitar"
 
 #. module: sale
-#: view:sale.order:0
-#: selection:sale.order,state:0
-#: view:sale.order.line:0
-#: selection:sale.order.line,state:0
-#: selection:sale.report,state:0
+#: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order.line,state:0 selection:sale.report,state:0
 msgid "Done"
 msgstr "Efectuat"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:120
 #: model:ir.model,name:sale.model_account_invoice
-#: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_invoice0 view:sale.order:0
 #, python-format
 msgid "Invoice"
 msgstr "Factura"
@@ -1738,33 +1330,95 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Factura Vanzare cu Plata in Avans"
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.order.line,product_id:0
-#: view:sale.report:0
-#: field:sale.report,product_id:0
+#: model:email.template,body_html:sale.email_template_edi_sale
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Buna ziua ${object.partner_id.name},</p>\n    \n    <p>Aici este ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} pentru ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERINTE</strong><br />\n       &nbsp;&nbsp;Numar comanda: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Total comanda: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data comenzii: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referinta comanda: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Contactul dumneavoastra: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    % if object.paypal_url:\n    <br/>\n    <p>De asemenea, puteti plati direct cu Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Daca aveti intrebari, nu ezitati sa ne contactati.</p>\n    <p>Va multumim ca ati ales ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+
+#. module: sale
+#: view:sale.order.line:0 field:sale.order.line,product_id:0
+#: view:sale.report:0 field:sale.report,product_id:0
 msgid "Product"
 msgstr "Produs"
 
 #. module: sale
 #: help:sale.order,order_policy:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. "
-"\n"
-"On delivery order: A draft invoice can be created from the delivery order "
-"when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be "
-"paid before the products can be delivered."
-msgstr ""
-"La cerere: O factura ciorna poate fi creata din comanda de vanzare atunci "
-"cand este necesar. \n"
-"La comanda de livrare: O factura ciorna poate fi creata din comanda de "
-"livrare atunci cand produsele au fost livrate. \n"
-"Inainte de livrare: O factura ciorna este creata din comanda de vanzare si "
-"trebuie platita inainte ca produsele sa poata fi livrate."
+"On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr "La cerere: O factura ciorna poate fi creata din comanda de vanzare atunci cand este necesar. \nLa comanda de livrare: O factura ciorna poate fi creata din comanda de livrare atunci cand produsele au fost livrate. \nInainte de livrare: O factura ciorna este creata din comanda de vanzare si trebuie platita inainte ca produsele sa poata fi livrate."
 
 #. module: sale
-#: view:account.invoice.report:0
-#: view:board.board:0
+#: view:account.invoice.report:0 view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
 msgstr "Cifra de afaceri lunară"
@@ -1821,11 +1475,7 @@ msgid ""
 "based on delivered or on ordered quantities. Thus, a sales order can "
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
-msgstr ""
-"In functie de Controlul factuaării comenzii de aânzare, factura se poate "
-"baza pe cantitatile livrate sau comandate. Astfel, o comanda de vanzare "
-"poate genera o factura sau o comanda de livrare de indata ce este confirmata "
-"de catre agentul de vanzari."
+msgstr "In functie de Controlul factuaării comenzii de aânzare, factura se poate baza pe cantitatile livrate sau comandate. Astfel, o comanda de vanzare poate genera o factura sau o comanda de livrare de indata ce este confirmata de catre agentul de vanzari."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1835,8 +1485,7 @@ msgstr "Niste linii ale comenzii"
 #. module: sale
 #: view:res.partner:0
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
-"sale.group_delivery_invoice_address (vanzare.adresa_factura_livrare_grup)"
+msgstr "sale.group_delivery_invoice_address (vanzare.adresa_factura_livrare_grup)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -1849,8 +1498,7 @@ msgid "Customer Reference"
 msgstr "Referinta Client"
 
 #. module: sale
-#: field:sale.order,amount_total:0
-#: view:sale.order.line:0
+#: field:sale.order,amount_total:0 view:sale.order.line:0
 msgid "Total"
 msgstr "Total"
 
@@ -1860,10 +1508,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr ""
-"Selectati modalitatea de facturare pentru aceasta comanda. Va\n"
-"                        crea o factura ciorna care poate fi modificata\n"
-"                        inainte de validare."
+msgstr "Selectati modalitatea de facturare pentru aceasta comanda. Va\n                        crea o factura ciorna care poate fi modificata\n                        inainte de validare."
 
 #. module: sale
 #: view:board.board:0
@@ -1879,31 +1524,18 @@ msgstr "Liniile Comenzii de Vanzare care sunt in starea 'efectuat'"
 #: help:sale.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allows to define your customer contracts conditions: invoicing\n"
-"            method (fixed price, on timesheet, advance invoice), the exact "
-"pricing\n"
-"            (650€/day for a developer), the duration (one year support "
-"contract).\n"
-"            You will be able to follow the progress of the contract and "
-"invoice automatically.\n"
+"            method (fixed price, on timesheet, advance invoice), the exact pricing\n"
+"            (650€/day for a developer), the duration (one year support contract).\n"
+"            You will be able to follow the progress of the contract and invoice automatically.\n"
 "            It installs the account_analytic_analysis module."
-msgstr ""
-"Va permite sa definiti conditiile contractelor cu clientii: metoda de\n"
-"            facturare (pret fix, in fisele de pontaj, factura in avans), "
-"stabilirea exacta a pretului\n"
-"            (650€/zi pentru un dezvoltator), durata (contract pe un an de "
-"asistenta tehnica).\n"
-"            Veti putea sa urmariti progresul contractului si sa facturati "
-"automat.\n"
-"            Instaleaza modulul account_analytic_analysis module."
+msgstr "Va permite sa definiti conditiile contractelor cu clientii: metoda de\n            facturare (pret fix, in fisele de pontaj, factura in avans), stabilirea exacta a pretului\n            (650€/zi pentru un dezvoltator), durata (contract pe un an de asistenta tehnica).\n            Veti putea sa urmariti progresul contractului si sa facturati automat.\n            Instaleaza modulul account_analytic_analysis module."
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -1914,14 +1546,11 @@ msgstr "Data la care comanda de vânzare este confirmată."
 #: code:addons/sale/sale.py:571
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
-"Mai întâi anulați toate facturile atașate acestei comenzi de vânzări."
+msgstr "Mai întâi anulați toate facturile atașate acestei comenzi de vânzări."
 
 #. module: sale
-#: field:sale.order,company_id:0
-#: field:sale.order.line,company_id:0
-#: view:sale.report:0
-#: field:sale.report,company_id:0
+#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
+#: view:sale.report:0 field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
 msgstr "Companie"
@@ -1937,8 +1566,7 @@ msgid "The amount to be invoiced in advance."
 msgstr "Suma care va fi facturata in avans."
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Invoice Exception"
 msgstr "Excepție factură"
 
@@ -1973,12 +1601,9 @@ msgid "Project"
 msgstr "Proiect"
 
 #. module: sale
-#: code:addons/sale/sale.py:187
-#: code:addons/sale/sale.py:365
-#: code:addons/sale/sale.py:506
-#: code:addons/sale/sale.py:604
-#: code:addons/sale/sale.py:769
-#: code:addons/sale/sale.py:786
+#: code:addons/sale/sale.py:187 code:addons/sale/sale.py:365
+#: code:addons/sale/sale.py:506 code:addons/sale/sale.py:604
+#: code:addons/sale/sale.py:769 code:addons/sale/sale.py:786
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -1991,17 +1616,12 @@ msgstr "Total Net:"
 #. module: sale
 #: help:sale.order.line,type:0
 msgid ""
-"From stock: When needed, the product is taken from the stock or we wait for "
-"replenishment.\n"
+"From stock: When needed, the product is taken from the stock or we wait for replenishment.\n"
 "On order: When needed, the product is purchased or produced."
-msgstr ""
-"Din stoc: Atunci cand este necesar, produsul este luat din stoc sau asteptam "
-"reaprovizionarea.\n"
-"La comanda: Atunci cand este necesar, produsul este cumparat sau fabricat."
+msgstr "Din stoc: Atunci cand este necesar, produsul este luat din stoc sau asteptam reaprovizionarea.\nLa comanda: Atunci cand este necesar, produsul este cumparat sau fabricat."
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
+#: selection:sale.order,state:0 selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
 msgstr "Anulat(ă)"
@@ -2023,9 +1643,7 @@ msgstr "Wizardul de compunere email-uri"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: field:sale.order,shop_id:0
-#: view:sale.report:0
-#: field:sale.report,shop_id:0
+#: field:sale.order,shop_id:0 view:sale.report:0 field:sale.report,shop_id:0
 msgid "Shop"
 msgstr "Magazin"
 
@@ -2038,9 +1656,7 @@ msgstr "Confirmarea datei"
 #: code:addons/sale/sale.py:366
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr ""
-"Va rugam sa definiti registrul de vanzari pentru aceasta companie: \"%s\" "
-"(id:%d)."
+msgstr "Va rugam sa definiti registrul de vanzari pentru aceasta companie: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.config.settings:0
@@ -2048,14 +1664,12 @@ msgid "Contract Features"
 msgstr "Caracteristici Contract"
 
 #. module: sale
-#: code:addons/sale/sale.py:289
-#: code:addons/sale/sale.py:590
+#: code:addons/sale/sale.py:289 code:addons/sale/sale.py:590
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
 #: field:res.partner,sale_order_ids:0
-#: model:res.request.link,name:sale.req_link_sale_order
-#: view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
 #: selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
@@ -2085,8 +1699,7 @@ msgstr "Confirmă"
 #: code:addons/sale/sale.py:826
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
-"Nu puteti anula o linie a comenzii de vanzare care a fost deja facturata."
+msgstr "Nu puteti anula o linie a comenzii de vanzare care a fost deja facturata."
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -2100,8 +1713,7 @@ msgstr "Linii factură"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Sales Order Lines"
 msgstr "Linii comanda de vanzare"
 
@@ -2145,16 +1757,10 @@ msgstr "Liniile comenzii de vanzare efectuate"
 #: code:addons/sale/wizard/sale_line_invoice.py:106
 #, python-format
 msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
+"Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
-msgstr ""
-"Factura nu poate fi creata pentru aceasta Linie a Comenzii de Vanzare "
-"datorita unuia dintre urmatoarele motive:\n"
-"1. Starea acestei linii a comenzii de vanzare este sau \"ciorna\" sau "
-"\"anulata\"!\n"
-"2. Linia Comenzii de Vanzare este facturata!"
+msgstr "Factura nu poate fi creata pentru aceasta Linie a Comenzii de Vanzare datorita unuia dintre urmatoarele motive:\n1. Starea acestei linii a comenzii de vanzare este sau \"ciorna\" sau \"anulata\"!\n2. Linia Comenzii de Vanzare este facturata!"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2175,9 +1781,7 @@ msgstr "Decembrie"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:97
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
-msgstr ""
-"Nu exista niciun cont de venituri definit pentru acest produs: \"%s\" "
-"(id:%d)."
+msgstr "Nu exista niciun cont de venituri definit pentru acest produs: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -2213,7 +1817,7 @@ msgstr "Iunie"
 #: code:addons/sale/wizard/sale_make_invoice.py:57
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
-msgstr ""
+msgstr "Nu ar trebui să facturaţi manual următoarea comandă de vânzare %s"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -2233,20 +1837,16 @@ msgstr "Șabloane e-mail"
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
 msgid ""
-"To allow your salesman to make invoices for sales order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-"Pentru a-i permite agentului dumneavoastra de vanzari sa faca facturi pentru "
-"liniile comenzii de vanzare folosind meniul 'Linii de Facturat'."
+"To allow your salesman to make invoices for sales order lines using the menu"
+" 'Lines to Invoice'."
+msgstr "Pentru a-i permite agentului dumneavoastra de vanzari sa faca facturi pentru liniile comenzii de vanzare folosind meniul 'Linii de Facturat'."
 
 #. module: sale
 #: view:sale.order.line:0
 msgid ""
-"Sales Order Lines that are confirmed, done or in exception state and haven't "
-"yet been invoiced"
-msgstr ""
-"Liniile Comenzii de Vanzare care sunt starea confirmate, efectuate sau in "
-"exceptie si nu au fost inca facturate"
+"Sales Order Lines that are confirmed, done or in exception state and haven't"
+" yet been invoiced"
+msgstr "Liniile Comenzii de Vanzare care sunt starea confirmate, efectuate sau in exceptie si nu au fost inca facturate"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2261,9 +1861,7 @@ msgstr "Avans Produse"
 #. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr ""
-"Ofera ordinea secventei atunci cand afiseaza o lista cu liniile comenzii de "
-"vanzare."
+msgstr "Ofera ordinea secventei atunci cand afiseaza o lista cu liniile comenzii de vanzare."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2283,12 +1881,10 @@ msgstr "Pregatiti facturile pe baza fiselor de pontaj"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
-"Referinta documentului care a generat aceasta cerere a comenzii de vanzare."
+msgstr "Referinta documentului care a generat aceasta cerere a comenzii de vanzare."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,delay:0
+#: view:sale.report:0 field:sale.report,delay:0
 msgid "Commitment Delay"
 msgstr "Angajament in cazul intarzierii"
 
@@ -2344,8 +1940,7 @@ msgid "It indicates that an invoice has been paid."
 msgstr "Indica faptul ca o factura a fost platita."
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,name:0
+#: report:sale.order:0 field:sale.order.line,name:0
 msgid "Description"
 msgstr "Descriere"
 
@@ -2365,8 +1960,7 @@ msgid "Order Number"
 msgstr "Numarul Comenzii"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,partner_id:0
+#: view:sale.order:0 field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Client"
@@ -2390,17 +1984,12 @@ msgstr "Aprilie"
 #: view:sale.config.settings:0
 msgid ""
 "Use contract to be able to manage your services with\n"
-"                        multiple invoicing as part of the same contract "
-"with\n"
+"                        multiple invoicing as part of the same contract with\n"
 "                        your customer."
-msgstr ""
-"Folositi contractul pentru a va putea gestiona serviciile cu\n"
-"                        facturare multipla ca parte a aceluiasi contract cu\n"
-"                        clientul dumneavoastra."
+msgstr "Folositi contractul pentru a va putea gestiona serviciile cu\n                        facturare multipla ca parte a aceluiasi contract cu\n                        clientul dumneavoastra."
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Search Sales Order"
 msgstr "Cauta comanda de vanzare"
 
@@ -2420,8 +2009,7 @@ msgid "Sequence"
 msgstr "Secvență"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order,payment_term:0
+#: report:sale.order:0 field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Termen de plata"
 
@@ -2434,18 +2022,11 @@ msgstr "Permite instalarea modulului sale_analytic_plans."
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr ""
-"Acest raport efectueaza analiza cotatiilor și a comenzilor de vanzare ale "
-"dumneavoastra. Analiza verifica veniturile din vanzari si le sorteaza dupa "
-"diferite criterii de grup (agent de vanzari, partener, produs, etc). "
-"Folositi acest raport pentru a efectua analiza vanzarilor care nu au fost "
-"facturate inca. Daca doriti sa analizați cifra dumneavoastra de afaceri, "
-"trebuie sa utilizati raportul Analiza Facturilor din Aplicatia de "
-"contabilitate."
+msgstr "Acest raport efectueaza analiza cotatiilor și a comenzilor de vanzare ale dumneavoastra. Analiza verifica veniturile din vanzari si le sorteaza dupa diferite criterii de grup (agent de vanzari, partener, produs, etc). Folositi acest raport pentru a efectua analiza vanzarilor care nu au fost facturate inca. Daca doriti sa analizați cifra dumneavoastra de afaceri, trebuie sa utilizati raportul Analiza Facturilor din Aplicatia de contabilitate."
 
 #. module: sale
 #: report:sale.order:0
@@ -2458,28 +2039,6 @@ msgid "Picked"
 msgstr "Ridicat(a)"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,year:0
+#: view:sale.report:0 field:sale.report,year:0
 msgid "Year"
 msgstr "An"
-
-#, python-format
-#~ msgid "No Customer Defined !"
-#~ msgstr "Niciun client definit !"
-
-#, python-format
-#~ msgid ""
-#~ "In order to delete a confirmed sales order, you must cancel it before !"
-#~ msgstr ""
-#~ "Pentru a sterge o comanda de vanzare confirmata, mai intai trebuie sa o "
-#~ "anulati !"
-
-#~ msgid "Quotation send"
-#~ msgstr "Trimite Oferta"
-
-#~ msgid ""
-#~ "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name} ${object.state in ('draft', 'sent') și 'Cotație' "
-#~ "sau 'Comandă'} (Ref ${object.name or 'n/a' })"

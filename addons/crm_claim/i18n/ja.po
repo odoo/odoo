@@ -1,28 +1,29 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * crm_claim
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:47+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
 msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
-msgstr ""
+msgstr "ステータスバーやかんばんビューで表示すべきレコードが存在しない場合、このステージは表示されません。"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -30,8 +31,7 @@ msgid "# of Cases"
 msgstr "案件の数"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: view:crm.claim.report:0
+#: view:crm.claim:0 view:crm.claim.report:0
 msgid "Group By..."
 msgstr "グループ化…"
 
@@ -65,7 +65,7 @@ msgstr "締めを延期する"
 #. module: crm_claim
 #: field:crm.claim,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未読メッセージ"
 
 #. module: crm_claim
 #: field:crm.claim,resolution:0
@@ -73,8 +73,7 @@ msgid "Resolution"
 msgstr "決定"
 
 #. module: crm_claim
-#: field:crm.claim,company_id:0
-#: view:crm.claim.report:0
+#: field:crm.claim,company_id:0 view:crm.claim.report:0
 #: field:crm.claim.report,company_id:0
 msgid "Company"
 msgstr "会社"
@@ -100,22 +99,20 @@ msgstr "苦情の数"
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "ステージ名"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "販売担当者"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
+#: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "Highest"
 msgstr "最高"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-#: field:crm.claim.report,day:0
+#: view:crm.claim.report:0 field:crm.claim.report,day:0
 msgid "Day"
 msgstr "日"
 
@@ -135,8 +132,7 @@ msgid "Factual Claims"
 msgstr "実際のクレーム"
 
 #. module: crm_claim
-#: selection:crm.claim,state:0
-#: selection:crm.claim.report,state:0
+#: selection:crm.claim,state:0 selection:crm.claim.report,state:0
 #: selection:crm.claim.stage,state:0
 msgid "Cancelled"
 msgstr "キャンセル済み"
@@ -184,16 +180,13 @@ msgid ""
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,date_deadline:0
+#: view:crm.claim:0 field:crm.claim,date_deadline:0
 #: field:crm.claim.report,date_deadline:0
 msgid "Deadline"
 msgstr "締切期限"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,partner_id:0
-#: view:crm.claim.report:0
+#: view:crm.claim:0 field:crm.claim,partner_id:0 view:crm.claim.report:0
 #: field:crm.claim.report,partner_id:0
 #: model:ir.model,name:crm_claim.model_res_partner
 msgid "Partner"
@@ -205,8 +198,7 @@ msgid "Month of claim"
 msgstr "クレームの月"
 
 #. module: crm_claim
-#: selection:crm.claim,type_action:0
-#: selection:crm.claim.report,type_action:0
+#: selection:crm.claim,type_action:0 selection:crm.claim.report,type_action:0
 msgid "Preventive Action"
 msgstr "予防措置"
 
@@ -226,8 +218,7 @@ msgid "Trouble Responsible"
 msgstr "不具合の責任"
 
 #. module: crm_claim
-#: field:crm.claim,priority:0
-#: view:crm.claim.report:0
+#: field:crm.claim,priority:0 view:crm.claim.report:0
 #: field:crm.claim.report,priority:0
 msgid "Priority"
 msgstr "優先度"
@@ -240,12 +231,10 @@ msgstr ""
 #. module: crm_claim
 #: field:crm.claim,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "フォロワー"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: selection:crm.claim,state:0
-#: view:crm.claim.report:0
+#: view:crm.claim:0 selection:crm.claim,state:0 view:crm.claim.report:0
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
 #: selection:crm.claim.stage,state:0
 msgid "New"
@@ -254,7 +243,7 @@ msgstr "新規"
 #. module: crm_claim
 #: field:crm.claim.stage,section_ids:0
 msgid "Sections"
-msgstr ""
+msgstr "セクション"
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
@@ -262,8 +251,7 @@ msgid "Email"
 msgstr "Eメール"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
+#: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "Lowest"
 msgstr "最低"
 
@@ -271,7 +259,7 @@ msgstr "最低"
 #: code:addons/crm_claim/crm_claim.py:186
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s（コピー）"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -291,7 +279,7 @@ msgstr "クレームの件名"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim3
 msgid "Rejected"
-msgstr ""
+msgstr "拒否"
 
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
@@ -327,9 +315,7 @@ msgid "Categories"
 msgstr "種類"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,stage_id:0
-#: view:crm.claim.report:0
+#: view:crm.claim:0 field:crm.claim,stage_id:0 view:crm.claim.report:0
 #: field:crm.claim.report,stage_id:0
 msgid "Stage"
 msgstr "段階"
@@ -348,7 +334,7 @@ msgstr ""
 #: code:addons/crm_claim/crm_claim.py:202
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "無題"
 
 #. module: crm_claim
 #: help:crm.claim.stage,state:0
@@ -367,7 +353,7 @@ msgstr ""
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
 msgid "Stages"
-msgstr ""
+msgstr "ステージ"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
@@ -388,7 +374,7 @@ msgstr "CRMクレーム報告書"
 #. module: crm_claim
 #: view:sale.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "設定"
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim1
@@ -406,14 +392,12 @@ msgid "December"
 msgstr "12月"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-#: field:crm.claim.report,month:0
+#: view:crm.claim.report:0 field:crm.claim.report,month:0
 msgid "Month"
 msgstr "月"
 
 #. module: crm_claim
-#: field:crm.claim,type_action:0
-#: view:crm.claim.report:0
+#: field:crm.claim,type_action:0 view:crm.claim.report:0
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
 msgstr "アクションタイプ"
@@ -438,11 +422,10 @@ msgstr "クレームの年"
 msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
-msgstr ""
+msgstr "この項目をチェックした場合、この段階が各営業チームにデフォルトで提案されます。既存のチームにはこの段階を割り当てることはありません。"
 
 #. module: crm_claim
-#: field:crm.claim,categ_id:0
-#: view:crm.claim.report:0
+#: field:crm.claim,categ_id:0 view:crm.claim.report:0
 #: field:crm.claim.report,categ_id:0
 msgid "Category"
 msgstr "種類"
@@ -473,19 +456,16 @@ msgstr "これらのEメールアドレスは送受信するEメールの CC 欄
 #. module: crm_claim
 #: selection:crm.claim.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "ドラフト"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
+#: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "Low"
 msgstr "低い"
 
 #. module: crm_claim
-#: field:crm.claim,date_closed:0
-#: selection:crm.claim,state:0
-#: selection:crm.claim.report,state:0
-#: selection:crm.claim.stage,state:0
+#: field:crm.claim,date_closed:0 selection:crm.claim,state:0
+#: selection:crm.claim.report,state:0 selection:crm.claim.stage,state:0
 msgid "Closed"
 msgstr "既決"
 
@@ -505,22 +485,16 @@ msgid "Claim Stage"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: selection:crm.claim,state:0
-#: view:crm.claim.report:0
-#: selection:crm.claim.report,state:0
-#: selection:crm.claim.stage,state:0
+#: view:crm.claim:0 selection:crm.claim,state:0 view:crm.claim.report:0
+#: selection:crm.claim.report,state:0 selection:crm.claim.stage,state:0
 msgid "Pending"
 msgstr "保留"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,state:0
-#: view:crm.claim.report:0
-#: field:crm.claim.report,state:0
-#: field:crm.claim.stage,state:0
+#: view:crm.claim:0 field:crm.claim,state:0 view:crm.claim.report:0
+#: field:crm.claim.report,state:0 field:crm.claim.stage,state:0
 msgid "Status"
-msgstr ""
+msgstr "ステータス"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -528,15 +502,14 @@ msgid "August"
 msgstr "8月"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
+#: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "Normal"
 msgstr "正常"
 
 #. module: crm_claim
 #: help:crm.claim.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "ステージの順位に使用します。 低いほど良好です。"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -567,13 +540,10 @@ msgstr "ユーザ"
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to setup a new stage in the processing of the claims. "
-"\n"
+"                Click to setup a new stage in the processing of the claims. \n"
 "              </p><p>\n"
-"                You can create claim stages to categorize the status of "
-"every\n"
-"                claim entered in the system. The stages define all the "
-"steps\n"
+"                You can create claim stages to categorize the status of every\n"
+"                claim entered in the system. The stages define all the steps\n"
 "                required for the resolution of a claim.\n"
 "              </p>\n"
 "            "
@@ -583,10 +553,10 @@ msgstr ""
 #: help:crm.claim,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
 msgstr ""
 
 #. module: crm_claim
@@ -627,15 +597,14 @@ msgid "January"
 msgstr "1月"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,date:0
+#: view:crm.claim:0 field:crm.claim,date:0
 msgid "Claim Date"
 msgstr "クレームの日付"
 
 #. module: crm_claim
 #: field:crm.claim,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "要約"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -648,19 +617,16 @@ msgid "Common to All Teams"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: view:crm.claim.report:0
+#: view:crm.claim:0 view:crm.claim.report:0
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
-#: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
-#: view:res.partner:0
+#: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims view:res.partner:0
 #: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "クレーム"
 
 #. module: crm_claim
-#: selection:crm.claim,type_action:0
-#: selection:crm.claim.report,type_action:0
+#: selection:crm.claim,type_action:0 selection:crm.claim.report,type_action:0
 msgid "Corrective Action"
 msgstr "修正措置"
 
@@ -675,8 +641,7 @@ msgid "Date Closed"
 msgstr "解決日付"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: model:ir.model,name:crm_claim.model_crm_claim
+#: view:crm.claim:0 model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
 msgstr "クレーム"
@@ -702,8 +667,7 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-#: selection:crm.claim.report,state:0
+#: view:crm.claim.report:0 selection:crm.claim.report,state:0
 msgid "Open"
 msgstr "オープン"
 
@@ -713,16 +677,14 @@ msgid "New Claims"
 msgstr "新しいクレーム"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: selection:crm.claim,state:0
+#: view:crm.claim:0 selection:crm.claim,state:0
 #: model:crm.claim.stage,name:crm_claim.stage_claim5
 #: selection:crm.claim.stage,state:0
 msgid "In Progress"
 msgstr "進行中"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,user_id:0
+#: view:crm.claim:0 field:crm.claim,user_id:0
 msgid "Responsible"
 msgstr "責任者"
 
@@ -767,8 +729,7 @@ msgid "May"
 msgstr "5月"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: view:crm.claim.report:0
+#: view:crm.claim:0 view:crm.claim.report:0
 msgid "Type"
 msgstr "タイプ"
 
@@ -801,18 +762,13 @@ msgstr "2月"
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Record and track your customers' claims. Claims may be "
-"linked to a sales order or a lot.You can send emails with attachments and "
-"keep the full history for a claim (emails sent, intervention type and so "
-"on).Claims may automatically be linked to an email address using the mail "
-"gateway module.\n"
+"                Record and track your customers' claims. Claims may be linked to a sales order or a lot.You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on).Claims may automatically be linked to an email address using the mail gateway module.\n"
 "            </p>\n"
 "            "
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-#: field:crm.claim.report,name:0
+#: view:crm.claim.report:0 field:crm.claim.report,name:0
 msgid "Year"
 msgstr "年"
 
@@ -839,7 +795,7 @@ msgstr ""
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "メッセージと通信履歴"
 
 #. module: crm_claim
 #: field:sale.config.settings,fetchmail_claim:0
@@ -849,7 +805,7 @@ msgstr ""
 #. module: crm_claim
 #: field:crm.claim.stage,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "順序"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -857,14 +813,12 @@ msgid "Actions"
 msgstr "アクション"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
+#: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "High"
 msgstr "高"
 
 #. module: crm_claim
-#: field:crm.claim,section_id:0
-#: view:crm.claim.report:0
+#: field:crm.claim,section_id:0 view:crm.claim.report:0
 msgid "Sales Team"
 msgstr "営業チーム"
 

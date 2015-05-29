@@ -1,28 +1,26 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * process
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
-"macedonian@lists.launchpad.net >\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-02-28 20:37+0000\n"
-"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
-"Language-Team: OpenERP Macedonia <openerp-i18n-"
-"macedonian@lists.launchpad.net>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-7/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
 "Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: process
-#: model:ir.model,name:process.model_process_node
-#: view:process.node:0
+#: model:ir.model,name:process.model_process_node view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
 msgstr "Јазол на процесот"
@@ -32,9 +30,7 @@ msgstr "Јазол на процесот"
 msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
-msgstr ""
-"Доколку активното поле е подесено на Грешка, ќе ви дозволи да го сокриете "
-"процесот без да го отстраните."
+msgstr "Доколку активното поле е подесено на Грешка, ќе ви дозволи да го сокриете процесот без да го отстраните."
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -52,8 +48,7 @@ msgid "Buttons"
 msgstr "Копчиња"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Group By..."
 msgstr "Групирај по..."
 
@@ -74,21 +69,18 @@ msgstr "Почнување на тек"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.ui.menu,name:process.menu_process_node_form
-#: view:process.node:0
+#: model:ir.ui.menu,name:process.menu_process_node_form view:process.node:0
 #: view:process.process:0
 msgid "Process Nodes"
 msgstr "Јазли на процесот"
 
 #. module: process
-#: view:process.process:0
-#: field:process.process,node_ids:0
+#: view:process.process:0 field:process.process,node_ids:0
 msgid "Nodes"
 msgstr "Јазли"
 
 #. module: process
-#: field:process.node,condition_ids:0
-#: view:process.process:0
+#: field:process.node,condition_ids:0 view:process.process:0
 msgid "Conditions"
 msgstr "Услови"
 
@@ -118,10 +110,8 @@ msgid "Process Transitions Actions"
 msgstr "Активности за премини на процес"
 
 #. module: process
-#: field:process.condition,model_id:0
-#: view:process.node:0
-#: field:process.node,model_id:0
-#: view:process.process:0
+#: field:process.condition,model_id:0 view:process.node:0
+#: field:process.node,model_id:0 view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
 msgstr "Предмет"
@@ -132,8 +122,7 @@ msgid "Source Node"
 msgstr "Изворен јазол"
 
 #. module: process
-#: view:process.transition:0
-#: field:process.transition,transition_ids:0
+#: view:process.transition:0 field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr "премин на текот на работа"
 
@@ -184,10 +173,8 @@ msgid "Transition"
 msgstr "Премин"
 
 #. module: process
-#: field:process.condition,name:0
-#: field:process.node,name:0
-#: field:process.process,name:0
-#: field:process.transition,name:0
+#: field:process.condition,name:0 field:process.node,name:0
+#: field:process.process,name:0 field:process.transition,name:0
 #: field:process.transition.action,name:0
 msgid "Name"
 msgstr "Име"
@@ -205,11 +192,8 @@ msgid "Related:"
 msgstr "Поврзани:"
 
 #. module: process
-#: view:process.node:0
-#: field:process.node,note:0
-#: view:process.process:0
-#: field:process.process,note:0
-#: view:process.transition:0
+#: view:process.node:0 field:process.node,note:0 view:process.process:0
+#: field:process.process,note:0 view:process.transition:0
 msgid "Notes"
 msgstr "Белешки"
 
@@ -270,8 +254,7 @@ msgid "Required Groups"
 msgstr "Потребни групи"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Incoming Transitions"
 msgstr "Дојдовни премини"
 
@@ -290,8 +273,7 @@ msgstr "Завршни премини"
 #: code:addons/process/static/src/js/process.js:243
 #: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
-#: field:process.node,process_id:0
-#: view:process.process:0
+#: field:process.node,process_id:0 view:process.process:0
 #, python-format
 msgid "Process"
 msgstr "Процес"
@@ -302,8 +284,7 @@ msgid "Search ProcessNode"
 msgstr "Пребарувај јазол на процес"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Other Conditions"
 msgstr "Други услови"
 
@@ -318,8 +299,7 @@ msgid "Actions"
 msgstr "Дејства"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Properties"
 msgstr "Својства"
 
@@ -347,8 +327,7 @@ msgid "Subflows:"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Outgoing Transitions"
 msgstr "Излезни премини"
 
@@ -360,14 +339,12 @@ msgid "Notes:"
 msgstr "Забелешки:"
 
 #. module: process
-#: selection:process.node,kind:0
-#: field:process.node,subflow_id:0
+#: selection:process.node,kind:0 field:process.node,subflow_id:0
 msgid "Subflow"
-msgstr ""
+msgstr "Подтек"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Transitions"
 msgstr "Премини"
 

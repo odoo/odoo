@@ -1,21 +1,22 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mrp_repair
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-02-15 04:18+0000\n"
-"Last-Translator: gobi <Unknown>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-7/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -39,8 +40,7 @@ msgid "Cancel Repair Order"
 msgstr "Засварын захиалгыг цуцлах"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,to_invoice:0
-#: field:mrp.repair.line,to_invoice:0
+#: field:mrp.repair.fee,to_invoice:0 field:mrp.repair.line,to_invoice:0
 msgid "To Invoice"
 msgstr "Нэхэмжлэх"
 
@@ -71,8 +71,7 @@ msgid "No product defined on Fees!"
 msgstr "Ажлын хөлс дээр бараа тодорхойлогдоогүй байна!"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,company_id:0
+#: view:mrp.repair:0 field:mrp.repair,company_id:0
 msgid "Company"
 msgstr "Компани"
 
@@ -133,8 +132,7 @@ msgid "Messages"
 msgstr "Зурвас"
 
 #. module: mrp_repair
-#: field:mrp.repair,amount_tax:0
-#: field:mrp.repair.fee,tax_id:0
+#: field:mrp.repair,amount_tax:0 field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
 msgid "Taxes"
 msgstr "Татвар"
@@ -153,8 +151,7 @@ msgid "Net Total :"
 msgstr "Цэвэр дүн :"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-#: selection:mrp.repair.line,state:0
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
 msgstr "Цуцалсан"
 
@@ -174,54 +171,25 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a reparation order. \n"
 "              </p><p>\n"
-"                In a repair order, you can detail the components you "
-"remove,\n"
-"                add or replace and record the time you spent on the "
-"different\n"
+"                In a repair order, you can detail the components you remove,\n"
+"                add or replace and record the time you spent on the different\n"
 "                operations.\n"
 "              </p><p>\n"
-"                The repair order uses the warranty date on the Serial Number "
-"in\n"
-"                order to know if whether the repair should be invoiced to "
-"the\n"
+"                The repair order uses the warranty date on the Serial Number in\n"
+"                order to know if whether the repair should be invoiced to the\n"
 "                customer or not.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Засварын захиалгыг үүсгэхдээ дарна уу. \n"
-"              </p><p>\n"
-"                Засварын захиалганд нэмсэн, хассан, солисон бүрэлдхүүн "
-"болон\n"
-"                ажиллагаанд зарцуулсан цаг зэрэгийг дэлгэрэнгүйгээр бүртгэж "
-"болно.\n"
-"              </p><p>\n"
-"                засварын захиалга нь Серийн Дугаар дээрх баталгаат "
-"хугацааны\n"
-"                огноог хэрэглэдэг. Ингэснээр засварыг захиалагчаас нэхэмжлэх "
-"эсэхээ\n"
-"                шийддэг.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Засварын захиалгыг үүсгэхдээ дарна уу. \n              </p><p>\n                Засварын захиалганд нэмсэн, хассан, солисон бүрэлдхүүн болон\n                ажиллагаанд зарцуулсан цаг зэрэгийг дэлгэрэнгүйгээр бүртгэж болно.\n              </p><p>\n                засварын захиалга нь Серийн Дугаар дээрх баталгаат хугацааны\n                огноог хэрэглэдэг. Ингэснээр засварыг захиалагчаас нэхэмжлэх эсэхээ\n                шийддэг.\n              </p>\n            "
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
 msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in "
-"draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order "
-"in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.     "
-"                   \n"
+" * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n"
+"* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
+"* The 'Done' status is set automatically when repair order is completed.                        \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr ""
-" * 'Ноорог' төлөв нь засварын захиалга ноорог байхад автоматаар олгогдоно.   "
-"                      \n"
-"* 'Батлагдсан' төлөв нь засварын захиалга батлагдсан төлөвт байхад автомат "
-"олгогдоно.                         \n"
-"* 'Хийгдсэн' төлөв нь засварын захиалга хийж гүйцсэн тохиолдолд автомат "
-"олгогдоно.                        \n"
-"* 'Цуцлагдсан' төлөв нь хэрэглэгч засварын захиалгыг цуцлахад олгогдоно."
+msgstr " * 'Ноорог' төлөв нь засварын захиалга ноорог байхад автоматаар олгогдоно.                         \n* 'Батлагдсан' төлөв нь засварын захиалга батлагдсан төлөвт байхад автомат олгогдоно.                         \n* 'Хийгдсэн' төлөв нь засварын захиалга хийж гүйцсэн тохиолдолд автомат олгогдоно.                        \n* 'Цуцлагдсан' төлөв нь хэрэглэгч засварын захиалгыг цуцлахад олгогдоно."
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
@@ -249,9 +217,7 @@ msgstr "Үнийн санал / Захиалга"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
-"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
+msgstr "Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -273,8 +239,7 @@ msgid "(update)"
 msgstr "(шинэчлэх)"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,partner_id:0
+#: view:mrp.repair:0 field:mrp.repair,partner_id:0
 msgid "Partner"
 msgstr "Харилцагч"
 
@@ -285,8 +250,7 @@ msgid "No account defined for partner \"%s\"."
 msgstr "\"%s\" харилцагчид данс тодорхойлогдоогүй байна."
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: selection:mrp.repair,state:0
+#: view:mrp.repair:0 selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Confirmed"
 msgstr "Батлагдсан"
@@ -294,27 +258,13 @@ msgstr "Батлагдсан"
 #. module: mrp_repair
 #: help:mrp.repair,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.      "
-"       \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
-" * 'Ноорог' төлөв нь хэрэглэгч засварын захиалгыг оруулаад батлаагүй байх "
-"үед хэрэглэгдэнэ.             \n"
-"* 'Батлагдсан' төлөв нь хэрэглэгч засварын захиалгыг батлахад олгогдоно.     "
-"        \n"
-"* 'Засахад бэлэн' төлөв нь хэрэглэгч засварыг эхлэхэд хэрэглэгддэг, гэхдээ "
-"зөвхөн засварын захиалгыг батласан дараа л эхлэх боломжтой.             \n"
-"* 'Нэхэмжлэх' төлөв нь засвар хийгдэж дууссан дараа нэхэмжлэх үүсгэхэд бэлэн "
-"байхад хэрэглэгдэнэ.             \n"
-"* 'Хийгдсэн' төлөв нь засвар дууссан тохиолдолд олгогдоно.            \n"
-"* 'Цуцлагдсан' засварыг цуцласан тохиолдолд энэ төлөв олгогдоно."
+msgstr " * 'Ноорог' төлөв нь хэрэглэгч засварын захиалгыг оруулаад батлаагүй байх үед хэрэглэгдэнэ.             \n* 'Батлагдсан' төлөв нь хэрэглэгч засварын захиалгыг батлахад олгогдоно.             \n* 'Засахад бэлэн' төлөв нь хэрэглэгч засварыг эхлэхэд хэрэглэгддэг, гэхдээ зөвхөн засварын захиалгыг батласан дараа л эхлэх боломжтой.             \n* 'Нэхэмжлэх' төлөв нь засвар хийгдэж дууссан дараа нэхэмжлэх үүсгэхэд бэлэн байхад хэрэглэгдэнэ.             \n* 'Хийгдсэн' төлөв нь засвар дууссан тохиолдолд олгогдоно.            \n* 'Цуцлагдсан' засварыг цуцласан тохиолдолд энэ төлөв олгогдоно."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -333,8 +283,7 @@ msgid "Repair Order N° :"
 msgstr "Засварын Захиалга № :"
 
 #. module: mrp_repair
-#: field:mrp.repair,prodlot_id:0
-#: field:mrp.repair.line,prodlot_id:0
+#: field:mrp.repair,prodlot_id:0 field:mrp.repair.line,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
 msgstr "Цувралын Дугаар"
@@ -379,9 +328,7 @@ msgstr "Нийт :"
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr ""
-"Энэ үйлдэл нь засварын захиалгыг цуцлах боловч үүний нэхэмжлэлийг нь "
-"цуцлахгүй. Та үргэлжлүүлэхийг хүсч байна уу?"
+msgstr "Энэ үйлдэл нь засварын захиалгыг цуцлах боловч үүний нэхэмжлэлийг нь цуцлахгүй. Та үргэлжлүүлэхийг хүсч байна уу?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -394,9 +341,7 @@ msgid "Quotation Notes"
 msgstr "Үнийн саналын тэмдэглэл"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,state:0
-#: field:mrp.repair.line,state:0
+#: view:mrp.repair:0 field:mrp.repair,state:0 field:mrp.repair.line,state:0
 msgid "Status"
 msgstr "Төлөв"
 
@@ -411,8 +356,7 @@ msgid "(Add)"
 msgstr "(Нэмэх)"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_line
-#: view:mrp.repair:0
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line view:mrp.repair:0
 msgid "Repair Line"
 msgstr "Засварын мөр"
 
@@ -427,8 +371,7 @@ msgid "Invoice Method"
 msgstr "Нэхэмжлэх арга"
 
 #. module: mrp_repair
-#: field:mrp.repair,repaired:0
-#: selection:mrp.repair,state:0
+#: field:mrp.repair,repaired:0 selection:mrp.repair,state:0
 msgid "Repaired"
 msgstr "Засагдсан"
 
@@ -459,22 +402,18 @@ msgid "Yes"
 msgstr "Тийм"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
+#: view:mrp.repair.cancel:0 view:mrp.repair.make_invoice:0
 msgid "or"
 msgstr "эсвэл"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,invoiced:0
-#: field:mrp.repair.fee,invoiced:0
-#: field:mrp.repair.line,invoiced:0
+#: view:mrp.repair:0 field:mrp.repair,invoiced:0
+#: field:mrp.repair.fee,invoiced:0 field:mrp.repair.line,invoiced:0
 msgid "Invoiced"
 msgstr "Нэхэмжилсэн"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,product_uom:0
-#: field:mrp.repair.line,product_uom:0
+#: field:mrp.repair.fee,product_uom:0 field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
 msgstr "Барааны хэмжих нэгж"
 
@@ -504,8 +443,7 @@ msgid "Repair Reference"
 msgstr "Засварын Код"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair
-#: view:mrp.repair:0
+#: model:ir.model,name:mrp_repair.model_mrp_repair view:mrp.repair:0
 msgid "Repair Order"
 msgstr "Засварын Захиалга"
 
@@ -530,10 +468,7 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr ""
-"'Засварын өмнө' эсвэл 'Засварын дараа' гэдэгийг сонгосноор засварын өмнө "
-"эсвэл дараа нэхэмжлэл үүсгэхийг сонгодог. 'Нэхэмжлэл үгүй' гэдэг нь засварт "
-"нэхэмжлэл үүсгэхгүйг илэрхийлнэ."
+msgstr "'Засварын өмнө' эсвэл 'Засварын дараа' гэдэгийг сонгосноор засварын өмнө эсвэл дараа нэхэмжлэл үүсгэхийг сонгодог. 'Нэхэмжлэл үгүй' гэдэг нь засварт нэхэмжлэл үүсгэхгүйг илэрхийлнэ."
 
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
@@ -556,8 +491,7 @@ msgid "unknown"
 msgstr "үл мэдэгдэх"
 
 #. module: mrp_repair
-#: field:mrp.repair,product_id:0
-#: report:repair.order:0
+#: field:mrp.repair,product_id:0 report:repair.order:0
 msgid "Product to Repair"
 msgstr "Засах бараа"
 
@@ -631,10 +565,8 @@ msgid "Quotations"
 msgstr "Үнийн санал"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_uom_qty:0
-#: field:mrp.repair.line,product_uom_qty:0
-#: report:repair.order:0
+#: view:mrp.repair:0 field:mrp.repair.fee,product_uom_qty:0
+#: field:mrp.repair.line,product_uom_qty:0 report:repair.order:0
 msgid "Quantity"
 msgstr "Тоо хэмжээ"
 
@@ -660,8 +592,7 @@ msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,price_unit:0
-#: field:mrp.repair.line,price_unit:0
+#: field:mrp.repair.fee,price_unit:0 field:mrp.repair.line,price_unit:0
 #: report:repair.order:0
 msgid "Unit Price"
 msgstr "Нэгж үнэ"
@@ -682,8 +613,7 @@ msgid "Fees"
 msgstr "Ажлын хөлс"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
+#: view:mrp.repair.cancel:0 view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "Цуцлах"
 
@@ -713,28 +643,20 @@ msgid ""
 "Check this box if you want to manage the delivery once the product is "
 "repaired and create a picking with selected product. Note that you can "
 "select the locations in the Info tab, if you have the extended view."
-msgstr ""
-"Хэрэв бараа засагдаж дууссан дараа сонгосон бараануудыг давхар бэлтгэн хамт "
-"хүргэж өгөхийг хүсвэл үүнийг сонгоно. Хэрэв өргөтгөсөн харагдацийг ашиглаж "
-"байгаа бол Мэдээлэл хавтсанд байрлалыг сонгох боломжтой."
+msgstr "Хэрэв бараа засагдаж дууссан дараа сонгосон бараануудыг давхар бэлтгэн хамт хүргэж өгөхийг хүсвэл үүнийг сонгоно. Хэрэв өргөтгөсөн харагдацийг ашиглаж байгаа бол Мэдээлэл хавтсанд байрлалыг сонгох боломжтой."
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
 msgid ""
 "The warranty expiration limit is computed as: last move date + warranty "
 "defined on selected product. If the current date is below the warranty "
-"expiration limit, each operation and fee you will add will be set as 'not to "
-"invoiced' by default. Note that you can change manually afterwards."
-msgstr ""
-"Баталгааны дуусах хугацааг дараах байдлаар тооцоолдог: сүүлийн хөдөлгөөний "
-"огноо + сонгосон бараанд тодорхойлсон баталгаа. Хэрэв одоогийн огноо нь "
-"баталгаат хугацаанд багтаж байвал таны нэмсэн төлбөр, ажиллагаанууд бүгд "
-"'Нэхэмжлэхгүй' гэж тохируулагдана."
+"expiration limit, each operation and fee you will add will be set as 'not to"
+" invoiced' by default. Note that you can change manually afterwards."
+msgstr "Баталгааны дуусах хугацааг дараах байдлаар тооцоолдог: сүүлийн хөдөлгөөний огноо + сонгосон бараанд тодорхойлсон баталгаа. Хэрэв одоогийн огноо нь баталгаат хугацаанд багтаж байвал таны нэмсэн төлбөр, ажиллагаанууд бүгд 'Нэхэмжлэхгүй' гэж тохируулагдана."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
-#: view:mrp.repair:0
-#: view:mrp.repair.make_invoice:0
+#: view:mrp.repair:0 view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
 msgstr "Нэхэмжлэл үүсгэх"
 
@@ -744,8 +666,7 @@ msgid "Reair Orders"
 msgstr "Засварын захиалгууд"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,name:0
-#: field:mrp.repair.line,name:0
+#: field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
 #: report:repair.order:0
 msgid "Description"
 msgstr "Тайлбар"
@@ -756,8 +677,7 @@ msgid "Operation Lines"
 msgstr "Ажиллагааны мөрүүд"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_id:0
+#: view:mrp.repair:0 field:mrp.repair.fee,product_id:0
 #: field:mrp.repair.line,product_id:0
 msgid "Product"
 msgstr "Бараа"
@@ -809,8 +729,7 @@ msgid "Untaxed amount"
 msgstr "Татваргүй дүн"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,repair_id:0
-#: field:mrp.repair.line,repair_id:0
+#: field:mrp.repair.fee,repair_id:0 field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
 msgstr "Засварын Захиалгын Код"
 
@@ -851,8 +770,7 @@ msgid "Source Location"
 msgstr "Эх байрлал"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
-#: view:mrp.repair:0
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel view:mrp.repair:0
 msgid "Cancel Repair"
 msgstr "Засвар Цуцлах"
 
@@ -870,11 +788,3 @@ msgstr "Нийт"
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
 msgstr "Засахад Бэлэн"
-
-#, python-format
-#~ msgid "You have to select a Partner Invoice Address in the repair form !"
-#~ msgstr "Засварын маягтад харилцагчийн нэхэмжлэх хаягийг сонгох хэрэгтэй !"
-
-#, python-format
-#~ msgid "No partner !"
-#~ msgstr "Харилцагч алга !"

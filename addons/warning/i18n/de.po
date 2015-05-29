@@ -1,20 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* warning
-#
+# * warning
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2014-01-19 19:25+0000\n"
-"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2015-05-29 13:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: German (http://www.transifex.com/projects/p/odoo-7/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:30+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -48,18 +49,15 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: warning
-#: view:product.product:0
-#: view:res.partner:0
+#: view:product.product:0 view:res.partner:0
 msgid "Warnings"
 msgstr "Warnungen"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "Blockierende Meldung"
 
@@ -71,10 +69,8 @@ msgstr "Warnung zu Rechnung"
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "No Message"
 msgstr "Keine Nachricht"
 
@@ -106,23 +102,16 @@ msgid "Message for Purchase Order"
 msgstr "Nachricht bei Beschaffungsauftrag"
 
 #. module: warning
-#: code:addons/warning/warning.py:32
-#: help:product.product,purchase_line_warn:0
-#: help:product.product,sale_line_warn:0
-#: help:res.partner,invoice_warn:0
-#: help:res.partner,picking_warn:0
-#: help:res.partner,purchase_warn:0
+#: code:addons/warning/warning.py:32 help:product.product,purchase_line_warn:0
+#: help:product.product,sale_line_warn:0 help:res.partner,invoice_warn:0
+#: help:res.partner,picking_warn:0 help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
 #, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr ""
-"Die Auswahl \r\n"
-"    \"Warnung\" wird dem Benutzer die Meldung zeigen.\r\n"
-"    \"Blockiere\" wird die Meldung ausgeben und den Workflow abbrechen.\r\n"
-"Die Meldung bitte ins nächste Feld eintragen."
+msgstr "Die Auswahl \r\n    \"Warnung\" wird dem Benutzer die Meldung zeigen.\r\n    \"Blockiere\" wird die Meldung ausgeben und den Workflow abbrechen.\r\nDie Meldung bitte ins nächste Feld eintragen."
 
 #. module: warning
 #: view:res.partner:0
@@ -150,14 +139,10 @@ msgid "Warning on the Purchase Order"
 msgstr "Warnung beim Einkaufsauftrag"
 
 #. module: warning
-#: code:addons/warning/warning.py:66
-#: code:addons/warning/warning.py:95
-#: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:194
-#: code:addons/warning/warning.py:221
-#: code:addons/warning/warning.py:270
-#: code:addons/warning/warning.py:303
+#: code:addons/warning/warning.py:66 code:addons/warning/warning.py:95
+#: code:addons/warning/warning.py:130 code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:194 code:addons/warning/warning.py:221
+#: code:addons/warning/warning.py:270 code:addons/warning/warning.py:303
 #, python-format
 msgid "Warning for %s"
 msgstr "Warnung für %s"
@@ -170,10 +155,8 @@ msgstr "Mitteilung für Auftragszeile"
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Warning"
 msgstr "Warnung"
 
@@ -188,8 +171,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
+#: model:ir.model,name:warning.model_sale_order field:res.partner,sale_warn:0
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
 
@@ -203,7 +185,3 @@ msgstr "Warenauslieferung"
 #: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
 msgstr "Auftragsposition"
-
-#, python-format
-#~ msgid "Alert for %s !"
-#~ msgstr "Warnhinweis an %s"

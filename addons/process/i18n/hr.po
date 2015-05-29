@@ -1,25 +1,25 @@
-# Croatian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * process
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-11-16 17:09+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
-"Language-Team: Croatian <hr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/odoo-7/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: process
-#: model:ir.model,name:process.model_process_node
-#: view:process.node:0
+#: model:ir.model,name:process.model_process_node view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
 msgstr "Procesni čvor"
@@ -29,8 +29,7 @@ msgstr "Procesni čvor"
 msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
-msgstr ""
-"Isključivanje ovog polja omogućuje sakrivanje procesa bez da ga brišemo."
+msgstr "Isključivanje ovog polja omogućuje sakrivanje procesa bez da ga brišemo."
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -48,8 +47,7 @@ msgid "Buttons"
 msgstr "Tipke"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Group By..."
 msgstr "Grupiraj po..."
 
@@ -70,21 +68,18 @@ msgstr "Početni tok"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.ui.menu,name:process.menu_process_node_form
-#: view:process.node:0
+#: model:ir.ui.menu,name:process.menu_process_node_form view:process.node:0
 #: view:process.process:0
 msgid "Process Nodes"
 msgstr "Procesna čvorišta"
 
 #. module: process
-#: view:process.process:0
-#: field:process.process,node_ids:0
+#: view:process.process:0 field:process.process,node_ids:0
 msgid "Nodes"
 msgstr "Čvorišta"
 
 #. module: process
-#: field:process.node,condition_ids:0
-#: view:process.process:0
+#: field:process.node,condition_ids:0 view:process.process:0
 msgid "Conditions"
 msgstr "Uvjeti"
 
@@ -114,10 +109,8 @@ msgid "Process Transitions Actions"
 msgstr "Radnje Procesnih Prijelaza"
 
 #. module: process
-#: field:process.condition,model_id:0
-#: view:process.node:0
-#: field:process.node,model_id:0
-#: view:process.process:0
+#: field:process.condition,model_id:0 view:process.node:0
+#: field:process.node,model_id:0 view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
 msgstr "Objekt"
@@ -128,8 +121,7 @@ msgid "Source Node"
 msgstr "Čvorište izvor"
 
 #. module: process
-#: view:process.transition:0
-#: field:process.transition,transition_ids:0
+#: view:process.transition:0 field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr "Prijelazi Hodograma"
 
@@ -180,10 +172,8 @@ msgid "Transition"
 msgstr "Prijelaz"
 
 #. module: process
-#: field:process.condition,name:0
-#: field:process.node,name:0
-#: field:process.process,name:0
-#: field:process.transition,name:0
+#: field:process.condition,name:0 field:process.node,name:0
+#: field:process.process,name:0 field:process.transition,name:0
 #: field:process.transition.action,name:0
 msgid "Name"
 msgstr "Ime"
@@ -201,11 +191,8 @@ msgid "Related:"
 msgstr "Povezani:"
 
 #. module: process
-#: view:process.node:0
-#: field:process.node,note:0
-#: view:process.process:0
-#: field:process.process,note:0
-#: view:process.transition:0
+#: view:process.node:0 field:process.node,note:0 view:process.process:0
+#: field:process.process,note:0 view:process.transition:0
 msgid "Notes"
 msgstr "Bilješke"
 
@@ -266,8 +253,7 @@ msgid "Required Groups"
 msgstr "Obavezne grupe"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Incoming Transitions"
 msgstr "Ulazni prijelazi"
 
@@ -286,8 +272,7 @@ msgstr "Završni prijelazi"
 #: code:addons/process/static/src/js/process.js:243
 #: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
-#: field:process.node,process_id:0
-#: view:process.process:0
+#: field:process.node,process_id:0 view:process.process:0
 #, python-format
 msgid "Process"
 msgstr "Proces"
@@ -298,8 +283,7 @@ msgid "Search ProcessNode"
 msgstr "Potraži čvorištae procesa"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Other Conditions"
 msgstr "Ostali uvjeti"
 
@@ -314,8 +298,7 @@ msgid "Actions"
 msgstr "Radnje"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Properties"
 msgstr "Svojstva"
 
@@ -343,8 +326,7 @@ msgid "Subflows:"
 msgstr "Podtokovi:"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Outgoing Transitions"
 msgstr "Izlazni prijelazi"
 
@@ -356,14 +338,12 @@ msgid "Notes:"
 msgstr "Bilješke:"
 
 #. module: process
-#: selection:process.node,kind:0
-#: field:process.node,subflow_id:0
+#: selection:process.node,kind:0 field:process.node,subflow_id:0
 msgid "Subflow"
 msgstr "Podtok"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Transitions"
 msgstr "Prijelazi"
 

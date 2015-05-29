@@ -1,21 +1,22 @@
-# German translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-04-05 21:45+0000\n"
-"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: German (http://www.transifex.com/projects/p/odoo-7/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:39+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -49,8 +50,7 @@ msgid "Open Customer Journal Entries"
 msgstr "Offene Posten Kunden"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: view:sale.receipt.report:0
+#: view:account.voucher:0 view:sale.receipt.report:0
 msgid "Group By..."
 msgstr "Gruppierung..."
 
@@ -123,13 +123,10 @@ msgstr "Zuordnung"
 msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
-msgstr ""
-"Dieser Satz hilft dabei, die richtige Zahlweise auszuwählen, indem die "
-"Auswirkung direkt dargestellt wird."
+msgstr "Dieser Satz hilft dabei, die richtige Zahlweise auszuwählen, indem die Auswirkung direkt dargestellt wird."
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,user_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,user_id:0
 msgid "Salesperson"
 msgstr "Verkäufer"
 
@@ -144,9 +141,7 @@ msgstr "Statistik Zahlungsbelege"
 msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
-msgstr ""
-"Dieses Journal kann nicht geändert werden, da bereits Auszugspositionen "
-"ausgeglichen wurden."
+msgstr "Dieses Journal kann nicht geändert werden, da bereits Auszugspositionen ausgeglichen wurden."
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
@@ -174,14 +169,7 @@ msgid ""
 "                supplier payment related to this purchase receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Klicken Sie zur Erfassung eines Kaufbelegs.\n"
-"               </ p>\n"
-"                 Wenn der Kaufbeleg bestätigt wird, können Sie die\n"
-"                 Lieferantenzahlung erfassen.\n"
-"               </ p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Klicken Sie zur Erfassung eines Kaufbelegs.\n               </ p>\n                 Wenn der Kaufbeleg bestätigt wird, können Sie die\n                 Lieferantenzahlung erfassen.\n               </ p>\n            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -194,8 +182,7 @@ msgid "Counterpart Account"
 msgstr "Gegenkonto"
 
 #. module: account_voucher
-#: field:account.voucher,account_id:0
-#: field:account.voucher.line,account_id:0
+#: field:account.voucher,account_id:0 field:account.voucher.line,account_id:0
 #: field:sale.receipt.report,account_id:0
 msgid "Account"
 msgstr "Konto"
@@ -216,10 +203,8 @@ msgid "Full Reconcile"
 msgstr "Voll Ausgleich"
 
 #. module: account_voucher
-#: field:account.voucher,date_due:0
-#: field:account.voucher.line,date_due:0
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,date_due:0
+#: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,date_due:0
 msgid "Due Date"
 msgstr "Fälligkeit"
 
@@ -272,8 +257,7 @@ msgid "Other Information"
 msgstr "Weitere Informationen"
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: selection:sale.receipt.report,state:0
+#: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
 msgid "Cancelled"
 msgstr "Abgebrochen"
 
@@ -281,10 +265,9 @@ msgstr "Abgebrochen"
 #: code:addons/account_voucher/account_voucher.py:1261
 #, python-format
 msgid ""
-"You have to configure account base code and account tax code on the '%s' tax!"
-msgstr ""
-"Sie müssen die Finanzkonten und Steuerkonten für die Steuer '%s' "
-"konfigurieren."
+"You have to configure account base code and account tax code on the '%s' "
+"tax!"
+msgstr "Sie müssen die Finanzkonten und Steuerkonten für die Steuer '%s' konfigurieren."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -292,19 +275,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a sale receipt.\n"
 "              </p><p>\n"
-"                When the sale receipt is confirmed, you can record the "
-"customer\n"
+"                When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Erstellung eines Kaufbeleg.\n"
-"              </p><p>\n"
-"                 Wenn Sie den Kaufbeleg bestätigt haben, können Sie die\n"
-"                 Einzahlung sofort oder später erfassen.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicken Sie zur Erstellung eines Kaufbeleg.\n              </p><p>\n                 Wenn Sie den Kaufbeleg bestätigt haben, können Sie die\n                 Einzahlung sofort oder später erfassen.\n              </p>\n            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -317,14 +292,12 @@ msgid "Bank Statement Line"
 msgstr "Bankauszug-Buchungen"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,day:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,day:0
 msgid "Day"
 msgstr "Tag"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,tax_id:0
+#: view:account.voucher:0 field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Steuer"
 
@@ -349,10 +322,7 @@ msgstr "Kostenstellenkonto"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Beinhaltet die Chatter Zusammenfassung (Anzahl der Nachrichten, ...). Diese "
-"Zusammenfassung ist im HTML-Format, um in Kanban Karten Ansichten eingefügt "
-"zu werden."
+msgstr "Beinhaltet die Chatter Zusammenfassung (Anzahl der Nachrichten, ...). Diese Zusammenfassung ist im HTML-Format, um in Kanban Karten Ansichten eingefügt zu werden."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -370,10 +340,8 @@ msgid "(update)"
 msgstr "(aktualisieren)"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:0
-#: selection:sale.receipt.report,state:0
+#: view:account.voucher:0 selection:account.voucher,state:0
+#: view:sale.receipt.report:0 selection:sale.receipt.report,state:0
 msgid "Draft"
 msgstr "Entwurf"
 
@@ -394,14 +362,12 @@ msgid "Wrong voucher line"
 msgstr "Falsche Belegzeile"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
 msgstr "Einzahlung später buchen"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: selection:account.voucher,type:0
+#: view:account.voucher:0 selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Receipt"
 msgstr "Zahlungsbestätigung"
@@ -413,9 +379,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
-"Um Wechselkursdifferenzen automatisch zu buchen, geben Sie hier das Konto "
-"für Kurserträge an."
+msgstr "Um Wechselkursdifferenzen automatisch zu buchen, geben Sie hier das Konto für Kurserträge an."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -428,14 +392,12 @@ msgid "Cancel Voucher"
 msgstr "Auszug abbrechen"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,period_id:0
+#: view:account.voucher:0 field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Periode"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:231
+#: view:account.voucher:0 code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Lieferant"
@@ -456,14 +418,12 @@ msgid "Debit"
 msgstr "Konto belasten (Soll)"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,nbr:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
 msgstr "Zahlungsposten"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,type:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,type:0
 msgid "Type"
 msgstr "Typ"
 
@@ -478,9 +438,7 @@ msgstr "Pro-Forma-Belege"
 msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
-msgstr ""
-"Bei der Durchführung war der Wechselkurs\n"
-"%s = %s"
+msgstr "Bei der Durchführung war der Wechselkurs\n%s = %s"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -488,18 +446,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new supplier payment.\n"
 "              </p><p>\n"
-"                OpenERP helps you easily track payments you make and the "
-"remaining balances you need to pay your suppliers.\n"
+"                OpenERP helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Eingabe einer Lieferantenzahlung.\n"
-"              </p><p>\n"
-"                OpenERP unterstützt Sie bei der Bezahlung Ihrer "
-"Lieferantenrechnungen.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicken Sie zur Eingabe einer Lieferantenzahlung.\n              </p><p>\n                OpenERP unterstützt Sie bei der Bezahlung Ihrer Lieferantenrechnungen.\n              </p>\n            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -525,9 +475,7 @@ msgstr "Rechnung zahlen"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr ""
-"Wollen Sie den Ausgleich wirklich rückgängig machen und den Datensatz "
-"stornieren / löschen"
+msgstr "Wollen Sie den Ausgleich wirklich rückgängig machen und den Datensatz stornieren / löschen"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -552,22 +500,11 @@ msgstr "Juli"
 #. module: account_voucher
 #: help:account.voucher,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
+"* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
-" * Ein Zahlungsbeleg befindet sich unmittelbar nach der Erstellung im "
-"\"Entwurf\"-Zustand.\n"
-"* Durch Änderung auf den Status \"Pro-Forma\" wird der Status geändert, aber "
-"keine Belegnummer vergeben.\n"
-"* Der Status \"Gebucht\"  wird angewendet, wenn ein Benutzer einen "
-"Zahlungsbeleg mitsamt Belegnummer vollständig gebucht hat.\n"
-"* Der Zustand \"Abgebrochen\" kennzeichnet den Abbruch eines Zahlungsbelegs."
+msgstr " * Ein Zahlungsbeleg befindet sich unmittelbar nach der Erstellung im \"Entwurf\"-Zustand.\n* Durch Änderung auf den Status \"Pro-Forma\" wird der Status geändert, aber keine Belegnummer vergeben.\n* Der Status \"Gebucht\"  wird angewendet, wenn ein Benutzer einen Zahlungsbeleg mitsamt Belegnummer vollständig gebucht hat.\n* Der Zustand \"Abgebrochen\" kennzeichnet den Abbruch eines Zahlungsbelegs."
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -575,8 +512,7 @@ msgid "Difference Amount"
 msgstr "Differenzbetrag"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,due_delay:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
 msgstr "Durch. Zahlungsverzug"
 
@@ -608,24 +544,12 @@ msgid ""
 "                Click to register a new payment. \n"
 "              </p><p>\n"
 "                Enter the customer and the payment method and then, either\n"
-"                create manually a payment record or OpenERP will propose to "
-"you\n"
-"                automatically the reconciliation of this payment with the "
-"open\n"
+"                create manually a payment record or OpenERP will propose to you\n"
+"                automatically the reconciliation of this payment with the open\n"
 "                invoices or sales receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Klicken Sie zur Eingabe einer Einzahlung.\n"
-"               </ p>\n"
-"                 Erfassen Sie den Kunden, die Zahlungsmethode und den "
-"Betrag, bevor Sie dann entweder \n"
-"                 einfach nur die Zahlung bestätigen oder den automatischen "
-"Vorschlag der auszugleichenden \n"
-"                 Rechnungen bzw. Verkaufsbelege übernehmen und buchen.\n"
-"               </ p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Klicken Sie zur Eingabe einer Einzahlung.\n               </ p>\n                 Erfassen Sie den Kunden, die Zahlungsmethode und den Betrag, bevor Sie dann entweder \n                 einfach nur die Zahlung bestätigen oder den automatischen Vorschlag der auszugleichenden \n                 Rechnungen bzw. Verkaufsbelege übernehmen und buchen.\n               </ p>\n            "
 
 #. module: account_voucher
 #: field:account.config.settings,expense_currency_exchange_account_id:0
@@ -644,8 +568,7 @@ msgid "Payment Difference"
 msgstr "Zahlungsdifferenz"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,audit:0
+#: view:account.voucher:0 field:account.voucher,audit:0
 msgid "To Review"
 msgstr "Zu Prüfen"
 
@@ -664,9 +587,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
-"Um Wechselkursdifferenzen automatisch zu buchen, geben Sie hier das Konto "
-"für Kursaufwendungen an."
+msgstr "Um Wechselkursdifferenzen automatisch zu buchen, geben Sie hier das Konto für Kursaufwendungen an."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -678,9 +599,7 @@ msgstr "Aufwandspositionen"
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
-msgstr ""
-"Felder zur internen Nutzung, die genau anzeigen sollen, ob der Zahlungsbeleg "
-"multiple  Währungen verarbeiten kann oder nicht."
+msgstr "Felder zur internen Nutzung, die genau anzeigen sollen, ob der Zahlungsbeleg multiple  Währungen verarbeiten kann oder nicht."
 
 #. module: account_voucher
 #: view:account.invoice:0
@@ -703,8 +622,7 @@ msgid "Group by month of Invoice Date"
 msgstr "Gruppiere je Monat des Rechnungsdatums"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,month:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,month:0
 msgid "Month"
 msgstr "Monat"
 
@@ -732,10 +650,8 @@ msgid "Voucher Status"
 msgstr "Belegstatus"
 
 #. module: account_voucher
-#: field:account.voucher,company_id:0
-#: field:account.voucher.line,company_id:0
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,company_id:0
+#: field:account.voucher,company_id:0 field:account.voucher.line,company_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,company_id:0
 msgid "Company"
 msgstr "Unternehmen"
 
@@ -761,14 +677,12 @@ msgid "Configuration Error !"
 msgstr "Konfigurationsfehler !"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: view:sale.receipt.report:0
+#: view:account.voucher:0 view:sale.receipt.report:0
 msgid "Draft Vouchers"
 msgstr "Belegentwurf"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,price_total_tax:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
 msgstr "Bruttobetrag"
 
@@ -778,8 +692,7 @@ msgid "Purchase Voucher"
 msgstr "Einkaufsbelege"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,state:0
+#: view:account.voucher:0 field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "Status"
 msgstr "Status"
@@ -790,8 +703,7 @@ msgid "Group by year of Invoice Date"
 msgstr "Gruppiere je Jahr der Rechnung"
 
 #. module: account_voucher
-#: view:account.statement.from.invoice.lines:0
-#: view:account.voucher:0
+#: view:account.statement.from.invoice.lines:0 view:account.voucher:0
 msgid "or"
 msgstr "oder"
 
@@ -810,10 +722,7 @@ msgstr "Zahlung bestätigen"
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr ""
-"Aktivieren Sie diese Option, wenn Sie bezüglich der Buchung nicht sicher "
-"sind und demnach als 'zu überprüfen' durch einen Buchhalter markieren "
-"möchten."
+msgstr "Aktivieren Sie diese Option, wenn Sie bezüglich der Buchung nicht sicher sind und demnach als 'zu überprüfen' durch einen Buchhalter markieren möchten."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -858,8 +767,7 @@ msgid "Write-Off Analytic Account"
 msgstr "Analytisches Abschreibungskonto"
 
 #. module: account_voucher
-#: field:account.voucher,date:0
-#: field:account.voucher.line,date_original:0
+#: field:account.voucher,date:0 field:account.voucher.line,date_original:0
 #: field:sale.receipt.report,date:0
 msgid "Date"
 msgstr "Datum"
@@ -885,8 +793,7 @@ msgid "Amount reconciled"
 msgstr "Betrag ausgeglichen"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
 msgstr "Einzahlung sofort buchen"
 
@@ -973,8 +880,7 @@ msgid "Helping Sentence"
 msgstr "Hilfreiche Nummernfolge"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,price_total:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
 msgstr "Nettobetrag"
 
@@ -1025,8 +931,7 @@ msgid "Sales Information"
 msgstr "Information Umsatz"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher.line,voucher_id:0
+#: view:account.voucher:0 field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
 msgid "Voucher"
 msgstr "Zahlungsbeleg"
@@ -1042,8 +947,7 @@ msgid "Voucher Items"
 msgstr "Zahlungspositionen"
 
 #. module: account_voucher
-#: view:account.statement.from.invoice.lines:0
-#: view:account.voucher:0
+#: view:account.statement.from.invoice.lines:0 view:account.voucher:0
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1053,15 +957,13 @@ msgid "Open Invoicing Menu"
 msgstr "Offene Rechnungen Auswahl"
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:0
+#: selection:account.voucher,state:0 view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
 msgstr "Pro-Forma"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,move_ids:0
+#: view:account.voucher:0 field:account.voucher,move_ids:0
 msgid "Journal Items"
 msgstr "Buchungsjournale"
 
@@ -1069,19 +971,15 @@ msgstr "Buchungsjournale"
 #: code:addons/account_voucher/account_voucher.py:558
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
-msgstr ""
-"Bitte definieren Sie je ein Standard  Soll-/ Haben-Konto für das Journal "
-"\"%s\"."
+msgstr "Bitte definieren Sie je ein Standard  Soll-/ Haben-Konto für das Journal \"%s\"."
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Purchase"
 msgstr "Einkauf"
 
 #. module: account_voucher
-#: view:account.invoice:0
-#: view:account.voucher:0
+#: view:account.invoice:0 view:account.voucher:0
 msgid "Pay"
 msgstr "Zahlen"
 
@@ -1094,36 +992,22 @@ msgstr "Währungsoptionen"
 #: help:account.voucher,payment_option:0
 msgid ""
 "This field helps you to choose what you want to do with the eventual "
-"difference between the paid amount and the sum of allocated amounts. You can "
-"either choose to keep open this difference on the partner's account, or "
+"difference between the paid amount and the sum of allocated amounts. You can"
+" either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
-msgstr ""
-"In diesem Feld können Sie auswählen was mit allfälligen Differenzen zwischen "
-"Zahlung und zugeordneten Beträgen geschehen soll. Sie können diese entweder "
-"offen lassen oder ausgleichen."
+msgstr "In diesem Feld können Sie auswählen was mit allfälligen Differenzen zwischen Zahlung und zugeordneten Beträgen geschehen soll. Sie können diese entweder offen lassen oder ausgleichen."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview of the amount "
-"invoiced\n"
+"            From this report, you can have an overview of the amount invoiced\n"
 "            to your customer as well as payment delays. The tool search can\n"
 "            also be used to personalise your Invoices reports and so, match\n"
 "            this analysis to your needs.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"             Durch diese Statistik können Sie sich einen Überblick über die "
-"abgerechneten Rechnungen \n"
-"             verschaffen sowie den Status der nicht termingerechten "
-"Zahlungen bewerten. Die \n"
-"             Sucheinstellung kann verwendet werden, um Statistiken zu "
-"personalisieren \n"
-"             und bedarfsgerecht anzupassen.\n"
-"          </p>\n"
-"        "
+msgstr "<p>\n             Durch diese Statistik können Sie sich einen Überblick über die abgerechneten Rechnungen \n             verschaffen sowie den Status der nicht termingerechten Zahlungen bewerten. Die \n             Sucheinstellung kann verwendet werden, um Statistiken zu personalisieren \n             und bedarfsgerecht anzupassen.\n          </p>\n        "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1151,10 +1035,8 @@ msgid "May"
 msgstr "Mai"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,journal_id:0
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,journal_id:0
+#: view:account.voucher:0 field:account.voucher,journal_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,journal_id:0
 msgid "Journal"
 msgstr "Journal"
 
@@ -1164,8 +1046,7 @@ msgid "Internal Notes"
 msgstr "Interne Hinweise"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,line_cr_ids:0
+#: view:account.voucher:0 field:account.voucher,line_cr_ids:0
 msgid "Credits"
 msgstr "Gutschriftspositionen"
 
@@ -1187,19 +1068,15 @@ msgid ""
 msgstr "Ein spezieller Wechselkurs für diesen Beleg."
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,pay_now:0
-#: selection:account.voucher,type:0
-#: field:sale.receipt.report,pay_now:0
+#: view:account.voucher:0 field:account.voucher,pay_now:0
+#: selection:account.voucher,type:0 field:sale.receipt.report,pay_now:0
 #: selection:sale.receipt.report,type:0
 msgid "Payment"
 msgstr "Zahlung"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:0
-#: selection:sale.receipt.report,state:0
+#: view:account.voucher:0 selection:account.voucher,state:0
+#: view:sale.receipt.report:0 selection:sale.receipt.report,state:0
 msgid "Posted"
 msgstr "Gebucht"
 
@@ -1230,8 +1107,7 @@ msgid "Voucher Entries"
 msgstr "Zahlungsbeleg Buchungen"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,year:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,year:0
 msgid "Year"
 msgstr "Jahr"
 
@@ -1242,8 +1118,7 @@ msgid "Gain Exchange Rate Account"
 msgstr "Konto für Kurserträge"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Sale"
 msgstr "Verkauf"
 
@@ -1279,8 +1154,7 @@ msgid "Entries by Statement from Invoices"
 msgstr "Einträge bei Auszug nach Rechnungen"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,amount:0
+#: view:account.voucher:0 field:account.voucher,amount:0
 msgid "Total"
 msgstr "Summe"
 
@@ -1294,9 +1168,7 @@ msgstr "Buchungssatz"
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line."
-msgstr ""
-"Der Betrag für diesen Beleg sollte identisch sein mit demjenigen auf dem "
-"Bankauszug."
+msgstr "Der Betrag für diesen Beleg sollte identisch sein mit demjenigen auf dem Bankauszug."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:981
@@ -1320,15 +1192,13 @@ msgid "Keep Open"
 msgstr "Offen halten"
 
 #. module: account_voucher
-#: field:account.voucher,line_ids:0
-#: view:account.voucher.line:0
+#: field:account.voucher,line_ids:0 view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
 msgstr "Zahlungspositionen"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,delay_to_pay:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
 msgstr "Durch. Zahlungsdauer"
 
@@ -1343,10 +1213,8 @@ msgid "Sales Receipt Statistics"
 msgstr "Statistik Einnahmen"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,partner_id:0
-#: field:account.voucher.line,partner_id:0
-#: view:sale.receipt.report:0
+#: view:account.voucher:0 field:account.voucher,partner_id:0
+#: field:account.voucher.line,partner_id:0 view:sale.receipt.report:0
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
 msgstr "Partner"
@@ -1366,26 +1234,7 @@ msgstr "Unzureichende Konfiguration !"
 #. module: account_voucher
 #: help:account.voucher,active:0
 msgid ""
-"By default, reconciliation vouchers made on draft bank statements are set as "
-"inactive, which allow to hide the customer/supplier payment while the bank "
+"By default, reconciliation vouchers made on draft bank statements are set as"
+" inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
-msgstr ""
-"Standardmäßig werden die Zahlungsausgleiche aus Bankbelegen als inaktiv "
-"gesetzt, um Kunden-/ Lieferantenzahlungen zu verbergen, während der "
-"Kontoauszug noch nicht endgültig bestätigt wurde."
-
-#~ msgid "Are you sure to unreconcile this record?"
-#~ msgstr "Möchten Sie wirklich den Ausgleich stornieren?"
-
-#~ msgid "Sale voucher"
-#~ msgstr "Verkauf Belege"
-
-#~ msgid "Sale Receipt"
-#~ msgstr "Verkauf Buchungsbelege"
-
-#, python-format
-#~ msgid "Unable to change journal !"
-#~ msgstr "Es ist nicht möglich das Journal zu ändern !"
-
-#~ msgid "Status <b>changed</b>"
-#~ msgstr "Status <b>wurde geändert</b>"
+msgstr "Standardmäßig werden die Zahlungsausgleiche aus Bankbelegen als inaktiv gesetzt, um Kunden-/ Lieferantenzahlungen zu verbergen, während der Kontoauszug noch nicht endgültig bestätigt wurde."

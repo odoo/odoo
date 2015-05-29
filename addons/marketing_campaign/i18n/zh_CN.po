@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:03+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -49,10 +50,8 @@ msgid "Custom Action"
 msgstr "自定义操作"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
-#: view:marketing.campaign.workitem:0
+#: view:campaign.analysis:0 view:marketing.campaign:0
+#: view:marketing.campaign.segment:0 view:marketing.campaign.workitem:0
 msgid "Group By..."
 msgstr "分组..."
 
@@ -72,7 +71,7 @@ msgstr "触发器"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "后续跟进"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -85,8 +84,7 @@ msgid "Campaign Editor"
 msgstr "营销活动编辑器"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: selection:marketing.campaign,state:0
+#: view:marketing.campaign:0 selection:marketing.campaign,state:0
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
@@ -95,8 +93,8 @@ msgstr "正在运行"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
 msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle "
-"of our Gold Partners"
+"Hi, we are delighted to let you know that you have entered the select circle"
+" of our Gold Partners"
 msgstr ""
 
 #. module: marketing_campaign
@@ -117,25 +115,16 @@ msgstr "同步模式：只同步上次同步之后创建的记录"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr ""
-"由Python表达式决定活动是否被执行的，或者被删除，或者被取消。表达式可以用以下[browsable]变量：\n"
-"   -activity：营销活动项\n"
-"   -workitem：营销活动工作项\n"
-"   -resource：营销活动代表的资源对象\n"
-"   -transitions：从此活动转出的营销活动列表\n"
-"...-re：Python正则表达式模块"
+msgstr "由Python表达式决定活动是否被执行的，或者被删除，或者被取消。表达式可以用以下[browsable]变量：\n   -activity：营销活动项\n   -workitem：营销活动工作项\n   -resource：营销活动代表的资源对象\n   -transitions：从此活动转出的营销活动列表\n...-re：Python正则表达式模块"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
+#: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Set to Draft"
 msgstr "设为草稿"
 
@@ -165,8 +154,7 @@ msgid "Launch Date"
 msgstr "发起日期"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,day:0
+#: view:campaign.analysis:0 field:campaign.analysis,day:0
 msgid "Day"
 msgstr "天"
 
@@ -213,8 +201,7 @@ msgid ""
 msgstr "这部分上次同步的日期（自动或手工）"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -228,19 +215,11 @@ msgstr "自动的"
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
 msgid ""
-"Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but "
-"does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and "
-"reports (be very careful with this mode, you're live!)"
-msgstr ""
-"测试 - 直接生成和处理所有活动（不等待事务的延迟），但是不发送邮件或者生成报表。\n"
-"实时测试 - 直接生成和处理所有活动，但是不发送邮件或者生成报表.\n"
-"手工确认 - 营销活动正常启动，但是用户必须手工验证所有工作项。\n"
-"正常 - 营销活动正常启动，并自动发送所有邮件和报表（请小心使用这个模式，所有的都是实时的！）"
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+msgstr "测试 - 直接生成和处理所有活动（不等待事务的延迟），但是不发送邮件或者生成报表。\n实时测试 - 直接生成和处理所有活动，但是不发送邮件或者生成报表.\n手工确认 - 营销活动正常启动，但是用户必须手工验证所有工作项。\n正常 - 营销活动正常启动，并自动发送所有邮件和报表（请小心使用这个模式，所有的都是实时的！）"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -250,13 +229,11 @@ msgstr ""
 #. module: marketing_campaign
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "False"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,campaign_id:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign.activity,campaign_id:0
+#: view:campaign.analysis:0 field:campaign.analysis,campaign_id:0
+#: view:marketing.campaign:0 field:marketing.campaign.activity,campaign_id:0
 #: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,campaign_id:0
 #: view:marketing.campaign.workitem:0
@@ -270,10 +247,8 @@ msgid "Hello, you will receive your welcome pack via email shortly."
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,segment_id:0
-#: view:marketing.campaign.segment:0
-#: view:marketing.campaign.workitem:0
+#: view:campaign.analysis:0 field:campaign.analysis,segment_id:0
+#: view:marketing.campaign.segment:0 view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,segment_id:0
 msgid "Segment"
 msgstr "段"
@@ -289,17 +264,10 @@ msgstr ""
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
 "  "
-msgstr ""
-"工作项进入此活动时执行的操作类型，比如：\n"
-"    - 邮件：通过预定义的邮件模板发送邮件\n"
-"    - 报表：打印定义在资源上的报表，并把它保存到指定的目录\n"
-"    - 自定义操作： 执行一个预定义的操作，比如，修改资源记录的字段\n"
-"  "
+msgstr "工作项进入此活动时执行的操作类型，比如：\n    - 邮件：通过预定义的邮件模板发送邮件\n    - 报表：打印定义在资源上的报表，并把它保存到指定的目录\n    - 自定义操作： 执行一个预定义的操作，比如，修改资源记录的字段\n  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
@@ -312,8 +280,7 @@ msgid "Month(s)"
 msgstr "月"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,partner_id:0
+#: view:campaign.analysis:0 field:campaign.analysis,partner_id:0
 #: model:ir.model,name:marketing_campaign.model_res_partner
 #: field:marketing.campaign.workitem,partner_id:0
 msgid "Partner"
@@ -343,11 +310,10 @@ msgstr "时间间隔必须为正数或零"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr ""
+msgstr "电子邮件"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
@@ -364,8 +330,7 @@ msgid "Synchronization mode"
 msgstr "同步模式"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
+#: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Run"
 msgstr "执行"
 
@@ -400,8 +365,7 @@ msgstr "错误消息"
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
-#: view:marketing.campaign:0
-#: view:res.partner:0
+#: view:marketing.campaign:0 view:res.partner:0
 msgid "Campaigns"
 msgstr "营销活动"
 
@@ -488,16 +452,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a marketing campaign.\n"
 "          </p><p>\n"
-"            OpenERP's marketing campaign allows you to automate "
-"communication\n"
-"            to your prospects. You can define a segment (set of conditions) "
-"on\n"
+"            OpenERP's marketing campaign allows you to automate communication\n"
+"            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fullfil the campaign.\n"
 "          </p><p>\n"
-"            A campaign can have many activities like sending an email, "
-"printing\n"
-"            a letter, assigning to a team, etc. These activities are "
-"triggered\n"
+"            A campaign can have many activities like sending an email, printing\n"
+"            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc.\n"
 "          </p>\n"
@@ -528,15 +488,14 @@ msgstr "12"
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
 msgid ""
-"The generated workitems will be linked to the partner related to the record. "
-"If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr "生成的工作条目会链接到与该记录相关的业务伙伴上。如果该记录就是业务伙伴，此字段留空。此字段用于营销分析或营销跟进等分析报表。"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,month:0
+#: view:campaign.analysis:0 field:campaign.analysis,month:0
 msgid "Month"
 msgstr "月份"
 
@@ -597,11 +556,9 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that "
-"already entered the campaign."
-msgstr ""
-"作为一个附加的筛选条件，用来选择要放进营销活动的新记录。“无重复”选项避免了将已经放进营销活动的记录再次放进去。如果营销活动有“唯一字段”选项，“无重复”"
-"还能检查是否已经有唯一字段值相同的记录在营销活动中了。"
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
+msgstr "作为一个附加的筛选条件，用来选择要放进营销活动的新记录。“无重复”选项避免了将已经放进营销活动的记录再次放进去。如果营销活动有“唯一字段”选项，“无重复”还能检查是否已经有唯一字段值相同的记录在营销活动中了。"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -619,8 +576,7 @@ msgid "Directory"
 msgstr "目录"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
+#: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Draft"
 msgstr "草稿"
 
@@ -635,16 +591,13 @@ msgid "Preview"
 msgstr "预览"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,state:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign,state:0
-#: view:marketing.campaign.segment:0
-#: field:marketing.campaign.segment,state:0
+#: view:campaign.analysis:0 field:campaign.analysis,state:0
+#: view:marketing.campaign:0 field:marketing.campaign,state:0
+#: view:marketing.campaign.segment:0 field:marketing.campaign.segment,state:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,state:0
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -669,8 +622,7 @@ msgid ""
 msgstr "带信号的活动可以通过编程方式访问。请小心，当信号发出去的时候工作项会自动创建好。"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: selection:campaign.analysis,state:0
+#: view:campaign.analysis:0 selection:campaign.analysis,state:0
 #: view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "To Do"
@@ -727,8 +679,7 @@ msgid "Unique Field"
 msgstr "唯一字段"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: view:marketing.campaign.workitem:0
+#: selection:campaign.analysis,state:0 view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Exception"
 msgstr "异常"
@@ -749,8 +700,7 @@ msgid "January"
 msgstr "1"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,date:0
+#: view:marketing.campaign.workitem:0 field:marketing.campaign.workitem,date:0
 msgid "Execution Date"
 msgstr "执行日期"
 
@@ -822,10 +772,8 @@ msgid "How is the destination workitem triggered"
 msgstr "如何触发目标工作项"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: selection:campaign.analysis,state:0
-#: view:marketing.campaign:0
-#: selection:marketing.campaign,state:0
+#: view:campaign.analysis:0 selection:campaign.analysis,state:0
+#: view:marketing.campaign:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Done"
@@ -877,8 +825,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
+#: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "片段"
 
@@ -898,8 +845,7 @@ msgid "Day(s)"
 msgstr "天"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: field:marketing.campaign,activity_ids:0
+#: view:marketing.campaign:0 field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
 msgstr "活动"
@@ -927,18 +873,15 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to "
-"avoid selecting similar records twice. Similar records are records that have "
-"the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr ""
-"如果指定了某个字段，当渠道运作在“无重复”的模式下时，避免选择两条相同的记录。相同的记录是指这个唯一字段的值相同的记录。例如，把CRM线索的“邮箱”字段设"
-"置为唯一，就可以避免同一个营销邮件多次发送给相同邮箱。如果没有指定，“无重复”模式只能避免在输入营销活动时插入之前加过的记录。这里应该选择一个容易比较的字"
-"段，例如文本字段、整数、下拉列表或简单的关系字段。"
+msgstr "如果指定了某个字段，当渠道运作在“无重复”的模式下时，避免选择两条相同的记录。相同的记录是指这个唯一字段的值相同的记录。例如，把CRM线索的“邮箱”字段设置为唯一，就可以避免同一个营销邮件多次发送给相同邮箱。如果没有指定，“无重复”模式只能避免在输入营销活动时插入之前加过的记录。这里应该选择一个容易比较的字段，例如文本字段、整数、下拉列表或简单的关系字段。"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:527
@@ -963,10 +906,8 @@ msgid "February"
 msgstr "2"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,res_id:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign,object_id:0
+#: view:campaign.analysis:0 field:campaign.analysis,res_id:0
+#: view:marketing.campaign:0 field:marketing.campaign,object_id:0
 #: field:marketing.campaign.segment,object_id:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,object_id:0
@@ -976,9 +917,9 @@ msgstr "资源"
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and "
-"revenue on each campaign activity. Cost and Revenue statistics are included "
-"in Campaign Reporting."
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
 msgstr "开展此营销活动的固定成本。你也可以为每个营销活动指定可变成本和收入。成本和收入统计包含在营销活动报表中。"
 
 #. module: marketing_campaign
@@ -1014,14 +955,12 @@ msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr "营销活动的所有部分都结束了才能把营销活动标记为完成。"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: field:marketing.campaign,mode:0
+#: view:marketing.campaign:0 field:marketing.campaign,mode:0
 msgid "Mode"
 msgstr "模式"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,activity_id:0
+#: view:campaign.analysis:0 field:campaign.analysis,activity_id:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1034,9 +973,7 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr ""
-"过滤器，选择属于此活动段的匹配的资源记录。可以通过资源的列表视图的高级查询来创建和保存新的过滤器。如果没有设置过滤器，所有的都会被选中。同步模式也可以添加"
-"条件到过滤器中。"
+msgstr "过滤器，选择属于此活动段的匹配的资源记录。可以通过资源的列表视图的高级查询来创建和保存新的过滤器。如果没有设置过滤器，所有的都会被选中。同步模式也可以添加条件到过滤器中。"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:136
@@ -1081,13 +1018,11 @@ msgid "Welcome to the OpenERP Partner Channel!"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,total_cost:0
+#: view:campaign.analysis:0 field:campaign.analysis,total_cost:0
 msgid "Cost"
 msgstr "成本"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,year:0
+#: view:campaign.analysis:0 field:campaign.analysis,year:0
 msgid "Year"
 msgstr "年"

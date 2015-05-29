@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-02-04 13:45+0000\n"
-"Last-Translator: Jan Jurkus (GCE CAD-Service) <ict@gcecad-service.nl>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 09:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-7/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:53+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -58,10 +59,7 @@ msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
-"Foto van gemiddeld formaat van de werknemer. Deze afbeelding wordt, in "
-"verhouding, geschaald naar 128x128px. Gebruik dit veld in de formulier "
-"weergave of sommige kanban weergaven."
+msgstr "Foto van gemiddeld formaat van de werknemer. Deze afbeelding wordt, in verhouding, geschaald naar 128x128px. Gebruik dit veld in de formulier weergave of sommige kanban weergaven."
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -69,8 +67,7 @@ msgid "Time Tracking"
 msgstr "Tijdregistratie"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "Groepeer op..."
 
@@ -90,11 +87,8 @@ msgid "Organize employees periodic evaluation"
 msgstr "Organiseer periodieke werknemer beoordelingen"
 
 #. module: hr
-#: view:hr.department:0
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
+#: view:hr.department:0 view:hr.employee:0 field:hr.employee,department_id:0
+#: view:hr.job:0 field:hr.job,department_id:0
 #: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Afdeling"
@@ -109,9 +103,7 @@ msgstr "E-mail werk"
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
-msgstr ""
-"Dit veld bevat de afbeelding, welke wordt gebruikt als foto voor de "
-"werknemer. Maximale grootte 1024x1024px."
+msgstr "Dit veld bevat de afbeelding, welke wordt gebruikt als foto voor de werknemer. Maximale grootte 1024x1024px."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
@@ -134,9 +126,7 @@ msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Bedrijf"
@@ -154,8 +144,7 @@ msgstr "Overige informatie...."
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error! You cannot create recursive Categories."
-msgstr ""
-"Fout! het is niet toegestaan om recursieve werknemer labels te maken."
+msgstr "Fout! het is niet toegestaan om recursieve werknemer labels te maken."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
@@ -238,9 +227,7 @@ msgstr "Kleur index"
 msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
-msgstr ""
-"Het verbonden gebruiker veld op het medewerker formulier laat de OpenERP "
-"gebruiker (en haar rechten) koppelen met de werknemer."
+msgstr "Het verbonden gebruiker veld op het medewerker formulier laat de OpenERP gebruiker (en haar rechten) koppelen met de werknemer."
 
 #. module: hr
 #: field:hr.employee,image_medium:0
@@ -273,8 +260,7 @@ msgid "Child Categories"
 msgstr "Onderliggende labels"
 
 #. module: hr
-#: field:hr.job,description:0
-#: model:ir.model,name:hr.model_hr_job
+#: field:hr.job,description:0 model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "Functieomschrijving"
 
@@ -289,8 +275,7 @@ msgid "Followers"
 msgstr "Volgers"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Werknemer"
@@ -304,12 +289,9 @@ msgstr "Overige informatie"
 #: help:hr.employee,image_small:0
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Kleine foto van de werknemer. Deze foto wordt automatisch, in verhouding, "
-"geschaald naar 64x64px. Gebruik dit veld, overal waar een kleine afbeelding "
-"nodig is."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Kleine foto van de werknemer. Deze foto wordt automatisch, in verhouding, geschaald naar 64x64px. Gebruik dit veld, overal waar een kleine afbeelding nodig is."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -331,19 +313,14 @@ msgstr "Personeelsbeheer menu openen"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
-"This installs the module account_analytic_analysis, which will install sales "
-"management too."
-msgstr ""
-"Dit installeert de module  account_analytic_analysis, welke tevens de "
-"verkoopbeheer modules zal installeren."
+"This installs the module account_analytic_analysis, which will install sales"
+" management too."
+msgstr "Dit installeert de module  account_analytic_analysis, welke tevens de verkoopbeheer modules zal installeren."
 
 #. module: hr
 #: view:board.board:0
@@ -351,9 +328,7 @@ msgid "Human Resources Dashboard"
 msgstr "Personeelsbeheer dashboard"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "Functie"
 
@@ -420,35 +395,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new job position.\n"
 "              </p><p>\n"
-"                Job Positions are used to define jobs and their "
-"requirements.\n"
-"                You can keep track of the number of employees you have per "
-"job\n"
-"                position and follow the evolution according to what you "
-"planned\n"
+"                Job Positions are used to define jobs and their requirements.\n"
+"                You can keep track of the number of employees you have per job\n"
+"                position and follow the evolution according to what you planned\n"
 "                for the future.\n"
 "              </p><p>\n"
-"                You can attach a survey to a job position. It will be used "
-"in\n"
-"                the recruitment process to evaluate the applicants for this "
-"job\n"
+"                You can attach a survey to a job position. It will be used in\n"
+"                the recruitment process to evaluate the applicants for this job\n"
 "                position.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een nieuwe vacature aan te maken..\n"
-"              </p><p>\n"
-"                Vacatures worden gebruikt om functies te definiëren met hun "
-"functie-eisen.\n"
-"                U kunt bijhouden hoeveel werknemers u heeft per baan\n"
-"                en hoeveel u er in de toekomst verwacht. \n"
-"              </p><p>\n"
-"                U kunt ook een enquête koppelen aan een baan die in het \n"
-"                wervingsproces wordt gebruikt om de kandidaten voor deze\n"
-"                baan te evalueren.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik om een nieuwe vacature aan te maken..\n              </p><p>\n                Vacatures worden gebruikt om functies te definiëren met hun functie-eisen.\n                U kunt bijhouden hoeveel werknemers u heeft per baan\n                en hoeveel u er in de toekomst verwacht. \n              </p><p>\n                U kunt ook een enquête koppelen aan een baan die in het \n                wervingsproces wordt gebruikt om de kandidaten voor deze\n                baan te evalueren.\n              </p>\n            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -460,9 +417,7 @@ msgstr "Man"
 msgid ""
 "$('.oe_employee_picture').load(function() { if($(this).width() > "
 "$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-"$('.oe_employee_picture').load(function() { if($(this).width() > "
-"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
+msgstr "$('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
@@ -472,9 +427,7 @@ msgstr "Dit installeert de module  hr_evaluation."
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
-"Fout! Het is niet toegestaan om een recursieve werknemer hiërarchie aan te "
-"maken."
+msgstr "Fout! Het is niet toegestaan om een recursieve werknemer hiërarchie aan te maken."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
@@ -558,9 +511,7 @@ msgid "Child Departments"
 msgstr "Sub-afdelingen"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.employee:0 view:hr.job:0 field:hr.job,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -634,9 +585,7 @@ msgstr "Samenvatting"
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
-msgstr ""
-"In het werknemerformulier staan verschillende soorten informatie zoals "
-"contactgegevens."
+msgstr "In het werknemerformulier staan verschillende soorten informatie zoals contactgegevens."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -644,24 +593,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new employee.\n"
 "              </p><p>\n"
-"                With just a quick glance on the OpenERP employee screen, "
-"you\n"
-"                can easily find all the information you need for each "
-"person;\n"
+"                With just a quick glance on the OpenERP employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een nieuwe werknemer aan te maken.\n"
-"              </p><p>\n"
-"                Met slechts een snelle blik op het OpenERP werknemer "
-"formulier kunt\n"
-"                u eenvoudig alle informatie vinden die u nodig hebt voor "
-"elke persoon;\n"
-"                contactgegevens, functie, beschikbaarheid, enz.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik om een nieuwe werknemer aan te maken.\n              </p><p>\n                Met slechts een snelle blik op het OpenERP werknemer formulier kunt\n                u eenvoudig alle informatie vinden die u nodig hebt voor elke persoon;\n                contactgegevens, functie, beschikbaarheid, enz.\n              </p>\n            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -719,23 +656,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a department.\n"
 "              </p><p>\n"
-"                OpenERP's department structure is used to manage all "
-"documents\n"
+"                OpenERP's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een afdeling aan te maken.\n"
-"              </p><p>\n"
-"                OpenERP's afdelingsstructuur wordt gebruikt om alle "
-"documenten\n"
-"                te beheren die gerelateerd zijn aan werknemers per afdeling: "
-"\n"
-"               declaraties en urenstaten, verlof, werving etc.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik om een afdeling aan te maken.\n              </p><p>\n                OpenERP's afdelingsstructuur wordt gebruikt om alle documenten\n                te beheren die gerelateerd zijn aan werknemers per afdeling: \n               declaraties en urenstaten, verlof, werving etc.\n              </p>\n            "
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
@@ -755,22 +681,11 @@ msgid ""
 "                Click to define a new department.\n"
 "              </p><p>\n"
 "                Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
+"                related to employees by departments: expenses and timesheets,\n"
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een afdeling aan te maken.\n"
-"              </p><p>\n"
-"                OpenERP's afdelingsstructuur wordt gebruikt om alle "
-"documenten\n"
-"                te beheren die gerelateerd zijn aan werknemers per afdeling: "
-"\n"
-"               declaraties en urenstaten, verlof, werving etc.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik om een afdeling aan te maken.\n              </p><p>\n                OpenERP's afdelingsstructuur wordt gebruikt om alle documenten\n                te beheren die gerelateerd zijn aan werknemers per afdeling: \n               declaraties en urenstaten, verlof, werving etc.\n              </p>\n            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -801,9 +716,7 @@ msgstr "Werving en selectie in behandeling"
 #: field:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allow invoicing based on timesheets (the sale application will be installed)"
-msgstr ""
-"Toestaan van facturatie op basis van urenstaten (de verkoopbeheer  module "
-"wordt geinstalleerd)"
+msgstr "Toestaan van facturatie op basis van urenstaten (de verkoopbeheer  module wordt geinstalleerd)"
 
 #. module: hr
 #: code:addons/hr/hr.py:227
@@ -887,8 +800,7 @@ msgid "Resource"
 msgstr "Resource"
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee,name_related:0
+#: field:hr.department,complete_name:0 field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Naam"
@@ -899,8 +811,7 @@ msgid "Gender"
 msgstr "Sexe"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee.category,employee_ids:0
+#: view:hr.employee:0 field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -965,9 +876,7 @@ msgstr "Totaal aantal verwachte werknemers"
 msgid ""
 "By default 'In position', set it to 'In Recruitment' if recruitment process "
 "is going on for this job position."
-msgstr ""
-"Standaard wordt de status 'is vervuld' gewijzigd in 'Wordt geworven' als het "
-"verwervingsproces in gang is gezet voor deze functie."
+msgstr "Standaard wordt de status 'is vervuld' gewijzigd in 'Wordt geworven' als het verwervingsproces in gang is gezet voor deze functie."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -988,8 +897,7 @@ msgid ""
 "                    <b>Human Resources dashboard is empty.</b>\n"
 "                  </p><p>\n"
 "                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options.\n"
 "                  </p><p>\n"
 "                    You can filter and group data before inserting into the\n"
@@ -997,27 +905,10 @@ msgid ""
 "                  </p>\n"
 "              </div>\n"
 "            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Personeelsbeheer dashboard is leeg.</b>\n"
-"                  </p><p>\n"
-"                     Om uw erste rapport toe te voegen in dit dashboard, "
-"kunt u gaan naar elk\n"
-"                     menu en overschakelen naar de lijst of grafiek "
-"weergeven en klik op <i> 'Toevoegen aan\n"
-"                     Dashboard '</ i> in het uitgebreide zoekopties.\n"
-"                  </ p>\n"
-"                     U kunt filteren en groeperen van gegevens voordat u "
-"deze in de\n"
-"                     dashboard invoegt met behulp van de zoekopties.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
+msgstr "<div class=\"oe_empty_custom_dashboard\">\n                  <p>\n                    <b>Personeelsbeheer dashboard is leeg.</b>\n                  </p><p>\n                     Om uw erste rapport toe te voegen in dit dashboard, kunt u gaan naar elk\n                     menu en overschakelen naar de lijst of grafiek weergeven en klik op <i> 'Toevoegen aan\n                     Dashboard '</ i> in het uitgebreide zoekopties.\n                  </ p>\n                     U kunt filteren en groeperen van gegevens voordat u deze in de\n                     dashboard invoegt met behulp van de zoekopties.\n                  </p>\n              </div>\n            "
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Coach"
 
@@ -1037,8 +928,7 @@ msgid "hr.config.settings"
 msgstr "hr.config.settings"
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Manager"
@@ -1061,7 +951,4 @@ msgstr "Toepassen"
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Small-sized photo"
-msgstr ""
-
-#~ msgid "Smal-sized photo"
-#~ msgstr "Kleine foto"
+msgstr "Kleine foto"

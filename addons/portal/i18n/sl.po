@@ -1,21 +1,22 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-26 08:57+0000\n"
-"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-27 05:32+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -29,19 +30,12 @@ msgid "Please select at least one user to share with"
 msgstr "Prosimo, izberite vsaj enega uporabnika za skupno rabo"
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
-msgstr ""
-"V spodnjem seznamu izberite stike, ki bodo pripadali portalu.\n"
-"                        E-poštni naslov vsakega izbranega stika mora biti "
-"veljaven in unikaten.\n"
-"                        Če bi bilo potrebno, lahko popravite e-poštni naslov "
-"kateregakoli uporabnika neposredno na seznamu."
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr "V spodnji listi izberite, kateri kontakti bodo pripadali portalu."
 
 #. module: portal
 #: model:mail.group,name:portal.company_jobs
@@ -51,28 +45,25 @@ msgstr "Zaposlitve"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
 msgid "Billing"
-msgstr "Obračun"
+msgstr "Zaračunavanje"
 
 #. module: portal
-#: view:portal.wizard.user:portal.wizard_user_tree_view
+#: view:portal.wizard.user:0
 msgid "Contacts"
 msgstr "Stiki"
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
-"To besedilo je zajeto v elektronskem sporočilu, ki je poslano novim "
-"uporabnikom portala."
+msgstr "To besedilo je zajeto v elektronskem sporočilu, ki je poslano novemu uporabniku poratala."
 
 #. module: portal
-#: view:share.wizard:portal.share_step1_form_portal
-#: field:share.wizard,group_ids:0
+#: view:share.wizard:0 field:share.wizard,group_ids:0
 msgid "Existing groups"
 msgstr "Obstoječe skupine"
 
 #. module: portal
-#: view:res.groups:portal.group_search_view
+#: view:res.groups:0
 msgid "Portal Groups"
 msgstr "Portal skupine"
 
@@ -80,25 +71,23 @@ msgstr "Portal skupine"
 #: code:addons/portal/mail_mail.py:52
 #, python-format
 msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
-msgstr ""
-"<p>Dostopanje do tega dokumeta <a href=\"%s\">direktno v OpenERP</a></p>"
+msgstr "<p>Dostopanje do tega dokumeta <a href=\"%s\">direktno v OpenERP</a></p>"
 
 #. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
-msgstr "Vabilo"
+msgstr "Sporočilo povabila"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:portal.wizard_view
+#: model:ir.model,name:portal.model_portal_wizard view:portal.wizard:0
 msgid "Portal Access Management"
 msgstr "Upravljanje dostopov portala"
 
 #. module: portal
-#: view:res.groups:portal.group_search_view
+#: view:res.groups:0
 msgid "Non-Portal Groups"
-msgstr "Skupine, ki niso na portalu"
+msgstr "Grupe, ki niso na portalu"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:54
@@ -123,13 +112,11 @@ msgid ""
 "Make this payment acquirer available in portal forms (Customer invoices, "
 "etc.)"
 msgstr ""
-"Nastavi tega prejemnika plačila med razpoložljive v obrazcih portala (računi "
-"kupcev, itd.)"
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
-msgstr "Čarovnik za skupno rabo"
+msgstr "Pomočnik za skupno rabo"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_jobs
@@ -150,10 +137,10 @@ msgstr ""
 #. module: portal
 #: field:portal.wizard.user,email:0
 msgid "Email"
-msgstr "E-pošta"
+msgstr "Elektronska pošta"
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid "or"
 msgstr "ali"
 
@@ -161,16 +148,14 @@ msgstr "ali"
 #: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_starfeeds
 msgid "To-do"
-msgstr "Seznam opravkov"
+msgstr "Odprte naloge"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:226
+#: code:addons/portal/wizard/portal_wizard.py:194
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr ""
-"V vaših uporabniških nastavitvah morate imeti e-poštni naslov, da lahko "
-"pošiljate pošto."
+msgstr "V vaših nastavitvah uporabnika morate imeti elektronski naslov, da lahko pošiljate pošto."
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_jobs
@@ -179,7 +164,7 @@ msgid "Jobs"
 msgstr "Zaposlitve"
 
 #. module: portal
-#: field:portal.wizard,user_ids:0
+#: model:ir.model,name:portal.model_res_users field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Uporabniki"
 
@@ -193,21 +178,16 @@ msgstr "Varno plačevanje preko spleta."
 #: code:addons/portal/acquirer.py:77
 #, python-format
 msgid "No online payment acquirers configured"
-msgstr "Iskanje spletnih plačil ni nastavljeno."
+msgstr ""
 
 #. module: portal
 #: code:addons/portal/mail_message.py:60
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. "
-"Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
-"Zahtevana operacija ne more biti dokončana zaradi varnostnih omejitev. "
-"Obrnite se na sistemskega administratorja.\n"
-"\n"
-"(Tip dokumenta: %s, Operacija: %s)"
+msgstr "Zahtevana operacija ne more biti končana zaradi varnostnih omejitev. Prosimo kontaktirajte sistemskega administratorja.\n\n(Tip dokumenta: %s, Operacija: %s)"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -218,16 +198,14 @@ msgstr "Portal, ki mu je uporabnik lahko dodan ali odstranjen z njega."
 #: code:addons/portal/wizard/share_wizard.py:38
 #, python-format
 msgid "Users you already shared with"
-msgstr "Uporabniki, ki so že v skupni rabi z vami"
+msgstr "Uporabniki, ki so že z vami v skupni rabi"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
 "object: the document on which the payment form is rendered (usually an "
 "invoice or sales order record)"
-msgstr ""
-"objekt: dokument, na katerem temelji plačilna forma (običajno račun ali "
-"prodajni nalog)"
+msgstr "objekt: dokument, na katerem temelji plačilna forma (običajno račun ali prodajni nalog)"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
@@ -236,24 +214,14 @@ msgid ""
 "                    No message found and no message sent yet.\n"
 "                </p><p>\n"
 "                    Click on the top-right icon to compose a message. This\n"
-"                    message will be sent by email if it's an internal "
-"contact.\n"
+"                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    Nobeno sporočilo najdeno in nobeno še ni poslano.\n"
-"                </p><p>\n"
-"                    Kliknite na zgornjo desno ikono za sestavo sporočila. "
-"To\n"
-"                    sporočilo bo internim stikom poslano po e-pošti.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    Nobeno sporočilo najdeno in nobeno še ni poslano.\n                </p><p>\n                    Kliknite na zgornjo desno ikono za sestavo sporočila. To\n                    sporočilo bo poslano po elektronski pošti, če je interni kontakt.\n                </p>\n            "
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_menu
-#: field:portal.wizard,portal_id:0
-#: field:res.groups,is_portal:0
+#: model:ir.ui.menu,name:portal.portal_menu field:portal.wizard,portal_id:0
+#: field:res.groups,is_portal:0 model:res.groups,name:portal.group_portal
 msgid "Portal"
 msgstr "Portal"
 
@@ -261,7 +229,7 @@ msgstr "Portal"
 #: code:addons/portal/wizard/portal_wizard.py:34
 #, python-format
 msgid "Your OpenERP account at %(company)s"
-msgstr "Vaš OpenERP račun pri %(company)s."
+msgstr ""
 
 #. module: portal
 #: model:res.groups,name:portal.group_anonymous
@@ -294,13 +262,9 @@ msgstr "Prejeto"
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
 msgid ""
-"Portal members have specific access rights (such as record rules and "
-"restricted menus).\n"
+"Portal members have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
-msgstr ""
-"Uporabniki portala imajo določene pravice dostopa (npr. pravila na zapisih "
-"ali prepovedani meniji).\n"
-"                Ponavadi ne pripadajo običajnim OpenERP skupinam."
+msgstr "Uporabniki portala imajo določene pravice dostopa (npr. pravila na zapisih ali prepovedani meniji).\n                Ponavadi ne pripadajo običajnim OpenERP skupinam."
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.action_acquirer_list
@@ -320,8 +284,7 @@ msgid "Existing Groups (e.g Portal Groups)"
 msgstr "Obstoječe skupine (npr. skupine portala)"
 
 #. module: portal
-#: view:share.wizard:portal.share_step1_form_portal
-#: field:share.wizard,user_ids:0
+#: view:share.wizard:0 field:share.wizard,user_ids:0
 msgid "Existing users"
 msgstr "Obstoječi uporabniki"
 
@@ -338,7 +301,7 @@ msgstr "Ime"
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
 msgid "Access Groups"
-msgstr "Dostopne skupine"
+msgstr "Skupine pravic"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -348,11 +311,9 @@ msgstr "Sporočilo"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
-msgstr ""
-"način: vrsta dokumenta, na katerem temelji plačilo (prevedeno v uporabniški "
-"jezik, npr. \"Račun\")"
+"kind: the kind of document on which the payment form is rendered (translated"
+" to user language, e.g. \"Invoice\")"
+msgstr "način: vrsta dokumenta, na katerem temelji plačilo (prevedeno v uporabniški jezik, npr. \"Račun\")"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -372,9 +333,7 @@ msgstr "znesek: skupni znesek za plačilo, z decimalkami"
 msgid ""
 "<p>Access your messages and personal documents through <a href=\"%s\">our "
 "Customer Portal</a></p>"
-msgstr ""
-"<p>Dostopajte do vaših sporočil in osebnih dokumentov z <a "
-"href=\"%s\">našega partnerskega poratala</a></p>"
+msgstr "<p>Dostopajte do vaših sporočil in osebnih dokumentov z <a href=\"%s\">našega partnerskega poratala</a></p>"
 
 #. module: portal
 #: field:portal.wizard.user,partner_id:0
@@ -384,7 +343,7 @@ msgstr "Stik"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Odhodna pošta"
+msgstr "Odhajajoča sporočila"
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
@@ -399,28 +358,24 @@ msgstr "Sporočanje"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "uid: the current user id"
-msgstr "uid: trenutno uporabniško ime"
+msgstr ""
 
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
 msgid ""
-"Anonymous users have specific access rights (such as record rules and "
-"restricted menus).\n"
+"Anonymous users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
-msgstr ""
-"Anonimni uporabniki imajo določene dostopne pravice (do zapisov in "
-"prepovedani meniji).\n"
-"                   Ponavadi ne pripadajo običajnim OpenERP skupinam."
+msgstr "Anonimni uporabniki imajo določene dostopne pravice (do zapisov in prepovedani meniji).\n                   Ponavadi ne pripadajo običajnim OpenERP skupinam."
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
-msgstr "Prejemnik spletnega plačila"
+msgstr ""
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
 msgid "After Sale Services"
-msgstr "Po-prodajne storitve"
+msgstr "Poprodajne aktivnosti"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -431,9 +386,9 @@ msgstr "Novice"
 #: code:addons/portal/acquirer.py:76
 #, python-format
 msgid ""
-"You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
-msgstr ""
-"Konfiguracijo lahko zaključite v <a href=\"%s\">nastavitvah bank/gotovine</a>"
+"You can finish the configuration in the <a href=\"%s\">Bank&Cash "
+"settings</a>"
+msgstr "Konfiguracijo lahko zaključite v <a href=\"%s\">nastavitvah bank/gotovine</a>"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -446,31 +401,17 @@ msgid ""
 "<p>\n"
 "                    <b>Good Job!</b> Your inbox is empty.\n"
 "                </p><p>\n"
-"                    Your inbox contains private messages or emails sent to "
-"you\n"
-"                    as well as information related to documents or people "
-"you\n"
+"                    Your inbox contains private messages or emails sent to you\n"
+"                    as well as information related to documents or people you\n"
 "                    follow.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    <b>Dobro opravljeno!</b> Vaš poštni predal je prazen.\n"
-"                </p><p>\n"
-"                    Vaš poštni predal vsebuje privatna sporočila ali e-pošto "
-"poslano vam,\n"
-"                    kakor tudi informacije glede dokumentov ali ljudi, ki "
-"jim\n"
-"                    sledite.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    <b>Dobro opravljeno!</b> Vaš predal prejete pošte je prazen.\n                </p><p>\n                    Vaš predal prejete pošte vsebuje privatna sporočila ali sporočila, poslana vam,\n                    kakor tudi informacije, povezane z dokumenti ali ljudmi, ki jim\n                    sledite.\n                </p>\n            "
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
-"To besedilo je zajeto v elektronskem sporočilu, ki je poslano novim "
-"uporabnikom portala."
+msgstr "To besedilo je vključeno v e-sporočilo, poslano novim uporabnikom portala."
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_company
@@ -480,7 +421,7 @@ msgstr "O nas"
 #. module: portal
 #: help:res.groups,is_portal:0
 msgid "If checked, this group is usable as a portal."
-msgstr "Če je označeno, je ta skupina uporabna kot portal."
+msgstr "Če je označeno, je ta skupina tudi kot portalna."
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -507,73 +448,31 @@ msgid ""
 "--\n"
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
-msgstr ""
-"Spoštovani %(name)s,\n"
-"\n"
-"Dobili ste dostop do %(portal)s.\n"
-"\n"
-"Vaši prijavni podatki so:\n"
-"Baza podatkov: %(db)s\n"
-"Uporabniško ime: %(login)s\n"
-"\n"
-"Za zaključek procesa prijave potrdite naslednjo url-povezavo:\n"
-"%(url)s\n"
-"\n"
-"%(welcome_message)s\n"
-"\n"
-"--\n"
-"Mentis d.o.o.\n"
-"www.mentis.si\n"
-"OpenERP - Open Source Business Applications\n"
-"www.openerp.com\n"
+msgstr "Spoštovani %(name)s,\n\nDobili ste dostop do %(portal)s.\n\nVaši prijavni podatki so:\nBaza podatkov: %(db)s\nUporabniško ime: %(login)s\n\nZa zaključek procesa prijave potrdite naslednjo url-povezavo:\n%(url)s\n\n%(welcome_message)s\n\n--\nMentis d.o.o.\nwww.mentis.si\nOpenERP - Open Source Business Applications\nwww.openerp.com\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
 "currency: the currency record in which the document is issued (e.g. "
 "currency.name could be EUR)"
-msgstr ""
-"valuta: valutni zapis, v katerem je bil izdan dokument (npr.: ime valute bi "
-"lahko bilo EUR)"
+msgstr "valuta: valutni zapis, v katerem je bil izdan dokument (npr.: ime valute bi lahko bilo EUR)"
 
 #. module: portal
 #: model:portal.payment.acquirer,form_template:portal.paypal_acquirer
 msgid ""
 "\n"
 "% if object.company_id.paypal_account:\n"
-"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
-"target=\"_blank\">\n"
+"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" target=\"_blank\">\n"
 "  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
-"  <input type=\"hidden\" name=\"business\" "
-"value=\"${object.company_id.paypal_account}\"/>\n"
-"  <input type=\"hidden\" name=\"item_name\" "
-"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
+"  <input type=\"hidden\" name=\"business\" value=\"${object.company_id.paypal_account}\"/>\n"
+"  <input type=\"hidden\" name=\"item_name\" value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
 "  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
-"  <input type=\"hidden\" name=\"currency_code\" "
-"value=\"${currency.name}\"/>\n"
-"  <input type=\"image\" name=\"submit\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"  <input type=\"hidden\" name=\"currency_code\" value=\"${currency.name}\"/>\n"
+"  <input type=\"image\" name=\"submit\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "</form>\n"
 "% endif\n"
 "            "
-msgstr ""
-"\n"
-"% if object.company_id.paypal_account:\n"
-"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
-"target=\"_blank\">\n"
-"  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
-"  <input type=\"hidden\" name=\"business\" "
-"value=\"${object.company_id.paypal_account}\"/>\n"
-"  <input type=\"hidden\" name=\"item_name\" "
-"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
-"  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
-"  <input type=\"hidden\" name=\"currency_code\" "
-"value=\"${currency.name}\"/>\n"
-"  <input type=\"image\" name=\"submit\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"</form>\n"
-"% endif\n"
-"            "
+msgstr "\n% if object.company_id.paypal_account:\n<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" target=\"_blank\">\n  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n  <input type=\"hidden\" name=\"business\" value=\"${object.company_id.paypal_account}\"/>\n  <input type=\"hidden\" name=\"item_name\" value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n  <input type=\"hidden\" name=\"currency_code\" value=\"${currency.name}\"/>\n  <input type=\"image\" name=\"submit\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n</form>\n% endif\n            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -585,9 +484,7 @@ msgstr "Nastavitev uporabnika portala"
 msgid ""
 "If the template renders to an empty result in a certain context it will be "
 "ignored, as if it was inactive."
-msgstr ""
-"Če osnutki postanejo prazni rezultati, bodo običajno ignorirani, kot bi bili "
-"neaktivni."
+msgstr "Če osnutki postanejo prazni rezultati, bodo običajno ignorirani, kot bi bili neaktivni."
 
 #. module: portal
 #: field:portal.payment.acquirer,visible:0
@@ -595,20 +492,20 @@ msgid "Visible"
 msgstr "Vidno"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:225
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
 msgid "Email Required"
 msgstr "E-pošta obvezna"
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid "Cancel"
-msgstr "Preklic"
+msgstr "Prekliči"
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid "Apply"
-msgstr "Uveljavi"
+msgstr "Uporabi"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_news
@@ -630,8 +527,6 @@ msgid ""
 "This is an HTML form template to submit a payment through this acquirer.\n"
 "                                The template will be rendered with"
 msgstr ""
-"To je HTML predloga obrazca za vložitev plačila preko tega prejemnika.\n"
-"                                Predloga bo upodobljena z"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
@@ -639,22 +534,11 @@ msgid ""
 "<p>\n"
 "                    <b>No todo.</b>\n"
 "                </p><p>\n"
-"                    When you process messages in your inbox, you can mark "
-"some\n"
-"                    as <i>todo</i>. From this menu, you can process all your "
-"todo.\n"
+"                    When you process messages in your inbox, you can mark some\n"
+"                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    <b>Ni seznama opravkov.</b>\n"
-"                </p><p>\n"
-"                    Ob obdelavi sporočil v vašem poštnem predalu, lahko "
-"nekatera označite\n"
-"                    kot <i>opravke</i>. Iz tega menija se dostopa do svojih "
-"opravkov.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    <b>Ni odprtih nalog.</b>\n                </p><p>\n                    Ko pregledate sporočila v vašem vhodnem nabiralniku, lahko nekatere ozančite\n                    kot <i>odprte naloge</i>. Iz tega menija lahko urejujete vse svoje odprte naloge.\n                </p>\n            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -662,32 +546,6 @@ msgid "Form Template"
 msgstr "Predloga forme"
 
 #. module: portal
-#: view:share.wizard:portal.share_step2_form_portal
+#: view:share.wizard:0
 msgid "Details"
 msgstr "Podrobnosti"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                    Youd don't have unread company's news.\n"
-#~ "                </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                    Nimate neprebranih novic podjetja.\n"
-#~ "                </p>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                    Youd don't have unread job offers.\n"
-#~ "                </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                   Nimate neprebranih ponudb za delo.\n"
-#~ "                </p>\n"
-#~ "            "
-
-#, python-format
-#~ msgid "Email required"
-#~ msgstr "Email obvezen"

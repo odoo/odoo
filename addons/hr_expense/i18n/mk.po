@@ -1,22 +1,23 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-28 23:08+0000\n"
-"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
-"Language-Team: ESKON-INZENERING\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-7/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:55+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
 "Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -54,8 +55,7 @@ msgid "Confirmation Date"
 msgstr "Датум на конфирмација"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 msgid "Group By..."
 msgstr "Групирај по..."
 
@@ -70,10 +70,8 @@ msgid "Validated By"
 msgstr "Потврдено од"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,department_id:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Одделение"
 
@@ -83,8 +81,7 @@ msgid "New Expense"
 msgstr "Нов трошок"
 
 #. module: hr_expense
-#: field:hr.expense.line,uom_id:0
-#: view:product.product:0
+#: field:hr.expense.line,uom_id:0 view:product.product:0
 msgid "Unit of Measure"
 msgstr "Единица мерка"
 
@@ -101,11 +98,10 @@ msgstr "Непрочитани Пораки"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting Payment"
-msgstr ""
+msgstr "Чека плаќање"
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr "Компанија"
@@ -126,9 +122,7 @@ msgstr "Да се плати"
 msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
-msgstr ""
-"Нема пронајдено дневник за трошоци. Осигурете се дека имате конфигурирано "
-"дневник со тип 'набавки'."
+msgstr "Нема пронајдено дневник за трошоци. Осигурете се дека имате конфигурирано дневник со тип 'набавки'."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
@@ -136,8 +130,7 @@ msgid "Expenses Statistics"
 msgstr "Статистики на трошоци"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,day:0
+#: view:hr.expense.report:0 field:hr.expense.report,day:0
 msgid "Day"
 msgstr "Ден"
 
@@ -146,9 +139,7 @@ msgstr "Ден"
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
-msgstr ""
-"Датум на прифаќање на список на трошокот. Тоа е пополнето кога е притиснато "
-"копчето Прифати."
+msgstr "Датум на прифаќање на список на трошокот. Тоа е пополнето кога е притиснато копчето Прифати."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -231,13 +222,10 @@ msgstr ""
 msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
 "Confirm is pressed."
-msgstr ""
-"Датум на потврдување на список на трошокот. Тоа е пополнето кога е "
-"притиснато копчето Потврди."
+msgstr "Датум на потврдување на список на трошокот. Тоа е пополнето кога е притиснато копчето Потврди."
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,nbr:0
+#: view:hr.expense.report:0 field:hr.expense.report,nbr:0
 msgid "# of Lines"
 msgstr "# од ставки"
 
@@ -246,9 +234,7 @@ msgstr "# од ставки"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е "
-"директно во html формат со цел да биде вметнато во kanban преглед."
+msgstr "Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:455
@@ -280,11 +266,9 @@ msgstr "Средна цена"
 #: help:hr.expense.expense,state:0
 msgid ""
 "When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
+" It is confirmed by the user and request is sent to admin, the status is 'Waiting Confirmation'.            \n"
 "If the admin accepts it, the status is 'Accepted'.\n"
-" If the accounting entries are made for the expense request, the status is "
-"'Waiting Payment'."
+" If the accounting entries are made for the expense request, the status is 'Waiting Payment'."
 msgstr ""
 
 #. module: hr_expense
@@ -306,19 +290,16 @@ msgstr "Одложување до потврдување"
 #. module: hr_expense
 #: help:hr.expense.line,sequence:0
 msgid "Gives the sequence order when displaying a list of expense lines."
-msgstr ""
-"Дава секвенциски редослед кога ја прикажува листата на ставки на трошокот."
+msgstr "Дава секвенциски редослед кога ја прикажува листата на ставки на трошокот."
 
 #. module: hr_expense
-#: field:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,state:0 view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "Status"
 msgstr "Статус"
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:0
+#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Аналитичка сметка"
@@ -339,28 +320,23 @@ msgid "Followers"
 msgstr "Пратители"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0
-#: view:hr.expense.report:0
+#: report:hr.expense:0 view:hr.expense.expense:0
+#: field:hr.expense.expense,employee_id:0 view:hr.expense.report:0
 msgid "Employee"
 msgstr "Вработен"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: selection:hr.expense.expense,state:0
+#: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
 msgid "New"
 msgstr "Ново"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.report,product_qty:0
+#: report:hr.expense:0 field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr "Количина"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,price_total:0
+#: view:hr.expense.report:0 field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Вкупна цена"
 
@@ -376,8 +352,7 @@ msgid "The employee must have a home address."
 msgstr "Вработениот мора да има домашна адреса"
 
 #. module: hr_expense
-#: view:board.board:0
-#: view:hr.expense.expense:0
+#: view:board.board:0 view:hr.expense.expense:0
 #: model:ir.actions.act_window,name:hr_expense.action_my_expense
 msgid "My Expenses"
 msgstr "Мои трошоци"
@@ -403,14 +378,12 @@ msgid "Reimburse expense"
 msgstr "Надомести трошок"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,no_of_products:0
+#: view:hr.expense.report:0 field:hr.expense.report,no_of_products:0
 msgid "# of Products"
 msgstr "# од производи"
 
@@ -436,8 +409,7 @@ msgid "Reimbursement"
 msgstr "Надоместување"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "Датум на валидација"
 
@@ -451,7 +423,7 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:238
 #, python-format
 msgid "The employee must have a payable account set on his home address."
-msgstr ""
+msgstr "Вработениот мора да има подесено сметка за плаќање на неговата домашна адреса."
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -461,16 +433,14 @@ msgid "Expenses Analysis"
 msgstr "Анализа на трошоци"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr "Трошок"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,line_ids:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr "Ставки на трошоци"
@@ -491,8 +461,7 @@ msgid "December"
 msgstr "Декември"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
 msgstr "Месец"
@@ -527,11 +496,9 @@ msgstr "Слободни белешки"
 #: code:addons/hr_expense/hr_expense.py:455
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
-msgstr ""
-"Селектираната Единица мерка не припаѓа на иста категорија како единицата "
-"мерка на производот"
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
+msgstr "Селектираната Единица мерка не припаѓа на иста категорија како единицата мерка на производот"
 
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
@@ -556,7 +523,7 @@ msgstr "Нацрт"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Платено"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:355
@@ -564,9 +531,7 @@ msgstr ""
 msgid ""
 "Please configure Default Expense account for Product purchase: "
 "`property_account_expense_categ`."
-msgstr ""
-"Конфигурирајте Сметка Стандарден трошок за набавка на производ: "
-"`property_account_expense_categ`."
+msgstr "Конфигурирајте Сметка Стандарден трошок за набавка на производ: `property_account_expense_categ`."
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveexpense0
@@ -584,8 +549,7 @@ msgid "The direct manager approves the sheet"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,amount:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "Вкупна сума"
 
@@ -610,8 +574,7 @@ msgid "Review Your Expenses Products"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,date:0
+#: report:hr.expense:0 field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr "Датум"
@@ -647,26 +610,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to register new expenses. \n"
 "              </p><p>\n"
-"                OpenERP will ensure the whole process is followed; the "
-"expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
+"                OpenERP will ensure the whole process is followed; the expense\n"
+"                sheet is validated by manager(s), the employee is reimbursed\n"
 "                from his expenses, some expenses must be re-invoiced to the\n"
 "                customers.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to register new expenses. \n"
-"              </p><p>\n"
-"                OpenERP will ensure the whole process is followed; the "
-"expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
-"                from his expenses, some expenses must be re-invoiced to the\n"
-"                customers.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Click to register new expenses. \n              </p><p>\n                OpenERP will ensure the whole process is followed; the expense\n                sheet is validated by manager(s), the employee is reimbursed\n                from his expenses, some expenses must be re-invoiced to the\n                customers.\n              </p>\n            "
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -691,7 +641,7 @@ msgstr "Резиме"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Ставки на дневник"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
@@ -727,7 +677,7 @@ msgstr "Влезна фактура"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expenses Sheet"
-msgstr ""
+msgstr "Табела на трошоци"
 
 #. module: hr_expense
 #: field:hr.expense.report,voucher_id:0
@@ -740,14 +690,12 @@ msgid "Approved Expenses"
 msgstr "Одобрени трошоци"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.line,unit_amount:0
+#: report:hr.expense:0 field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
 msgstr "Единечна цена"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: selection:hr.expense.report,state:0
+#: view:hr.expense.report:0 selection:hr.expense.report,state:0
 msgid "Done"
 msgstr "Завршено"
 
@@ -757,8 +705,7 @@ msgid "Invoice"
 msgstr "Фактура"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,year:0
+#: view:hr.expense.report:0 field:hr.expense.report,year:0
 msgid "Year"
 msgstr "Година"
 
@@ -810,7 +757,7 @@ msgid ""
 "                Click to create a new expense category. \n"
 "             </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за да креирате нова категорија на трошок. \n             </p>\n            "
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
@@ -828,26 +775,22 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
 msgstr "Одобрено"
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0
-#: view:hr.expense.report:0
+#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,product_id:0
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
 msgstr "Производ"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,name:0
-#: field:hr.expense.line,description:0
+#: report:hr.expense:0 view:hr.expense.expense:0
+#: field:hr.expense.expense,name:0 field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Опис"
 
@@ -899,8 +842,7 @@ msgid "Employee's Name"
 msgstr "Име на Вработениот"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,user_id:0
+#: view:hr.expense.report:0 field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr "Корисник на валидација"
 
@@ -982,9 +924,7 @@ msgstr "Трошоци"
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
 msgid "Specify if the product can be selected in an HR expense line."
-msgstr ""
-"Означете доколку производот може да биде избран во ставка трошок за човечки "
-"ресурси."
+msgstr "Означете доколку производот може да биде избран во ставка трошок за човечки ресурси."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -998,8 +938,7 @@ msgid "To Approve"
 msgstr "За Одобрување"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.line:0
+#: view:hr.expense.expense:0 view:hr.expense.line:0
 #: field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr "Вкупно"
@@ -1008,23 +947,3 @@ msgstr "Вкупно"
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "Повторно фактурирање"
-
-#~ msgid "Open Receipt"
-#~ msgstr "Отвори сметка"
-
-#, python-format
-#~ msgid "Expense Receipt"
-#~ msgstr "Сметка за трошок"
-
-#~ msgid ""
-#~ "When the expense request is created the status is 'Draft'.\n"
-#~ " It is confirmed by the user and request is sent to admin, the status is "
-#~ "'Waiting Confirmation'.            \n"
-#~ "If the admin accepts it, the status is 'Accepted'.\n"
-#~ " If a receipt is made for the expense request, the status is 'Done'."
-#~ msgstr ""
-#~ "Кога се креира барање за трошок статусот е 'Нацрт'.\n"
-#~ " Кога е потврдено од корисникот и барањето е испратено до администраторот, "
-#~ "статусот е 'Чекам потврда'.\n"
-#~ "Доколку администраторот го прифати, статусот е 'Прифатено'.\n"
-#~ " Доколку за барањето за трошок е направена сметка, статусот е 'Завршено'."

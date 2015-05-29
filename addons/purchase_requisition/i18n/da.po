@@ -1,21 +1,22 @@
-# Danish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * purchase_requisition
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-11-04 22:27+0000\n"
-"Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
-"Language-Team: Danish <da@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/odoo-7/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:20+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -38,21 +39,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to start a new purchase requisition process. \n"
 "          </p><p>\n"
-"            A purchase requisition is the step before a request for "
-"quotation.\n"
-"            In a purchase requisition (or purchase tender), you can record "
-"the\n"
+"            A purchase requisition is the step before a request for quotation.\n"
+"            In a purchase requisition (or purchase tender), you can record the\n"
 "            products you need to buy and trigger the creation of RfQs to\n"
-"            suppliers. After the negotiation, once you have reviewed all "
-"the\n"
+"            suppliers. After the negotiation, once you have reviewed all the\n"
 "            supplier's offers, you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,user_id:0
+#: view:purchase.requisition:0 field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Ansvarlig"
 
@@ -62,8 +59,7 @@ msgid "Cancel Requisition"
 msgstr "Annuller Rekvisition"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,state:0
+#: view:purchase.requisition:0 field:purchase.requisition,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -78,8 +74,7 @@ msgid "Group By..."
 msgstr "Sorter efter"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "Purchase Done"
 msgstr "Indkøb færdigt"
 
@@ -100,8 +95,7 @@ msgid "Supplier"
 msgstr "Leverandør"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "New"
 msgstr "Ny"
 
@@ -126,8 +120,7 @@ msgstr "Type"
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
 #: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 #: field:product.product,purchase_requisition:0
-#: field:purchase.order,requisition_id:0
-#: view:purchase.requisition:0
+#: field:purchase.order,requisition_id:0 view:purchase.requisition:0
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
@@ -160,8 +153,7 @@ msgid "Terms and Conditions"
 msgstr "Vilkår og betingelser"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,description:0
+#: report:purchase.requisition:0 field:purchase.requisition,description:0
 msgid "Description"
 msgstr "Beskrivelse"
 
@@ -253,9 +245,7 @@ msgstr "Tilbuds detaljer"
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr ""
-"Du har allerede en %s indkøbsordre hos denne partner, du må annullere denne "
-"indkøbsordre for at oprette et nyt tilbud."
+msgstr "Du har allerede en %s indkøbsordre hos denne partner, du må annullere denne indkøbsordre for at oprette et nyt tilbud."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -263,8 +253,7 @@ msgid "End Date"
 msgstr "Slut dato"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,name:0
+#: report:purchase.requisition:0 field:purchase.requisition,name:0
 msgid "Requisition Reference"
 msgstr "Rekvisitions reference"
 
@@ -274,8 +263,7 @@ msgid "Products to Purchase"
 msgstr "Varer der skal købes"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "Sent to Suppliers"
 msgstr "Sendt til leverandører"
 
@@ -303,11 +291,8 @@ msgstr "Beskeder"
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
 msgid ""
-"Purchase Requisition (exclusive):  On the confirmation of a purchase order, "
-"it cancels the remaining purchase order.\n"
-"Purchase Requisition(Multiple):  It allows to have multiple purchase "
-"orders.On confirmation of a purchase order it does not cancel the remaining "
-"orders"
+"Purchase Requisition (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
+"Purchase Requisition(Multiple):  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
 
 #. module: purchase_requisition
@@ -398,8 +383,7 @@ msgid "Procurement"
 msgstr "Indkøb"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: view:purchase.requisition:0
+#: report:purchase.requisition:0 view:purchase.requisition:0
 msgid "Source"
 msgstr "Kilde"
 
@@ -428,9 +412,7 @@ msgstr "Indkøbs rekvisitino (Exclusive)"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Indeholder chat sammendraget (antal beskeder). Dette sammendrag er i html "
-"format for at kunne sættes ind i kanban views."
+msgstr "Indeholder chat sammendraget (antal beskeder). Dette sammendrag er i html format for at kunne sættes ind i kanban views."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -454,8 +436,7 @@ msgid "Cancel"
 msgstr "Annullér"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,date_start:0
+#: report:purchase.requisition:0 field:purchase.requisition,date_start:0
 msgid "Requisition Date"
 msgstr "Rekvisitions dato"
 
@@ -479,9 +460,7 @@ msgstr "Rekvisition"
 msgid ""
 "Check this box to generates purchase requisition instead of generating "
 "requests for quotation from procurement."
-msgstr ""
-"Afmærk dette felt for at oprette indkøbsordrer i stedet for forespørgsler "
-"fra indkøb."
+msgstr "Afmærk dette felt for at oprette indkøbsordrer i stedet for forespørgsler fra indkøb."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0

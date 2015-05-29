@@ -1,21 +1,22 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mrp
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-04-01 12:11+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 14:31+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:04+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -62,9 +63,7 @@ msgstr "Število ciklov"
 msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
-msgstr ""
-"Pravilo \"Minimalna zaloga\" omogoča avtomatsko kreiranje naročil "
-"dobaviteljem."
+msgstr "Pravilo \"Minimalna zaloga\" omogoča avtomatsko kreiranje naročil dobaviteljem."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
@@ -99,8 +98,7 @@ msgid "For stockable products and consumables"
 msgstr "Za"
 
 #. module: mrp
-#: help:mrp.bom,message_unread:0
-#: help:mrp.production,message_unread:0
+#: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Če je izbrano, zahtevajo nova sporočila vašo pozornost."
@@ -118,9 +116,7 @@ msgid "False"
 msgstr "Napačno"
 
 #. module: mrp
-#: view:mrp.bom:0
-#: field:mrp.bom,code:0
-#: field:mrp.production,name:0
+#: view:mrp.bom:0 field:mrp.bom,code:0 field:mrp.production,name:0
 msgid "Reference"
 msgstr "Sklic"
 
@@ -135,8 +131,7 @@ msgid "Manufacturing Orders which are currently in production."
 msgstr "Delovni nalogi trenutno v proizvodnji"
 
 #. module: mrp
-#: help:mrp.bom,message_summary:0
-#: help:mrp.production,message_summary:0
+#: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
 #: help:mrp.production.workcenter.line,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
@@ -174,9 +169,7 @@ msgstr "Strošek na uro"
 msgid ""
 "In case the Supply method of the product is Produce, the system creates a "
 "production order."
-msgstr ""
-"V kolikor je način oskrbe izdelka \"Proizvodnja\", sistem ustvari proizvodni "
-"nalog."
+msgstr "V kolikor je način oskrbe izdelka \"Proizvodnja\", sistem ustvari proizvodni nalog."
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -244,21 +237,15 @@ msgid ""
 "                Click to create a routing.\n"
 "              </p><p>\n"
 "                Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers "
-"in\n"
+"                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nov delovni proces\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nov delovni proces\n              </p>\n            "
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,move_created_ids2:0
+#: view:mrp.production:0 field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
 msgstr "Končani izdelki"
 
@@ -288,8 +275,7 @@ msgstr "Izbira prave kosovnice bo odvisna od lastnosti iz prodajnega naloga."
 #: view:mrp.bom:0
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
+"                                will contain the raw materials, instead of the finished product."
 msgstr "Dostavni nalog bo namesto izdelka, vseboval sestavne dele."
 
 #. module: mrp
@@ -313,8 +299,7 @@ msgid "Sets / Phantom"
 msgstr "Sets / Phantom"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,state:0
+#: view:mrp.production:0 field:mrp.production,state:0
 msgid "Status"
 msgstr "Stanje"
 
@@ -357,17 +342,12 @@ msgid ""
 "                A manufacuring order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nov delovni nalog.</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nov delovni nalog.</p>\n            "
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -375,11 +355,8 @@ msgid "Reference must be unique per Company!"
 msgstr "Referenca mora biti enoznačna"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: report:bom.structure:0
-#: view:mrp.bom:0
-#: field:mrp.product_price,number:0
-#: view:mrp.production:0
+#: code:addons/mrp/report/price.py:141 report:bom.structure:0 view:mrp.bom:0
+#: field:mrp.product_price,number:0 view:mrp.production:0
 #: report:mrp.production.order:0
 #, python-format
 msgid "Quantity"
@@ -417,8 +394,7 @@ msgid ""
 msgstr "Uporablja se za usluge."
 
 #. module: mrp
-#: field:mrp.bom,product_qty:0
-#: field:mrp.production,product_qty:0
+#: field:mrp.bom,product_qty:0 field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Quantity"
 msgstr "Količina"
@@ -439,14 +415,10 @@ msgstr "Delovni čas"
 #: help:mrp.production,state:0
 msgid ""
 "When the production order is created the status is set to 'Draft'.\n"
-"                If the order is confirmed the status is set to 'Waiting "
-"Goods'.\n"
-"                If any exceptions are there, the status is set to 'Picking "
-"Exception'.\n"
-"                If the stock is available then the status is set to 'Ready "
-"to Produce'.\n"
-"                When the production gets started then the status is set to "
-"'In Production'.\n"
+"                If the order is confirmed the status is set to 'Waiting Goods'.\n"
+"                If any exceptions are there, the status is set to 'Picking Exception'.\n"
+"                If the stock is available then the status is set to 'Ready to Produce'.\n"
+"                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
 msgstr "Proizvodni nalog je najprej v statusu \"Osnutek\""
 
@@ -461,33 +433,19 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new property.\n"
 "              </p><p>\n"
-"                The Properties in OpenERP are used to select the right bill "
-"of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
+"                The Properties in OpenERP are used to select the right bill of\n"
+"                materials for manufacturing a product when you have different\n"
 "                ways of building the same product.  You can assign several\n"
 "                properties to each bill of materials.  When a salesperson\n"
-"                creates a sales order, they can relate it to several "
-"properties\n"
-"                and OpenERP will automatically select the BoM to use "
-"according\n"
+"                creates a sales order, they can relate it to several properties\n"
+"                and OpenERP will automatically select the BoM to use according\n"
 "                the needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova lastnost\n"
-"              </p><p>\n"
-"                Lastnosti se uporabljajo , kadar se lahko isti izdelek dela "
-"na \n"
-"                več načinov (npr. barva)\n"
-"              \n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova lastnost\n              </p><p>\n                Lastnosti se uporabljajo , kadar se lahko isti izdelek dela na \n                več načinov (npr. barva)\n              \n              </p>\n            "
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,date_planned:0
+#: view:mrp.production:0 field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
 msgid "Scheduled Date"
 msgstr "Načrtovani datum"
@@ -499,8 +457,7 @@ msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Delovni nalog <em>%s</em> ustvarjen."
 
 #. module: mrp
-#: view:mrp.bom:0
-#: report:mrp.production.order:0
+#: view:mrp.bom:0 report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Kosovnica"
 
@@ -510,8 +467,7 @@ msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr ""
-"Izpolnite če je proizvodnja na drugi lokaciji. (npr. Pogodba s Partnerjem)"
+msgstr "Izpolnite če je proizvodnja na drugi lokaciji. (npr. Pogodba s Partnerjem)"
 
 #. module: mrp
 #: view:board.board:0
@@ -550,10 +506,8 @@ msgid "Request for Quotation."
 msgstr "Povpraševanje"
 
 #. module: mrp
-#: view:change.production.qty:0
-#: view:mrp.config.settings:0
-#: view:mrp.product.produce:0
-#: view:mrp.product_price:0
+#: view:change.production.qty:0 view:mrp.config.settings:0
+#: view:mrp.product.produce:0 view:mrp.product_price:0
 #: view:mrp.workcenter.load:0
 msgid "or"
 msgstr "ali"
@@ -566,8 +520,7 @@ msgid ""
 msgstr "Kosovnica je povezana z delovnim procesom."
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,move_created_ids:0
+#: view:mrp.production:0 field:mrp.production,move_created_ids:0
 msgid "Products to Produce"
 msgstr "Predvideni izdelki"
 
@@ -577,8 +530,7 @@ msgid "Apply"
 msgstr "Uporabi"
 
 #. module: mrp
-#: view:mrp.routing:0
-#: field:mrp.routing,location_id:0
+#: view:mrp.routing:0 field:mrp.routing,location_id:0
 msgid "Production Location"
 msgstr "Lokacija proizvodnje"
 
@@ -621,25 +573,12 @@ msgstr "Za Izdelavo"
 #. module: mrp
 #: help:mrp.config.settings,module_stock_no_autopicking:0
 msgid ""
-"This module allows an intermediate picking process to provide raw materials "
-"to production orders.\n"
-"                For example to manage production made by your suppliers (sub-"
-"contracting).\n"
-"                To achieve this, set the assembled product which is sub-"
-"contracted to \"No Auto-Picking\"\n"
-"                and put the location of the supplier in the routing of the "
-"assembly operation.\n"
+"This module allows an intermediate picking process to provide raw materials to production orders.\n"
+"                For example to manage production made by your suppliers (sub-contracting).\n"
+"                To achieve this, set the assembled product which is sub-contracted to \"No Auto-Picking\"\n"
+"                and put the location of the supplier in the routing of the assembly operation.\n"
 "                This installs the module stock_no_autopicking."
-msgstr ""
-"This module allows an intermediate picking process to provide raw materials "
-"to production orders.\n"
-"                For example to manage production made by your suppliers (sub-"
-"contracting).\n"
-"                To achieve this, set the assembled product which is sub-"
-"contracted to \"No Auto-Picking\"\n"
-"                and put the location of the supplier in the routing of the "
-"assembly operation.\n"
-"                This installs the module stock_no_autopicking."
+msgstr "This module allows an intermediate picking process to provide raw materials to production orders.\n                For example to manage production made by your suppliers (sub-contracting).\n                To achieve this, set the assembled product which is sub-contracted to \"No Auto-Picking\"\n                and put the location of the supplier in the routing of the assembly operation.\n                This installs the module stock_no_autopicking."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -669,8 +608,7 @@ msgid "Material Routing"
 msgstr "Tok materiala"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,move_lines2:0
+#: view:mrp.production:0 field:mrp.production,move_lines2:0
 #: report:mrp.production.order:0
 msgid "Consumed Products"
 msgstr "Porabljeni izdelki"
@@ -700,8 +638,7 @@ msgid "Stock Move"
 msgstr "Prenos zaloge"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_planning
-#: view:mrp.config.settings:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_planning view:mrp.config.settings:0
 msgid "Planning"
 msgstr "Načrtovanje"
 
@@ -730,17 +667,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a component to a bill of material.\n"
 "              </p><p>\n"
-"                Bills of materials components are components and by-"
-"products\n"
+"                Bills of materials components are components and by-products\n"
 "                used to create master bills of materials.  Use this menu to\n"
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova komponenta.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova komponenta.\n              </p>\n            "
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -766,23 +698,15 @@ msgid ""
 "                    * Manufacturer Product Code\n"
 "                    * Product Attributes.\n"
 "                This installs the module product_manufacturer."
-msgstr ""
-"This allows you to define the following for a product:\n"
-"                    * Manufacturer\n"
-"                    * Manufacturer Product Name\n"
-"                    * Manufacturer Product Code\n"
-"                    * Product Attributes.\n"
-"                This installs the module product_manufacturer."
+msgstr "This allows you to define the following for a product:\n                    * Manufacturer\n                    * Manufacturer Product Name\n                    * Manufacturer Product Code\n                    * Product Attributes.\n                This installs the module product_manufacturer."
 
 #. module: mrp
-#: view:mrp.product_price:0
-#: view:mrp.workcenter.load:0
+#: view:mrp.product_price:0 view:mrp.workcenter.load:0
 msgid "Print"
 msgstr "Natisni"
 
 #. module: mrp
-#: view:mrp.bom:0
-#: view:mrp.workcenter:0
+#: view:mrp.bom:0 view:mrp.workcenter:0
 msgid "Type"
 msgstr "Tip"
 
@@ -794,15 +718,11 @@ msgid ""
 "              </p><p>\n"
 "                Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as "
-"capacity\n"
+"                considered as units for task assignation as well as capacity\n"
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova delovna postaja.<p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova delovna postaja.<p>\n            "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
@@ -832,8 +752,7 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr "Faktor 0.9 pomeni izgubo 10% v proizvodnem procesu."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:779
-#: code:addons/mrp/mrp.py:807
+#: code:addons/mrp/mrp.py:779 code:addons/mrp/mrp.py:807
 #, python-format
 msgid "Warning!"
 msgstr "Opozorilo!"
@@ -860,8 +779,7 @@ msgstr "Pravilo nabave"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
-"Izpolnite , če želite samodejne analitične vknjižbe za proizvodni nalog"
+msgstr "Izpolnite , če želite samodejne analitične vknjižbe za proizvodni nalog"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -884,9 +802,7 @@ msgid ""
 "Depending on the chosen method to 'supply' the service, the procurement "
 "order creates a RFQ for a subcontracting purchase order or waits until the "
 "service is done (= the delivery of the products)."
-msgstr ""
-"Odvisno od načina 'oskrbe' storitve , bo kreirano povpraševanje ali pa bo "
-"interno naročilo za oskrbo počakalo da je storitev končana."
+msgstr "Odvisno od načina 'oskrbe' storitve , bo kreirano povpraševanje ali pa bo interno naročilo za oskrbo počakalo da je storitev končana."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -907,10 +823,8 @@ msgid ""
 msgstr "Izbrana enota mere je različna od tiste na izdelku."
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production
-#: view:mrp.config.settings:0
-#: view:mrp.production:0
-#: field:mrp.production.workcenter.line,production_id:0
+#: model:ir.model,name:mrp.model_mrp_production view:mrp.config.settings:0
+#: view:mrp.production:0 field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr "Delovni nalog"
@@ -924,13 +838,11 @@ msgstr "Nabava surovin"
 #: sql_constraint:mrp.bom:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra "
-"products on BoMs !"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr "Vse količine morajo biti večje od 0."
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,cycle_total:0
+#: view:mrp.production:0 field:mrp.production,cycle_total:0
 msgid "Total Cycles"
 msgstr "Skupno ciklov"
 
@@ -947,8 +859,7 @@ msgid "Is a Follower"
 msgstr "Je sledilec"
 
 #. module: mrp
-#: view:mrp.bom:0
-#: view:mrp.production:0
+#: view:mrp.bom:0 view:mrp.production:0
 msgid "Date"
 msgstr "Datum"
 
@@ -961,17 +872,12 @@ msgid ""
 "                A manufacuring order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nov delovni nalog.<p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nov delovni nalog.<p>\n            "
 
 #. module: mrp
 #: field:mrp.bom,type:0
@@ -981,10 +887,8 @@ msgstr "Vrsta kosovnice"
 #. module: mrp
 #: code:addons/mrp/procurement.py:52
 #, python-format
-msgid ""
-"Procurement '%s' has an exception: 'No BoM defined for this product !'"
-msgstr ""
-"Interni oskrbi nalog '%s' ima pomanjkljivost:' Ni kosovnice za ta izdelek' !"
+msgid "Procurement '%s' has an exception: 'No BoM defined for this product !'"
+msgstr "Interni oskrbi nalog '%s' ima pomanjkljivost:' Ni kosovnice za ta izdelek' !"
 
 #. module: mrp
 #: view:mrp.property:0
@@ -1016,8 +920,7 @@ msgid "Minimum Stock"
 msgstr "Minimalna zaloga"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:162
-#: code:addons/mrp/report/price.py:213
+#: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr "Skupni stroški %s %s"
@@ -1061,16 +964,13 @@ msgid "Manufacturing Plan."
 msgstr "Planiranje proizvodnje"
 
 #. module: mrp
-#: view:mrp.routing:0
-#: view:mrp.workcenter:0
+#: view:mrp.routing:0 view:mrp.workcenter:0
 msgid "Inactive"
 msgstr "Neaktivno"
 
 #. module: mrp
-#: view:change.production.qty:0
-#: view:mrp.config.settings:0
-#: view:mrp.product.produce:0
-#: view:mrp.product_price:0
+#: view:change.production.qty:0 view:mrp.config.settings:0
+#: view:mrp.product.produce:0 view:mrp.product_price:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "Prekliči"
@@ -1101,8 +1001,7 @@ msgstr "Naziv kosovnice"
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
-#: view:mrp.production:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action view:mrp.production:0
 msgid "Manufacturing Orders"
 msgstr "Delovni nalogi"
 
@@ -1122,12 +1021,9 @@ msgid "Product UoS Quantity"
 msgstr "Enota mere za prodajo."
 
 #. module: mrp
-#: field:mrp.bom,name:0
-#: report:mrp.production.order:0
-#: field:mrp.production.product.line,name:0
-#: view:mrp.property:0
-#: field:mrp.routing,name:0
-#: field:mrp.routing.workcenter,name:0
+#: field:mrp.bom,name:0 report:mrp.production.order:0
+#: field:mrp.production.product.line,name:0 view:mrp.property:0
+#: field:mrp.routing,name:0 field:mrp.routing.workcenter,name:0
 msgid "Name"
 msgstr "Ime"
 
@@ -1142,8 +1038,7 @@ msgid "Mode"
 msgstr "Način"
 
 #. module: mrp
-#: help:mrp.bom,message_ids:0
-#: help:mrp.production,message_ids:0
+#: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
 msgstr "Sporočila in zgodovina sporočil"
@@ -1157,8 +1052,7 @@ msgstr "Merska enota zneska"
 #: help:mrp.config.settings,module_mrp_jit:0
 msgid ""
 "This allows Just In Time computation of procurement orders.\n"
-"                All procurement orders will be processed immediately, which "
-"could in some\n"
+"                All procurement orders will be processed immediately, which could in some\n"
 "                cases entail a small performance impact.\n"
 "                This installs the module mrp_jit."
 msgstr "Takojšni izračun nalogov za oskrbo."
@@ -1191,10 +1085,7 @@ msgid "Manufacturing Orders Waiting Products"
 msgstr "Delovni nalogi , ki čakajo na sestavine"
 
 #. module: mrp
-#: view:mrp.bom:0
-#: view:mrp.production:0
-#: view:mrp.property:0
-#: view:mrp.routing:0
+#: view:mrp.bom:0 view:mrp.production:0 view:mrp.property:0 view:mrp.routing:0
 #: view:mrp.workcenter:0
 msgid "Group By..."
 msgstr "Združi po..."
@@ -1235,8 +1126,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
-"Time in hours for this Work Center to achieve the operation of the specified "
-"routing."
+"Time in hours for this Work Center to achieve the operation of the specified"
+" routing."
 msgstr "Čas (ure) , ki se na tej postaji uporabi za določen delovni proces."
 
 #. module: mrp
@@ -1256,8 +1147,7 @@ msgid "Per week"
 msgstr "Na teden"
 
 #. module: mrp
-#: field:mrp.bom,message_unread:0
-#: field:mrp.production,message_unread:0
+#: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
 #: field:mrp.production.workcenter.line,message_unread:0
 msgid "Unread Messages"
 msgstr "Neprebrana sporočila"
@@ -1285,8 +1175,7 @@ msgid "Manufacturing Orders which are ready to start production."
 msgstr "Delovni nalogi pripravljeni za proizvodnjo."
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom
-#: view:mrp.bom:0
+#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:0
 #: field:mrp.production,bom_id:0
 #: model:process.node,name:mrp.process_node_billofmaterial0
 msgid "Bill of Material"
@@ -1300,8 +1189,7 @@ msgstr "Izberite časovno enoto"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_supply_method_produce
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
-#: model:ir.ui.menu,name:mrp.menu_mrp_product_form
-#: view:mrp.config.settings:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_product_form view:mrp.config.settings:0
 msgid "Products"
 msgstr "Izdelki"
 
@@ -1319,8 +1207,8 @@ msgstr "Lokacija gotovih izdelkov"
 #: help:mrp.routing.workcenter,routing_id:0
 msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
-"Routing is indicated then,the third tab of a production order (Work Centers) "
-"will be automatically pre-completed."
+"Routing is indicated then,the third tab of a production order (Work Centers)"
+" will be automatically pre-completed."
 msgstr "Delovni proces vsebuje vse delovne faze , čas in število ciklov."
 
 #. module: mrp
@@ -1335,9 +1223,7 @@ msgid ""
 "The Minimum Stock Rule is an automatic procurement rule based on a mini and "
 "maxi quantity. It's available in the Inventory management menu and "
 "configured by product."
-msgstr ""
-"Pravilo minimalne zaloge je pravilo samodejne nabave , na osnovi minimalne "
-"ni maksimalne zaloge."
+msgstr "Pravilo minimalne zaloge je pravilo samodejne nabave , na osnovi minimalne ni maksimalne zaloge."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:189
@@ -1366,9 +1252,7 @@ msgstr "Prevzemnica"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
-"Na kosovnici se opredeli seznam zahtevanega materiala za izdelavo gotovega "
-"izdelka."
+msgstr "Na kosovnici se opredeli seznam zahtevanega materiala za izdelavo gotovega izdelka."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:379
@@ -1459,8 +1343,7 @@ msgid "Hour Account"
 msgstr "Konto ur"
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0
-#: field:mrp.production,product_uom:0
+#: field:mrp.bom,product_uom:0 field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product Unit of Measure"
 msgstr "Enota mere izdelka"
@@ -1481,18 +1364,15 @@ msgid "Pending"
 msgstr "Na čakanju"
 
 #. module: mrp
-#: field:mrp.bom,active:0
-#: field:mrp.routing,active:0
+#: field:mrp.bom,active:0 field:mrp.routing,active:0
 msgid "Active"
 msgstr "Aktivno"
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_routings:0
 msgid ""
-"Routings allow you to create and manage the manufacturing operations that "
-"should be followed\n"
-"                within your work centers in order to produce a product. They "
-"are attached to bills of materials\n"
+"Routings allow you to create and manage the manufacturing operations that should be followed\n"
+"                within your work centers in order to produce a product. They are attached to bills of materials\n"
 "                that will define the required raw materials."
 msgstr "Delovni tok opredeljuje zaporedje operacij in delovnih enot."
 
@@ -1503,10 +1383,8 @@ msgstr "Obremenitev delovne postaje"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
-#: view:mrp.bom:0
-#: field:mrp.bom,property_ids:0
-#: view:mrp.property:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_action view:mrp.bom:0
+#: field:mrp.bom,property_ids:0 view:mrp.property:0
 #: field:procurement.order,property_ids:0
 msgid "Properties"
 msgstr "Lastnosti"
@@ -1569,8 +1447,7 @@ msgid "When you sell this product, OpenERP will trigger"
 msgstr "Ko prodate ta izdelek bo OpenERP sprožil"
 
 #. module: mrp
-#: field:mrp.production,origin:0
-#: report:mrp.production.order:0
+#: field:mrp.production,origin:0 report:mrp.production.order:0
 msgid "Source Document"
 msgstr "Izvorni dokument"
 
@@ -1592,8 +1469,7 @@ msgstr "Pripravljeni delovni nalogi"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: field:mrp.production.workcenter.line,workcenter_id:0
-#: field:mrp.routing.workcenter,workcenter_id:0
-#: view:mrp.workcenter:0
+#: field:mrp.routing.workcenter,workcenter_id:0 view:mrp.workcenter:0
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
 msgstr "Delovna postaja"
@@ -1604,31 +1480,18 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a group of properties.\n"
 "              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
-"                bill of materials and sales orders. Properties allows "
-"OpenERP\n"
-"                to automatically select the right bill of materials "
-"according\n"
+"                Define specific property groups that can be assigned to your\n"
+"                bill of materials and sales orders. Properties allows OpenERP\n"
+"                to automatically select the right bill of materials according\n"
 "                to properties selected in the sales order by salesperson.\n"
 "              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sales order, OpenERP "
-"will\n"
+"                For instance, in the property group \"Warranty\", you an have\n"
+"                two properties: 1 year warranty, 3 years warranty. Depending\n"
+"                on the propoerties selected in the sales order, OpenERP will\n"
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova skupina lastnosti\n"
-"              </p><p>\n"
-"                Lastnosti se uporabljajo , kadar se lahko isti izdelek dela "
-"na \n"
-"                več načinov (npr. barva)\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova skupina lastnosti\n              </p><p>\n                Lastnosti se uporabljajo , kadar se lahko isti izdelek dela na \n                več načinov (npr. barva)\n            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1636,19 +1499,15 @@ msgid "Capacity per Cycle"
 msgstr "Kapaciteta enega cikla"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_product_product
-#: view:mrp.bom:0
-#: field:mrp.bom,product_id:0
-#: view:mrp.production:0
-#: field:mrp.production,product_id:0
-#: report:mrp.production.order:0
+#: model:ir.model,name:mrp.model_product_product view:mrp.bom:0
+#: field:mrp.bom,product_id:0 view:mrp.production:0
+#: field:mrp.production,product_id:0 report:mrp.production.order:0
 #: field:mrp.production.product.line,product_id:0
 msgid "Product"
 msgstr "Izdelek"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,hour_total:0
+#: view:mrp.production:0 field:mrp.production,hour_total:0
 msgid "Total Hours"
 msgstr "Ure skupaj"
 
@@ -1663,8 +1522,7 @@ msgid "Print Cost Structure of Product."
 msgstr "Izpis strukture stroškov za izdelek."
 
 #. module: mrp
-#: field:mrp.bom,product_uos:0
-#: field:mrp.production.product.line,product_uos:0
+#: field:mrp.bom,product_uos:0 field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
 msgstr "Prodajna enota mere"
 
@@ -1675,8 +1533,7 @@ msgstr "Potrebni izdelki"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
-#: view:mrp.product.produce:0
-#: view:mrp.production:0
+#: view:mrp.product.produce:0 view:mrp.production:0
 msgid "Produce"
 msgstr "Proizvedi"
 
@@ -1705,8 +1562,7 @@ msgid "Resource"
 msgstr "Vir"
 
 #. module: mrp
-#: help:mrp.bom,date_start:0
-#: help:mrp.bom,date_stop:0
+#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
 msgstr "Veljavnost kosovnice.Pustite prazno , če je vedno veljavna."
 
@@ -1755,8 +1611,7 @@ msgid "Source Location"
 msgstr "Izvorna lokacija"
 
 #. module: mrp
-#: view:mrp.production:0
-#: view:mrp.production.product.line:0
+#: view:mrp.production:0 view:mrp.production.product.line:0
 msgid "Scheduled Products"
 msgstr "Načrtovani izdelki"
 
@@ -1768,19 +1623,12 @@ msgstr "Vodja"
 #. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
-"'Consume only' mode will only consume the products with the quantity "
-"selected.\n"
-"'Consume & Produce' mode will consume as well as produce the products with "
-"the quantity selected and it will finish the production order when total "
-"ordered quantities are produced."
-msgstr ""
-"'Samo poraba' vknjiži samo porabo materialov.\n"
-"'Poraba&Proizvodnja' vknjiži porabo in zaključi proizvodni nalog nalog , ko "
-"je izdelana vsa naročena količina."
+"'Consume only' mode will only consume the products with the quantity selected.\n"
+"'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
+msgstr "'Samo poraba' vknjiži samo porabo materialov.\n'Poraba&Proizvodnja' vknjiži porabo in zaključi proizvodni nalog nalog , ko je izdelana vsa naročena količina."
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
+#: view:mrp.production:0 report:mrp.production.order:0
 msgid "Work Orders"
 msgstr "Delovni nalogi"
 
@@ -1808,13 +1656,9 @@ msgstr "(Posodobi)"
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid ""
-"This allows to add state, date_start,date_stop in production order operation "
-"lines (in the \"Work Centers\" tab).\n"
+"This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "                This installs the module mrp_operations."
-msgstr ""
-"This allows to add state, date_start,date_stop in production order operation "
-"lines (in the \"Work Centers\" tab).\n"
-"                This installs the module mrp_operations."
+msgstr "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n                This installs the module mrp_operations."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:779
@@ -1822,9 +1666,7 @@ msgstr ""
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
 "But you can only consume up to total %s quantities."
-msgstr ""
-"Porabili boste %s enot %s.\n"
-"Uporabite lahko le %s."
+msgstr "Porabili boste %s enot %s.\nUporabite lahko le %s."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
@@ -1832,15 +1674,11 @@ msgid ""
 "The Bill of Material is the product's decomposition. The components (that "
 "are products themselves) can also have their own Bill of Material (multi-"
 "level)."
-msgstr ""
-"Kosovnica je seznam komponent izdelka , ki so tudi same lahko izdelki in "
-"imajo svoje kosovnice."
+msgstr "Kosovnica je seznam komponent izdelka , ki so tudi same lahko izdelki in imajo svoje kosovnice."
 
 #. module: mrp
-#: field:mrp.bom,company_id:0
-#: field:mrp.production,company_id:0
-#: field:mrp.routing,company_id:0
-#: field:mrp.routing.workcenter,company_id:0
+#: field:mrp.bom,company_id:0 field:mrp.production,company_id:0
+#: field:mrp.routing,company_id:0 field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:0
 msgid "Company"
 msgstr "Podjetje"
@@ -1874,8 +1712,7 @@ msgid "Automatic procurement rule"
 msgstr "Pravilo avtomatične oskrbe"
 
 #. module: mrp
-#: field:mrp.bom,message_ids:0
-#: field:mrp.production,message_ids:0
+#: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
 #: field:mrp.production.workcenter.line,message_ids:0
 msgid "Messages"
 msgstr "Sporočila"
@@ -1894,9 +1731,7 @@ msgid "Error!"
 msgstr "Napaka!"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: view:mrp.bom:0
-#: view:product.product:0
+#: code:addons/mrp/report/price.py:141 view:mrp.bom:0 view:product.product:0
 #, python-format
 msgid "Components"
 msgstr "Sestavni deli"
@@ -1951,7 +1786,7 @@ msgstr "Premik izdelka"
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Operation"
-msgstr ""
+msgstr "Postopek"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -1959,9 +1794,7 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receptions of products and delivery "
 "orders."
-msgstr ""
-"Tedensko nihanje vrednosti zalog vam omogoča analizo zalog v povezavi z "
-"proizvodnjo in dostavo."
+msgstr "Tedensko nihanje vrednosti zalog vam omogoča analizo zalog v povezavi z proizvodnjo in dostavo."
 
 #. module: mrp
 #: view:mrp.product.produce:0
@@ -1985,8 +1818,7 @@ msgstr "Sledilci"
 msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
-msgstr ""
-"Če polje ni označeno , lahko skrijete kosovnico ne da bi jo izbrisali."
+msgstr "Če polje ni označeno , lahko skrijete kosovnico ne da bi jo izbrisali."
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
@@ -2040,8 +1872,7 @@ msgstr "Skupna količina"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
-#: field:mrp.routing.workcenter,hour_nbr:0
-#: field:report.workcenter.load,hour:0
+#: field:mrp.routing.workcenter,hour_nbr:0 field:report.workcenter.load,hour:0
 msgid "Number of Hours"
 msgstr "Število ur"
 
@@ -2071,21 +1902,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a bill of material. \n"
 "              </p><p>\n"
-"                Bills of Materials allow you to define the list of required "
-"raw\n"
-"                materials used to make a finished product; through a "
-"manufacturing\n"
+"                Bills of Materials allow you to define the list of required raw\n"
+"                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products.\n"
 "              </p><p>\n"
-"                OpenERP uses these BoMs to automatically propose "
-"manufacturing\n"
+"                OpenERP uses these BoMs to automatically propose manufacturing\n"
 "                orders according to procurement needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Nova kosovnica<p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Nova kosovnica<p>\n            "
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2109,11 +1934,7 @@ msgid ""
 "                Without this module: A + B + C -> D.\n"
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
-msgstr ""
-"You can configure by-products in the bill of material.\n"
-"                Without this module: A + B + C -> D.\n"
-"                With this module: A + B + C -> D + E.\n"
-"                This installs the module mrp_byproduct."
+msgstr "You can configure by-products in the bill of material.\n                Without this module: A + B + C -> D.\n                With this module: A + B + C -> D + E.\n                This installs the module mrp_byproduct."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -2121,8 +1942,7 @@ msgid "BoM"
 msgstr "Kosovnica"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_report_mrp_inout
-#: view:report.mrp.inout:0
+#: model:ir.model,name:mrp.model_report_mrp_inout view:report.mrp.inout:0
 msgid "Stock value variation"
 msgstr "Nihanje vrednosti zalog"
 
@@ -2139,8 +1959,7 @@ msgid "Cost Price per Unit of Measure"
 msgstr "Stroškovna cena na enoto"
 
 #. module: mrp
-#: field:report.mrp.inout,date:0
-#: view:report.workcenter.load:0
+#: field:report.mrp.inout,date:0 view:report.workcenter.load:0
 #: field:report.workcenter.load,name:0
 msgid "Week"
 msgstr "Teden"
@@ -2193,9 +2012,7 @@ msgstr "Kos. Sklic"
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
 "But you can only produce up to total %s quantities."
-msgstr ""
-"Izdelati nameravate %s enot %s.\n"
-"Izdelate lahko le %s."
+msgstr "Izdelati nameravate %s enot %s.\nIzdelate lahko le %s."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
@@ -2220,10 +2037,8 @@ msgstr "Izberite količino"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.actions.act_window,name:mrp.product_open_bom
-#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
-#: view:mrp.bom:0
-#: view:product.product:0
-#: field:product.product,bom_ids:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action view:mrp.bom:0
+#: view:product.product:0 field:product.product,bom_ids:0
 msgid "Bill of Materials"
 msgstr "Kosovnica"
 
@@ -2237,12 +2052,8 @@ msgstr "Ni kosovnice za ta izdelek."
 #: view:product.product:0
 msgid ""
 "using the bill of materials assigned to this product.\n"
-"                        The delivery order will be ready once the production "
-"is done."
-msgstr ""
-"uporaba kosovnice izdelka.\n"
-"                        Dostavni nalog bo pripravljen , ko bo proizvodnja "
-"končana."
+"                        The delivery order will be ready once the production is done."
+msgstr "uporaba kosovnice izdelka.\n                        Dostavni nalog bo pripravljen , ko bo proizvodnja končana."
 
 #. module: mrp
 #: field:mrp.config.settings,module_stock_no_autopicking:0
@@ -2260,8 +2071,7 @@ msgid "Productions"
 msgstr "Proizvodnja"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_stock_move_split
-#: view:mrp.production:0
+#: model:ir.model,name:mrp.model_stock_move_split view:mrp.production:0
 msgid "Split in Serial Numbers"
 msgstr "Delitev v serijske številke"
 
@@ -2273,8 +2083,7 @@ msgid ""
 msgstr "Enota mere za prodajo se uporablja na ponudbah in računih."
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:stock.move,production_id:0
+#: view:mrp.production:0 field:stock.move,production_id:0
 msgid "Production"
 msgstr "Proizvodnja"
 
@@ -2306,8 +2115,7 @@ msgid "Change Product Qty"
 msgstr "Spremeni količino"
 
 #. module: mrp
-#: field:mrp.routing,note:0
-#: field:mrp.routing.workcenter,note:0
+#: field:mrp.routing,note:0 field:mrp.routing.workcenter,note:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "Opis"
@@ -2341,15 +2149,10 @@ msgstr "Proizvodnja"
 msgid ""
 "If a by-product is used in several products, it can be useful to create its "
 "own BoM. Though if you don't want separated production orders for this by-"
-"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
-"product, it will be sold and shipped as a set of components, instead of "
+"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root"
+" product, it will be sold and shipped as a set of components, instead of "
 "being produced."
-msgstr ""
-"If a by-product is used in several products, it can be useful to create its "
-"own BoM. Though if you don't want separated production orders for this by-"
-"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
-"product, it will be sold and shipped as a set of components, instead of "
-"being produced."
+msgstr "If a by-product is used in several products, it can be useful to create its own BoM. Though if you don't want separated production orders for this by-product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -2362,9 +2165,7 @@ msgstr "Nastavitve proizvodnje"
 msgid ""
 "a manufacturing\n"
 "                        order"
-msgstr ""
-"delovni\n"
-"                        nalog"
+msgstr "delovni\n                        nalog"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
@@ -2373,12 +2174,9 @@ msgid "Property Groups"
 msgstr "Skupine lasnosti"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_routing
-#: view:mrp.bom:0
-#: field:mrp.bom,routing_id:0
-#: view:mrp.production:0
-#: field:mrp.production,routing_id:0
-#: view:mrp.routing:0
+#: model:ir.model,name:mrp.model_mrp_routing view:mrp.bom:0
+#: field:mrp.bom,routing_id:0 view:mrp.production:0
+#: field:mrp.production,routing_id:0 view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
 msgstr "Delovni tok"
@@ -2388,9 +2186,7 @@ msgstr "Delovni tok"
 msgid ""
 "Depending on the chosen method to supply the stockable products, the "
 "procurement order creates a RFQ, a production order, ... "
-msgstr ""
-"Odvisno od načina oskrbe , bodo pripravljeni nabavni nalogi , proizvodni "
-"nalogi ... "
+msgstr "Odvisno od načina oskrbe , bodo pripravljeni nabavni nalogi , proizvodni nalogi ... "
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -2398,8 +2194,7 @@ msgid "Time in hours for the cleaning."
 msgstr "Čas (ure) za čiščenje"
 
 #. module: mrp
-#: field:mrp.bom,message_summary:0
-#: field:mrp.production,message_summary:0
+#: field:mrp.bom,message_summary:0 field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
 msgstr "Povzetek"
@@ -2414,9 +2209,7 @@ msgstr "Avtomatične zahteve za ponudbo"
 msgid ""
 "If the service has a 'Produce' supply method, this creates a task in the "
 "project management module of OpenERP."
-msgstr ""
-"Če ima storitev določeno vrsto oskrbe 'Proizvodnja' , bo kreirana naloga v "
-"modulu za projektno vodenje."
+msgstr "Če ima storitev določeno vrsto oskrbe 'Proizvodnja' , bo kreirana naloga v modulu za projektno vodenje."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_productionprocureproducts0
@@ -2424,18 +2217,14 @@ msgid ""
 "In order to supply raw material (to be purchased or produced), the "
 "production order creates as much procurement orders as components listed in "
 "the BOM, through a run of the schedulers (MRP)."
-msgstr ""
-"Za potrebno oskrbo materialov , bo proizvodni nalog kreiral interne naloge "
-"za oskrbo."
+msgstr "Za potrebno oskrbo materialov , bo proizvodni nalog kreiral interne naloge za oskrbo."
 
 #. module: mrp
 #: help:mrp.product_price,number:0
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
-msgstr ""
-"Določite količino za nabavo ali proizvodnjo.Poročilo o stroških bo "
-"izračunano na osnovi teh količin."
+msgstr "Določite količino za nabavo ali proizvodnjo.Poročilo o stroških bo izračunano na osnovi teh količin."
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2443,8 +2232,7 @@ msgid "On Stock"
 msgstr "Na zalogi"
 
 #. module: mrp
-#: field:mrp.bom,sequence:0
-#: report:mrp.production.order:0
+#: field:mrp.bom,sequence:0 report:mrp.production.order:0
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0
 msgid "Sequence"
@@ -2466,14 +2254,7 @@ msgid "mrp.config.settings"
 msgstr "mrp.config.settings"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,move_lines:0
+#: view:mrp.production:0 field:mrp.production,move_lines:0
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "Porabljeni izdelki i materiali"
-
-#~ msgid "Allow detailed planning of work order"
-#~ msgstr "Omogoča podrobno načrtovanje delovnega naloga"
-
-#~ msgid "Allow several bill of materials per products using properties"
-#~ msgstr "Več kosovnic za en izdelek (lastnosti)"

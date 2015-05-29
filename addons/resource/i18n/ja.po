@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * resource
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:32+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -54,8 +55,7 @@ msgstr "曜日"
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Define working hours and time table that could be scheduled "
-"to your project members\n"
+"                Define working hours and time table that could be scheduled to your project members\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -66,8 +66,7 @@ msgid "Thursday"
 msgstr "木曜"
 
 #. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
+#: view:resource.calendar.leaves:0 view:resource.resource:0
 msgid "Group By..."
 msgstr "グループ化…"
 
@@ -107,7 +106,7 @@ msgstr "作業時間に適切な曜日が設定されていることを確認し
 #: code:addons/resource/resource.py:373
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s（コピー）"
 
 #. module: resource
 #: view:resource.calendar:0
@@ -125,10 +124,8 @@ msgid "Resource Calendar"
 msgstr "リソースカレンダー」"
 
 #. module: resource
-#: field:resource.calendar,company_id:0
-#: view:resource.calendar.leaves:0
-#: field:resource.calendar.leaves,company_id:0
-#: view:resource.resource:0
+#: field:resource.calendar,company_id:0 view:resource.calendar.leaves:0
+#: field:resource.calendar.leaves,company_id:0 view:resource.resource:0
 #: field:resource.resource,company_id:0
 msgid "Company"
 msgstr "会社"
@@ -141,7 +138,7 @@ msgstr "金曜"
 #. module: resource
 #: view:resource.calendar.attendance:0
 msgid "Hours"
-msgstr ""
+msgstr "時間"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -149,8 +146,7 @@ msgid "Reason"
 msgstr "理由"
 
 #. module: resource
-#: view:resource.resource:0
-#: field:resource.resource,user_id:0
+#: view:resource.resource:0 field:resource.resource,user_id:0
 msgid "User"
 msgstr "ユーザ"
 
@@ -167,7 +163,7 @@ msgstr "作業期間休暇の検索"
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting Date"
-msgstr ""
+msgstr "開始日"
 
 #. module: resource
 #: field:resource.calendar,manager:0
@@ -187,23 +183,19 @@ msgstr "閉鎖日数"
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
-#: field:resource.calendar.leaves,resource_id:0
-#: view:resource.resource:0
+#: field:resource.calendar.leaves,resource_id:0 view:resource.resource:0
 msgid "Resource"
 msgstr "リソース"
 
 #. module: resource
-#: field:resource.calendar,name:0
-#: field:resource.calendar.attendance,name:0
-#: field:resource.calendar.leaves,name:0
-#: field:resource.resource,name:0
+#: field:resource.calendar,name:0 field:resource.calendar.attendance,name:0
+#: field:resource.calendar.leaves,name:0 field:resource.resource,name:0
 msgid "Name"
 msgstr "名前"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar:0 field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
 #: field:resource.calendar.leaves,calendar_id:0
 #: field:resource.resource,calendar_id:0
@@ -216,8 +208,7 @@ msgid "Start and End time of working."
 msgstr ""
 
 #. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
+#: view:resource.calendar.leaves:0 view:resource.resource:0
 msgid "Working Period"
 msgstr "作業期間"
 
@@ -298,8 +289,8 @@ msgstr "火曜日"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
 msgstr ""
 
 #. module: resource
@@ -314,8 +305,7 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr ""
-"リソースは特定のプロジェクトフェーズに関与すべきリソースの作成と管理ができます。それらの効率レベルと週間作業時間を基本とする作業負荷を設定できます。"
+msgstr "リソースは特定のプロジェクトフェーズに関与すべきリソースの作成と管理ができます。それらの効率レベルと週間作業時間を基本とする作業負荷を設定できます。"
 
 #. module: resource
 #: view:resource.resource:0
@@ -342,7 +332,7 @@ msgstr "人間"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Duration"
-msgstr ""
+msgstr "期間"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
@@ -353,8 +343,3 @@ msgstr "開始日"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "土曜"
-
-#~ msgid ""
-#~ "Define working hours and time table that could be scheduled to your project "
-#~ "members"
-#~ msgstr "プロジェクトメンバーにスケジュールする作業時間数とタイムテーブルを定義します。"

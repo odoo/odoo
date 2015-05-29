@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-10 04:15+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:03+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -49,10 +50,8 @@ msgid "Custom Action"
 msgstr "カスタムアクション"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
-#: view:marketing.campaign.workitem:0
+#: view:campaign.analysis:0 view:marketing.campaign:0
+#: view:marketing.campaign.segment:0 view:marketing.campaign.workitem:0
 msgid "Group By..."
 msgstr "グループ化…"
 
@@ -72,7 +71,7 @@ msgstr "トリガー"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "フォローアップ"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -85,8 +84,7 @@ msgid "Campaign Editor"
 msgstr "キャンペーンエディタ"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: selection:marketing.campaign,state:0
+#: view:marketing.campaign:0 selection:marketing.campaign,state:0
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
@@ -95,8 +93,8 @@ msgstr "実行中"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
 msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle "
-"of our Gold Partners"
+"Hi, we are delighted to let you know that you have entered the select circle"
+" of our Gold Partners"
 msgstr ""
 
 #. module: marketing_campaign
@@ -117,26 +115,16 @@ msgstr "同期モード：最終同期後に生成されたレコードのみ"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr ""
-"アクティビティが実行できるかどうかを決定するPython式です。それ以外はそれは削除されるかキャンセルされます。式は次のような変数（参照可能）を許します："
-"\n"
-"   ・ activity：キャンペーンのアクティビティ\n"
-"   ・ workitem：キャンペーンの作業項目\n"
-"   ・ resource：このキャンペーン項目を代表するリソースオブジェクト\n"
-"   ・ transitions：このアクティビティから外向きのキャンペーン遷移のリスト\n"
-"   ・ re：Pythonの一般的な式のモジュール"
+msgstr "アクティビティが実行できるかどうかを決定するPython式です。それ以外はそれは削除されるかキャンセルされます。式は次のような変数（参照可能）を許します：\n   ・ activity：キャンペーンのアクティビティ\n   ・ workitem：キャンペーンの作業項目\n   ・ resource：このキャンペーン項目を代表するリソースオブジェクト\n   ・ transitions：このアクティビティから外向きのキャンペーン遷移のリスト\n   ・ re：Pythonの一般的な式のモジュール"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
+#: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Set to Draft"
 msgstr "ドラフトに設定"
 
@@ -166,8 +154,7 @@ msgid "Launch Date"
 msgstr "起動日"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,day:0
+#: view:campaign.analysis:0 field:campaign.analysis,day:0
 msgid "Day"
 msgstr "日"
 
@@ -214,8 +201,7 @@ msgid ""
 msgstr "このセグメントが最後に同期された（自動または手動）日付"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -229,19 +215,11 @@ msgstr "自動"
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
 msgid ""
-"Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but "
-"does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and "
-"reports (be very careful with this mode, you're live!)"
-msgstr ""
-"テスト - 全てのアクティビティを直接作成し実行します（遷移の遅延を待たずに）が、Eメール送信やレポート生成はしません。\n"
-"リアルタイムテスト - 全てのアクティビティを直接作成し実行しますが、Eメール送信やレポート生成はしません。\n"
-"手動確認 - キャンペーンは正常に実行されますが、ユーザは全ての作業項目を手動で検証する必要があります。\n"
-"通常 - キャンペーンは正常に実行され、自動的に全てのEメールが送信されレポートされます（まさに本物。このモードはとても慎重に）。"
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+msgstr "テスト - 全てのアクティビティを直接作成し実行します（遷移の遅延を待たずに）が、Eメール送信やレポート生成はしません。\nリアルタイムテスト - 全てのアクティビティを直接作成し実行しますが、Eメール送信やレポート生成はしません。\n手動確認 - キャンペーンは正常に実行されますが、ユーザは全ての作業項目を手動で検証する必要があります。\n通常 - キャンペーンは正常に実行され、自動的に全てのEメールが送信されレポートされます（まさに本物。このモードはとても慎重に）。"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -254,10 +232,8 @@ msgid "False"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,campaign_id:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign.activity,campaign_id:0
+#: view:campaign.analysis:0 field:campaign.analysis,campaign_id:0
+#: view:marketing.campaign:0 field:marketing.campaign.activity,campaign_id:0
 #: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,campaign_id:0
 #: view:marketing.campaign.workitem:0
@@ -271,10 +247,8 @@ msgid "Hello, you will receive your welcome pack via email shortly."
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,segment_id:0
-#: view:marketing.campaign.segment:0
-#: view:marketing.campaign.workitem:0
+#: view:campaign.analysis:0 field:campaign.analysis,segment_id:0
+#: view:marketing.campaign.segment:0 view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,segment_id:0
 msgid "Segment"
 msgstr "セグメント"
@@ -290,17 +264,10 @@ msgstr ""
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
 "  "
-msgstr ""
-"項目がこのアクティブティに入った時に実行するアクションのタイプです。例：\n"
-"　・ Eメール：Eメールテンプレートで事前定義されたEメールを送信します。\n"
-"　・ レポート：リソース項目に定義された既存のレポートを印刷し、特定のディレクトリに保存します。\n"
-"　・ カスタムアクション：事前定義されたアクションを実行します。例えば、リソースレコードの項目を変更します。\n"
-"  "
+msgstr "項目がこのアクティブティに入った時に実行するアクションのタイプです。例：\n　・ Eメール：Eメールテンプレートで事前定義されたEメールを送信します。\n　・ レポート：リソース項目に定義された既存のレポートを印刷し、特定のディレクトリに保存します。\n　・ カスタムアクション：事前定義されたアクションを実行します。例えば、リソースレコードの項目を変更します。\n  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
@@ -313,8 +280,7 @@ msgid "Month(s)"
 msgstr "月"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,partner_id:0
+#: view:campaign.analysis:0 field:campaign.analysis,partner_id:0
 #: model:ir.model,name:marketing_campaign.model_res_partner
 #: field:marketing.campaign.workitem,partner_id:0
 msgid "Partner"
@@ -344,11 +310,10 @@ msgstr "間隔は正または0である必要があります。"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr ""
+msgstr "Eメール"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
@@ -365,8 +330,7 @@ msgid "Synchronization mode"
 msgstr "同期モード"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
+#: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Run"
 msgstr "実行"
 
@@ -401,8 +365,7 @@ msgstr "エラーメッセージ"
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
-#: view:marketing.campaign:0
-#: view:res.partner:0
+#: view:marketing.campaign:0 view:res.partner:0
 msgid "Campaigns"
 msgstr "キャンペーン"
 
@@ -489,16 +452,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a marketing campaign.\n"
 "          </p><p>\n"
-"            OpenERP's marketing campaign allows you to automate "
-"communication\n"
-"            to your prospects. You can define a segment (set of conditions) "
-"on\n"
+"            OpenERP's marketing campaign allows you to automate communication\n"
+"            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fullfil the campaign.\n"
 "          </p><p>\n"
-"            A campaign can have many activities like sending an email, "
-"printing\n"
-"            a letter, assigning to a team, etc. These activities are "
-"triggered\n"
+"            A campaign can have many activities like sending an email, printing\n"
+"            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc.\n"
 "          </p>\n"
@@ -529,17 +488,14 @@ msgstr "12月"
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
 msgid ""
-"The generated workitems will be linked to the partner related to the record. "
-"If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr ""
-"生成された作業項目はレコードに紐づく取引先とリンクされます。レコードが取引先自身である場合、この項目を空のままとします。これは、キャンペーン分析やキャンペ"
-"ーンフォローアップビューでのレポーティングに役立ちます。"
+msgstr "生成された作業項目はレコードに紐づく取引先とリンクされます。レコードが取引先自身である場合、この項目を空のままとします。これは、キャンペーン分析やキャンペーンフォローアップビューでのレポーティングに役立ちます。"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,month:0
+#: view:campaign.analysis:0 field:campaign.analysis,month:0
 msgid "Month"
 msgstr "月"
 
@@ -568,7 +524,7 @@ msgstr "最終同期後に変更されたレコードのみ（重複なし）"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -600,12 +556,9 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that "
-"already entered the campaign."
-msgstr ""
-"キャンペーンに入れる新しいレコードの選択時に、フィルタに追加する追加基準を決定します。重複なしは既に以前のキャンペーンに入れたレコードを選択するのを避けま"
-"す。キャンペーンが固有項目セットと重複なしである場合、固有項目であるために同じ値を持つれレコードや既にキャンペーンで入力されたレコードを選択するのを避けま"
-"す。"
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
+msgstr "キャンペーンに入れる新しいレコードの選択時に、フィルタに追加する追加基準を決定します。重複なしは既に以前のキャンペーンに入れたレコードを選択するのを避けます。キャンペーンが固有項目セットと重複なしである場合、固有項目であるために同じ値を持つれレコードや既にキャンペーンで入力されたレコードを選択するのを避けます。"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -623,8 +576,7 @@ msgid "Directory"
 msgstr "ディレクトリ"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
+#: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Draft"
 msgstr "ドラフト"
 
@@ -639,12 +591,9 @@ msgid "Preview"
 msgstr "プレビュー"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,state:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign,state:0
-#: view:marketing.campaign.segment:0
-#: field:marketing.campaign.segment,state:0
+#: view:campaign.analysis:0 field:campaign.analysis,state:0
+#: view:marketing.campaign:0 field:marketing.campaign,state:0
+#: view:marketing.campaign.segment:0 field:marketing.campaign.segment,state:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,state:0
 msgid "Status"
@@ -673,8 +622,7 @@ msgid ""
 msgstr "シグナルのアクティビティはプログラム化と呼ばれます。シグナルが送信された時に、作業項目はいつも作成されることに注意して下さい。"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: selection:campaign.analysis,state:0
+#: view:campaign.analysis:0 selection:campaign.analysis,state:0
 #: view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "To Do"
@@ -731,8 +679,7 @@ msgid "Unique Field"
 msgstr "固有項目"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: view:marketing.campaign.workitem:0
+#: selection:campaign.analysis,state:0 view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Exception"
 msgstr "例外"
@@ -753,8 +700,7 @@ msgid "January"
 msgstr "1月"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,date:0
+#: view:marketing.campaign.workitem:0 field:marketing.campaign.workitem,date:0
 msgid "Execution Date"
 msgstr "実行日"
 
@@ -826,10 +772,8 @@ msgid "How is the destination workitem triggered"
 msgstr "引き金となる宛先の作業項目の状態"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: selection:campaign.analysis,state:0
-#: view:marketing.campaign:0
-#: selection:marketing.campaign,state:0
+#: view:campaign.analysis:0 selection:campaign.analysis,state:0
+#: view:marketing.campaign:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Done"
@@ -881,8 +825,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
+#: view:marketing.campaign:0 view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "セグメント"
 
@@ -902,8 +845,7 @@ msgid "Day(s)"
 msgstr "日"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: field:marketing.campaign,activity_ids:0
+#: view:marketing.campaign:0 field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
 msgstr "アクティビティ"
@@ -931,19 +873,15 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to "
-"avoid selecting similar records twice. Similar records are records that have "
-"the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr ""
-"設定した場合、この項目は類似レコードが２回選択されることを避ける重複なしモードをセグメントに適用するのに役立ちます。類似レコードはこの固有項目に同じ値を持"
-"つレコードのことです。例えば、CRMのリードのEメール送信者項目を選択すると、同じキャンペーンを同じEメールアドレスに再度送信することを防止します。設定し"
-"ない場合、重複なしセグメントは以前のキャンペーンで入れられた同じレコードが再び選択されるのを防ぐのみとなります。テキスト、整数といった項目のみと簡単に比較"
-"可能で、選択または単一の関連を持つもので使用できます。"
+msgstr "設定した場合、この項目は類似レコードが２回選択されることを避ける重複なしモードをセグメントに適用するのに役立ちます。類似レコードはこの固有項目に同じ値を持つレコードのことです。例えば、CRMのリードのEメール送信者項目を選択すると、同じキャンペーンを同じEメールアドレスに再度送信することを防止します。設定しない場合、重複なしセグメントは以前のキャンペーンで入れられた同じレコードが再び選択されるのを防ぐのみとなります。テキスト、整数といった項目のみと簡単に比較可能で、選択または単一の関連を持つもので使用できます。"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:527
@@ -968,10 +906,8 @@ msgid "February"
 msgstr "2月"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,res_id:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign,object_id:0
+#: view:campaign.analysis:0 field:campaign.analysis,res_id:0
+#: view:marketing.campaign:0 field:marketing.campaign,object_id:0
 #: field:marketing.campaign.segment,object_id:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,object_id:0
@@ -981,12 +917,10 @@ msgstr "リソース"
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and "
-"revenue on each campaign activity. Cost and Revenue statistics are included "
-"in Campaign Reporting."
-msgstr ""
-"実行中のこのキャンペーンのための固定経費。各キャンペーンアクティビティに変動経費と売上を定義することができます。経費と売上統計はキャンペーンレポートに含ま"
-"れます。"
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
+msgstr "実行中のこのキャンペーンのための固定経費。各キャンペーンアクティビティに変動経費と売上を定義することができます。経費と売上統計はキャンペーンレポートに含まれます。"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -1021,14 +955,12 @@ msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr "全セグメントが閉じない限り、このキャンペーンは完了とはマークされません。"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: field:marketing.campaign,mode:0
+#: view:marketing.campaign:0 field:marketing.campaign,mode:0
 msgid "Mode"
 msgstr "モード"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,activity_id:0
+#: view:campaign.analysis:0 field:campaign.analysis,activity_id:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1041,9 +973,7 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr ""
-"このセグメントに沿った一致したりソースレコードを選択するためのフィルタです。新しいフィルタを作成、保存することでリソースのリストビューで高度な検索に使うこ"
-"とができます。フィルタが設定されない場合、フィルタされることなく全レコードが選択されます。同期モードはまた、フィルタに対して基準を追加します。"
+msgstr "このセグメントに沿った一致したりソースレコードを選択するためのフィルタです。新しいフィルタを作成、保存することでリソースのリストビューで高度な検索に使うことができます。フィルタが設定されない場合、フィルタされることなく全レコードが選択されます。同期モードはまた、フィルタに対して基準を追加します。"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:136
@@ -1088,13 +1018,11 @@ msgid "Welcome to the OpenERP Partner Channel!"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,total_cost:0
+#: view:campaign.analysis:0 field:campaign.analysis,total_cost:0
 msgid "Cost"
 msgstr "経費"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,year:0
+#: view:campaign.analysis:0 field:campaign.analysis,year:0
 msgid "Year"
 msgstr "年"

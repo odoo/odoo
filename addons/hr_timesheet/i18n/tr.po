@@ -1,20 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* hr_timesheet
-#
+# * hr_timesheet
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-08-04 16:34+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-7/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:13+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -23,20 +24,15 @@ msgid ""
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
 "                In OpenERP, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to "
-"analyse\n"
+"                analytic account. So, you can track costs and revenues to analyse\n"
 "                your margins easily.\n"
 "              </p><p>\n"
-"                Costs will be created automatically when you register "
-"supplier\n"
+"                Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets.\n"
 "              </p><p>\n"
-"                Revenues will be created automatically when you create "
-"customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
@@ -63,8 +59,8 @@ msgstr "Grupla İle..."
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
 msgid ""
 "Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the "
-"analytic account. This feature allows to record at the same time the "
+"is an analytic account and the time spent on a project generate costs on the"
+" analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
 
@@ -143,8 +139,7 @@ msgid "Work done in the last period"
 msgstr "Son dönemde yapılan işler"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
+#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
 msgid "Employees name"
 msgstr "Personel adı"
 
@@ -231,26 +226,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record activities.\n"
 "              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
+"                You can register and track your workings hours by project every\n"
+"                day. Every time spent on a project will become a cost in the\n"
 "                analytic accounting/contract and can be re-invoiced to\n"
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kayıt etkinlikler için tıklayın.\n"
-"              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
-"                analytic accounting/contract and can be re-invoiced to\n"
-"                customers if required.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kayıt etkinlikler için tıklayın.\n              </p><p>\n                You can register and track your workings hours by project every\n                day. Every time spent on a project will become a cost in the\n                analytic accounting/contract and can be re-invoiced to\n                customers if required.\n              </p>\n            "
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -278,8 +260,7 @@ msgid "July"
 msgstr "Temmuz"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
+#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
 msgstr "Başlama Tarihi"
 
@@ -300,9 +281,7 @@ msgstr "Türü 'hizmet' olan bir ürünü  çalışanın atamyın."
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr ""
-"proje üzerinde tanımlı analitik hesap yok.\n"
-"bir tane tanımlayın veya otomatik olarak zaman çizelgesi dolduramazsınız."
+msgstr "proje üzerinde tanımlı analitik hesap yok.\nbir tane tanımlayın veya otomatik olarak zaman çizelgesi dolduramazsınız."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -315,10 +294,7 @@ msgstr "Toplam maliyet"
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr ""
-"personel için tanımlanan 'Analitik Yevmiye' yok %s \n"
-"Seçilen kullanıcı için bir personel tanımlayın ve bir 'Analitik Yevmiye' "
-"atayın!"
+msgstr "personel için tanımlanan 'Analitik Yevmiye' yok %s \nSeçilen kullanıcı için bir personel tanımlayın ve bir 'Analitik Yevmiye' atayın!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -356,8 +332,7 @@ msgstr "İş Açıklaması"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "or"
 msgstr "veya"
@@ -396,8 +371,7 @@ msgid "(Keep empty for current time)"
 msgstr "(Şimdiki zaman için boş tutun)"
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:0
+#: field:account.analytic.account,use_timesheets:0 view:hr.employee:0
 msgid "Timesheets"
 msgstr "ZamanÇizelgeleri"
 
@@ -429,9 +403,7 @@ msgstr "Ağustos"
 msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
-msgstr ""
-"'%s' Için tanımlanmış bir analitik yevmiye yok.\n"
-"Sen personel formundan bir analitik yevmiye atamalısın."
+msgstr "'%s' Için tanımlanmış bir analitik yevmiye yok.\nSen personel formundan bir analitik yevmiye atamalısın."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -443,8 +415,7 @@ msgid "June"
 msgstr "Haziran"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
+#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
 msgid "Current Status"
 msgstr "Şimdiki Durumu"
 
@@ -493,8 +464,7 @@ msgid "Thu"
 msgstr "Per"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
+#: view:hr.sign.in.project:0 view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
 msgstr "Giriş/Çıkış Projeden"
 
@@ -504,8 +474,7 @@ msgid "Print Employee Timesheet & Print My Timesheet"
 msgstr "Personel ZamanÇizelgesi Yazdır ve Benim ZamanÇizelgemi Yazdır"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
+#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
 msgstr "Personel ID"
 
@@ -521,8 +490,7 @@ msgstr "Genel Bilgisi"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Cancel"
 msgstr "İptal"
@@ -553,11 +521,7 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr ""
-"Çalışanlar, üzerine atanan farklı projeler için harcanan zamanı "
-"kodlama.projen analitik bir hesaptır ve harcanan zaman Proje analitik "
-"maliyeti hesap oluşturur.Bu özellik, aynı zamanda katılım ve "
-"zamançizelgesine kaydetmenize olanak verir."
+msgstr "Çalışanlar, üzerine atanan farklı projeler için harcanan zamanı kodlama.projen analitik bir hesaptır ve harcanan zaman Proje analitik maliyeti hesap oluşturur.Bu özellik, aynı zamanda katılım ve zamançizelgesine kaydetmenize olanak verir."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -571,8 +535,7 @@ msgid "Timesheet Line"
 msgstr "ZamanÇizelge Satırı"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: field:hr.employee,product_id:0
+#: view:hr.analytic.timesheet:0 field:hr.employee,product_id:0
 msgid "Product"
 msgstr "Ürünler"
 
@@ -625,9 +588,7 @@ msgstr "Proje ile Oturumu Kapat"
 msgid ""
 "Please create an employee for this user, using the menu: Human Resources > "
 "Employees."
-msgstr ""
-"Menüsünü kullanarak, bu kullanıcı için bir çalışan oluşturun: İnsan "
-"Kaynakları >Personeller."
+msgstr "Menüsünü kullanarak, bu kullanıcı için bir çalışan oluşturun: İnsan Kaynakları >Personeller."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -681,8 +642,7 @@ msgid "Accounting"
 msgstr "Muhasebe"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
+#: xsl:hr.analytical.timesheet:0 xsl:hr.analytical.timesheet_users:0
 msgid "Total"
 msgstr "Toplam"
 

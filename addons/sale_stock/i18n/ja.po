@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2014-02-10 08:28+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:23+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -59,11 +60,7 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"あなたの選択した数量は %d です。\n"
-"しかし、それは選択した梱包と互換性がありません。\n"
-"これは、梱包による数量の提案です：\n"
-"EAN：%s　数量：%s　単位のタイプ：%s"
+msgstr "あなたの選択した数量は %d です。\nしかし、それは選択した梱包と互換性がありません。\nこれは、梱包による数量の提案です：\nEAN：%s　数量：%s　単位のタイプ：%s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
@@ -191,9 +188,7 @@ msgid ""
 "the same time as the procurement order. It represents the assignment of "
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
-msgstr ""
-"受注オーダーが確認されると同時に調達オーダーとしてすぐに、集荷リストフォームが作成されます。これは受注オーダー部品の割り当てを表しています。受注オーダー行"
-"による１つの集荷リストは部品の入手可能性とともに展開します。"
+msgstr "受注オーダーが確認されると同時に調達オーダーとしてすぐに、集荷リストフォームが作成されます。これは受注オーダー部品の割り当てを表しています。受注オーダー行による１つの集荷リストは部品の入手可能性とともに展開します。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -247,17 +242,15 @@ msgstr "プロジェクトMRP"
 
 #. module: sale_stock
 #: view:sale.order:0
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"If the sale order was set to create the invoice 'On Delivery Order', then an "
-"invoice is automatically created based on what you delivered. If you rather "
-"want to create your invoice based on your sale order, you can set the sale "
+"If the sale order was set to create the invoice 'On Delivery Order', then an"
+" invoice is automatically created based on what you delivered. If you rather"
+" want to create your invoice based on your sale order, you can set the sale "
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
 msgstr ""
@@ -268,8 +261,7 @@ msgid "Procurement"
 msgstr "調達"
 
 #. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
+#: view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "出荷済"
@@ -307,9 +299,7 @@ msgid ""
 "confirmed or as the invoice is paid. It drives the purchasing and the "
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
-msgstr ""
-"調達オーダーは、受注オーダーが確認された、または請求書が支払われた時に自動的に作成されます。それは支払と製品の製造のルールと受注オーダーのパラメータに関し"
-"て制御します。 "
+msgstr "調達オーダーは、受注オーダーが確認された、または請求書が支払われた時に自動的に作成されます。それは支払と製品の製造のルールと受注オーダーのパラメータに関して制御します。 "
 
 #. module: sale_stock
 #: help:sale.order,incoterm:0
@@ -322,8 +312,7 @@ msgstr "国際取引条件は国際間の取り引きで使用する、事前に
 #: help:sale.config.settings,module_delivery:0
 msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
+"                You can define your own carrier and delivery grids for prices.\n"
 "                This installs the module delivery."
 msgstr ""
 
@@ -380,8 +369,8 @@ msgstr "属性"
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr "顧客に約束した日付の許容誤差。サプライチェーンの予想外の遅延に対処するため、製品は実際に約束した日より何日も前にスケジュールされます。"
 
 #. module: sale_stock
@@ -391,8 +380,7 @@ msgstr "受注明細上の品目属性"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr "受注オーダー基準、または出荷基準の請求書を生成します。"
 
 #. module: sale_stock
@@ -409,15 +397,10 @@ msgstr "会社"
 #: help:sale.config.settings,task_work:0
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
+"                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways\n"
+"                and to automatically creates project tasks from procurement lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
-msgstr ""
-"プロジェクト管理のために定義されたタスクの項目を特定の日付とユーザーのタイムシートに転送して、調達明細からプロジェクトタスクを自動的に作成します。\n"
-"                project_timesheetとproject_mrpモジュールがインストールされます。"
+msgstr "プロジェクト管理のために定義されたタスクの項目を特定の日付とユーザーのタイムシートに転送して、調達明細からプロジェクトタスクを自動的に作成します。\n                project_timesheetとproject_mrpモジュールがインストールされます。"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -590,9 +573,7 @@ msgstr "例外を無視"
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"受注の計画量は %.2f %s。しかし %.2f %s のみ利用可能です。\n"
-"実在庫は %.2f %s です（予約を除く）。"
+msgstr "受注の計画量は %.2f %s。しかし %.2f %s のみ利用可能です。\n実在庫は %.2f %s です（予約を除く）。"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -626,12 +607,3 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr "製造品場所の設定によって、製造領域と顧客の間の移動は、手動または自動的な配達オーダーを通して実施されます。"
-
-#~ msgid ""
-#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
-#~ "pick' or 'Invoice on order after delivery'."
-#~ msgstr "出荷方針が集荷時に請求または配達後に請求の場合は、請求書は自動的に作成されます。"
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr "これは安全目的のために顧客に約束するために加える日数です。"

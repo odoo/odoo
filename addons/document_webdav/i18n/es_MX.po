@@ -1,21 +1,22 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * document_webdav
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 09:01+0000\n"
-"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2015-05-23 13:51+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/odoo-7/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:43+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
@@ -24,13 +25,17 @@ msgid "Date Created"
 msgstr "Fecha de creación"
 
 #. module: document_webdav
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "¡Error! No puede crear directorios recursivos."
+#: model:ir.ui.menu,name:document_webdav.menu_document_props
+msgid "Documents"
+msgstr "Documentos"
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
-#: view:document.webdav.file.property:0
+msgid "Document property"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0 view:document.webdav.file.property:0
 msgid "Search Document properties"
 msgstr "Buscar propiedades del documento"
 
@@ -53,8 +58,7 @@ msgid "document.webdav.file.property"
 msgstr "document.webdav.file.property"
 
 #. module: document_webdav
-#: view:document.webdav.dir.property:0
-#: view:document.webdav.file.property:0
+#: view:document.webdav.dir.property:0 view:document.webdav.file.property:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -64,15 +68,9 @@ msgid "These properties will be added to WebDAV requests"
 msgstr "Estas propiedades se añadirán a las peticiones WebDAV"
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_file_props
-msgid "DAV properties for documents"
-msgstr "Propiedades DAV para documentos"
-
-#. module: document_webdav
-#: code:addons/document_webdav/webdav.py:37
-#, python-format
-msgid "PyWebDAV Import Error!"
-msgstr "¡Error de importación PyWebDAV!"
+#: model:ir.actions.act_window,name:document_webdav.action_file_props_form
+msgid "DAV Properties for Documents"
+msgstr ""
 
 #. module: document_webdav
 #: view:document.webdav.file.property:0
@@ -81,53 +79,9 @@ msgid "Document"
 msgstr "Documento"
 
 #. module: document_webdav
-#: model:ir.module.module,description:document_webdav.module_meta_information
-msgid ""
-" With this module, the WebDAV server for the documents is activated.\n"
-"        You can then use any compatible browser to remotely see the "
-"attachments of OpenObject.\n"
-"\n"
-"        After installation, the webDAV server can be controlled by a "
-"[webdav] section in the server's config.\n"
-"        Server Configuration Parameter:\n"
-"        [webdav]\n"
-"        ; enable = True ; Serve webdav over the http(s) servers\n"
-"        ; vdir = webdav ; the directory that webdav will be served at\n"
-"          ; this default val means that webdav will be\n"
-"          ; on \"http://localhost:8069/webdav/\n"
-"        ; verbose = True ; Turn on the verbose messages of webdav\n"
-"        ; debug = True ; Turn on the debugging messages of webdav\n"
-"          ; since the messages are routed to the python logging, with\n"
-"          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
-"          ; these options on\n"
+#: model:ir.ui.menu,name:document_webdav.menu_folder_props
+msgid "Folders"
 msgstr ""
-" Con este módulo se activa el servidor WebDAV para los documentos.\n"
-"    Puede utilizar cualquier navegador compatible para ver los archivos "
-"adjuntos de forma remota OpenObject.\n"
-"\n"
-"    Después de la instalación, el servidor WebDAV puede ser controlado en la "
-"sección [webdav] de la configuración del servidor.\n"
-"    Parámetros de configuración del servidor:\n"
-"        [webdav]\n"
-"        ; enable = True ; Serve webdav over the http(s) servers\n"
-"        ; vdir = webdav ; the directory that webdav will be served at\n"
-"          ; this default val means that webdav will be\n"
-"          ; on \"http://localhost:8069/webdav/\n"
-"        ; verbose = True ; Turn on the verbose messages of webdav\n"
-"        ; debug = True ; Turn on the debugging messages of webdav\n"
-"          ; since the messages are routed to the python logging, with\n"
-"          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
-"          ; these options on\n"
-
-#. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "Directory cannot be parent of itself!"
-msgstr "¡El directorio no puede ser su propio padre!"
-
-#. module: document_webdav
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Contexto dinámico"
 
 #. module: document_webdav
 #: view:document.directory:0
@@ -135,30 +89,12 @@ msgid "WebDAV properties"
 msgstr "Propiedades WebDAV"
 
 #. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "The directory name must be unique !"
-msgstr "¡El nombre de directorio debe ser único!"
-
-#. module: document_webdav
-#: code:addons/document_webdav/webdav.py:37
-#, python-format
-msgid ""
-"Please install PyWebDAV from "
-"http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
-"0.9.4.tar.gz&can=2&q=/"
+#: model:ir.actions.act_window,name:document_webdav.action_dir_props_form
+msgid "DAV Properties for Folders"
 msgstr ""
-"Instale PyWebDAV desde "
-"http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
-"0.9.4.tar.gz&can=2&q=/"
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_dir_props
-msgid "DAV properties for folders"
-msgstr "Propiedades DAV para carpetas"
-
-#. module: document_webdav
-#: view:document.directory:0
-#: view:document.webdav.dir.property:0
+#: view:document.directory:0 view:document.webdav.dir.property:0
 #: view:document.webdav.file.property:0
 msgid "Properties"
 msgstr "Propiedades"
@@ -210,14 +146,14 @@ msgid "Creator"
 msgstr "Autor"
 
 #. module: document_webdav
-#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
-msgid "WebDAV server for Document Management"
-msgstr "Servidor WebDAV para gestión de documentos"
+#: view:document.webdav.file.property:0
+msgid "Document Property"
+msgstr ""
 
 #. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
-msgstr "El directorio debe tener un padre o un almacenamiento."
+#: model:ir.ui.menu,name:document_webdav.menu_properties
+msgid "DAV Properties"
+msgstr ""
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,do_subst:0

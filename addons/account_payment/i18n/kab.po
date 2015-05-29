@@ -1,21 +1,22 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-12 20:50+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:32+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-13 05:29+0000\n"
-"X-Generator: Launchpad (build 17389)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,8 +24,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
@@ -33,12 +33,12 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,currency:0
 msgid "Partner Currency"
-msgstr ""
+msgstr "Tanfalit n umendid"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:0
 msgid "Set to draft"
-msgstr ""
+msgstr "Rrit d arewway"
 
 #. module: account_payment
 #: help:payment.order,mode:0
@@ -46,10 +46,9 @@ msgid "Select the Payment Mode to be applied."
 msgstr ""
 
 #. module: account_payment
-#: view:payment.mode:0
-#: view:payment.order:0
+#: view:payment.mode:0 view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Sdukel s..."
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -57,15 +56,12 @@ msgid "Payment lines"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:account_payment.view_payment_line_form
-#: field:payment.line,info_owner:0
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.line:0 field:payment.line,info_owner:0 view:payment.order:0
 msgid "Owner Account"
-msgstr ""
+msgstr "Bab umiḍan"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Takebbwanit"
@@ -73,18 +69,17 @@ msgstr "Takebbwanit"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Tasiḍent / Afru"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr ""
+msgstr "ilelli"
 
 #. module: account_payment
-#: view:payment.order.create:account_payment.view_create_payment_order_lines
-#: field:payment.order.create,entries:0
+#: view:payment.order.create:0 field:payment.order.create,entries:0
 msgid "Entries"
-msgstr ""
+msgstr "Inekcam"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -92,13 +87,12 @@ msgid "Used Account"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr ""
+msgstr "Azemz n tagara"
 
 #. module: account_payment
-#: view:payment.order.create:account_payment.view_create_payment_order_lines
+#: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr ""
 
@@ -109,7 +103,7 @@ msgid "Payment Populate statement"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_invoice.py:42
+#: code:addons/account_payment/account_invoice.py:43
 #, python-format
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
@@ -117,22 +111,21 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_invoice.py:42
-#: code:addons/account_payment/account_move_line.py:57
+#: code:addons/account_payment/account_invoice.py:43
+#: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Tuccḍa!"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_form
-#: view:website:account_payment.report_paymentorder
+#: report:payment.order:0 view:payment.order:0
 msgid "Amount"
 msgstr "Azal"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr ""
+msgstr "Asemday s tenfalit n tkebbwanit"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -145,10 +138,9 @@ msgid "New Payment Order"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.order,reference:0
-#: view:website:account_payment.report_paymentorder
+#: report:payment.order:0 field:payment.order,reference:0
 msgid "Reference"
-msgstr ""
+msgstr "Tamselyut"
 
 #. module: account_payment
 #: sql_constraint:payment.line:0
@@ -168,15 +160,13 @@ msgstr ""
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:account_payment.view_payment_line_form
-#: view:payment.line:account_payment.view_payment_line_tree
-#: view:payment.order:account_payment.view_payment_order_form
+#: model:ir.model,name:account_payment.model_payment_line view:payment.line:0
+#: view:payment.order:0
 msgid "Payment Line"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:account_payment.view_payment_line_tree
+#: view:payment.line:0
 msgid "Amount Total"
 msgstr "Asemday n wazal"
 
@@ -189,8 +179,7 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_search
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Confirmed"
 msgstr "Intem"
 
@@ -210,13 +199,12 @@ msgid "Structured"
 msgstr ""
 
 #. module: account_payment
-#: view:account.bank.statement:account_payment.view_bank_statement_form
+#: view:account.bank.statement:0
 msgid "Import Payment Lines"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:account_payment.view_payment_line_form
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.line:0 view:payment.order:0
 msgid "Transaction Information"
 msgstr ""
 
@@ -224,23 +212,19 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
 #: model:ir.model,name:account_payment.model_payment_mode
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:account_payment.view_payment_mode_form
-#: view:payment.mode:account_payment.view_payment_mode_search
-#: view:payment.mode:account_payment.view_payment_mode_tree
-#: view:payment.order:account_payment.view_payment_order_search
-#: field:payment.order,mode:0
+#: view:payment.mode:0 view:payment.order:0 field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr ""
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
 msgid "Effective Date"
-msgstr ""
+msgstr "Azemz n tazwara"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
 msgid "Invoice Ref."
-msgstr ""
+msgstr "Tamsisɣelt n tfaturt."
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -266,18 +250,17 @@ msgid "Fixed date"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,info_partner:0
-#: view:payment.order:account_payment.view_payment_order_form
+#: field:payment.line,info_partner:0 view:payment.order:0
 msgid "Destination Account"
 msgstr "Amiḍan  n tuzzna"
 
 #. module: account_payment
-#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.line:0
 msgid "Desitination Account"
 msgstr "Amiḍan  n tuzzna"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_search
+#: view:payment.order:0
 msgid "Search Payment Orders"
 msgstr ""
 
@@ -292,12 +275,12 @@ msgid "Select Invoices to Pay"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:account_payment.view_payment_line_tree
+#: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Asemday n wazal n tenfalit"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:0
 msgid "Make Payments"
 msgstr ""
 
@@ -307,11 +290,10 @@ msgid "Communication Type"
 msgstr "Tawsit n taywalt"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
-#: view:website:account_payment.report_paymentorder
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
+#: report:payment.order:0
 msgid "Partner"
-msgstr ""
+msgstr "Amendid"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
@@ -321,7 +303,7 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr ""
+msgstr "Azemz n tagara"
 
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
@@ -329,14 +311,14 @@ msgid "Amount to be paid"
 msgstr ""
 
 #. module: account_payment
-#: view:website:account_payment.report_paymentorder
+#: report:payment.order:0
 msgid "Currency"
 msgstr "Tanfalit"
 
 #. module: account_payment
-#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "Ih"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -356,7 +338,7 @@ msgid "Account Payment Populate Statement"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:57
+#: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
 msgstr ""
@@ -367,7 +349,7 @@ msgid "Mode of Payment"
 msgstr ""
 
 #. module: account_payment
-#: view:website:account_payment.report_paymentorder
+#: report:payment.order:0
 msgid "Value Date"
 msgstr ""
 
@@ -382,16 +364,14 @@ msgid "Payment amount in the partner currency"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_search
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Draft"
 msgstr "Arewway"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_search
-#: field:payment.order,state:0
+#: view:payment.order:0 field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Addad"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -404,7 +384,7 @@ msgid "Address of the Ordering Customer."
 msgstr ""
 
 #. module: account_payment
-#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
+#: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
 msgstr ""
 
@@ -421,7 +401,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Tira n tsiḍent"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -431,24 +411,24 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "Nnadi"
 
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Amasay"
 
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
-msgstr ""
+msgstr "Date de règlement"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "Asemday:"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
@@ -486,37 +466,34 @@ msgid "Account make payment"
 msgstr ""
 
 #. module: account_payment
-#: view:website:account_payment.report_paymentorder
+#: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Tamsisɣelt n tfaturt"
 
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Tamsisɣet-ik"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_form
-#: view:payment.order:account_payment.view_payment_order_tree
+#: view:payment.order:0
 msgid "Payment order"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:account_payment.view_payment_line_form
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.line:0 view:payment.order:0
 msgid "General Information"
-msgstr ""
+msgstr "Tilɣa timatutin"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_search
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Done"
 msgstr "Immed"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Tafaturt"
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -524,10 +501,8 @@ msgid "Communication"
 msgstr "Taywalt"
 
 #. module: account_payment
-#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
-#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
-#: view:payment.order.create:account_payment.view_create_payment_order
-#: view:payment.order.create:account_payment.view_create_payment_order_lines
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "Cancel"
 msgstr "Sefsax"
 
@@ -537,16 +512,14 @@ msgid "Destination Bank Account"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:account_payment.view_payment_line_form
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.line:0 view:payment.order:0
 msgid "Information"
-msgstr ""
+msgstr "Information"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.action_report_payment_order
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
-#: view:payment.order:account_payment.view_payment_order_form
-#: view:payment.order:account_payment.view_payment_order_search
+#: view:payment.order:0
 msgid "Payment Order"
 msgstr ""
 
@@ -556,8 +529,7 @@ msgid "Payment amount in the company currency"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.order.create:account_payment.view_create_payment_order
-#: view:payment.order.create:account_payment.view_create_payment_order_lines
+#: view:payment.order.create:0
 msgid "Search Payment lines"
 msgstr ""
 
@@ -574,18 +546,17 @@ msgstr "Taywalt 2"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Azemz iɣiwsen"
 
 #. module: account_payment
-#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.mode:account_payment.view_payment_mode_search
-#: field:payment.mode,journal:0
+#: view:payment.mode:0 field:payment.mode,journal:0
 msgid "Journal"
-msgstr ""
+msgstr "Aɣemis"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -593,31 +564,30 @@ msgid "Bank account"
 msgstr "Amiḍan n lbanka"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:0
 msgid "Confirm Payments"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,company_currency:0
+#: field:payment.line,company_currency:0 report:payment.order:0
 msgid "Company Currency"
 msgstr "Tanfalit n kebbwanit"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment
-#: view:payment.line:account_payment.view_payment_line_form
-#: view:payment.order:account_payment.view_payment_order_form
+#: model:ir.ui.menu,name:account_payment.menu_main_payment view:payment.line:0
+#: view:payment.order:0
 msgid "Payment"
 msgstr ""
 
 #. module: account_payment
-#: view:website:account_payment.report_paymentorder
+#: report:payment.order:0
 msgid "Payment Order / Payment"
 msgstr ""
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr ""
+msgstr "Izrig n tira"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -629,18 +599,17 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,name:0
 msgid "Name"
-msgstr ""
+msgstr "Isem"
 
 #. module: account_payment
-#: view:website:account_payment.report_paymentorder
+#: report:payment.order:0
 msgid "Bank Account"
 msgstr "Amiḍan n lbanka"
 
 #. module: account_payment
-#: view:payment.line:account_payment.view_payment_line_form
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.line:0 view:payment.order:0
 msgid "Entry Information"
-msgstr ""
+msgstr "Talɣut n tira"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
@@ -650,27 +619,26 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr ""
+msgstr "Taladna"
 
 #. module: account_payment
-#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:0
 msgid "Cancel Payments"
-msgstr ""
+msgstr "Sefsax afru"
 
 #. module: account_payment
 #: field:payment.order,total:0
-#: view:website:account_payment.report_paymentorder
 msgid "Total"
-msgstr ""
+msgstr "Asemday"
 
 #. module: account_payment
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr ""
+msgstr "Izrigen n tira"
 
 #. module: account_payment
-#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr ""
@@ -686,14 +654,12 @@ msgid "Preferred Date"
 msgstr ""
 
 #. module: account_payment
-#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
-#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
-#: view:payment.order.create:account_payment.view_create_payment_order
-#: view:payment.order.create:account_payment.view_create_payment_order_lines
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "or"
-msgstr ""
+msgstr "neɣ"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
+msgstr "Amiḍan n lbanka n tarrayt n wefru"

@@ -1,27 +1,27 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * stock_location
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-11-08 20:59+0000\n"
-"Last-Translator: Harri Luuppala <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:53+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
-msgstr ""
-"Käytetään tiedoksi siitä, mille yhtiölle keräilyt ja siirrot kuuluvat."
+msgstr "Käytetään tiedoksi siitä, mille yhtiölle keräilyt ja siirrot kuuluvat."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -88,9 +88,7 @@ msgstr "Sisäinen"
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
-msgstr ""
-"Imuohjattu hankinta: tulossa alkuperäisestä paikasta %s, imuohjaussääntö %s, "
-"alkuperäinen hankinta %s (#%d)"
+msgstr "Imuohjattu hankinta: tulossa alkuperäisestä paikasta %s, imuohjaussääntö %s, alkuperäinen hankinta %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -106,12 +104,8 @@ msgstr "Laskun tila"
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
-"This is used to define paths the product has to follow within the location "
-"tree.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
+"This is used to define paths the product has to follow within the location tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
 msgstr ""
 
 #. module: stock_location
@@ -168,8 +162,7 @@ msgstr "Varastosiirto"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
-"Jos valittu, siirron peruutuksen yhteydessä myös linkitetty siirto peruuntuu"
+msgstr "Jos valittu, siirron peruutuksen yhteydessä myös linkitetty siirto peruuntuu"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -252,10 +245,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"\"Valmista varastoon\": Ota varastosta tarpeen vaatiessa tai odota kunnes "
-"saatavilla. \"Valmista tilaukseen\": Osta tai tuota tarpeen vaatiessa "
-"hankintapyynnöllä."
+msgstr "\"Valmista varastoon\": Ota varastosta tarpeen vaatiessa tai odota kunnes saatavilla. \"Valmista tilaukseen\": Osta tai tuota tarpeen vaatiessa hankintapyynnöllä."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -289,9 +279,7 @@ msgstr "Viive (päivää)"
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
-msgstr ""
-"Imuohjattu hankinta: keräilty paikasta %s, imuohjaussääntö %s, alkuperäinen "
-"hankinta %s (#%d)."
+msgstr "Imuohjattu hankinta: keräilty paikasta %s, imuohjaussääntö %s, alkuperäinen hankinta %s (#%d)."
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -304,9 +292,7 @@ msgstr "Työntövirtaus"
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
-msgstr ""
-"Imuohjattu siirto: siirto alkuperäiseltä paikalta %s, imuohjaussääntö %s, "
-"alkuperäinen hankinta %s (#%d)"
+msgstr "Imuohjattu siirto: siirto alkuperäiseltä paikalta %s, imuohjaussääntö %s, alkuperäinen hankinta %s (#%d)"
 
 #. module: stock_location
 #: view:product.product:0
@@ -330,8 +316,7 @@ msgid "Destination Location"
 msgstr "Kohteen sijainti"
 
 #. module: stock_location
-#: field:stock.location.path,auto:0
-#: selection:stock.location.path,auto:0
+#: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
 msgid "Automatic Move"
 msgstr "Automaattinen siirto"
 
@@ -362,8 +347,7 @@ msgstr "Hankintatapa"
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
-"Riippuen yrityksestä, valitse haluatko vastaanottaa vai lähettää tuotteita."
+msgstr "Riippuen yrityksestä, valitse haluatko vastaanottaa vai lähettää tuotteita."
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order

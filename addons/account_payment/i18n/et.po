@@ -1,21 +1,22 @@
-# Estonian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-10-09 14:53+0000\n"
-"Last-Translator: Rait <Unknown>\n"
-"Language-Team: Estonian <et@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Estonian (http://www.transifex.com/projects/p/odoo-7/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:38+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,8 +24,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
@@ -46,8 +46,7 @@ msgid "Select the Payment Mode to be applied."
 msgstr "Vali rakendatav makseviis"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: view:payment.order:0
+#: view:payment.mode:0 view:payment.order:0
 msgid "Group By..."
 msgstr "Grupeeri..."
 
@@ -57,15 +56,12 @@ msgid "Payment lines"
 msgstr "Makseread"
 
 #. module: account_payment
-#: view:payment.line:0
-#: field:payment.line,info_owner:0
-#: view:payment.order:0
+#: view:payment.line:0 field:payment.line,info_owner:0 view:payment.order:0
 msgid "Owner Account"
 msgstr "Omaniku konto"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Ettevõte"
@@ -81,8 +77,7 @@ msgid "Free"
 msgstr "Vaba"
 
 #. module: account_payment
-#: view:payment.order.create:0
-#: field:payment.order.create,entries:0
+#: view:payment.order.create:0 field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Kirjed"
 
@@ -92,8 +87,7 @@ msgid "Used Account"
 msgstr "Kasutajakonto"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Tähtaeg"
 
@@ -124,8 +118,7 @@ msgid "Error!"
 msgstr "Viga!"
 
 #. module: account_payment
-#: report:payment.order:0
-#: view:payment.order:0
+#: report:payment.order:0 view:payment.order:0
 msgid "Amount"
 msgstr "Kogus"
 
@@ -145,8 +138,7 @@ msgid "New Payment Order"
 msgstr "Uus maksekorraldus"
 
 #. module: account_payment
-#: report:payment.order:0
-#: field:payment.order,reference:0
+#: report:payment.order:0 field:payment.order,reference:0
 msgid "Reference"
 msgstr "Viide"
 
@@ -168,8 +160,7 @@ msgstr "Vahetult"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
+#: model:ir.model,name:account_payment.model_payment_line view:payment.line:0
 #: view:payment.order:0
 msgid "Payment Line"
 msgstr "Makserida"
@@ -188,8 +179,7 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Confirmed"
 msgstr "Kinnitatud"
 
@@ -214,8 +204,7 @@ msgid "Import Payment Lines"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Transaction Information"
 msgstr "Tehingu info"
 
@@ -223,9 +212,7 @@ msgstr "Tehingu info"
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
 #: model:ir.model,name:account_payment.model_payment_mode
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0
-#: view:payment.order:0
-#: field:payment.order,mode:0
+#: view:payment.mode:0 view:payment.order:0 field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Makseviis"
 
@@ -245,10 +232,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"Vali võimalus Maksekorraldusele. 'Fikseeritud' tähendab sinu poolt "
-"täpsustatud kuupäeva. 'Vahetult' tähendab kohest teostamist. 'Tähtaeg' "
-"tähendab teostamist planeeritud kuupäeval."
+msgstr "Vali võimalus Maksekorraldusele. 'Fikseeritud' tähendab sinu poolt täpsustatud kuupäeva. 'Vahetult' tähendab kohest teostamist. 'Tähtaeg' tähendab teostamist planeeritud kuupäeval."
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -266,8 +250,7 @@ msgid "Fixed date"
 msgstr "Fikseeritud kuupäev"
 
 #. module: account_payment
-#: field:payment.line,info_partner:0
-#: view:payment.order:0
+#: field:payment.line,info_partner:0 view:payment.order:0
 msgid "Destination Account"
 msgstr "Sihtkonto"
 
@@ -307,8 +290,7 @@ msgid "Communication Type"
 msgstr "Suhtlemise tüüp"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
 msgstr "Partner"
@@ -348,8 +330,7 @@ msgstr "Põhipartneri aadress"
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr ""
-"Kui maksekuupäeva pole täpsustatud siis pank töötleb makserea vahetult"
+msgstr "Kui maksekuupäeva pole täpsustatud siis pank töötleb makserea vahetult"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -383,16 +364,14 @@ msgid "Payment amount in the partner currency"
 msgstr "Makse summa partneri valuutas"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Draft"
 msgstr "Mustand"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
+#: view:payment.order:0 field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Olek"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -439,7 +418,7 @@ msgstr "Otsing"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Vastutav"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -502,14 +481,12 @@ msgid "Payment order"
 msgstr "Maksekorraldus"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "General Information"
 msgstr "Üldine info"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Done"
 msgstr "Tehtud"
 
@@ -525,8 +502,7 @@ msgstr "Suhtlus"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "Cancel"
 msgstr "Tühista"
 
@@ -536,8 +512,7 @@ msgid "Destination Bank Account"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Information"
 msgstr "Info"
 
@@ -571,7 +546,7 @@ msgstr "Suhtlus 2"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Planeeritud kuupäev"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -579,8 +554,7 @@ msgid "Are you sure you want to make payment?"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
+#: view:payment.mode:0 field:payment.mode,journal:0
 msgid "Journal"
 msgstr "Päevik"
 
@@ -595,14 +569,12 @@ msgid "Confirm Payments"
 msgstr "Kinnita maksed"
 
 #. module: account_payment
-#: field:payment.line,company_currency:0
-#: report:payment.order:0
+#: field:payment.line,company_currency:0 report:payment.order:0
 msgid "Company Currency"
 msgstr "Ettevõtte valuuta"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment
-#: view:payment.line:0
+#: model:ir.ui.menu,name:account_payment.menu_main_payment view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
 msgstr "Makse"
@@ -635,8 +607,7 @@ msgid "Bank Account"
 msgstr "Pangakonto"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Entry Information"
 msgstr "Kirje info"
 
@@ -664,7 +635,7 @@ msgstr "Kokku"
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr ""
+msgstr "Lausendi read"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -684,19 +655,11 @@ msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "or"
-msgstr ""
+msgstr "või"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Pangakonto makseviisile"
-
-#~ msgid ""
-#~ "The amount which should be paid at the current date\n"
-#~ "minus the amount which is already in payment order"
-#~ msgstr ""
-#~ "Summa, mis peaks olema tasutud käesoleval kuupäeval\n"
-#~ "miinus juba maksekorraldusel olev summa."

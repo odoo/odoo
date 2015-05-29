@@ -1,21 +1,22 @@
-# Chinese (Traditional) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2014-02-10 10:22+0000\n"
-"Last-Translator: Andy Cheng <andy@dobtor.com>\n"
-"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/odoo-7/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:24+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -59,9 +60,7 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"您選擇了 %d 單位的數量，但它無法相容於所選擇的包裝方式。\n"
-"根據包裝方式的數量建議： EAN： %s / 數量: %s 類型的 ul: %s"
+msgstr "您選擇了 %d 單位的數量，但它無法相容於所選擇的包裝方式。\n根據包裝方式的數量建議： EAN： %s / 數量: %s 類型的 ul: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
@@ -243,22 +242,18 @@ msgstr ""
 
 #. module: sale_stock
 #: view:sale.order:0
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"If the sale order was set to create the invoice 'On Delivery Order', then an "
-"invoice is automatically created based on what you delivered. If you rather "
-"want to create your invoice based on your sale order, you can set the sale "
+"If the sale order was set to create the invoice 'On Delivery Order', then an"
+" invoice is automatically created based on what you delivered. If you rather"
+" want to create your invoice based on your sale order, you can set the sale "
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
-msgstr ""
-"假如銷售訂單是設為「依出貨單開立發票」，則發票是依出貨內容自動建立。假如您要依銷售訂單開立發票，您可以設定銷售訂單為「依需求開立發票」，然後追蹤及處理銷售"
-"訂單至完全出貨後並開立發票。"
+msgstr "假如銷售訂單是設為「依出貨單開立發票」，則發票是依出貨內容自動建立。假如您要依銷售訂單開立發票，您可以設定銷售訂單為「依需求開立發票」，然後追蹤及處理銷售訂單至完全出貨後並開立發票。"
 
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
@@ -266,8 +261,7 @@ msgid "Procurement"
 msgstr "採購"
 
 #. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
+#: view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "已出貨"
@@ -318,13 +312,9 @@ msgstr "國貿條款(INCOTERMS)是一系列事先定義並使用於國際交易�
 #: help:sale.config.settings,module_delivery:0
 msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
+"                You can define your own carrier and delivery grids for prices.\n"
 "                This installs the module delivery."
-msgstr ""
-"允許您在銷售訂單及出貨單中增加運送方式。\n"
-"                您可以依價格考量設定你的貨運廠商及貨運網絡。\n"
-"                此功能將安裝 delivery 模組。"
+msgstr "允許您在銷售訂單及出貨單中增加運送方式。\n                您可以依價格考量設定你的貨運廠商及貨運網絡。\n                此功能將安裝 delivery 模組。"
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
@@ -379,8 +369,8 @@ msgstr "屬性"
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr "承諾客戶日期的邊際誤差，為了處理供應鏈中非預期性的延滯，產品的採購及出貨排程會較實際承諾日期提早該天數。"
 
 #. module: sale_stock
@@ -390,8 +380,7 @@ msgstr "訂單細項產品的屬性"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr "您可依銷售訂單或出貨單產生發票。"
 
 #. module: sale_stock
@@ -408,16 +397,10 @@ msgstr "公司"
 #: help:sale.config.settings,task_work:0
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
+"                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways\n"
+"                and to automatically creates project tasks from procurement lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
-msgstr ""
-"讓您轉移為專案管理定義的工作項目，到針對特定日期及特定使用者的工時表\n"
-"                項目，具有新增、編輯及刪除等功能，並且可自動從採購細項建立專案工作項目。\n"
-"                此功能將安裝模組 project_timesheet 和 project_mrp。"
+msgstr "讓您轉移為專案管理定義的工作項目，到針對特定日期及特定使用者的工時表\n                項目，具有新增、編輯及刪除等功能，並且可自動從採購細項建立專案工作項目。\n                此功能將安裝模組 project_timesheet 和 project_mrp。"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -481,9 +464,7 @@ msgstr "取消"
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
-msgstr ""
-"為了刪除已確認的銷售訂單，您必須先取消它。\n"
-"在此之前，您必須先取消與交貨單相關的提貨單。"
+msgstr "為了刪除已確認的銷售訂單，您必須先取消它。\n在此之前，您必須先取消與交貨單相關的提貨單。"
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -562,7 +543,7 @@ msgstr "相關提貨"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0
@@ -592,9 +573,7 @@ msgstr "忽略例外情形"
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"您計畫售出  %.2f %s ，但您只有 %.2f %s 可用！\n"
-"實際庫存是 %.2f %s。 (不含已預定保留)"
+msgstr "您計畫售出  %.2f %s ，但您只有 %.2f %s 可用！\n實際庫存是 %.2f %s。 (不含已預定保留)"
 
 #. module: sale_stock
 #: view:sale.order:0

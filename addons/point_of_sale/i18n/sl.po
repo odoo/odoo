@@ -1,21 +1,22 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * point_of_sale
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-20 22:24+0000\n"
-"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:09+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -37,12 +38,11 @@ msgid ""
 "                touchscreen interface.\n"
 "              </p><p>\n"
 "                If you put a photo on the category, the layout of the\n"
-"                touchscreen interface will automatically. We suggest not to "
-"put\n"
+"                touchscreen interface will automatically. We suggest not to put\n"
 "                a photo on categories for small (1024x768) screens.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Določi novo kategorijo.\n              </p><p>\n                Kategorije so namenjene brskanju po proizvodih preko\n                vmesnika z zaslonom na dotik.\n              </p><p>\n                Če se kategoriji določi fotografijo, bo samodejno postavljena\n                tudi v vmesnik z zaslonom na dotik. Predlagamo, da za majhne zaslone\n                (1024x768) ne dodajate fotografij kategorij.\n              </p>\n            "
 
 #. module: point_of_sale
 #: view:pos.receipt:0
@@ -55,8 +55,7 @@ msgid "Computed Balance"
 msgstr "Izračunani saldo"
 
 #. module: point_of_sale
-#: view:pos.session:0
-#: view:report.pos.order:0
+#: view:pos.session:0 view:report.pos.order:0
 msgid "Today"
 msgstr "Danes"
 
@@ -83,8 +82,7 @@ msgid "&atilde;"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.config,journal_id:0
-#: field:pos.order,sale_journal:0
+#: field:pos.config,journal_id:0 field:pos.order,sale_journal:0
 msgid "Sale Journal"
 msgstr "Dnevnik prodaje"
 
@@ -95,8 +93,7 @@ msgstr "Spa Reine 2L"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Details of Sales"
 msgstr "Podrobnosti prodaje"
 
@@ -106,17 +103,14 @@ msgid "You cannot have two cash controls in one Point Of Sale !"
 msgstr "V eni POS blagajni ne morete imeti dvojne kontrole gotovine!"
 
 #. module: point_of_sale
-#: field:pos.payment.report.user,user_id:0
-#: field:pos.sale.user,user_id:0
-#: field:pos.sales.user.today,user_id:0
-#: view:report.pos.order:0
+#: field:pos.payment.report.user,user_id:0 field:pos.sale.user,user_id:0
+#: field:pos.sales.user.today,user_id:0 view:report.pos.order:0
 #: field:report.pos.order,user_id:0
 msgid "Salesperson"
 msgstr "Prodajalec"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,day:0
+#: view:report.pos.order:0 field:report.pos.order,day:0
 msgid "Day"
 msgstr "Dan"
 
@@ -141,19 +135,13 @@ msgstr "Določi kupčevo EAN"
 #: view:pos.session.opening:0
 msgid ""
 "You may have to control your cash amount in your cash register, before\n"
-"                          being able to start selling through the "
-"touchscreen interface."
-msgstr ""
-"Znesek gotovine v blagajni bi naj preverili preden\n"
-"                          lahko pričnete prodajati preko zaslona na dotik."
+"                          being able to start selling through the touchscreen interface."
+msgstr "Znesek gotovine v blagajni bi naj preverili preden\n                          lahko pričnete prodajati preko zaslona na dotik."
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: field:pos.box.entries,amount:0
-#: report:pos.invoice:0
-#: field:pos.make.payment,amount:0
-#: report:pos.user.product:0
-#: field:report.transaction.pos,amount:0
+#: report:account.statement:0 field:pos.box.entries,amount:0
+#: report:pos.invoice:0 field:pos.make.payment,amount:0
+#: report:pos.user.product:0 field:report.transaction.pos,amount:0
 msgid "Amount"
 msgstr "Znesek"
 
@@ -188,8 +176,7 @@ msgstr "Sklic"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1085
-#: code:addons/point_of_sale/point_of_sale.py:1102
-#: report:pos.invoice:0
+#: code:addons/point_of_sale/point_of_sale.py:1102 report:pos.invoice:0
 #: report:pos.lines:0
 #, python-format
 msgid "Tax"
@@ -243,14 +230,12 @@ msgid "Closing Cash Control"
 msgstr "Kontrola gotovine ob zaključku blagajne"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Total of the day"
 msgstr "Dnevni izkupiček"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,average_price:0
+#: view:report.pos.order:0 field:report.pos.order,average_price:0
 msgid "Average Price"
 msgstr "Povprečna cena"
 
@@ -277,8 +262,7 @@ msgid "Disc. (%)"
 msgstr "Pop. (%)"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Total discount"
 msgstr "Popust skupaj"
 
@@ -314,8 +298,7 @@ msgstr "Pomaranča"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
+#: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 msgid "Sales by User"
 msgstr "Prodaja po uporabniku"
 
@@ -331,8 +314,7 @@ msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Prosim določite konto prihodkov za ta izdelek: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,price_total:0
+#: view:report.pos.order:0 field:report.pos.order,price_total:0
 msgid "Total Price"
 msgstr "Skupna cena"
 
@@ -346,9 +328,7 @@ msgstr "Leffe Brune 33cl"
 msgid ""
 "Check this if this point of sale should open by default in a self checkout "
 "mode. If unchecked, OpenERP uses the normal cashier mode by default."
-msgstr ""
-"Označite, če se naj ta POS-blagajna odpre kot privzeta v načinu z avtomatsko "
-"odjavo. Če ni označeno, uporabi OpenERP normalni način blagajne kot privzet."
+msgstr "Označite, če se naj ta POS-blagajna odpre kot privzeta v načinu z avtomatsko odjavo. Če ni označeno, uporabi OpenERP normalni način blagajne kot privzet."
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
@@ -400,8 +380,7 @@ msgstr "Odpiranje blagajne"
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
 "already been issued."
-msgstr ""
-"Ne morete spremeniti partnerja za POS naročilo, ki je že bilo fakturirano."
+msgstr "Ne morete spremeniti partnerja za POS naročilo, ki je že bilo fakturirano."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -415,8 +394,7 @@ msgid "Margin"
 msgstr "Marža"
 
 #. module: point_of_sale
-#: field:pos.discount,discount:0
-#: field:pos.order.line,discount:0
+#: field:pos.discount,discount:0 field:pos.order.line,discount:0
 msgid "Discount (%)"
 msgstr "Popust (%)"
 
@@ -442,7 +420,7 @@ msgstr "Tehtanje"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:476
 #, python-format
 msgid "Hardware Events"
-msgstr ""
+msgstr "Dogodki strojne opreme"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:302
@@ -475,13 +453,10 @@ msgstr "Fanta Orange 33cl"
 #, python-format
 msgid ""
 "Please set your profit and loss accounts on your payment method '%s'. This "
-"will allow OpenERP to post the difference of %.2f in your ending balance. To "
-"close this session, you can update the 'Closing Cash Control' to avoid any "
+"will allow OpenERP to post the difference of %.2f in your ending balance. To"
+" close this session, you can update the 'Closing Cash Control' to avoid any "
 "difference."
-msgstr ""
-"Prosimo nastavite vaše konte dobička/izgube za metodo plačila '%s'. Tako "
-"dovolite OpenERP knjiženje razlik %.2f v vaši zaključni bilanci. Za končanje "
-"te seje lahko v izogib razlikam posodobite 'Kontrolo zapiranja blagajne'."
+msgstr "Prosimo nastavite vaše konte dobička/izgube za metodo plačila '%s'. Tako dovolite OpenERP knjiženje razlik %.2f v vaši zaključni bilanci. Za končanje te seje lahko v izogib razlikam posodobite 'Kontrolo zapiranja blagajne'."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:316
@@ -518,16 +493,14 @@ msgid "Validate & Open Session"
 msgstr "Potrdi & Odpri sejo"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:99
-#: selection:pos.session,state:0
+#: code:addons/point_of_sale/point_of_sale.py:99 selection:pos.session,state:0
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "In Progress"
 msgstr "V teku"
 
 #. module: point_of_sale
-#: view:pos.session:0
-#: field:pos.session,opening_details_ids:0
+#: view:pos.session:0 field:pos.session,opening_details_ids:0
 msgid "Opening Cash Control"
 msgstr "Odpiranje blagajne"
 
@@ -542,10 +515,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
-"Srednje velika slika kategorije. Avtomatično je spremenjena v velikost "
-"128x128, ob upoštevanju razmerja. Uporabite to polje v pogledih forme ali "
-"nekaterih kanban pogledih."
+msgstr "Srednje velika slika kategorije. Avtomatično je spremenjena v velikost 128x128, ob upoštevanju razmerja. Uporabite to polje v pogledih forme ali nekaterih kanban pogledih."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -575,15 +545,10 @@ msgid "Search Cash Statements"
 msgstr "Iskanje denarnih izkazov"
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: field:pos.config,state:0
-#: view:pos.order:0
-#: field:pos.order,state:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: field:pos.session,state:0
-#: field:pos.session.opening,pos_state_str:0
-#: field:report.pos.order,state:0
+#: view:account.bank.statement:0 field:pos.config,state:0 view:pos.order:0
+#: field:pos.order,state:0 report:pos.sales.user:0
+#: report:pos.sales.user.today:0 field:pos.session,state:0
+#: field:pos.session.opening,pos_state_str:0 field:report.pos.order,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -635,16 +600,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to start a new session.\n"
 "              </p><p>\n"
-"                A session is a period of time, usually one day, during "
-"which\n"
-"                you sell through the point of sale. The user has to check "
-"the\n"
-"                currencies in your cash registers at the beginning and the "
-"end\n"
+"                A session is a period of time, usually one day, during which\n"
+"                you sell through the point of sale. The user has to check the\n"
+"                currencies in your cash registers at the beginning and the end\n"
 "                of each session.\n"
 "              </p><p>\n"
-"                Note that you should better to use the menu <i>Your "
-"Session</i>\n"
+"                Note that you should better to use the menu <i>Your Session</i>\n"
 "                to quickly open a new session.\n"
 "              </p>\n"
 "            "
@@ -659,15 +620,12 @@ msgstr "Izdan račun"
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid ""
-"You can continue sales from the touchscreen interface by clicking on \"Start "
-"Selling\" or close the cash register session."
-msgstr ""
-"Lahko nadaljujete s prodajo preko zaslona na dotik z izbiro \"Prični "
-"prodajo\" ali zaprete sejo za registracijo gotovine."
+"You can continue sales from the touchscreen interface by clicking on \"Start"
+" Selling\" or close the cash register session."
+msgstr "Lahko nadaljujete s prodajo preko zaslona na dotik z izbiro \"Prični prodajo\" ali zaprete sejo za registracijo gotovine."
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,stop_at:0
 msgid "Closing Date"
 msgstr "Zaključni datum"
@@ -688,8 +646,7 @@ msgid "Coca-Cola Light 1L"
 msgstr "Coca-Cola Light 1L"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Summary"
 msgstr "Povzetek"
 
@@ -704,9 +661,7 @@ msgid "Chaudfontaine 50cl"
 msgstr "Chaudfontaine 50cl"
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-#: report:pos.lines:0
-#: field:pos.order.line,qty:0
+#: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,qty:0
 #: field:report.sales.by.user.pos,qty:0
 #: field:report.sales.by.user.pos.month,qty:0
 msgid "Quantity"
@@ -766,14 +721,10 @@ msgstr "Granny Smith apples"
 msgid ""
 "Check if, this is a product you can use to take cash from a statement for "
 "the point of sale backend, example: money lost, transfer to bank, etc."
-msgstr ""
-"Označite, če je to produkt, ki ga lahko uporabite za odvzem gotovine pri "
-"pripravi poročila POS-blagajne, npr.: izgubljen denar, prenos na banko in "
-"podobno."
+msgstr "Označite, če je to produkt, ki ga lahko uporabite za odvzem gotovine pri pripravi poročila POS-blagajne, npr.: izgubljen denar, prenos na banko in podobno."
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,total_discount:0
+#: view:report.pos.order:0 field:report.pos.order,total_discount:0
 msgid "Total Discount"
 msgstr "Skupaj Popust"
 
@@ -782,12 +733,9 @@ msgstr "Skupaj Popust"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:39
 #, python-format
 msgid ""
-"The Point of Sale is not supported by Microsoft Internet Explorer. Please "
-"use\n"
+"The Point of Sale is not supported by Microsoft Internet Explorer. Please use\n"
 "                        a modern browser like"
-msgstr ""
-"POS ni podprt za Microsoft Internet Explorer. Prosimo, uporabite\n"
-"                        sodobnejši brskalnik."
+msgstr "POS ni podprt za Microsoft Internet Explorer. Prosimo, uporabite\n                        sodobnejši brskalnik."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -795,9 +743,7 @@ msgid "Click to start a session."
 msgstr "Kliknite za pričetek seje."
 
 #. module: point_of_sale
-#: view:pos.details:0
-#: view:pos.payment.report:0
-#: view:pos.payment.report.user:0
+#: view:pos.details:0 view:pos.payment.report:0 view:pos.payment.report.user:0
 #: view:pos.sale.user:0
 msgid "Print Report"
 msgstr "Natisni poročilo"
@@ -876,8 +822,7 @@ msgid "Post All Orders"
 msgstr "Knjiži vsa naročila"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,cash_register_balance_end_real:0
 msgid "Ending Balance"
 msgstr "Končni saldo"
@@ -913,13 +858,9 @@ msgid ""
 "sale by reusing existing bank and cash through \"Accounting / Configuration "
 "/ Journals / Journals\". Select a journal and check the field \"PoS Payment "
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
-"methods directly from menu \"PoS Backend / Configuration / Payment Methods\"."
-msgstr ""
-"Opredeliti je potrebno, kateri načini plačila morajo biti dostopni v POS z "
-"uporabo obstoječih bank in gotovine v meniju "
-"\"Računovodstvo/Nastavitve/Dnevnik/Dnevniki\". Izberite dnevnik in označite "
-"polje \"POS-način plačila\" v zavihku \"POS\". Lahko kreirate nove načine "
-"plačila direktno v \"POS/Nastavitve/Načini plačila\"."
+"methods directly from menu \"PoS Backend / Configuration / Payment "
+"Methods\"."
+msgstr "Opredeliti je potrebno, kateri načini plačila morajo biti dostopni v POS z uporabo obstoječih bank in gotovine v meniju \"Računovodstvo/Nastavitve/Dnevnik/Dnevniki\". Izberite dnevnik in označite polje \"POS-način plačila\" v zavihku \"POS\". Lahko kreirate nove načine plačila direktno v \"POS/Nastavitve/Načini plačila\"."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.rouges_noyau_fruits
@@ -937,8 +878,7 @@ msgid "Spa Reine 1L"
 msgstr "Spa Reine 1L"
 
 #. module: point_of_sale
-#: constraint:res.partner:0
-#: constraint:res.users:0
+#: constraint:res.partner:0 constraint:res.users:0
 msgid "Error: Invalid ean code"
 msgstr "Napaka: neveljavna EAN črtna koda"
 
@@ -955,8 +895,7 @@ msgid "Open Statements"
 msgstr "Odprti izpiski"
 
 #. module: point_of_sale
-#: field:pos.details,date_end:0
-#: field:pos.sale.user,date_end:0
+#: field:pos.details,date_end:0 field:pos.sale.user,date_end:0
 msgid "Date End"
 msgstr "Zaključek"
 
@@ -966,8 +905,7 @@ msgid "Jonagold apples"
 msgstr "Jonagold apples"
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: report:account.statement:0
+#: view:account.bank.statement:0 report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: field:report.pos.order,journal_id:0
@@ -987,15 +925,12 @@ msgstr "Prodaja skupaj(Prihodki)"
 #. module: point_of_sale
 #: help:pos.config,group_by:0
 msgid ""
-"Check this if you want to group the Journal Items by Product while closing a "
-"Session"
-msgstr ""
-"Označite, če želite združevanje postavk dnevnika po izdelkih, ko "
-"zaključujete sejo"
+"Check this if you want to group the Journal Items by Product while closing a"
+" Session"
+msgstr "Označite, če želite združevanje postavk dnevnika po izdelkih, ko zaključujete sejo"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Total paid"
 msgstr "Skupaj plačano"
 
@@ -1013,7 +948,7 @@ msgstr "Uredi EAN"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "Seznam blagajn"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_50cl_product_template
@@ -1058,9 +993,7 @@ msgstr "POS naročilo mora vsebovati vrstice, ko je klican ta način"
 msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
-msgstr ""
-"Morate izbrati cenik v prodajnem oknu!\n"
-"Prosim določite eno, pred izbiro artikla."
+msgstr "Morate izbrati cenik v prodajnem oknu!\nProsim določite eno, pred izbiro artikla."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
@@ -1132,7 +1065,7 @@ msgstr "Fresh vegetables"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "tab of the"
-msgstr ""
+msgstr "zavihek za"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1142,8 +1075,7 @@ msgid "Scan Item Success"
 msgstr "Skeniranje izdelka uspešno"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,cash_register_balance_start:0
 msgid "Starting Balance"
 msgstr "Začetni Saldo"
@@ -1159,7 +1091,7 @@ msgstr "Oven Baked Lays Natural 150g"
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
 "Please first close this one to use this point of sale."
-msgstr ""
+msgstr "Ne morete uporabljati sej drugih uporabnikov. Ta seja je v lasti %s. Da bi lahko uporabili ta POS jo morate najprej zaključiti."
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -1197,15 +1129,13 @@ msgstr "Plačilo Uporabnika"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:285
 #: code:addons/point_of_sale/wizard/pos_payment.py:79
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
-#: report:pos.details:0
-#: view:pos.order:0
+#: report:pos.details:0 view:pos.order:0
 #, python-format
 msgid "Payment"
 msgstr "Plačilo"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,nbr:0
+#: view:report.pos.order:0 field:report.pos.order,nbr:0
 msgid "# of Lines"
 msgstr "# št. vrstic"
 
@@ -1288,7 +1218,7 @@ msgstr "IJsboerke 2.5L White Lady"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined!"
-msgstr ""
+msgstr "Ni določene blagajne!"
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
@@ -1305,7 +1235,7 @@ msgstr "Chaudfontaine Petillante 50cl"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:485
 #, python-format
 msgid "Read Weighting Scale"
-msgstr ""
+msgstr "Branje tehtnice"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1341,17 +1271,14 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.sales.by.margin.pos:0
-#: view:report.sales.by.margin.pos.month:0
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
+#: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS "
 msgstr "POS "
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:pos.user.product:0
+#: report:account.statement:0 report:pos.user.product:0
 msgid "Total :"
 msgstr "Skupaj:"
 
@@ -1376,8 +1303,7 @@ msgid "Pricelist"
 msgstr "Cenik"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Total invoiced"
 msgstr "Skupaj zaračunano"
 
@@ -1388,8 +1314,7 @@ msgid "Point of Sale Category"
 msgstr "Kategorija POS"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,product_qty:0
+#: view:report.pos.order:0 field:report.pos.order,product_qty:0
 msgid "# of Qty"
 msgstr "# od Kos"
 
@@ -1398,9 +1323,7 @@ msgstr "# od Kos"
 msgid ""
 "This sequence is automatically created by OpenERP but you can change it to "
 "customize the reference numbers of your orders."
-msgstr ""
-"To zaporedje je avtomatično kreira OpenERP, vendar ga lahko spremenite z "
-"namenom prilagoditve referenčne številke vaših naročil."
+msgstr "To zaporedje je avtomatično kreira OpenERP, vendar ga lahko spremenite z namenom prilagoditve referenčne številke vaših naročil."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1420,8 +1343,7 @@ msgid "Yellow Peppers"
 msgstr "Yellow Peppers"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,date_order:0
+#: view:pos.order:0 field:pos.order,date_order:0
 #: field:report.sales.by.margin.pos,date_order:0
 #: field:report.sales.by.margin.pos.month,date_order:0
 #: field:report.sales.by.user.pos,date_order:0
@@ -1478,8 +1400,7 @@ msgid "September"
 msgstr "September"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,start_at:0
 msgid "Opening Date"
 msgstr "Datum odprtja"
@@ -1607,13 +1528,9 @@ msgid "Apply Discount"
 msgstr "Uveljavi popust"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
-#: field:pos.box.entries,user_id:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: view:pos.session:0
-#: report:pos.user.product:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
+#: field:pos.box.entries,user_id:0 report:pos.sales.user:0
+#: report:pos.sales.user.today:0 view:pos.session:0 report:pos.user.product:0
 #: field:report.sales.by.margin.pos,user_id:0
 #: field:report.sales.by.margin.pos.month,user_id:0
 #: field:report.sales.by.user.pos,user_id:0
@@ -1665,15 +1582,14 @@ msgid "transaction for the pos"
 msgstr "transakcija za POS"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: field:report.transaction.pos,date_create:0
+#: report:pos.details:0 field:report.transaction.pos,date_create:0
 msgid "Date"
 msgstr "Datum"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_entries
 msgid "Pos Box Entries"
-msgstr ""
+msgstr "POS"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boon_framboise_37,5cl_product_template
@@ -1690,9 +1606,7 @@ msgstr "pos.config"
 msgid ""
 "Enter a reference, it will be converted\n"
 "                        automatically to a valid EAN number."
-msgstr ""
-"Vpišite referenco, ki bo avtomatično\n"
-"                            spremenjena v veljvano EAN kodo."
+msgstr "Vpišite referenco, ki bo avtomatično\n                            spremenjena v veljvano EAN kodo."
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
@@ -1737,29 +1651,19 @@ msgstr "Številka transakcije"
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
-msgstr ""
-"Konto terjatev ni določen, da bi lahko prejeli plačilo za partnerja: \"%s\" "
-"(id:%d)."
+msgstr "Konto terjatev ni določen, da bi lahko prejeli plačilo za partnerja: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: view:pos.config:0
-#: selection:pos.config,state:0
+#: view:pos.config:0 selection:pos.config,state:0
 msgid "Inactive"
 msgstr "Neaktivno"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:313
-#: view:pos.confirm:0
-#: view:pos.details:0
-#: view:pos.discount:0
-#: view:pos.ean_wizard:0
-#: view:pos.make.payment:0
-#: view:pos.open.statement:0
-#: view:pos.payment.report:0
-#: view:pos.payment.report.user:0
-#: view:pos.receipt:0
-#: view:pos.sale.user:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:313 view:pos.confirm:0
+#: view:pos.details:0 view:pos.discount:0 view:pos.ean_wizard:0
+#: view:pos.make.payment:0 view:pos.open.statement:0 view:pos.payment.report:0
+#: view:pos.payment.report.user:0 view:pos.receipt:0 view:pos.sale.user:0
 #, python-format
 msgid "Cancel"
 msgstr "Prekliči"
@@ -1799,9 +1703,7 @@ msgid "Order IDs Sequence"
 msgstr "Zaporedje naročil"
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-#: report:pos.lines:0
-#: field:pos.order.line,price_unit:0
+#: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,price_unit:0
 #: report:pos.payment.report.user:0
 msgid "Unit Price"
 msgstr "Cena enote"
@@ -1832,8 +1734,7 @@ msgid "Lines of Point of Sale"
 msgstr "POS postavke"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: view:report.transaction.pos:0
+#: view:pos.order:0 view:report.transaction.pos:0
 msgid "Amount total"
 msgstr "Skupni znesek"
 
@@ -1872,10 +1773,8 @@ msgstr "Sklic"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:94
-#: report:pos.details:0
-#: report:pos.invoice:0
-#: report:pos.lines:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:94 report:pos.details:0
+#: report:pos.invoice:0 report:pos.lines:0
 #, python-format
 msgid "Price"
 msgstr "Cena"
@@ -1886,10 +1785,8 @@ msgid "Coca-Cola Light 33cl"
 msgstr "Coca-Cola Light 33cl"
 
 #. module: point_of_sale
-#: view:report.sales.by.margin.pos:0
-#: view:report.sales.by.margin.pos.month:0
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
+#: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS"
 msgstr "POS"
@@ -1924,16 +1821,13 @@ msgid "Other Citrus"
 msgstr "Ostali citrusi"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Start Period"
 msgstr "Začni Obdobje"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: field:pos.category,complete_name:0
-#: field:pos.category,name:0
-#: report:pos.sales.user:0
+#: report:account.statement:0 field:pos.category,complete_name:0
+#: field:pos.category,name:0 report:pos.sales.user:0
 #: report:pos.sales.user.today:0
 msgid "Name"
 msgstr "Ime"
@@ -1946,9 +1840,9 @@ msgstr "Spa Barisart 33cl"
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid ""
-"Generate all sale journal entries for non invoiced orders linked to a closed "
-"cash register or statement."
-msgstr ""
+"Generate all sale journal entries for non invoiced orders linked to a closed"
+" cash register or statement."
+msgstr "Ustvarjanje vseh vnosov prodajnega dnevnika za ne obračunane naloge v zvezi z zaključeno blagajno ali izpiskom."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.unreferenced_product_product_template
@@ -1965,31 +1859,26 @@ msgstr "Uporabi"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:288
 #, python-format
 msgid ""
-"Please insert your card in the reader and follow the instructions to "
-"complete\n"
+"Please insert your card in the reader and follow the instructions to complete\n"
 "            your purchase"
-msgstr ""
-"Prosimo, vstavite kartico v čitalec in sledite navodilom za zaključek\n"
-"            vašega nakupa"
+msgstr "Prosimo, vstavite kartico v čitalec in sledite navodilom za zaključek\n            vašega nakupa"
 
 #. module: point_of_sale
 #: help:product.product,income_pdt:0
 msgid ""
-"Check if, this is a product you can use to put cash into a statement for the "
-"point of sale backend."
-msgstr ""
-"Označite, če je to proizvod, ki ga lahko uporabite za polog gotovine v "
-"poročilu ob zaključku blagajne."
+"Check if, this is a product you can use to put cash into a statement for the"
+" point of sale backend."
+msgstr "Označite, če je to proizvod, ki ga lahko uporabite za polog gotovine v poročilu ob zaključku blagajne."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_moka_2,5l_product_template
 msgid "IJsboerke Mocha 2.5L"
-msgstr ""
+msgstr "IJsboerke Mocha 2.5L"
 
 #. module: point_of_sale
 #: field:pos.session,cash_control:0
 msgid "Has Cash Control"
-msgstr ""
+msgstr "Ima kontrolo gotovine"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
@@ -2010,22 +1899,17 @@ msgstr "Uporabnik:"
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
 "of sale."
-msgstr ""
-"Seje ni mogoče pričeti. Vaši POS-blagajni morate prirediti prodajni dnevnik."
+msgstr "Seje ni mogoče pričeti. Vaši POS-blagajni morate prirediti prodajni dnevnik."
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current year"
-msgstr ""
+msgstr "POS nalogi tekočega leta"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
-#: report:pos.lines:0
-#: report:pos.payment.report.user:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: report:pos.user.product:0
+#: report:pos.details:0 report:pos.details_summary:0 report:pos.lines:0
+#: report:pos.payment.report.user:0 report:pos.sales.user:0
+#: report:pos.sales.user.today:0 report:pos.user.product:0
 msgid "Print Date"
 msgstr "Datum izpisa"
 
@@ -2036,14 +1920,11 @@ msgstr "Leeks"
 
 #. module: point_of_sale
 #: help:pos.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
+msgid "Gives the sequence order when displaying a list of product categories."
 msgstr "Določi zaporedje pri izpisu seznama kategorij izdelkov."
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: view:pos.order:0
-#: view:pos.session:0
+#: view:account.bank.statement:0 view:pos.order:0 view:pos.session:0
 #: view:report.pos.order:0
 msgid "Group By..."
 msgstr "Združi po ..."
@@ -2058,7 +1939,7 @@ msgstr "Podajalna:r"
 #. module: point_of_sale
 #: field:account.journal,self_checkout_payment_method:0
 msgid "Self Checkout Payment Method"
-msgstr ""
+msgstr "Plačilni način samodejne odjave"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2074,7 +1955,7 @@ msgstr "Vse Zaprte Blagajne"
 #: code:addons/point_of_sale/point_of_sale.py:1191
 #, python-format
 msgid "No Pricelist!"
-msgstr ""
+msgstr "Ni cenika!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:789
@@ -2082,7 +1963,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
 msgid "You have to open at least one cashbox."
-msgstr ""
+msgstr "Odpreti morate vsaj eno blagajno."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_rouges_product_template
@@ -2137,7 +2018,7 @@ msgstr "Other fresh vegetables"
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
-msgstr ""
+msgstr "Za to sejo ni blagajniškega izpiska. Ni bilo mogoče vknjižiti vračila gotovine."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oignons_ail_echalotes
@@ -2160,9 +2041,7 @@ msgid "Coca-Cola Light Lemon 2L"
 msgstr "Coca-Cola Light Lemon 2L"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.invoice:0
-#: field:pos.order,amount_tax:0
+#: report:pos.details:0 report:pos.invoice:0 field:pos.order,amount_tax:0
 msgid "Taxes"
 msgstr "Davki"
 
@@ -2183,8 +2062,7 @@ msgstr "123"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_normal_action
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_product
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_products
-#: view:pos.order:0
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_products view:pos.order:0
 msgid "Products"
 msgstr "Izdelki"
 
@@ -2210,10 +2088,8 @@ msgstr "Zaženi POS"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:84
-#: report:pos.details:0
-#: report:pos.payment.report.user:0
-#: report:pos.user.product:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:84 report:pos.details:0
+#: report:pos.payment.report.user:0 report:pos.user.product:0
 #: field:report.sales.by.margin.pos,qty:0
 #: field:report.sales.by.margin.pos.month,qty:0
 #, python-format
@@ -2244,8 +2120,7 @@ msgid "Spa Fruit and Orange 50cl"
 msgstr "Spa Fruit and Orange 50cl"
 
 #. module: point_of_sale
-#: view:pos.config:0
-#: field:pos.config,journal_ids:0
+#: view:pos.config:0 field:pos.config,journal_ids:0
 #: field:pos.session,journal_ids:0
 msgid "Available Payment Methods"
 msgstr "Možni načini plačila"
@@ -2259,15 +2134,13 @@ msgid ""
 "                You must define a product for everything you sell through\n"
 "                the point of sale interface.\n"
 "              </p><p>\n"
-"                Do not forget to set the price and the point of sale "
-"category\n"
-"                in which it should appear. If a product has no point of "
-"sale\n"
+"                Do not forget to set the price and the point of sale category\n"
+"                in which it should appear. If a product has no point of sale\n"
 "                category, you can not sell it through the point of sale\n"
 "                interface.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Dodaj nov proizvod.\n              </p><p>\n                Določite proizvod za karkoli prodajate preko\n                POS vmesnika.\n              </p><p>\n                Ne pozabite nastaviti cene in kategorije POS\n                v kateri se bo nahajal. Če proizvod nima POS kategorije,\n                ga ne morete prodajati preko POS\n                vmesnika.\n              </p>\n            "
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2307,7 +2180,7 @@ msgstr "Vir"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #, python-format
 msgid "Admin Badge"
-msgstr ""
+msgstr "Administratorjeva priponka"
 
 #. module: point_of_sale
 #: field:pos.make.payment,journal_id:0
@@ -2327,8 +2200,7 @@ msgstr "Bančni izpisek"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:101
-#: selection:pos.session,state:0
-#: selection:pos.session.opening,pos_state:0
+#: selection:pos.session,state:0 selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closed & Posted"
 msgstr "Zaključeno & Knjiženo"
@@ -2369,14 +2241,12 @@ msgstr "Julij"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
-#: view:pos.session:0
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos view:pos.session:0
 msgid "Point of Sales"
 msgstr "Prodajalna"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Qty of product"
 msgstr "Količina"
 
@@ -2392,12 +2262,11 @@ msgid ""
 "Your ending balance is too different from the theoretical cash closing "
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
-msgstr ""
+msgstr "Vaše zaključno stanje preveč odstopa od teoretičnega zaključnega stanja (%.2f); dovoljeno je največ: %.2f. Pokličite upravitelja, da vsili zaključek."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:100
-#: selection:pos.session,state:0
-#: selection:pos.session.opening,pos_state:0
+#: selection:pos.session,state:0 selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closing Control"
 msgstr "Zaključna kontrola"
@@ -2434,7 +2303,7 @@ msgstr "Neznan proizvod"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:36
 #, python-format
 msgid "<![endif]-->"
-msgstr ""
+msgstr "<![endif]-->"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_50cl_product_template
@@ -2442,8 +2311,7 @@ msgid "Jupiler 50cl"
 msgstr "Jupiler 50cl"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "End Period"
 msgstr "Konec obdobja"
 
@@ -2457,7 +2325,7 @@ msgstr "Coca-Cola Light Lemon 33cl"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:33
 #, python-format
 msgid "<!--[if IE]>"
-msgstr ""
+msgstr "<!--[if IE]>"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_ketchup_250g_product_template
@@ -2475,8 +2343,7 @@ msgid "Chimay Red 33cl"
 msgstr "Chimay Red 33cl"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,month:0
+#: view:report.pos.order:0 field:report.pos.order,month:0
 msgid "Month"
 msgstr "Mesec"
 
@@ -2496,8 +2363,7 @@ msgid "Year of order date"
 msgstr "Leto iz datuma naročila"
 
 #. module: point_of_sale
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
+#: report:pos.sales.user:0 report:pos.sales.user.today:0
 #: field:report.pos.order,date:0
 msgid "Date Order"
 msgstr "Datum naročila"
@@ -2507,14 +2373,11 @@ msgstr "Datum naročila"
 msgid ""
 "Check if the product should be weighted (mainly used with self check-out "
 "interface)."
-msgstr ""
-"Označite, če je treba proizvod tehtati (v glavnem uporaba pri vmesnik za "
-"samostojni obračun)."
+msgstr "Označite, če je treba proizvod tehtati (v glavnem uporaba pri vmesnik za samostojni obračun)."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
-#: field:pos.box.entries,journal_id:0
-#: field:pos.session,cash_register_id:0
+#: field:pos.box.entries,journal_id:0 field:pos.session,cash_register_id:0
 msgid "Cash Register"
 msgstr "Blagajna"
 
@@ -2538,7 +2401,7 @@ msgstr "Prodaja po Uporabniku Denvna Marža"
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Open Registers"
-msgstr ""
+msgstr "Odpri blagajne"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.poire
@@ -2556,8 +2419,7 @@ msgid "Opening Balance"
 msgstr "Začetno stanje"
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: selection:report.pos.order,state:0
+#: view:account.bank.statement:0 selection:report.pos.order,state:0
 msgid "Closed"
 msgstr "Zaprto"
 
@@ -2607,8 +2469,7 @@ msgid "An internal identification of the point of sale"
 msgstr "Interna identifikacija POS"
 
 #. module: point_of_sale
-#: view:pos.config:0
-#: selection:pos.config,state:0
+#: view:pos.config:0 selection:pos.config,state:0
 msgid "Active"
 msgstr "Aktivno"
 
@@ -2639,10 +2500,8 @@ msgstr "Status strojne opreme"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:220
 #: code:addons/point_of_sale/static/src/xml/pos.xml:426
 #: code:addons/point_of_sale/static/src/xml/pos.xml:601
-#: report:all.closed.cashbox.of.the.day:0
-#: report:pos.invoice:0
-#: report:pos.lines:0
-#: report:pos.payment.report.user:0
+#: report:all.closed.cashbox.of.the.day:0 report:pos.invoice:0
+#: report:pos.lines:0 report:pos.payment.report.user:0
 #, python-format
 msgid "Total:"
 msgstr "Skupaj:"
@@ -2657,7 +2516,7 @@ msgstr "EAN13"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:578
 #, python-format
 msgid "% discount"
-msgstr ""
+msgstr "% Popust"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos
@@ -2712,10 +2571,7 @@ msgid ""
 "The system will open all cash registers, so that you can start recording "
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
-msgstr ""
-"Sistem bo odprl vse registratorje gotovine, tako da lahko pričnete zajemati "
-"plačila. Predlagamo, da kontrolirate začetno stanje za vsako vrsto posebej, "
-"z uporabo zavihka Blagajna."
+msgstr "Sistem bo odprl vse registratorje gotovine, tako da lahko pričnete zajemati plačila. Predlagamo, da kontrolirate začetno stanje za vsako vrsto posebej, z uporabo zavihka Blagajna."
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2726,9 +2582,7 @@ msgstr "Opravljeno"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:328
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
-#: report:pos.invoice:0
-#: view:pos.order:0
-#: field:pos.order,invoice_id:0
+#: report:pos.invoice:0 view:pos.order:0 field:pos.order,invoice_id:0
 #, python-format
 msgid "Invoice"
 msgstr "Račun"
@@ -2739,7 +2593,7 @@ msgstr "Račun"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:706
 #, python-format
 msgid "shift"
-msgstr ""
+msgstr "shift"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.rochefort_8_33cl_product_template
@@ -2747,14 +2601,12 @@ msgid "Rochefort \"8\" 33cl"
 msgstr "Rochefort \"8\" 33cl"
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: view:pos.session:0
+#: view:account.bank.statement:0 view:pos.session:0
 msgid "Open"
 msgstr "Odprt"
 
 #. module: point_of_sale
-#: field:pos.order,name:0
-#: field:pos.order.line,order_id:0
+#: field:pos.order,name:0 field:pos.order.line,order_id:0
 msgid "Order Ref"
 msgstr "Sklic naloga"
 
@@ -2764,7 +2616,7 @@ msgstr "Sklic naloga"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:577
 #, python-format
 msgid "With a"
-msgstr ""
+msgstr "Z"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.courgette_product_template
@@ -2774,7 +2626,7 @@ msgstr "Zucchini"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_geuze_37,5cl_product_template
 msgid "Timmermans Geuze 37.5cl"
-msgstr ""
+msgstr "Timmermans Geuze 37.5cl"
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -2789,8 +2641,7 @@ msgid "Payment Terminal"
 msgstr "Plačilni terminal"
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: field:pos.session,user_id:0
+#: view:account.bank.statement:0 field:pos.session,user_id:0
 msgid "Responsible"
 msgstr "Odgovoren"
 
@@ -2826,7 +2677,7 @@ msgstr "Prodaja po uporabniku mesečno"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Cashbox Lines"
-msgstr ""
+msgstr "Blagajniške postavke"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report_user
@@ -2834,15 +2685,13 @@ msgid "Today's Payment By User"
 msgstr "Današnja Plačila Po Uporabniku"
 
 #. module: point_of_sale
-#: view:report.sales.by.margin.pos:0
-#: view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
 msgstr "Prodaja po Uporabniku marža"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:427
-#: report:pos.invoice:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:427 report:pos.invoice:0
 #, python-format
 msgid "Taxes:"
 msgstr "Davek:"
@@ -2859,12 +2708,9 @@ msgstr "Statistika naročil POS"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
-#: report:pos.details:0
-#: field:pos.order.line,product_id:0
-#: report:pos.payment.report.user:0
-#: report:pos.user.product:0
-#: view:report.pos.order:0
-#: field:report.pos.order,product_id:0
+#: report:pos.details:0 field:pos.order.line,product_id:0
+#: report:pos.payment.report.user:0 report:pos.user.product:0
+#: view:report.pos.order:0 field:report.pos.order,product_id:0
 msgid "Product"
 msgstr "Proizvod"
 
@@ -2904,8 +2750,7 @@ msgstr "Prosimo počakajte blagajnika"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_session_opening.py:67
-#: field:pos.box.entries,session_id:0
-#: view:pos.order:0
+#: field:pos.box.entries,session_id:0 view:pos.order:0
 #: field:pos.order,session_id:0
 #, python-format
 msgid "Session"
@@ -2922,8 +2767,7 @@ msgid "Dr. Oetker La Margherita"
 msgstr "Dr. Oetker La Margherita"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: selection:pos.order,state:0
+#: view:pos.order:0 selection:pos.order,state:0
 msgid "Posted"
 msgstr "Knjiženo"
 
@@ -2984,8 +2828,7 @@ msgid "Order"
 msgstr "Vrsti red"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_res_users
-#: report:pos.details:0
+#: model:ir.model,name:point_of_sale.model_res_users report:pos.details:0
 msgid "Users"
 msgstr "Uporabniki"
 
@@ -2999,7 +2842,7 @@ msgstr "Podrobnosti POS"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:462
 #, python-format
 msgid "Client Badge"
-msgstr ""
+msgstr "Priponka stranke"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -3022,16 +2865,13 @@ msgid "Lays Salt and Pepper Oven Baked 150g"
 msgstr "Lays Salt and Pepper Oven Baked 150g"
 
 #. module: point_of_sale
-#: field:pos.details,date_start:0
-#: field:pos.sale.user,date_start:0
+#: field:pos.details,date_start:0 field:pos.sale.user,date_start:0
 msgid "Date Start"
 msgstr "Datum Začetka"
 
 #. module: point_of_sale
-#: field:pos.order,amount_total:0
-#: report:pos.payment.report.user:0
-#: view:pos.session:0
-#: field:report.sales.by.user.pos,amount:0
+#: field:pos.order,amount_total:0 report:pos.payment.report.user:0
+#: view:pos.session:0 field:report.sales.by.user.pos,amount:0
 #: field:report.sales.by.user.pos.month,amount:0
 msgid "Total"
 msgstr "Skupaj"
@@ -3050,7 +2890,7 @@ msgstr "Odpri blagajno"
 #: code:addons/point_of_sale/point_of_sale.py:564
 #, python-format
 msgid "Unable to Delete!"
-msgstr ""
+msgstr "Brisanje ni možno!"
 
 #. module: point_of_sale
 #: field:account.journal,amount_authorized_diff:0
@@ -3072,7 +2912,7 @@ msgstr "pos.session"
 #. module: point_of_sale
 #: help:pos.session,config_id:0
 msgid "The physical point of sale you will use."
-msgstr ""
+msgstr "Fizična prodajna točka, ki se bo uporabljala."
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -3082,7 +2922,7 @@ msgstr "Iskanje prodajnih nalogov"
 #. module: point_of_sale
 #: field:pos.config,iface_self_checkout:0
 msgid "Self Checkout Mode"
-msgstr ""
+msgstr "Način samodejne odjave"
 
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
@@ -3097,9 +2937,9 @@ msgstr "Pepsi 33cl"
 #. module: point_of_sale
 #: help:pos.order,user_id:0
 msgid ""
-"Person who uses the the cash register. It can be a reliever, a student or an "
-"interim employee."
-msgstr ""
+"Person who uses the the cash register. It can be a reliever, a student or an"
+" interim employee."
+msgstr "Oseba, ki uporablja blagajno. Lahko bi bil nadomestni delavec, študent ali začasno zaposleni."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
@@ -3124,7 +2964,7 @@ msgstr "Fanta Orange 25cl"
 msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
-msgstr ""
+msgstr "Za vračilo proizvodov morate odpreti sejo, ki bo uporabljena za knjiženje dobropisa."
 
 #. module: point_of_sale
 #: view:pos.confirm:0
@@ -3132,17 +2972,11 @@ msgid "Generate Journal Entries"
 msgstr "Ustvari postavke dnevnika"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
-#: report:pos.details:0
-#: report:pos.details_summary:0
-#: report:pos.lines:0
-#: field:pos.order,company_id:0
-#: field:pos.order.line,company_id:0
-#: report:pos.payment.report.user:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: report:pos.user.product:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
+#: report:pos.details:0 report:pos.details_summary:0 report:pos.lines:0
+#: field:pos.order,company_id:0 field:pos.order.line,company_id:0
+#: report:pos.payment.report.user:0 report:pos.sales.user:0
+#: report:pos.sales.user.today:0 report:pos.user.product:0
 #: field:report.pos.order,company_id:0
 msgid "Company"
 msgstr "Družba"
@@ -3256,8 +3090,7 @@ msgid "No. Of Articles"
 msgstr "Število izdelkov"
 
 #. module: point_of_sale
-#: selection:pos.order,state:0
-#: selection:report.pos.order,state:0
+#: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Cancelled"
 msgstr "Preklicano"
 
@@ -3271,9 +3104,7 @@ msgstr "Končni datum"
 msgid ""
 "The Point of Sale Category this products belongs to. Those categories are "
 "used to group similar products and are specific to the Point of Sale."
-msgstr ""
-"Kategorija POS, ki ji pripada ta izdelek. Te kategorije se uporabljajo za "
-"združevanje podobnih proizvodov in so specifične za POS."
+msgstr "Kategorija POS, ki ji pripada ta izdelek. Te kategorije se uporabljajo za združevanje podobnih proizvodov in so specifične za POS."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_1,5l_product_template
@@ -3291,8 +3122,7 @@ msgid "Ice Cream"
 msgstr "Ice Cream"
 
 #. module: point_of_sale
-#: field:pos.config,shop_id:0
-#: field:pos.order,shop_id:0
+#: field:pos.config,shop_id:0 field:pos.order,shop_id:0
 #: field:report.pos.order,shop_id:0
 msgid "Shop"
 msgstr "Trgovina"
@@ -3324,8 +3154,7 @@ msgid "IJsboerke Stracciatella 2.5L"
 msgstr "IJsboerke Stracciatella 2.5L"
 
 #. module: point_of_sale
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
+#: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS Report"
 msgstr "POS Izpis"
@@ -3354,9 +3183,7 @@ msgstr "Da bi izbrisali prodajo, mora biti 'nova' ali 'preklicana'."
 msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
-msgstr ""
-"Obstajajo operacije, ki niso mogle biti shranjene v bazo, ali res želite "
-"zaključiti?"
+msgstr "Obstajajo operacije, ki niso mogle biti shranjene v bazo, ali res želite zaključiti?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_50cl_product_template
@@ -3415,12 +3242,10 @@ msgstr "Račun dobavitelja"
 msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
-msgstr ""
-"Ne morete potrditi vseh naročil te seje, ker nimajo statusa 'plačano'."
+msgstr "Ne morete potrditi vseh naročil te seje, ker nimajo statusa 'plačano'."
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: selection:pos.order,state:0
+#: view:pos.order:0 selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "New"
 msgstr "Nov"
@@ -3428,7 +3253,7 @@ msgstr "Nov"
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Do you want to open cash registers?"
-msgstr ""
+msgstr "Želite odpreti blagajne?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_50cl_product_template
@@ -3493,7 +3318,7 @@ msgstr "Coca-Cola Regular 1L"
 #: code:addons/point_of_sale/point_of_sale.py:745
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr ""
+msgstr "Ni možno preklicati zbirnika."
 
 #. module: point_of_sale
 #: view:pos.config:0
@@ -3531,8 +3356,7 @@ msgid "Spa Barisart 1.5l"
 msgstr "Spa Barisart 1.5l"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:831
-#: view:pos.order:0
+#: code:addons/point_of_sale/point_of_sale.py:831 view:pos.order:0
 #, python-format
 msgid "Return Products"
 msgstr "Vrni izdelke"
@@ -3552,7 +3376,7 @@ msgstr "Izpis računa"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.peche_product_template
 msgid "Peaches"
-msgstr ""
+msgstr "Breskve"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
@@ -3560,47 +3384,32 @@ msgid "Sales Details"
 msgstr "Podrobnost Prodaje"
 
 #. module: point_of_sale
-#: view:account.journal:0
-#: model:ir.model,name:point_of_sale.model_pos_order
+#: view:account.journal:0 model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
-#: field:pos.session,config_id:0
-#: field:pos.session.opening,pos_config_id:0
-#: view:product.product:0
-#: view:res.partner:0
-#: view:res.users:0
+#: field:pos.session,config_id:0 field:pos.session.opening,pos_config_id:0
+#: view:product.product:0 view:res.partner:0 view:res.users:0
 msgid "Point of Sale"
 msgstr "Prodajno mesto"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,user_id:0
+#: view:pos.order:0 field:pos.order,user_id:0
 msgid "Salesman"
 msgstr "Prodajalec"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:41
-#: view:pos.confirm:0
-#: view:pos.details:0
-#: view:pos.discount:0
-#: view:pos.ean_wizard:0
-#: view:pos.make.payment:0
-#: view:pos.open.statement:0
-#: view:pos.payment.report:0
-#: view:pos.payment.report.user:0
-#: view:pos.receipt:0
-#: view:pos.sale.user:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:41 view:pos.confirm:0
+#: view:pos.details:0 view:pos.discount:0 view:pos.ean_wizard:0
+#: view:pos.make.payment:0 view:pos.open.statement:0 view:pos.payment.report:0
+#: view:pos.payment.report.user:0 view:pos.receipt:0 view:pos.sale.user:0
 #, python-format
 msgid "or"
 msgstr "ali"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: view:pos.order:0
-#: selection:pos.order,state:0
-#: view:report.pos.order:0
-#: selection:report.pos.order,state:0
+#: report:pos.details:0 view:pos.order:0 selection:pos.order,state:0
+#: view:report.pos.order:0 selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Zaračunano"
 
@@ -3620,10 +3429,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new order.\n"
 "              </p><p>\n"
-"                Use this menu to browse your preceeding orders. To record "
-"new\n"
-"                orders, you should better use the menu <i>Your Session</i> "
-"for\n"
+"                Use this menu to browse your preceeding orders. To record new\n"
+"                orders, you should better use the menu <i>Your Session</i> for\n"
 "                the touchscreen interface.\n"
 "              </p>\n"
 "            "
@@ -3650,7 +3457,7 @@ msgstr "Privzeta POS"
 #: code:addons/point_of_sale/wizard/pos_box.py:23
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr ""
+msgstr "Za to POS sejo ni blagajne"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.special_beers
@@ -3673,8 +3480,7 @@ msgid "Mode of Taxes"
 msgstr "Način obdavčenja"
 
 #. module: point_of_sale
-#: field:pos.order,amount_paid:0
-#: selection:pos.order,state:0
+#: field:pos.order,amount_paid:0 selection:pos.order,state:0
 msgid "Paid"
 msgstr "Plačano"
 
@@ -3704,7 +3510,7 @@ msgstr "Fruity Beers"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "You can define another list of available currencies on the"
-msgstr ""
+msgstr "Lahko določite še en seznam razpoložljivih valut na"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3736,8 +3542,7 @@ msgstr "Dr. Oetker Ristorante Hawaii"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:483
-#: view:pos.receipt:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:483 view:pos.receipt:0
 #, python-format
 msgid "Print Receipt"
 msgstr "Natisni Račun"
@@ -3817,8 +3622,7 @@ msgid "Dr. Oetker Ristorante Mozzarella"
 msgstr "Dr. Oetker Ristorante Mozzarella"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.payment.report.user:0
+#: report:pos.details:0 report:pos.payment.report.user:0
 msgid "Disc(%)"
 msgstr "Pop.(%)"
 
@@ -3857,7 +3661,7 @@ msgstr "Postavke naročila"
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "PoS Session Opening"
-msgstr ""
+msgstr "POS otvoritev seje"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
@@ -3911,7 +3715,7 @@ msgstr "Seja:"
 #. module: point_of_sale
 #: field:pos.config,iface_print_via_proxy:0
 msgid "Print via Proxy"
-msgstr ""
+msgstr "Natisni preko proxy"
 
 #. module: point_of_sale
 #: report:pos.sales.user.today:0
@@ -3929,19 +3733,18 @@ msgid "Customer Code"
 msgstr "Šifra kupca"
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-#: report:pos.lines:0
+#: report:pos.invoice:0 report:pos.lines:0
 msgid "Description"
 msgstr "Opis"
 
 #. module: point_of_sale
 #: help:account.journal,amount_authorized_diff:0
 msgid ""
-"This field depicts the maximum difference allowed between the ending balance "
-"and the theorical cash when closing a session, for non-POS managers. If this "
-"maximum is reached, the user will have an error message at the closing of "
-"his session saying that he needs to contact his manager."
-msgstr ""
+"This field depicts the maximum difference allowed between the ending balance"
+" and the theorical cash when closing a session, for non-POS managers. If "
+"this maximum is reached, the user will have an error message at the closing "
+"of his session saying that he needs to contact his manager."
+msgstr "Polje določi maksimalno razliko med končnim stanjem in teoretično gotovino ob zaključku seje (ne za POS upravitelje). Če je maksimum dosežen, dobi uporabnik sporočilo ob zaključku seje, da mora poklicati upravitelja."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
@@ -3973,12 +3776,9 @@ msgstr "IJsboerke Chocolat 2.5L"
 #: help:pos.category,image_small:0
 msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Majhna slika kategorije. Avtomatično je pretvorjena v 64x64px, z "
-"upoštevanjem razmerja. Uporabite to polje povsod, kjer je zahtevana majhna "
-"slika."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Majhna slika kategorije. Avtomatično je pretvorjena v 64x64px, z upoštevanjem razmerja. Uporabite to polje povsod, kjer je zahtevana majhna slika."
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_state:0
@@ -3996,21 +3796,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a payment method.\n"
 "              </p><p>\n"
-"                Payment methods are defined by accounting journals having "
-"the\n"
-"                field <i>PoS Payment Method</i> checked. In order to be "
-"useable\n"
-"                from the touchscreen interface, you must set the payment "
-"method\n"
+"                Payment methods are defined by accounting journals having the\n"
+"                field <i>PoS Payment Method</i> checked. In order to be useable\n"
+"                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Dodaj način plačila.\n              </p><p>\n                Načini plačila so določeni s kontnimi dnevniki v polju,\n                z označenim <i>POS način plačila</i>. Da bi lahko bilo\n                uporabno preko zaslona na dotik, mora biti način plačila\n                nastavljen v nastavitvah <i>Prodajnega mesta</i>.\n              </p>\n            "
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,partner_id:0
-#: view:report.pos.order:0
+#: view:pos.order:0 field:pos.order,partner_id:0 view:report.pos.order:0
 msgid "Customer"
 msgstr "Kupec"
 
@@ -4050,8 +3845,7 @@ msgid "April"
 msgstr "April"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,statement_ids:0
+#: view:pos.order:0 field:pos.order,statement_ids:0
 msgid "Payments"
 msgstr "Plačila"
 
@@ -4082,9 +3876,7 @@ msgstr "Leffe Brune \"9\" 33cl"
 msgid ""
 "Check this box if this journal define a payment method that can be used in "
 "point of sales."
-msgstr ""
-"Označite to poje, če ta dnevnik določa način plačila, ki se lahko uporablja "
-"v POS."
+msgstr "Označite to poje, če ta dnevnik določa način plačila, ki se lahko uporablja v POS."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4104,8 +3896,7 @@ msgid "Sequence"
 msgstr "Zaporedje"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_return.py:316
-#: view:pos.make.payment:0
+#: code:addons/point_of_sale/wizard/pos_return.py:316 view:pos.make.payment:0
 #, python-format
 msgid "Make Payment"
 msgstr "Izvedi Plačilo"
@@ -4128,8 +3919,7 @@ msgid "Next Order"
 msgstr "Naslednje naročilo"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:98
-#: selection:pos.session,state:0
+#: code:addons/point_of_sale/point_of_sale.py:98 selection:pos.session,state:0
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Opening Control"
@@ -4141,8 +3931,7 @@ msgid "Month of order date"
 msgstr "Mesec iz datuma naročila"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,year:0
+#: view:report.pos.order:0 field:report.pos.order,year:0
 msgid "Year"
 msgstr "Leto"
 
@@ -4165,26 +3954,3 @@ msgstr "cash.box.in"
 #: field:pos.session,order_ids:0
 msgid "Orders"
 msgstr "Naročila"
-
-#, python-format
-#~ msgid "No Pricelist !"
-#~ msgstr "Ni cenika!"
-
-#~ msgid "VAT :"
-#~ msgstr "DDV:"
-
-#~ msgid "Fishing"
-#~ msgstr "Fishing"
-
-#, python-format
-#~ msgid ""
-#~ "Your ending balance is too different from the theorical cash closing (%.2f), "
-#~ "the maximum allowed is: %.2f. You can contact your manager to force it."
-#~ msgstr ""
-#~ "Vaše zaključno stanje preveč odstopa od teoretičnega zaključka blagajne "
-#~ "(%.2f), maksimum, ki je dovoljen, je: %.2f. Kontaktirajte vašega nadrejenega "
-#~ "za ureditev."
-
-#, python-format
-#~ msgid "Unable to Delete !"
-#~ msgstr "Brisanje ni možno!"

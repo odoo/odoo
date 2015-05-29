@@ -1,36 +1,36 @@
-# French translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mail
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-01-20 14:03+0000\n"
-"Last-Translator: Lionel Sausin - Numérigraphe <Unknown>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/projects/p/odoo-7/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-21 06:38+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mail
-#: view:mail.followers:mail.view_mail_subscription_form
+#: view:mail.followers:0
 msgid "Followers Form"
 msgstr "Formulaire abonnés"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:384
+#: code:addons/mail/mail_thread.py:259
 #, python-format
 msgid "%s created"
 msgstr "%s créé(e)"
 
 #. module: mail
-#: field:mail.compose.message,author_id:0
-#: view:mail.mail:mail.view_mail_search
+#: field:mail.compose.message,author_id:0 view:mail.mail:0
 #: field:mail.message,author_id:0
 msgid "Author"
 msgstr "Auteur"
@@ -63,20 +63,18 @@ msgstr "Commentaires"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:334
+#: code:addons/mail/static/src/xml/mail.xml:314
 #, python-format
 msgid "more messages"
 msgstr "messages supplémentaires"
 
 #. module: mail
-#: view:mail.alias:0
-#: view:mail.mail:0
+#: view:mail.alias:0 view:mail.mail:0
 msgid "Group By..."
 msgstr "Grouper par ..."
 
 #. module: mail
-#: help:mail.compose.message,body:0
-#: help:mail.message,body:0
+#: help:mail.compose.message,body:0 help:mail.message,body:0
 msgid "Automatically sanitized HTML contents"
 msgstr "Nettoyer automatiquement les contenus HTML"
 
@@ -85,16 +83,11 @@ msgstr "Nettoyer automatiquement les contenus HTML"
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.my.openerp.com>"
-msgstr ""
-"Le nom de l'alias de courriel, e.g. 'emploi' si vous souhaitez voir les "
-"courriels pour <emploi@example.my.openerp.com>"
+msgstr "Le nom de l'alias de courriel, e.g. 'emploi' si vous souhaitez voir les courriels pour <emploi@example.my.openerp.com>"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1970
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
-#: view:mail.compose.message:mail.email_compose_message_wizard_form
-#, python-format
+#: view:mail.compose.message:0
 msgid "Compose Email"
 msgstr "Rédiger un courriel"
 
@@ -103,13 +96,10 @@ msgstr "Rédiger un courriel"
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr ""
-"Expression invalide : une définition litérale d'un dictionnaire Python est "
-"attendue, par exemple \"{'field': 'value'}\""
+msgstr "Expression invalide : une définition litérale d'un dictionnaire Python est attendue, par exemple \"{'field': 'value'}\""
 
 #. module: mail
-#: view:mail.group:mail.view_group_form
-#: view:mail.group:mail.view_group_tree
+#: view:mail.group:0
 msgid "Group Name"
 msgstr "Nom du groupe"
 
@@ -120,30 +110,27 @@ msgstr "Public"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:297
+#: code:addons/mail/static/src/xml/mail.xml:278
 #, python-format
 msgid "to"
 msgstr "à"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:0
 msgid "Body"
 msgstr "Corps de texte"
 
 #. module: mail
-#: view:mail.message:mail.view_message_search
+#: view:mail.message:0
 msgid "Show messages to read"
 msgstr "Afficher les messages à lire"
 
 #. module: mail
-#: help:mail.compose.message,email_from:0
-#: help:mail.message,email_from:0
+#: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
-msgstr ""
-"Adresse courriel de l'expéditeur. Ce champ est défini dans les courriels "
-"entrants quand aucun partenaire ne correspond."
+msgstr "Adresse courriel de l'expéditeur. Ce champ est défini dans les courriels entrants quand aucun partenaire ne correspond."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -152,14 +139,14 @@ msgstr "Assistant de composition de courriel"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:286
+#: code:addons/mail/static/src/xml/mail.xml:269
 #, python-format
 msgid "updated document"
 msgstr "a fait une mise à jour"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:28
+#: code:addons/mail/static/src/xml/mail_followers.xml:23
 #, python-format
 msgid "Add others"
 msgstr "Ajouter d'autres"
@@ -175,30 +162,19 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- Incoming Emails only: for messages received by the system via email\n"
-"- Incoming Emails and Discussions: for incoming emails along with internal "
-"discussions\n"
+"- Incoming Emails and Discussions: for incoming emails along with internal discussions\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr ""
-"Définit le comportement à suivre lors de l'arrivée de nouveaux messages dans "
-"votre boîte de réception personnelle :\n"
-"- Jamais : aucun courriel ne vous est envoyé\n"
-"- Courriels entrants uniquement : un courriel vous est envoyé pour chaque "
-"courriel reçu par le système\n"
-"- Courriels entrants et discussions : un courriel est envoyé pour chaque "
-"courriel entrant ou pour chaque discussion interne\n"
-"- Tous les messages : un courriel est envoyé pour toute notification "
-"arrivant dans votre boîte de réception"
+msgstr "Définit le comportement à suivre lors de l'arrivée de nouveaux messages dans votre boîte de réception personnelle :\n- Jamais : aucun courriel ne vous est envoyé\n- Courriels entrants uniquement : un courriel vous est envoyé pour chaque courriel reçu par le système\n- Courriels entrants et discussions : un courriel est envoyé pour chaque courriel entrant ou pour chaque discussion interne\n- Tous les messages : un courriel est envoyé pour toute notification arrivant dans votre boîte de réception"
 
 #. module: mail
-#: field:mail.group,message_unread:0
-#: field:mail.thread,message_unread:0
+#: field:mail.group,message_unread:0 field:mail.thread,message_unread:0
 #: field:res.partner,message_unread:0
 msgid "Unread Messages"
 msgstr "Messages non lus"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:334
+#: code:addons/mail/static/src/xml/mail.xml:314
 #, python-format
 msgid "show"
 msgstr "montrer"
@@ -208,9 +184,7 @@ msgstr "montrer"
 msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
-msgstr ""
-"Les membres de ces groupes seront automatiquement abonnés. Ils pourront "
-"cependant gérer leur abonnement manuellement si nécessaire."
+msgstr "Les membres de ces groupes seront automatiquement abonnés. Ils pourront cependant gérer leur abonnement manuellement si nécessaire."
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:76
@@ -220,44 +194,38 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1021
+#: code:addons/mail/static/src/js/mail.js:1032
 #, python-format
 msgid "Do you really want to delete this message?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce message ?"
 
 #. module: mail
-#: field:mail.notification,is_read:0
+#: view:mail.message:0 field:mail.notification,read:0
 msgid "Read"
 msgstr "Lire"
 
 #. module: mail
-#: view:mail.group:mail.view_group_search
+#: view:mail.group:0
 msgid "Search Groups"
 msgstr "Chercher dans les groupes"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:140
+#: code:addons/mail/static/src/js/mail_followers.js:110
 #, python-format
 msgid ""
 "Warning! \n"
-" %s won't be notified of any email or discussion on this document. Do you "
-"really want to remove him from the followers ?"
-msgstr ""
-"Attention! \n"
-" %s ne sera plus averti des courriels ou discussions sur ce document. Voulez-"
-"vous vraiment le retirer des abonnées ?"
+" %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"
+msgstr "Attention! \n %s ne sera plus averti des courriels ou discussions sur ce document. Voulez-vous vraiment le retirer des abonnées ?"
 
 #. module: mail
-#: field:mail.compose.message,res_id:0
-#: field:mail.followers,res_id:0
-#: field:mail.message,res_id:0
-#: field:mail.wizard.invite,res_id:0
+#: field:mail.compose.message,res_id:0 field:mail.followers,res_id:0
+#: field:mail.message,res_id:0 field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
 msgstr "ID du document associé"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:763
+#: code:addons/mail/mail_message.py:739
 #, python-format
 msgid "Access Denied"
 msgstr "Accès refusé"
@@ -268,14 +236,11 @@ msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr ""
-"Icône du groupe. L'image sera redimensionnée pour faire 128x128 pixels, en "
-"préservant les proportions. Utilisez ce champ dans les formulaires ou dans "
-"les vues Kanban."
+msgstr "Icône du groupe. L'image sera redimensionnée pour faire 128x128 pixels, en préservant les proportions. Utilisez ce champ dans les formulaires ou dans les vues Kanban."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:223
+#: code:addons/mail/static/src/xml/mail.xml:213
 #, python-format
 msgid "Uploading error"
 msgstr "Erreur de transmission"
@@ -286,34 +251,28 @@ msgid "Support"
 msgstr "Assistance"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:764
+#: code:addons/mail/mail_message.py:740
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. "
-"Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
-"L'opération demandée ne peut pas être effectuée en raison de la politique de "
-"sécurité. Veuillez contacter votre administrateur système.\n"
-"\n"
-"(Type de document: %s, Opération: %s)"
+msgstr "L'opération demandée ne peut pas être effectuée en raison de la politique de sécurité. Veuillez contacter votre administrateur système.\n\n(Type de document: %s, Opération: %s)"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:0 selection:mail.mail,state:0
 msgid "Received"
 msgstr "Reçu"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:74
+#: code:addons/mail/static/src/xml/mail.xml:72
 #, python-format
 msgid "Attach a File"
 msgstr "Joindre un ficher"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:0
 msgid "Thread"
 msgstr "Discussion"
 
@@ -347,45 +306,38 @@ msgid "References"
 msgstr "Références"
 
 #. module: mail
-#: view:mail.wizard.invite:mail.mail_wizard_invite_form
+#: view:mail.wizard.invite:0
 msgid "Add Followers"
 msgstr "Ajouter des abonnés"
 
 #. module: mail
-#: help:mail.compose.message,author_id:0
-#: help:mail.message,author_id:0
+#: help:mail.compose.message,author_id:0 help:mail.message,author_id:0
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
-msgstr ""
-"Auteur du message. S'il n'est pas indiqué, email_from peux contenir une "
-"adresse électronique ne correspondant à aucun partenaire."
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
+msgstr "Auteur du message. S'il n'est pas indiqué, email_from peux contenir une adresse électronique ne correspondant à aucun partenaire."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:99
-#: code:addons/mail/static/src/xml/mail.xml:111
+#: code:addons/mail/static/src/xml/mail.xml:97
+#: code:addons/mail/static/src/xml/mail.xml:109
 #, python-format
 msgid "uploading"
 msgstr "envoi"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:62
+#: code:addons/mail/static/src/xml/mail_followers.xml:52
 #, python-format
 msgid "more."
 msgstr "plus."
 
 #. module: mail
-#: help:mail.compose.message,type:0
-#: help:mail.message,type:0
+#: help:mail.compose.message,type:0 help:mail.message,type:0
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr ""
-"Type de message : \"Courriel\" pour les courriers électroniques, "
-"\"Notification\" pour les messages du système, \"Commentaire\" pour les "
-"autres messages tels que les réponses des utilisateurs"
+msgstr "Type de message : \"Courriel\" pour les courriers électroniques, \"Notification\" pour les messages du système, \"Commentaire\" pour les autres messages tels que les réponses des utilisateurs"
 
 #. module: mail
 #: help:mail.message.subtype,relation_field:0
@@ -393,10 +345,7 @@ msgid ""
 "Field used to link the related model to the subtype model when using "
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
-msgstr ""
-"Champ utilisé pour associer le modèle relié au sous-modèle lors de "
-"l'abonnement automatique à un document relié. Le champ est utilisé pour "
-"calculer getattr(related_document.relation_field)."
+msgstr "Champ utilisé pour associer le modèle relié au sous-modèle lors de l'abonnement automatique à un document relié. Le champ est utilisé pour calculer getattr(related_document.relation_field)."
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -404,8 +353,7 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: mail
-#: field:mail.compose.message,reply_to:0
-#: field:mail.message,reply_to:0
+#: field:mail.mail,reply_to:0
 msgid "Reply-To"
 msgstr "Répondre à"
 
@@ -423,8 +371,7 @@ msgid "Send a message"
 msgstr "Envoyer un message"
 
 #. module: mail
-#: help:mail.group,message_unread:0
-#: help:mail.thread,message_unread:0
+#: help:mail.group,message_unread:0 help:mail.thread,message_unread:0
 #: help:res.partner,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Si coché, de nouveaux messages requièrent votre attention."
@@ -452,35 +399,34 @@ msgstr "Suppression automatique"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:312
+#: code:addons/mail/static/src/xml/mail.xml:295
 #, python-format
 msgid "notified"
 msgstr "notifié"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:292
+#: code:addons/mail/static/src/xml/mail.xml:275
 #, python-format
 msgid "logged a note"
 msgstr "enregistrer une note"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:13
-#: view:mail.group:mail.view_group_kanban
+#: code:addons/mail/static/src/xml/mail_followers.xml:12 view:mail.group:0
 #, python-format
 msgid "Unfollow"
 msgstr "Ne plus suivre"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:333
+#: code:addons/mail/static/src/xml/mail.xml:313
 #, python-format
 msgid "show one more message"
 msgstr "afficher un message de plus"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:177
+#: code:addons/mail/mail_mail.py:76 code:addons/mail/res_users.py:69
 #, python-format
 msgid "Invalid Action!"
 msgstr "Action invalide !"
@@ -494,8 +440,8 @@ msgstr "Image utilisateur"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
-#: model:ir.ui.menu,name:mail.menu_mail_mail
-#: view:mail.mail:mail.view_mail_tree
+#: model:ir.ui.menu,name:mail.menu_mail_mail view:mail.mail:0
+#: view:mail.message:0
 msgid "Emails"
 msgstr "Courriels"
 
@@ -505,15 +451,12 @@ msgid "Related Partner"
 msgstr "Partenaire associé"
 
 #. module: mail
-#: help:mail.group,message_summary:0
-#: help:mail.thread,message_summary:0
+#: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
 #: help:res.partner,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contient le résumé de la discussion (nombre de messages, ...). Ce résumé est "
-"au format HTML pour permettre son utilisation dans la vue kanban"
+msgstr "Contient le résumé de la discussion (nombre de messages, ...). Ce résumé est au format HTML pour permettre son utilisation dans la vue kanban"
 
 #. module: mail
 #: help:mail.alias,alias_model_id:0
@@ -521,10 +464,7 @@ msgid ""
 "The model (OpenERP Document Kind) to which this alias corresponds. Any "
 "incoming email that does not reply to an existing record will cause the "
 "creation of a new record of this model (e.g. a Project Task)"
-msgstr ""
-"Le modèle (OpenERP Document Kind) auquel correspond cet alias. Tout courriel "
-"entrant qui ne répond pas à un enregistrement existant entraînera la "
-"création d'un nouvel enregistrement de ce modèle (ex.: une tâche de projet)."
+msgstr "Le modèle (OpenERP Document Kind) auquel correspond cet alias. Tout courriel entrant qui ne répond pas à un enregistrement existant entraînera la création d'un nouvel enregistrement de ce modèle (ex.: une tâche de projet)."
 
 #. module: mail
 #: view:base.config.settings:0
@@ -537,13 +477,12 @@ msgid "Relation field"
 msgstr "Champ relation"
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: selection:mail.message,type:0
+#: selection:mail.compose.message,type:0 selection:mail.message,type:0
 msgid "System notification"
 msgstr "Notification Système"
 
 #. module: mail
-#: view:mail.message:mail.view_message_search
+#: view:mail.message:0
 msgid "To Read"
 msgstr "À lire"
 
@@ -558,8 +497,7 @@ msgid "Organizer"
 msgstr "Agenda"
 
 #. module: mail
-#: field:mail.compose.message,subject:0
-#: field:mail.message,subject:0
+#: field:mail.compose.message,subject:0 field:mail.message,subject:0
 msgid "Subject"
 msgstr "Sujet"
 
@@ -569,28 +507,24 @@ msgid "Partners"
 msgstr "Partenaires"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:0
 msgid "Retry"
 msgstr "Recommencer"
 
 #. module: mail
-#: field:mail.compose.message,email_from:0
+#: field:mail.compose.message,email_from:0 field:mail.mail,email_from:0
 #: field:mail.message,email_from:0
 msgid "From"
 msgstr "De"
 
 #. module: mail
-#: field:mail.compose.message,subtype_id:0
-#: field:mail.followers,subtype_ids:0
-#: field:mail.message,subtype_id:0
-#: view:mail.message.subtype:mail.view_message_subtype_tree
+#: field:mail.compose.message,subtype_id:0 field:mail.followers,subtype_ids:0
+#: field:mail.message,subtype_id:0 view:mail.message.subtype:0
 msgid "Subtype"
 msgstr "Sous-type"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.message.subtype:mail.view_mail_message_subtype_form
+#: view:mail.mail:0 view:mail.message.subtype:0
 msgid "Email message"
 msgstr "Message du courriel"
 
@@ -601,47 +535,45 @@ msgstr "base.config.settings"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:188
+#: code:addons/mail/static/src/js/mail_followers.js:157
 #, python-format
 msgid "followers"
 msgstr "abonnés"
 
 #. module: mail
-#: view:mail.group:mail.view_group_form
+#: view:mail.group:0
 msgid "Send a message to the group"
 msgstr "Envoyer un message au groupe"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:36
-#: view:mail.compose.message:mail.email_compose_message_wizard_form
+#: code:addons/mail/static/src/xml/mail.xml:36 view:mail.compose.message:0
 #, python-format
 msgid "Send"
 msgstr "Envoyer"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:184
+#: code:addons/mail/static/src/js/mail_followers.js:153
 #, python-format
 msgid "No followers"
 msgstr "Aucun abonné"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:0
 msgid "Failed"
 msgstr "Échec"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:0
 msgid "Cancel Email"
 msgstr "Annuler le courriel"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:27
+#: code:addons/mail/static/src/xml/mail_followers.xml:22
 #: model:ir.actions.act_window,name:mail.action_view_followers
-#: model:ir.ui.menu,name:mail.menu_email_followers
-#: view:mail.followers:mail.view_followers_tree
+#: model:ir.ui.menu,name:mail.menu_email_followers view:mail.followers:0
 #: field:mail.group,message_follower_ids:0
 #: field:mail.thread,message_follower_ids:0
 #: field:res.partner,message_follower_ids:0
@@ -656,41 +588,38 @@ msgid "Archives"
 msgstr "Archives"
 
 #. module: mail
-#: view:mail.compose.message:mail.email_compose_message_wizard_form
+#: view:mail.compose.message:0
 msgid "Subject..."
 msgstr "Sujet..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:98
-#: code:addons/mail/static/src/xml/mail.xml:110
+#: code:addons/mail/static/src/xml/mail.xml:96
+#: code:addons/mail/static/src/xml/mail.xml:108
 #, python-format
 msgid "Delete this attachment"
 msgstr "Supprimer cette pièce jointe"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:172
+#: code:addons/mail/mail_thread.py:114
 #, python-format
 msgid "New"
 msgstr "Nouveau"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:186
+#: code:addons/mail/static/src/js/mail_followers.js:155
 #, python-format
 msgid "One follower"
 msgstr "Un abonné"
 
 #. module: mail
-#: field:mail.compose.message,type:0
-#: view:mail.message:mail.view_message_search
-#: field:mail.message,type:0
+#: field:mail.compose.message,type:0 field:mail.message,type:0
 msgid "Type"
 msgstr "Type"
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: view:mail.mail:mail.view_mail_search
+#: selection:mail.compose.message,type:0 view:mail.mail:0
 #: selection:mail.message,type:0
 msgid "Email"
 msgstr "Courriel"
@@ -711,7 +640,7 @@ msgid "by"
 msgstr "par"
 
 #. module: mail
-#: code:addons/mail/res_users.py:98
+#: code:addons/mail/res_users.py:89
 #, python-format
 msgid "%s has joined the %s network."
 msgstr "%s a rejoint le réseau %s."
@@ -720,17 +649,12 @@ msgstr "%s a rejoint le réseau %s."
 #: help:mail.group,image_small:0
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Photo petit format du groupe. Elle est automatiquement redimensionnée au "
-"format 64x64px, en respectant le ratio d'aspect. Utilisez ce champ à tout "
-"endroit où une petite image est requise."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Photo petit format du groupe. Elle est automatiquement redimensionnée au format 64x64px, en respectant le ratio d'aspect. Utilisez ce champ à tout endroit où une petite image est requise."
 
 #. module: mail
-#: view:mail.compose.message:mail.email_compose_message_wizard_form
-#: field:mail.message,partner_ids:0
-#: field:mail.wizard.invite,partner_ids:0
+#: view:mail.compose.message:0 field:mail.message,partner_ids:0
 msgid "Recipients"
 msgstr "Destinataires"
 
@@ -747,10 +671,7 @@ msgid "Authorized Group"
 msgstr "Groupe autorisé"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/suggestions.xml:30
-#: view:mail.group:mail.view_group_kanban
-#, python-format
+#: view:mail.group:0
 msgid "Join Group"
 msgstr "Rejoindre le groupe"
 
@@ -773,29 +694,23 @@ msgid "<div>You have been invited to follow a new document.</div>"
 msgstr "<div>Vous avez été invités à suivre un nouveau document.</div>"
 
 #. module: mail
-#: field:mail.compose.message,parent_id:0
-#: field:mail.message,parent_id:0
+#: field:mail.compose.message,parent_id:0 field:mail.message,parent_id:0
 msgid "Parent Message"
 msgstr "Message parent"
 
 #. module: mail
 #: selection:res.partner,notification_email_send:0
 msgid "All Messages (discussions, emails, followed system notifications)"
-msgstr ""
-"Tous les messages (discussions, courriels, notifications des éléments suivis)"
+msgstr "Tous les messages (discussions, courriels, notifications des éléments suivis)"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:309
+#: code:addons/mail/static/src/js/mail_followers.js:252
 #, python-format
 msgid ""
 "Warning! \n"
-"You won't be notified of any email or discussion on this document. Do you "
-"really want to unfollow this document ?"
-msgstr ""
-"Attention !\n"
-"Vous ne serez plus avertis des courriels ou discussions liés à ce document. "
-"Voulez-vous vraiment ne plus suivre ce document?"
+"You won't be notified of any email or discussion on this document. Do you really want to unfollow this document ?"
+msgstr "Attention !\nVous ne serez plus avertis des courriels ou discussions liés à ce document. Voulez-vous vraiment ne plus suivre ce document?"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -806,14 +721,7 @@ msgid ""
 "                    This list contains messages sent to you.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    <b>Pas de message privé.</b>\n"
-"                </p><p>\n"
-"                    Cette liste contient les messages qui vous ont été "
-"envoyés.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    <b>Pas de message privé.</b>\n                </p><p>\n                    Cette liste contient les messages qui vous ont été envoyés.\n                </p>\n            "
 
 #. module: mail
 #: model:mail.group,name:mail.group_rd
@@ -826,26 +734,25 @@ msgid "Invite wizard"
 msgstr "Assistant d'invitation"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:0
 msgid "Advanced"
 msgstr "Avancée"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:255
+#: code:addons/mail/static/src/xml/mail.xml:245
 #, python-format
 msgid "Move to Inbox"
 msgstr "Déplacer dans la boîte de réception"
 
 #. module: mail
-#: code:addons/mail/wizard/mail_compose_message.py:188
+#: code:addons/mail/wizard/mail_compose_message.py:194
 #, python-format
 msgid "Re:"
 msgstr "Re:"
 
 #. module: mail
-#: field:mail.compose.message,to_read:0
-#: field:mail.message,to_read:0
+#: field:mail.compose.message,to_read:0 field:mail.message,to_read:0
 msgid "To read"
 msgstr "À lire"
 
@@ -855,26 +762,23 @@ msgstr "À lire"
 msgid ""
 "You may not create a user. To create new users, you should use the "
 "\"Settings > Users\" menu."
-msgstr ""
-"Vous ne pouvez pas créer un utilisateur. Pour créer de nouveaux "
-"utilisateurs, vous devez utiliser le menu \"Configuration > Utilisateurs\"."
+msgstr "Vous ne pouvez pas créer un utilisateur. Pour créer de nouveaux utilisateurs, vous devez utiliser le menu \"Configuration > Utilisateurs\"."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:348
+#: code:addons/mail/static/src/xml/mail.xml:338
 #, python-format
 msgid "like"
 msgstr "j'aime"
 
 #. module: mail
-#: help:mail.followers,res_model:0
-#: help:mail.wizard.invite,res_model:0
+#: help:mail.followers,res_model:0 help:mail.wizard.invite,res_model:0
 msgid "Model of the followed resource"
 msgstr "Modèle de la ressource suivie"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:273
+#: code:addons/mail/static/src/js/mail.js:982
 #, python-format
 msgid "read less"
 msgstr "lire moins"
@@ -884,15 +788,10 @@ msgstr "lire moins"
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message to all followers of the document"
-msgstr ""
+msgstr "Envoyer un message à tous les abonnés de ce document"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:105
-#: view:mail.compose.message:mail.email_compose_message_wizard_form
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.wizard.invite:mail.mail_wizard_invite_form
-#, python-format
+#: view:mail.compose.message:0 view:mail.wizard.invite:0
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -921,7 +820,7 @@ msgid "ir.ui.menu"
 msgstr "ir.ui.menu"
 
 #. module: mail
-#: view:mail.message:mail.view_message_search
+#: view:mail.message:0
 msgid "Has attachments"
 msgstr "Comporte des pièces jointes"
 
@@ -936,18 +835,14 @@ msgstr "le"
 msgid ""
 "The following partners chosen as recipients for the email have no email "
 "address linked :"
-msgstr ""
-"Les partenaires suivants, choisis comme destinataires du courriel, ne sont "
-"liés à aucune adresse :"
+msgstr "Les partenaires suivants, choisis comme destinataires du courriel, ne sont liés à aucune adresse :"
 
 #. module: mail
 #: help:mail.alias,alias_defaults:0
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
-"Un dictionnaire Python qui sera interprété pour fournir les valeurs par "
-"défaut lors de la création des nouveaux enregistrements pour cet alias."
+msgstr "Un dictionnaire Python qui sera interprété pour fournir les valeurs par défaut lors de la création des nouveaux enregistrements pour cet alias."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -963,8 +858,7 @@ msgid "Log a note"
 msgstr "Enregistrer une note"
 
 #. module: mail
-#: selection:mail.compose.message,type:0
-#: view:mail.mail:mail.view_mail_search
+#: selection:mail.compose.message,type:0 view:mail.mail:0
 #: selection:mail.message,type:0
 msgid "Comment"
 msgstr "Commentaire"
@@ -975,26 +869,12 @@ msgid ""
 "<p>\n"
 "                    <b>Good Job!</b> Your inbox is empty.\n"
 "                </p><p>\n"
-"                    Your inbox contains private messages or emails sent to "
-"you\n"
-"                    as well as information related to documents or people "
-"you\n"
+"                    Your inbox contains private messages or emails sent to you\n"
+"                    as well as information related to documents or people you\n"
 "                    follow.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    <b>Bon travail !</b> Votre boîte de réception est vide.\n"
-"                </p><p>\n"
-"                    Votre boîte de réception contient les messages privés ou "
-"les\n"
-"                    courriels qui vous ont été adressés, mais aussi des "
-"informations\n"
-"                    concernant les documents ou les personnes auxquels vous "
-"êtes\n"
-"                    abonné.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    <b>Bon travail !</b> Votre boîte de réception est vide.\n                </p><p>\n                    Votre boîte de réception contient les messages privés ou les\n                    courriels qui vous ont été adressés, mais aussi des informations\n                    concernant les documents ou les personnes auxquels vous êtes\n                    abonné.\n                </p>\n            "
 
 #. module: mail
 #: field:mail.mail,notification:0
@@ -1009,28 +889,23 @@ msgid "Compose a new message"
 msgstr "Rédiger un nouveau message"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:0
 msgid "Send Now"
 msgstr "Envoyer maintenant"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:177
+#: code:addons/mail/mail_mail.py:76
 #, python-format
 msgid ""
 "Unable to send email, please configure the sender's email address or alias."
-msgstr ""
-"Impossible d'envoyer le courriel, veuillez configurer l'adresse de "
-"l'expéditeur ou son alias."
+msgstr "Impossible d'envoyer le courriel, veuillez configurer l'adresse de l'expéditeur ou son alias."
 
 #. module: mail
 #: help:res.users,alias_id:0
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr ""
-"Adresse de courriel interne associée à cet utilisateur. Les messages reçus "
-"apparaîtront dans les notifications de l'utilisateur."
+msgstr "Adresse de courriel interne associée à cet utilisateur. Les messages reçus apparaîtront dans les notifications de l'utilisateur."
 
 #. module: mail
 #: field:mail.group,image:0
@@ -1038,8 +913,7 @@ msgid "Photo"
 msgstr "Photo"
 
 #. module: mail
-#: help:mail.compose.message,vote_user_ids:0
-#: help:mail.message,vote_user_ids:0
+#: help:mail.compose.message,vote_user_ids:0 help:mail.message,vote_user_ids:0
 msgid "Users that voted for this message"
 msgstr "Utilisateurs ayant voté pour ce message"
 
@@ -1048,23 +922,20 @@ msgstr "Utilisateurs ayant voté pour ce message"
 msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
-msgstr ""
-"L'adresse de courriel associée à ce groupe. Les messages nouvellement reçus "
-"vont automatiquement créer de nouveaux sujets."
+msgstr "L'adresse de courriel associée à ce groupe. Les messages nouvellement reçus vont automatiquement créer de nouveaux sujets."
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:0
 msgid "Month"
 msgstr "Mois"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:0
 msgid "Email Search"
 msgstr "Recherche des emails"
 
 #. module: mail
-#: field:mail.compose.message,child_ids:0
-#: field:mail.message,child_ids:0
+#: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
 msgid "Child Messages"
 msgstr "Messages enfants"
 
@@ -1074,29 +945,25 @@ msgid "Owner"
 msgstr "Propriétaire"
 
 #. module: mail
-#: code:addons/mail/res_partner.py:51
+#: code:addons/mail/res_partner.py:52
 #, python-format
 msgid "Partner Profile"
 msgstr "Profil du partenaire"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
-#: field:mail.mail,mail_message_id:0
-#: view:mail.message:mail.view_message_form
-#: field:mail.notification,message_id:0
-#: field:mail.wizard.invite,message:0
+#: field:mail.mail,mail_message_id:0 view:mail.message:0
+#: field:mail.notification,message_id:0 field:mail.wizard.invite,message:0
 msgid "Message"
 msgstr "Message"
 
 #. module: mail
-#: help:mail.followers,res_id:0
-#: help:mail.wizard.invite,res_id:0
+#: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
 msgstr "Id. de la ressource suivie"
 
 #. module: mail
-#: field:mail.compose.message,body:0
-#: field:mail.message,body:0
+#: field:mail.compose.message,body:0 field:mail.message,body:0
 msgid "Contents"
 msgstr "Contenu"
 
@@ -1111,28 +978,24 @@ msgstr "Alias"
 msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
-msgstr ""
-"Description qui sera ajoutée dans le message envoyé pour ce sous-type. Si "
-"vide, le nom sera ajouté à la place."
+msgstr "Description qui sera ajoutée dans le message envoyé pour ce sous-type. Si vide, le nom sera ajouté à la place."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:57
+#: code:addons/mail/static/src/xml/mail.xml:56
 #, python-format
 msgid "Log a note for this document. No notification will be sent"
-msgstr ""
+msgstr "Enregistrer une note interne sur ce document. Aucune notification ne sera envoyée."
 
 #. module: mail
-#: view:mail.group:mail.view_group_search
+#: view:mail.group:0
 msgid "Group"
 msgstr "Groupe"
 
 #. module: mail
-#: help:mail.compose.message,starred:0
-#: help:mail.message,starred:0
+#: help:mail.compose.message,starred:0 help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
-"L'utilisateur actuel a une notification \"favori\" associée à ce message"
+msgstr "L'utilisateur actuel a une notification \"favori\" associée à ce message"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -1140,13 +1003,13 @@ msgid "Privacy"
 msgstr "Confidentialité"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:0
 msgid "Notification"
 msgstr "Notification"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:611
+#: code:addons/mail/static/src/js/mail.js:655
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Veuillez compléter les informations du partenaire"
@@ -1155,8 +1018,7 @@ msgstr "Veuillez compléter les informations du partenaire"
 #: code:addons/mail/mail_mail.py:191
 #, python-format
 msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
-msgstr ""
-"<p>Accéder à ce document <a href=\"%s\">directement dans OpenERP</a></p>"
+msgstr "<p>Accéder à ce document <a href=\"%s\">directement dans OpenERP</a></p>"
 
 #. module: mail
 #: view:mail.compose.message:0
@@ -1185,51 +1047,38 @@ msgid ""
 "                    No message found and no message sent yet.\n"
 "                </p><p>\n"
 "                    Click on the top-right icon to compose a message. This\n"
-"                    message will be sent by email if it's an internal "
-"contact.\n"
+"                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    Pas de messages trouvés et pas encore de messages "
-"envoyés.\n"
-"                </p><p>\n"
-"                    Cliquez sur l'icône en haut à droite pour écrire un "
-"message.\n"
-"                    Ce message sera envoyé par courriel si c'est un contact "
-"interne.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    Pas de messages trouvés et pas encore de messages envoyés.\n                </p><p>\n                    Cliquez sur l'icône en haut à droite pour écrire un message.\n                    Ce message sera envoyé par courriel si c'est un contact interne.\n                </p>\n            "
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_search
-#: field:mail.mail,state:0
+#: view:mail.mail:0 field:mail.mail,state:0
 msgid "Status"
 msgstr "État"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:0 selection:mail.mail,state:0
 msgid "Outgoing"
 msgstr "Sortant"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:56
+#: code:addons/mail/static/src/xml/mail.xml:55
+#: code:addons/mail/static/src/xml/mail.xml:192 view:mail.compose.message:0
+#: view:mail.wizard.invite:0
 #, python-format
 msgid "or"
 msgstr "ou"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:171
+#: code:addons/mail/mail_thread.py:113
 #, python-format
 msgid "You have one unread message"
 msgstr "Vous avez un nouveau message"
 
 #. module: mail
-#: help:mail.compose.message,record_name:0
-#: help:mail.message,record_name:0
+#: help:mail.compose.message,record_name:0 help:mail.message,record_name:0
 msgid "Name get of the related document."
 msgstr "Nom obtenu pour le document relié."
 
@@ -1237,14 +1086,13 @@ msgstr "Nom obtenu pour le document relié."
 #: model:ir.actions.act_window,name:mail.action_view_notifications
 #: model:ir.model,name:mail.model_mail_notification
 #: model:ir.ui.menu,name:mail.menu_email_notifications
-#: field:mail.compose.message,notification_ids:0
-#: field:mail.message,notification_ids:0
-#: view:mail.notification:mail.view_notification_tree
+#: field:mail.compose.message,notification_ids:0 view:mail.message:0
+#: field:mail.message,notification_ids:0 view:mail.notification:0
 msgid "Notifications"
 msgstr "Notifications"
 
 #. module: mail
-#: view:mail.alias:mail.view_mail_alias_search
+#: view:mail.alias:0
 msgid "Search Alias"
 msgstr "Chercher l'alias"
 
@@ -1254,14 +1102,11 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
-"ID optionnel d'un fil (enregistrement) auquel tout message entrant sera "
-"rattaché, même si il ne s'agissait pas d'une réponse à ce fil. Si renseigné, "
-"la création de nouveaux enregistrements sera complètement désactivée."
+msgstr "ID optionnel d'un fil (enregistrement) auquel tout message entrant sera rattaché, même si il ne s'agissait pas d'une réponse à ce fil. Si renseigné, la création de nouveaux enregistrements sera complètement désactivée."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:332
+#: code:addons/mail/static/src/xml/mail.xml:312
 #, python-format
 msgid "show more message"
 msgstr "afficher plus de messages"
@@ -1270,17 +1115,11 @@ msgstr "afficher plus de messages"
 #: help:mail.message.subtype,name:0
 msgid ""
 "Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new "
-"record (New), or to a stage change in a process (Stage change). Message "
+"system notifications. For example, it can be a notification related to a new"
+" record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
-msgstr ""
-"Un sous-type de message précise le type du message, en particulier pour les "
-"notifications système. Par exemple, il pourrait s'agir d'une notification "
-"relative à un nouvel enregistrement (Nouveau), ou à un changement d'étape "
-"dans un processus (Changement d'étape). Les sous-types de messages "
-"permettent d'ajuster plus finement les notifications que l'utilisateur "
-"désire recevoir sur son mur."
+msgstr "Un sous-type de message précise le type du message, en particulier pour les notifications système. Par exemple, il pourrait s'agir d'une notification relative à un nouvel enregistrement (Nouveau), ou à un changement d'étape dans un processus (Changement d'étape). Les sous-types de messages permettent d'ajuster plus finement les notifications que l'utilisateur désire recevoir sur son mur."
 
 #. module: mail
 #: field:res.partner,notification_email_send:0
@@ -1305,35 +1144,32 @@ msgid "Is a Follower"
 msgstr "Est abonné"
 
 #. module: mail
-#: view:mail.alias:mail.view_mail_alias_search
-#: view:mail.mail:mail.view_mail_form
-#: view:mail.mail:mail.view_mail_tree
+#: view:mail.alias:0 view:mail.mail:0
 msgid "User"
 msgstr "Utilisateur"
 
 #. module: mail
-#: view:mail.group:mail.view_group_tree
+#: view:mail.group:0
 msgid "Groups"
 msgstr "Groupes"
 
 #. module: mail
-#: view:mail.message:mail.view_message_search
+#: view:mail.message:0
 msgid "Messages Search"
 msgstr "Recherche de messages"
 
 #. module: mail
-#: field:mail.compose.message,date:0
-#: field:mail.message,date:0
+#: field:mail.compose.message,date:0 field:mail.message,date:0
 msgid "Date"
 msgstr "Date"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:0
 msgid "Extended Filters..."
 msgstr "Filtres étendus..."
 
 #. module: mail
-#: code:addons/mail/mail_group.py:174
+#: code:addons/mail/mail_group.py:180
 #, python-format
 msgid "Warning!"
 msgstr "Attention !"
@@ -1345,14 +1181,14 @@ msgstr "Courriels entrants uniquement"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:310
+#: code:addons/mail/static/src/xml/mail.xml:293
 #, python-format
 msgid "more"
 msgstr "plus"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:123
+#: code:addons/mail/static/src/xml/mail.xml:121
 #, python-format
 msgid "To:"
 msgstr "À :"
@@ -1381,7 +1217,7 @@ msgstr "Utilisateurs"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:257
+#: code:addons/mail/static/src/xml/mail.xml:247
 #, python-format
 msgid "Mark as Todo"
 msgstr "Marqué comme 'À faire'"
@@ -1392,8 +1228,7 @@ msgid "Parent subtype, used for automatic subscription."
 msgstr "Sous-type parent, utilisé pour l'abonnement automatique."
 
 #. module: mail
-#: field:mail.group,message_summary:0
-#: field:mail.thread,message_summary:0
+#: field:mail.group,message_summary:0 field:mail.thread,message_summary:0
 #: field:res.partner,message_summary:0
 msgid "Summary"
 msgstr "Résumé"
@@ -1402,24 +1237,20 @@ msgstr "Résumé"
 #: help:mail.message.subtype,res_model:0
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
-msgstr ""
-"Modèle auquel le sous-type s'applique. Si False est spécifié, le sous-type "
-"s'applique à tous les modèles."
+msgstr "Modèle auquel le sous-type s'applique. Si False est spécifié, le sous-type s'applique à tous les modèles."
 
 #. module: mail
-#: view:mail.compose.message:mail.email_compose_message_wizard_form
-#: view:mail.wizard.invite:mail.mail_wizard_invite_form
+#: view:mail.compose.message:0 view:mail.wizard.invite:0
 msgid "Add contacts to notify..."
 msgstr "Ajouter des contacts à prévenir"
 
 #. module: mail
-#: view:mail.group:mail.view_group_form
+#: view:mail.group:0
 msgid "Group Form"
 msgstr "Formulaire de groupe"
 
 #. module: mail
-#: field:mail.compose.message,starred:0
-#: field:mail.message,starred:0
+#: field:mail.compose.message,starred:0 field:mail.message,starred:0
 #: field:mail.notification,starred:0
 msgid "Starred"
 msgstr "Favori"
@@ -1430,14 +1261,14 @@ msgid "Related Menu"
 msgstr "Menu correspondant"
 
 #. module: mail
-#: code:addons/mail/update.py:91
+#: code:addons/mail/update.py:93
 #, python-format
 msgid "Error"
 msgstr "Erreur"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:14
+#: code:addons/mail/static/src/xml/mail_followers.xml:13
 #, python-format
 msgid "Following"
 msgstr "Abonné(e)"
@@ -1446,17 +1277,15 @@ msgstr "Abonné(e)"
 #: sql_constraint:mail.alias:0
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
-msgstr ""
-"Malheureusement, cet alias de courriel est déjà utilisé : veuillez utiliser "
-"un alias unique"
+msgstr "Malheureusement, cet alias de courriel est déjà utilisé : veuillez utiliser un alias unique"
 
 #. module: mail
-#: code:addons/mail/mail_group.py:174
+#: code:addons/mail/mail_group.py:180
 #, python-format
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr ""
+msgstr "Impossible de supprimer ces groupes, car le groupe \"Toute la société\" est nécessaire pour d'autres modules."
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1465,29 +1294,23 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr ""
-"Le propriétaire d'enregistrements créés lors de la réception de courriel sur "
-"cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
-"le propriétaire approprié à partir de l'adresse de l'expéditeur (De) ou "
-"utilisera le compte Administrateur si aucun utilisateur du système n'est "
-"trouvé pour cette adresse."
+msgstr "Le propriétaire d'enregistrements créés lors de la réception de courriel sur cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver le propriétaire approprié à partir de l'adresse de l'expéditeur (De) ou utilisera le compte Administrateur si aucun utilisateur du système n'est trouvé pour cette adresse."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:62
+#: code:addons/mail/static/src/xml/mail_followers.xml:52
 #, python-format
 msgid "And"
 msgstr "Et"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:171
+#: code:addons/mail/mail_thread.py:113
 #, python-format
 msgid "You have %d unread messages"
 msgstr "Vous avez %d nouveaux messages"
 
 #. module: mail
-#: field:mail.compose.message,message_id:0
-#: field:mail.message,message_id:0
+#: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
 msgid "Message-Id"
 msgstr "ID du message"
 
@@ -1496,20 +1319,16 @@ msgstr "ID du message"
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
-msgstr ""
-"Ce champ contient une image utilisée pour représenter le groupe, de taille "
-"limitée à 1024x1024px."
+msgstr "Ce champ contient une image utilisée pour représenter le groupe, de taille limitée à 1024x1024px."
 
 #. module: mail
-#: field:mail.compose.message,attachment_ids:0
-#: view:mail.mail:mail.view_mail_form
+#: field:mail.compose.message,attachment_ids:0 view:mail.mail:0
 #: field:mail.message,attachment_ids:0
 msgid "Attachments"
 msgstr "Pièces jointes"
 
 #. module: mail
-#: field:mail.compose.message,record_name:0
-#: field:mail.message,record_name:0
+#: field:mail.compose.message,record_name:0 field:mail.message,record_name:0
 msgid "Message Record Name"
 msgstr "Nom de l'enregistrement du message"
 
@@ -1524,13 +1343,13 @@ msgid "Starred message that goes into the todo mailbox"
 msgstr "Message favori allant dans la boîte aux lettres \"à faire\""
 
 #. module: mail
-#: view:mail.group:mail.view_group_form
+#: view:mail.group:0
 msgid "Topics discussed in this group..."
 msgstr "Sujets discutés dans ce groupe..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:127
+#: code:addons/mail/static/src/xml/mail.xml:124 view:mail.compose.message:0
 #, python-format
 msgid "Followers of"
 msgstr "Abonnés à"
@@ -1547,7 +1366,7 @@ msgstr "Groupe de discussion"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:253
+#: code:addons/mail/static/src/xml/mail.xml:243
 #, python-format
 msgid "Done"
 msgstr "Terminé"
@@ -1559,7 +1378,7 @@ msgstr "Discussions"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:12
+#: code:addons/mail/static/src/xml/mail_followers.xml:11
 #, python-format
 msgid "Follow"
 msgstr "Suivre"
@@ -1571,8 +1390,8 @@ msgstr "Toute la société"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:137
-#: code:addons/mail/static/src/xml/mail.xml:310
+#: code:addons/mail/static/src/xml/mail.xml:130
+#: code:addons/mail/static/src/xml/mail.xml:293 view:mail.compose.message:0
 #, python-format
 msgid "and"
 msgstr "et"
@@ -1583,7 +1402,7 @@ msgid "Rich-text/HTML message"
 msgstr "Message Texte enrichi/HTML"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
+#: view:mail.mail:0
 msgid "Creation Month"
 msgstr "Mois de création"
 
@@ -1592,9 +1411,7 @@ msgstr "Mois de création"
 #: help:mail.message,notified_partner_ids:0
 msgid ""
 "Partners that have a notification pushing this message in their mailboxes"
-msgstr ""
-"Partenaires ayant une notification qui publie ce message dans leur courrier "
-"entrant"
+msgstr "Partenaires ayant une notification qui publie ce message dans leur courrier entrant"
 
 #. module: mail
 #: view:mail.message:0
@@ -1602,7 +1419,7 @@ msgid "Show already read messages"
 msgstr "Afficher les messages lus"
 
 #. module: mail
-#: view:mail.message:mail.view_message_search
+#: view:mail.message:0
 msgid "Content"
 msgstr "Contenu"
 
@@ -1613,8 +1430,7 @@ msgstr "À"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:256
-#: view:mail.mail:mail.view_mail_form
+#: code:addons/mail/static/src/xml/mail.xml:246 view:mail.mail:0
 #, python-format
 msgid "Reply"
 msgstr "Répondre"
@@ -1637,9 +1453,7 @@ msgstr "ce document"
 msgid ""
 "This group is visible by non members.             Invisible groups can add "
 "members through the invite button."
-msgstr ""
-"Ce groupe est visible pour les non-membres. Les groupes invisibles peuvent "
-"ajouter des membres grâce au bouton d'invitation."
+msgstr "Ce groupe est visible pour les non-membres. Les groupes invisibles peuvent ajouter des membres grâce au bouton d'invitation."
 
 #. module: mail
 #: model:mail.group,name:mail.group_board
@@ -1649,18 +1463,15 @@ msgstr "Réunions"
 #. module: mail
 #: field:mail.alias,alias_model_id:0
 msgid "Aliased Model"
-msgstr ""
+msgstr "Modèle concerné"
 
 #. module: mail
-#: help:mail.compose.message,message_id:0
-#: help:mail.message,message_id:0
+#: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
 msgid "Message unique identifier"
 msgstr "Identifiant unique de message"
 
 #. module: mail
-#: field:mail.group,description:0
-#: view:mail.message.subtype:mail.view_mail_message_subtype_form
-#: field:mail.message.subtype,description:0
+#: field:mail.group,description:0 field:mail.message.subtype,description:0
 msgid "Description"
 msgstr "Description"
 
@@ -1671,19 +1482,18 @@ msgstr "Abonnés au document"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:41
+#: code:addons/mail/static/src/xml/mail_followers.xml:35
 #, python-format
 msgid "Remove this follower"
 msgstr "Retirer cet abonné"
 
 #. module: mail
-#: selection:res.partner,notify_email:0
+#: selection:res.partner,notification_email_send:0
 msgid "Never"
 msgstr "Jamais"
 
 #. module: mail
-#: field:mail.compose.message,mail_server_id:0
-#: field:mail.message,mail_server_id:0
+#: field:mail.mail,mail_server_id:0
 msgid "Outgoing mail server"
 msgstr "Serveur courriel sortant"
 
@@ -1694,8 +1504,7 @@ msgid "Partners email addresses not found"
 msgstr "Adresses courriel des partenaires introuvables"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search
-#: selection:mail.mail,state:0
+#: view:mail.mail:0 selection:mail.mail,state:0
 msgid "Sent"
 msgstr "Envoyé"
 
@@ -1705,8 +1514,7 @@ msgid "Rich-text Contents"
 msgstr "Contenus textes enrichis"
 
 #. module: mail
-#: help:mail.compose.message,to_read:0
-#: help:mail.message,to_read:0
+#: help:mail.compose.message,to_read:0 help:mail.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
 msgstr "L'utilisateur actuel a une notification non-lue liée à ce message."
 
@@ -1728,15 +1536,11 @@ msgid ""
 "                    No message in this group.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    Aucun message dans ce groupe.\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    Aucun message dans ce groupe.\n                </p>\n            "
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:224
+#: code:addons/mail/static/src/xml/mail.xml:214
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "Merci de patienter durant le transfert du fichier."
@@ -1745,18 +1549,13 @@ msgstr "Merci de patienter durant le transfert du fichier."
 #: view:mail.group:0
 msgid ""
 "This group is visible by everyone,\n"
-"                                    including your customers if you "
-"installed\n"
+"                                    including your customers if you installed\n"
 "                                    the portal module."
-msgstr ""
-"Ce groupe est visible par tout le monde,\n"
-"                                    y compris vos clients si vous avez "
-"installé\n"
-"                                    le module \"Portail\"."
+msgstr "Ce groupe est visible par tout le monde,\n                                    y compris vos clients si vous avez installé\n                                    le module \"Portail\"."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:254
+#: code:addons/mail/static/src/xml/mail.xml:244
 #, python-format
 msgid "Set back to Todo"
 msgstr "Remettre dans 'À faire'"
@@ -1793,32 +1592,27 @@ msgstr "Vous ne pouvez pas créer de hiérarchies de partenaires récursives."
 #. module: mail
 #: help:base.config.settings,alias_domain:0
 msgid ""
-"If you have setup a catch-all email domain redirected to the OpenERP server, "
-"enter the domain name here."
-msgstr ""
-"Si vous avez configuré un domaine de courriel attrape-tout (catch-all) qui "
-"redirige vers le serveur OpenERP, saisir le nom de domaine ici."
+"If you have setup a catch-all email domain redirected to the OpenERP server,"
+" enter the domain name here."
+msgstr "Si vous avez configuré un domaine de courriel attrape-tout (catch-all) qui redirige vers le serveur OpenERP, saisir le nom de domaine ici."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
-#: model:ir.ui.menu,name:mail.menu_mail_message
-#: field:mail.group,message_ids:0
-#: view:mail.message:mail.view_message_tree
-#: field:mail.thread,message_ids:0
+#: model:ir.ui.menu,name:mail.menu_mail_message field:mail.group,message_ids:0
+#: view:mail.message:0 field:mail.thread,message_ids:0
 #: field:res.partner,message_ids:0
 msgid "Messages"
 msgstr "Messages"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:222
-#: code:addons/mail/mail_mail.py:243
+#: code:addons/mail/mail_mail.py:222 code:addons/mail/mail_mail.py:243
 #, python-format
 msgid "Followers of %s"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:146
+#: code:addons/mail/static/src/xml/mail.xml:140
 #, python-format
 msgid "others..."
 msgstr "autres..."
@@ -1830,9 +1624,7 @@ msgid "To-do"
 msgstr "À faire"
 
 #. module: mail
-#: view:mail.alias:mail.view_mail_alias_form
-#: view:mail.alias:mail.view_mail_alias_tree
-#: field:mail.group,alias_id:0
+#: view:mail.alias:0 field:mail.alias,alias_name:0 field:mail.group,alias_id:0
 #: field:res.users,alias_id:0
 msgid "Alias"
 msgstr "Alias"
@@ -1848,13 +1640,11 @@ msgstr "Courriels à envoyer"
 msgid ""
 "Technical field holding the message notifications. Use notified_partner_ids "
 "to access notified partners."
-msgstr ""
-"Champ technique contenant les notifications du message. Utiliser "
-"notified_partner_ids pour accéder aux partenaires notifiés."
+msgstr "Champ technique contenant les notifications du message. Utiliser notified_partner_ids pour accéder aux partenaires notifiés."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:156
+#: code:addons/mail/static/src/xml/mail.xml:150
 #, python-format
 msgid "(no email address)"
 msgstr "(pas d'adresse courriel)"
@@ -1866,14 +1656,13 @@ msgid "Messaging"
 msgstr "Messagerie"
 
 #. module: mail
-#: view:mail.alias:mail.view_mail_alias_search
-#: field:mail.message.subtype,res_model:0
+#: view:mail.alias:0 field:mail.message.subtype,res_model:0
 msgid "Model"
 msgstr "Modèle"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:217
+#: code:addons/mail/static/src/xml/mail.xml:207
 #, python-format
 msgid "No messages."
 msgstr "Aucun message"
@@ -1883,13 +1672,10 @@ msgstr "Aucun message"
 msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
-msgstr ""
-"Sous-types de message suivis, c'est-à-dire sous-types qui seront publiés sur "
-"le Mur de l'utilisateur."
+msgstr "Sous-types de message suivis, c'est-à-dire sous-types qui seront publiés sur le Mur de l'utilisateur."
 
 #. module: mail
-#: help:mail.group,message_ids:0
-#: help:mail.thread,message_ids:0
+#: help:mail.group,message_ids:0 help:mail.thread,message_ids:0
 #: help:res.partner,message_ids:0
 msgid "Messages and communication history"
 msgstr "Historique des messages et communications"
@@ -1897,8 +1683,7 @@ msgstr "Historique des messages et communications"
 #. module: mail
 #: help:mail.mail,references:0
 msgid "Message references, such as identifiers of previous messages"
-msgstr ""
-"Références du message , tel que les identifiants des messages précédents"
+msgstr "Références du message , tel que les identifiants des messages précédents"
 
 #. module: mail
 #: field:mail.compose.message,composition_mode:0
@@ -1906,16 +1691,14 @@ msgid "Composition mode"
 msgstr "Mode de composition"
 
 #. module: mail
-#: field:mail.compose.message,model:0
-#: field:mail.followers,res_model:0
-#: field:mail.message,model:0
-#: field:mail.wizard.invite,res_model:0
+#: field:mail.compose.message,model:0 field:mail.followers,res_model:0
+#: field:mail.message,model:0 field:mail.wizard.invite,res_model:0
 msgid "Related Document Model"
 msgstr "Modèle de document relié"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:349
+#: code:addons/mail/static/src/xml/mail.xml:339
 #, python-format
 msgid "unlike"
 msgstr "je n'aime plus"
@@ -1936,11 +1719,10 @@ msgid "Alias domain"
 msgstr "Domaine d'alias"
 
 #. module: mail
-#: code:addons/mail/update.py:91
+#: code:addons/mail/update.py:93
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr ""
-"Erreur durant la communication avec le serveur de garantie de l'éditeur."
+msgstr "Erreur durant la communication avec le serveur de garantie de l'éditeur."
 
 #. module: mail
 #: selection:mail.group,public:0
@@ -1953,22 +1735,11 @@ msgid ""
 "<p>\n"
 "                    <b>No todo.</b>\n"
 "                </p><p>\n"
-"                    When you process messages in your inbox, you can mark "
-"some\n"
-"                    as <i>todo</i>. From this menu, you can process all your "
-"todo.\n"
+"                    When you process messages in your inbox, you can mark some\n"
+"                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                    <b>Rien à faire.</b>\n"
-"                </p><p>\n"
-"                    Quand vous traitez des messages dans votre boîte de "
-"réception, vous pouvez en marquer certains\n"
-"                    comme <i>À faire</i>. Depuis ce menu, vous pouvez "
-"traitez tous vos messages \"À faire\".\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                    <b>Rien à faire.</b>\n                </p><p>\n                    Quand vous traitez des messages dans votre boîte de réception, vous pouvez en marquer certains\n                    comme <i>À faire</i>. Depuis ce menu, vous pouvez traitez tous vos messages \"À faire\".\n                </p>\n            "
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -1981,8 +1752,7 @@ msgid "Additional contacts"
 msgstr "Contacts additionnels"
 
 #. module: mail
-#: help:mail.compose.message,parent_id:0
-#: help:mail.message,parent_id:0
+#: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
 msgid "Initial thread message."
 msgstr "Message initial du fil."
 
@@ -2036,44 +1806,3 @@ msgstr "Photo petit format"
 #: help:mail.mail,reply_to:0
 msgid "Preferred response address for the message"
 msgstr "Adresse de réponse préférée pour le message"
-
-#~ msgid "Comments and Emails"
-#~ msgstr "Commentaires et courriels"
-
-#~ msgid "All feeds"
-#~ msgstr "Tous les flux"
-
-#, python-format
-#~ msgid "File"
-#~ msgstr "Fichier"
-
-#~ msgid "Receive Feeds by Email"
-#~ msgstr "Flux à recevoir par courriel"
-
-#, python-format
-#~ msgid "Write to the followers of this document..."
-#~ msgstr "Écrire aux abonnés de ce document..."
-
-#~ msgid ""
-#~ "Choose in which case you want to receive an email when you receive new feeds."
-#~ msgstr ""
-#~ "Choisissez dans quel cas vous voulez recevoir un courriel lors de la "
-#~ "réception de nouveaux flux."
-
-#~ msgid "Unread"
-#~ msgstr "Non lu"
-
-#, python-format
-#~ msgid "/web/binary/upload_attachment"
-#~ msgstr "/web/binary/upload_attachment"
-
-#, python-format
-#~ msgid "Post"
-#~ msgstr "Envoyer"
-
-#, python-format
-#~ msgid "Add them into recipients and followers"
-#~ msgstr "Ajouter dans destinataires et abonnés"
-
-#~ msgid "Emails only"
-#~ msgstr "Courriels seulement"

@@ -1,21 +1,22 @@
-# Dutch (Belgium) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * warning
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
+"PO-Revision-Date: 2015-05-23 12:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (Belgium) (http://www.transifex.com/projects/p/odoo-7/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:30+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl_BE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -49,18 +50,15 @@ msgid "Product"
 msgstr "Product"
 
 #. module: warning
-#: view:product.product:0
-#: view:res.partner:0
+#: view:product.product:0 view:res.partner:0
 msgid "Warnings"
 msgstr "Waarschuwingen"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "Blokkerend bericht"
 
@@ -72,10 +70,8 @@ msgstr "Waarschuwing op de factuur"
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "No Message"
 msgstr "Geen bericht"
 
@@ -107,23 +103,16 @@ msgid "Message for Purchase Order"
 msgstr "Bericht voor aankooporder"
 
 #. module: warning
-#: code:addons/warning/warning.py:32
-#: help:product.product,purchase_line_warn:0
-#: help:product.product,sale_line_warn:0
-#: help:res.partner,invoice_warn:0
-#: help:res.partner,picking_warn:0
-#: help:res.partner,purchase_warn:0
+#: code:addons/warning/warning.py:32 help:product.product,purchase_line_warn:0
+#: help:product.product,sale_line_warn:0 help:res.partner,invoice_warn:0
+#: help:res.partner,picking_warn:0 help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
 #, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr ""
-"Als u 'Waarschuwing' selecteert, wordt het bericht naar de gebruiker "
-"gestuurd. Als u 'Blokkerend bericht' kiest, wordt een fout gegenereerd met "
-"de boodschap en het proces wordt geblokkeerd. Het bericht moet in het "
-"volgende veld worden ingevoerd."
+msgstr "Als u 'Waarschuwing' selecteert, wordt het bericht naar de gebruiker gestuurd. Als u 'Blokkerend bericht' kiest, wordt een fout gegenereerd met de boodschap en het proces wordt geblokkeerd. Het bericht moet in het volgende veld worden ingevoerd."
 
 #. module: warning
 #: view:res.partner:0
@@ -151,14 +140,10 @@ msgid "Warning on the Purchase Order"
 msgstr "Waarschuwing op aankooporder"
 
 #. module: warning
-#: code:addons/warning/warning.py:66
-#: code:addons/warning/warning.py:95
-#: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:194
-#: code:addons/warning/warning.py:221
-#: code:addons/warning/warning.py:270
-#: code:addons/warning/warning.py:303
+#: code:addons/warning/warning.py:66 code:addons/warning/warning.py:95
+#: code:addons/warning/warning.py:130 code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:194 code:addons/warning/warning.py:221
+#: code:addons/warning/warning.py:270 code:addons/warning/warning.py:303
 #, python-format
 msgid "Warning for %s"
 msgstr "Waarschuwing voor %s"
@@ -171,10 +156,8 @@ msgstr "Bericht voor verkooporderlijn"
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Warning"
 msgstr "Waarschuwing"
 
@@ -189,8 +172,7 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
+#: model:ir.model,name:warning.model_sale_order field:res.partner,sale_warn:0
 msgid "Sales Order"
 msgstr "Verkooporder"
 
@@ -204,7 +186,3 @@ msgstr "Uitgaande leveringen"
 #: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
 msgstr "Verkooporderlijn"
-
-#, python-format
-#~ msgid "Alert for %s !"
-#~ msgstr "Waarschuwing voor %s!"

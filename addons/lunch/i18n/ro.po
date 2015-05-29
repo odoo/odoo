@@ -1,25 +1,25 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * lunch
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-07 19:02+0000\n"
-"Last-Translator: ERPSystems.ro <Unknown>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:00+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: lunch
-#: field:lunch.product,category_id:0
-#: field:lunch.product.category,name:0
+#: field:lunch.product,category_id:0 field:lunch.product.category,name:0
 msgid "Category"
 msgstr "Categorie"
 
@@ -39,8 +39,7 @@ msgid "Partially Confirmed"
 msgstr "Confirmat Partial"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order.line:0
+#: view:lunch.cashmove:0 view:lunch.order.line:0
 msgid "Group By..."
 msgstr "Grupati dupa..."
 
@@ -50,8 +49,7 @@ msgid "Sunday"
 msgstr "Duminica"
 
 #. module: lunch
-#: field:lunch.order.line,supplier:0
-#: field:lunch.product,supplier:0
+#: field:lunch.order.line,supplier:0 field:lunch.product,supplier:0
 msgid "Supplier"
 msgstr "Furnizor"
 
@@ -86,14 +84,12 @@ msgid "Order lines Tree"
 msgstr "Arbore linii comanda"
 
 #. module: lunch
-#: field:lunch.alert,specific_day:0
-#: field:report.lunch.order.line,day:0
+#: field:lunch.alert,specific_day:0 field:report.lunch.order.line,day:0
 msgid "Day"
 msgstr "Zi"
 
 #. module: lunch
-#: view:lunch.order.line:0
-#: selection:lunch.order.line,state:0
+#: view:lunch.order.line:0 selection:lunch.order.line,state:0
 msgid "Received"
 msgstr "Primit"
 
@@ -110,25 +106,11 @@ msgid ""
 "            </p>\n"
 "            <p>\n"
 "                A lunch order is defined by its user, date and order lines.\n"
-"                Each order line corresponds to a product, an additional note "
-"and a price.\n"
-"                Before selecting your order lines, don't forget to read the "
-"warnings displayed in the reddish area.\n"
+"                Each order line corresponds to a product, an additional note and a price.\n"
+"                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area.\n"
 "            </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Clic pentru a crea o comanda pentru masa de pranz.\n"
-"            </p>\n"
-"            <p>\n"
-"                O comanda pentru masa de pranz este definita de catre "
-"utilizatorul ei, data si liniile comenzii.\n"
-"                Fiecare linie a comenzii corespunde unui produs, unei note "
-"aditionale si unui pret.\n"
-"                Inainte de a selecta liniile comenzii, nu uitati sa cititi "
-"avertismentele afisate in zona rosie.\n"
-"            </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Clic pentru a crea o comanda pentru masa de pranz.\n            </p>\n            <p>\n                O comanda pentru masa de pranz este definita de catre utilizatorul ei, data si liniile comenzii.\n                Fiecare linie a comenzii corespunde unui produs, unei note aditionale si unui pret.\n                Inainte de a selecta liniile comenzii, nu uitati sa cititi avertismentele afisate in zona rosie.\n            </p>\n            "
 
 #. module: lunch
 #: view:lunch.order.line:0
@@ -155,22 +137,11 @@ msgstr "formular de mutare numerar"
 #: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
 msgid ""
 "<p>\n"
-"                Here you can see your cash moves.<br/>A cash moves can be "
-"either an expense or a payment.\n"
-"                An expense is automatically created when an order is "
-"received while a payment is a reimbursement to the company encoded by the "
-"manager.\n"
+"                Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.\n"
+"                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Aici puteti vedea mutarile numerarului dumneavoastra.<br/>O "
-"mutare de numerar poate fi sau o cheltuiala sau o plata.\n"
-"                O cheltuiala este creata automat atunci cand o comanda este "
-"primita, in timp ce o plata este o rambursare catre compania inregistrata de "
-"catre manager.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Aici puteti vedea mutarile numerarului dumneavoastra.<br/>O mutare de numerar poate fi sau o cheltuiala sau o plata.\n                O cheltuiala este creata automat atunci cand o comanda este primita, in timp ce o plata este o rambursare catre compania inregistrata de catre manager.\n              </p>\n            "
 
 #. module: lunch
 #: field:lunch.cashmove,amount:0
@@ -190,8 +161,7 @@ msgid "By Date"
 msgstr "Dupa Data"
 
 #. module: lunch
-#: selection:lunch.order,state:0
-#: view:lunch.order.line:0
+#: selection:lunch.order,state:0 view:lunch.order.line:0
 #: selection:lunch.order.line,state:0
 msgid "Cancelled"
 msgstr "Anulat(a)"
@@ -220,8 +190,7 @@ msgstr "Alerta Pranz"
 #: code:addons/lunch/lunch.py:193
 #, python-format
 msgid "Select a product and put your order comments on the note."
-msgstr ""
-"Selectati un produs si introduceti comentariile legate de comanda in nota."
+msgstr "Selectati un produs si introduceti comentariile legate de comanda in nota."
 
 #. module: lunch
 #: selection:lunch.alert,alter_type:0
@@ -269,8 +238,7 @@ msgid "Wizard to order a meal"
 msgstr "Wizard pentru comanda unei mese de pranz"
 
 #. module: lunch
-#: selection:lunch.order,state:0
-#: selection:lunch.order.line,state:0
+#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "New"
 msgstr "Nou(a)"
 
@@ -311,8 +279,7 @@ msgid "Configuration"
 msgstr "Configurare"
 
 #. module: lunch
-#: field:lunch.order,state:0
-#: field:lunch.order.line,state:0
+#: field:lunch.order,state:0 field:lunch.order.line,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -321,10 +288,7 @@ msgstr "Status"
 msgid ""
 "Order a meal doesn't mean that we have to pay it.\n"
 "                        A meal should be paid when it is received."
-msgstr ""
-"Comandarea unei mese de pranz nu inseamna ca trebuie sa o platim noi.\n"
-"                        O masa de pranz ar trebui platita atunci cand este "
-"primita."
+msgstr "Comandarea unei mese de pranz nu inseamna ca trebuie sa o platim noi.\n                        O masa de pranz ar trebui platita atunci cand este primita."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_control_accounts
@@ -361,35 +325,15 @@ msgstr "Septembrie"
 #: model:ir.actions.act_window,help:lunch.action_lunch_control_suppliers
 msgid ""
 "<p>\n"
-"                Here you can see every orders grouped by suppliers and by "
-"date.\n"
+"                Here you can see every orders grouped by suppliers and by date.\n"
 "              </p>\n"
 "              <p>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
-"that the order is ordered <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
-"the order is received <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce "
-"that the order isn't available\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce that the order isn't available\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Aici puteti vedea fiecare comanda grupata dupa furnizori si "
-"dupa data.\n"
-"              </p>\n"
-"              <p>\n"
-"                - Clic pe <img src=\"../../../web/static/src/img/icons/terp-"
-"call-start.png\"/> pentru a anunta plasarea comenzii <br/>\n"
-"                - Clic pe <img src=\"../../../web/static/src/img/icons/gtk-"
-"apply.png\"/> pentru a anunta primirea comenzii <br/>\n"
-"                - Clic pe <img src=\"../../../web/static/src/img/icons/gtk-"
-"cancel.png\"/> red X pentru a anunta faptul ca, comanda nu este disponibila\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Aici puteti vedea fiecare comanda grupata dupa furnizori si dupa data.\n              </p>\n              <p>\n                - Clic pe <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> pentru a anunta plasarea comenzii <br/>\n                - Clic pe <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> pentru a anunta primirea comenzii <br/>\n                - Clic pe <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X pentru a anunta faptul ca, comanda nu este disponibila\n              </p>\n            "
 
 #. module: lunch
 #: field:lunch.alert,tuesday:0
@@ -413,23 +357,13 @@ msgid ""
 "                Click to create a product for lunch. \n"
 "            </p>\n"
 "              <p>\n"
-"                A product is defined by its name, category, price and "
-"supplier.\n"
+"                A product is defined by its name, category, price and supplier.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Clic pentru a crea un produs pentru pranz.\n"
-"            </p>\n"
-"              <p>\n"
-"                Un produs este definit dupa numele, categoria, pretul si "
-"furnizorul lui.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Clic pentru a crea un produs pentru pranz.\n            </p>\n              <p>\n                Un produs este definit dupa numele, categoria, pretul si furnizorul lui.\n              </p>\n            "
 
 #. module: lunch
-#: view:lunch.alert:0
-#: field:lunch.alert,message:0
+#: view:lunch.alert:0 field:lunch.alert,message:0
 msgid "Message"
 msgstr "Mesaj"
 
@@ -439,9 +373,7 @@ msgid "Order Meals"
 msgstr "Comanda Mesele de pranz"
 
 #. module: lunch
-#: view:lunch.cancel:0
-#: view:lunch.order.order:0
-#: view:lunch.validation:0
+#: view:lunch.cancel:0 view:lunch.order.order:0 view:lunch.validation:0
 msgid "or"
 msgstr "sau"
 
@@ -455,14 +387,7 @@ msgid ""
 "                Here you can find every lunch categories for products.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Clic pentru a crea o categorie a pranzului. \n"
-"            </p>\n"
-"              <p>\n"
-"                Aici puteti gasi fiecare categorie de pranz pentru produse.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Clic pentru a crea o categorie a pranzului. \n            </p>\n              <p>\n                Aici puteti gasi fiecare categorie de pranz pentru produse.\n              </p>\n            "
 
 #. module: lunch
 #: view:lunch.order.order:0
@@ -487,14 +412,12 @@ msgstr "Programati Data"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_alert
-#: model:ir.ui.menu,name:lunch.menu_lunch_alert
-#: field:lunch.order,alerts:0
+#: model:ir.ui.menu,name:lunch.menu_lunch_alert field:lunch.order,alerts:0
 msgid "Alerts"
 msgstr "Alerte"
 
 #. module: lunch
-#: field:lunch.order.line,note:0
-#: field:report.lunch.order.line,note:0
+#: field:lunch.order.line,note:0 field:report.lunch.order.line,note:0
 msgid "Note"
 msgstr "Nota"
 
@@ -505,8 +428,7 @@ msgid "Add"
 msgstr "Adauga"
 
 #. module: lunch
-#: view:lunch.product:0
-#: view:lunch.product.category:0
+#: view:lunch.product:0 view:lunch.product.category:0
 msgid "Products Form"
 msgstr "Formular Produse"
 
@@ -516,8 +438,7 @@ msgid "Cancel meals"
 msgstr "Anuleaza mesele de pranz"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
-#: view:lunch.cashmove:0
+#: model:ir.model,name:lunch.model_lunch_cashmove view:lunch.cashmove:0
 msgid "lunch cashmove"
 msgstr "mutare numerar pentru pranz"
 
@@ -552,8 +473,7 @@ msgid "June"
 msgstr "Iunie"
 
 #. module: lunch
-#: field:lunch.cashmove,user_id:0
-#: field:lunch.order,user_id:0
+#: field:lunch.cashmove,user_id:0 field:lunch.order,user_id:0
 #: field:report.lunch.order.line,user_id:0
 msgid "User Name"
 msgstr "Nume de utilizator"
@@ -582,8 +502,7 @@ msgid "User"
 msgstr "Utilizator"
 
 #. module: lunch
-#: field:lunch.cashmove,date:0
-#: field:lunch.order,date:0
+#: field:lunch.cashmove,date:0 field:lunch.order,date:0
 #: field:lunch.order.line,date:0
 msgid "Date"
 msgstr "Data"
@@ -604,8 +523,7 @@ msgid "Orders Form"
 msgstr "Formular de comanda"
 
 #. module: lunch
-#: view:lunch.alert:0
-#: view:lunch.order.line:0
+#: view:lunch.alert:0 view:lunch.order.line:0
 msgid "Search"
 msgstr "Cauta"
 
@@ -621,30 +539,12 @@ msgid ""
 "                Here you can see today's orders grouped by suppliers.\n"
 "              </p>\n"
 "              <p>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
-"that the order is ordered <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
-"the order is received <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that "
-"the order isn't available\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that the order isn't available\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Aici puteti vedea comenzile de azi grupate dupa furnizori.\n"
-"              </p>\n"
-"              <p>\n"
-"                - Clic pe <img src=\"../../../web/static/src/img/icons/terp-"
-"call-start.png\"/> pentru a anunta plasarea comenzii <br/>\n"
-"                - Clic pe <img src=\"../../../web/static/src/img/icons/gtk-"
-"apply.png\"/> pentru a anunta primirea comenzii <br/>\n"
-"                - Clic pe <img src=\"../../../web/static/src/img/icons/gtk-"
-"cancel.png\"/> pentru a anunta faptul ca, comanda nu este disponibila\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Aici puteti vedea comenzile de azi grupate dupa furnizori.\n              </p>\n              <p>\n                - Clic pe <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> pentru a anunta plasarea comenzii <br/>\n                - Clic pe <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> pentru a anunta primirea comenzii <br/>\n                - Clic pe <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> pentru a anunta faptul ca, comanda nu este disponibila\n              </p>\n            "
 
 #. module: lunch
 #: selection:report.lunch.order.line,month:0
@@ -674,8 +574,7 @@ msgstr "Si"
 #. module: lunch
 #: view:lunch.alert:0
 msgid "Write the message you want to display during the defined period..."
-msgstr ""
-"Scrieti mesajul pe care doriti sa il afisati in timpul perioadei definite..."
+msgstr "Scrieti mesajul pe care doriti sa il afisati in timpul perioadei definite..."
 
 #. module: lunch
 #: selection:lunch.order.line,state:0
@@ -699,11 +598,8 @@ msgid ""
 "                Click to create a lunch alert. \n"
 "            </p>\n"
 "              <p>\n"
-"                Alerts are used to warn employee from possible issues "
-"concerning the lunch orders.\n"
-"                To create a lunch alert you have to define its recurrency, "
-"the time interval during which the alert should be executed and the message "
-"to display.\n"
+"                Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
+"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display.\n"
 "            </p>\n"
 "            <p>\n"
 "                Example: <br/>\n"
@@ -712,25 +608,7 @@ msgid ""
 "                - Message: \"You must order before 10h30 am\"\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Clic pentru a crea o alerta pentru pranz. \n"
-"            </p>\n"
-"              <p>\n"
-"                Alertele sunt utilizate pentru a avertiza angajatii in "
-"legatura cu probleme posibile legate de comenzile de pranz.\n"
-"                Pentru a crea o alerta de pranz trebuie sa ii definiti "
-"valuta, intervalul de timp in care alerta ar trebui executata si mesajul de "
-"afisare.\n"
-"            </p>\n"
-"            <p>\n"
-"                Exemplu: <br/>\n"
-"                - Recurenta: Zilnic<br/>\n"
-"                - Intervalul de timp: de la ora 00:00 am la ora 11:59 "
-"pm<br/>\n"
-"                - Mesaj: \"Trebuie sa comandati inainte de ora 10:30 am\"\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Clic pentru a crea o alerta pentru pranz. \n            </p>\n              <p>\n                Alertele sunt utilizate pentru a avertiza angajatii in legatura cu probleme posibile legate de comenzile de pranz.\n                Pentru a crea o alerta de pranz trebuie sa ii definiti valuta, intervalul de timp in care alerta ar trebui executata si mesajul de afisare.\n            </p>\n            <p>\n                Exemplu: <br/>\n                - Recurenta: Zilnic<br/>\n                - Intervalul de timp: de la ora 00:00 am la ora 11:59 pm<br/>\n                - Mesaj: \"Trebuie sa comandati inainte de ora 10:30 am\"\n              </p>\n            "
 
 #. module: lunch
 #: view:lunch.cancel:0
@@ -753,9 +631,7 @@ msgid "December"
 msgstr "Decembrie"
 
 #. module: lunch
-#: view:lunch.cancel:0
-#: view:lunch.order.line:0
-#: view:lunch.order.order:0
+#: view:lunch.cancel:0 view:lunch.order.line:0 view:lunch.order.order:0
 #: view:lunch.validation:0
 msgid "Cancel"
 msgstr "Anulati"
@@ -767,37 +643,23 @@ msgid ""
 "                Click to create a payment. \n"
 "            </p>\n"
 "              <p>\n"
-"                Here you can see the employees' payment. A payment is a cash "
-"move from the employee to the company.\n"
+"                Here you can see the employees' payment. A payment is a cash move from the employee to the company.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Clic pentru a crea o plata. \n"
-"            </p>\n"
-"              <p>\n"
-"                Aici puteti vedea plata angajatilor. O plata este o mutare "
-"de numerar de la angaja la companie\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Clic pentru a crea o plata. \n            </p>\n              <p>\n                Aici puteti vedea plata angajatilor. O plata este o mutare de numerar de la angaja la companie\n              </p>\n            "
 
 #. module: lunch
 #: code:addons/lunch/lunch.py:196
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
-msgstr ""
-"Mancarurile dumneavoastra preferate vor fi create pe baza ultimelor "
-"dumneavoastra comenzi."
+msgstr "Mancarurile dumneavoastra preferate vor fi create pe baza ultimelor dumneavoastra comenzi."
 
 #. module: lunch
 #: model:ir.module.category,description:lunch.module_lunch_category
 msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
-msgstr ""
-"Va ajuta sa gestionati necesarul pentru pranz, daca sunteti manager veti "
-"putea sa creati produse noi, miscari de numerar si sa confirmati sau sa "
-"anulati comenzi."
+msgstr "Va ajuta sa gestionati necesarul pentru pranz, daca sunteti manager veti putea sa creati produse noi, miscari de numerar si sa confirmati sau sa anulati comenzi."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_control_accounts
@@ -807,23 +669,11 @@ msgid ""
 "            </p>\n"
 "              <p>\n"
 "                A cashmove can either be an expense or a payment.<br/>\n"
-"                An expense is automatically created at the order "
-"receipt.<br/>\n"
-"                A payment represents the employee reimbursement to the "
-"company.\n"
+"                An expense is automatically created at the order receipt.<br/>\n"
+"                A payment represents the employee reimbursement to the company.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Clic pentru a crea o plata noua. \n"
-"            </p>\n"
-"              <p>\n"
-"                O miscare de numerar poate fi sau o cheltuiala sau o "
-"plata.<br/>\n"
-"                O cheltuiala este creata automat la primirea comenzii.<br/>\n"
-"                O plata reprezinta rambursarea angajatului catre companie.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Clic pentru a crea o plata noua. \n            </p>\n              <p>\n                O miscare de numerar poate fi sau o cheltuiala sau o plata.<br/>\n                O cheltuiala este creata automat la primirea comenzii.<br/>\n                O plata reprezinta rambursarea angajatului catre companie.\n              </p>\n            "
 
 #. module: lunch
 #: field:lunch.alert,alter_type:0
@@ -852,14 +702,12 @@ msgid "By User"
 msgstr "Dupa Utilizator"
 
 #. module: lunch
-#: field:lunch.order.line,product_id:0
-#: field:lunch.product,name:0
+#: field:lunch.order.line,product_id:0 field:lunch.product,name:0
 msgid "Product"
 msgstr "Produs"
 
 #. module: lunch
-#: field:lunch.cashmove,description:0
-#: report:lunch.order.line:0
+#: field:lunch.cashmove,description:0 report:lunch.order.line:0
 #: field:lunch.product,description:0
 msgid "Description"
 msgstr "Descriere"
@@ -870,8 +718,7 @@ msgid "May"
 msgstr "Mai"
 
 #. module: lunch
-#: field:lunch.order.line,price:0
-#: field:lunch.product,price:0
+#: field:lunch.order.line,price:0 field:lunch.product,price:0
 msgid "Price"
 msgstr "Pret"
 
@@ -894,8 +741,7 @@ msgstr "arbore miscari de numerar"
 #. module: lunch
 #: view:lunch.cancel:0
 msgid "Cancel a meal means that we didn't receive it from the supplier."
-msgstr ""
-"Anularea unei mese de pranz inseamna ca nu am primit-o de la furnizor."
+msgstr "Anularea unei mese de pranz inseamna ca nu am primit-o de la furnizor."
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -908,8 +754,7 @@ msgid "Employee Payments"
 msgstr "Platile Angajatilor"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: selection:lunch.cashmove,state:0
+#: view:lunch.cashmove:0 selection:lunch.cashmove,state:0
 msgid "Payment"
 msgstr "Plata"
 
@@ -944,10 +789,8 @@ msgid "Select your order"
 msgstr "Selecteaza comanda"
 
 #. module: lunch
-#: field:lunch.cashmove,order_id:0
-#: selection:lunch.cashmove,state:0
-#: report:lunch.order.line:0
-#: view:lunch.order.line:0
+#: field:lunch.cashmove,order_id:0 selection:lunch.cashmove,state:0
+#: report:lunch.order.line:0 view:lunch.order.line:0
 #: field:lunch.order.line,order_id:0
 msgid "Order"
 msgstr "Comanda"
@@ -955,8 +798,7 @@ msgstr "Comanda"
 #. module: lunch
 #: code:addons/lunch/lunch.py:43
 #: model:ir.actions.report.xml,name:lunch.report_lunch_order
-#: model:ir.model,name:lunch.model_lunch_order
-#: report:lunch.order.line:0
+#: model:ir.model,name:lunch.model_lunch_order report:lunch.order.line:0
 #, python-format
 msgid "Lunch Order"
 msgstr "Comanda pranz"
@@ -994,9 +836,7 @@ msgstr "Ati primit aceste mese de pranz?"
 #. module: lunch
 #: view:lunch.validation:0
 msgid "Once a meal is received a new cash move is created for the employee."
-msgstr ""
-"Odata ce o masa de pranz este primita, o noua miscare de numerar este creata "
-"pentru angajat."
+msgstr "Odata ce o masa de pranz este primita, o noua miscare de numerar este creata pentru angajat."
 
 #. module: lunch
 #: view:lunch.product:0
@@ -1004,9 +844,7 @@ msgid "Products Tree"
 msgstr "Arbore Produse"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order:0
-#: field:lunch.order,total:0
+#: view:lunch.cashmove:0 view:lunch.order:0 field:lunch.order,total:0
 #: view:lunch.order.line:0
 msgid "Total"
 msgstr "Total"
@@ -1015,6 +853,3 @@ msgstr "Total"
 #: model:ir.ui.menu,name:lunch.menu_lunch_order_tree
 msgid "Previous Orders"
 msgstr "Comenzile Anterioare"
-
-#~ msgid "My Account"
-#~ msgstr "Contul meu"

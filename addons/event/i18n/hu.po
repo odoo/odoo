@@ -1,25 +1,25 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * event
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-10-12 11:43+0000\n"
-"Last-Translator: tdombos <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-7/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
+#: view:event.event:0 view:report.event.registration:0
 msgid "My Events"
 msgstr "Saját rendezvények"
 
@@ -39,8 +39,7 @@ msgid "Main Speaker"
 msgstr "Főelőadó"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 #: view:report.event.registration:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
@@ -56,10 +55,7 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
-"Minden rendezvényhez minimum feliratkozási szintet határozhat meg. Ha nincs "
-"elég jelentkező akkor nem igazolhatja vissza az eseményt. (írjon be 0 "
-"értéket ennek a szabálynak a falülírásához)"
+msgstr "Minden rendezvényhez minimum feliratkozási szintet határozhat meg. Ha nincs elég jelentkező akkor nem igazolhatja vissza az eseményt. (írjon be 0 értéket ennek a szabálynak a falülírásához)"
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -77,8 +73,7 @@ msgid "Concert of Bon Jovi"
 msgstr "Bon Jovi Koncert"
 
 #. module: event
-#: view:event.registration:0
-#: selection:event.registration,state:0
+#: view:event.registration:0 selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
 msgstr "Megjelent"
@@ -94,8 +89,7 @@ msgid "Send Email"
 msgstr "E-mail küldése"
 
 #. module: event
-#: field:event.event,company_id:0
-#: field:event.registration,company_id:0
+#: field:event.event,company_id:0 field:event.registration,company_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,company_id:0
 msgid "Company"
@@ -169,9 +163,7 @@ msgstr "Rendezvények elemzése"
 #. module: event
 #: help:event.type,default_registration_max:0
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
-"Ezt a maximum alapértelmezett értéket választja ha ezt az eseményt "
-"kiválasztja"
+msgstr "Ezt a maximum alapértelmezett értéket választja ha ezt az eseményt kiválasztja"
 
 #. module: event
 #: view:report.event.registration:0
@@ -180,24 +172,20 @@ msgid "Register"
 msgstr "Regisztráció"
 
 #. module: event
-#: field:event.event,message_ids:0
-#: field:event.registration,message_ids:0
+#: field:event.event,message_ids:0 field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,registration_ids:0
+#: view:event.event:0 field:event.event,registration_ids:0
 #: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration
-#: view:res.partner:0
+#: model:ir.ui.menu,name:event.menu_action_registration view:res.partner:0
 msgid "Registrations"
 msgstr "Regisztrációk"
 
 #. module: event
-#: code:addons/event/event.py:89
-#: code:addons/event/event.py:100
+#: code:addons/event/event.py:89 code:addons/event/event.py:100
 #: code:addons/event/event.py:357
 #, python-format
 msgid "Error!"
@@ -209,14 +197,12 @@ msgid "Confirm Event"
 msgstr "Rendezvény megerősítése"
 
 #. module: event
-#: view:board.board:0
-#: model:ir.actions.act_window,name:event.act_event_view
+#: view:board.board:0 model:ir.actions.act_window,name:event.act_event_view
 msgid "Next Events"
 msgstr "Következő rendezvény"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
+#: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
@@ -233,8 +219,7 @@ msgid "Opera of Verdi"
 msgstr "Verdi-opera"
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
+#: help:event.event,message_unread:0 help:event.registration,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
@@ -270,9 +255,7 @@ msgstr "Esemény vége dátuma"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
-"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
+msgstr "A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: event
 #: view:report.event.registration:0
@@ -280,21 +263,18 @@ msgid "Registrations in confirmed or done state"
 msgstr "A jelentkezés visszaigazolt vagy lezárt állapotú"
 
 #. module: event
-#: code:addons/event/event.py:106
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:106 code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr "Figyelem!"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Registration"
 msgstr "Regisztráció"
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,partner_id:0
+#: view:event.registration:0 field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
 msgid "Partner"
 msgstr "Partner"
@@ -302,9 +282,7 @@ msgstr "Partner"
 #. module: event
 #: help:event.type,default_registration_min:0
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-"Ezt az alapértelmezett minimum értékel választja ha ez az eseményt lett "
-"kiválasztva"
+msgstr "Ezt az alapértelmezett minimum értékel választja ha ez az eseményt lett kiválasztva"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -312,19 +290,15 @@ msgid " Event Type "
 msgstr " Rendezvény típusa "
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,event_id:0
+#: view:event.registration:0 field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: view:report.event.registration:0
-#: field:report.event.registration,event_id:0
+#: view:report.event.registration:0 field:report.event.registration,event_id:0
 #: view:res.partner:0
 msgid "Event"
 msgstr "Rendezvény"
 
 #. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
-#: view:event.registration:0
+#: view:event.event:0 selection:event.event,state:0 view:event.registration:0
 #: selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
@@ -337,8 +311,7 @@ msgid "Participant"
 msgstr "Résztvevő"
 
 #. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: view:event.registration:0 view:report.event.registration:0
 msgid "Confirm"
 msgstr "Megerősítés"
 
@@ -357,9 +330,7 @@ msgstr "Jelentkezés erre az eseményre"
 msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
-msgstr ""
-"Ez lesz az alapértelmezett jelentkezés visszaigazoló levél érték ha ezt az "
-"eseményt választotta"
+msgstr "Ez lesz az alapértelmezett jelentkezés visszaigazoló levél érték ha ezt az eseményt választotta"
 
 #. module: event
 #: view:event.event:0
@@ -378,16 +349,13 @@ msgid "Location"
 msgstr "Helyszín"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,message_unread:0
-#: view:event.registration:0
-#: field:event.registration,message_unread:0
+#: view:event.event:0 field:event.event,message_unread:0
+#: view:event.registration:0 field:event.registration,message_unread:0
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
 #. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: view:event.registration:0 view:report.event.registration:0
 msgid "New"
 msgstr "Új"
 
@@ -418,15 +386,12 @@ msgid "Creation Date"
 msgstr "Létrehozás dátuma"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
+#: view:report.event.registration:0 field:report.event.registration,user_id:0
 msgid "Event Responsible"
 msgstr "Esemény felelős"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
+#: view:event.event:0 view:event.registration:0 view:res.partner:0
 msgid "Cancel Registration"
 msgstr "Regisztráció törlése"
 
@@ -503,8 +468,7 @@ msgid "Logs"
 msgstr "Naplók"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state_id:0
+#: view:event.event:0 field:event.event,state_id:0
 msgid "State"
 msgstr "Állapot"
 
@@ -535,8 +499,7 @@ msgid "Registration Confirmation Email"
 msgstr "Jelentkezés visszaigazoló e-mail"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,month:0
+#: view:report.event.registration:0 field:report.event.registration,month:0
 msgid "Month"
 msgstr "Hónap"
 
@@ -585,14 +548,10 @@ msgstr "Nincs több jegy!"
 #: help:event.event,state:0
 msgid ""
 "If event is created, the status is 'Draft'.If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'.If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'.If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr ""
-"Ha az esemény létre lett hozva, akkor annak állapota 'Tervezet'. Ha az "
-"esemény megerősített a megadott dátumra akkor annak az állapota "
-"'Visszaigazolt'. Ha a rendezvény lezajlott, akkor annak állapota "
-"'Elvégezve'. Ha az esemény törölve lett akkor annak állapota 'Visszavonva'."
+msgstr "Ha az esemény létre lett hozva, akkor annak állapota 'Tervezet'. Ha az esemény megerősített a megadott dátumra akkor annak az állapota 'Visszaigazolt'. Ha a rendezvény lezajlott, akkor annak állapota 'Elvégezve'. Ha az esemény törölve lett akkor annak állapota 'Visszavonva'."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -600,24 +559,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "               Click to add a new event.\n"
 "             </p><p>\n"
-"               OpenERP helps you schedule and efficiently organize your "
-"events:\n"
-"               track subscriptions and participations, automate the "
-"confirmation emails,\n"
+"               OpenERP helps you schedule and efficiently organize your events:\n"
+"               track subscriptions and participations, automate the confirmation emails,\n"
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Kattintson új esemény hozzáadásához.\n"
-"             </p><p>\n"
-"               OpenERP segít az eseményeit hatékonyan ütemezni és "
-"szervezni:\n"
-"               jelentkezések és résztvevők nyomonkövetése, a visszaigazó "
-"emailek automatizálása,\n"
-"               jegyek eladása, stb.\n"
-"             </p>\n"
-"           "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Kattintson új esemény hozzáadásához.\n             </p><p>\n               OpenERP segít az eseményeit hatékonyan ütemezni és szervezni:\n               jelentkezések és résztvevők nyomonkövetése, a visszaigazó emailek automatizálása,\n               jegyek eladása, stb.\n             </p>\n           "
 
 #. module: event
 #: help:event.event,register_max:0
@@ -625,10 +572,7 @@ msgid ""
 "You can for each event define a maximum registration level. If you have too "
 "much registrations you are not able to confirm your event. (put 0 to ignore "
 "this rule )"
-msgstr ""
-"Mindegyik eseményre külön maximum jelentkezési számot határozhat meg. Ha túl "
-"sok jelentkező van akkor nem tud az eseményre visszaigazolást küldeni. "
-"(tegyen 0 értéket ennek a szabálynak a kiiktatásához)"
+msgstr "Mindegyik eseményre külön maximum jelentkezési számot határozhat meg. Ha túl sok jelentkező van akkor nem tud az eseményre visszaigazolást küldeni. (tegyen 0 értéket ennek a szabálynak a kiiktatásához)"
 
 #. module: event
 #: code:addons/event/event.py:106
@@ -643,19 +587,14 @@ msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
 "expected minimum/maximum. Please reconsider those limits before going "
 "further."
-msgstr ""
-"Az összes visszaigazolt jelentkezés erre az eseményre '%s' nem egyezik az "
-"elvárt minimum/maximum értékkel. Kérem értékelje újra a határértékeket "
-"mielőtt továbblépne."
+msgstr "Az összes visszaigazolt jelentkezés erre az eseményre '%s' nem egyezik az elvárt minimum/maximum értékkel. Kérem értékelje újra a határértékeket mielőtt továbblépne."
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
 msgid ""
 "If you set an email template, each participant will receive this email "
 "announcing the confirmation of the event."
-msgstr ""
-"Ha e-mail sablont állított be, mindegyik résztvevő ezt az e-mailt kapja az "
-"esemény visszaigazolására."
+msgstr "Ha e-mail sablont állított be, mindegyik résztvevő ezt az e-mailt kapja az esemény visszaigazolására."
 
 #. module: event
 #: view:board.board:0
@@ -679,22 +618,18 @@ msgid "Events which are in New state"
 msgstr "Események, melyeknek új állapotuk van"
 
 #. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.action_event_view
+#: view:event.event:0 model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.actions.act_window,name:event.open_board_associations_manager
 #: model:ir.module.category,name:event.module_category_event_management
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_reporting_events
-#: view:res.partner:0
+#: model:ir.ui.menu,name:event.menu_reporting_events view:res.partner:0
 msgid "Events"
 msgstr "Rendezvények"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
+#: view:event.event:0 field:event.event,state:0 view:event.registration:0
 #: field:event.registration,state:0
 msgid "Status"
 msgstr "Állapot"
@@ -715,8 +650,7 @@ msgid "zip"
 msgstr "Irányítószám"
 
 #. module: event
-#: field:res.partner,event_ids:0
-#: field:res.partner,event_registration_ids:0
+#: field:res.partner,event_ids:0 field:res.partner,event_registration_ids:0
 msgid "unknown"
 msgstr "ismeretlen"
 
@@ -736,14 +670,10 @@ msgid ""
 "The email address of the organizer which is put in the 'Reply-To' of all "
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
-msgstr ""
-"A szervező e-mail címe ami az esemény visszaigazolására automatikusan "
-"kiküldött visszaigazolások 'Válasz-cím' mezőjében lesz. A saját e-mail címét "
-"is beteheti az e-mail átjárójából, ha használ ilyet."
+msgstr "A szervező e-mail címe ami az esemény visszaigazolására automatikusan kiküldött visszaigazolások 'Válasz-cím' mezőjében lesz. A saját e-mail címét is beteheti az e-mail átjárójából, ha használ ilyet."
 
 #. module: event
-#: help:event.event,message_ids:0
-#: help:event.registration,message_ids:0
+#: help:event.event,message_ids:0 help:event.registration,message_ids:0
 msgid "Messages and communication history"
 msgstr "Üzenetek és kommunikáció történet"
 
@@ -757,23 +687,11 @@ msgstr "Telefon"
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from ${object.event_id.date_begin} to "
-"${object.event_id.date_end}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}.\n"
+"        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Hello ${object.name},</p>\n"
-"        <p>Az ${object.event_id.name} eseményre küldjük visszaigazolásunkat, "
-"melyre jelentkezett és  ${object.event_id.date_begin} időponttól "
-"${object.event_id.date_end} időpontig tart.\n"
-"        Egyéb felmerülő kérdésekben kérjük vegye fel a kapcsolatot a "
-"rendezvény osztályunkkal.</p>\n"
-"        <p>Köszönjük a jelentkezését a részvételre!</p>\n"
-"        <p>Viszont látásra</p>"
+msgstr "\n        <p>Hello ${object.name},</p>\n        <p>Az ${object.event_id.name} eseményre küldjük visszaigazolásunkat, melyre jelentkezett és  ${object.event_id.date_begin} időponttól ${object.event_id.date_end} időpontig tart.\n        Egyéb felmerülő kérdésekben kérjük vegye fel a kapcsolatot a rendezvény osztályunkkal.</p>\n        <p>Köszönjük a jelentkezését a részvételre!</p>\n        <p>Viszont látásra</p>"
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -792,9 +710,7 @@ msgstr "Felhasználó"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr ""
-"Figyelem: Ez a rendezvény még nem érte el a minimális regisztrációs limitet, "
-"Biztos benne, hogy szeretné megerősíteni?"
+msgstr "Figyelem: Ez a rendezvény még nem érte el a minimális regisztrációs limitet, Biztos benne, hogy szeretné megerősíteni?"
 
 #. module: event
 #: view:event.event:0
@@ -819,7 +735,7 @@ msgstr "Kiterjesztett szűrők…"
 #. module: event
 #: field:report.event.registration,nbevent:0
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Jelentkezők száma"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -837,9 +753,7 @@ msgid "Set To Draft"
 msgstr "Beállítás tervezetnek"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
+#: view:event.event:0 view:event.registration:0 view:res.partner:0
 msgid "Confirm Registration"
 msgstr "Regisztráció megerősítése"
 
@@ -849,9 +763,7 @@ msgstr "Regisztráció megerősítése"
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
-"Már jelentkezett erre az eseményre mint 'Résztvevő'. Kérem állítsa vissza "
-"tervezetre, ha vissza szeretné vonni ezt a jelentkezést."
+msgstr "Már jelentkezett erre az eseményre mint 'Résztvevő'. Kérem állítsa vissza tervezetre, ha vissza szeretné vonni ezt a jelentkezést."
 
 #. module: event
 #: view:res.partner:0
@@ -882,31 +794,25 @@ msgstr "Rendezvény típusa"
 #. module: event
 #: help:event.event,email_registration_id:0
 msgid ""
-"This field contains the template of the mail that will be automatically sent "
-"each time a registration for this event is confirmed."
-msgstr ""
-"Ez a mező az e-mail sablont tartalmazza ami automatikusan mindíg el lesz "
-"elküldve a jelentkezés visszaigazolására."
+"This field contains the template of the mail that will be automatically sent"
+" each time a registration for this event is confirmed."
+msgstr "Ez a mező az e-mail sablont tartalmazza ami automatikusan mindíg el lesz elküldve a jelentkezés visszaigazolására."
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Attended the Event"
 msgstr "Az eseményen megjelent"
 
 #. module: event
 #: constraint:event.event:0
 msgid "Error ! Closing Date cannot be set before Beginning Date."
-msgstr ""
-"Hiba ! A befejezés időpontja nem lehet előbb mint a kezdés időpontja."
+msgstr "Hiba ! A befejezés időpontja nem lehet előbb mint a kezdés időpontja."
 
 #. module: event
 #: code:addons/event/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr ""
-"Várnia kell az esemény indításának napjára ahhoz, hogy ezt a műveletet el "
-"tudja végezni."
+msgstr "Várnia kell az esemény indításának napjára ahhoz, hogy ezt a műveletet el tudja végezni."
 
 #. module: event
 #: field:event.event,user_id:0
@@ -951,8 +857,7 @@ msgid "Set To Unconfirmed"
 msgstr "Visszaigazolatlanra állítja"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,is_subscribed:0
+#: view:event.event:0 field:event.event,is_subscribed:0
 msgid "Subscribed"
 msgstr "Feliratkozva"
 
@@ -962,8 +867,7 @@ msgid "Unsubscribe"
 msgstr "Leiratkozás"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Responsible"
 msgstr "Felelős"
 
@@ -974,8 +878,7 @@ msgstr "Jelentkezési kapcsolat"
 
 #. module: event
 #: view:report.event.registration:0
-#: field:report.event.registration,speaker_id:0
-#: field:res.partner,speaker:0
+#: field:report.event.registration,speaker_id:0 field:res.partner,speaker:0
 msgid "Speaker"
 msgstr "Előadó"
 
@@ -1032,8 +935,7 @@ msgid "Maximum Registrations"
 msgstr "Maximum regisztrációk"
 
 #. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
+#: view:event.event:0 selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Nincs megerősítve"
@@ -1054,15 +956,12 @@ msgid "Association Dashboard"
 msgstr "Társítási műszerfal"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,name:0
-#: field:event.registration,name:0
+#: view:event.event:0 field:event.event,name:0 field:event.registration,name:0
 msgid "Name"
 msgstr "Név"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,country_id:0
+#: view:event.event:0 field:event.event,country_id:0
 msgid "Country"
 msgstr "Ország"
 
@@ -1086,9 +985,7 @@ msgstr "Április"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr ""
-"Ezt az alapértelmezett esemény visszaigazoló email értéket állítja ba, ha "
-"ezt az rendezvényt választja."
+msgstr "Ezt az alapértelmezett esemény visszaigazoló email értéket állítja ba, ha ezt az rendezvényt választja."
 
 #. module: event
 #: view:report.event.registration:0
@@ -1096,9 +993,7 @@ msgid "Events which are in confirm state"
 msgstr "Események melyek visszaigazolt állapotúak"
 
 #. module: event
-#: view:event.event:0
-#: view:event.type:0
-#: field:event.type,name:0
+#: view:event.event:0 view:event.type:0 field:event.type,name:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_type:0
 msgid "Event Type"
@@ -1146,34 +1041,20 @@ msgstr "Jelenlegi jelentkezések"
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
+"        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Hello ${object.name},</p>\n"
-"        <p>Visszaigazoljuk a jelentkezését erre a rendezvényre "
-"${object.event_id.name} és annak rögzítésére.\n"
-"        Automatikus válasz levelet kap a részvétel információiról (mint "
-"menetrend, napirend...) amint a rendezvényt jóváhagyták.</p>\n"
-"        <p>Köszönjük jelentkezését, részvételét!</p>\n"
-"        <p>Viszont látásra</p>"
+msgstr "\n        <p>Hello ${object.name},</p>\n        <p>Visszaigazoljuk a jelentkezését erre a rendezvényre ${object.event_id.name} és annak rögzítésére.\n        Automatikus válasz levelet kap a részvétel információiról (mint menetrend, napirend...) amint a rendezvényt jóváhagyták.</p>\n        <p>Köszönjük jelentkezését, részvételét!</p>\n        <p>Viszont látásra</p>"
 
 #. module: event
 #: help:event.event,reply_to:0
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr ""
-"A szervező e-mail címét ide tegye, ezzel a 'Válasz-cím' helyén ez lesz az "
-"automatikus esemény visszaigazoló emaileken. A saját e-mail címét is "
-"beteheti az e-mail átjárójából, ha használ ilyet."
+msgstr "A szervező e-mail címét ide tegye, ezzel a 'Válasz-cím' helyén ez lesz az automatikus esemény visszaigazoló emaileken. A saját e-mail címét is beteheti az e-mail átjárójából, ha használ ilyet."
 
 #. module: event
 #: view:event.event:0
@@ -1199,8 +1080,7 @@ msgid "Event Confirmation"
 msgstr "Rendezvény megerősítése"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
+#: view:report.event.registration:0 field:report.event.registration,year:0
 msgid "Year"
 msgstr "Év"
 
@@ -1208,6 +1088,3 @@ msgstr "Év"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Megerősített előadók"
-
-#~ msgid "Number Of Events"
-#~ msgstr "Rendezvények száma"

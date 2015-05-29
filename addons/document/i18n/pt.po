@@ -1,21 +1,22 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-21 12:39+0000\n"
-"Last-Translator: Mike C. <miguelmclara@gmail.com>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (http://www.transifex.com/projects/p/odoo-7/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -38,8 +39,7 @@ msgstr "Procurar nas pastas de Documento"
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr ""
-"Campo a usar como nome nas pastas. Se vazio o campo \"nome\" será o usado."
+msgstr "Campo a usar como nome nas pastas. Se vazio o campo \"nome\" será o usado."
 
 #. module: document
 #: view:document.directory:0
@@ -57,8 +57,7 @@ msgid "Resources"
 msgstr "Recursos"
 
 #. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:0
+#: field:document.directory,file_ids:0 view:report.document.user:0
 msgid "Files"
 msgstr "Ficheiros"
 
@@ -78,8 +77,7 @@ msgid "Expression"
 msgstr "Expressão"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,company_id:0
+#: view:document.directory:0 field:document.directory,company_id:0
 msgid "Company"
 msgstr "Empresa"
 
@@ -102,12 +100,8 @@ msgstr "Gestão documental"
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"Uma expressão python, usada para avaliar o campo\n"
-"Não pode usar 'dir_id' para a pasta atual, 'res_id', 'res_model' como "
-"referência para o registo atual em pastas dinâmicas"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
+msgstr "Uma expressão python, usada para avaliar o campo\nNão pode usar 'dir_id' para a pasta atual, 'res_id', 'res_model' como referência para o registo atual em pastas dinâmicas"
 
 #. module: document
 #: help:document.directory.dctx,field:0
@@ -115,8 +109,7 @@ msgid "The name of the field."
 msgstr "O nome do campo."
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "O nome da pasta tem de ser único"
@@ -127,8 +120,7 @@ msgid "Filter on my documents"
 msgstr "Filtrar nos meus documentos"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
+#: view:ir.attachment:0 field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Conteúdo indexado"
 
@@ -137,9 +129,7 @@ msgstr "Conteúdo indexado"
 msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
-msgstr ""
-"Se verdadeiro, todos os anexos relacionados com este recurso serão "
-"encontrados. Se falso, apenas  aqueles que têm este recurso como ascendente."
+msgstr "Se verdadeiro, todos os anexos relacionados com este recurso serão encontrados. Se falso, apenas  aqueles que têm este recurso como ascendente."
 
 #. module: document
 #: view:document.directory:0
@@ -179,8 +169,7 @@ msgid "Knowledge Application Configuration"
 msgstr "Conhecimento da configuração da aplicação"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,partner_id:0
+#: view:ir.attachment:0 field:ir.attachment,partner_id:0
 msgid "Partner"
 msgstr "Parceiro"
 
@@ -196,24 +185,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Clique para criar um documento novo.\n"
-"          </p><p>\n"
-"            O repositório de documentos dá-lhe acesso a todos os anexos, "
-"tais como\n"
-"            faturas, documentos de projetos, email, etc.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Clique para criar um documento novo.\n          </p><p>\n            O repositório de documentos dá-lhe acesso a todos os anexos, tais como\n            faturas, documentos de projetos, email, etc.\n          </p>\n        "
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #: code:addons/document/document.py:348
 #, python-format
 msgid "ValidateError"
@@ -249,8 +228,7 @@ msgid "Content Type"
 msgstr "Tipo de conteúdo"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,type:0
+#: view:document.directory:0 field:document.directory,type:0
 msgid "Type"
 msgstr "Tipo"
 
@@ -260,8 +238,7 @@ msgid "The filename must be unique in a directory !"
 msgstr "O nome do ficheiro deve ser único, na pasta!"
 
 #. module: document
-#: code:addons/document/document.py:118
-#: code:addons/document/document.py:308
+#: code:addons/document/document.py:118 code:addons/document/document.py:308
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -271,15 +248,13 @@ msgstr "%s (cópia)"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
-"Selecione um objeto, para criar uma pasta por cada registo dessa tabela."
+msgstr "Selecione um objeto, para criar uma pasta por cada registo dessa tabela."
 
 #. module: document
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Use um domínio se quer aplicar um filtro automático aos registos visíveis"
+msgstr "Use um domínio se quer aplicar um filtro automático aos registos visíveis"
 
 #. module: document
 #: constraint:document.directory:0
@@ -297,8 +272,7 @@ msgid "Context fields"
 msgstr "Campos do contexto"
 
 #. module: document
-#: view:document.directory:0
-#: field:report.document.user,type:0
+#: view:document.directory:0 field:report.document.user,type:0
 msgid "Directory Type"
 msgstr "Tipo de Directório"
 
@@ -336,18 +310,15 @@ msgstr "Ficheiros gerados"
 #. module: document
 #: view:document.configuration:0
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"Ao executar este assistente, ele irá configurar os diretórios "
-"automaticamente de acordo com os módulos instalados."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
+msgstr "Ao executar este assistente, ele irá configurar os diretórios automaticamente de acordo com os módulos instalados."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:0
-#: field:ir.attachment,parent_id:0
+#: view:ir.attachment:0 field:ir.attachment,parent_id:0
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
@@ -359,8 +330,7 @@ msgid "Security"
 msgstr "Segurança"
 
 #. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Utilizador da última modificação"
 
@@ -381,8 +351,7 @@ msgid "Domain"
 msgstr "Domínio"
 
 #. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Data da modificação"
 
@@ -413,17 +382,14 @@ msgid "Static Directory"
 msgstr "Diretório estático"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "Mês"
 
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
-"Defina palavras no contexto, para todos os diretórios e ficheiros "
-"descendentes"
+msgstr "Defina palavras no contexto, para todos os diretórios e ficheiros descendentes"
 
 #. module: document
 #: view:document.directory:0
@@ -436,10 +402,8 @@ msgid "unknown"
 msgstr "desconhecido"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,user_id:0
-#: view:ir.attachment:0
-#: field:ir.attachment,user_id:0
+#: view:document.directory:0 field:document.directory,user_id:0
+#: view:ir.attachment:0 field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "Dono"
@@ -463,13 +427,9 @@ msgstr "Data de criação"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
-"Assinale este campo se quer que o nome do ficheiro contenha o nome do "
-"registo.\n"
-"Se for definido, o diretório terá de ser um recurso."
+msgstr "Assinale este campo se quer que o nome do ficheiro contenha o nome do registo.\nSe for definido, o diretório terá de ser um recurso."
 
 #. module: document
 #: view:document.configuration:0
@@ -490,20 +450,16 @@ msgstr "ID do modelo"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Assinale aqui se quer usar a mesma estrutura em árvore como a do objeto "
-"selecionado no sistema."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "Assinale aqui se quer usar a mesma estrutura em árvore como a do objeto selecionado no sistema."
 
 #. module: document
 #: help:document.directory,ressource_id:0
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
-"Este ID, junto com o modelo ascendente, anexa esta pasta a um registo "
-"específico do modelo ascendente"
+msgstr "Este ID, junto com o modelo ascendente, anexa esta pasta a um registo específico do modelo ascendente"
 
 #. module: document
 #. openerp-web
@@ -550,15 +506,11 @@ msgstr "Novembro"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
-"Se colocar um objeto aqui, este diretório do template irá aparecer por baixo "
-"de todos os objetos. Pastas destas são anexadas ao modelo ou registo "
-"específico, tal como os anexos. Não coloque uma pasta ascendente, se "
-"selecionar um modelo ascendente."
+msgstr "Se colocar um objeto aqui, este diretório do template irá aparecer por baixo de todos os objetos. Pastas destas são anexadas ao modelo ou registo específico, tal como os anexos. Não coloque uma pasta ascendente, se selecionar um modelo ascendente."
 
 #. module: document
 #: view:document.directory:0
@@ -612,12 +564,7 @@ msgid ""
 "documents. The virtual folder of a document can be used to manage the files "
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
-msgstr ""
-"Sistema de Gestão de Documentos OpenERP suporta mapeamento de pastas "
-"virtuais com documentos. A pasta virtual de um documento pode ser usada para "
-"gerir os ficheiros anexados ao documento, ou para imprimir e fazer download "
-"de qualquer relatório. Esta ferramenta irá criar diretórios automaticamente "
-"de acordo com os módulos instalados."
+msgstr "Sistema de Gestão de Documentos OpenERP suporta mapeamento de pastas virtuais com documentos. A pasta virtual de um documento pode ser usada para gerir os ficheiros anexados ao documento, ou para imprimir e fazer download de qualquer relatório. Esta ferramenta irá criar diretórios automaticamente de acordo com os módulos instalados."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
@@ -665,9 +612,7 @@ msgstr "Modelo ascendente"
 msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
-msgstr ""
-"Estes grupos, não se aplicam porém às pastas descendentes, que devem ter os "
-"seus próprios grupos definidos."
+msgstr "Estes grupos, não se aplicam porém às pastas descendentes, que devem ter os seus próprios grupos definidos."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -699,14 +644,10 @@ msgstr "Configuração do Diretório"
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
-"Cada pasta pode ser do tipo estático ou estar ligada a uma tabela. Uma pasta "
-"estática é uma pasta que pode conter ficheiros, tal como no sistema "
-"operativo. O diretórios ligados a recursos do sistema, automaticamente "
-"contêm sub-diretórios para cada recurso definido como descendente."
+msgstr "Cada pasta pode ser do tipo estático ou estar ligada a uma tabela. Uma pasta estática é uma pasta que pode conter ficheiros, tal como no sistema operativo. O diretórios ligados a recursos do sistema, automaticamente contêm sub-diretórios para cada recurso definido como descendente."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -729,8 +670,7 @@ msgid "April"
 msgstr "Abril"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "# dos ficheiros"
 
@@ -744,8 +684,7 @@ msgstr "Tipo de conteúdo da pasta"
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
-msgstr ""
-"Apenas os membros deste grupo terão acesso a este diretório e seus ficheiros."
+msgstr "Apenas os membros deste grupo terão acesso a este diretório e seus ficheiros."
 
 #. module: document
 #. openerp-web

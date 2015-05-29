@@ -1,21 +1,22 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * membership
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2015-03-23 18:16+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 14:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-24 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -35,15 +36,14 @@ msgid "Paid Member"
 msgstr ""
 
 #. module: membership
-#: view:report.membership:membership.view_report_membership_search
+#: view:report.membership:0
 msgid "This will display waiting, invoiced and total pending columns"
 msgstr ""
 
 #. module: membership
-#: view:report.membership:0
-#: view:res.partner:0
+#: view:report.membership:0 view:res.partner:0
 msgid "Group By..."
-msgstr ""
+msgstr "Sdukel s..."
 
 #. module: membership
 #: field:report.membership,num_paid:0
@@ -63,7 +63,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "March"
-msgstr ""
+msgstr "Meɣres"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
@@ -76,8 +76,7 @@ msgid "Invoice is be paid."
 msgstr ""
 
 #. module: membership
-#: field:membership.membership_line,company_id:0
-#: view:report.membership:membership.view_report_membership_search
+#: field:membership.membership_line,company_id:0 view:report.membership:0
 #: field:report.membership,company_id:0
 msgid "Company"
 msgstr "Takebbwanit"
@@ -85,8 +84,7 @@ msgstr "Takebbwanit"
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
-#: field:res.partner,free_member:0
-#: selection:res.partner,membership_state:0
+#: field:res.partner,free_member:0 selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr ""
 
@@ -101,15 +99,14 @@ msgid "End membership date"
 msgstr ""
 
 #. module: membership
-#: field:product.template,membership_date_to:0
+#: field:product.product,membership_date_to:0
 #: field:res.partner,membership_stop:0
 msgid "Membership End Date"
 msgstr ""
 
 #. module: membership
-#: view:report.membership:membership.view_report_membership_search
-#: field:report.membership,user_id:0
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:report.membership:0 field:report.membership,user_id:0
+#: view:res.partner:0
 msgid "Salesperson"
 msgstr "Amzenzi"
 
@@ -119,12 +116,12 @@ msgid "Waiting to invoice"
 msgstr ""
 
 #. module: membership
-#: view:report.membership:membership.view_report_membership_search
+#: view:report.membership:0
 msgid "This will display paid, old and total earned columns"
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "Suppliers"
 msgstr "Isseǧǧawen"
 
@@ -136,23 +133,23 @@ msgid "Non Member"
 msgstr ""
 
 #. module: membership
-#: view:product.template:membership.membership_products_form
+#: view:product.product:0
 msgid "Taxes"
 msgstr "Tizendiyin"
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "All Members"
 msgstr ""
 
 #. module: membership
-#: view:product.template:membership.membership_products_form
+#: view:product.product:0
 msgid "This note will be displayed on quotations..."
 msgstr ""
 
 #. module: membership
-#: code:addons/membership/membership.py:402
-#: code:addons/membership/membership.py:405
+#: code:addons/membership/membership.py:410
+#: code:addons/membership/membership.py:413
 #, python-format
 msgid "Error!"
 msgstr "Tuccḍa!"
@@ -183,7 +180,7 @@ msgid "Associated partner."
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "Supplier Partners"
 msgstr "Imendiden iseǧǧawen"
 
@@ -199,12 +196,12 @@ msgid "Members Analysis"
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "End Membership Date"
 msgstr ""
 
 #. module: membership
-#: code:addons/membership/membership.py:406
+#: code:addons/membership/membership.py:414
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr ""
@@ -221,7 +218,7 @@ msgid "Invoice to paid"
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "Customer Partners"
 msgstr "Imendiden Imsaɣen"
 
@@ -238,7 +235,7 @@ msgstr ""
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
-msgstr ""
+msgstr "Silel"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -268,13 +265,12 @@ msgstr "# Itraǧun"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
-#: model:ir.ui.menu,name:membership.menu_membership
-#: view:res.partner:membership.membership_members_tree
+#: model:ir.ui.menu,name:membership.menu_membership view:res.partner:0
 msgid "Members"
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "Invoiced/Paid/Free"
 msgstr ""
 
@@ -286,7 +282,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "July"
-msgstr ""
+msgstr "Yulyu"
 
 #. module: membership
 #: model:product.template,name:membership.membership_0_product_template
@@ -301,8 +297,7 @@ msgid ""
 msgstr ""
 
 #. module: membership
-#: view:product.template:membership.membership_product_search_form_view
-#: view:report.membership:membership.view_report_membership_search
+#: view:product.product:0 view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
 msgstr ""
@@ -318,14 +313,13 @@ msgid "Invoiced member may be Associated member."
 msgstr ""
 
 #. module: membership
-#: help:product.template,membership_date_to:0
+#: help:product.product,membership_date_to:0
 #: help:res.partner,membership_stop:0
 msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: membership
-#: view:product.template:membership.membership_products_form
-#: view:product.template:membership.membership_products_tree
+#: view:product.product:0
 msgid "Membership products"
 msgstr ""
 
@@ -335,7 +329,7 @@ msgid "Current Membership Status"
 msgstr ""
 
 #. module: membership
-#: view:product.template:membership.membership_products_form
+#: view:product.product:0
 msgid "Add a description..."
 msgstr "Rnu aglam..."
 
@@ -355,7 +349,7 @@ msgid " Membership State"
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_partner_form
+#: view:res.partner:0
 msgid "Memberships"
 msgstr ""
 
@@ -367,12 +361,12 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "September"
-msgstr ""
+msgstr "Ctember"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "December"
-msgstr ""
+msgstr "Bujember"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
@@ -380,47 +374,46 @@ msgid "Invoice Line"
 msgstr "Izrig n tfaturt"
 
 #. module: membership
-#: view:report.membership:membership.view_report_membership_search
+#: view:report.membership:0 field:report.membership,month:0
 msgid "Month"
 msgstr "Aggur"
 
 #. module: membership
-#: view:product.template:membership.membership_product_search_form_view
+#: view:product.product:0
 msgid "Group by..."
 msgstr "Sdukel s ..."
 
 #. module: membership
-#: code:addons/membership/membership.py:403
+#: code:addons/membership/membership.py:411
 #, python-format
 msgid "Partner is a free Member."
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_partner_form
+#: view:res.partner:0
 msgid "Buy Membership"
 msgstr ""
 
 #. module: membership
-#: field:report.membership,associate_member_id:0
-#: view:res.partner:membership.view_res_partner_member_filter
+#: field:report.membership,associate_member_id:0 view:res.partner:0
 #: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr ""
 
 #. module: membership
-#: help:product.template,membership_date_from:0
+#: help:product.product,membership_date_from:0
 #: help:res.partner,membership_start:0
 msgid "Date from which membership becomes active."
 msgstr ""
 
 #. module: membership
-#: view:report.membership:membership.view_report_membership_search
+#: view:report.membership:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "Partenaire Associé"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
-#: view:membership.invoice:membership.view_membership_invoice_view
+#: view:membership.invoice:0
 msgid "Membership Invoice"
 msgstr ""
 
@@ -430,24 +423,24 @@ msgid "Define membership product."
 msgstr ""
 
 #. module: membership
-#: view:product.template:membership.membership_product_search_form_view
+#: view:product.product:0
 msgid "Category"
 msgstr "Taggayt"
 
 #. module: membership
-#: view:res.partner:membership.view_partner_tree
+#: view:res.partner:0
 msgid "Contacts"
 msgstr "Inarmisen"
 
 #. module: membership
-#: view:report.membership:membership.view_report_membership_search
+#: view:report.membership:0
 msgid "Forecast"
-msgstr ""
+msgstr "Prévisions"
 
 #. module: membership
 #: field:report.membership,partner_id:0
 msgid "Member"
-msgstr ""
+msgstr "Amedraw"
 
 #. module: membership
 #: view:product.product:0
@@ -470,39 +463,39 @@ msgid "Membership Status"
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "Customers"
 msgstr "Imsaɣen"
 
 #. module: membership
-#: view:membership.invoice:membership.view_membership_invoice_view
+#: view:membership.invoice:0
 msgid "or"
 msgstr "neɣ"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "August"
-msgstr ""
+msgstr "Ɣuct"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
 #: model:ir.ui.menu,name:membership.menu_membership_products
-#: view:product.template:membership.membership_product_search_form_view
+#: view:product.product:0
 msgid "Membership Products"
 msgstr ""
 
 #. module: membership
-#: sql_constraint:product.template:0
+#: sql_constraint:product.product:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr ""
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "June"
-msgstr ""
+msgstr "Yunyu"
 
 #. module: membership
-#: help:product.template,membership:0
+#: help:product.product,membership:0
 msgid "Check if the product is eligible for membership."
 msgstr ""
 
@@ -515,12 +508,9 @@ msgstr ""
 
 #. module: membership
 #: field:membership.invoice,product_id:0
-#: field:membership.membership_line,membership_id:0
-#: field:product.template,membership:0
-#: view:report.membership:membership.view_report_membership_graph1
-#: view:report.membership:membership.view_report_membership_search
-#: view:res.partner:membership.view_partner_form
-#: field:res.partner,member_lines:0
+#: field:membership.membership_line,membership_id:0 view:product.product:0
+#: field:product.product,membership:0 view:report.membership:0
+#: view:res.partner:0 field:res.partner,member_lines:0
 msgid "Membership"
 msgstr ""
 
@@ -537,51 +527,44 @@ msgid "Association Partner"
 msgstr ""
 
 #. module: membership
-#: field:report.membership,start_date:0
+#: field:report.membership,date_from:0 view:res.partner:0
 msgid "Start Date"
 msgstr "Azemz n tazwara"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "November"
-msgstr ""
+msgstr "Number"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "October"
-msgstr ""
+msgstr "Tuber"
 
 #. module: membership
 #: help:res.partner,membership_state:0
 msgid ""
 "It indicates the membership state.\n"
-"                    -Non Member: A partner who has not applied for any "
-"membership.\n"
-"                    -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                    -Old Member: A member whose membership date has "
-"expired.\n"
-"                    -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                    -Invoiced Member: A member whose invoice has been "
-"created.\n"
+"                    -Non Member: A partner who has not applied for any membership.\n"
+"                    -Cancelled Member: A member who has cancelled his membership.\n"
+"                    -Old Member: A member whose membership date has expired.\n"
+"                    -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been created.\n"
 "                    -Paying member: A member who has paid the membership fee."
 msgstr ""
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "January"
-msgstr ""
+msgstr "Yennayer"
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "Membership Partners"
 msgstr ""
 
 #. module: membership
-#: field:membership.membership_line,member_price:0
-#: view:product.template:membership.membership_products_form
-#: view:product.template:membership.membership_products_tree
+#: field:membership.membership_line,member_price:0 view:product.product:0
 msgid "Membership Fee"
 msgstr ""
 
@@ -596,7 +579,7 @@ msgid "Basic Membership"
 msgstr ""
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "None/Canceled/Old/Waiting"
 msgstr ""
 
@@ -613,8 +596,7 @@ msgid "To"
 msgstr "Ɣer"
 
 #. module: membership
-#: view:report.membership:membership.view_report_membership_search
-#: field:report.membership,membership_state:0
+#: view:report.membership:0 field:report.membership,membership_state:0
 msgid "Current Membership State"
 msgstr ""
 
@@ -622,18 +604,12 @@ msgstr ""
 #: help:membership.membership_line,state:0
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
+"                        -Non Member: A member who has not applied for any membership.\n"
+"                        -Cancelled Member: A member who has cancelled his membership.\n"
+"                        -Old Member: A member whose membership date has expired.\n"
+"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been created.\n"
+"                        -Paid Member: A member who has paid the membership amount."
 msgstr ""
 
 #. module: membership
@@ -642,7 +618,7 @@ msgid "Draft invoice is now open."
 msgstr ""
 
 #. module: membership
-#: view:product.template:membership.membership_product_search_form_view
+#: view:product.product:0
 msgid "Inactive"
 msgstr "Arurmid"
 
@@ -653,12 +629,12 @@ msgid "Invoice"
 msgstr "Tafaturt"
 
 #. module: membership
-#: view:membership.invoice:membership.view_membership_invoice_view
+#: view:membership.invoice:0
 msgid "Cancel"
 msgstr "Sefsax"
 
 #. module: membership
-#: view:res.partner:membership.view_res_partner_member_filter
+#: view:res.partner:0
 msgid "All non Members"
 msgstr ""
 
@@ -678,22 +654,22 @@ msgid "Member Price"
 msgstr ""
 
 #. module: membership
-#: view:product.template:membership.membership_products_form
+#: view:product.product:0
 msgid "Membership Duration"
 msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Afaris"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "May"
-msgstr ""
+msgstr "Maggu"
 
 #. module: membership
-#: field:product.template,membership_date_from:0
+#: field:product.product,membership_date_from:0
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
 msgstr ""
@@ -709,14 +685,14 @@ msgid "Membership Amount"
 msgstr ""
 
 #. module: membership
-#: field:report.membership,date_to:0
+#: field:report.membership,date_to:0 view:res.partner:0
 msgid "End Date"
 msgstr "Azemz n tagara"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "February"
-msgstr ""
+msgstr "Furar"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
@@ -726,7 +702,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "April"
-msgstr ""
+msgstr "Yebrir"
 
 #. module: membership
 #: view:res.partner:0
@@ -750,7 +726,7 @@ msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
-#: view:membership.invoice:membership.view_membership_invoice_view
+#: view:membership.invoice:0
 msgid "Invoice Membership"
 msgstr ""
 
@@ -777,17 +753,16 @@ msgid "Cancelled Member"
 msgstr ""
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,year:0
+#: view:report.membership:0 field:report.membership,year:0
 msgid "Year"
-msgstr ""
+msgstr "Aseggawas"
 
 #. module: membership
 #: view:product.product:0
 msgid "Accounting"
-msgstr ""
+msgstr "Tasiḍent"
 
 #. module: membership
-#: view:report.membership:membership.view_report_membership_search
+#: view:report.membership:0
 msgid "Revenue Done"
 msgstr ""

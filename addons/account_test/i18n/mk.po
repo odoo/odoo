@@ -1,49 +1,44 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_test
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-03-28 21:36+0000\n"
-"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
-"Language-Team: ESKON-INZENERING\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-7/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:59+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
 "Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
+"Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
@@ -57,19 +52,14 @@ msgstr "Тест 2: Отварање на фискална година"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
-msgstr ""
-"Означете дека порамнетата фактура за Продажби/Набавки има порамнети внесови "
-"за Сметките Плаќања и Побарувања"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
+msgstr "Означете дека порамнетата фактура за Продажби/Набавки има порамнети внесови за Сметките Плаќања и Побарувања"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
-msgid ""
-"Check if movement lines are balanced and have the same date and period"
-msgstr ""
-"Означете доколку ставките на движењето се балансирани и имаат ист датум и "
-"период"
+msgid "Check if movement lines are balanced and have the same date and period"
+msgstr "Означете доколку ставките на движењето се балансирани и имаат ист датум и период"
 
 #. module: account_test
 #: field:accounting.assert.test,name:0
@@ -165,11 +155,9 @@ msgstr "Код Python"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
-msgstr ""
-"Означете на банкарскиот извод дека Заклучното салдо = Почетно салдо + сума "
-"од ставки на изводот"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
+msgstr "Означете на банкарскиот извод дека Заклучното салдо = Почетно салдо + сума од ставки на изводот"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
@@ -211,9 +199,7 @@ msgstr "Секвенца"
 msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
-msgstr ""
-"Проверете дали салдото на новоотворената фискална година се совпаѓа со "
-"салдото од минатата година"
+msgstr "Проверете дали салдото на новоотворената фискална година се совпаѓа со салдото од минатата година"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -227,11 +213,7 @@ msgid ""
 "                Click to create Accounting Test.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете за да креирате Сметководствен Тест.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за да креирате Сметководствен Тест.\n              </p>\n            "
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -241,8 +223,7 @@ msgstr "Провери го салдото: Сума на задолжување
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
 msgid "Check that general accounts and partners on account moves are active"
-msgstr ""
-"Означете дека општите сметки и партнерите на движењата на сметката се активни"
+msgstr "Означете дека општите сметки и партнерите на движењата на сметката се активни"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1

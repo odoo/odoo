@@ -1,21 +1,22 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_holidays
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-27 21:13+0000\n"
-"Last-Translator: gehad shaat <gehad.shaath@gmail.com>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:55+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -38,9 +39,7 @@ msgstr "في انتظار الموافقة الثانية"
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
 "resource manager."
-msgstr ""
-"لا يمكنك تعديل طلب مغادرة قد تمت الموافقة عليها. الرجاء الاتصال بمدير "
-"الموارد البشرية."
+msgstr "لا يمكنك تعديل طلب مغادرة قد تمت الموافقة عليها. الرجاء الاتصال بمدير الموارد البشرية."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,remaining_leaves:0
@@ -68,8 +67,7 @@ msgid "From Date"
 msgstr "من تاريخ"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,department_id:0
+#: view:hr.holidays:0 field:hr.holidays,department_id:0
 msgid "Department"
 msgstr "الإدارة"
 
@@ -152,8 +150,7 @@ msgid "Validate"
 msgstr "تحقق"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
@@ -206,14 +203,12 @@ msgid "Leaves by Department"
 msgstr "اجازة حسب الإدارة"
 
 #. module: hr_holidays
-#: field:hr.holidays,manager_id2:0
-#: selection:hr.holidays,state:0
+#: field:hr.holidays,manager_id2:0 selection:hr.holidays,state:0
 msgid "Second Approval"
 msgstr "الموافقة الثانية"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "ملغي"
 
@@ -221,11 +216,8 @@ msgstr "ملغي"
 #: help:hr.holidays,type:0
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves "
-"available for someone"
-msgstr ""
-"اختر ' طلب اجازة ' عند حاجة  الموظف ليوم عطلة\n"
-"اختر 'طلب تخصيص ' لزيادة عدد ايام العطل المتاحة للموظف"
+"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
+msgstr "اختر ' طلب اجازة ' عند حاجة  الموظف ليوم عطلة\nاختر 'طلب تخصيص ' لزيادة عدد ايام العطل المتاحة للموظف"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -235,7 +227,7 @@ msgstr "التحقّق"
 #. module: hr_holidays
 #: help:hr.holidays,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "عند التفعيل، يجب الانتباه الى الرسائل الجديدة"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -248,11 +240,9 @@ msgid "This area is automatically filled by the user who validate the leave"
 msgstr "هذه المنطقة تملأ بشكل آلي عن طريق المستخدم الذي أجيزت له الإجازة"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-#: field:hr.holidays,holiday_status_id:0
+#: xsl:holidays.summary:0 field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
-#: view:hr.holidays.status:0
-#: field:hr.holidays.status,name:0
+#: view:hr.holidays.status:0 field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
 msgid "Leave Type"
@@ -263,7 +253,7 @@ msgstr "نوع الاجازة"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل إدراجها في عروض كانبان."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:254
@@ -331,9 +321,7 @@ msgid "Total holidays by type"
 msgstr "المجموع الكلي للأجازات حسب النوع"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: view:hr.holidays:0
-#: field:hr.holidays,employee_id:0
+#: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
@@ -378,18 +366,14 @@ msgstr ""
 #. module: hr_holidays
 #: help:hr.holidays,state:0
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.         "
-"   \n"
-"The status is 'To Approve', when holiday request is confirmed by user.       "
-"     \n"
-"The status is 'Refused', when holiday request is refused by manager.         "
-"   \n"
+"The status is set to 'To Submit', when a holiday request is created.            \n"
+"The status is 'To Approve', when holiday request is confirmed by user.            \n"
+"The status is 'Refused', when holiday request is refused by manager.            \n"
 "The status is 'Approved', when holiday request is approved by manager."
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,number_of_days:0
+#: view:hr.holidays:0 field:hr.holidays,number_of_days:0
 msgid "Number of Days"
 msgstr "عدد الأيام"
 
@@ -397,13 +381,8 @@ msgstr "عدد الأيام"
 #: code:addons/hr_holidays/hr_holidays.py:487
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when "
-"there is only one leave type with the option 'Allow to Override Limit' "
-"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
-"decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
-"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
-"the employees if the configuration does not allow to use this field."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \\ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
 
 #. module: hr_holidays
@@ -429,16 +408,15 @@ msgstr "الموظفين"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that "
-"is 'active' (active field is True)"
+"Filters only on allocations and requests that belong to an holiday type that"
+" is 'active' (active field is True)"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
 msgid ""
 "<p>\n"
-"               You can assign remaining Legal Leaves for each employee, "
-"OpenERP\n"
+"               You can assign remaining Legal Leaves for each employee, OpenERP\n"
 "               will automatically create and validate allocation requests.\n"
 "             </p>\n"
 "           "
@@ -495,8 +473,7 @@ msgid "Allow to Override Limit"
 msgstr "السماح لتجاوز الحد"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,date_from:0
+#: view:hr.holidays:0 field:hr.holidays,date_from:0
 msgid "Start Date"
 msgstr "تاريخ البدء"
 
@@ -509,8 +486,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "or"
 msgstr "أو"
 
@@ -596,8 +572,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,state:0
+#: view:hr.holidays:0 field:hr.holidays,state:0
 msgid "Status"
 msgstr "الحالة"
 
@@ -665,8 +640,7 @@ msgid "Unpaid"
 msgstr "غير مدفوعة"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-#: view:hr.holidays:0
+#: xsl:holidays.summary:0 view:hr.holidays:0
 #: view:hr.holidays.summary.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 #: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
@@ -710,8 +684,7 @@ msgstr "نوع الطلب"
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr ""
-"اذا تم وضع الحقل النشط الى خطأ, ستسمح لك بإخفاء نوع الاجازة بدون ازالته."
+msgstr "اذا تم وضع الحقل النشط الى خطأ, ستسمح لك بإخفاء نوع الاجازة بدون ازالته."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -735,8 +708,7 @@ msgid "Leaves Analysis"
 msgstr "تحليل الاجازة"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "إلغاء"
 
@@ -757,8 +729,7 @@ msgid "You cannot delete a leave which is in %s state."
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays,type:0
+#: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "طلب التوزيع"
 
@@ -781,14 +752,12 @@ msgid "Apply Double Validation"
 msgstr "قم بالتحقق من صلاحية الازدواج"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: view:hr.holidays:0
+#: view:hr.employee:0 view:hr.holidays:0
 msgid "days"
 msgstr "أيام"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "طباعة"
 
@@ -798,8 +767,7 @@ msgid "Details"
 msgstr "تفاصيل"
 
 #. module: hr_holidays
-#: view:board.board:0
-#: view:hr.holidays:0
+#: view:board.board:0 view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
 msgstr "أجازاتي"
@@ -815,23 +783,19 @@ msgid "To Submit"
 msgstr "للإرسال"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:359
-#: view:hr.holidays:0
-#: selection:hr.holidays,type:0
-#: field:resource.calendar.leaves,holiday_id:0
+#: code:addons/hr_holidays/hr_holidays.py:359 view:hr.holidays:0
+#: selection:hr.holidays,type:0 field:resource.calendar.leaves,holiday_id:0
 #, python-format
 msgid "Leave Request"
 msgstr "طلب الاجازة"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,name:0
+#: view:hr.holidays:0 field:hr.holidays,name:0
 msgid "Description"
 msgstr "الوصف"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: field:hr.employee,remaining_leaves:0
+#: view:hr.employee:0 field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
 msgstr "المغادرات القانونية المتبقية"
 
@@ -841,8 +805,7 @@ msgid "By Employee Tag"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "مرفوض"
@@ -899,9 +862,7 @@ msgstr "الحد الاقصى المسموح"
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr ""
-"يتم ملئ هذه المنطقة تلقائيًا من المستخدم الذي تم التحقق من صلاحية أجازته في "
-"المستوى الثاني (إذا احتاج نوع الاجازة الى صلاحية اخرى)"
+msgstr "يتم ملئ هذه المنطقة تلقائيًا من المستخدم الذي تم التحقق من صلاحية أجازته في المستوى الثاني (إذا احتاج نوع الاجازة الى صلاحية اخرى)"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -932,8 +893,7 @@ msgstr "الرسائل و سجل التواصل"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:265
-#: code:addons/hr_holidays/hr_holidays.py:290
-#: sql_constraint:hr.holidays:0
+#: code:addons/hr_holidays/hr_holidays.py:290 sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
 msgstr "تاريخ البدء يجب أن يكون قبل تاريخ الانتهاء"
@@ -1002,8 +962,7 @@ msgid "Duration"
 msgstr "المدة"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays,state:0
+#: view:hr.holidays:0 selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
 msgstr "للموافقة"
@@ -1022,10 +981,3 @@ msgstr "الأسباب"
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr "اختر نوع المغادرة"
-
-#, python-format
-#~ msgid "Request <b>approved</b>, waiting second validation."
-#~ msgstr "تمت <b>الموافقة</b> على الطلب، بانتظار الموافقة الثانية"
-
-#~ msgid "The employee or employee category of this request is missing."
-#~ msgstr "الموظف أو فئة الموظفين لهذا الطلب غير متوفرة."

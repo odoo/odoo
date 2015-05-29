@@ -1,21 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-07-16 07:39+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:01+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -35,7 +36,7 @@ msgstr ""
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
+msgstr "Когда следует условие срабатывает. В случае присутствия, будет проверено планировщиком. В случае отсутствия, будет проверяться на создание и обновление."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -55,7 +56,7 @@ msgstr "Ответственный"
 #. module: base_action_rule
 #: help:base.action.rule,server_action_ids:0
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "Примеры: напоминания электронной почты, служба вызова объекта и т.д."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_followers:0
@@ -73,7 +74,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
+msgstr "Задержка после даты запуска.Вы можете поставить отрицательное число, если вам нужно задержать дату запуска, например отправить напоминание за 15 минут до встречи."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -113,7 +114,7 @@ msgstr "Статус"
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "Перед обновлением фильтра"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -134,7 +135,7 @@ msgstr "Поля для изменения"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "Поэтому данный фильтр должен быть доступен на этой странице."
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
@@ -152,8 +153,7 @@ msgid "To create a new filter:"
 msgstr "Для создания нового фильтра:"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "Активен"
 
@@ -228,7 +228,7 @@ msgstr "Действия сервера для запуска"
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "При отсутствии проверки, правило скрыто и не будет выполняться."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -258,8 +258,9 @@ msgstr "Модель связанного документа"
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
-msgstr ""
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "В случае присутствия, это условие должно быть удовлетворено до обновления записи."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -278,15 +279,13 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Нажмите чтобы установить новое автоматизированное правило действия. \n              </p><p>\n                Используйте автоматизированные действия для автоматического запуска действий для различных экранов. Пример: кандидат, созданный конкретным пользователем может \n                 автоматически устанавливаться на определенный отдел продаж, или \n                 возможность, которая до сих пор имеет статус ожидания после 14 дней может \n                 осуществлять автоматическое напоминание по электронной почте.\n              </p>\n            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -309,8 +308,7 @@ msgid "Trigger Date"
 msgstr "Дата активации"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-#: field:base.action.rule,server_action_ids:0
+#: view:base.action.rule:0 field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
 msgstr "Действия сервера"
 

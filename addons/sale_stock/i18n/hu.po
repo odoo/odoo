@@ -1,30 +1,29 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-10-12 10:17+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-7/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:23+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
-"Engedélyezi az értékesítőnek a kiszállítási kézbesítési bizonylatra történő "
-"számlázást a 'Kiszállítások számlázása' menüben."
+msgstr "Engedélyezi az értékesítőnek a kiszállítási kézbesítési bizonylatra történő számlázást a 'Kiszállítások számlázása' menüben."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -61,12 +60,7 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"Kiválasztott egy mennyiséget ezekben a mértékegységekben %d.\n"
-"De ez nem kompatibilis a kiválasztott csomagolással.\n"
-"Itt van egy javaslat a csomagolás szerinti mennyiségre:\n"
-"Globális szabványalapú azonosító (EAN): %s Mennyiség: %s Csomagolás típusa: "
-"%s"
+msgstr "Kiválasztott egy mennyiséget ezekben a mértékegységekben %d.\nDe ez nem kompatibilis a kiválasztott csomagolással.\nItt van egy javaslat a csomagolás szerinti mennyiségre:\nGlobális szabványalapú azonosító (EAN): %s Mennyiség: %s Csomagolás típusa: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
@@ -93,9 +87,7 @@ msgstr "Rendelés visszavonása"
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
-"Előszőr a megrendeléshez tartozó összes kiszállítási kézbesítési bizonylatot "
-"törölnie kell."
+msgstr "Előszőr a megrendeléshez tartozó összes kiszállítási kézbesítési bizonylatot törölnie kell."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -112,9 +104,7 @@ msgstr "Vevői megrendelés"
 msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
-msgstr ""
-"Minden vásárlói megrendelés tételhez, létrehoz egy beszerzési megbízás is az "
-"eladott termék előteremtésére."
+msgstr "Minden vásárlói megrendelés tételhez, létrehoz egy beszerzési megbízás is az eladott termék előteremtésére."
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -129,8 +119,7 @@ msgstr "Üzlet"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sales order line."
-msgstr ""
-"Beszerzési megbízást generál minden vásárlói megrendelési tétel sorhoz."
+msgstr "Beszerzési megbízást generál minden vásárlói megrendelési tétel sorhoz."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -199,12 +188,7 @@ msgid ""
 "the same time as the procurement order. It represents the assignment of "
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
-msgstr ""
-"A kiválogatási lista adatlapját a vevői megrendelés visszaigazolásakor "
-"azonnal létrehozza, ugyanakkor amikor a beszerzési megbízást. Ez képviseli a "
-"vevői megrendelés tételeit. Itt  a vevői megrendelés tételekként  1 "
-"kiválogatási lista van, ami mindjárt megmutatja a tételek hozzáférhetőségét "
-"is."
+msgstr "A kiválogatási lista adatlapját a vevői megrendelés visszaigazolásakor azonnal létrehozza, ugyanakkor amikor a beszerzési megbízást. Ez képviseli a vevői megrendelés tételeit. Itt  a vevői megrendelés tételekként  1 kiválogatási lista van, ami mindjárt megmutatja a tételek hozzáférhetőségét is."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -258,26 +242,18 @@ msgstr "MRP Gyártás tervezési project"
 
 #. module: sale_stock
 #: view:sale.order:0
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
-msgstr ""
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
+msgstr "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"If the sale order was set to create the invoice 'On Delivery Order', then an "
-"invoice is automatically created based on what you delivered. If you rather "
-"want to create your invoice based on your sale order, you can set the sale "
+"If the sale order was set to create the invoice 'On Delivery Order', then an"
+" invoice is automatically created based on what you delivered. If you rather"
+" want to create your invoice based on your sale order, you can set the sale "
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
-msgstr ""
-"Ha a megrendelés alapján lett a számla kiállítása beállítva 'a szállítási "
-"megbízáson', akkor a számla automatikusan a kiszállítás alapján lesz "
-"létrehozva. Ha mégis a megrendelés alapján szeretné elkészíteni a számlát, "
-"akkor beállíthatja a 'a szállítási megbízáson' a megrendelés alapján történő "
-"számla előállítást, és nyomon követheti innen a teljesen számlázott és "
-"kiszállított megrendeléseket."
+msgstr "Ha a megrendelés alapján lett a számla kiállítása beállítva 'a szállítási megbízáson', akkor a számla automatikusan a kiszállítás alapján lesz létrehozva. Ha mégis a megrendelés alapján szeretné elkészíteni a számlát, akkor beállíthatja a 'a szállítási megbízáson' a megrendelés alapján történő számla előállítást, és nyomon követheti innen a teljesen számlázott és kiszállított megrendeléseket."
 
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
@@ -285,8 +261,7 @@ msgid "Procurement"
 msgstr "Beszerzés"
 
 #. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
+#: view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Kiszállított"
@@ -300,15 +275,12 @@ msgstr "érvénytelen mód a teszt_állapotban"
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
-"Lehetővé teszi a vásárlói megrendelési tételek tulajdonságokkal való "
-"címkézését"
+msgstr "Lehetővé teszi a vásárlói megrendelési tételek tulajdonságokkal való címkézését"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
-"Számla generálása a kiszállítási kézbesítési bizonylatok alapján és után"
+msgstr "Számla generálása a kiszállítási kézbesítési bizonylatok alapján és után"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
@@ -327,35 +299,22 @@ msgid ""
 "confirmed or as the invoice is paid. It drives the purchasing and the "
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
-msgstr ""
-"A rendszer automatikusan egy beszerzési megbízást hoz létre, amint "
-"megerősítettük a vevői megrendelést, vagy a számlát kifizették. A rendszer "
-"az értékesítési megbízásokon keresztül irányítja a szállítói megrendeléseket "
-"és a termékek gyártását is a beállított szabályoknak és a vevői megrendelés "
-"paramétereinek megfelelően. "
+msgstr "A rendszer automatikusan egy beszerzési megbízást hoz létre, amint megerősítettük a vevői megrendelést, vagy a számlát kifizették. A rendszer az értékesítési megbízásokon keresztül irányítja a szállítói megrendeléseket és a termékek gyártását is a beállított szabályoknak és a vevői megrendelés paramétereinek megfelelően. "
 
 #. module: sale_stock
 #: help:sale.order,incoterm:0
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Nemzetközi üzleti feltételek, olyan előredefiniált üzleti feltételek, "
-"melyeket nemzetközi ügyleteknél használnak."
+msgstr "Nemzetközi üzleti feltételek, olyan előredefiniált üzleti feltételek, melyeket nemzetközi ügyleteknél használnak."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
 msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
+"                You can define your own carrier and delivery grids for prices.\n"
 "                This installs the module delivery."
-msgstr ""
-"Lehetővé teszi szállítási mód hozzáadását a megrendelésekhez és a "
-"kiszállítási kézbesítési bizonylatokhoz.\n"
-"                Meghatározhatja a saját szállítóját és szállítási hálózat "
-"külön árát.\n"
-"                Ez a delivery (szállítás) modult telepíti."
+msgstr "Lehetővé teszi szállítási mód hozzáadását a megrendelésekhez és a kiszállítási kézbesítési bizonylatokhoz.\n                Meghatározhatja a saját szállítóját és szállítási hálózat külön árát.\n                Ez a delivery (szállítás) modult telepíti."
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
@@ -381,9 +340,7 @@ msgstr "Az eladott anyagok beszerzése"
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
-"Válasszon ki 'Szállítson ki egyesével terméket, amint az elérhető' ha rész "
-"szállítmányt akar megengedni."
+msgstr "Válasszon ki 'Szállítson ki egyesével terméket, amint az elérhető' ha rész szállítmányt akar megengedni."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:209
@@ -401,9 +358,7 @@ msgstr "Értékesítési bolt"
 msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
-msgstr ""
-"Jelzi, hogy a vásárlói megrendelés kiszállításra került. Ez a mező csak "
-"akkor frissül, ha az ütemező(k) elindult(ak)."
+msgstr "Jelzi, hogy a vásárlói megrendelés kiszállításra került. Ez a mező csak akkor frissül, ha az ütemező(k) elindult(ak)."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -414,12 +369,9 @@ msgstr "Tulajdonságok"
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
-msgstr ""
-"Megígért határidő dátum hiba a Vevők felé. Termék beszerzési és szállítási "
-"ütemterv  a megígért dátumnál egy pár nappal előbbre, a beszállítási lánc "
-"előre nem látható késésével számítva."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
+msgstr "Megígért határidő dátum hiba a Vevők felé. Termék beszerzési és szállítási ütemterv  a megígért dátumnál egy pár nappal előbbre, a beszállítási lánc előre nem látható késésével számítva."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -428,8 +380,7 @@ msgstr "Termék tulajdonságok a megrendelés tétel sorain"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr "Létrehozhat számlát vásárlói megrendelés vagy kiszállítások alapján."
 
 #. module: sale_stock
@@ -446,39 +397,24 @@ msgstr "Vállalatok"
 #: help:sale.config.settings,task_work:0
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
+"                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways\n"
+"                and to automatically creates project tasks from procurement lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
-msgstr ""
-"Lehetővé teszi a Terv szervezése alatt álló bevitt feladatok átmozgatását "
-"egy\n"
-"                kiválasztott felhasználó és kiválasztott dátum időkimutatás "
-"sor tételeibe, ennek értelmében  bármilyen módon létrehozhat, szerkeszthet "
-"és törölhet \n"
-"                és automatikusan létrehozhat terv feladatokat a beszerzés "
-"tétel soraiból.\n"
-"                Ez a project_timesheet és project_mrp modult telepíti."
+msgstr "Lehetővé teszi a Terv szervezése alatt álló bevitt feladatok átmozgatását egy\n                kiválasztott felhasználó és kiválasztott dátum időkimutatás sor tételeibe, ennek értelmében  bármilyen módon létrehozhat, szerkeszthet és törölhet \n                és automatikusan létrehozhat terv feladatokat a beszerzés tétel soraiból.\n                Ez a project_timesheet és project_mrp modult telepíti."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
-"Lehetővé teszi különböző szállítási és számlázási cím meghatározását a "
-"vásárlói megrendelésekhez."
+msgstr "Lehetővé teszi különböző szállítási és számlázási cím meghatározását a vásárlói megrendelésekhez."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
 msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
-msgstr ""
-"Egy beszerzési megbízás minden egyes vásárlói megrendelés tétel sorhoz és "
-"minden egyes alkotóelemhez."
+msgstr "Egy beszerzési megbízás minden egyes vásárlói megrendelés tétel sorhoz és minden egyes alkotóelemhez."
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_assign0
@@ -496,9 +432,7 @@ msgstr "Nincs elég raktárkészlet!: "
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
-"A megrendelése visszaigazolás és a termék megrendelőhöz való kiszállítása "
-"közti napok száma."
+msgstr "A megrendelése visszaigazolás és a termék megrendelőhöz való kiszállítása közti napok száma."
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -506,10 +440,7 @@ msgid ""
 "Sales order by default will be configured to deliver all products at once "
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
-msgstr ""
-"A vásárlói megrendelések alapértelmezetten az összes termék egyszerre "
-"történő kiszállítására van beállítva, nem pedig az egyes termékek "
-"elérhetőségétől függően. Ez befolyással lehet a szállítási árra."
+msgstr "A vásárlói megrendelések alapértelmezetten az összes termék egyszerre történő kiszállítására van beállítva, nem pedig az egyes termékek elérhetőségétől függően. Ez befolyással lehet a szállítási árra."
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -533,11 +464,7 @@ msgstr "Mégsem"
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
-msgstr ""
-"Egy visszaigazolt vásárlói megrendelés törléséhez, először vissza kell azt "
-"vonni.\n"
-"Ehhez, először az ide tartozó megrendelési kiválogatási listákat kell "
-"törölni."
+msgstr "Egy visszaigazolt vásárlói megrendelés törléséhez, először vissza kell azt vonni.\nEhhez, először az ide tartozó megrendelési kiválogatási listákat kell törölni."
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -568,9 +495,7 @@ msgstr "Vevői díjbekérő előlegszámla"
 #: code:addons/sale_stock/sale_stock.py:532
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
-"Először érvénytelenítenie kell az ehhez a vásárlói megrendelési tétel sorhoz "
-"tartozó készletmozgásokat."
+msgstr "Először érvénytelenítenie kell az ehhez a vásárlói megrendelési tétel sorhoz tartozó készletmozgásokat."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:570
@@ -593,7 +518,7 @@ msgstr "A vásárlói megrendelés tétel sorát nem tudja visszavonni!"
 #: code:addons/sale_stock/res_config.py:81
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Kizárólag rendszergazda tudja megváltoztatni a beállításokat"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -625,9 +550,7 @@ msgstr "sale.config.settings"
 msgid ""
 "This is a list of delivery orders that has been generated for this sales "
 "order."
-msgstr ""
-"Ez az ehhez a megrendeléshez létrehozott kiszállítási Kiszolgáltatási jegyek "
-"listája."
+msgstr "Ez az ehhez a megrendeléshez létrehozott kiszállítási Kiszolgáltatási jegyek listája."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
@@ -650,10 +573,7 @@ msgstr "Hiba figyelmen kívül hagyása"
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"El szertné adni a következő mennyiséget: %.2f %s, de csak a következő "
-"mennyiség érhető el a raktáron: %.2f %s!\n"
-"A valós készlet: %.2f %s. (foglalások nélkül)"
+msgstr "El szertné adni a következő mennyiséget: %.2f %s, de csak a következő mennyiség érhető el a raktáron: %.2f %s!\nA valós készlet: %.2f %s. (foglalások nélkül)"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -686,30 +606,4 @@ msgid ""
 "Depending on the configuration of the location Output, the move between the "
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
-msgstr ""
-"A kiadási hely beállításától függően a kiadási terület és a vevő telephelye "
-"közötti árumozgás manuális vagy automatikus kiszállítási megbízással "
-"kezelhető."
-
-#, python-format
-#~ msgid "Error!"
-#~ msgstr "Hiba!"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot make an advance on a sales order                      that is "
-#~ "defined as 'Automatic Invoice after delivery'."
-#~ msgstr ""
-#~ "Nem végezhet díjbekérést egy olyan vásárlói megrendelésen ami úgy van "
-#~ "meghatározva, hogy 'Szállítás után automatikus számlázás'."
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr "A vevőknek megígért, biztonsági okokból hozzáadott, napok száma."
-
-#~ msgid ""
-#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
-#~ "pick' or 'Invoice on order after delivery'."
-#~ msgstr ""
-#~ "A számla automatikusan létrejön, ha a kiszállítási szabály: 'számlázás "
-#~ "kiszedésből' vagy 'számlázás kiszállítás után'."
+msgstr "A kiadási hely beállításától függően a kiadási terület és a vevő telephelye közötti árumozgás manuális vagy automatikus kiszállítási megbízással kezelhető."

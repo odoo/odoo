@@ -1,21 +1,22 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-06-20 14:42+0000\n"
-"Last-Translator: Jan Grmela <Unknown>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-7/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:11+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -33,21 +34,15 @@ msgid ""
 "This is the time frame analysed by the scheduler when computing "
 "procurements. All procurements that are not between today and today+range "
 "are skipped for future computation."
-msgstr ""
-"Toto je časový rámce analyzovaný plánovačem při výpočtu zásobování. Všechna "
-"zásobování, která nejsou mezi dneškem a dneškem + rozmezí jsou přeskočena "
-"pro budoucí výpočty."
+msgstr "Toto je časový rámce analyzovaný plánovačem při výpočtu zásobování. Všechna zásobování, která nejsou mezi dneškem a dneškem + rozmezí jsou přeskočena pro budoucí výpočty."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
 msgid ""
-"Triggers an automatic procurement for all products that have a virtual stock "
-"under 0. You should probably not use this option, we suggest using a MTO "
+"Triggers an automatic procurement for all products that have a virtual stock"
+" under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
-msgstr ""
-"Spustí automatické zásobování pro všechny výrobky, které mají virtuální "
-"skladové zásoby nižší než 0. Pravděpodobně byste neměli tuto volbu používat. "
-"Doporučujeme použít nastavení MTO u výrobků."
+msgstr "Spustí automatické zásobování pro všechny výrobky, které mají virtuální skladové zásoby nižší než 0. Pravděpodobně byste neměli tuto volbu používat. Doporučujeme použít nastavení MTO u výrobků."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -63,16 +58,10 @@ msgstr "Návrh zásobování výrobu a umístění této úrovně pro doplnění
 #: view:make.procurement:0
 msgid ""
 "Use this assistant to generate a procurement request for this\n"
-"                        product. According to the product configuration, "
-"this may\n"
-"                        trigger a draft purchase order, a manufacturing "
-"order or\n"
+"                        product. According to the product configuration, this may\n"
+"                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr ""
-"Vyplňte pro spuštění zásobovacího příkazu tohoto\n"
-"                        výrobku. Podle nastavení výrobku může být tato akce\n"
-"                        vytvořit koncept objednávky, výrobní příkaz nebo\n"
-"                        nový úkol."
+msgstr "Vyplňte pro spuštění zásobovacího příkazu tohoto\n                        výrobku. Podle nastavení výrobku může být tato akce\n                        vytvořit koncept objednávky, výrobní příkaz nebo\n                        nový úkol."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -83,15 +72,9 @@ msgstr "Externí poznámka..."
 #: view:product.product:0
 msgid ""
 "If there are not enough quantities available, the delivery order\n"
-"                           will wait for new products. To fulfill the "
-"inventory, you should\n"
+"                           will wait for new products. To fulfill the inventory, you should\n"
 "                           create others rules like orderpoints."
-msgstr ""
-"Pokud není k dispozici dostatečné množství, dodávka bude čekat na nové "
-"výrobky\n"
-"                           Pro splnění skladových požadavků byste měli "
-"použít ostatní pravidla\n"
-"                           jako například úrovně pro doplnění."
+msgstr "Pokud není k dispozici dostatečné množství, dodávka bude čekat na nové výrobky\n                           Pro splnění skladových požadavků byste měli použít ostatní pravidla\n                           jako například úrovně pro doplnění."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -139,24 +122,10 @@ msgstr "Důvod"
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"              You can define your minimum stock rules, so that OpenERP will "
-"automatically create draft manufacturing orders or purchase quotations "
-"according to the stock level.Once the virtual stock of a product (= stock on "
-"hand minus all confirmed orders and reservations) is below the minimum "
-"quantity, OpenERP will generate a procurement request to increase the stock "
-"up to the maximum quantity.\n"
+"              You can define your minimum stock rules, so that OpenERP will automatically create draft manufacturing orders or purchase quotations according to the stock level.Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, OpenERP will generate a procurement request to increase the stock up to the maximum quantity.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"              Můžete nadefinovat svá pravidla minimálních zásob takže bude "
-"OpenERP automaticky vytvářet koncepty výrobních příkazů nebo nákupních "
-"nabídek podle úrovně zásob. Jakmile klesne úroveň virtuálních zásob (= zásob "
-"na skladě minus všechny potvrzené objednávky a rezervace), OpenERP "
-"vygeneruje požadavek zásobování pro zvýšení úrovně zásob na maximální "
-"množství.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n              Můžete nadefinovat svá pravidla minimálních zásob takže bude OpenERP automaticky vytvářet koncepty výrobních příkazů nebo nákupních nabídek podle úrovně zásob. Jakmile klesne úroveň virtuálních zásob (= zásob na skladě minus všechny potvrzené objednávky a rezervace), OpenERP vygeneruje požadavek zásobování pro zvýšení úrovně zásob na maximální množství.\n              </p>\n            "
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -239,9 +208,7 @@ msgstr "Neplatná akce!"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Udržuje souhrn klábosení (počet zpráv, ...). Tento souhrn je přímo ve "
-"formátu HTML aby jej bylo možné vložit do pohledů kanban."
+msgstr "Udržuje souhrn klábosení (počet zpráv, ...). Tento souhrn je přímo ve formátu HTML aby jej bylo možné vložit do pohledů kanban."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -257,16 +224,7 @@ msgstr "Automatická úroveň pro doplnění"
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
 msgid ""
 "<p>\n"
-"                Procurement Orders represent the need for a certain quantity "
-"of products, at a given time, in a given location. Sales Orders are one "
-"typical source of Procurement Orders (but these are distinct documents). "
-"Depending on the procurement parameters and the product configuration, the "
-"procurement engine will attempt to satisfy the need by reserving products "
-"from stock, ordering products from a supplier, or passing a manufacturing "
-"order, etc. A Procurement Exception occurs when the system cannot find a way "
-"to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message).\n"
+"                Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -282,8 +240,7 @@ msgid "Retry"
 msgstr "Opakovat"
 
 #. module: procurement
-#: view:procurement.order.compute:0
-#: view:procurement.orderpoint.compute:0
+#: view:procurement.order.compute:0 view:procurement.orderpoint.compute:0
 msgid "Parameters"
 msgstr "Parametry"
 
@@ -302,9 +259,7 @@ msgstr "Násobek množství"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by OpenERP."
-msgstr ""
-"Odkaz na dokument, který vytvořil toto zásobování.\n"
-"Toto je doplněno automaticky pomocí OpenERP."
+msgstr "Odkaz na dokument, který vytvořil toto zásobování.\nToto je doplněno automaticky pomocí OpenERP."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -343,8 +298,7 @@ msgid "Followers"
 msgstr "Sledující"
 
 #. module: procurement
-#: field:procurement.order,location_id:0
-#: view:stock.warehouse.orderpoint:0
+#: field:procurement.order,location_id:0 view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
 msgstr "Umístění"
@@ -355,8 +309,7 @@ msgid "Picking List"
 msgstr "Dodací list"
 
 #. module: procurement
-#: field:make.procurement,warehouse_id:0
-#: view:stock.warehouse.orderpoint:0
+#: field:make.procurement,warehouse_id:0 view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
 msgstr "Sklad"
@@ -392,8 +345,7 @@ msgid "Group By"
 msgstr "Seskupit podle"
 
 #. module: procurement
-#: field:make.procurement,qty:0
-#: field:procurement.order,product_qty:0
+#: field:make.procurement,qty:0 field:procurement.order,product_qty:0
 msgid "Quantity"
 msgstr "Množství"
 
@@ -404,8 +356,7 @@ msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Nedostatek zásob a není definováno pravidlo pro úroveň doplnění."
 
 #. module: procurement
-#: field:make.procurement,uom_id:0
-#: view:procurement.order:0
+#: field:make.procurement,uom_id:0 view:procurement.order:0
 msgid "Unit of Measure"
 msgstr "Měrná jednotka"
 
@@ -422,45 +373,23 @@ msgid ""
 "                Click to create a procurement order. \n"
 "              </p><p>\n"
 "                A procurement order is used to record a need for a specific\n"
-"                product at a specific location.  Procurement orders are "
-"usually\n"
-"                created automatically from sales orders, pull logistic rules "
-"or\n"
+"                product at a specific location.  Procurement orders are usually\n"
+"                created automatically from sales orders, pull logistic rules or\n"
 "                minimum stock rules.\n"
 "              </p><p>\n"
 "                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
+"                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro vytvoření příkazu zásobování.\n"
-"              </p><p>\n"
-"                Zásobovací příkaz je použit pro zaznamenání potřeby\n"
-"                určitého výrobku v určitém umístění. Příkazy zásobování "
-"jsou\n"
-"                obvykle vytvořeny automaticky z potvrzení objednávek, "
-"logistických\n"
-"                pravidel nebo pravidel minimálních skladových zásob.\n"
-"              </p><p>\n"
-"                Jakmile je zásobovací příkaz potvrzen, automaticky jsou "
-"vytvořeny\n"
-"                úkony nutné pro splnění požadavku: návrh objednávky, "
-"výrobní\n"
-"                příkaz a podobně.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření příkazu zásobování.\n              </p><p>\n                Zásobovací příkaz je použit pro zaznamenání potřeby\n                určitého výrobku v určitém umístění. Příkazy zásobování jsou\n                obvykle vytvořeny automaticky z potvrzení objednávek, logistických\n                pravidel nebo pravidel minimálních skladových zásob.\n              </p><p>\n                Jakmile je zásobovací příkaz potvrzen, automaticky jsou vytvořeny\n                úkony nutné pro splnění požadavku: návrh objednávky, výrobní\n                příkaz a podobně.\n              </p>\n            "
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
 msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
-msgstr ""
-"Pokud zásobovací požadavek zadáte ručně, budete zřejmě chtít použít metodu "
-"vyrobit na objednávku."
+msgstr "Pokud zásobovací požadavek zadáte ručně, budete zřejmě chtít použít metodu vyrobit na objednávku."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -472,9 +401,7 @@ msgstr "Automatické zásobování"
 msgid ""
 "use the available\n"
 "                           inventory"
-msgstr ""
-"použít dostupné\n"
-"                           skladové zásoby"
+msgstr "použít dostupné\n                           skladové zásoby"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -543,30 +470,19 @@ msgstr "plus"
 #: help:procurement.order,state:0
 msgid ""
 "When a procurement is created the status is set to 'Draft'.\n"
-" If the procurement is confirmed, the status is set to 'Confirmed'.          "
-"  \n"
+" If the procurement is confirmed, the status is set to 'Confirmed'.            \n"
 "After confirming the status is set to 'Running'.\n"
-" If any exception arises in the order then the status is set to "
-"'Exception'.\n"
+" If any exception arises in the order then the status is set to 'Exception'.\n"
 " Once the exception is removed the status becomes 'Ready'.\n"
-" It is in 'Waiting'. status when the procurement is waiting for another one "
-"to finish."
-msgstr ""
-"Když je zásobovací příkaz vytvořen, je jeho stav nastaven na 'Koncept'.\n"
-" Pokud je příkaz potvrzen, nastaví se jeho stav na 'Potvrzeno'.            \n"
-"Po potvrzení je nastaven na 'Probíhá'.\n"
-" Pokud při zpracování vyvstane výjimka, změní se stav na 'Výjimka'.\n"
-" Jakmile je výjimka odstraněna, stav se změní na 'Připraven'.\n"
-" Příkazy ve stavu 'Čeká se' značí že čekají na dokončení jiných příkazů."
+" It is in 'Waiting'. status when the procurement is waiting for another one to finish."
+msgstr "Když je zásobovací příkaz vytvořen, je jeho stav nastaven na 'Koncept'.\n Pokud je příkaz potvrzen, nastaví se jeho stav na 'Potvrzeno'.            \nPo potvrzení je nastaven na 'Probíhá'.\n Pokud při zpracování vyvstane výjimka, změní se stav na 'Výjimka'.\n Jakmile je výjimka odstraněna, stav se změní na 'Připraven'.\n Příkazy ve stavu 'Čeká se' značí že čekají na dokončení jiných příkazů."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr ""
-"Pokud je pole aktivní nastaveno na Nepravda, umožní vám skrýt úrovně pro "
-"doplnění bez jejich odebrání."
+msgstr "Pokud je pole aktivní nastaveno na Nepravda, umožní vám skrýt úrovně pro doplnění bez jejich odebrání."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -576,8 +492,7 @@ msgstr "Interní poznámka..."
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
 msgid "If the stock of a product is under 0, it will act like an orderpoint"
-msgstr ""
-"Bude se chovat jako úroveň pro doplnění, pokud zásoby výrobku jsou pod 0."
+msgstr "Bude se chovat jako úroveň pro doplnění, pokud zásoby výrobku jsou pod 0."
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
@@ -590,9 +505,7 @@ msgstr "Měrná jednotka výrobku"
 msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
-msgstr ""
-"Musíte zvolit měrnou jednotku ve stejné kategorii jako jako je výchozí měrná "
-"jednotka výrobku"
+msgstr "Musíte zvolit měrnou jednotku ve stejné kategorii jako jako je výchozí měrná jednotka výrobku"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -604,9 +517,7 @@ msgstr "Řádky zásobování"
 msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
-msgstr ""
-"jelikož lze položku spotřebovat (v čehož důsledku může být\n"
-"                           množství k dispozici záporné)."
+msgstr "jelikož lze položku spotřebovat (v čehož důsledku může být\n                           množství k dispozici záporné)."
 
 #. module: procurement
 #: field:procurement.order,note:0
@@ -616,13 +527,10 @@ msgstr "Poznámka"
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_min_qty:0
 msgid ""
-"When the virtual stock goes below the Min Quantity specified for this field, "
-"OpenERP generates a procurement to bring the forecasted quantity to the Max "
-"Quantity."
-msgstr ""
-"Jakmile klesne množství virtuálních zásob pod minimální množství určené pro "
-"toto pole, OpenERP vytvoří příkaz zásobování, který předpokládané množství "
-"upraví na maximální množství."
+"When the virtual stock goes below the Min Quantity specified for this field,"
+" OpenERP generates a procurement to bring the forecasted quantity to the Max"
+" Quantity."
+msgstr "Jakmile klesne množství virtuálních zásob pod minimální množství určené pro toto pole, OpenERP vytvoří příkaz zásobování, který předpokládané množství upraví na maximální množství."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -642,8 +550,7 @@ msgid "This wizard will schedule procurements."
 msgstr "Průvodce naplánuje zásobování."
 
 #. module: procurement
-#: view:procurement.order:0
-#: field:procurement.order,state:0
+#: view:procurement.order:0 field:procurement.order,state:0
 msgid "Status"
 msgstr "Stav"
 
@@ -665,13 +572,9 @@ msgstr "Normální"
 #. module: procurement
 #: help:product.template,supply_method:0
 msgid ""
-"Manufacture: When procuring the product, a manufacturing order or a task "
-"will be generated, depending on the product type. \n"
+"Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
-msgstr ""
-"Vyrobit: Když žádáte naskladnění výrobku, vytvoří se výrobní příkaz nebo "
-"úkol v závislosti na druhu výrobku. \n"
-"Koupit: Když žádáte naskladnění výrobku, vytvoří se objednávka."
+msgstr "Vyrobit: Když žádáte naskladnění výrobku, vytvoří se výrobní příkaz nebo úkol v závislosti na druhu výrobku. \nKoupit: Když žádáte naskladnění výrobku, vytvoří se objednávka."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -703,11 +606,9 @@ msgstr "Naskladnit výrobky"
 #: code:addons/procurement/procurement.py:330
 #, python-format
 msgid ""
-"Please check the quantity in procurement order(s) for the product \"%s\", it "
-"should not be 0 or less!"
-msgstr ""
-"Prosím ověřte množství v zásobovacích příkazech u výrobku \"%s\", nemělo by "
-"být menší nebo rovno nule!"
+"Please check the quantity in procurement order(s) for the product \"%s\", it"
+" should not be 0 or less!"
+msgstr "Prosím ověřte množství v zásobovacích příkazech u výrobku \"%s\", nemělo by být menší nebo rovno nule!"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
@@ -724,9 +625,7 @@ msgstr "Výjimka"
 msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
-msgstr ""
-"Když prodáte tento výrobek bude vytvořen dodací příkaz.\n"
-"                           OpenERP zváží že"
+msgstr "Když prodáte tento výrobek bude vytvořen dodací příkaz.\n                           OpenERP zváží že"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:125
@@ -748,14 +647,9 @@ msgstr "násobek množ."
 #: view:product.product:0
 msgid ""
 "When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
+"                           to deliver the customer, as you set the procurement method as\n"
 "                           'Make to Stock'."
-msgstr ""
-"Když prodáte tuto službu, nesputí se nic zvláštního\n"
-"                           pro dodání zákazníkovi jelikož zvolíte metodu "
-"zásobování\n"
-"                           'Na sklad'."
+msgstr "Když prodáte tuto službu, nesputí se nic zvláštního\n                           pro dodání zákazníkovi jelikož zvolíte metodu zásobování\n                           'Na sklad'."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -800,13 +694,9 @@ msgstr "Logistika"
 #. module: procurement
 #: help:product.template,procure_method:0
 msgid ""
-"Make to Stock: When needed, the product is taken from the stock or we wait "
-"for replenishment. \n"
+"Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
-msgstr ""
-"Na sklad: Když je třeba, tak se výrobek vezme ze skladu nebo se počká na "
-"jeho naskladnění. \n"
-"Na zakázku: Když je třeba, výrobek se koupí nebo vyrobí."
+msgstr "Na sklad: Když je třeba, tak se výrobek vezme ze skladu nebo se počká na jeho naskladnění. \nNa zakázku: Když je třeba, výrobek se koupí nebo vyrobí."
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -815,8 +705,7 @@ msgstr "Složení parametrů"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property_group
-#: field:mrp.property,group_id:0
-#: field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
 msgid "Property Group"
 msgstr "Skupina vlastností"
 
@@ -841,10 +730,8 @@ msgid "Done"
 msgstr "Dokončeno"
 
 #. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
+#: view:make.procurement:0 view:procurement.order.compute:0
+#: view:procurement.order.compute.all:0 view:procurement.orderpoint.compute:0
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -884,10 +771,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, OpenERP generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr ""
-"Jakmile se úroveň zásob sníži pod minimální množství, OpenERP vytvoří "
-"zásobovací příkaz pro naskladnění předpokládaného množství na maximální "
-"množství."
+msgstr "Jakmile se úroveň zásob sníži pod minimální množství, OpenERP vytvoří zásobovací příkaz pro naskladnění předpokládaného množství na maximální množství."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -927,8 +811,7 @@ msgstr "Plánované datum"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_product
-#: field:make.procurement,product_id:0
-#: view:procurement.order:0
+#: field:make.procurement,product_id:0 view:procurement.order:0
 #: field:procurement.order,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
@@ -940,8 +823,7 @@ msgid "Temporary"
 msgstr "Dočasné"
 
 #. module: procurement
-#: field:mrp.property,description:0
-#: field:mrp.property.group,description:0
+#: field:mrp.property,description:0 field:mrp.property.group,description:0
 #: field:procurement.order,name:0
 msgid "Description"
 msgstr "Popis"
@@ -988,9 +870,7 @@ msgstr "Když prodáte tento výrobek, OpenERP"
 msgid ""
 "required quantities are always\n"
 "                           available"
-msgstr ""
-"požadované množství je vždy\n"
-"                           k dispozici"
+msgstr "požadované množství je vždy\n                           k dispozici"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -998,8 +878,7 @@ msgid "Temporary Procurement Exceptions"
 msgstr "Dočasné výjimky zásobování"
 
 #. module: procurement
-#: field:mrp.property,name:0
-#: field:stock.warehouse.orderpoint,name:0
+#: field:mrp.property,name:0 field:stock.warehouse.orderpoint,name:0
 msgid "Name"
 msgstr "Název"
 
@@ -1037,9 +916,7 @@ msgstr "Šablona výrobku"
 #: view:procurement.orderpoint.compute:0
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr ""
-"Provodce zkontroluje všechny pravidla minimálních zásob a vygeneruje "
-"zásobovací příkazy."
+msgstr "Provodce zkontroluje všechny pravidla minimálních zásob a vygeneruje zásobovací příkazy."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -1077,10 +954,8 @@ msgid "min"
 msgstr "min"
 
 #. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
+#: view:make.procurement:0 view:procurement.order.compute:0
+#: view:procurement.order.compute.all:0 view:procurement.orderpoint.compute:0
 msgid "or"
 msgstr "nebo"
 
@@ -1100,43 +975,3 @@ msgstr "Žádat zásobování"
 #, python-format
 msgid "Products reserved from stock."
 msgstr "Výrobky rezervované ve skladu."
-
-#, python-format
-#~ msgid "Data Insufficient !"
-#~ msgstr "Nedostatečná data !"
-
-#~ msgid ""
-#~ "You can define your minimum stock rules, so that OpenERP will automatically "
-#~ "create draft manufacturing orders or purchase quotations according to the "
-#~ "stock level. Once the virtual stock of a product (= stock on hand minus all "
-#~ "confirmed orders and reservations) is below the minimum quantity, OpenERP "
-#~ "will generate a procurement request to increase the stock up to the maximum "
-#~ "quantity."
-#~ msgstr ""
-#~ "Můžete nadefinovat pravidla minimálních zásob což umožní OpenERP automaticky "
-#~ "vytvořit koncepty výrobních příkazů nebo nabídek nákupu na základě "
-#~ "skladových zásob. Jakmile virtuální skladové množství výrobku (= zásoby k "
-#~ "dispozici minus všechny potvrzené objednávky a rezervace) dosáhne hodnoty "
-#~ "pod minimálním množstvím, OpenERP vygeneruje objednávku zásob pro "
-#~ "naskladnění zásob k maximálnímu množství."
-
-#, python-format
-#~ msgid "PROC %d: from stock - %3.2f %-5s - %s"
-#~ msgstr "PROC %d: ze skladových zásob - %3.2f %-5s - %s"
-
-#~ msgid ""
-#~ "Fill is this for to launch a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Vyplňte pro spuštění zásobovacího příkazu tohoto\n"
-#~ "                        výrobku. Podle nastavení výrobku může být tato akce\n"
-#~ "                        vytvořit koncept objednávky, výrobní příkaz nebo\n"
-#~ "                        nový úkol."
-
-#, python-format
-#~ msgid "PROC %d: on order - %3.2f %-5s - %s"
-#~ msgstr "PROC %d: na objednávce - %3.2f %-5s - %s"

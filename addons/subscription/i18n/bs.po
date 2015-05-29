@@ -1,21 +1,22 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * subscription
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-10-27 13:38+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-7/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:28+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -70,8 +71,7 @@ msgid "Weeks"
 msgstr "Sedmice"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
+#: view:subscription.subscription:0 field:subscription.subscription,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -120,8 +120,7 @@ msgid "Subscription History"
 msgstr "Istorija pretplate"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,user_id:0
+#: view:subscription.subscription:0 field:subscription.subscription,user_id:0
 msgid "User"
 msgstr "Korisnik"
 
@@ -145,13 +144,10 @@ msgstr "Broj dokumenata"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr ""
-"Ako je aktivno polje postavljeno na netačno, dozvoliti će Vam da sakrijete "
-"dokument pretplate bez da ga uklonite."
+msgstr "Ako je aktivno polje postavljeno na netačno, dozvoliti će Vam da sakrijete dokument pretplate bez da ga uklonite."
 
 #. module: subscription
-#: field:subscription.document,name:0
-#: field:subscription.subscription,name:0
+#: field:subscription.document,name:0 field:subscription.subscription,name:0
 msgid "Name"
 msgstr "Naziv"
 
@@ -161,8 +157,7 @@ msgid "Fields"
 msgstr "Polja"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,note:0
+#: view:subscription.subscription:0 field:subscription.subscription,note:0
 #: field:subscription.subscription,notes:0
 msgid "Notes"
 msgstr "Zabilješke"
@@ -237,15 +232,12 @@ msgstr "Dokument pretplate"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr ""
-"Ako je aktivno polje postavljeno na netačno, dozvolit će Vam skrivanje "
-"pretplate bez uklanja iste."
+msgstr "Ako je aktivno polje postavljeno na netačno, dozvolit će Vam skrivanje pretplate bez uklanja iste."
 
 #. module: subscription
 #: help:subscription.document.fields,value:0
 msgid "Default value is considered for field when new document is generated."
-msgstr ""
-"Predefinirana vrijednost se uzima za polje kod generisanja novog dokumenta."
+msgstr "Predefinirana vrijednost se uzima za polje kod generisanja novog dokumenta."
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -266,8 +258,7 @@ msgstr "Proces"
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr ""
-"Korisnik može izabrati izvorni dokument prema kojem želi kreirati dokumente"
+msgstr "Korisnik može izabrati izvorni dokument prema kojem želi kreirati dokumente"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
@@ -302,19 +293,3 @@ msgstr "Dokument kreiran"
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Aktivan"
-
-#, python-format
-#~ msgid "You cannot delete an active subscription !"
-#~ msgstr "Brisanje aktivnih pretplata nije dozvoljeno!"
-
-#, python-format
-#~ msgid ""
-#~ "Please provide another source document.\n"
-#~ "This one does not exist !"
-#~ msgstr ""
-#~ "Molim odaberite drugi izvorni dokument.\n"
-#~ "Ovaj ne postoji!"
-
-#, python-format
-#~ msgid "Wrong Source Document !"
-#~ msgstr "Pogrešan izvorni dokument!"

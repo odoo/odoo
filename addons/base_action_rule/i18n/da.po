@@ -1,21 +1,22 @@
-# Danish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-10-14 18:54+0000\n"
-"Last-Translator: Morten Schou <ms@msteknik.dk>\n"
-"Language-Team: Danish <da@li.org>\n"
+"PO-Revision-Date: 2015-05-27 09:17+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/odoo-7/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:01+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -28,18 +29,14 @@ msgid ""
 "- In this same \"Search\" view, select the menu \"Save Current Filter\", "
 "enter the name (Ex: Create the 01/01/2012) and add the option \"Share with "
 "all users\""
-msgstr ""
-"- I dette \"Søge\" vindue, vælg menuen \"Gem aktive filter\", indtast navnet "
-"(Eks.: Opret 01/01/2012) og tilføj optionen \"Del med alle brugere\""
+msgstr "- I dette \"Søge\" vindue, vælg menuen \"Gem aktive filter\", indtast navnet (Eks.: Opret 01/01/2012) og tilføj optionen \"Del med alle brugere\""
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
-"Hvornår skal regel aktiveres, Hvis den eksisterer, bliver den aktiveret af "
-"timer. Hvis den er tom, bliver den aktiveret ved oprettelse og opdatering."
+msgstr "Hvornår skal regel aktiveres, Hvis den eksisterer, bliver den aktiveret af timer. Hvis den er tom, bliver den aktiveret ved oprettelse og opdatering."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -77,9 +74,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
-"Forsinkelse efter trigger tid. Du kan indsætte negativ antal hvis trigger "
-"skal udløses før tidspunkt, f.eks send en påmindelse 15 min. før et møde."
+msgstr "Forsinkelse efter trigger tid. Du kan indsætte negativ antal hvis trigger skal udløses før tidspunkt, f.eks send en påmindelse 15 min. før et møde."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -130,8 +125,7 @@ msgstr "Aktion regel"
 #: help:base.action.rule,filter_id:0
 msgid ""
 "If present, this condition must be satisfied after the update of the record."
-msgstr ""
-"Hvis eksisterer, skal denne regel være sand efter opdatering af post."
+msgstr "Hvis eksisterer, skal denne regel være sand efter opdatering af post."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -159,8 +153,7 @@ msgid "To create a new filter:"
 msgstr "For at oprette nyt filter"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "Aktiv"
 
@@ -176,11 +169,7 @@ msgid ""
 "Model\". The precondition filter is checked right before the modification "
 "while the postcondition filter is checked after the modification. A "
 "precondition filter will therefore not work during a creation."
-msgstr ""
-"En aktion regel er markeret når du opretter eller ændrer den \"Tilhørende "
-"dokument model\". Før betingelses filter er markeret lige før ændringen mens "
-"efter betingelses filter er markeret efter ændringen. Et før betingelses "
-"filter virker derfor ikke ved en oprettelse."
+msgstr "En aktion regel er markeret når du opretter eller ændrer den \"Tilhørende dokument model\". Før betingelses filter er markeret lige før ændringen mens efter betingelses filter er markeret efter ændringen. Et før betingelses filter virker derfor ikke ved en oprettelse."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -193,10 +182,7 @@ msgid ""
 "- Go to your \"Related Document Model\" page and set the filter parameters "
 "in the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
-msgstr ""
-"- Gå til din \"Tilhørende dokument model\" side og sæt filter parameter i "
-"\"søge\" vindue (Eksempel på filter baseret på Emner/forventninger: "
-"Oprettelses dato \"er lig med\" 01/01/2012)"
+msgstr "- Gå til din \"Tilhørende dokument model\" side og sæt filter parameter i \"søge\" vindue (Eksempel på filter baseret på Emner/forventninger: Oprettelses dato \"er lig med\" 01/01/2012)"
 
 #. module: base_action_rule
 #: field:base.action.rule,name:0
@@ -272,9 +258,9 @@ msgstr "Relateret dokument model"
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
-msgstr ""
-"Hvis eksisterer, skal denne betingelse være opfyldt før opdatering af post."
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "Hvis eksisterer, skal denne betingelse være opfyldt før opdatering af post."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -293,27 +279,13 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik for at oprette ny automatisk regel. \n"
-"              </p><p>\n"
-"                Brug automatiske aktioner for automatisk at udføre aktioner "
-"på\n"
-"                diverse skærmbilleder. F.eks.: Et emne oprettet at en "
-"bestemt bruger skal\n"
-"                automatisk oprettes med  en bestemt salgs gruppe, eller et\n"
-"                tilbud der stadigt har status afventende efter 14 dage kan\n"
-"                udløse en automatisk påmindelses email.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik for at oprette ny automatisk regel. \n              </p><p>\n                Brug automatiske aktioner for automatisk at udføre aktioner på\n                diverse skærmbilleder. F.eks.: Et emne oprettet at en bestemt bruger skal\n                automatisk oprettes med  en bestemt salgs gruppe, eller et\n                tilbud der stadigt har status afventende efter 14 dage kan\n                udløse en automatisk påmindelses email.\n              </p>\n            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -336,8 +308,7 @@ msgid "Trigger Date"
 msgstr "Trigger dato"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-#: field:base.action.rule,server_action_ids:0
+#: view:base.action.rule:0 field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
 msgstr "Server aktion"
 

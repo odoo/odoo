@@ -1,21 +1,22 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * fleet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-06-18 07:32+0000\n"
-"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/odoo-7/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:53+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -35,13 +36,10 @@ msgstr "Repuesto del compresor de A/C"
 #. module: fleet
 #: help:fleet.vehicle,vin_sn:0
 msgid "Unique number written on the vehicle motor (VIN/SN number)"
-msgstr ""
-"Nº único escrito en el motor del vehículo (nº de identificación del vehículo "
-"o nº de serie)"
+msgstr "Nº único escrito en el motor del vehículo (nº de identificación del vehículo o nº de serie)"
 
 #. module: fleet
-#: selection:fleet.service.type,category:0
-#: view:fleet.vehicle.log.contract:0
+#: selection:fleet.service.type,category:0 view:fleet.vehicle.log.contract:0
 #: view:fleet.vehicle.log.services:0
 msgid "Service"
 msgstr "Servicio"
@@ -84,10 +82,8 @@ msgid "Resurface Rotors"
 msgstr "Reflotar rotores"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.model:0
-#: view:fleet.vehicle.odometer:0
+#: view:fleet.vehicle.cost:0 view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.model:0 view:fleet.vehicle.odometer:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -210,21 +206,18 @@ msgid "Head Gasket(s) Replacement"
 msgstr "Repuesto de la junta(s) de culata"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: selection:fleet.vehicle.cost,cost_type:0
+#: view:fleet.vehicle:0 selection:fleet.vehicle.cost,cost_type:0
 msgid "Services"
 msgstr "Servicios"
 
 #. module: fleet
-#: help:fleet.vehicle,odometer:0
-#: help:fleet.vehicle.cost,odometer:0
+#: help:fleet.vehicle,odometer:0 help:fleet.vehicle.cost,odometer:0
 #: help:fleet.vehicle.cost,odometer_id:0
 msgid "Odometer measure of the vehicle at the moment of this log"
 msgstr "Medida del odómetro del vehículo en el momento de registro"
 
 #. module: fleet
-#: view:fleet.vehicle.log.contract:0
-#: field:fleet.vehicle.log.contract,notes:0
+#: view:fleet.vehicle.log.contract:0 field:fleet.vehicle.log.contract,notes:0
 msgid "Terms and Conditions"
 msgstr "Términos y condiciones"
 
@@ -254,8 +247,7 @@ msgstr "Ambos"
 #: field:fleet.vehicle.log.fuel,cost_id:0
 #: field:fleet.vehicle.log.services,cost_id:0
 msgid "Automatically created field to link to parent fleet.vehicle.cost"
-msgstr ""
-"Campo creado automáticamente para enlazar con el fleet.vehicle.cost padre"
+msgstr "Campo creado automáticamente para enlazar con el fleet.vehicle.cost padre"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
@@ -280,17 +272,13 @@ msgstr "Cálculo de las prestaciones en especie"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,expiration_date:0
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after "
-"begin date)"
-msgstr ""
-"Fecha en la que la cobertura de los contratos expira (por defecto, un año "
-"después de la fecha de inicio)"
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
+msgstr "Fecha en la que la cobertura de los contratos expira (por defecto, un año después de la fecha de inicio)"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: field:fleet.vehicle.log.fuel,notes:0
-#: view:fleet.vehicle.log.services:0
-#: field:fleet.vehicle.log.services,notes:0
+#: view:fleet.vehicle.log.fuel:0 field:fleet.vehicle.log.fuel,notes:0
+#: view:fleet.vehicle.log.services:0 field:fleet.vehicle.log.services,notes:0
 msgid "Notes"
 msgstr "Notas"
 
@@ -399,8 +387,7 @@ msgid "Transmission Used by the vehicle"
 msgstr "Transmisión usada por el vehículo"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:740
-#: view:fleet.vehicle.log.contract:0
+#: code:addons/fleet/fleet.py:740 view:fleet.vehicle.log.contract:0
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #, python-format
 msgid "Renew Contract"
@@ -443,26 +430,14 @@ msgid ""
 "                Click to create a new contract. \n"
 "              </p><p>\n"
 "                Manage all your contracts (leasing, insurances, etc.) with\n"
-"                their related services, costs. OpenERP will automatically "
-"warn\n"
+"                their related services, costs. OpenERP will automatically warn\n"
 "                you when some contracts have to be renewed.\n"
 "              </p><p>\n"
 "                Each contract (e.g.: leasing) may include several services\n"
 "                (reparation, insurances, periodic maintenance).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un nuevo contrato.\n"
-"</p><p>\n"
-"Gestione todos sus contratos (leasing, seguros, etc.) con sus servicios y "
-"costes relacionados. OpenERP le avisará automáticamente cuando algún "
-"contrato deba ser renovado.\n"
-"</p><p>\n"
-"Cada contrato (por ejemplo: leasing) puede incluir varios servicios "
-"(reparación, seguro, mantenimiento periódico...).\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo contrato.\n</p><p>\nGestione todos sus contratos (leasing, seguros, etc.) con sus servicios y costes relacionados. OpenERP le avisará automáticamente cuando algún contrato deba ser renovado.\n</p><p>\nCada contrato (por ejemplo: leasing) puede incluir varios servicios (reparación, seguro, mantenimiento periódico...).\n</p>\n            "
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -498,9 +473,7 @@ msgstr "Registros de combustible de los vehículos"
 msgid ""
 "$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
 "$(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-"$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
-"$(this).addClass('oe_employee_picture_wide') } });"
+msgstr "$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: fleet
 #: view:board.board:0
@@ -518,15 +491,7 @@ msgid ""
 "                contracts (fixed or recurring) and fuel logs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un nuevo coste.\n"
-"</p><p>\n"
-"OpenERP le ayuda a gestionar los costes para sus diferentes vehículos. Los "
-"costes se crean automáticamente de los servicios, contratos (fijos o "
-"recurrentes) y registros de combustible.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo coste.\n</p><p>\nOpenERP le ayuda a gestionar los costes para sus diferentes vehículos. Los costes se crean automáticamente de los servicios, contratos (fijos o recurrentes) y registros de combustible.\n</p>\n            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -617,7 +582,7 @@ msgstr "Conductor del vehículo"
 #. module: fleet
 #: view:fleet.vehicle.odometer:0
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "Odómetros de los vehículos"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_refueling
@@ -634,9 +599,7 @@ msgstr "Repuesto de neumático"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene "
-"directamente en formato HTML para poder ser insertado en las vistas kanban."
+msgstr "Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_5
@@ -651,9 +614,7 @@ msgstr "Registro de combustible para los vehículos"
 #. module: fleet
 #: view:fleet.vehicle.log.services:0
 msgid "Write here any other information related to the service completed."
-msgstr ""
-"Escriba aquí cualquier otra información relacionada con el servicio "
-"completado."
+msgstr "Escriba aquí cualquier otra información relacionada con el servicio completado."
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -707,32 +668,21 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a vehicule status.\n"
 "              </p><p>\n"
-"                You can customize available status to track the evolution "
-"of\n"
+"                You can customize available status to track the evolution of\n"
 "                each vehicule. Example: Active, Being Repaired, Sold.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un estado del vehículo.\n"
-"</p><p>\n"
-"Puede personalizar los estados disponibles para seguir la evolución de cada "
-"vehículo. Por ejemplo: Activo, siendo reparado, vendido, etc.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un estado del vehículo.\n</p><p>\nPuede personalizar los estados disponibles para seguir la evolución de cada vehículo. Por ejemplo: Activo, siendo reparado, vendido, etc.\n</p>\n            "
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: field:fleet.vehicle,log_fuel:0
+#: view:fleet.vehicle:0 field:fleet.vehicle,log_fuel:0
 #: view:fleet.vehicle.log.fuel:0
 msgid "Fuel Logs"
 msgstr "Registros de combustible"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:409
-#: code:addons/fleet/fleet.py:413
-#: code:addons/fleet/fleet.py:417
-#: code:addons/fleet/fleet.py:420
+#: code:addons/fleet/fleet.py:409 code:addons/fleet/fleet.py:413
+#: code:addons/fleet/fleet.py:417 code:addons/fleet/fleet.py:420
 #, python-format
 msgid "None"
 msgstr "Ninguno"
@@ -780,11 +730,7 @@ msgid ""
 "                Click to create a new brand.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear una nueva marca.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear una nueva marca.\n</p>\n            "
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,start_date:0
@@ -817,8 +763,7 @@ msgid "Date when the cost has been executed"
 msgstr "Fecha en la que se ha ejecutado el coste"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: view:fleet.vehicle.model:0
+#: view:fleet.vehicle.cost:0 view:fleet.vehicle.model:0
 msgid "Vehicles costs"
 msgstr "Costes de los vehículos"
 
@@ -842,9 +787,7 @@ msgstr "Repuesto de la válvula de control del calentador"
 msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
-msgstr ""
-"Crea automáticamente un nuevo contrato con la misma información excepto por "
-"la fecha de inicio, que será la de finalización del actual contrato."
+msgstr "Crea automáticamente un nuevo contrato con la misma información excepto por la fecha de inicio, que será la de finalización del actual contrato."
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -862,14 +805,12 @@ msgid "Other Maintenance"
 msgstr "Otro mantenimiento"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,parent_id:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,parent_id:0
 msgid "Parent"
 msgstr "Padre"
 
 #. module: fleet
-#: field:fleet.vehicle,state_id:0
-#: view:fleet.vehicle.state:0
+#: field:fleet.vehicle,state_id:0 view:fleet.vehicle.state:0
 msgid "State"
 msgstr "Estado"
 
@@ -889,21 +830,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new fuel log. \n"
 "              </p><p>\n"
-"                Here you can add refuelling entries for all vehicles.  You "
-"can\n"
+"                Here you can add refuelling entries for all vehicles.  You can\n"
 "                also filter logs of a particular vehicle using the search\n"
 "                field.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un nuevo registro de combustible.\n"
-"</p><p>\n"
-"Aquí puede añadir entradas de reabastecimiento de combustible para todos los "
-"vehículos. Puede también filtrar los registros de un vehículo en particular "
-"usando el campo de búsqueda.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo registro de combustible.\n</p><p>\nAquí puede añadir entradas de reabastecimiento de combustible para todos los vehículos. Puede también filtrar los registros de un vehículo en particular usando el campo de búsqueda.\n</p>\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_11
@@ -968,10 +900,8 @@ msgid "Horsepower"
 msgstr "Caballos de potencia"
 
 #. module: fleet
-#: field:fleet.vehicle,image:0
-#: field:fleet.vehicle,image_medium:0
-#: field:fleet.vehicle,image_small:0
-#: field:fleet.vehicle.model,image:0
+#: field:fleet.vehicle,image:0 field:fleet.vehicle,image_medium:0
+#: field:fleet.vehicle,image_small:0 field:fleet.vehicle.model,image:0
 #: field:fleet.vehicle.model,image_medium:0
 #: field:fleet.vehicle.model,image_small:0
 #: field:fleet.vehicle.model.brand,image:0
@@ -984,8 +914,7 @@ msgid "Horsepower Taxation"
 msgstr "Caballos de potencia fiscales"
 
 #. module: fleet
-#: field:fleet.vehicle,log_services:0
-#: view:fleet.vehicle.log.services:0
+#: field:fleet.vehicle,log_services:0 view:fleet.vehicle.log.services:0
 msgid "Services Logs"
 msgstr "Registros de los servicios"
 
@@ -1014,9 +943,7 @@ msgstr "Costes de combustible por mes"
 msgid ""
 "This field holds the image used as logo for the brand, limited to "
 "1024x1024px."
-msgstr ""
-"Este campo contiene la imagen usado como logo para la marca, limitada a "
-"1024x1024 px."
+msgstr "Este campo contiene la imagen usado como logo para la marca, limitada a 1024x1024 px."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1029,8 +956,7 @@ msgid "All vehicles"
 msgstr "Todos los vehículos"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.log.services:0
+#: view:fleet.vehicle.log.fuel:0 view:fleet.vehicle.log.services:0
 msgid "Additional Details"
 msgstr "Detalles adicionales"
 
@@ -1126,8 +1052,7 @@ msgid "Tags"
 msgstr "Etiquetas"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: field:fleet.vehicle,log_contracts:0
+#: view:fleet.vehicle:0 field:fleet.vehicle,log_contracts:0
 msgid "Contracts"
 msgstr "Contratos"
 
@@ -1137,8 +1062,7 @@ msgid "Brake Pad(s) Replacement"
 msgstr "Repuesto de la(s) pastilla(s) de freno"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.log.services:0
+#: view:fleet.vehicle.log.fuel:0 view:fleet.vehicle.log.services:0
 msgid "Odometer Details"
 msgstr "Detalles del odómetro"
 
@@ -1151,12 +1075,9 @@ msgstr "Conductor"
 #: help:fleet.vehicle.model.brand,image_small:0
 msgid ""
 "Small-sized photo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Foto pequeña de la marca. Se redimensiona automáticamente a 64x64 px, con el "
-"ratio de aspecto preservado. Use este campo donde se requiera una imagen "
-"pequeña"
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Foto pequeña de la marca. Se redimensiona automáticamente a 64x64 px, con el ratio de aspecto preservado. Use este campo donde se requiera una imagen pequeña"
 
 #. module: fleet
 #: view:board.board:0
@@ -1216,21 +1137,11 @@ msgid ""
 "              </p>\n"
 "              <p>\n"
 "                Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle "
-"using\n"
+"                You can also show odometer value for a particular vehicle using\n"
 "                the search field.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse aquí para crear un nuevo registro de odómetro (cuentakilómetros).\n"
-"</p>\n"
-"<p>\n"
-"Aquí puede añadir varias entradas de odómetros para todos los vehículos.\n"
-"Puede también mostrar los valores de odómetro para un vehículo en particular "
-"usando el campo de búsqueda.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse aquí para crear un nuevo registro de odómetro (cuentakilómetros).\n</p>\n<p>\nAquí puede añadir varias entradas de odómetros para todos los vehículos.\nPuede también mostrar los valores de odómetro para un vehículo en particular usando el campo de búsqueda.\n</p>\n            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1248,17 +1159,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new model.\n"
 "              </p><p>\n"
-"                You can define several models (e.g. A3, A4) for each brand "
-"(Audi).\n"
+"                You can define several models (e.g. A3, A4) for each brand (Audi).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un nuevo modelo.\n"
-"</p><p>\n"
-"Puede definir varios modelos (por ejemplo, A3, A4) para cada marca (Audi).\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo modelo.\n</p><p>\nPuede definir varios modelos (por ejemplo, A3, A4) para cada marca (Audi).\n</p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -1266,28 +1170,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new vehicle. \n"
 "              </p><p>\n"
-"                You will be able to manage your fleet by keeping track of "
-"the\n"
-"                contracts, services, fixed and recurring costs, odometers "
-"and\n"
+"                You will be able to manage your fleet by keeping track of the\n"
+"                contracts, services, fixed and recurring costs, odometers and\n"
 "                fuel logs associated to each vehicle.\n"
 "            </p><p>\n"
 "                OpenERP will warn you when services or contract have to be\n"
 "                renewed.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un nuevo vehículo.\n"
-"</p><p>\n"
-"Podrá gestionar su flota siguiendo los contratos, servicios, costes fijos y "
-"recurrentes, odómetros y registros de combustible asociados a cada "
-"vehículo.\n"
-"</p><p>\n"
-"OpenERP le avisará cuando los servicios o el contrato tengan que ser "
-"renovados.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo vehículo.\n</p><p>\nPodrá gestionar su flota siguiendo los contratos, servicios, costes fijos y recurrentes, odómetros y registros de combustible asociados a cada vehículo.\n</p><p>\nOpenERP le avisará cuando los servicios o el contrato tengan que ser renovados.\n</p>\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
@@ -1312,8 +1203,7 @@ msgid ""
 "                    <b>Fleet dashboard is empty.</b>\n"
 "                  </p><p>\n"
 "                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options.\n"
 "                  </p><p>\n"
 "                    You can filter and group data before inserting into the\n"
@@ -1321,20 +1211,7 @@ msgid ""
 "                  </p>\n"
 "              </div>\n"
 "            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"<p>\n"
-"<b>El tablero de la flota está vacío.</b>\n"
-"</p><p>\n"
-"Para añdir un primer informe en el tablero, vaya a un menú, cambia a la "
-"vista lista o gráfico, y pulse <i>'Añadir al tablero'</i> en las opciones de "
-"búsqueda avanzada.\n"
-"</p><p>\n"
-"Puede filtrar y agrupar los datos antes de insertarla en el tablero usando "
-"las opciones de búsqueda.\n"
-"</p>\n"
-"</div>\n"
-"            "
+msgstr "<div class=\"oe_empty_custom_dashboard\">\n<p>\n<b>El tablero de la flota está vacío.</b>\n</p><p>\nPara añdir un primer informe en el tablero, vaya a un menú, cambia a la vista lista o gráfico, y pulse <i>'Añadir al tablero'</i> en las opciones de búsqueda avanzada.\n</p><p>\nPuede filtrar y agrupar los datos antes de insertarla en el tablero usando las opciones de búsqueda.\n</p>\n</div>\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
@@ -1370,8 +1247,7 @@ msgid "Battery Replacement"
 msgstr "Repuesto de la batería"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,date:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,date:0
 #: field:fleet.vehicle.odometer,date:0
 msgid "Date"
 msgstr "Fecha"
@@ -1393,10 +1269,7 @@ msgstr "Millas"
 msgid ""
 "Costs paid at regular intervals, depending on the cost frequency. If the "
 "cost frequency is set to unique, the cost will be logged at the start date"
-msgstr ""
-"Costes pagados a intervalos regulares, dependiendo de la frecuencia del "
-"coste. Si la frecuencia del coste se establece a única, el coste será "
-"registrado en la fecha de inicio."
+msgstr "Costes pagados a intervalos regulares, dependiendo de la frecuencia del coste. Si la frecuencia del coste se establece a única, el coste será registrado en la fecha de inicio."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_17
@@ -1414,25 +1287,14 @@ msgstr "Modelo de un vehículo"
 msgid ""
 "<p>\n"
 "          OpenERP helps you managing the costs for your different vehicles\n"
-"          Costs are generally created from services and contract and appears "
-"here.\n"
+"          Costs are generally created from services and contract and appears here.\n"
 "        </p>\n"
 "        <p>\n"
-"          Thanks to the different filters, OpenERP can only print the "
-"effective\n"
+"          Thanks to the different filters, OpenERP can only print the effective\n"
 "          costs, sort them by type and by vehicle.\n"
 "        </p>\n"
 "      "
-msgstr ""
-"<p>\n"
-"OpenERP le ayuda a gestionar los costes para sus vehículos. Los costes se "
-"crean generalmente desde los servicios y contratos, y aparecen aquí.\n"
-"</p>\n"
-"<p>\n"
-"Gracias a los diferentes filtros, OpenERP puede mostrar sólo los costes "
-"efectivos, y ordenarlos por tipo y por vehículo.\n"
-"</p>\n"
-"      "
+msgstr "<p>\nOpenERP le ayuda a gestionar los costes para sus vehículos. Los costes se crean generalmente desde los servicios y contratos, y aparecen aquí.\n</p>\n<p>\nGracias a los diferentes filtros, OpenERP puede mostrar sólo los costes efectivos, y ordenarlos por tipo y por vehículo.\n</p>\n      "
 
 #. module: fleet
 #: field:fleet.vehicle,car_value:0
@@ -1480,8 +1342,7 @@ msgid "Tax roll"
 msgstr "Registro tributario"
 
 #. module: fleet
-#: view:fleet.vehicle.model:0
-#: field:fleet.vehicle.model,vendors:0
+#: view:fleet.vehicle.model:0 field:fleet.vehicle.model,vendors:0
 msgid "Vendors"
 msgstr "Vendedores"
 
@@ -1496,10 +1357,7 @@ msgid ""
 "Medium-sized logo of the brand. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr ""
-"Logo de tamaño medio de la marca. Se redimensiona automáticamente a 128x128 "
-"px, con el ratio de aspecto preservado. Use este campo en las vistas de "
-"formulario o en algunas vistas kanban."
+msgstr "Logo de tamaño medio de la marca. Se redimensiona automáticamente a 128x128 px, con el ratio de aspecto preservado. Use este campo en las vistas de formulario o en algunas vistas kanban."
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1507,8 +1365,7 @@ msgid "Weekly"
 msgstr "Semanalmente"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: view:fleet.vehicle.odometer:0
+#: view:fleet.vehicle:0 view:fleet.vehicle.odometer:0
 msgid "Odometer Logs"
 msgstr "Registros de odómetros"
 
@@ -1574,8 +1431,7 @@ msgid "Indicative Cost"
 msgstr "Coste indicativo"
 
 #. module: fleet
-#: field:fleet.vehicle.model,brand_id:0
-#: view:fleet.vehicle.model.brand:0
+#: field:fleet.vehicle.model,brand_id:0 view:fleet.vehicle.model.brand:0
 msgid "Model Brand"
 msgstr "Modelo"
 
@@ -1755,31 +1611,25 @@ msgid "Vehicle %s has been added to the fleet!"
 msgstr "¡El vehículo %s ha sido añadido a la flota!"
 
 #. module: fleet
-#: view:fleet.vehicle.log.contract:0
-#: view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.log.contract:0 view:fleet.vehicle.log.fuel:0
 #: view:fleet.vehicle.log.services:0
 msgid "Price"
 msgstr "Precio"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,odometer:0
-#: field:fleet.vehicle.odometer,value:0
+#: field:fleet.vehicle.cost,odometer:0 field:fleet.vehicle.odometer,value:0
 msgid "Odometer Value"
 msgstr "Valor del odómetro"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,vehicle_id:0
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.odometer:0
-#: field:fleet.vehicle.odometer,vehicle_id:0
+#: view:fleet.vehicle:0 view:fleet.vehicle.cost:0
+#: field:fleet.vehicle.cost,vehicle_id:0 view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.odometer:0 field:fleet.vehicle.odometer,vehicle_id:0
 msgid "Vehicle"
 msgstr "Vehículo"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,cost_ids:0
-#: view:fleet.vehicle.log.contract:0
+#: field:fleet.vehicle.cost,cost_ids:0 view:fleet.vehicle.log.contract:0
 #: view:fleet.vehicle.log.services:0
 msgid "Included Services"
 msgstr "Servicios incluidos"
@@ -1788,17 +1638,10 @@ msgstr "Servicios incluidos"
 #: model:ir.actions.act_window,help:fleet.action_fleet_vehicle_kanban
 msgid ""
 "<p>\n"
-"          Here are displayed vehicles for which one or more contracts need "
-"to be renewed. If you see this message, then there is no contracts to "
-"renew.\n"
+"          Here are displayed vehicles for which one or more contracts need to be renewed. If you see this message, then there is no contracts to renew.\n"
 "        </p>\n"
 "      "
-msgstr ""
-"<p>\n"
-"Aquí se muestran los vehículos para los que uno o más contratos deben ser "
-"renovados. Si ve este mensaje, entonces no hay contratos a renovar.\n"
-"</p>\n"
-"      "
+msgstr "<p>\nAquí se muestran los vehículos para los que uno o más contratos deben ser renovados. Si ve este mensaje, entonces no hay contratos a renovar.\n</p>\n      "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -1819,8 +1662,7 @@ msgstr "Odómetro de los vehículos"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,notes:0
 msgid "Write here all supplementary informations relative to this contract"
-msgstr ""
-"Escriba aquí toda la información suplementaria relativa a este contrato"
+msgstr "Escriba aquí toda la información suplementaria relativa a este contrato"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -1844,14 +1686,10 @@ msgid "Contract Reference"
 msgstr "Referencia del contrato"
 
 #. module: fleet
-#: field:fleet.service.type,name:0
-#: field:fleet.vehicle,name:0
-#: field:fleet.vehicle.cost,name:0
-#: field:fleet.vehicle.log.contract,name:0
-#: field:fleet.vehicle.model,name:0
-#: field:fleet.vehicle.odometer,name:0
-#: field:fleet.vehicle.state,name:0
-#: field:fleet.vehicle.tag,name:0
+#: field:fleet.service.type,name:0 field:fleet.vehicle,name:0
+#: field:fleet.vehicle.cost,name:0 field:fleet.vehicle.log.contract,name:0
+#: field:fleet.vehicle.model,name:0 field:fleet.vehicle.odometer,name:0
+#: field:fleet.vehicle.state,name:0 field:fleet.vehicle.tag,name:0
 msgid "Name"
 msgstr "Nombre"
 
@@ -1886,15 +1724,7 @@ msgid ""
 "                repair, fixed maintenance, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un nuevo servicio.\n"
-"</p><p>\n"
-"OpenERP le ayuda a seguir todos los servicios realizados en su vehículo. Los "
-"servicios pueden ser de muchos tipos: reparaciones ocasionales, "
-"mantenimiento fijos, etc.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo servicio.\n</p><p>\nOpenERP le ayuda a seguir todos los servicios realizados en su vehículo. Los servicios pueden ser de muchos tipos: reparaciones ocasionales, mantenimiento fijos, etc.\n</p>\n            "
 
 #. module: fleet
 #: field:fleet.vehicle,co2:0
@@ -1922,8 +1752,7 @@ msgid "Contracts Costs by Month"
 msgstr "Costes de los contratos por mes"
 
 #. module: fleet
-#: field:fleet.vehicle,model_id:0
-#: view:fleet.vehicle.model:0
+#: field:fleet.vehicle,model_id:0 view:fleet.vehicle.model:0
 msgid "Model"
 msgstr "Modelo"
 
@@ -1979,18 +1808,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new type of service.\n"
 "              </p><p>\n"
-"                Each service can used in contracts, as a standalone service "
-"or both.\n"
+"                Each service can used in contracts, as a standalone service or both.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un nuevo tipo de servicio.\n"
-"</p><p>\n"
-"Cada servicio puede ser usado en los contratos, como un servicio "
-"independiente o ambos.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo tipo de servicio.\n</p><p>\nCada servicio puede ser usado en los contratos, como un servicio independiente o ambos.\n</p>\n            "
 
 #. module: fleet
 #: view:board.board:0
@@ -2029,8 +1850,7 @@ msgid "Starter Replacement"
 msgstr "Repuesto del motor de arranque"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,year:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,year:0
 msgid "Year"
 msgstr "Año"
 
@@ -2056,11 +1876,8 @@ msgstr "Total"
 
 #. module: fleet
 #: help:fleet.service.type,category:0
-msgid ""
-"Choose wheter the service refer to contracts, vehicle services or both"
-msgstr ""
-"Escoja si el servicio se refiere a los contratos, a servicios del vehículo o "
-"a ambos"
+msgid "Choose wheter the service refer to contracts, vehicle services or both"
+msgstr "Escoja si el servicio se refiere a los contratos, a servicios del vehículo o a ambos"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_type:0
@@ -2071,19 +1888,3 @@ msgstr "Sólo para uso interno"
 #: help:fleet.vehicle.state,sequence:0
 msgid "Used to order the note stages"
 msgstr "Usado para ordenar las etapas"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                Here you can add various odometer entries for all vehicles.\n"
-#~ "                You can also show odometer value for a particular vehicle "
-#~ "using\n"
-#~ "                the search field.\n"
-#~ "              </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "Aquí puede añadir varias entradas de odómetro para todos sus vehículos.\n"
-#~ "Puede también ver el valor del odómetro para un vehículo en particular "
-#~ "usando el campo de búsqueda.\n"
-#~ "</p>\n"
-#~ "            "

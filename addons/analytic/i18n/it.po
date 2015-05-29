@@ -1,21 +1,22 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-22 14:24+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-7/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:40+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -36,7 +37,7 @@ msgstr "Contratto: "
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_pending
 msgid "Contract pending"
-msgstr ""
+msgstr "Contratto pendente"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -62,25 +63,12 @@ msgstr "Debito"
 #: view:account.analytic.account:0
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
-msgstr ""
-"Quando la data finale del contratto è\n"
-"                                        superata o il numero massimo di "
-"unità di\n"
-"                                        servizio (per es. contratto di "
-"assistenza a pacchetto) è\n"
-"                                        raggiunto, il gestore del conto sarà "
-"avvisato \n"
-"                                        via mail di rinnovare il contratto "
-"con il\n"
-"                                        cliente."
+msgstr "Quando la data finale del contratto è\n                                        superata o il numero massimo di unità di\n                                        servizio (per es. contratto di assistenza a pacchetto) è\n                                        raggiunto, il gestore del conto sarà avvisato \n                                        via mail di rinnovare il contratto con il\n                                        cliente."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -106,12 +94,9 @@ msgstr "Followers"
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
-msgstr ""
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
+msgstr "Quando impostate una azienda la valuta selezionata deve essere la stessa indicata .\nPotete rimuovere l'azienda di appartenenza e quindi cambiare la valuta solamente nel conto analitico di tipo 'vista'. Questo può essere davvero utile per consolidare gli scopi di parecchie aziende con diverse valute, per esempio."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -159,7 +144,7 @@ msgstr "Descrizione"
 #: code:addons/analytic/analytic.py:262
 #, python-format
 msgid "Quick account creation disallowed."
-msgstr ""
+msgstr "Creazione veloce conto non permessa"
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -187,9 +172,7 @@ msgstr "Rinnovo"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Gestisce il sommario (numero di messaggi, ...) di Chatter. Questo sommario è "
-"direttamente in html così da poter essere inserito nelle viste kanban."
+msgstr "Gestisce il sommario (numero di messaggi, ...) di Chatter. Questo sommario è direttamente in html così da poter essere inserito nelle viste kanban."
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
@@ -201,10 +184,7 @@ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr ""
-"Imposto il limite massimo  delle ore lavorate sul contratto, basate sul "
-"timesheet. (per esempio, numero di ore in un contratto d'assistenza a "
-"pacchetto.)"
+msgstr "Imposto il limite massimo  delle ore lavorate sul contratto, basate sul timesheet. (per esempio, numero di ore in un contratto d'assistenza a pacchetto.)"
 
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
@@ -239,16 +219,14 @@ msgstr "Termini e Condizioni"
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Expiration Date"
-msgstr ""
+msgstr "Data di scadenza"
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
-"Calcolato moltiplicando la quantità ed il prezzo specificato nel prezzo di "
-"costo del Prodotto. Sempre espresso nella valuta principale aziendale."
+msgstr "Calcolato moltiplicando la quantità ed il prezzo specificato nel prezzo di costo del Prodotto. Sempre espresso nella valuta principale aziendale."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -309,23 +287,11 @@ msgstr "Contratti Aperti"
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Se viene selezionata il Tipo Vista, significa che non sarà permesso creare "
-"registrazioni usando quel conto.\n"
-"Il tipo 'Conto analitico' serve per conti tipici che si usano in "
-"contabilità.\n"
-"Se viene selezionato Contratto o Progetto, permette di gestire la validità e "
-"le opzioni di fatturazione per questo conto.\n"
-"Il tipo speciale 'Modello di Contratto' permette di definire un modello con "
-"i dati di default che è possibile riutilizzare facilmente."
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
+msgstr "Se viene selezionata il Tipo Vista, significa che non sarà permesso creare registrazioni usando quel conto.\nIl tipo 'Conto analitico' serve per conti tipici che si usano in contabilità.\nSe viene selezionato Contratto o Progetto, permette di gestire la validità e le opzioni di fatturazione per questo conto.\nIl tipo speciale 'Modello di Contratto' permette di definire un modello con i dati di default che è possibile riutilizzare facilmente."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -345,7 +311,7 @@ msgstr "Saldo"
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Name"
-msgstr ""
+msgstr "Nome Completo"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -372,7 +338,7 @@ msgstr "Errore!"
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_closed
 msgid "Contract closed"
-msgstr ""
+msgstr "Contratto chiuso"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -385,8 +351,7 @@ msgid "Amount"
 msgstr "Importo"
 
 #. module: analytic
-#: view:account.analytic.account:0
-#: selection:account.analytic.account,type:0
+#: view:account.analytic.account:0 selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
@@ -400,13 +365,13 @@ msgstr "Valuta"
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_opened
 msgid "Contract opened"
-msgstr ""
+msgstr "Contratto aperto"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:262
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Attenzione"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -422,34 +387,3 @@ msgstr "Data Iniziale"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Voci Conto Analitico"
-
-#~ msgid "Date End"
-#~ msgstr "Data Fine"
-
-#~ msgid "Full Account Name"
-#~ msgstr "Nome Conto completa"
-
-#, python-format
-#~ msgid ""
-#~ "If you set a company, the currency selected has to be the same as it's "
-#~ "currency. \n"
-#~ "You can remove the company belonging, and thus change the currency, only on "
-#~ "analytic account of type 'view'. This can be really usefull for "
-#~ "consolidation purposes of several companies charts with different "
-#~ "currencies, for example."
-#~ msgstr ""
-#~ "Se viene selezionata un'azienda, la valuta selezionata deve essere la stessa "
-#~ "di quella aziendale. \n"
-#~ "E' possibile rimuovere l'azienda collegata, e quindi cambiare la valuta, "
-#~ "solo sui conti analitici di tipo 'vista'. Ciò può essere utile veramente "
-#~ "solo per ragioni di consolidamento di piani dei conti di diverse aziende con "
-#~ "diverse valuta, per esempio."
-
-#~ msgid "Contract <b>pending</b>"
-#~ msgstr "Contratti <b>sospesi</b>"
-
-#~ msgid "Contract <b>closed</b>"
-#~ msgstr "Contratti <b>chiusi</b>"
-
-#~ msgid "Stage <b>opened</b>"
-#~ msgstr "Fasi <b>aperte</b>"

@@ -1,21 +1,22 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_long_term
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-27 08:18+0000\n"
-"Last-Translator: electro <Unknown>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-7/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -23,8 +24,7 @@ msgid "force the phase to finish before this date"
 msgstr "forza la fine della fase prima di questa data"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "In Progress"
 msgstr "In corso"
 
@@ -38,8 +38,7 @@ msgstr "Fasi"
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
+#: view:project.phase:0 view:project.user.allocation:0
 msgid "Team Planning"
 msgstr "Pianificazione Team"
 
@@ -49,8 +48,7 @@ msgid "Assigned Users"
 msgstr "Utenti assegnati"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,next_phase_ids:0
+#: view:project.phase:0 field:project.phase,next_phase_ids:0
 msgid "Next Phases"
 msgstr "Prossime fasi"
 
@@ -67,13 +65,9 @@ msgstr "Attività del progetto"
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
 msgid ""
-"To schedule phases of all or a specified project. It then open a gantt "
-"view.\n"
+"To schedule phases of all or a specified project. It then open a gantt view.\n"
 "               "
-msgstr ""
-"Per pianificare fasi di tutti o di un specifico progetto. Aprirà una vista "
-"gantt.\n"
-"               "
+msgstr "Per pianificare fasi di tutti o di un specifico progetto. Aprirà una vista gantt.\n               "
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
@@ -113,14 +107,12 @@ msgid "Draft"
 msgstr "Bozza"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "C_ompute"
 msgstr "C_alcola"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "New"
 msgstr "Nuovo"
 
@@ -135,8 +127,7 @@ msgid "Resource Leaves"
 msgstr "Permessi risorsa"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "Pending"
 msgstr "In sospeso"
 
@@ -163,8 +154,7 @@ msgid "Please specify a project to schedule."
 msgstr "Si prega di specificare un progetto da pianificare."
 
 #. module: project_long_term
-#: view:project.phase:0
-#: view:project.user.allocation:0
+#: view:project.phase:0 view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Raggruppa per..."
 
@@ -188,9 +178,7 @@ msgstr "Unità di Misura (Unita di Misura) è l'unità di misura della Durata"
 #: help:project.phase,user_ids:0
 msgid ""
 "The resources on the project can be computed automatically by the scheduler."
-msgstr ""
-"Le risorse sul progetto possono essere calcolate automaticamente dal "
-"pianificatore."
+msgstr "Le risorse sul progetto possono essere calcolate automaticamente dal pianificatore."
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -200,24 +188,16 @@ msgstr "Annulla fase"
 #. module: project_long_term
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
-msgstr ""
-"Selezionare questo campo se si prevede di usare una pianificare basata sulle "
-"fasi"
+msgstr "Selezionare questo campo se si prevede di usare una pianificare basata sulle fasi"
 
 #. module: project_long_term
 #: help:project.phase,state:0
 msgid ""
 "If the phase is created the status 'Draft'.\n"
 " If the phase is started, the status becomes 'In Progress'.\n"
-" If review is needed the phase is in 'Pending' status.                       "
-"           \n"
+" If review is needed the phase is in 'Pending' status.                                  \n"
 " If the phase is over, the status is set to 'Done'."
-msgstr ""
-"Se la fase è creata lo stato è 'Bozza'.\n"
-" Se la fase è avviata, lo stato diventa 'In Corso'.\n"
-" Se è necessario revisionarla la fase è in stato 'Sospeso'.                  "
-"                \n"
-" Se la fase è conclusa, lo stato è impostato a 'Fatto'."
+msgstr "Se la fase è creata lo stato è 'Bozza'.\n Se la fase è avviata, lo stato diventa 'In Corso'.\n Se è necessario revisionarla la fase è in stato 'Sospeso'.                                  \n Se la fase è conclusa, lo stato è impostato a 'Fatto'."
 
 #. module: project_long_term
 #: field:project.phase,progress:0
@@ -236,8 +216,7 @@ msgid "My Projects"
 msgstr "Miei progetti"
 
 #. module: project_long_term
-#: view:project.project:0
-#: view:project.user.allocation:0
+#: view:project.project:0 view:project.user.allocation:0
 msgid "Phase"
 msgstr "Fase"
 
@@ -272,8 +251,7 @@ msgid "Start Month"
 msgstr "Mese Iniziale"
 
 #. module: project_long_term
-#: field:project.phase,date_end:0
-#: field:project.user.allocation,date_end:0
+#: field:project.phase,date_end:0 field:project.user.allocation,date_end:0
 msgid "End Date"
 msgstr "Data fine"
 
@@ -291,13 +269,7 @@ msgid ""
 "scheduling. Use the long term planning in order to planify your available "
 "users, convert your phases into a series of tasks when you start working on "
 "the project."
-msgstr ""
-"Un progetto può essere suddiviso in diverse fasi. Per ogni fase, è possibile "
-"definire la collocazione degli utenti, descrivere diversi attività e "
-"collegare le fasi alle precedenti o a quelle successive, aggiungere vincoli "
-"di date per le pianificazioni automatiche. Usare la pianificazione a lunga "
-"durata per pianificare gli utenti disponibili, convertire le fasi in una "
-"serie di attività quando si inizia a lavorare sul progetto."
+msgstr "Un progetto può essere suddiviso in diverse fasi. Per ogni fase, è possibile definire la collocazione degli utenti, descrivere diversi attività e collegare le fasi alle precedenti o a quelle successive, aggiungere vincoli di date per le pianificazioni automatiche. Usare la pianificazione a lunga durata per pianificare gli utenti disponibili, convertire le fasi in una serie di attività quando si inizia a lavorare sul progetto."
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -305,8 +277,7 @@ msgid "Compute a Single Project"
 msgstr "Calcola un singolo progetto"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,previous_phase_ids:0
+#: view:project.phase:0 field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
 msgstr "Fasi precedenti"
 
@@ -328,9 +299,9 @@ msgstr "Fasi Aperte"
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
-" It's computed by the scheduler according to the start date and the duration."
-msgstr ""
-" Viene calcolato dal pianificatore secondo la data di inizio e la durata."
+" It's computed by the scheduler according to the start date and the "
+"duration."
+msgstr " Viene calcolato dal pianificatore secondo la data di inizio e la durata."
 
 #. module: project_long_term
 #: constraint:project.phase:0
@@ -338,26 +309,21 @@ msgid "Loops in phases not allowed"
 msgstr "Le fasi circolari non sono permesse"
 
 #. module: project_long_term
-#: view:project.user.allocation:0
-#: field:project.user.allocation,user_id:0
+#: view:project.user.allocation:0 field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Utente"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
 #: field:project.compute.phases,project_id:0
-#: field:project.compute.tasks,project_id:0
-#: view:project.phase:0
-#: field:project.phase,project_id:0
-#: view:project.task:0
-#: view:project.user.allocation:0
-#: field:project.user.allocation,project_id:0
+#: field:project.compute.tasks,project_id:0 view:project.phase:0
+#: field:project.phase,project_id:0 view:project.task:0
+#: view:project.user.allocation:0 field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Progetto"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -368,9 +334,7 @@ msgstr "Utenti del progetto"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
-#: view:project.phase:0
-#: view:project.task:0
-#: field:project.task,phase_id:0
+#: view:project.phase:0 view:project.task:0 field:project.task,phase_id:0
 #: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr "Fase progetto"
@@ -383,8 +347,7 @@ msgstr "Pianificazione"
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Phase start-date must be lower than phase end-date."
-msgstr ""
-"La data di inizio della fase deve essere precedente alla data di fine."
+msgstr "La data di inizio della fase deve essere precedente alla data di fine."
 
 #. module: project_long_term
 #: selection:project.phase,state:0
@@ -402,8 +365,7 @@ msgid "Project Compute Phases"
 msgstr "Calcolo fasi progetto"
 
 #. module: project_long_term
-#: field:project.phase,date_start:0
-#: field:project.user.allocation,date_start:0
+#: field:project.phase,date_start:0 field:project.user.allocation,date_start:0
 msgid "Start Date"
 msgstr "Data inizio"
 
@@ -413,8 +375,7 @@ msgid "Constraints"
 msgstr "Vincoli"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,state:0
+#: view:project.phase:0 field:project.phase,state:0
 msgid "Status"
 msgstr "Stato"
 
@@ -442,19 +403,16 @@ msgstr "Errore!"
 #. module: project_long_term
 #: help:project.phase,date_start:0
 msgid ""
-"It's computed by the scheduler according the project date or the end date of "
-"the previous phase."
-msgstr ""
-"Viene calcolato dal pianificatore secondo la data del progetto o la data di "
-"fine della fase precedente."
+"It's computed by the scheduler according the project date or the end date of"
+" the previous phase."
+msgstr "Viene calcolato dal pianificatore secondo la data del progetto o la data di fine della fase precedente."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
-#: view:project.phase:0
-#: field:project.project,phase_ids:0
+#: view:project.phase:0 field:project.project,phase_ids:0
 msgid "Project Phases"
 msgstr "Fasi progetto"
 
@@ -491,8 +449,7 @@ msgid "Schedule Tasks"
 msgstr "Pianifica attività"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "Done"
 msgstr "Completato"
 
@@ -507,8 +464,7 @@ msgid "Force Assigned Users"
 msgstr "Forza gli Utenti Assegnati"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,duration:0
+#: view:project.phase:0 field:project.phase,duration:0
 msgid "Duration"
 msgstr "Durata"
 
@@ -523,7 +479,6 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "or"
 msgstr "o"

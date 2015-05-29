@@ -1,21 +1,22 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-11-09 10:24+0000\n"
-"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:02+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -28,19 +29,14 @@ msgid ""
 "- In this same \"Search\" view, select the menu \"Save Current Filter\", "
 "enter the name (Ex: Create the 01/01/2012) and add the option \"Share with "
 "all users\""
-msgstr ""
-"V tem istem pogledu \"Iskanje\", izberite meni \"Shrani trenutni filter\", "
-"vpišite naziv (npr. Kreirano 01/01/2013) in označite opcijo \"Deli z vsemi "
-"uporabniki\""
+msgstr "V tem istem pogledu \"Iskanje\", izberite meni \"Shrani trenutni filter\", vpišite naziv (npr. Kreirano 01/01/2013) in označite opcijo \"Deli z vsemi uporabniki\""
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
-"Kdaj se naj izvede pogoj. Če je navedeno, ga bo načrtovalec preveril. Če je "
-"prazno, bo preverjeno ob kreiranju in popravljanju."
+msgstr "Kdaj se naj izvede pogoj. Če je navedeno, ga bo načrtovalec preveril. Če je prazno, bo preverjeno ob kreiranju in popravljanju."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -78,9 +74,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
-"Zamik po datumu izvedbe. Lahko vpišete negativno število, če potrebujete "
-"zamik pred datumom izvedbe, npr. pošiljanje opomnika 15 minut pred sestankom."
+msgstr "Zamik po datumu izvedbe. Lahko vpišete negativno število, če potrebujete zamik pred datumom izvedbe, npr. pošiljanje opomnika 15 minut pred sestankom."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -159,8 +153,7 @@ msgid "To create a new filter:"
 msgstr "Za kreiranje novega filtra:"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "Aktivno"
 
@@ -176,11 +169,7 @@ msgid ""
 "Model\". The precondition filter is checked right before the modification "
 "while the postcondition filter is checked after the modification. A "
 "precondition filter will therefore not work during a creation."
-msgstr ""
-"Pravilo aktivnosti je preverjeno, ko kreirate ali spremenite \"Povezan "
-"dokumentni model\". Filter predpogoja je preverjen tik pred spremembo, "
-"medtem ko je posledični filter preverjen po spremembi. Napovedani filter bo "
-"delal med kreiranjem."
+msgstr "Pravilo aktivnosti je preverjeno, ko kreirate ali spremenite \"Povezan dokumentni model\". Filter predpogoja je preverjen tik pred spremembo, medtem ko je posledični filter preverjen po spremembi. Napovedani filter bo delal med kreiranjem."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -193,10 +182,7 @@ msgid ""
 "- Go to your \"Related Document Model\" page and set the filter parameters "
 "in the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
-msgstr ""
-"Pojdite na stran \"Povezani dokumenti model\" in nastavite parametre filtra "
-"v pogledu \"Iskanje\" (primer filtra temeljni na Možnostih/Priložnostih: "
-"Datum kreiranja \"je enak\" 01/01/2012)"
+msgstr "Pojdite na stran \"Povezani dokumenti model\" in nastavite parametre filtra v pogledu \"Iskanje\" (primer filtra temeljni na Možnostih/Priložnostih: Datum kreiranja \"je enak\" 01/01/2012)"
 
 #. module: base_action_rule
 #: field:base.action.rule,name:0
@@ -272,7 +258,8 @@ msgstr "Povezan dokumentni model"
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr "Če je prisoten, mora biti ta pogoj izveden pred spremembo zapisa."
 
 #. module: base_action_rule
@@ -292,29 +279,13 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Potrdite za nastavitev novega avtomatičnega pravila "
-"aktivnosti. \n"
-"              </p><p>\n"
-"                Uporabite avtomatične akitvnosti za avtomatsko izvedbo "
-"aktivnosti za\n"
-"                različne ekrane. Npr.: možnost, ki jo kreira nek uporabnik, "
-"je lahko\n"
-"                avtomatično prirejena določeni prodajni ekipi. Ali: "
-"priložnost, ki je še\n"
-"                v statusu čakanja, lahko avtomatično čez 14 dni sproži\n"
-"                avtomatično e-sporočilo za opomnik.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Potrdite za nastavitev novega avtomatičnega pravila aktivnosti. \n              </p><p>\n                Uporabite avtomatične akitvnosti za avtomatsko izvedbo aktivnosti za\n                različne ekrane. Npr.: možnost, ki jo kreira nek uporabnik, je lahko\n                avtomatično prirejena določeni prodajni ekipi. Ali: priložnost, ki je še\n                v statusu čakanja, lahko avtomatično čez 14 dni sproži\n                avtomatično e-sporočilo za opomnik.\n              </p>\n            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -337,8 +308,7 @@ msgid "Trigger Date"
 msgstr "Sproženo dne"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-#: field:base.action.rule,server_action_ids:0
+#: view:base.action.rule:0 field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
 msgstr "Aktivnosti strežnika"
 

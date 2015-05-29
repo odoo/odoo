@@ -1,26 +1,27 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-7/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:01+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "In Corso"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -35,7 +36,7 @@ msgstr ""
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
+msgstr "Quando dovrebbe scattare una condizione. Se presente verrà spuntata dallo schedulatore. Se vuota verrà spuntata alla creazione o all'aggiornamento"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -55,17 +56,17 @@ msgstr "Responsabile"
 #. module: base_action_rule
 #: help:base.action.rule,server_action_ids:0
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "Esempio: promemoria e-mail, chiamata servizi, ecc."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_followers:0
 msgid "Add Followers"
-msgstr ""
+msgstr "Aggiungi Followers"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
 msgid "Set Responsible"
-msgstr ""
+msgstr "Imposta il responsabile"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_range:0
@@ -73,7 +74,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
+msgstr "Ritardo dopo la data di esecuzione. Potete anche mettere un numero negativo se necessitate di avere una data di esecuzione antecedente l'evento, come inviare promemoria 15 minuti prima dell'incontro."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -83,12 +84,12 @@ msgstr ""
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Chiusura"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "New"
-msgstr ""
+msgstr "Nuovo"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -103,7 +104,7 @@ msgstr "Condizioni"
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Pending"
-msgstr ""
+msgstr "In attesa"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,state:0
@@ -113,7 +114,7 @@ msgstr "Stato"
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "Prima di aggiornare il filtro"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -134,7 +135,7 @@ msgstr "Campi da cambiare"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "I filtri devono quindi essere disponibili in questa pagina"
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
@@ -149,11 +150,10 @@ msgstr "Ore"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "To create a new filter:"
-msgstr ""
+msgstr "Per creare un nuovo filtro:"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "Attivo"
 
@@ -198,8 +198,7 @@ msgstr "Azioni automatiche"
 #. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
-"Fornisce l'ordine alla sequenza quando si visualizza una lista di regole"
+msgstr "Fornisce l'ordine alla sequenza quando si visualizza una lista di regole"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -224,17 +223,17 @@ msgstr "Tipo Ritardo"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server actions to run"
-msgstr ""
+msgstr "Azione server da eseguire"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Quando non è spuntato la regola sarà nascosta e non verrà eseguita"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Annullato"
 
 #. module: base_action_rule
 #: field:base.action.rule,model:0
@@ -259,8 +258,9 @@ msgstr "Modello documento relativo"
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
-msgstr ""
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "Se presente, questa condizione deve essere soddisfatta prima dell'aggiornamento del record."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -279,15 +279,13 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliccare per impostare una nuova regola per un'azione automatica.\n</p><p>\nUtilzzare azioni automatiche per fare scattare automaticamente azioni per\nvarie situazioni. Esempio: una lead è creata da un'utente specifico deve \nautomaticamente impostare uno specifico team di vendita o una\nopportunità che si trova in stato pendente dopo 14 giorni deve\nfare scattare una mail di promemoria automatica.\n</p>\n            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -297,7 +295,7 @@ msgstr "Data di creazione"
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "Ultima azione"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,partner_id:0
@@ -310,12 +308,11 @@ msgid "Trigger Date"
 msgstr "Data Programmata"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-#: field:base.action.rule,server_action_ids:0
+#: view:base.action.rule:0 field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
 msgstr "Azioni Server"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Oggetto"

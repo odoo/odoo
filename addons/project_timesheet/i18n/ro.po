@@ -1,21 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-02-12 18:51+0000\n"
-"Last-Translator: ERPSystems.ro <Unknown>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:18+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -37,8 +38,7 @@ msgstr "Grupeaza dupa data anului"
 #, python-format
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
-"Nu puteti selecta un Cont Analitic care se afla in starea Inchis sau Anulat."
+msgstr "Nu puteti selecta un Cont Analitic care se afla in starea Inchis sau Anulat."
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -56,9 +56,7 @@ msgstr "Id Cronologie corelata"
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
-msgstr ""
-"Nu puteti sterge un partener care este alocat unui proiect, dar puteti "
-"debifa casuta activa."
+msgstr "Nu puteti sterge un partener care este alocat unui proiect, dar puteti debifa casuta activa."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
@@ -103,15 +101,7 @@ msgid ""
 "                projects in order to track the invoicing progress.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualziare_niciuncontiunut_creeaza\">\n"
-"                Dati clic pentru a adauga un contract al clientului.\n"
-"              </p><p>\n"
-"                Aici veti gasi contractele asociate proiectelor\n"
-"                clientului dumneavoastra pentru a urmari progresul "
-"facturarii.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualziare_niciuncontiunut_creeaza\">\n                Dati clic pentru a adauga un contract al clientului.\n              </p><p>\n                Aici veti gasi contractele asociate proiectelor\n                clientului dumneavoastra pentru a urmari progresul facturarii.\n              </p>\n            "
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
@@ -132,13 +122,9 @@ msgstr "Proiectele Clientilor"
 #: code:addons/project_timesheet/project_timesheet.py:89
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the HR Settings tab of the employee form."
-msgstr ""
-"Va rugam sa definiti produsul si proprietatea contului categoriei produsului "
-"pentru angajatul respectiv.\n"
-"Completati tabul HR Settings (Setari RU) din formularul angajatului."
+msgstr "Va rugam sa definiti produsul si proprietatea contului categoriei produsului pentru angajatul respectiv.\nCompletati tabul HR Settings (Setari RU) din formularul angajatului."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
@@ -171,9 +157,7 @@ msgstr "Mai"
 msgid ""
 "Please define journal on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr ""
-"Va rugam sa definiti registrul angajatului respectiv.\n"
-"Completati tabul fisa de pontaj din formularul angajatului."
+msgstr "Va rugam sa definiti registrul angajatului respectiv.\nCompletati tabul fisa de pontaj din formularul angajatului."
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
@@ -212,8 +196,7 @@ msgid "User"
 msgstr "Utilizator"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,name:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,name:0
 msgid "Date"
 msgstr "Data"
 
@@ -241,20 +224,11 @@ msgstr "Februarie"
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
 msgid ""
 "<p>\n"
-"                You will find here timesheets and purchases you did for "
-"contracts that can be reinvoiced to the customer.\n"
-"                If you want to record new jobs to invoice, you should use "
-"the timesheet menu instead.\n"
+"                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use the timesheet menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Aici veti gasi fisele de pontaj si achizitiile pe care le-"
-"ati facut pentru contracte care pot fi refacturate clientului.\n"
-"                Daca doriti sa inregistrati noi activitati de facturat, ar "
-"trebui sa folositi meniul fisa de pontaj.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Aici veti gasi fisele de pontaj si achizitiile pe care le-ati facut pentru contracte care pot fi refacturate clientului.\n                Daca doriti sa inregistrati noi activitati de facturat, ar trebui sa folositi meniul fisa de pontaj.\n              </p>\n            "
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -304,16 +278,13 @@ msgstr "raport.foaie_de_pontaj.utilizator.sarcina"
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskencoding0
 msgid "Encode how much time u spent on your task"
-msgstr ""
-"Inregistreaza cat de mult timp ati petrecut lucrand la sarcina dumneavoastra"
+msgstr "Inregistreaza cat de mult timp ati petrecut lucrand la sarcina dumneavoastra"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:85
 #, python-format
 msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
-"Va rugam sa definiti angajatul pentru utilizatorul \"%s\". Trebuie sa creati "
-"unul."
+msgstr "Va rugam sa definiti angajatul pentru utilizatorul \"%s\". Trebuie sa creati unul."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
@@ -344,13 +315,9 @@ msgstr "Declansati facturi din liniile comenzii de vanzare"
 #: code:addons/project_timesheet/project_timesheet.py:100
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr ""
-"Va rugam sa definiti produsul si proprietatile contului categoriei "
-"produsului pentru angajatul respectiv.\n"
-"Completati tabul fisa de pontaj din formularul angajatului."
+msgstr "Va rugam sa definiti produsul si proprietatile contului categoriei produsului pentru angajatul respectiv.\nCompletati tabul fisa de pontaj din formularul angajatului."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:60
@@ -358,9 +325,7 @@ msgstr ""
 msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
-msgstr ""
-"<p>Fisele de pontaj pentru acest proiect pot fi facturate lui %s, in functie "
-"de termenii definti in contract.</p>"
+msgstr "<p>Fisele de pontaj pentru acest proiect pot fi facturate lui %s, in functie de termenii definti in contract.</p>"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
@@ -402,8 +367,7 @@ msgid "Invalid Action!"
 msgstr "Actiune Nevalida!"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,month:0
 msgid "Month"
 msgstr "Luna"
 
@@ -411,11 +375,9 @@ msgstr "Luna"
 #: code:addons/project_timesheet/project_timesheet.py:57
 #, python-format
 msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">Inregistrati-va fisele de "
-"pontaj pentru proiectul '%s'.</p>"
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
+" '%s'.</p>"
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">Inregistrati-va fisele de pontaj pentru proiectul '%s'.</p>"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:84
@@ -427,8 +389,7 @@ msgid "Bad Configuration!"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,year:0
 msgid "Year"
 msgstr "An"
 
@@ -436,11 +397,3 @@ msgstr "An"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Completeaza Fisa de pontaj"
-
-#, python-format
-#~ msgid "Invalid Analytic Account !"
-#~ msgstr "Cont Analitic Nevalid !"
-
-#, python-format
-#~ msgid "Bad Configuration !"
-#~ msgstr "Configurare gresita !"

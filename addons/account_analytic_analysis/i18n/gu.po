@@ -1,21 +1,22 @@
-# Gujarati translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_analytic_analysis
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Gujarati <gu@li.org>\n"
+"PO-Revision-Date: 2015-05-23 12:54+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Gujarati (http://www.transifex.com/projects/p/odoo-7/language/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: gu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -92,8 +93,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
 "                Use sale orders to track everything that should be invoiced\n"
@@ -110,7 +110,7 @@ msgstr "આ ખાતાની કુલ ગ્રાહક ભરતિયા�
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Cancelled"
-msgstr ""
+msgstr "રદ કરેલ છે"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
@@ -148,7 +148,7 @@ msgstr "વિશ્લેષણાત્મક ખાતું"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr ""
+msgstr "ભાગીદાર"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -165,10 +165,8 @@ msgid ""
 "                end date is passed or the working effort is higher than the\n"
 "                maximum authorized one.\n"
 "              </p><p>\n"
-"                OpenERP automatically sets contracts to be renewed in a "
-"pending\n"
-"                state. After the negociation, the salesman should close or "
-"renew\n"
+"                OpenERP automatically sets contracts to be renewed in a pending\n"
+"                state. After the negociation, the salesman should close or renew\n"
 "                pending contracts.\n"
 "              </p>\n"
 "            "
@@ -239,9 +237,7 @@ msgstr ""
 msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
-msgstr ""
-"વિશ્લેષણાત્મક ખાતા ઉપર તમે ખર્ચેલો સમય અંક (સમયપત્રક માંથી). તે 'જનરલ'-"
-"સામાન્ય રોજમેળ હિસાબના બધા ભાગોમાંથી ગણતરી કરેલ છે."
+msgstr "વિશ્લેષણાત્મક ખાતા ઉપર તમે ખર્ચેલો સમય અંક (સમયપત્રક માંથી). તે 'જનરલ'-સામાન્ય રોજમેળ હિસાબના બધા ભાગોમાંથી ગણતરી કરેલ છે."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -258,9 +254,7 @@ msgstr ""
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
-msgstr ""
-"જો ભરતિયુ ખર્ચમાંથી હોય તો આ તાજેતરમાં થયેલા કામની કે ભરતિયુ થયેલા ખર્ચ ની "
-"તારીખ છે."
+msgstr "જો ભરતિયુ ખર્ચમાંથી હોય તો આ તાજેતરમાં થયેલા કામની કે ભરતિયુ થયેલા ખર્ચ ની તારીખ છે."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -329,7 +323,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Start Date"
-msgstr ""
+msgstr "શરુઆતની તારીખ"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -360,18 +354,14 @@ msgid ""
 "        % for account in accounts:\n"
 "        <tr>\n"
 "            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
+"            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or '???'}</td>\n"
 "            <td>\n"
 "            % if account.quantity_max != 0.0:\n"
 "                ${account.remaining_hours}/${account.quantity_max} units\n"
 "            % endif\n"
 "            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
+"            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n"
 "        </tr>\n"
 "        % endfor\n"
 "    % endfor\n"
@@ -419,16 +409,14 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed"
-msgstr ""
+msgstr "બંધ થયેલ"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
-msgstr ""
-"સમય અંક (કલાકો/દિવસો) ('જનરલ'-સામાન્ય રોજમેળ હિસાબ માંથી) કે જે ભરતિયામાં "
-"સમાવી શકો છો જો તમે વિશ્લેષણાત્મક ખાતા આધારિત ભરતિયુ બનાવો"
+msgstr "સમય અંક (કલાકો/દિવસો) ('જનરલ'-સામાન્ય રોજમેળ હિસાબ માંથી) કે જે ભરતિયામાં સમાવી શકો છો જો તમે વિશ્લેષણાત્મક ખાતા આધારિત ભરતિયુ બનાવો"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -438,7 +426,7 @@ msgstr "ચડત જથ્થો"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr ""
+msgstr "સ્થિતિ"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -474,9 +462,7 @@ msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
-msgstr ""
-"પરિયોજના ઉપર થયેલા તમારા ખર્ચ દ્વારા, આવક શું હોય શકે જો આ બધો ખર્ચ "
-"ભરતિયામાં રાબેતા મુજબ વેચાણ કિંમત ભાવપત્રકમાંથી લેવાયેલ હોય."
+msgstr "પરિયોજના ઉપર થયેલા તમારા ખર્ચ દ્વારા, આવક શું હોય શકે જો આ બધો ખર્ચ ભરતિયામાં રાબેતા મુજબ વેચાણ કિંમત ભાવપત્રકમાંથી લેવાયેલ હોય."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -496,8 +482,7 @@ msgid ""
 "                    Click here to create a template of contract.\n"
 "                </p><p>\n"
 "                    Templates are used to prefigure contract/project that \n"
-"                    can be selected by the salespeople to quickly configure "
-"the\n"
+"                    can be selected by the salespeople to quickly configure the\n"
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
@@ -525,9 +510,7 @@ msgstr ""
 msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
-msgstr ""
-"સમય અંક (કલાકો/દિવસો) કે જે ભરતિયામાં સમાવી શકો છો અને જેનો ભરતિયામાં સમાવેશ "
-"કરી ચૂક્યા છો."
+msgstr "સમય અંક (કલાકો/દિવસો) કે જે ભરતિયામાં સમાવી શકો છો અને જેનો ભરતિયામાં સમાવેશ કરી ચૂક્યા છો."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -545,12 +528,9 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click to create a new contract.\n"
 "                </p><p>\n"
-"                    Use contracts to follow tasks, issues, timesheets or "
-"invoicing based on\n"
-"                    work done, expenses and/or sales orders. OpenERP will "
-"automatically manage\n"
-"                    the alerts for the renewal of the contracts to the right "
-"salesperson.\n"
+"                    Use contracts to follow tasks, issues, timesheets or invoicing based on\n"
+"                    work done, expenses and/or sales orders. OpenERP will automatically manage\n"
+"                    the alerts for the renewal of the contracts to the right salesperson.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -578,13 +558,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "In Progress"
-msgstr ""
+msgstr "પ્રગતિમાં છે"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
-"આ સૂત્રની મદદથી થયેલી ગણતરી : ભરતિયાની અધિકતમ કિંમત - ભરતિયાની મૂળ રકમ"
+msgstr "આ સૂત્રની મદદથી થયેલી ગણતરી : ભરતિયાની અધિકતમ કિંમત - ભરતિયાની મૂળ રકમ"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -606,10 +585,8 @@ msgstr ""
 msgid ""
 "<p>\n"
 "                You will find here timesheets and purchases you did for\n"
-"                contracts that can be reinvoiced to the customer.  If you "
-"want\n"
-"                to record new activities to invoice, you should use the "
-"timesheet\n"
+"                contracts that can be reinvoiced to the customer.  If you want\n"
+"                to record new activities to invoice, you should use the timesheet\n"
 "                menu instead.\n"
 "              </p>\n"
 "            "
@@ -709,9 +686,7 @@ msgstr ""
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
-msgstr ""
-"આ ખાતાનો કુલ ખર્ચ. આમાં વાસ્તવિક ખર્ચ (ભરતિયા માંથી) અને અપ્રત્યક્ષ ખર્ચ "
-"જેવા કે સમયપત્રક પર ખર્ચેલો સમય નો સમાવેશ થાય છે."
+msgstr "આ ખાતાનો કુલ ખર્ચ. આમાં વાસ્તવિક ખર્ચ (ભરતિયા માંથી) અને અપ્રત્યક્ષ ખર્ચ જેવા કે સમયપત્રક પર ખર્ચેલો સમય નો સમાવેશ થાય છે."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
@@ -728,9 +703,7 @@ msgstr "બાકીની આવક"
 msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
-msgstr ""
-"જો ભરતિયુ વિશ્લેષણાત્મક ખાતામાંથી હોય તો, બાકીની આવકનુ તમે ગ્રાહકને કુલ ખર્ચ "
-"પ્રમાણેનું ભરતિયુ બનાવી શકો છો."
+msgstr "જો ભરતિયુ વિશ્લેષણાત્મક ખાતામાંથી હોય તો, બાકીની આવકનુ તમે ગ્રાહકને કુલ ખર્ચ પ્રમાણેનું ભરતિયુ બનાવી શકો છો."
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
@@ -752,27 +725,4 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
-
-#~ msgid ""
-#~ "The contracts to be renewed because the deadline is passed or the working "
-#~ "hours are higher than the allocated hours"
-#~ msgstr ""
-#~ "કરારનુ નવીનીકરણ કરવામાં આવશે કારણ કે છેલ્લી તારીખ પસાર થઈ ગયી છે અથવા "
-#~ "કામકાજના કાલાકો ફાળવવામાં આવેલા કાલાકો કરતા વધારે છે"
-
-#~ msgid "Pending contracts to renew with your customer"
-#~ msgstr "તમારા ગ્રાહકોના નવીનીકરણ કરવામાં બાકી રહેલા કરારો"
-
-#~ msgid "Contracts in progress"
-#~ msgstr "ચાલુ કરારો"
-
-#~ msgid "Pending"
-#~ msgstr "બાકી"
-
-#~ msgid "Open"
-#~ msgstr "ખૂલેલુ"
-
-#~ msgid ""
-#~ "A contract in OpenERP is an analytic account having a partner set on it."
-#~ msgstr "OpenERPમાં કરાર એટલે કે વિશ્લેષણાત્મક ખાતું જેમાં સહ-ભાગીદાર હોય."
+msgstr "કુલ"

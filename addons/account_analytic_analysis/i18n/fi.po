@@ -1,21 +1,22 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_analytic_analysis
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-02-28 10:49+0000\n"
-"Last-Translator: Harri Luuppala <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-22 15:23+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -31,17 +32,17 @@ msgstr "Laskutettavat tuntikortit: %s"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ryhmittely.."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Template"
-msgstr ""
+msgstr "Mallipohja"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Laskuta"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -92,8 +93,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
 "                Use sale orders to track everything that should be invoiced\n"
@@ -110,7 +110,7 @@ msgstr "Asiakkaiden kokonaislaskutuksen määrä tälle tilille."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Peruutettu"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
@@ -148,7 +148,7 @@ msgstr "Analyyttinen tili"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr ""
+msgstr "Kumppani"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -165,10 +165,8 @@ msgid ""
 "                end date is passed or the working effort is higher than the\n"
 "                maximum authorized one.\n"
 "              </p><p>\n"
-"                OpenERP automatically sets contracts to be renewed in a "
-"pending\n"
-"                state. After the negociation, the salesman should close or "
-"renew\n"
+"                OpenERP automatically sets contracts to be renewed in a pending\n"
+"                state. After the negociation, the salesman should close or renew\n"
 "                pending contracts.\n"
 "              </p>\n"
 "            "
@@ -177,12 +175,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End Date"
-msgstr ""
+msgstr "Loppupvm"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Account Manager"
-msgstr ""
+msgstr "Asiakasvastaava"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -227,7 +225,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Hinnasto"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -256,9 +254,7 @@ msgstr "Sopimuksissa on pakko käyttää malleja."
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
-msgstr ""
-"Jos laskutetaan kuluista, tämä on viimeisimpien töiden tai kulujen "
-"laskutuspäivä."
+msgstr "Jos laskutetaan kuluista, tämä on viimeisimpien töiden tai kulujen laskutuspäivä."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -275,9 +271,7 @@ msgstr "Todellinen kate"
 msgid ""
 "{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
 "('invoice_on_timesheets', '=', True)]}"
-msgstr ""
-"{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
-"('invoice_on_timesheets', '=', True)]}"
+msgstr "{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True)]}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -297,8 +291,7 @@ msgstr "Odottavat sopimukset"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
-"Lasketaan käyttäen kaavaa: (Todellinen kate / todelliset kulut) * 100"
+msgstr "Lasketaan käyttäen kaavaa: (Todellinen kate / todelliset kulut) * 100"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -308,7 +301,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr ""
+msgstr "Edeltävä"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -330,7 +323,7 @@ msgstr "Laskutettava aika ja materiaali"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Start Date"
-msgstr ""
+msgstr "Alkupäivä"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -340,7 +333,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Laskutettu"
 
 #. module: account_analytic_analysis
 #: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
@@ -361,18 +354,14 @@ msgid ""
 "        % for account in accounts:\n"
 "        <tr>\n"
 "            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
+"            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or '???'}</td>\n"
 "            <td>\n"
 "            % if account.quantity_max != 0.0:\n"
 "                ${account.remaining_hours}/${account.quantity_max} units\n"
 "            % endif\n"
 "            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
+"            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n"
 "        </tr>\n"
 "        % endfor\n"
 "    % endfor\n"
@@ -420,7 +409,7 @@ msgstr "Tuntikortit"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed"
-msgstr ""
+msgstr "Suljettu"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -437,7 +426,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -460,7 +449,7 @@ msgstr "Sopimukset"
 #: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "Myyntitilaukset"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -473,9 +462,7 @@ msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
-msgstr ""
-"Perustuu projektin kustannuksille: mikä olisi ollut tulo, jos kaikki kulut "
-"olisi laskutettu hintalistan listahinnalla."
+msgstr "Perustuu projektin kustannuksille: mikä olisi ollut tulo, jos kaikki kulut olisi laskutettu hintalistan listahinnalla."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -495,8 +482,7 @@ msgid ""
 "                    Click here to create a template of contract.\n"
 "                </p><p>\n"
 "                    Templates are used to prefigure contract/project that \n"
-"                    can be selected by the salespeople to quickly configure "
-"the\n"
+"                    can be selected by the salespeople to quickly configure the\n"
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
@@ -510,7 +496,7 @@ msgstr "Tuntiyhteenveto käyttäjittäin"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contract"
-msgstr ""
+msgstr "Sopimus"
 
 #. module: account_analytic_analysis
 #: help:sale.config.settings,group_template_required:0
@@ -542,25 +528,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click to create a new contract.\n"
 "                </p><p>\n"
-"                    Use contracts to follow tasks, issues, timesheets or "
-"invoicing based on\n"
-"                    work done, expenses and/or sales orders. OpenERP will "
-"automatically manage\n"
-"                    the alerts for the renewal of the contracts to the right "
-"salesperson.\n"
+"                    Use contracts to follow tasks, issues, timesheets or invoicing based on\n"
+"                    work done, expenses and/or sales orders. OpenERP will automatically manage\n"
+"                    the alerts for the renewal of the contracts to the right salesperson.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Klikkaa luodakasesi uuden sopimuksen.\n"
-"                </p><p>\n"
-"                    Käytä sopimuksia seurataksesi tehtäviä, asioita, "
-"työkortteja tai laskuttaaksesi \n"
-"                    tehdyt työt, kulut ja/tai myyntitilaukset. OpenERP "
-"hallitsee automaattisesti\n"
-"                    sopimuksen uusinnasta hälytykset oikealle myyjälle.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Klikkaa luodakasesi uuden sopimuksen.\n                </p><p>\n                    Käytä sopimuksia seurataksesi tehtäviä, asioita, työkortteja tai laskuttaaksesi \n                    tehdyt työt, kulut ja/tai myyntitilaukset. OpenERP hallitsee automaattisesti\n                    sopimuksen uusinnasta hälytykset oikealle myyjälle.\n                </p>\n            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
@@ -585,7 +558,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "In Progress"
-msgstr ""
+msgstr "Käsittelyssä"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -612,10 +585,8 @@ msgstr ""
 msgid ""
 "<p>\n"
 "                You will find here timesheets and purchases you did for\n"
-"                contracts that can be reinvoiced to the customer.  If you "
-"want\n"
-"                to record new activities to invoice, you should use the "
-"timesheet\n"
+"                contracts that can be reinvoiced to the customer.  If you want\n"
+"                to record new activities to invoice, you should use the timesheet\n"
 "                menu instead.\n"
 "              </p>\n"
 "            "
@@ -697,7 +668,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
@@ -715,9 +686,7 @@ msgstr ""
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
-msgstr ""
-"Kokonaiskulut tälle tilille. Sisältää todelliset kulut (laskuilta) ja "
-"epäsuorat kulut, kuten tuntilistoista tulevat tunnit."
+msgstr "Kokonaiskulut tälle tilille. Sisältää todelliset kulut (laskuilta) ja epäsuorat kulut, kuten tuntilistoista tulevat tunnit."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
@@ -734,9 +703,7 @@ msgstr "Jäljellä oleva liikevaihto"
 msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
-msgstr ""
-"Jos laskutetaan analyyttisiltä tileiltä, jäljellä oleva määrä, jonka voit "
-"veloittaa asiakkaalta, määräytyy kokonaiskuluista."
+msgstr "Jos laskutetaan analyyttisiltä tileiltä, jäljellä oleva määrä, jonka voit veloittaa asiakkaalta, määräytyy kokonaiskuluista."
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
@@ -758,14 +725,4 @@ msgstr "Työkorteilla"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
-
-#~ msgid "Pending contracts to renew with your customer"
-#~ msgstr "Asiakkaan kanssa uusittavat odottavat sopimukset"
-
-#~ msgid ""
-#~ "The contracts to be renewed because the deadline is passed or the working "
-#~ "hours are higher than the allocated hours"
-#~ msgstr ""
-#~ "Sopimukset on uusittava, koska deadline on mennyt tai työtuntien määrä "
-#~ "ylittää suunnitellun tuntimäärän"
+msgstr "Yhteensä"

@@ -1,21 +1,22 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-22 14:13+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-7/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -38,9 +39,7 @@ msgstr "Ricerca Cartella Documenti"
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr ""
-"Campo da usare come nome sulle cartelle risorsa. Se vuoto verrà usato il "
-"campo \"nome\"."
+msgstr "Campo da usare come nome sulle cartelle risorsa. Se vuoto verrà usato il campo \"nome\"."
 
 #. module: document
 #: view:document.directory:0
@@ -58,8 +57,7 @@ msgid "Resources"
 msgstr "Risorse"
 
 #. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:0
+#: field:document.directory,file_ids:0 view:report.document.user:0
 msgid "Files"
 msgstr "File"
 
@@ -79,8 +77,7 @@ msgid "Expression"
 msgstr "Espressione"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,company_id:0
+#: view:document.directory:0 field:document.directory,company_id:0
 msgid "Company"
 msgstr "Azienda"
 
@@ -103,12 +100,8 @@ msgstr "Gestione Documentale"
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"Espressione python usata per interpretare il campo.\n"
-"E' possibile usare \"dir_id\" per dir. corrente, \"res_id\", \"res_model\" "
-"come riferimento al record corrente, nelle cartelle dinamiche."
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
+msgstr "Espressione python usata per interpretare il campo.\nE' possibile usare \"dir_id\" per dir. corrente, \"res_id\", \"res_model\" come riferimento al record corrente, nelle cartelle dinamiche."
 
 #. module: document
 #: help:document.directory.dctx,field:0
@@ -116,8 +109,7 @@ msgid "The name of the field."
 msgstr "Il nome del campo."
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Il nome della cartella deve essere univoco!"
@@ -128,8 +120,7 @@ msgid "Filter on my documents"
 msgstr "Filtro sui miei documenti"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
+#: view:ir.attachment:0 field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Contenuto Indicizzato"
 
@@ -138,9 +129,7 @@ msgstr "Contenuto Indicizzato"
 msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
-msgstr ""
-"Se vero, tutti gli allegati che corrispondono a questa risorsa verranno "
-"collocati. Se falso, solo quelli che hanno questa come superiore."
+msgstr "Se vero, tutti gli allegati che corrispondono a questa risorsa verranno collocati. Se falso, solo quelli che hanno questa come superiore."
 
 #. module: document
 #: view:document.directory:0
@@ -180,8 +169,7 @@ msgid "Knowledge Application Configuration"
 msgstr "Configurazione applicazione know how"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,partner_id:0
+#: view:ir.attachment:0 field:ir.attachment,partner_id:0
 msgid "Partner"
 msgstr "Partner"
 
@@ -197,24 +185,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Cliccare per creare un nuovo documento. \n"
-"          </p><p>\n"
-"            L'archivio Documenti permette l'accesso a tutti gli allegati, "
-"quali\n"
-"            email, documenti di progetto, fatture, ecc.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Cliccare per creare un nuovo documento. \n          </p><p>\n            L'archivio Documenti permette l'accesso a tutti gli allegati, quali\n            email, documenti di progetto, fatture, ecc.\n          </p>\n        "
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #: code:addons/document/document.py:348
 #, python-format
 msgid "ValidateError"
@@ -250,8 +228,7 @@ msgid "Content Type"
 msgstr "Tipo Di Contenuto"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,type:0
+#: view:document.directory:0 field:document.directory,type:0
 msgid "Type"
 msgstr "Tipo"
 
@@ -261,8 +238,7 @@ msgid "The filename must be unique in a directory !"
 msgstr "Il nome del file deve essere unico in una cartella !"
 
 #. module: document
-#: code:addons/document/document.py:118
-#: code:addons/document/document.py:308
+#: code:addons/document/document.py:118 code:addons/document/document.py:308
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -272,16 +248,13 @@ msgstr "%s (copia)"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
-"Selezionare un oggetto qui e ci sarà una cartella per record di quella "
-"risorsa."
+msgstr "Selezionare un oggetto qui e ci sarà una cartella per record di quella risorsa."
 
 #. module: document
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Usa un Dominio se vui applicare un filtro automatico sulle risorse visibili"
+msgstr "Usa un Dominio se vui applicare un filtro automatico sulle risorse visibili"
 
 #. module: document
 #: constraint:document.directory:0
@@ -299,8 +272,7 @@ msgid "Context fields"
 msgstr "Campi contesto"
 
 #. module: document
-#: view:document.directory:0
-#: field:report.document.user,type:0
+#: view:document.directory:0 field:report.document.user,type:0
 msgid "Directory Type"
 msgstr "Tipo Cartella"
 
@@ -338,18 +310,15 @@ msgstr "File generati"
 #. module: document
 #: view:document.configuration:0
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"Eseguendo questa procedura, verranno configurate automaticamente le cartelle "
-"in conformità ai moduli installati."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
+msgstr "Eseguendo questa procedura, verranno configurate automaticamente le cartelle in conformità ai moduli installati."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:0
-#: field:ir.attachment,parent_id:0
+#: view:ir.attachment:0 field:ir.attachment,parent_id:0
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
@@ -361,8 +330,7 @@ msgid "Security"
 msgstr "Sicurezza"
 
 #. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Ultimo utente che ha modificato"
 
@@ -383,8 +351,7 @@ msgid "Domain"
 msgstr "Dominio"
 
 #. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Data modifica"
 
@@ -415,16 +382,14 @@ msgid "Static Directory"
 msgstr "Cartella Statica"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "Mese"
 
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
-"Definire parole nel contesto, per tutte le cartelle figlie e per i files"
+msgstr "Definire parole nel contesto, per tutte le cartelle figlie e per i files"
 
 #. module: document
 #: view:document.directory:0
@@ -437,10 +402,8 @@ msgid "unknown"
 msgstr "sconosciuto"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,user_id:0
-#: view:ir.attachment:0
-#: field:ir.attachment,user_id:0
+#: view:document.directory:0 field:document.directory,user_id:0
+#: view:ir.attachment:0 field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "Proprietario"
@@ -464,13 +427,9 @@ msgstr "Data di creazione"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
-"Selezionare questo campo se si desidera che il nome del file contenga il "
-"nome del record.\n"
-"Se impostata, la cartella dovrà essere una risorsa."
+msgstr "Selezionare questo campo se si desidera che il nome del file contenga il nome del record.\nSe impostata, la cartella dovrà essere una risorsa."
 
 #. module: document
 #: view:document.configuration:0
@@ -491,20 +450,16 @@ msgstr "ID Modello"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Spunta se vuoi usare la stessa struttura ad albero come l'oggetto "
-"selezionato nel sistema"
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "Spunta se vuoi usare la stessa struttura ad albero come l'oggetto selezionato nel sistema"
 
 #. module: document
 #: help:document.directory,ressource_id:0
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
-"Insieme con il Modello Superiore, questo ID attribuisce questa cartella ad "
-"uno specifico record del Modello Superiore."
+msgstr "Insieme con il Modello Superiore, questo ID attribuisce questa cartella ad uno specifico record del Modello Superiore."
 
 #. module: document
 #. openerp-web
@@ -551,15 +506,11 @@ msgstr "Novembre"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
-"Se si inserisce un oggetto qui, questo modello di cartella apparirà sotto  "
-"tutti questi oggetti. Tali cartelle saranno \"collegate\" ad uno specifico "
-"modello o record, semplicemente come allegati. Non inserire una cartella "
-"superiore se si seleziona un modello superiore."
+msgstr "Se si inserisce un oggetto qui, questo modello di cartella apparirà sotto  tutti questi oggetti. Tali cartelle saranno \"collegate\" ad uno specifico modello o record, semplicemente come allegati. Non inserire una cartella superiore se si seleziona un modello superiore."
 
 #. module: document
 #: view:document.directory:0
@@ -613,12 +564,7 @@ msgid ""
 "documents. The virtual folder of a document can be used to manage the files "
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
-msgstr ""
-"La Gestione Documentale di OpenERP supporta la mappatura di cartelle "
-"virtuali con documenti. La cartella virtuale di un documento può essere "
-"usata per gestire i file allegati al documento, o per stampare e scaricare "
-"qualsiasi report. Questo strumento creerà automaticamente le cartelle "
-"adeguate ai moduli installati."
+msgstr "La Gestione Documentale di OpenERP supporta la mappatura di cartelle virtuali con documenti. La cartella virtuale di un documento può essere usata per gestire i file allegati al documento, o per stampare e scaricare qualsiasi report. Questo strumento creerà automaticamente le cartelle adeguate ai moduli installati."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
@@ -666,9 +612,7 @@ msgstr "Modello Padre"
 msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
-msgstr ""
-"Questi gruppi, comunque, NON si applicano alle cartelle figlie, per le quali "
-"bisogna definire i loro gruppi."
+msgstr "Questi gruppi, comunque, NON si applicano alle cartelle figlie, per le quali bisogna definire i loro gruppi."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -700,15 +644,10 @@ msgstr "Configurazione Cartella"
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
-"Ogni cartella può avere il tipo statico o essere collegata ad altra risorsa. "
-"Una cartella statica, come per i sistemi operativi, è la classica cartella "
-"che può contenere un set di file. Le cartelle collegate ad una risorsa di "
-"sistema, possiedono automaticamente le sotto-cartelle per ogni tipo di "
-"risorsa definito nella cartella superiore."
+msgstr "Ogni cartella può avere il tipo statico o essere collegata ad altra risorsa. Una cartella statica, come per i sistemi operativi, è la classica cartella che può contenere un set di file. Le cartelle collegate ad una risorsa di sistema, possiedono automaticamente le sotto-cartelle per ogni tipo di risorsa definito nella cartella superiore."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -731,8 +670,7 @@ msgid "April"
 msgstr "Aprile"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "Num. di files"
 
@@ -746,9 +684,7 @@ msgstr "Tipo di Contenuto della Cartella"
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
-msgstr ""
-"Solo gli appartenenti a questi gruppi avranno accesso a questa cartella e ai "
-"suoi files."
+msgstr "Solo gli appartenenti a questi gruppi avranno accesso a questa cartella e ai suoi files."
 
 #. module: document
 #. openerp-web

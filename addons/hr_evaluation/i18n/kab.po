@@ -1,21 +1,21 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_evaluation
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-03-20 18:58+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-21 05:39+0000\n"
-"X-Generator: Launchpad (build 17405)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -23,23 +23,23 @@ msgid "Send an anonymous summary to the manager"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 msgid "Start Appraisal"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr.evaluation.report:0
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
-msgstr ""
+msgstr "Sdukel s..."
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 msgid "Cancel Appraisal"
-msgstr ""
+msgstr "Sefsax Askazal"
 
 #. module: hr_evaluation
+#: field:hr.evaluation.interview,request_id:0
 #: field:hr.evaluation.report,request_id:0
 msgid "Request_id"
 msgstr ""
@@ -47,7 +47,7 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Meɣres"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,delay_date:0
@@ -55,38 +55,34 @@ msgid "Delay to Start"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in waiting appreciation state"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
-#: field:hr_evaluation.plan,company_id:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,company_id:0
 #: field:hr_evaluation.plan.phase,company_id:0
 msgid "Company"
 msgstr "Takebbwanit"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,survey_id:0
+#: field:hr.evaluation.interview,evaluation_id:0
 #: field:hr_evaluation.plan.phase,survey_id:0
 msgid "Appraisal Form"
-msgstr ""
+msgstr "Tiferkit n Uskazal"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,day:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Ass"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
-#: field:hr_evaluation.plan,phase_ids:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,phase_ids:0
 msgid "Appraisal Phases"
-msgstr ""
+msgstr "Imecwaṛen n Uskazal"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: view:hr.evaluation.interview:0
 msgid "Send Request"
 msgstr ""
 
@@ -98,15 +94,15 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.employee:hr_evaluation.hr_hr_employee_view_form
+#: view:hr.employee:0
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisals"
-msgstr ""
+msgstr "Iskazalen"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "(eval_name)s:Appraisal Name"
-msgstr ""
+msgstr "(eval_name)s:Isem n Uskazal"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_ids:0
@@ -115,7 +111,7 @@ msgid "Messages"
 msgstr "Iznan"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
 msgstr "Taffeka n yizen"
 
@@ -130,7 +126,6 @@ msgid "Employee Appraisal"
 msgstr ""
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.interview,state:0
 #: selection:hr.evaluation.report,state:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Cancelled"
@@ -138,26 +133,25 @@ msgstr "Ifsax"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
 msgid "Did not meet expectations"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_tree
+#: view:hr_evaluation.evaluation:0
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
 msgid "Appraisal"
-msgstr ""
+msgstr "Askazal"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_unread:0
 #: help:hr_evaluation.evaluation,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "Send to Managers"
 msgstr ""
 
@@ -172,7 +166,7 @@ msgid "First Appraisal in (months)"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "Send to Employees"
 msgstr ""
 
@@ -198,9 +192,9 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in Plan In Progress state"
-msgstr ""
+msgstr "Askazal yellan deg uɣawas anazzal"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_summary:0
@@ -208,30 +202,27 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa  deg umasal HTML "
-"iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
+msgstr "Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa  deg umasal HTML iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 msgid "Reset to Draft"
 msgstr "Rrit d arewway"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,deadline:0
 #: field:hr.evaluation.report,deadline:0
 msgid "Deadline"
 msgstr "Azemz n tagara"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:239
-#: code:addons/hr_evaluation/hr_evaluation.py:339
+#: code:addons/hr_evaluation/hr_evaluation.py:235
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "Warning!"
 msgstr "ɣuṛ-ek !"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr.evaluation.report:0
 msgid "In progress Evaluations"
 msgstr ""
 
@@ -241,12 +232,12 @@ msgid "survey.request"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:0
 msgid "Cancel Survey"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
 msgstr "(date)s: Azemz Amiran"
 
@@ -265,7 +256,7 @@ msgstr ""
 #: field:hr.evaluation.interview,message_follower_ids:0
 #: field:hr_evaluation.evaluation,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Imagazen"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_unread:0
@@ -274,9 +265,8 @@ msgid "Unread Messages"
 msgstr "Iznan ur neţwaɣer-ara"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
-#: field:hr.evaluation.report,employee_id:0
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,employee_id:0
+#: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,employee_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_employee
 msgid "Employee"
@@ -285,7 +275,7 @@ msgstr "Amaris"
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
 msgid "New"
-msgstr "Amaynut"
+msgstr "Nouveau"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_body:0
@@ -305,9 +295,9 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr.evaluation.report:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Azemz  n usilel"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_answer_manager:0
@@ -321,19 +311,17 @@ msgid "Plan In Progress"
 msgstr "Aɣawas anazzal"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 msgid "Public Notes"
 msgstr "Iwenniten azayezen"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: view:hr.evaluation.interview:0
 msgid "Send Reminder Email"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
-#: field:hr_evaluation.evaluation,rating:0
+#: view:hr.evaluation.report:0 field:hr_evaluation.evaluation,rating:0
 msgid "Appreciation"
 msgstr ""
 
@@ -354,20 +342,18 @@ msgid "Meet expectations"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr.evaluation.report,nbr:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,nbr:0
 msgid "# of Requests"
-msgstr ""
+msgstr "# n isutar"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Yulyu"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
-#: field:hr.evaluation.report,state:0
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: field:hr.evaluation.report,state:0 view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,state:0
 msgid "Status"
 msgstr "Addad"
@@ -384,19 +370,17 @@ msgid ""
 "                Click to define a new appraisal plan.\n"
 "              </p><p>\n"
 "                You can define appraisal plans (ex: first interview after 6\n"
-"                months, then every year). Then, each employee can be linked "
-"to\n"
-"                an appraisal plan so that OpenERP can automatically "
-"generate\n"
+"                months, then every year). Then, each employee can be linked to\n"
+"                an appraisal plan so that OpenERP can automatically generate\n"
 "                interview requests to managers and/or subordinates.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "Action to Perform"
-msgstr ""
+msgstr "Tigawt i wuselkem"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_action:0
@@ -420,13 +404,12 @@ msgid "Significantly exceeds expectations"
 msgstr ""
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.interview,state:0
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: view:hr_evaluation.evaluation:0
 msgid "In progress"
 msgstr "Anazzal"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_evaluation_calendar
+#: view:hr.evaluation.interview:0
 msgid "Interview Request"
 msgstr ""
 
@@ -434,43 +417,42 @@ msgstr ""
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
 #: field:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "All Answers"
-msgstr ""
+msgstr "Istanen Imaṛṛa"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Answer Survey"
 msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Ctember"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Bujember"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,month:0
 msgid "Month"
 msgstr "Aggur"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: view:hr_evaluation.evaluation:0
 msgid "Group by..."
 msgstr "Sdukel s ..."
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "Mail Settings"
 msgstr "Tawila n Email"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
 msgid "Appraisal Reminders"
-msgstr ""
+msgstr "Ismetiyen n Uskazal"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
@@ -480,9 +462,9 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "Legend"
-msgstr ""
+msgstr "Légende"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,note_action:0
@@ -492,7 +474,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.interview,state:0
 #: selection:hr.evaluation.report,state:0
 msgid "Draft"
 msgstr "Arewway"
@@ -504,45 +485,41 @@ msgid "Anonymous Summary"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: view:hr_evaluation.evaluation:0
 msgid "Pending"
 msgstr "Iţraǧu"
 
 #. module: hr_evaluation
-#: field:hr.employee,evaluation_plan_id:0
-#: field:hr.evaluation.interview,evaluation_id:0
-#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
-#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
-#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_tree
-#: field:hr_evaluation.plan,name:0
+#: field:hr.employee,evaluation_plan_id:0 view:hr.evaluation.interview:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,name:0
 #: field:hr_evaluation.plan.phase,plan_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Appraisal Plan"
-msgstr ""
+msgstr "Aɣawas n Uskazal"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: view:hr.evaluation.interview:0
 msgid "Print Survey"
 msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Ɣuct"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Yunyu"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
 msgid "Significantly bellow expectations"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 msgid "Validate Appraisal"
 msgstr ""
 
@@ -555,13 +532,11 @@ msgstr ""
 #: field:hr.evaluation.interview,message_is_follower:0
 #: field:hr_evaluation.evaluation,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "D amagaz"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
-#: field:hr.evaluation.report,plan_id:0
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
-#: field:hr_evaluation.evaluation,plan_id:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,plan_id:0
+#: view:hr_evaluation.evaluation:0 field:hr_evaluation.evaluation,plan_id:0
 msgid "Plan"
 msgstr "Aɣawas"
 
@@ -573,10 +548,10 @@ msgstr "Urmid"
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Number"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr.evaluation.report:0
 msgid "Extended Filters..."
 msgstr "Imzizdigen leqqayen..."
 
@@ -588,15 +563,15 @@ msgstr ""
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
 msgid "Appraisal Plan Phase"
-msgstr ""
+msgstr "Amecwaṛ n Uɣawas n Uskazal"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Yennayer"
 
 #. module: hr_evaluation
-#: field:hr.employee,appraisal_count:0
+#: view:hr.employee:0
 msgid "Appraisal Interviews"
 msgstr ""
 
@@ -607,12 +582,12 @@ msgid "Summary"
 msgstr "Agzul"
 
 #. module: hr_evaluation
-#: model:survey.question,question:hr_evaluation.opinion_1_2
+#: view:hr_evaluation.evaluation:0
 msgid "Date"
 msgstr "Azemz"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr.evaluation.interview:0
 msgid "Survey"
 msgstr ""
 
@@ -622,8 +597,7 @@ msgid "Action"
 msgstr "Tigawt"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
-#: selection:hr.evaluation.report,state:0
+#: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
 msgid "Final Validation"
 msgstr ""
 
@@ -633,17 +607,16 @@ msgid "Waiting Appreciation"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_graph
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr.evaluation.report:0
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
 #: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
 msgid "Appraisal Analysis"
-msgstr ""
+msgstr "Tasleṭ n Uskazal"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date:0
 msgid "Appraisal Deadline"
-msgstr ""
+msgstr "Azemz n Tagara n Uskazal"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
@@ -651,10 +624,7 @@ msgid "Overall Rating"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
-#: field:hr.evaluation.interview,user_id:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Interviewer"
 msgstr ""
 
@@ -664,7 +634,7 @@ msgid "Evaluations Statistics"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: view:hr.evaluation.interview:0
 msgid "Deadline Date"
 msgstr "Azemz n tagara"
 
@@ -679,7 +649,7 @@ msgid "Top-Down Appraisal Requests"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "General"
 msgstr "Amatu"
 
@@ -689,22 +659,18 @@ msgid "Send all answers to the employee"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
-#: selection:hr.evaluation.interview,state:0
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
-#: selection:hr.evaluation.report,state:0
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: selection:hr.evaluation.report,state:0 view:hr_evaluation.evaluation:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Done"
 msgstr "Immed"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+#: view:hr_evaluation.plan:0
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
 msgid "Appraisal Plans"
-msgstr ""
+msgstr "Iɣawasen n Uskazal"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
@@ -712,17 +678,17 @@ msgid "Appraisal Interview"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "Anazzal"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr.evaluation.interview:0
 msgid "To Do"
 msgstr "Ad imag"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr.evaluation.report:0
 msgid "Final Validation Evaluations"
 msgstr ""
 
@@ -739,7 +705,7 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Tuber"
 
 #. module: hr_evaluation
 #: help:hr.employee,evaluation_date:0
@@ -766,15 +732,15 @@ msgid "Self Appraisal Requests"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,survey_request_ids:0
 msgid "Appraisal Forms"
-msgstr ""
+msgstr "Tiferkitin n Uskazal"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Maggu"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
@@ -782,12 +748,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new appraisal.\n"
 "              </p><p>\n"
-"                Each employee may be assigned an Appraisal Plan. Such a "
-"plan\n"
+"                Each employee may be assigned an Appraisal Plan. Such a plan\n"
 "                defines the frequency and the way you manage your periodic\n"
 "                personnel evaluation. You will be able to define steps and\n"
-"                attach interviews to each step. OpenERP manages all kinds "
-"of\n"
+"                attach interviews to each step. OpenERP manages all kinds of\n"
 "                evaluations: bottom-up, top-down, self-evaluation and final\n"
 "                evaluation by the manager.\n"
 "              </p>\n"
@@ -795,7 +759,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 msgid "Internal Notes"
 msgstr "Iwenniten igensanen"
 
@@ -817,11 +781,10 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Furar"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Interview Appraisal"
 msgstr ""
 
@@ -831,15 +794,15 @@ msgid "Is Appraisal?"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:339
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 msgid "Appraisal Summary..."
-msgstr ""
+msgstr "Agzul n Uskazal..."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
@@ -857,24 +820,21 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Yebrir"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_tree
+#: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
-msgstr ""
+msgstr "Imecwaṛen n Uɣawas n Uskazal"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new interview request related to a "
-"personal evaluation. \n"
+"                Click to create a new interview request related to a personal evaluation. \n"
 "              </p><p>\n"
 "                Interview requests are usually generated automatically by\n"
-"                OpenERP according to an employee's appraisal plan. Each "
-"user\n"
+"                OpenERP according to an employee's appraisal plan. Each user\n"
 "                receives automatic emails and requests to evaluate their\n"
 "                colleagues periodically.\n"
 "              </p>\n"
@@ -888,8 +848,7 @@ msgid "Messages and communication history"
 msgstr "Amazray n iznan  d  tiywalin"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
-#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Search Appraisal"
 msgstr ""
 
@@ -899,11 +858,13 @@ msgid "Sequence"
 msgstr "Agzum"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
 msgstr "(user_signature)s: Isem n useqdac"
 
 #. module: hr_evaluation
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_board
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
 msgid "Interview Requests"
@@ -915,15 +876,14 @@ msgid "Create Date"
 msgstr "Azemz n usilel"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,year:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Aseggawas"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_summary:0
 msgid "Appraisal Summary"
-msgstr ""
+msgstr "Agzul n Uskazal"
 
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
@@ -931,6 +891,6 @@ msgid "Next Appraisal Date"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:0
 msgid "Action Plan..."
 msgstr "Aɣawas n Tigawt..."

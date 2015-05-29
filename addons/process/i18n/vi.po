@@ -1,25 +1,25 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * process
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"PO-Revision-Date: 2015-05-27 08:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Vietnamese (http://www.transifex.com/projects/p/odoo-7/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: process
-#: model:ir.model,name:process.model_process_node
-#: view:process.node:0
+#: model:ir.model,name:process.model_process_node view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 #. module: process
 #: selection:process.node,kind:0
 msgid "Status"
-msgstr ""
+msgstr "Trạng thái"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -47,8 +47,7 @@ msgid "Buttons"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Group By..."
 msgstr "Nhóm theo..."
 
@@ -69,23 +68,20 @@ msgstr ""
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.ui.menu,name:process.menu_process_node_form
-#: view:process.node:0
+#: model:ir.ui.menu,name:process.menu_process_node_form view:process.node:0
 #: view:process.process:0
 msgid "Process Nodes"
 msgstr ""
 
 #. module: process
-#: view:process.process:0
-#: field:process.process,node_ids:0
+#: view:process.process:0 field:process.process,node_ids:0
 msgid "Nodes"
 msgstr ""
 
 #. module: process
-#: field:process.node,condition_ids:0
-#: view:process.process:0
+#: field:process.node,condition_ids:0 view:process.process:0
 msgid "Conditions"
-msgstr ""
+msgstr "Các điều kiện"
 
 #. module: process
 #: view:process.transition:0
@@ -105,7 +101,7 @@ msgstr ""
 #. module: process
 #: field:process.transition,note:0
 msgid "Description"
-msgstr ""
+msgstr "Mô tả"
 
 #. module: process
 #: model:ir.model,name:process.model_process_transition_action
@@ -113,10 +109,8 @@ msgid "Process Transitions Actions"
 msgstr ""
 
 #. module: process
-#: field:process.condition,model_id:0
-#: view:process.node:0
-#: field:process.node,model_id:0
-#: view:process.process:0
+#: field:process.condition,model_id:0 view:process.node:0
+#: field:process.node,model_id:0 view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
 msgstr "Đối tượng"
@@ -127,8 +121,7 @@ msgid "Source Node"
 msgstr ""
 
 #. module: process
-#: view:process.transition:0
-#: field:process.transition,transition_ids:0
+#: view:process.transition:0 field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr ""
 
@@ -160,12 +153,12 @@ msgstr ""
 #. module: process
 #: model:ir.model,name:process.model_process_condition
 msgid "Condition"
-msgstr ""
+msgstr "Điều kiện"
 
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Dummy"
-msgstr ""
+msgstr "Vật giả"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_form
@@ -179,13 +172,11 @@ msgid "Transition"
 msgstr ""
 
 #. module: process
-#: field:process.condition,name:0
-#: field:process.node,name:0
-#: field:process.process,name:0
-#: field:process.transition,name:0
+#: field:process.condition,name:0 field:process.node,name:0
+#: field:process.process,name:0 field:process.transition,name:0
 #: field:process.transition.action,name:0
 msgid "Name"
-msgstr ""
+msgstr "Tên"
 
 #. module: process
 #: field:process.node,transition_in:0
@@ -200,13 +191,10 @@ msgid "Related:"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: field:process.node,note:0
-#: view:process.process:0
-#: field:process.process,note:0
-#: view:process.transition:0
+#: view:process.node:0 field:process.node,note:0 view:process.process:0
+#: field:process.process,note:0 view:process.transition:0
 msgid "Notes"
-msgstr ""
+msgstr "Các ghi chú"
 
 #. module: process
 #. openerp-web
@@ -230,7 +218,7 @@ msgstr ""
 #. module: process
 #: field:process.process,active:0
 msgid "Active"
-msgstr ""
+msgstr "Hoạt động"
 
 #. module: process
 #: view:process.transition:0
@@ -245,7 +233,7 @@ msgstr ""
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Action"
-msgstr ""
+msgstr "Hành động"
 
 #. module: process
 #. openerp-web
@@ -265,15 +253,14 @@ msgid "Required Groups"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Incoming Transitions"
 msgstr ""
 
 #. module: process
 #: field:process.transition.action,state:0
 msgid "Type"
-msgstr ""
+msgstr "Loại"
 
 #. module: process
 #: field:process.node,transition_out:0
@@ -285,11 +272,10 @@ msgstr ""
 #: code:addons/process/static/src/js/process.js:243
 #: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
-#: field:process.node,process_id:0
-#: view:process.process:0
+#: field:process.node,process_id:0 view:process.process:0
 #, python-format
 msgid "Process"
-msgstr ""
+msgstr "Xử lý"
 
 #. module: process
 #: view:process.node:0
@@ -297,8 +283,7 @@ msgid "Search ProcessNode"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Other Conditions"
 msgstr ""
 
@@ -310,13 +295,12 @@ msgstr ""
 #. module: process
 #: view:process.transition:0
 msgid "Actions"
-msgstr ""
+msgstr "Hành động"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Properties"
-msgstr ""
+msgstr "Các thuộc tính"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
@@ -342,8 +326,7 @@ msgid "Subflows:"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Outgoing Transitions"
 msgstr ""
 
@@ -355,16 +338,14 @@ msgid "Notes:"
 msgstr ""
 
 #. module: process
-#: selection:process.node,kind:0
-#: field:process.node,subflow_id:0
+#: selection:process.node,kind:0 field:process.node,subflow_id:0
 msgid "Subflow"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Transitions"
-msgstr ""
+msgstr "Chuyển tiếp"
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -376,4 +357,4 @@ msgstr ""
 #: code:addons/process/static/src/xml/process.xml:77
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Chọn"

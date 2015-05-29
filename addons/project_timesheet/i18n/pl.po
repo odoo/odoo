@@ -1,21 +1,22 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-18 10:24+0000\n"
-"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-7/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:18+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -37,8 +38,7 @@ msgstr "Grupuj wg lat"
 #, python-format
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
-"Nie możesz wybierać konta analitycznego w stanie Zamknięte lub Anulowano."
+msgstr "Nie możesz wybierać konta analitycznego w stanie Zamknięte lub Anulowano."
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -56,9 +56,7 @@ msgstr "ID związanej karty czasu pracy"
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
-msgstr ""
-"Nie możesz usunąć partnera, który jest związany z projektem. Możesz usunąć "
-"zaznaczenie pola Aktywne."
+msgstr "Nie możesz usunąć partnera, który jest związany z projektem. Możesz usunąć zaznaczenie pola Aktywne."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
@@ -69,7 +67,7 @@ msgstr "Praca w zadaniu"
 #: code:addons/project_timesheet/project_timesheet.py:295
 #, python-format
 msgid "Invalid Analytic Account!"
-msgstr ""
+msgstr "Nieprawidłowe konto analityczne!"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -103,14 +101,7 @@ msgid ""
 "                projects in order to track the invoicing progress.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknij, aby dodać umowę z klientem.\n"
-"              </p><p>\n"
-"                Znajdziesz tu umowy na projekty z  klientem\n"
-"                do śledzenie fakturowania.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknij, aby dodać umowę z klientem.\n              </p><p>\n                Znajdziesz tu umowy na projekty z  klientem\n                do śledzenie fakturowania.\n              </p>\n            "
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
@@ -131,12 +122,9 @@ msgstr "Projekty klienta"
 #: code:addons/project_timesheet/project_timesheet.py:89
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the HR Settings tab of the employee form."
-msgstr ""
-"Zdefiniuj produkt i konto właściwości kategorii produktu dla pracownika.\n"
-"Wypełnij zakładkę Ustawienia w formularzu pracownika."
+msgstr "Zdefiniuj produkt i konto właściwości kategorii produktu dla pracownika.\nWypełnij zakładkę Ustawienia w formularzu pracownika."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
@@ -169,9 +157,7 @@ msgstr "Maj"
 msgid ""
 "Please define journal on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr ""
-"Zdefiniuj dziennik dla pracownika.\n"
-"Wypełnij zakładkę Karta pracy w formularzu pracownika."
+msgstr "Zdefiniuj dziennik dla pracownika.\nWypełnij zakładkę Karta pracy w formularzu pracownika."
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
@@ -210,8 +196,7 @@ msgid "User"
 msgstr "Użytkownik"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,name:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,name:0
 msgid "Date"
 msgstr "Data"
 
@@ -239,20 +224,11 @@ msgstr "Luty"
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
 msgid ""
 "<p>\n"
-"                You will find here timesheets and purchases you did for "
-"contracts that can be reinvoiced to the customer.\n"
-"                If you want to record new jobs to invoice, you should use "
-"the timesheet menu instead.\n"
+"                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use the timesheet menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Tutaj znajdziesz karty pracy i zakupy wykonane w związku z "
-"umowami, które powinny\n"
-"                być fakturowane na klienta. Jeśli chcesz rejestrować nowe "
-"prace, to stosuj menu Karty pracy..\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Tutaj znajdziesz karty pracy i zakupy wykonane w związku z umowami, które powinny\n                być fakturowane na klienta. Jeśli chcesz rejestrować nowe prace, to stosuj menu Karty pracy..\n              </p>\n            "
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -339,12 +315,9 @@ msgstr "Uruchamia fakturę z pozycji zlecenia sprzedaży"
 #: code:addons/project_timesheet/project_timesheet.py:100
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr ""
-"Zdefiniuj produkt i konto właściwości kategorii produktu dla pracownika.\n"
-"Wypełnij zakładkę Karta pracy w formularzu pracownika."
+msgstr "Zdefiniuj produkt i konto właściwości kategorii produktu dla pracownika.\nWypełnij zakładkę Karta pracy w formularzu pracownika."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:60
@@ -352,9 +325,7 @@ msgstr ""
 msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
-msgstr ""
-"<p>Praca nad tym projektem może być fakturowana na %s, zgodnie z warunkami z "
-"umowy.</p>"
+msgstr "<p>Praca nad tym projektem może być fakturowana na %s, zgodnie z warunkami z umowy.</p>"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
@@ -396,8 +367,7 @@ msgid "Invalid Action!"
 msgstr "Niedozwolona akcja!"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,month:0
 msgid "Month"
 msgstr "Miesiąc"
 
@@ -405,11 +375,9 @@ msgstr "Miesiąc"
 #: code:addons/project_timesheet/project_timesheet.py:57
 #, python-format
 msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">Rejestruj twoje karty pracy dla "
-"projektu '%s'.</p>"
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
+" '%s'.</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">Rejestruj twoje karty pracy dla projektu '%s'.</p>"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:84
@@ -418,11 +386,10 @@ msgstr ""
 #: code:addons/project_timesheet/project_timesheet.py:99
 #, python-format
 msgid "Bad Configuration!"
-msgstr ""
+msgstr "Zła konfiguracja!"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,year:0
 msgid "Year"
 msgstr "Rok"
 
@@ -430,11 +397,3 @@ msgstr "Rok"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Wypełnij kartę czasu pracy"
-
-#, python-format
-#~ msgid "Bad Configuration !"
-#~ msgstr "Błędna konfiguracja !"
-
-#, python-format
-#~ msgid "Invalid Analytic Account !"
-#~ msgstr "Niedozwolone konto analityczne !"

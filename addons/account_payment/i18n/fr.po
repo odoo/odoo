@@ -1,21 +1,22 @@
-# French translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-10-23 07:27+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/projects/p/odoo-7/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:38+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,19 +24,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Cliquez pour créer un ordre de paiement.\n"
-"              </p><p>\n"
-"                Un ordre de paiement est un demande de règlement fournisseur "
-"ou le remboursement d'un avoir client.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Cliquez pour créer un ordre de paiement.\n              </p><p>\n                Un ordre de paiement est un demande de règlement fournisseur ou le remboursement d'un avoir client.\n              </p>\n            "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -53,8 +46,7 @@ msgid "Select the Payment Mode to be applied."
 msgstr "Sélectionnez le mode de paiement à appliquer"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: view:payment.order:0
+#: view:payment.mode:0 view:payment.order:0
 msgid "Group By..."
 msgstr "Regrouper par..."
 
@@ -64,15 +56,12 @@ msgid "Payment lines"
 msgstr "Lignes de paiement"
 
 #. module: account_payment
-#: view:payment.line:0
-#: field:payment.line,info_owner:0
-#: view:payment.order:0
+#: view:payment.line:0 field:payment.line,info_owner:0 view:payment.order:0
 msgid "Owner Account"
 msgstr "Compte du Partenaire principal"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Société"
@@ -88,8 +77,7 @@ msgid "Free"
 msgstr "Libre"
 
 #. module: account_payment
-#: view:payment.order.create:0
-#: field:payment.order.create,entries:0
+#: view:payment.order.create:0 field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Ecritures"
 
@@ -99,8 +87,7 @@ msgid "Used Account"
 msgstr "Compte utilisé"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Date d'échéance"
 
@@ -121,9 +108,7 @@ msgstr "Relevé rempli par paiement"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
-"Vous ne pouvez pas supprimer une facture déja importée dans un ordre de "
-"paiement. Il s'agit de l'ordre de paiement : %s."
+msgstr "Vous ne pouvez pas supprimer une facture déja importée dans un ordre de paiement. Il s'agit de l'ordre de paiement : %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -133,8 +118,7 @@ msgid "Error!"
 msgstr "Erreur !"
 
 #. module: account_payment
-#: report:payment.order:0
-#: view:payment.order:0
+#: report:payment.order:0 view:payment.order:0
 msgid "Amount"
 msgstr "Montant"
 
@@ -154,8 +138,7 @@ msgid "New Payment Order"
 msgstr "Nouvel ordre de paiement"
 
 #. module: account_payment
-#: report:payment.order:0
-#: field:payment.order,reference:0
+#: report:payment.order:0 field:payment.order,reference:0
 msgid "Reference"
 msgstr "Référence"
 
@@ -177,8 +160,7 @@ msgstr "Directement"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
+#: model:ir.model,name:account_payment.model_payment_line view:payment.line:0
 #: view:payment.order:0
 msgid "Payment Line"
 msgstr "Ligne de paiement"
@@ -194,16 +176,10 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
-"Lorsqu'un ordre de paiement est créé il est à l'état 'brouillon'.\n"
-" Lorsque vous avez la confirmation de la banque passez le statut à "
-"'Confirmé'\n"
-" Le statut doit être 'Terminé' lors de la confirmation du relevé bancaire "
-"dans lequel vous avez importé les lignes de paiement."
+msgstr "Lorsqu'un ordre de paiement est créé il est à l'état 'brouillon'.\n Lorsque vous avez la confirmation de la banque passez le statut à 'Confirmé'\n Le statut doit être 'Terminé' lors de la confirmation du relevé bancaire dans lequel vous avez importé les lignes de paiement."
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Confirmed"
 msgstr "Confirmé"
 
@@ -228,8 +204,7 @@ msgid "Import Payment Lines"
 msgstr "Import de lignes de paiement"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Transaction Information"
 msgstr "Informations sur la transaction"
 
@@ -237,9 +212,7 @@ msgstr "Informations sur la transaction"
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
 #: model:ir.model,name:account_payment.model_payment_mode
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0
-#: view:payment.order:0
-#: field:payment.order,mode:0
+#: view:payment.mode:0 view:payment.order:0 field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Mode de paiement"
 
@@ -259,11 +232,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"Choisissez une option pour l'ordre de paiement : \r\n"
-"« Date fixe » signifie une date déterminée par vous. \r\n"
-"« Directement » signifie un exécution directe. \r\n"
-"« Date d'échéance » représente la date d'exécution prévue."
+msgstr "Choisissez une option pour l'ordre de paiement : \r\n« Date fixe » signifie une date déterminée par vous. \r\n« Directement » signifie un exécution directe. \r\n« Date d'échéance » représente la date d'exécution prévue."
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -281,8 +250,7 @@ msgid "Fixed date"
 msgstr "Date fixe"
 
 #. module: account_payment
-#: field:payment.line,info_partner:0
-#: view:payment.order:0
+#: field:payment.line,info_partner:0 view:payment.order:0
 msgid "Destination Account"
 msgstr "Compte de destination"
 
@@ -322,8 +290,7 @@ msgid "Communication Type"
 msgstr "Type de communication"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
 msgstr "Partenaire"
@@ -363,9 +330,7 @@ msgstr "Adresse du partenaire principal"
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr ""
-"Si aucune date de paiement n'est spécifiée, la banque traitera cette ligne "
-"de paiement directement"
+msgstr "Si aucune date de paiement n'est spécifiée, la banque traitera cette ligne de paiement directement"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -399,14 +364,12 @@ msgid "Payment amount in the partner currency"
 msgstr "Montant du paiement dans la devise du partenaire"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Draft"
 msgstr "Brouillon"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
+#: view:payment.order:0 field:payment.order,state:0
 msgid "Status"
 msgstr "Statut"
 
@@ -428,8 +391,7 @@ msgstr "Remplir le relevé :"
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
-"Sélectionnez une date si vous avez choisi \"Date fixe\" comme date préférée"
+msgstr "Sélectionnez une date si vous avez choisi \"Date fixe\" comme date préférée"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
@@ -446,9 +408,7 @@ msgstr "Lignes d'écriture"
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr ""
-"Cette ligne d'écriture servira de référence pour les information sur le "
-"client ayant passé la commande."
+msgstr "Cette ligne d'écriture servira de référence pour les information sur le client ayant passé la commande."
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -521,14 +481,12 @@ msgid "Payment order"
 msgstr "Ordre de paiement"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "General Information"
 msgstr "informations générales"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Done"
 msgstr "Effectué"
 
@@ -544,8 +502,7 @@ msgstr "Communication"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -555,8 +512,7 @@ msgid "Destination Bank Account"
 msgstr "Compte bancaire de destination"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Information"
 msgstr "Informations"
 
@@ -598,8 +554,7 @@ msgid "Are you sure you want to make payment?"
 msgstr "Etes-vous sûr de vouloir réaliser le paiement ?"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
+#: view:payment.mode:0 field:payment.mode,journal:0
 msgid "Journal"
 msgstr "Journal"
 
@@ -614,14 +569,12 @@ msgid "Confirm Payments"
 msgstr "Confirmer les paiements"
 
 #. module: account_payment
-#: field:payment.line,company_currency:0
-#: report:payment.order:0
+#: field:payment.line,company_currency:0 report:payment.order:0
 msgid "Company Currency"
 msgstr "Devise de la société"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment
-#: view:payment.line:0
+#: model:ir.ui.menu,name:account_payment.menu_main_payment view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
 msgstr "Paiement"
@@ -641,9 +594,7 @@ msgstr "Ligne d'écriture"
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"Utilisé comme message entre le client et la société actuelle. Décrit : \"Que "
-"voulez vous dire au destinataire à propos de cette commande ?\""
+msgstr "Utilisé comme message entre le client et la société actuelle. Décrit : \"Que voulez vous dire au destinataire à propos de cette commande ?\""
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -656,8 +607,7 @@ msgid "Bank Account"
 msgstr "Compte bancaire"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Entry Information"
 msgstr "Informations sur l'écriture"
 
@@ -705,8 +655,7 @@ msgstr "Date préférée"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "or"
 msgstr "ou"
 
@@ -714,10 +663,3 @@ msgstr "ou"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Compte bancaire pour le mode de paiement"
-
-#~ msgid ""
-#~ "The amount which should be paid at the current date\n"
-#~ "minus the amount which is already in payment order"
-#~ msgstr ""
-#~ "Le montant qui doit être payé à la date courante\n"
-#~ "moins le montant qui se trouve déjà dans l'ordre de paiement"

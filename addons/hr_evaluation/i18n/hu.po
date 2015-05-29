@@ -1,21 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_evaluation
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-03-10 20:56+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-7/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:11+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -28,8 +29,7 @@ msgid "Start Appraisal"
 msgstr "Értékelés elindítása"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr.evaluation.report:0
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
@@ -61,8 +61,7 @@ msgid "Appraisal that are in waiting appreciation state"
 msgstr "Értékelés ami elismerés állapotra vár"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,company_id:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,company_id:0
 #: field:hr_evaluation.plan.phase,company_id:0
 msgid "Company"
 msgstr "Vállalat"
@@ -74,14 +73,12 @@ msgid "Appraisal Form"
 msgstr "Értékelési űrlap"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,day:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,day:0
 msgid "Day"
 msgstr "Nap"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,phase_ids:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,phase_ids:0
 msgid "Appraisal Phases"
 msgstr "Értékelés fázisai"
 
@@ -193,22 +190,7 @@ msgid ""
 "%(user_signature)s\n"
 "\n"
 "        "
-msgstr ""
-"\n"
-"Dátum: %(date)s\n"
-"\n"
-"Tisztelt %(employee_name)s,\n"
-"\n"
-"Én egy értékelést készítek erre vonatkozólag %(eval_name)s.\n"
-"\n"
-"Megtisztelő válaszát várva.\n"
-"\n"
-"\n"
-"Köszönettel,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        "
+msgstr "\nDátum: %(date)s\n\nTisztelt %(employee_name)s,\n\nÉn egy értékelést készítek erre vonatkozólag %(eval_name)s.\n\nMegtisztelő válaszát várva.\n\n\nKöszönettel,\n--\n%(user_signature)s\n\n        "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -221,9 +203,7 @@ msgstr "Értékelés ami a Tervezetben a folyamat állapotban van"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
-"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
+msgstr "A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -286,8 +266,7 @@ msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,employee_id:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,employee_id:0
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,employee_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_employee
@@ -314,9 +293,7 @@ msgstr "Meghaladja a várakozásokat"
 #: help:hr_evaluation.plan.phase,mail_feature:0
 msgid ""
 "Check this box if you want to send mail to employees coming under this phase"
-msgstr ""
-"Jelölje be a négyzetet ha e-mailt szeretne küldeni annak az alkalmazottnak "
-"aki ebbe a fázisba kerül"
+msgstr "Jelölje be a négyzetet ha e-mailt szeretne küldeni annak az alkalmazottnak aki ebbe a fázisba kerül"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -345,8 +322,7 @@ msgid "Send Reminder Email"
 msgstr "Emlékeztető e-mail küldés"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr_evaluation.evaluation,rating:0
+#: view:hr.evaluation.report:0 field:hr_evaluation.evaluation,rating:0
 msgid "Appreciation"
 msgstr "Elismerés"
 
@@ -367,8 +343,7 @@ msgid "Meet expectations"
 msgstr "lvárásoknak megfelel"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,nbr:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,nbr:0
 msgid "# of Requests"
 msgstr "Kérelmek száma"
 
@@ -378,10 +353,8 @@ msgid "July"
 msgstr "Július"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,state:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: field:hr.evaluation.report,state:0 view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,state:0
 msgid "Status"
 msgstr "Állapot"
@@ -398,26 +371,12 @@ msgid ""
 "                Click to define a new appraisal plan.\n"
 "              </p><p>\n"
 "                You can define appraisal plans (ex: first interview after 6\n"
-"                months, then every year). Then, each employee can be linked "
-"to\n"
-"                an appraisal plan so that OpenERP can automatically "
-"generate\n"
+"                months, then every year). Then, each employee can be linked to\n"
+"                an appraisal plan so that OpenERP can automatically generate\n"
 "                interview requests to managers and/or subordinates.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson új értékelés terv létrehozásához.\n"
-"              </p><p>\n"
-"                Meghatározhat értékelés terveket (végrehajtás: első interjú "
-"6 hónap\n"
-"                elteltével, utána minden évben). Ezután, mindegyik "
-"alkalmazott hozzá lesz\n"
-"                rendelve egy értékelés tervhez így az OpenERP automatikusan "
-"tud létrehozni\n"
-"                interjú kérelmet a vezetők és/vagy beosztottjaik részére.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson új értékelés terv létrehozásához.\n              </p><p>\n                Meghatározhat értékelés terveket (végrehajtás: első interjú 6 hónap\n                elteltével, utána minden évben). Ezután, mindegyik alkalmazott hozzá lesz\n                rendelve egy értékelés tervhez így az OpenERP automatikusan tud létrehozni\n                interjú kérelmet a vezetők és/vagy beosztottjaik részére.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -462,8 +421,7 @@ msgid "All Answers"
 msgstr "Minden válasz"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Answer Survey"
 msgstr "Kérdőív felmérő"
 
@@ -478,8 +436,7 @@ msgid "December"
 msgstr "December"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,month:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,month:0
 msgid "Month"
 msgstr "Hónap"
 
@@ -503,9 +460,7 @@ msgstr "Értékelés emlékeztetők"
 msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
 "before launching this phase."
-msgstr ""
-"Jelölje ki ezt a négyzetet, ha azt szeretné, hogy az összes megelőző fázis "
-"be legyen fejezve, mielőtt ezt a fázist elindítaná."
+msgstr "Jelölje ki ezt a négyzetet, ha azt szeretné, hogy az összes megelőző fázis be legyen fejezve, mielőtt ezt a fázist elindítaná."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -517,9 +472,7 @@ msgstr "Magyarázat"
 msgid ""
 "If the evaluation does not meet the expectations, you can proposean action "
 "plan"
-msgstr ""
-"Ha az értékelés nem az elvárásoknak megfelelő, akkor javasolhat egy művelet "
-"tervet"
+msgstr "Ha az értékelés nem az elvárásoknak megfelelő, akkor javasolhat egy művelet tervet"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -538,10 +491,8 @@ msgid "Pending"
 msgstr "Függőben lévő"
 
 #. module: hr_evaluation
-#: field:hr.employee,evaluation_plan_id:0
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,name:0
+#: field:hr.employee,evaluation_plan_id:0 view:hr.evaluation.interview:0
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,name:0
 #: field:hr_evaluation.plan.phase,plan_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Appraisal Plan"
@@ -585,10 +536,8 @@ msgid "Is a Follower"
 msgstr "Ez egy követő"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,plan_id:0
-#: view:hr_evaluation.evaluation:0
-#: field:hr_evaluation.evaluation,plan_id:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,plan_id:0
+#: view:hr_evaluation.evaluation:0 field:hr_evaluation.evaluation,plan_id:0
 msgid "Plan"
 msgstr "Terv"
 
@@ -649,8 +598,7 @@ msgid "Action"
 msgstr "Művelet"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: selection:hr.evaluation.report,state:0
+#: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
 msgid "Final Validation"
 msgstr "Végső ellenőrzés"
 
@@ -677,8 +625,7 @@ msgid "Overall Rating"
 msgstr "Átlag"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Interviewer"
 msgstr "Interjúztató"
 
@@ -713,10 +660,8 @@ msgid "Send all answers to the employee"
 msgstr "Az összes válasz elküldése az alkalmazottnak"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr.evaluation.report:0
-#: selection:hr.evaluation.report,state:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: selection:hr.evaluation.report,state:0 view:hr_evaluation.evaluation:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Done"
 msgstr "Kész"
@@ -768,9 +713,7 @@ msgstr "Október"
 msgid ""
 "The date of the next appraisal is computed by the appraisal plan's dates "
 "(first appraisal + periodicity)."
-msgstr ""
-"A következő értékelés dátuma az értékelés tervek dátumából számított (első "
-"értékelés + időszak)."
+msgstr "A következő értékelés dátuma az értékelés tervek dátumából számított (első értékelés + időszak)."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
@@ -782,9 +725,7 @@ msgstr "Túllépett határidő"
 msgid ""
 "The number of month that depicts the delay between each evaluation of this "
 "plan (after the first one)."
-msgstr ""
-"A hónapok száma ami leírja az ehhez a tervhez tartozó értékelések közti  (az "
-"elsőt követő) időszakokat."
+msgstr "A hónapok száma ami leírja az ehhez a tervhez tartozó értékelések közti  (az elsőt követő) időszakokat."
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
@@ -808,31 +749,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new appraisal.\n"
 "              </p><p>\n"
-"                Each employee may be assigned an Appraisal Plan. Such a "
-"plan\n"
+"                Each employee may be assigned an Appraisal Plan. Such a plan\n"
 "                defines the frequency and the way you manage your periodic\n"
 "                personnel evaluation. You will be able to define steps and\n"
-"                attach interviews to each step. OpenERP manages all kinds "
-"of\n"
+"                attach interviews to each step. OpenERP manages all kinds of\n"
 "                evaluations: bottom-up, top-down, self-evaluation and final\n"
 "                evaluation by the manager.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson új értékelés létrehozásához.\n"
-"              </p><p>\n"
-"                Mindegyik alkalmazotthoz hozzá rendel egy Értékelés tervet. "
-"Ez a terv\n"
-"                meghatározza a személyes értékelés kezelés végrehajtásának "
-"gyakoriságát\n"
-"                és módját. Lépéseket határozhat meg  és hozzáfűzhet\n"
-"                interjúkat minden lépéshez. OpenERP kezelni tud mindenféle\n"
-"                értékelést: fordított sorrendi (lentről-felfelé), sorrendi "
-"(fentről-lefelé), önértékelés és \n"
-"                felettes általi végső értékelés.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson új értékelés létrehozásához.\n              </p><p>\n                Mindegyik alkalmazotthoz hozzá rendel egy Értékelés tervet. Ez a terv\n                meghatározza a személyes értékelés kezelés végrehajtásának gyakoriságát\n                és módját. Lépéseket határozhat meg  és hozzáfűzhet\n                interjúkat minden lépéshez. OpenERP kezelni tud mindenféle\n                értékelést: fordított sorrendi (lentről-felfelé), sorrendi (fentről-lefelé), önértékelés és \n                felettes általi végső értékelés.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -860,8 +785,7 @@ msgid "February"
 msgstr "Február"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Interview Appraisal"
 msgstr "Értékelés interjú"
 
@@ -892,9 +816,7 @@ msgstr "Munkavállalói interjú"
 msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
 "draft state."
-msgstr ""
-"Nem változtathatja meg az állapotát, mert egyes értékelés(ek) várakozó vagy "
-"tervezet állapotúak."
+msgstr "Nem változtathatja meg az állapotát, mert egyes értékelés(ek) várakozó vagy tervezet állapotúak."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -910,27 +832,15 @@ msgstr "Értékelés terv fázisok"
 #: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new interview request related to a "
-"personal evaluation. \n"
+"                Click to create a new interview request related to a personal evaluation. \n"
 "              </p><p>\n"
 "                Interview requests are usually generated automatically by\n"
-"                OpenERP according to an employee's appraisal plan. Each "
-"user\n"
+"                OpenERP according to an employee's appraisal plan. Each user\n"
 "                receives automatic emails and requests to evaluate their\n"
 "                colleagues periodically.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson új interjú kéréshez egy személyi értékeléshez. \n"
-"              </p><p>\n"
-"                Interjú kérések alap esetben automatikusa az OpenERP által\n"
-"                létrehozottak az alkalmazott értékelési terve alapján. "
-"Mindegyik felhasználó\n"
-"                automatikus emailt kap melyben időszakosan felmérési kérést "
-"kap a kollégaitól.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson új interjú kéréshez egy személyi értékeléshez. \n              </p><p>\n                Interjú kérések alap esetben automatikusa az OpenERP által\n                létrehozottak az alkalmazott értékelési terve alapján. Mindegyik felhasználó\n                automatikus emailt kap melyben időszakosan felmérési kérést kap a kollégaitól.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_ids:0
@@ -939,8 +849,7 @@ msgid "Messages and communication history"
 msgstr "Üzenetek és kommunikáció történet"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Search Appraisal"
 msgstr "Értékelés keresése"
 
@@ -968,8 +877,7 @@ msgid "Create Date"
 msgstr "Létrehozás dátuma"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr.evaluation.report,year:0
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,year:0
 msgid "Year"
 msgstr "Év"
 
@@ -987,6 +895,3 @@ msgstr "Következő értékelés dátuma"
 #: view:hr_evaluation.evaluation:0
 msgid "Action Plan..."
 msgstr "Végrehajtási terv..."
-
-#~ msgid "Cancel"
-#~ msgstr "Mégsem"

@@ -1,21 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * product
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-30 13:05+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:13+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -25,7 +26,7 @@ msgstr "Numar de Straturi"
 #. module: product
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "compania părinte"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -35,8 +36,7 @@ msgstr "Pretul de baza pentru calcul."
 #. module: product
 #: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
-"Aceasta este cantitatea minima de achizitionat de la Furnizorul principal."
+msgstr "Aceasta este cantitatea minima de achizitionat de la Furnizorul principal."
 
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
@@ -64,9 +64,7 @@ msgstr "A Doua Unitate de Masura"
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr ""
-"Aceasta lista de preturi va fi folosita in locul celei implicite pentru "
-"vanzarile catre partenerul curent"
+msgstr "Aceasta lista de preturi va fi folosita in locul celei implicite pentru vanzarile catre partenerul curent"
 
 #. module: product
 #: field:product.product,seller_qty:0
@@ -97,10 +95,9 @@ msgstr "Numele regulii"
 #. module: product
 #: help:product.template,list_price:0
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
-msgstr ""
-"Pretul de baza pentru calcularea pretului clientului. Uneori este numit "
-"pretul de catalog."
+"Base price to compute the customer price. Sometimes called the catalog "
+"price."
+msgstr "Pretul de baza pentru calcularea pretului clientului. Uneori este numit pretul de catalog."
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -113,13 +110,10 @@ msgstr "PC Asamblare SC234"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Conține rezumatul Chatter (număr de mesaje, ...). Acest rezumat este direct "
-"în format HTML, cu scopul de a se introduce în vizualizări kanban."
+msgstr "Conține rezumatul Chatter (număr de mesaje, ...). Acest rezumat este direct în format HTML, cu scopul de a se introduce în vizualizări kanban."
 
 #. module: product
-#: code:addons/product/pricelist.py:198
-#: code:addons/product/product.py:208
+#: code:addons/product/pricelist.py:198 code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr "Avertisment!"
@@ -135,9 +129,7 @@ msgstr "Imagine de dimensiune mica"
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
-"Conversia din UdM a Produsului %s in UdM Implicita %s nu este posibila "
-"pentru ca cele doua apartin unor Categorii diferite!."
+msgstr "Conversia din UdM a Produsului %s in UdM Implicita %s nu este posibila pentru ca cele doua apartin unor Categorii diferite!."
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -169,13 +161,9 @@ msgstr "PC Asamlare SC349"
 #: help:product.product,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
-"and the reception of goods for this product and for the default supplier. It "
-"is used by the scheduler to order requests based on reordering delays."
-msgstr ""
-"Aceasta este intarzierea medie in zile intre confirmarea comenzii de "
-"achizitie si primirea bunurilor pentru acest produs si pentru furnizorul "
-"implicit. Este folosit de catre programator pentru cererile de comenzi pe "
-"baza efectuarii din nou a comenzilor."
+"and the reception of goods for this product and for the default supplier. It"
+" is used by the scheduler to order requests based on reordering delays."
+msgstr "Aceasta este intarzierea medie in zile intre confirmarea comenzii de achizitie si primirea bunurilor pentru acest produs si pentru furnizorul implicit. Este folosit de catre programator pentru cererile de comenzi pe baza efectuarii din nou a comenzilor."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
@@ -194,8 +182,7 @@ msgid "Sale Pricelist"
 msgstr "Lista cu preturile de vanzare"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,type:0
+#: view:product.template:0 field:product.template,type:0
 msgid "Product Type"
 msgstr "Tipul de produs"
 
@@ -210,9 +197,7 @@ msgstr "Produse: "
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr ""
-"Eroare! Nu puteti defini precizia zecimala a 'Contului' ca fiind mai mare "
-"decat factorul de rotunjire al monedeo principale a companiei"
+msgstr "Eroare! Nu puteti defini precizia zecimala a 'Contului' ca fiind mai mare decat factorul de rotunjire al monedeo principale a companiei"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -240,33 +225,17 @@ msgstr "Numele furnizorului, prețul, codul produsului, ..."
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr ""
-"Eroare! Nu puteti defini un factor de rotunjire pentru moneda principala a "
-"companiei care este mai mic decat precizia zecimala a 'Contului'."
+msgstr "Eroare! Nu puteti defini un factor de rotunjire pentru moneda principala a companiei care este mai mic decat precizia zecimala a 'Contului'."
 
 #. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this "
-"Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock "
-"Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods leaving the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' "
-"type."
-msgstr ""
-"Cantitatea de produse care sunt planificate sa plece.\n"
-"In contextul unei singure Locatii a Stocului, aceasta include bunurile care "
-"pleaca din aceasta Locatie, sau oricare dintre subordonatele ei.\n"
-"In contextul unui singur Depozit, acesta include bunurile care pleaca din "
-"Locatia Stocului acestui Depozit, sau oricare dintre subordonatii lui.\n"
-"In contextul unui singur Magazin, acesta include bunurile care pleaca din "
-"Locatia de Stoc a Depozitului acestui Magazin, sau oricare dintre "
-"subordonatii lui.\n"
-"In caz contrar, acesta include bunurile care pleaca din orice Locatie a "
-"Stocului de tip 'intern'."
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods leaving the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+msgstr "Cantitatea de produse care sunt planificate sa plece.\nIn contextul unei singure Locatii a Stocului, aceasta include bunurile care pleaca din aceasta Locatie, sau oricare dintre subordonatele ei.\nIn contextul unui singur Depozit, acesta include bunurile care pleaca din Locatia Stocului acestui Depozit, sau oricare dintre subordonatii lui.\nIn contextul unui singur Magazin, acesta include bunurile care pleaca din Locatia de Stoc a Depozitului acestui Magazin, sau oricare dintre subordonatii lui.\nIn caz contrar, acesta include bunurile care pleaca din orice Locatie a Stocului de tip 'intern'."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_42_product_template
@@ -274,9 +243,7 @@ msgstr ""
 msgid ""
 "Office Editing Software with word processing, spreadsheets, presentations, "
 "graphics, and databases..."
-msgstr ""
-"Software de Editare Office cu procesare de text, foi de calcul, prezentari, "
-"grafica si baze de date..."
+msgstr "Software de Editare Office cu procesare de text, foi de calcul, prezentari, grafica si baze de date..."
 
 #. module: product
 #: field:product.product,seller_id:0
@@ -287,9 +254,7 @@ msgstr "Furnizorul principal"
 #: model:ir.actions.act_window,name:product.product_ul_form_action
 #: model:ir.model,name:product.model_product_packaging
 #: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.packaging:0
-#: view:product.product:0
-#: view:product.ul:0
+#: view:product.packaging:0 view:product.product:0 view:product.ul:0
 msgid "Packaging"
 msgstr "Ambalare"
 
@@ -297,12 +262,10 @@ msgstr "Ambalare"
 #: help:product.product,active:0
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
-"Daca ramane nebifat, va va permite sa ascundeti produsul fara a-l sterge."
+msgstr "Daca ramane nebifat, va va permite sa ascundeti produsul fara a-l sterge."
 
 #. module: product
-#: view:product.product:0
-#: field:product.template,categ_id:0
+#: view:product.product:0 field:product.template,categ_id:0
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Categorie"
@@ -341,8 +304,7 @@ msgid "Pen drive, SP-2"
 msgstr "Mecanism de antrenare a penitei, SP-2"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 #: field:product.template,state:0
 msgid "Status"
 msgstr "Stare"
@@ -374,25 +336,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new packaging type.\n"
 "              </p><p>\n"
-"                The packaging type define the dimensions as well as the "
-"number\n"
-"                of products per package. This will ensure salesperson sell "
-"the\n"
+"                The packaging type define the dimensions as well as the number\n"
+"                of products per package. This will ensure salesperson sell the\n"
 "                right number of products according to the package selected.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a adauga un nou tip de ambalare.\n"
-"              </p><p>\n"
-"                Tipul de ambalare defineste atat dimensiunile, cat si "
-"numarul\n"
-"                de produse per ambalaj. Acest lucru va asigura vanzarea de "
-"catre agentul de vanzari a\n"
-"                numarului corect de produse, in functie de ambalajul "
-"selectat.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a adauga un nou tip de ambalare.\n              </p><p>\n                Tipul de ambalare defineste atat dimensiunile, cat si numarul\n                de produse per ambalaj. Acest lucru va asigura vanzarea de catre agentul de vanzari a\n                numarului corect de produse, in functie de ambalajul selectat.\n              </p>\n            "
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -416,8 +365,7 @@ msgid "Products Price Search"
 msgstr "Căutați Prețul Produselor"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,description_sale:0
+#: view:product.template:0 field:product.template,description_sale:0
 msgid "Sale Description"
 msgstr "Descriere vânzare"
 
@@ -437,25 +385,21 @@ msgid "The net weight in Kg."
 msgstr "Masa netă în Kg."
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
+#: field:pricelist.partnerinfo,min_quantity:0 field:product.supplierinfo,qty:0
 msgid "Quantity"
 msgstr "Cantitate"
 
 #. module: product
 #: view:product.price_list:0
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr ""
-"Calculează Pretul produsului per unitate pe baza versiunii listei de preturi."
+msgstr "Calculează Pretul produsului per unitate pe baza versiunii listei de preturi."
 
 #. module: product
 #: help:product.pricelist.item,product_id:0
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr ""
-"Specificati un produs daca aceasta regula se aplica doar unui produs. In caz "
-"contrar, lasati necompletat."
+msgstr "Specificati un produs daca aceasta regula se aplica doar unui produs. In caz contrar, lasati necompletat."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -466,26 +410,11 @@ msgstr "Greutate"
 #: help:product.product,virtual_available:0
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in "
-"this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-"Cantitatea estimata (calculata drept Cantitatea Disponibila - Iesire + "
-"Intrare)\n"
-"In contextul unei singure Locatii a Stocului, aceasta include marfa stocata "
-"in aceasta locatie, sau oricare dintre locatiile secundare.\n"
-"In contextul unui singur Depozit, acesta include marfa stocata in Locatia "
-"Stocului a acestui Depozit, sau oricare dintre depozitele secundare.\n"
-"In contextul unui singur Magazin, acesta include marfa stocata in Locatia "
-"Stocului Depozitului acestui Magazin, sau oricare dintre magazinele "
-"secundare.\n"
-"In caz contrar, acesta include marfa stocata in orice Locatie a Stocului de "
-"tip 'intern'."
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr "Cantitatea estimata (calculata drept Cantitatea Disponibila - Iesire + Intrare)\nIn contextul unei singure Locatii a Stocului, aceasta include marfa stocata in aceasta locatie, sau oricare dintre locatiile secundare.\nIn contextul unui singur Depozit, acesta include marfa stocata in Locatia Stocului a acestui Depozit, sau oricare dintre depozitele secundare.\nIn contextul unui singur Magazin, acesta include marfa stocata in Locatia Stocului Depozitului acestui Magazin, sau oricare dintre magazinele secundare.\nIn caz contrar, acesta include marfa stocata in orice Locatie a Stocului de tip 'intern'."
 
 #. module: product
 #: field:product.packaging,height:0
@@ -505,13 +434,9 @@ msgstr "Gestionati Proprietatile Produsului"
 #. module: product
 #: help:product.uom,factor:0
 msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of "
-"Measure for this category:\n"
+"How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-"Cat de mult sau de putin este comparata aceasta unitate cu Unitatea de "
-"Masura de referinta pentru aceasta categorie:\n"
-"1 * (unitatea de referinta) = raport * (aceasta unitate)"
+msgstr "Cat de mult sau de putin este comparata aceasta unitate cu Unitatea de Masura de referinta pentru aceasta categorie:\n1 * (unitatea de referinta) = raport * (aceasta unitate)"
 
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
@@ -580,35 +505,18 @@ msgstr "Zi (zile)"
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods arriving to the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with "
-"'internal' type."
-msgstr ""
-"Cantitatea de produse planificate sa soseasca.\n"
-"In contextul unei singure Locatii a Stocului, aceasta include marfa care "
-"soseste in aceasta Locatie, sau in oricare din locatiile subordonate.\n"
-"In contextul unui singur Depozit, acesta include marfa care soseste in "
-"Locatia Stocului acestui Depozit, sau in oricare dintre depozitele "
-"subordonate.\n"
-"In contextul unui singur Magazin, acesta include marfa care soseste in "
-"Locatia Stocului Depozitului acestui Magazin, sau in oricare dintre "
-"subordonatele lui.\n"
-"Altfel, include marfa care soseste in orice Locatie a Stocului de tip "
-"'intern'."
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+msgstr "Cantitatea de produse planificate sa soseasca.\nIn contextul unei singure Locatii a Stocului, aceasta include marfa care soseste in aceasta Locatie, sau in oricare din locatiile subordonate.\nIn contextul unui singur Depozit, acesta include marfa care soseste in Locatia Stocului acestui Depozit, sau in oricare dintre depozitele subordonate.\nIn contextul unui singur Magazin, acesta include marfa care soseste in Locatia Stocului Depozitului acestui Magazin, sau in oricare dintre subordonatele lui.\nAltfel, include marfa care soseste in orice Locatie a Stocului de tip 'intern'."
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr ""
-"Eroare: Unitatea de masura implicita si Unitatea de masura pentru achizitie "
-"trebuie sa fie in aceeasi categorie."
+msgstr "Eroare: Unitatea de masura implicita si Unitatea de masura pentru achizitie trebuie sa fie in aceeasi categorie."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -635,9 +543,7 @@ msgstr "Calcul pret"
 msgid ""
 "You provided an invalid \"EAN13 Barcode\" reference. You may use the "
 "\"Internal Reference\" field instead."
-msgstr ""
-"Ati furnizat o referinta nevalida \"Cod de bare EAN13\". Puteti folosi "
-"campul \"Referinta Interna\" in locul ei."
+msgstr "Ati furnizat o referinta nevalida \"Cod de bare EAN13\". Puteti folosi campul \"Referinta Interna\" in locul ei."
 
 #. module: product
 #: model:res.groups,name:product.group_purchase_pricelist
@@ -698,9 +604,7 @@ msgstr "Specificati valoarea maxima a limitei peste pretul de baza."
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr ""
-"Eroare! Nu puteti sa atribuiti Lista Principala de Preturi drept O Alta "
-"Lista de Preturi in Elementul Listei de Preturi!"
+msgstr "Eroare! Nu puteti sa atribuiti Lista Principala de Preturi drept O Alta Lista de Preturi in Elementul Listei de Preturi!"
 
 #. module: product
 #: view:product.price_list:0
@@ -755,10 +659,7 @@ msgid ""
 "When a version is duplicated it is set to non active, so that the dates do "
 "not overlaps with original version. You should change the dates and "
 "reactivate the pricelist"
-msgstr ""
-"Atunci cand o versiune este copiata, este setata ca non activa astfel incat "
-"datele sa nu se suprapuna cu versiunea originala. Ar trebui sa modificati "
-"datele si sa reactivati lista de preturi"
+msgstr "Atunci cand o versiune este copiata, este setata ca non activa astfel incat datele sa nu se suprapuna cu versiunea originala. Ar trebui sa modificati datele si sa reactivati lista de preturi"
 
 #. module: product
 #: model:product.template,name:product.product_product_18_product_template
@@ -773,21 +674,16 @@ msgid "HDD SH-1"
 msgstr "HDD SH-1"
 
 #. module: product
-#: field:product.supplierinfo,name:0
-#: field:product.template,seller_ids:0
+#: field:product.supplierinfo,name:0 field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Furnizor"
 
 #. module: product
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year). \n"
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year). \n"
 "Average Price: The cost price is recomputed at each incoming shipment."
-msgstr ""
-"Pretul Standard: Pretul de cost este actualizat manual la sfarsitul unei "
-"anumite perioade (de obicei in fiecare an). \n"
-"Pretul Mediu: Pretul de cost este recalculat la fiecare transport primit."
+msgstr "Pretul Standard: Pretul de cost este actualizat manual la sfarsitul unei anumite perioade (de obicei in fiecare an). \nPretul Mediu: Pretul de cost este recalculat la fiecare transport primit."
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -812,8 +708,7 @@ msgstr "Cod de bare EAN13"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
 #: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:0
-#: report:product.pricelist:0
+#: view:product.price_list:0 report:product.pricelist:0
 #: field:product.pricelist.version,pricelist_id:0
 msgid "Price List"
 msgstr "Lista de preturi"
@@ -873,7 +768,7 @@ msgstr "descrieti caracteristicile produsului..."
 #. module: product
 #: view:res.partner:0
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "Listele de prețuri sunt gestionate în"
 
 #. module: product
 #: field:product.category,child_id:0
@@ -896,9 +791,7 @@ msgid "Print"
 msgstr "Tipariti"
 
 #. module: product
-#: view:product.product:0
-#: field:product.ul,type:0
-#: field:product.uom,uom_type:0
+#: view:product.product:0 field:product.ul,type:0 field:product.uom,uom_type:0
 msgid "Type"
 msgstr "Tip"
 
@@ -923,8 +816,7 @@ msgstr "Tasta"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,pricelist_id:0
-#: view:product.supplierinfo:0
+#: field:product.product,pricelist_id:0 view:product.supplierinfo:0
 msgid "Pricelist"
 msgstr "Lista de preturi"
 
@@ -948,9 +840,7 @@ msgstr "Partener"
 msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
-msgstr ""
-"1 sau mai multi furnizori pot fi asociati unui produs. Gasiti toate "
-"informatiile in formularul produsului."
+msgstr "1 sau mai multi furnizori pot fi asociati unui produs. Gasiti toate informatiile in formularul produsului."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -976,8 +866,7 @@ msgstr "Informatii furnizor"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
-#: field:product.price.type,currency_id:0
-#: report:product.pricelist:0
+#: field:product.price.type,currency_id:0 report:product.pricelist:0
 #: field:product.pricelist,currency_id:0
 msgid "Currency"
 msgstr "Moneda"
@@ -993,10 +882,7 @@ msgstr "Card de date"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
-msgstr ""
-"Coeficient pentru transformarea Unitatii de Masura implicite in Unitate de "
-"Vanzare\n"
-" udv = udm * coef"
+msgstr "Coeficient pentru transformarea Unitatii de Masura implicite in Unitate de Vanzare\n udv = udm * coef"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1049,17 +935,12 @@ msgstr "Informatii despre un furnizor de produse"
 #. module: product
 #: help:product.uom,factor_inv:0
 msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of "
-"Measure in this category:\n"
+"How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-"De cate ori aceasta Unitate de Masura este mai mare decat Unitatea de Masura "
-"de referinta din aceasta categorie:\n"
-"1 * (aceasta unitate) = raport * (unitatea de referinta)"
+msgstr "De cate ori aceasta Unitate de Masura este mai mare decat Unitatea de Masura de referinta din aceasta categorie:\n1 * (aceasta unitate) = raport * (unitatea de referinta)"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,description_purchase:0
+#: view:product.template:0 field:product.template,description_purchase:0
 msgid "Purchase Description"
 msgstr "Descriere achiziție"
 
@@ -1073,9 +954,7 @@ msgstr "Nu puteti avea doua liste de preturi care se suprapun"
 msgid ""
 "Specify the minimum quantity that needs to be bought/sold for the rule to "
 "apply."
-msgstr ""
-"Specificati cantitatea minima care trebuie cumparata/vanduta pentru ca "
-"regula sa se aplice."
+msgstr "Specificati cantitatea minima care trebuie cumparata/vanduta pentru ca regula sa se aplice."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1088,10 +967,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr ""
-"Durata in zile de la confirmarea comenzii de achizitie pana la primirea "
-"produselor in depozitul dumneavoastra. Folosit de catre programator pentru "
-"calculul automat al achizitiei."
+msgstr "Durata in zile de la confirmarea comenzii de achizitie pana la primirea produselor in depozitul dumneavoastra. Folosit de catre programator pentru calculul automat al achizitiei."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
@@ -1101,11 +977,7 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr ""
-"17\" LCD Monitor\n"
-"Processor AMD 8-Core\n"
-"512MB RAM\n"
-"HDD SH-1"
+msgstr "17\" LCD Monitor\nProcessor AMD 8-Core\n512MB RAM\nHDD SH-1"
 
 #. module: product
 #: selection:product.template,type:0
@@ -1145,8 +1017,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new product.\n"
 "              </p><p>\n"
-"                You must define a product for everything you sell, whether "
-"it's\n"
+"                You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers.\n"
 "              </p><p>\n"
@@ -1155,22 +1026,7 @@ msgid ""
 "                procurement methods, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a defini un nou produs.\n"
-"              </p><p>\n"
-"                Trebuie sa definiti un produs pentru orice vindeti, fie ca "
-"este\n"
-"                un produs fizic, un consumabil sau un serviciu pe care il "
-"oferiti\n"
-"                clientilor.\n"
-"              </p><p>\n"
-"                Formularul produsului contine informatii pentru a simplifica "
-"procesul de\n"
-"                vanzare: pret, note la oferta, date contabile,\n"
-"                metode de aprovizionare, etc.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a defini un nou produs.\n              </p><p>\n                Trebuie sa definiti un produs pentru orice vindeti, fie ca este\n                un produs fizic, un consumabil sau un serviciu pe care il oferiti\n                clientilor.\n              </p><p>\n                Formularul produsului contine informatii pentru a simplifica procesul de\n                vanzare: pret, note la oferta, date contabile,\n                metode de aprovizionare, etc.\n              </p>\n            "
 
 #. module: product
 #: view:product.price_list:0
@@ -1186,17 +1042,13 @@ msgstr "Imprimanta de mare viteza all in one cu fax si scanner."
 #. module: product
 #: help:product.supplierinfo,min_qty:0
 msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product Unit of Measure if not empty, in the default unit of measure of the "
-"product otherwise."
-msgstr ""
-"Cantitatea minima de cumparat de la acest furnizor, exprimata in Unitatea de "
-"Masura a Produsului furnizorului daca nu este lasat necompletat, in caz "
-"contrar unitatea de masura implicita a produsului."
+"The minimal quantity to purchase to this supplier, expressed in the supplier"
+" Product Unit of Measure if not empty, in the default unit of measure of the"
+" product otherwise."
+msgstr "Cantitatea minima de cumparat de la acest furnizor, exprimata in Unitatea de Masura a Produsului furnizorului daca nu este lasat necompletat, in caz contrar unitatea de masura implicita a produsului."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 msgid "Information"
 msgstr "Informatii"
 
@@ -1239,7 +1091,7 @@ msgstr "Suprataxare pret"
 #: code:addons/product/pricelist.py:401
 #, python-format
 msgid "Supplier Prices on the product form"
-msgstr ""
+msgstr "Prețul de achiziție din datele de bază ale produsului"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1258,12 +1110,9 @@ msgid "Logistical Units"
 msgstr "Unitati logistice"
 
 #. module: product
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
+#: field:product.category,complete_name:0 field:product.category,name:0
+#: field:product.pricelist.type,name:0 field:product.pricelist.version,name:0
+#: field:product.template,name:0 field:product.ul,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr "Nume"
@@ -1300,11 +1149,8 @@ msgstr "Cost"
 
 #. module: product
 #: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
-msgstr ""
-"Prezinta ordinea secventei atunci cand afiseaza o lista cu categorii de "
-"produse."
+msgid "Gives the sequence order when displaying a list of product categories."
+msgstr "Prezinta ordinea secventei atunci cand afiseaza o lista cu categorii de produse."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1312,8 +1158,7 @@ msgid "Dozen(s)"
 msgstr "Duzini"
 
 #. module: product
-#: field:product.uom,factor:0
-#: field:product.uom,factor_inv:0
+#: field:product.uom,factor:0 field:product.uom,factor_inv:0
 msgid "Ratio"
 msgstr "Raport"
 
@@ -1328,10 +1173,8 @@ msgid "Associated field in the product form."
 msgstr "Campul asociat din formularul produsului."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,uom_id:0
-#: field:product.uom,name:0
+#: view:product.product:0 view:product.template:0
+#: field:product.template,uom_id:0 field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr "Unitatea de masura"
 
@@ -1359,8 +1202,7 @@ msgstr "Categorii ale Unitatii de Masura"
 #. module: product
 #: help:product.product,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
-msgstr ""
-"Furnizorul principal care are cea mai mare prioritate in Lista cu Furnizori."
+msgstr "Furnizorul principal care are cea mai mare prioritate in Lista cu Furnizori."
 
 #. module: product
 #: model:product.category,name:product.product_category_5
@@ -1371,29 +1213,18 @@ msgstr "Servicii"
 #. module: product
 #: help:product.product,ean13:0
 msgid "International Article Number used for product identification."
-msgstr ""
-"Numar de Articol International folosit pentru identificarea produselor."
+msgstr "Numar de Articol International folosit pentru identificarea produselor."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
 msgid ""
 "<p>\n"
-"                Here is a list of all your products classified by category. "
-"You\n"
-"                can click a category to get the list of all products linked "
-"to\n"
+"                Here is a list of all your products classified by category. You\n"
+"                can click a category to get the list of all products linked to\n"
 "                this category or to a child of this category.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Iata o lista cu toate produsele dumneavoastra clasificare pe "
-"categorii. Puteti sa\n"
-"                faceti clic pe o categorie pentru a obtine lista cu toate "
-"produsele asociate\n"
-"                acestei categorii sau unei categorii secundare.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Iata o lista cu toate produsele dumneavoastra clasificare pe categorii. Puteti sa\n                faceti clic pe o categorie pentru a obtine lista cu toate produsele asociate\n                acestei categorii sau unei categorii secundare.\n              </p>\n            "
 
 #. module: product
 #: code:addons/product/product.py:361
@@ -1401,13 +1232,9 @@ msgstr ""
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
 "as of old Unit of Measure '%s'. If you need to change the unit of measure, "
-"you may deactivate this product from the 'Procurements' tab and create a new "
-"one."
-msgstr ""
-"Noua Unitate de Masura '%s' trebuie sa apartina aceleiasi categorii a "
-"Unitatii de Masura '%s' ca si vechea Unitate de Masura '%s'. Daca trebuie sa "
-"modificati unitatea de masura, puteti sa dezactivati acest produs din tabul "
-"'Aprovizionari' si sa creati una noua."
+"you may deactivate this product from the 'Procurements' tab and create a new"
+" one."
+msgstr "Noua Unitate de Masura '%s' trebuie sa apartina aceleiasi categorii a Unitatii de Masura '%s' ca si vechea Unitate de Masura '%s'. Daca trebuie sa modificati unitatea de masura, puteti sa dezactivati acest produs din tabul 'Aprovizionari' si sa creati una noua."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1415,8 +1242,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
-#: model:ir.ui.menu,name:product.prod_config_main
-#: view:product.product:0
+#: model:ir.ui.menu,name:product.prod_config_main view:product.product:0
 msgid "Products"
 msgstr "Produse"
 
@@ -1425,9 +1251,7 @@ msgstr "Produse"
 #: model:product.template,description:product.product_template_32
 msgid ""
 "Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr ""
-"Set de casti hands free pentru laptop PC cu microfon incorporat si mufa "
-"pentru casti."
+msgstr "Set de casti hands free pentru laptop PC cu microfon incorporat si mufa pentru casti."
 
 #. module: product
 #: help:product.packaging,rows:0
@@ -1450,8 +1274,7 @@ msgid "Net Weight"
 msgstr "Masă netă"
 
 #. module: product
-#: view:product.packaging:0
-#: view:product.product:0
+#: view:product.packaging:0 view:product.product:0
 msgid "Pallet Dimension"
 msgstr "Dimensiunea paletului"
 
@@ -1460,19 +1283,14 @@ msgstr "Dimensiunea paletului"
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr ""
-"Acest camp contine imaginea folosita drept imagine a produsului, limitata la "
-"1024x1024px."
+msgstr "Acest camp contine imaginea folosita drept imagine a produsului, limitata la 1024x1024px."
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr ""
-"Specificati o categorie a produsului daca aceasta regula se aplica doar "
-"produselor care apartin acestei categorii sau categoriilor subordonate ei. "
-"In caz contrar lasati necompletat."
+msgstr "Specificati o categorie a produsului daca aceasta regula se aplica doar produselor care apartin acestei categorii sau categoriilor subordonate ei. In caz contrar lasati necompletat."
 
 #. module: product
 #: view:product.product:0
@@ -1510,8 +1328,7 @@ msgstr "Cartus de toner"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
+#: model:ir.ui.menu,name:product.next_id_16 view:product.uom:0
 msgid "Units of Measure"
 msgstr "Unitati de Masura"
 
@@ -1525,16 +1342,14 @@ msgstr "Cantitatea minima"
 msgid ""
 "The prices below will only be taken into account when your pricelist is set "
 "as based on supplier prices."
-msgstr ""
+msgstr "Prețurile de mai jos vor fi luate în considerare doar când lista de prețuri este bazată pe prețurile de achiziţie"
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
 msgid ""
 "This supplier's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-"Acest cod al produsului furnizorului va fi folosit la tiparirea unei cereri "
-"de cotatie. Lasati necompletat pentru a-l folosi pe cel intern."
+msgstr "Acest cod al produsului furnizorului va fi folosit la tiparirea unei cereri de cotatie. Lasati necompletat pentru a-l folosi pe cel intern."
 
 #. module: product
 #: model:product.template,name:product.product_product_43_product_template
@@ -1550,17 +1365,13 @@ msgstr "Versiune a listei de preturi"
 #. module: product
 #: help:product.pricelist.item,sequence:0
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation "
-"gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation"
+" gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
-msgstr ""
-"Prezinta ordinea in care va fi bifat obiectul listei de preturi. Evaluarea "
-"acorda o mai mare prioritate secventei mai mici si se opreste de indata ce "
-"gaseste un obiect care se potriveste."
+msgstr "Prezinta ordinea in care va fi bifat obiectul listei de preturi. Evaluarea acorda o mai mare prioritate secventei mai mici si se opreste de indata ce gaseste un obiect care se potriveste."
 
 #. module: product
-#: view:product.product:0
-#: selection:product.template,type:0
+#: view:product.product:0 selection:product.template,type:0
 msgid "Consumable"
 msgstr "Consumabil"
 
@@ -1592,8 +1403,7 @@ msgid "Processor AMD 8-Core"
 msgstr "Processor AMD 8-Core"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 msgid "Weights"
 msgstr "Greutati"
 
@@ -1605,12 +1415,9 @@ msgstr "Descriere pentru Oferte"
 #. module: product
 #: help:pricelist.partnerinfo,price:0
 msgid ""
-"This price will be considered as a price for the supplier Unit of Measure if "
-"any or the default Unit of Measure of the product otherwise"
-msgstr ""
-"Acest pret va fi considerat drept pretul pentru Unitatea de Masura a "
-"furnizorului daca exista sau Unitatea de Masura implicita a produsului daca "
-"nu exista"
+"This price will be considered as a price for the supplier Unit of Measure if"
+" any or the default Unit of Measure of the product otherwise"
+msgstr "Acest pret va fi considerat drept pretul pentru Unitatea de Masura a furnizorului daca exista sau Unitatea de Masura implicita a produsului daca nu exista"
 
 #. module: product
 #: field:product.template,uom_po_id:0
@@ -1662,33 +1469,18 @@ msgid ""
 "              </p><p>\n"
 "                There can be more than one version of a pricelist, each of\n"
 "                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a adauga o versiune a listei de preturi.\n"
-"              </p><p>\n"
-"                Puteti avea mai multe versiuni ale unei liste de preturi, "
-"fiecare dintre\n"
-"                acestea trebuie sa fie valabile pentru o anumita perioada de "
-"timp. Niste\n"
-"                exemple de versiuni: Preturi Principale, 2010, 2011, Preturi "
-"de vara,\n"
-"                etc.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a adauga o versiune a listei de preturi.\n              </p><p>\n                Puteti avea mai multe versiuni ale unei liste de preturi, fiecare dintre\n                acestea trebuie sa fie valabile pentru o anumita perioada de timp. Niste\n                exemple de versiuni: Preturi Principale, 2010, 2011, Preturi de vara,\n                etc.\n              </p>\n            "
 
 #. module: product
 #: help:product.template,uom_po_id:0
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr ""
-"Unitatea de Masura implicita folosita pentru comenzile de achizitie. Trebuie "
-"sa faca parte din aceeasi categorie ca si unitatea de masura implicita."
+msgstr "Unitatea de Masura implicita folosita pentru comenzile de achizitie. Trebuie sa faca parte din aceeasi categorie ca si unitatea de masura implicita."
 
 #. module: product
 #: view:product.pricelist:0
@@ -1703,11 +1495,7 @@ msgid ""
 "6GB RAM\n"
 "Hi-Speed 234Q Processor\n"
 "QWERTY keyboard"
-msgstr ""
-"17\" Monitor\n"
-"6GB RAM\n"
-"Hi-Speed 234Q Processor\n"
-"tastatura QWERTY"
+msgstr "17\" Monitor\n6GB RAM\nHi-Speed 234Q Processor\ntastatura QWERTY"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1745,10 +1533,8 @@ msgid "HDD on Demand"
 msgstr "HDD la Cerere"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
+#: field:product.price.type,active:0 field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0 field:product.product,active:0
 #: field:product.uom,active:0
 msgid "Active"
 msgstr "Activ(a)"
@@ -1809,8 +1595,7 @@ msgstr "Camp Produs"
 #: model:product.template,description:product.product_product_5_product_template
 #: model:product.template,description:product.product_template_5
 msgid "Custom computer assembled on order based on customer's requirement."
-msgstr ""
-"Calculator personalizat asamblat la comanda pe baza cerintelor clientului."
+msgstr "Calculator personalizat asamblat la comanda pe baza cerintelor clientului."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
@@ -1821,8 +1606,7 @@ msgstr "Tipuri de preturi"
 #. module: product
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
-"Unitatea de masura implicita folosita in toate operatiunile stocului."
+msgstr "Unitatea de masura implicita folosita in toate operatiunile stocului."
 
 #. module: product
 #: view:product.product:0
@@ -1837,31 +1621,18 @@ msgid ""
 "              </p><p>\n"
 "                Units of measure belonging to the same category can be\n"
 "                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of "
-"measure:\n"
+"                <i>'Time'</i>, you will have the following units of measure:\n"
 "                Hours, Days.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a adauga o noua categorie a unitatii de masura.\n"
-"              </p><p>\n"
-"                Unitatile de masura care apartin aceleiasi categorii pot fi\n"
-"                transformate intre ele. De exemplu, in categoria\n"
-"                <i>'Timp'</i>, veti avea urmatoarele unitati de masura:\n"
-"                Ore, Zile.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a adauga o noua categorie a unitatii de masura.\n              </p><p>\n                Unitatile de masura care apartin aceleiasi categorii pot fi\n                transformate intre ele. De exemplu, in categoria\n                <i>'Timp'</i>, veti avea urmatoarele unitati de masura:\n                Ore, Zile.\n              </p>\n            "
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
 msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
-"Measure if any or in the default Unit of Measure of the product otherrwise."
-msgstr ""
-"Cantitatea minima pentru declansarea acestei reguli, exprimata in Unitatea "
-"de Masura a furnizorului daca exista sau in Unitatea de Masura implicita a "
-"produsului daca nu exista."
+"The minimal quantity to trigger this rule, expressed in the supplier Unit of"
+" Measure if any or in the default Unit of Measure of the product otherrwise."
+msgstr "Cantitatea minima pentru declansarea acestei reguli, exprimata in Unitatea de Masura a furnizorului daca exista sau in Unitatea de Masura implicita a produsului daca nu exista."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1882,9 +1653,7 @@ msgstr "Codul Furnizorului Produsului"
 #: help:product.pricelist,active:0
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr ""
-"Daca nu selectati, va va permite sa ascundeti lista de preturi fara sa o "
-"stergeti."
+msgstr "Daca nu selectati, va va permite sa ascundeti lista de preturi fara sa o stergeti."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1901,8 +1670,7 @@ msgstr "Colet pe strat"
 #: model:process.node,name:product.process_node_product0
 #: model:process.process,name:product.process_process_productprocess0
 #: field:product.packaging,product_id:0
-#: field:product.pricelist.item,product_id:0
-#: view:product.product:0
+#: field:product.pricelist.item,product_id:0 view:product.product:0
 #: field:product.supplierinfo,product_id:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
@@ -1971,10 +1739,7 @@ msgstr "Gestionati Unitatea de Masura Secundara"
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr ""
-"Cantitatea calculata va fi un multiplu al acestei valori. Folositi 1.0 "
-"pentru o Unitate de Masura care nu mai poate fi impartita, precum este o "
-"bucata."
+msgstr "Cantitatea calculata va fi un multiplu al acestei valori. Folositi 1.0 pentru o Unitate de Masura care nu mai poate fi impartita, precum este o bucata."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -2024,10 +1789,7 @@ msgstr "Adaptor USB"
 msgid ""
 "Sepcify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Specificati o unitate de masura aici daca facturarea se face intr-o alta "
-"unitate de masura decat cea a inventarului. Lasati necompletat pentru a "
-"folosi unitatea de masura implicita."
+msgstr "Specificati o unitate de masura aici daca facturarea se face intr-o alta unitate de masura decat cea a inventarului. Lasati necompletat pentru a folosi unitatea de masura implicita."
 
 #. module: product
 #: code:addons/product/product.py:208
@@ -2048,10 +1810,8 @@ msgstr "Lista de preturi Produse"
 #. module: product
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: view:product.product:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
+#: field:product.pricelist.version,company_id:0 view:product.product:0
+#: field:product.supplierinfo,company_id:0 field:product.template,company_id:0
 msgid "Company"
 msgstr "Compania"
 
@@ -2080,9 +1840,7 @@ msgstr "Alte Produse"
 #: model:product.template,description:product.product_product_9_product_template
 #: model:product.template,description:product.product_template_9
 msgid "This product is configured with example of push/pull flows"
-msgstr ""
-"Acest produs este configurat cu exemple de fluxuri de inaintare si de "
-"retragere"
+msgstr "Acest produs este configurat cu exemple de fluxuri de inaintare si de retragere"
 
 #. module: product
 #: field:product.product,message_ids:0
@@ -2116,8 +1874,7 @@ msgid "Components"
 msgstr "Componente"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
+#: field:product.product,code:0 field:product.product,default_code:0
 msgid "Internal Reference"
 msgstr "Referinta Interna"
 
@@ -2145,13 +1902,10 @@ msgstr "Index culori"
 #. module: product
 #: help:product.template,sale_ok:0
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
-"Specificati daca produsul poate fi selectat intr-o linie a comenzii de "
-"vanzare."
+msgstr "Specificati daca produsul poate fi selectat intr-o linie a comenzii de vanzare."
 
 #. module: product
-#: view:product.product:0
-#: field:product.template,sale_ok:0
+#: view:product.product:0 field:product.template,sale_ok:0
 msgid "Can be Sold"
 msgstr "Poate fi vandut"
 
@@ -2193,36 +1947,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new product.\n"
 "              </p><p>\n"
-"                You must define a product for everything you purchase, "
-"whether\n"
-"                it's a physical product, a consumable or services you buy "
-"to\n"
+"                You must define a product for everything you purchase, whether\n"
+"                it's a physical product, a consumable or services you buy to\n"
 "                subcontractants.\n"
 "              </p><p>\n"
-"                The product form contains detailed information to improve "
-"the\n"
-"                purchase process: prices, procurement logistics, accounting "
-"data,\n"
+"                The product form contains detailed information to improve the\n"
+"                purchase process: prices, procurement logistics, accounting data,\n"
 "                available suppliers, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a defini un nou produs.\n"
-"              </p><p>\n"
-"                Trebuie sa definiti un produs pentru orice cumparati, fie "
-"ca\n"
-"                este un produs fizic, un consumabil sau un serviciu pe care "
-"il cumparati pentru a-l\n"
-"                subcontracta.\n"
-"              </p><p>\n"
-"                Formularul produsului contine informatii detaliate pentru a "
-"imbunatati\n"
-"                procesul de cumparare: preturi, logistica de aprovizionare, "
-"date contabile,\n"
-"                furnizori disponibili, etc.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a defini un nou produs.\n              </p><p>\n                Trebuie sa definiti un produs pentru orice cumparati, fie ca\n                este un produs fizic, un consumabil sau un serviciu pe care il cumparati pentru a-l\n                subcontracta.\n              </p><p>\n                Formularul produsului contine informatii detaliate pentru a imbunatati\n                procesul de cumparare: preturi, logistica de aprovizionare, date contabile,\n                furnizori disponibili, etc.\n              </p>\n            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
@@ -2232,8 +1966,7 @@ msgstr "Software de editare imagine complet"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:0
-#: view:product.pricelist.version:0
+#: view:product.pricelist:0 view:product.pricelist.version:0
 msgid "Pricelist Version"
 msgstr "Versiune a Listei de preturi"
 
@@ -2259,8 +1992,7 @@ msgid "Sale Conditions"
 msgstr "Conditii de Vanzare"
 
 #. module: product
-#: view:product.packaging:0
-#: view:product.product:0
+#: view:product.packaging:0 view:product.product:0
 msgid "Palletization"
 msgstr "Paletizare"
 
@@ -2289,9 +2021,7 @@ msgstr "luni"
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
-msgstr ""
-"Daca nu bifati campul activ, puteti dezactiva o unitate de masura fara a o "
-"stergeti."
+msgstr "Daca nu bifati campul activ, puteti dezactiva o unitate de masura fara a o stergeti."
 
 #. module: product
 #: field:product.product,seller_delay:0
@@ -2313,53 +2043,31 @@ msgstr "Cutie"
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr ""
-"Specificati valoarea fixa de adunat sau de scazut(daca este negativa) la "
-"valoarea calculata cu reducere."
+msgstr "Specificati valoarea fixa de adunat sau de scazut(daca este negativa) la valoarea calculata cu reducere."
 
 #. module: product
 #: help:product.product,qty_available:0
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-"Cantitatea actuala de produse.\n"
-"In contextul unei singure Locatii a Stocului, aceasta include marfa "
-"depozitata in aceasta Locatie, sau in oricare dintre locatiile subordonate "
-"ei.\n"
-"In contextul unui singur Depozit, acesta include marfa depozitata in Locatia "
-"Stocului acestui Depozit, sau in oricare dintre depozitele subordonate lui.\n"
-"In contextul unui singur Magazin, acesta include marfa depozitata in Locatia "
-"Stocului Depozitului acestui Magazin, sau oricare dintre magazinele "
-"subordonate lui.\n"
-"In caz contrar, acesta include marfa depozitata in orice Locatie a Stocului "
-"de tip 'intern'."
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr "Cantitatea actuala de produse.\nIn contextul unei singure Locatii a Stocului, aceasta include marfa depozitata in aceasta Locatie, sau in oricare dintre locatiile subordonate ei.\nIn contextul unui singur Depozit, acesta include marfa depozitata in Locatia Stocului acestui Depozit, sau in oricare dintre depozitele subordonate lui.\nIn contextul unui singur Magazin, acesta include marfa depozitata in Locatia Stocului Depozitului acestui Magazin, sau oricare dintre magazinele subordonate lui.\nIn caz contrar, acesta include marfa depozitata in orice Locatie a Stocului de tip 'intern'."
 
 #. module: product
 #: help:product.template,type:0
 msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
-msgstr ""
-"Consumabil: Nu va implica mabagementul stocului pentru acest produs. \n"
-"Produs care poate fi stocat: Va implica managementul stocului pentru acest "
-"produs."
+msgstr "Consumabil: Nu va implica mabagementul stocului pentru acest produs. \nProdus care poate fi stocat: Va implica managementul stocului pentru acest produs."
 
 #. module: product
 #: help:product.pricelist.type,key:0
 msgid ""
 "Used in the code to select specific prices based on the context. Keep "
 "unchanged."
-msgstr ""
-"Folosit in cod pentru a selecta preturile specifice bazate pe context. "
-"Lasati neschimbat."
+msgstr "Folosit in cod pentru a selecta preturile specifice bazate pe context. Lasati neschimbat."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2371,15 +2079,7 @@ msgid ""
 "                whether it's a physical product, a consumable or service.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a defini un produs nou.\n"
-"              </p><p>\n"
-"                Trebuie sa definiti un produs pentru orice cumparati sau "
-"vindeti,\n"
-"                fie ca este un produs fizic, un consumabil sau un serviciu.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a defini un produs nou.\n              </p><p>\n                Trebuie sa definiti un produs pentru orice cumparati sau vindeti,\n                fie ca este un produs fizic, un consumabil sau un serviciu.\n              </p>\n            "
 
 #. module: product
 #: view:product.product:0
@@ -2396,10 +2096,7 @@ msgstr "Tipul de colet"
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr ""
-"O categorie de tip vizualizare este o categorie virtuala care poate fi "
-"utilizata ca parinte al unei alte categorii pentru a crea o structura "
-"ierarhica."
+msgstr "O categorie de tip vizualizare este o categorie virtuala care poate fi utilizata ca parinte al unei alte categorii pentru a crea o structura ierarhica."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2411,9 +2108,7 @@ msgstr "Impachetati"
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr ""
-"Specificati un sablon daca aceasta regula se aplica doar unui sablon de "
-"produse. In caz contrar lasati necompletat."
+msgstr "Specificati un sablon daca aceasta regula se aplica doar unui sablon de produse. In caz contrar lasati necompletat."
 
 #. module: product
 #: model:product.template,description:product.product_product_2_product_template
@@ -2421,9 +2116,7 @@ msgstr ""
 msgid ""
 "This type of service include assistance for security questions, system "
 "configuration requirements, implementation or special needs."
-msgstr ""
-"Acest tip de servicii contine asistenta pentru aspectele legate de "
-"securitate, cerintele de configurare sistem, implementare sau nevoi speciale."
+msgstr "Acest tip de servicii contine asistenta pentru aspectele legate de securitate, cerintele de configurare sistem, implementare sau nevoi speciale."
 
 #. module: product
 #: field:product.product,image:0
@@ -2443,11 +2136,7 @@ msgid ""
 "Processor Core i5 2.70 Ghz\n"
 "2GB RAM\n"
 "HDD SH-1"
-msgstr ""
-"19\" LCD Monitor\n"
-"Processor Core i5 2.70 Ghz\n"
-"2GB RAM\n"
-"HDD SH-1"
+msgstr "19\" LCD Monitor\nProcessor Core i5 2.70 Ghz\n2GB RAM\nHDD SH-1"
 
 #. module: product
 #: view:product.template:0
@@ -2476,8 +2165,7 @@ msgid "Gives the sequence order when displaying a list of packaging."
 msgstr "Prezinta ordinea secventei atunci cand afiseaza o lista de ambalaje."
 
 #. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
+#: selection:product.category,type:0 selection:product.template,state:0
 msgid "Normal"
 msgstr "Normal"
 
@@ -2487,9 +2175,7 @@ msgstr "Normal"
 msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
-msgstr ""
-"Cel putin o lista de preturi nu are nici o versiune activa !\n"
-"Va rugam sa creati sau sa activati una."
+msgstr "Cel putin o lista de preturi nu are nici o versiune activa !\nVa rugam sa creati sau sa activati una."
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -2501,18 +2187,14 @@ msgstr "Marja Pret Maxim"
 msgid ""
 "Cost price of the product used for standard stock valuation in accounting "
 "and used as a base price on purchase orders."
-msgstr ""
-"Pretul de cost al produsului folosit pentru evaluarea standard a stocului in "
-"contabilitate si folosit drept pret de baza pentru comenzile de achizitie."
+msgstr "Pretul de cost al produsului folosit pentru evaluarea standard a stocului in contabilitate si folosit drept pret de baza pentru comenzile de achizitie."
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-"Numele acestui produs al furnizorului va fi folosit la tiparirea unei cereri "
-"de cotatie. Lasati necompletat pentru a-l folosi pe cel intern."
+msgstr "Numele acestui produs al furnizorului va fi folosit la tiparirea unei cereri de cotatie. Lasati necompletat pentru a-l folosi pe cel intern."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
@@ -2520,41 +2202,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a pricelist.\n"
 "              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
-"                the purchase price. The default price list has only one "
-"rule; use\n"
-"                the cost price defined on the product form, so that you do "
-"not have to\n"
-"                worry about supplier pricelists if you have very simple "
-"needs.\n"
+"                A price list contains rules to be evaluated in order to compute\n"
+"                the purchase price. The default price list has only one rule; use\n"
+"                the cost price defined on the product form, so that you do not have to\n"
+"                worry about supplier pricelists if you have very simple needs.\n"
 "              </p><p>\n"
-"                But you can also import complex price lists form your "
-"supplier\n"
+"                But you can also import complex price lists form your supplier\n"
 "                that may depends on the quantities ordered or the current\n"
 "                promotions.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a crea o lista de preturi.\n"
-"              </p><p>\n"
-"                O lista de preturi contine reguli care trebuie evaluate "
-"pentru a calcula\n"
-"                pretul de cumparare. Lista implicita de preturi are o "
-"singura regula; folositi\n"
-"                pretul de cost definit in formularul produsului, astfel ca "
-"nu trebuie sa\n"
-"                va faceti griji in legatura cu listele de preturi ale "
-"furnizorilor daca aveti niste nevoi foarte simple.\n"
-"              </p><p>\n"
-"                Dar puteti, de asemenea, sa importati liste complexe de "
-"preturi de la furnizorul dumneavoastra,\n"
-"                care pot sa depinda de cantitatile comandate sau de "
-"promotiile\n"
-"                actuale.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o lista de preturi.\n              </p><p>\n                O lista de preturi contine reguli care trebuie evaluate pentru a calcula\n                pretul de cumparare. Lista implicita de preturi are o singura regula; folositi\n                pretul de cost definit in formularul produsului, astfel ca nu trebuie sa\n                va faceti griji in legatura cu listele de preturi ale furnizorilor daca aveti niste nevoi foarte simple.\n              </p><p>\n                Dar puteti, de asemenea, sa importati liste complexe de preturi de la furnizorul dumneavoastra,\n                care pot sa depinda de cantitatile comandate sau de promotiile\n                actuale.\n              </p>\n            "
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2599,15 +2257,10 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr ""
-"17\" Monitor\n"
-"4GB RAM\n"
-"Procesor Standard-1294P\n"
-"Tastatura QWERTY"
+msgstr "17\" Monitor\n4GB RAM\nProcesor Standard-1294P\nTastatura QWERTY"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
+#: field:product.category,sequence:0 field:product.packaging,sequence:0
 #: field:product.pricelist.item,sequence:0
 #: field:product.supplierinfo,sequence:0
 msgid "Sequence"
@@ -2618,10 +2271,7 @@ msgstr "Secventa"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
-"Intarzierea medie in zile pentru fabricarea acestui produs. In cazul unei "
-"LdM pe mai multe niveluri, vor fi adaugate intervalele de productie a "
-"componentelor."
+msgstr "Intarzierea medie in zile pentru fabricarea acestui produs. In cazul unei LdM pe mai multe niveluri, vor fi adaugate intervalele de productie a componentelor."
 
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
@@ -2643,15 +2293,7 @@ msgid ""
 "                Measure within the same category.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a adauga o unitate de masura noua.\n"
-"              </p><p>\n"
-"                Trebuie sa definiti o rata de conversie intre mai multe "
-"Unitati de\n"
-"                Masura din cadrul aceleiasi categorii.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a adauga o unitate de masura noua.\n              </p><p>\n                Trebuie sa definiti o rata de conversie intre mai multe Unitati de\n                Masura din cadrul aceleiasi categorii.\n              </p>\n            "
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
@@ -2675,10 +2317,8 @@ msgid "Creation of the product"
 msgstr "Crearea produsului"
 
 #. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: report:product.pricelist:0
-#: view:product.product:0
+#: field:pricelist.partnerinfo,name:0 field:product.packaging,name:0
+#: report:product.pricelist:0 view:product.product:0
 #: field:product.template,description:0
 msgid "Description"
 msgstr "Descriere"
@@ -2703,12 +2343,9 @@ msgstr "Volum"
 #: help:product.product,image_small:0
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Imagine de dimensiuni mici a produsului. Este redimensionata automat drept o "
-"imagine de 64x64px, cu pastrarea aspectului imaginii. Folositi acest domeniu "
-"oriunde este necesara o imagine mica."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Imagine de dimensiuni mici a produsului. Este redimensionata automat drept o imagine de 64x64px, cu pastrarea aspectului imaginii. Folositi acest domeniu oriunde este necesara o imagine mica."
 
 #. module: product
 #: model:product.template,name:product.product_product_40_product_template
@@ -2755,42 +2392,21 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a pricelist.\n"
 "              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
+"                A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products.\n"
 "              </p><p>\n"
-"                Price lists may have several versions (2010, 2011, Promotion "
-"of\n"
-"                February 2010, etc.) and each version may have several "
-"rules.\n"
-"                (e.g. the customer price of a product category will be based "
-"on\n"
+"                Price lists may have several versions (2010, 2011, Promotion of\n"
+"                February 2010, etc.) and each version may have several rules.\n"
+"                (e.g. the customer price of a product category will be based on\n"
 "                the supplier price multiplied by 1.80).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a crea o lista de preturi.\n"
-"              </p><p>\n"
-"                O lista de preturi contine reguli care vor fi evaluate "
-"pentru a calcula\n"
-"                pretul de vanzare al produselor.\n"
-"              </p><p>\n"
-"                Listele de preturi pot sa aiba mai multe versiuni (2010, "
-"2011, Promotia lunii\n"
-"                februarie 2010, etc.) si fiecare versiune poate avea mai "
-"multe reguli.\n"
-"                (de exemplu pretul clientului pentru o categorie de produse "
-"se va baza pe\n"
-"                pretul furnizorului inmultit cu 1.80).\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o lista de preturi.\n              </p><p>\n                O lista de preturi contine reguli care vor fi evaluate pentru a calcula\n                pretul de vanzare al produselor.\n              </p><p>\n                Listele de preturi pot sa aiba mai multe versiuni (2010, 2011, Promotia lunii\n                februarie 2010, etc.) si fiecare versiune poate avea mai multe reguli.\n                (de exemplu pretul clientului pentru o categorie de produse se va baza pe\n                pretul furnizorului inmultit cu 1.80).\n              </p>\n            "
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
 #: field:product.pricelist.item,product_tmpl_id:0
-#: field:product.product,product_tmpl_id:0
-#: view:product.template:0
+#: field:product.product,product_tmpl_id:0 view:product.template:0
 msgid "Product Template"
 msgstr "Sablon produs"
 
@@ -2828,10 +2444,7 @@ msgstr "RAM SR3"
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr ""
-"Prezinta modurile diferite de ambalare ale aceluiasi produs. Aceasta nu are "
-"nici un impact asupra comenzii de ridicare si este folosit in principal daca "
-"folositi modulul EDI."
+msgstr "Prezinta modurile diferite de ambalare ale aceluiasi produs. Aceasta nu are nici un impact asupra comenzii de ridicare si este folosit in principal daca folositi modulul EDI."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -2846,11 +2459,7 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-"Seteaza pretul astfel incat sa fie un multiplu al acestei valori.\n"
-"Rotunjirea se aplica dupa reducere si inainte de majorare.\n"
-"Pentru a avea preturi care se termină in 9.99, setati rotunjirea la 10, iar "
-"majorarea la -0.01"
+msgstr "Seteaza pretul astfel incat sa fie un multiplu al acestei valori.\nRotunjirea se aplica dupa reducere si inainte de majorare.\nPentru a avea preturi care se termină in 9.99, setati rotunjirea la 10, iar majorarea la -0.01"
 
 #. module: product
 #: field:product.template,list_price:0
@@ -2862,9 +2471,7 @@ msgstr "Pret de vanzare"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr ""
-"Conversia intre Unitatile de Masura pot avea loc numai daca ele apartin "
-"aceleiasi categorii. Conversia va fi facuta pe baza proportiilor."
+msgstr "Conversia intre Unitatile de Masura pot avea loc numai daca ele apartin aceleiasi categorii. Conversia va fi facuta pe baza proportiilor."
 
 #. module: product
 #: constraint:product.category:0
@@ -2877,11 +2484,7 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr ""
-"Imagine de dimensiune medie a produsului. Este redimensionata automat ca o "
-"imagine de 128x128px, cu pastrarea aspectului imaginii, numai atunci cand "
-"imaginea depaseste una dintre acele dimensiuni. Folositi acest domeniu in "
-"vizualizarile formularului sau in unele vizualizari kanban."
+msgstr "Imagine de dimensiune medie a produsului. Este redimensionata automat ca o imagine de 128x128px, cu pastrarea aspectului imaginii, numai atunci cand imaginea depaseste una dintre acele dimensiuni. Folositi acest domeniu in vizualizarile formularului sau in unele vizualizari kanban."
 
 #. module: product
 #: view:product.uom:0
@@ -2891,9 +2494,7 @@ msgstr "de exemplu: 1 * (unitatea de referinta) = raport * (aceasta unitate)"
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Unit of Measure."
-msgstr ""
-"Aceasta este o cantitate care este transformata in Unitatea de Masura "
-"Implicita."
+msgstr "Aceasta este o cantitate care este transformata in Unitatea de Masura Implicita."
 
 #. module: product
 #: help:product.template,volume:0
@@ -2904,7 +2505,3 @@ msgstr "Volumul in m3."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Reduceri de pret"
-
-#, python-format
-#~ msgid "Partner section of the product form"
-#~ msgstr "Sectiunea partenerului din formularul produsului"

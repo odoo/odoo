@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * survey
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2014-10-27 08:41+0000\n"
-"Last-Translator: Yenthe - Bapps.be <yenthespam@gmail.com>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 10:02+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-7/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-28 07:11+0000\n"
-"X-Generator: Launchpad (build 17203)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -29,9 +30,7 @@ msgid ""
 "Minimum Required Answer you                                     entered is "
 "greater than the number of answer.                                      "
 "Please use a number that is smaller than %d."
-msgstr ""
-"Minimum aantal antwoorden is groter dan het aantal antwoorden. Gebruik aub "
-"een aantal kleiner dan %d."
+msgstr "Minimum aantal antwoorden is groter dan het aantal antwoorden. Gebruik aub een aantal kleiner dan %d."
 
 #. module: survey
 #: view:survey.question.wiz:0
@@ -50,8 +49,7 @@ msgid "Answers:"
 msgstr "Antwoorden:"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,invited_user_ids:0
+#: view:survey:0 field:survey,invited_user_ids:0
 msgid "Invited User"
 msgstr "Uitgenodigde gebruiker"
 
@@ -66,10 +64,9 @@ msgid "Character"
 msgstr "Karakter"
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_form
+#: model:ir.actions.act_window,name:survey.action_survey_form1
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
-#: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Surveys"
 msgstr "Enquêtes"
 
@@ -79,9 +76,7 @@ msgid "Cancel Request"
 msgstr "Aanvraag annuleren"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 #: view:survey.request:0
 msgid "Group By..."
 msgstr "Groepeer op..."
@@ -122,11 +117,8 @@ msgid "History Lines"
 msgstr "Geschiedenisregels"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-#: field:survey.question,descriptive_text:0
-#: selection:survey.question,type:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
+#: field:survey.question,descriptive_text:0 selection:survey.question,type:0
 msgid "Descriptive Text"
 msgstr "Beschrijvende tekst"
 
@@ -158,9 +150,7 @@ msgid "Is Menu Choice Invisible?"
 msgstr "Is menukeuze onzichtbaar?"
 
 #. module: survey
-#: view:survey.survey:survey.survey_tree
-#: view:survey.user_input:survey.survey_user_input_search
-#: selection:survey.user_input,state:0
+#: view:survey:0
 msgid "Completed"
 msgstr "Voltooid"
 
@@ -197,9 +187,7 @@ msgid ""
 "#Required Answer you entered                                     is greater "
 "than the number of answer.                                     Please use a "
 "number that is smaller than %d."
-msgstr ""
-"Ingevoerde aantal verplichte antwoorden is groter dan aantal antwoorden. "
-"Gebruik aub een aantal dat lager is dan %d."
+msgstr "Ingevoerde aantal verplichte antwoorden is groter dan aantal antwoorden. Gebruik aub een aantal dat lager is dan %d."
 
 #. module: survey
 #: field:survey.question,tot_resp:0
@@ -221,11 +209,10 @@ msgstr "survey.name.wiz"
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
-"your maximum is greater than the number of answer.                           "
-"           Please use a number that is smaller than %d."
-msgstr ""
-"Maximum aantal verwachte antwoorden is groter dan aantal antwoorden. Gebruik "
-"aub een aantal dat kleiner is dan %d."
+"your maximum is greater than the number of answer."
+"                                      Please use a number that is smaller "
+"than %d."
+msgstr "Maximum aantal verwachte antwoorden is groter dan aantal antwoorden. Gebruik aub een aantal dat kleiner is dan %d."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -244,14 +231,11 @@ msgstr "Stuur een herinnering naar bestaande gebruiker"
 msgid ""
 "Maximum Required Answer you entered for your maximum is greater than the "
 "number of answer. Please use a number that is smaller than %d."
-msgstr ""
-"Maximum aantal verplichte antwoorden is groter dan aantal antwoorden. "
-"Gebruik aub een aantal dat kleiner is dan %d."
+msgstr "Maximum aantal verplichte antwoorden is groter dan aantal antwoorden. Gebruik aub een aantal dat kleiner is dan %d."
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_question
-#: view:survey.question:survey.survey_question_form
-#: view:survey.question:survey.survey_question_tree
+#: model:ir.model,name:survey.model_survey_question view:survey:0
+#: view:survey.page:0 view:survey.question:0
 msgid "Survey Question"
 msgstr "Enquêtevraag"
 
@@ -261,14 +245,12 @@ msgid "Use if question type is rating_scale"
 msgstr "Gebruiken als vraagsoort waarderingsschaal is"
 
 #. module: survey
-#: field:survey.print,page_number:0
-#: field:survey.print.answer,page_number:0
+#: field:survey.print,page_number:0 field:survey.print.answer,page_number:0
 msgid "Include Page Number"
 msgstr "Paginanummer afdrukken"
 
 #. module: survey
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey.page:0 view:survey.question:0
 msgid "Ok"
 msgstr "Ok"
 
@@ -283,13 +265,12 @@ msgid "Survey History"
 msgstr "Enquête geschiedenis"
 
 #. module: survey
-#: field:survey.response.answer,comment:0
-#: field:survey.response.line,comment:0
+#: field:survey.response.answer,comment:0 field:survey.response.line,comment:0
 msgid "Notes"
 msgstr "Notities"
 
 #. module: survey
-#: view:survey.user_input:survey.survey_user_input_search
+#: view:survey:0 view:survey.request:0
 msgid "Search Survey"
 msgstr "Enquête zoeken"
 
@@ -326,8 +307,7 @@ msgid "Survey Statistics"
 msgstr "Enquête statistieken"
 
 #. module: survey
-#: selection:survey,state:0
-#: selection:survey.request,state:0
+#: selection:survey,state:0 selection:survey.request,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
 
@@ -337,15 +317,12 @@ msgid "Rating Scale"
 msgstr "Waarderingsschaal"
 
 #. module: survey
-#: code:addons/survey/survey.py:153
-#: code:addons/survey/survey.py:188
+#: code:addons/survey/survey.py:153 code:addons/survey/survey.py:188
 #, python-format
 msgid ""
-"This survey has no question defined. Please define the questions and answers "
-"first."
-msgstr ""
-"Deze enquête heeft geen vragen gedefinieerd. Definieer a.u.b. de vraag en "
-"antwoorden eerst."
+"This survey has no question defined. Please define the questions and answers"
+" first."
+msgstr "Deze enquête heeft geen vragen gedefinieerd. Definieer a.u.b. de vraag en antwoorden eerst."
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -369,7 +346,7 @@ msgid "You cannot select the same answer more than one time."
 msgstr "U kunt niet meerdere keren hetzelfde antwoord kiezen."
 
 #. module: survey
-#: field:survey.survey,color:0
+#: field:survey,color:0
 msgid "Color Index"
 msgstr "Kleur index"
 
@@ -409,8 +386,7 @@ msgid "At Most"
 msgstr "Ten hoogste"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.request:0
+#: view:survey:0 view:survey.request:0
 msgid "My Survey(s)"
 msgstr "Mijn Enquête(s)"
 
@@ -421,7 +397,7 @@ msgid "Answered by : "
 msgstr "Beantwoord door: "
 
 #. module: survey
-#: view:survey.user_input_line:survey.survey_response_line_tree
+#: view:survey.response.line:0
 msgid "Survey Answer Line"
 msgstr "Enquête antwoordregel"
 
@@ -446,27 +422,10 @@ msgid ""
 "\n"
 "\n"
 "Thanks,"
-msgstr ""
-"\n"
-"Beste %%(name)s,\n"
-"\n"
-"\n"
-"Wij vragen een gedeelte van uw tijd om onze enquête in te vullen: \n"
-"%s\n"
-"\n"
-"U kunt naar de enquête gaan met de volgende parameters:\n"
-"URL: %s\n"
-"\n"
-" Uw login ID: %%(login)s\n"
-"\n"
-" Uw wachtwoord: %%(passwd)s\n"
-"\n"
-"\n"
-"\n"
-"Bedankt,"
+msgstr "\nBeste %%(name)s,\n\n\nWij vragen een gedeelte van uw tijd om onze enquête in te vullen: \n%s\n\nU kunt naar de enquête gaan met de volgende parameters:\nURL: %s\n\n Uw login ID: %%(login)s\n\n Uw wachtwoord: %%(passwd)s\n\n\n\nBedankt,"
 
 #. module: survey
-#: selection:survey.user_input_line,answer_type:0
+#: field:survey.response.line,single_text:0
 msgid "Text"
 msgstr "Tekst"
 
@@ -483,8 +442,7 @@ msgid "Letter (8.5\" x 11\")"
 msgstr "Letter (8.5\" x 11\")"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,responsible_id:0
+#: view:survey:0 field:survey,responsible_id:0
 msgid "Responsible"
 msgstr "Verantwoordelijke"
 
@@ -511,13 +469,12 @@ msgid "survey.tbl.column.heading"
 msgstr "survey.tbl.column.heading"
 
 #. module: survey
-#: view:survey.send.invitation:0
-#: field:survey.send.invitation,send_mail:0
+#: view:survey.send.invitation:0 field:survey.send.invitation,send_mail:0
 msgid "Send Mail for New User"
 msgstr "Mail versturen voor nieuwe gebruiker"
 
 #. module: survey
-#: field:survey.mail.compose.message,email_from:0
+#: field:survey.send.invitation,mail_from:0
 msgid "From"
 msgstr "Van"
 
@@ -545,12 +502,10 @@ msgid "Must Be A Whole Number"
 msgstr "Moet een heel getal zijn"
 
 #. module: survey
-#: view:survey.label:survey.survey_label_search
-#: field:survey.label,question_id:0
-#: field:survey.label,question_id_2:0
-#: view:survey.question:survey.survey_question_search
-#: field:survey.user_input_line,question_id:0
-#: view:website:survey.result
+#: field:survey.answer,question_id:0 view:survey.question:0
+#: field:survey.question,question:0
+#: field:survey.question.column.heading,question_id:0
+#: field:survey.response.line,question_id:0
 msgid "Question"
 msgstr "Vraag"
 
@@ -579,21 +534,18 @@ msgid "Unknown"
 msgstr "Onbekend"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Between"
 msgstr "Tussen"
 
 #. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
+#: view:survey.print:0 view:survey.print.answer:0
 #: view:survey.print.statistics:0
 msgid "Print"
 msgstr "Afdrukken"
 
 #. module: survey
-#: view:survey.user_input:survey.survey_user_input_search
+#: view:survey:0
 msgid "New"
 msgstr "Nieuw"
 
@@ -603,37 +555,28 @@ msgid "Make Comment Field an Answer Choice"
 msgstr "Opmerking veld een antwoordkeus maken"
 
 #. module: survey
-#: field:survey.mail.compose.message,type:0
-#: view:survey.question:survey.survey_question_search
+#: view:survey:0 field:survey,type:0
 msgid "Type"
 msgstr "Soort"
 
 #. module: survey
-#: selection:survey.mail.compose.message,type:0
-#: view:survey.user_input:survey.survey_user_input_search
+#: selection:survey.answer,type:0 field:survey.request,email:0
 msgid "Email"
 msgstr "E-mail"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Required Answer"
 msgstr "Verplicht antwoord"
 
 #. module: survey
-#: code:addons/survey/survey.py:425
-#: code:addons/survey/survey.py:513
+#: code:addons/survey/survey.py:425 code:addons/survey/survey.py:513
 #, python-format
-msgid ""
-"You must enter one or more column headings for question \"%s\" of page %s."
-msgstr ""
-"U moet een of meerdere kolomkoppen ingeven voor vraag \"%s\" op pagina %s."
+msgid "You must enter one or more column headings for question \"%s\" of page %s."
+msgstr "U moet een of meerdere kolomkoppen ingeven voor vraag \"%s\" op pagina %s."
 
 #. module: survey
-#: code:addons/survey/survey.py:246
-#: code:addons/survey/survey.py:543
-#: code:addons/survey/survey.py:662
+#: code:addons/survey/survey.py:97 code:addons/survey/survey.py:260
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -667,16 +610,12 @@ msgid "Reporting"
 msgstr "Rapportage"
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input
-#: model:ir.ui.menu,name:survey.menu_survey_type_form1
-#: view:survey.question:survey.survey_question_form
-#: field:survey.question,user_input_line_ids:0
-#: field:survey.user_input,user_input_line_ids:0
+#: model:ir.actions.act_window,name:survey.act_survey_answer
 msgid "Answers"
 msgstr "Antwoorden"
 
 #. module: survey
-#: selection:survey.user_input,type:0
+#: selection:survey.response,response_type:0
 msgid "Link"
 msgstr "Koppeling"
 
@@ -688,8 +627,7 @@ msgstr "Antwoord van:- "
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_type_form
-#: model:ir.model,name:survey.model_survey_type
-#: view:survey.type:0
+#: model:ir.model,name:survey.model_survey_type view:survey.type:0
 msgid "Survey Type"
 msgstr "Enquêtesoort"
 
@@ -741,9 +679,7 @@ msgid "survey.print"
 msgstr "survey.print"
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_page
-#: view:survey.page:survey.survey_page_form
-#: view:survey.page:survey.survey_page_tree
+#: view:survey:0 view:survey.page:0 field:survey.question,page_id:0
 msgid "Survey Page"
 msgstr "Enquête pagina"
 
@@ -781,11 +717,10 @@ msgstr "Bewerken..."
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
-"your maximum is greater than the number of answer.                           "
-"          Please use a number that is smaller than %d."
-msgstr ""
-"Maximaal aantal verplichte antwoorden is groter dan aantal antwoorden. "
-"Gebruik aub een aantal dat kleiner is dan %d."
+"your maximum is greater than the number of answer."
+"                                     Please use a number that is smaller "
+"than %d."
+msgstr "Maximaal aantal verplichte antwoorden is groter dan aantal antwoorden. Gebruik aub een aantal dat kleiner is dan %d."
 
 #. module: survey
 #: view:survey:0
@@ -793,14 +728,12 @@ msgid "Survey description..."
 msgstr "Enquête omschrijving..."
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the question is not answered, display this error message:"
 msgstr "Als de vraag niet is beantwoord, geef dan een foutmelding:"
 
 #. module: survey
-#: view:survey.question:survey.survey_question_form
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Options"
 msgstr "Instellingen"
 
@@ -808,8 +741,7 @@ msgstr "Instellingen"
 #: code:addons/survey/survey.py:437
 #, python-format
 msgid "You must enter one or more Answers for question \"%s\" of page %s."
-msgstr ""
-"U moet een of meerdere antwoorden geven voor vraag  \"%s\" op pagina %s."
+msgstr "U moet een of meerdere antwoorden geven voor vraag  \"%s\" op pagina %s."
 
 #. module: survey
 #: view:survey:0
@@ -817,17 +749,14 @@ msgid "Delete"
 msgstr "Verwijderen"
 
 #. module: survey
-#: selection:survey.mail.compose.message,type:0
-#: view:website:survey.result_comments
+#: field:survey.response.answer,comment_field:0 view:survey.response.line:0
 msgid "Comment"
 msgstr "Opmerking"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_answer
 #: model:ir.model,name:survey.model_survey_response_answer
-#: view:survey.answer:0
-#: view:survey.response:0
-#: view:survey.response.answer:0
+#: view:survey.answer:0 view:survey.response:0 view:survey.response.answer:0
 #: view:survey.response.line:0
 msgid "Survey Answer"
 msgstr "Enquête antwoord"
@@ -844,14 +773,12 @@ msgid "Answer Survey"
 msgstr "Enquête beantwoorden"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Comment Field"
 msgstr "Opmerkingenveld"
 
 #. module: survey
-#: selection:survey.user_input,type:0
+#: selection:survey.response,response_type:0
 msgid "Manually"
 msgstr "Handmatig"
 
@@ -866,10 +793,8 @@ msgid "User responsible for survey"
 msgstr "Verantwoordelijke gebruiker voor enquête"
 
 #. module: survey
-#: view:survey.page:survey.survey_page_search
-#: view:survey.question:survey.survey_question_search
-#: field:survey.user_input_line,page_id:0
-#: view:website:survey.page
+#: field:survey,page_ids:0 view:survey.page:0 view:survey.question:0
+#: field:survey.response.line,page_id:0
 msgid "Page"
 msgstr "Pagina"
 
@@ -890,17 +815,13 @@ msgid "Print Without Page Breaks"
 msgstr "Afdrukken zonder paginaeinden"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the comment is an invalid format, display this error message"
 msgstr "Als de opmerking in verkeerd formaat is, toon dan deze foutmelding"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
 #: model:ir.actions.act_window,name:survey.act_survey_question
-#: model:ir.actions.act_window,name:survey.action_survey_question_form
-#: model:ir.ui.menu,name:survey.menu_survey_question_form1
 #: field:survey.page,question_ids:0
 msgid "Questions"
 msgstr "Vragen"
@@ -917,8 +838,7 @@ msgid " Answer :- "
 msgstr " Antwoord:- "
 
 #. module: survey
-#: model:ir.model,name:survey.model_res_users
-#: field:survey,users:0
+#: model:ir.model,name:survey.model_res_users field:survey,users:0
 msgid "Users"
 msgstr "Gebruikers"
 
@@ -928,7 +848,8 @@ msgid "Message"
 msgstr "Bericht"
 
 #. module: survey
-#: field:survey.mail.compose.message,subject:0
+#: field:survey.send.invitation,mail_subject:0
+#: field:survey.send.invitation,mail_subject_existing:0
 msgid "Subject"
 msgstr "Onderwerp"
 
@@ -938,9 +859,7 @@ msgstr "Onderwerp"
 msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)."
-msgstr ""
-"U moet een of meerdere menukeuzen ingeven in de kolomkop (spaties zijn niet "
-"toegestaan)."
+msgstr "U moet een of meerdere menukeuzen ingeven in de kolomkop (spaties zijn niet toegestaan)."
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
@@ -953,15 +872,12 @@ msgid "Page Number"
 msgstr "Paginanummer"
 
 #. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
+#: view:survey.print:0 view:survey.print.answer:0
 msgid "Print Option"
 msgstr "Afdrukoptie"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "and"
 msgstr "en"
 
@@ -977,9 +893,7 @@ msgid "Log"
 msgstr "Logboek"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
 msgstr "Als de keuzes niet kloppen, toon dan deze foutmelding"
 
@@ -1002,18 +916,7 @@ msgid ""
 "                of several types: text, multiple choices, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik hier voor het maken van een enquête. \n"
-"              </p><p>\n"
-"                U kunt enquêtes voor verschillende doelen maken: "
-"sollicitatiegesprekken,\n"
-"                periodieke beoordelingen, marketing campagnes, etc. \n"
-"              </p><p>\n"
-"                Een enquête is opgebouwd uit pagina's met vragen van\n"
-"                verschillende soorten: tekst, meerkeuze, etc.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik hier voor het maken van een enquête. \n              </p><p>\n                U kunt enquêtes voor verschillende doelen maken: sollicitatiegesprekken,\n                periodieke beoordelingen, marketing campagnes, etc. \n              </p><p>\n                Een enquête is opgebouwd uit pagina's met vragen van\n                verschillende soorten: tekst, meerkeuze, etc.\n              </p>\n            "
 
 #. module: survey
 #: selection:survey.question,comment_field_type:0
@@ -1031,8 +934,7 @@ msgid "Validate Text"
 msgstr "Tekst valideren"
 
 #. module: survey
-#: view:survey.browse.answer:0
-#: view:survey.name.wiz:0
+#: view:survey.browse.answer:0 view:survey.name.wiz:0
 msgid "Start"
 msgstr "Starten"
 
@@ -1040,11 +942,9 @@ msgstr "Starten"
 #: code:addons/survey/wizard/survey_selection.py:83
 #, python-format
 msgid ""
-"You cannot give more responses. Please contact the author of this survey for "
-"further assistance."
-msgstr ""
-"U kunt niet meer reageren. Neem contact op met de maker van deze enquete "
-"voor hulp."
+"You cannot give more responses. Please contact the author of this survey for"
+" further assistance."
+msgstr "U kunt niet meer reageren. Neem contact op met de maker van deze enquete voor hulp."
 
 #. module: survey
 #: field:survey.question,comment_maximum_no:0
@@ -1053,7 +953,7 @@ msgid "Maximum number"
 msgstr "Maximum aantal"
 
 #. module: survey
-#: model:survey.stage,name:survey.stage_draft
+#: selection:survey.request,state:0 selection:survey.response.line,state:0
 msgid "Draft"
 msgstr "Concept"
 
@@ -1063,8 +963,7 @@ msgid "survey.print.statistics"
 msgstr "survey.print.statistics"
 
 #. module: survey
-#: field:survey.stage,closed:0
-#: model:survey.stage,name:survey.stage_closed
+#: selection:survey,state:0
 msgid "Closed"
 msgstr "Gesloten"
 
@@ -1074,20 +973,14 @@ msgid "Matrix of Drop-down Menus"
 msgstr "Matrix van pull-down menu's"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:226
-#: view:survey:0
-#: field:survey.answer,answer:0
-#: field:survey.name.wiz,response:0
-#: view:survey.page:0
-#: view:survey.print.answer:0
-#: field:survey.print.answer,response_ids:0
-#: view:survey.question:0
-#: field:survey.question,answer_choice_ids:0
-#: field:survey.request,response:0
+#: code:addons/survey/wizard/survey_answer.py:226 view:survey:0
+#: field:survey.answer,answer:0 field:survey.name.wiz,response:0
+#: view:survey.page:0 view:survey.print.answer:0
+#: field:survey.print.answer,response_ids:0 view:survey.question:0
+#: field:survey.question,answer_choice_ids:0 field:survey.request,response:0
 #: field:survey.response,question_ids:0
 #: field:survey.response.answer,answer_id:0
-#: field:survey.response.answer,response_id:0
-#: view:survey.response.line:0
+#: field:survey.response.answer,response_id:0 view:survey.response.line:0
 #: field:survey.response.line,response_answer_ids:0
 #: field:survey.response.line,response_id:0
 #: field:survey.response.line,response_table_ids:0
@@ -1124,12 +1017,14 @@ msgid "Date and Time"
 msgstr "Datum en tijd"
 
 #. module: survey
-#: field:survey.user_input,state:0
+#: view:survey:0 field:survey,state:0 view:survey.request:0
+#: field:survey.request,state:0 field:survey.response,state:0
+#: field:survey.response.line,state:0
 msgid "Status"
 msgstr "Status"
 
 #. module: survey
-#: view:survey.survey:survey.survey_form
+#: model:ir.actions.act_window,name:survey.action_view_survey_print
 msgid "Print Survey"
 msgstr "Enquête afdrukken"
 
@@ -1140,20 +1035,18 @@ msgid "No Answer"
 msgstr "Geen antwoord"
 
 #. module: survey
-#: field:survey.user_input,type:0
-#: field:survey.user_input_line,answer_type:0
+#: field:survey.response,response_type:0
 msgid "Answer Type"
 msgstr "Antwoordsoort"
 
 #. module: survey
-#: view:survey.survey:survey.survey_tree
+#: view:survey:0
 msgid "Started"
 msgstr "Gestart"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_print_answer
-#: view:survey:0
-#: view:survey.print.answer:0
+#: view:survey:0 view:survey.print.answer:0
 msgid "Print Answer"
 msgstr "Antwoord afdrukken"
 
@@ -1194,15 +1087,12 @@ msgid "Customer Feeback"
 msgstr "Klant feedback"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Validation"
 msgstr "Validatie"
 
 #. module: survey
-#: view:survey.request:0
-#: selection:survey.request,state:0
+#: view:survey.request:0 selection:survey.request,state:0
 msgid "Waiting Answer"
 msgstr "Wacht op antwoord"
 
@@ -1218,8 +1108,7 @@ msgid "Groups"
 msgstr "Groepen"
 
 #. module: survey
-#: field:survey.mail.compose.message,date:0
-#: selection:survey.user_input_line,answer_type:0
+#: selection:survey.answer,type:0 selection:survey.question,type:0
 msgid "Date"
 msgstr "Datum"
 
@@ -1229,8 +1118,7 @@ msgid "All New Survey"
 msgstr "Alle nieuwe enquêtes"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
+#: view:survey:0 view:survey.page:0
 msgid "Description on the survey page..."
 msgstr "Omschrijving op enquête pagina..."
 
@@ -1240,10 +1128,8 @@ msgid "survey.send.invitation"
 msgstr "survey.send.invitation"
 
 #. module: survey
-#: field:survey.history,user_id:0
-#: view:survey.request:0
-#: field:survey.request,user_id:0
-#: field:survey.response,user_id:0
+#: field:survey.history,user_id:0 view:survey.request:0
+#: field:survey.request,user_id:0 field:survey.response,user_id:0
 msgid "User"
 msgstr "Gebruiker"
 
@@ -1261,12 +1147,10 @@ msgstr "Overgeslagen"
 #: code:addons/survey/wizard/survey_answer.py:996
 #, python-format
 msgid "You cannot select same answer more than one time.'"
-msgstr ""
-"Het is niet toegestaan om een antwoord meer dan één keer te selecteren."
+msgstr "Het is niet toegestaan om een antwoord meer dan één keer te selecteren."
 
 #. module: survey
-#: field:survey.print,paper_size:0
-#: field:survey.print.answer,paper_size:0
+#: field:survey.print,paper_size:0 field:survey.print.answer,paper_size:0
 msgid "Paper Size"
 msgstr "Papierformaat"
 
@@ -1301,22 +1185,18 @@ msgstr "Antwoord datum : "
 #: code:addons/survey/survey.py:170
 #, python-format
 msgid "This survey has no pages defined. Please define pages first."
-msgstr ""
-"Voor deze  enquete zijn geen pagina's gedefinieerd. Definieer deze eerst."
+msgstr "Voor deze  enquete zijn geen pagina's gedefinieerd. Definieer deze eerst."
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_survey
-#: field:survey.mail.compose.message,survey_id:0
-#: view:survey.page:survey.survey_page_search
-#: field:survey.page,survey_id:0
-#: view:survey.question:survey.survey_question_search
-#: field:survey.question,survey_id:0
-#: view:survey.survey:survey.survey_form
-#: view:survey.survey:survey.survey_tree
-#: view:survey.user_input:survey.survey_user_input_search
-#: field:survey.user_input,survey_id:0
-#: view:survey.user_input_line:survey.survey_response_line_search
-#: field:survey.user_input_line,survey_id:0
+#: model:ir.actions.report.xml,name:survey.report_survey_form
+#: model:ir.model,name:survey.model_survey view:survey:0
+#: view:survey.browse.answer:0 field:survey.browse.answer,survey_id:0
+#: field:survey.history,survey_id:0 view:survey.name.wiz:0
+#: field:survey.name.wiz,survey_id:0 view:survey.page:0
+#: field:survey.page,survey_id:0 view:survey.print:0
+#: field:survey.print,survey_ids:0 field:survey.print.statistics,survey_ids:0
+#: field:survey.question,survey:0 view:survey.request:0
+#: field:survey.request,survey_id:0 field:survey.response,survey_id:0
 msgid "Survey"
 msgstr "Enquête"
 
@@ -1361,15 +1241,12 @@ msgid "Surveys Statistics"
 msgstr "Enquête statistieken"
 
 #. module: survey
-#: field:survey.print,orientation:0
-#: field:survey.print.answer,orientation:0
+#: field:survey.print,orientation:0 field:survey.print.answer,orientation:0
 msgid "Orientation"
 msgstr "Afdrukstand"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.answer:0
-#: view:survey.page:0
+#: view:survey:0 view:survey.answer:0 view:survey.page:0
 #: view:survey.question:0
 msgid "Seq"
 msgstr "Volgorde"
@@ -1391,8 +1268,7 @@ msgid "#Required Answer"
 msgstr "#Verplicht antwoord"
 
 #. module: survey
-#: field:survey.question,sequence:0
-#: field:survey.stage,sequence:0
+#: field:survey.answer,sequence:0 field:survey.question,sequence:0
 msgid "Sequence"
 msgstr "Volgnummer"
 
@@ -1402,15 +1278,14 @@ msgid "Field Label"
 msgstr "Veldlabel"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:382
-#: view:survey.request:0
+#: code:addons/survey/wizard/survey_answer.py:382 view:survey.request:0
 #: selection:survey.request,state:0
 #, python-format
 msgid "Done"
 msgstr "Verwerkt"
 
 #. module: survey
-#: view:survey.survey:survey.survey_form
+#: view:survey:0
 msgid "Test Survey"
 msgstr "Enquête testen"
 
@@ -1420,13 +1295,14 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr "Slechts één antwoord per kolom toestaan (geforceerde rangorde)"
 
 #. module: survey
-#: view:survey.mail.compose.message:survey.survey_email_compose_message
+#: view:survey.browse.answer:0 view:survey.name.wiz:0 view:survey.print:0
+#: view:survey.print.answer:0 view:survey.print.statistics:0
+#: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: survey
-#: view:survey.mail.compose.message:survey.survey_email_compose_message
-#: view:website:survey.page
+#: view:survey:0
 msgid "Close"
 msgstr "Sluiten"
 
@@ -1437,8 +1313,7 @@ msgid "Minimum decimal number"
 msgstr "Minimum aantal decimalen"
 
 #. module: survey
-#: view:survey:0
-#: selection:survey,state:0
+#: view:survey:0 selection:survey,state:0
 msgid "Open"
 msgstr "Open"
 
@@ -1446,8 +1321,7 @@ msgstr "Open"
 #: code:addons/survey/survey.py:509
 #, python-format
 msgid "You must enter one or more answers for question \"%s\" of page %s ."
-msgstr ""
-"U dient één of meer antwoorden in te geven voor vraag \"%s\" op pagina %s."
+msgstr "U dient één of meer antwoorden in te geven voor vraag \"%s\" op pagina %s."
 
 #. module: survey
 #: field:survey,tot_start_survey:0
@@ -1466,9 +1340,7 @@ msgstr ", Datum :- "
 msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
 "use a number that is smaller than %d."
-msgstr ""
-"#Verplichte ingevulde antwoorden is groter dan aantal antwoorden. Gebruik "
-"aub een aantal dat kleiner is dan %d."
+msgstr "#Verplichte ingevulde antwoorden is groter dan aantal antwoorden. Gebruik aub een aantal dat kleiner is dan %d."
 
 #. module: survey
 #: help:survey,max_response_limit:0
@@ -1504,12 +1376,10 @@ msgstr "Enquête antwoord geven"
 #: help:survey.browse.answer,response_id:0
 msgid ""
 "If this field is empty, all answers of the selected survey will be print."
-msgstr ""
-"Als dit veld leeg is worden alle antwoorden van de geselecteerde enquête "
-"afgedrukt."
+msgstr "Als dit veld leeg is worden alle antwoorden van de geselecteerde enquête afgedrukt."
 
 #. module: survey
-#: view:website:survey.result
+#: selection:survey.response.line,state:0
 msgid "Answered"
 msgstr "Beantwoord"
 
@@ -1557,12 +1427,10 @@ msgstr "U kunt niet meer dan %s keer reageren op deze enquete."
 msgid ""
 "You must enter one or more menu choices in column heading (white spaces not "
 "allowed)."
-msgstr ""
-"U dient één of meeerdere menu keuzes te maken in de kolomhoofd (lege regels "
-"niet toegestaan)."
+msgstr "U dient één of meeerdere menu keuzes te maken in de kolomhoofd (lege regels niet toegestaan)."
 
 #. module: survey
-#: view:survey.question:survey.survey_question_search
+#: view:survey.question:0
 msgid "Search Question"
 msgstr "Vragen zoeken"
 
@@ -1577,9 +1445,8 @@ msgid "Survey Questions"
 msgstr "Enquêtevragen"
 
 #. module: survey
-#: field:survey.page,description:0
-#: field:survey.question,description:0
-#: field:survey.survey,description:0
+#: field:survey,note:0 field:survey.name.wiz,note:0 view:survey.page:0
+#: field:survey.page,note:0 view:survey.response.line:0
 msgid "Description"
 msgstr "Omschrijving"
 
@@ -1636,12 +1503,10 @@ msgstr "U kunt de resource niet dupliceren!"
 msgid ""
 "Minimum Required Answer you entered is greater than the number of answer. "
 "Please use a number that is smaller than %d."
-msgstr ""
-"Minimum aantal verplichte antwoorden is groter dan het aantal antwoorden. "
-"Gebruik aub een aantal dat kleiner is dan %d."
+msgstr "Minimum aantal verplichte antwoorden is groter dan het aantal antwoorden. Gebruik aub een aantal dat kleiner is dan %d."
 
 #. module: survey
-#: selection:survey.user_input_line,answer_type:0
+#: field:survey.question.wiz,name:0
 msgid "Number"
 msgstr "Nummer"
 
@@ -1669,9 +1534,6 @@ msgstr "Pagina :- "
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
-#: model:ir.actions.act_window,name:survey.action_survey_page_form
-#: model:ir.ui.menu,name:survey.menu_survey_page_form1
-#: field:survey.survey,page_ids:0
 msgid "Pages"
 msgstr "Pagina's"
 
@@ -1682,9 +1544,7 @@ msgid ""
 "#Required Answer you entered is                                     greater "
 "than the number of answer.                                    Please use a "
 "number that is smaller than %d."
-msgstr ""
-"#Verplicht ingevulde antwoorden is groter dan het aantal antwoorden. Gebruik "
-"aub een aantal dat kleiner is dan %d."
+msgstr "#Verplicht ingevulde antwoorden is groter dan het aantal antwoorden. Gebruik aub een aantal dat kleiner is dan %d."
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -1693,12 +1553,12 @@ msgid "Legal (8.5\" x 14\")"
 msgstr "Legal (8.5\" x 14\")"
 
 #. module: survey
-#: field:survey.stage,name:0
+#: field:survey.type,name:0
 msgid "Name"
 msgstr "Naam"
 
 #. module: survey
-#: view:survey.page:survey.survey_page_tree
+#: view:survey.page:0
 msgid "#Questions"
 msgstr "#Vragen"
 
@@ -1718,18 +1578,49 @@ msgid "survey.response"
 msgstr "survey.response"
 
 #. module: survey
-#: field:survey.question,constr_error_msg:0
-#: field:survey.question,validation_error_msg:0
+#: field:survey.question,comment_valid_err_msg:0
+#: field:survey.question,make_comment_field_err_msg:0
+#: field:survey.question,numeric_required_sum_err_msg:0
+#: field:survey.question,validation_valid_err_msg:0
 msgid "Error message"
 msgstr "Foutmelding"
 
 #. module: survey
-#: code:addons/survey/survey.py:444
-#: code:addons/survey/survey.py:898
-#: code:addons/survey/survey.py:1030
-#: code:addons/survey/wizard/survey_email_compose_message.py:95
-#: code:addons/survey/wizard/survey_email_compose_message.py:188
-#: code:addons/survey/wizard/survey_email_compose_message.py:213
+#: code:addons/survey/survey.py:153 code:addons/survey/survey.py:170
+#: code:addons/survey/survey.py:188 code:addons/survey/survey.py:425
+#: code:addons/survey/survey.py:437 code:addons/survey/survey.py:451
+#: code:addons/survey/survey.py:456 code:addons/survey/survey.py:466
+#: code:addons/survey/survey.py:472 code:addons/survey/survey.py:478
+#: code:addons/survey/survey.py:484 code:addons/survey/survey.py:488
+#: code:addons/survey/survey.py:494 code:addons/survey/survey.py:498
+#: code:addons/survey/survey.py:509 code:addons/survey/survey.py:513
+#: code:addons/survey/survey.py:518 code:addons/survey/survey.py:524
+#: code:addons/survey/survey.py:526 code:addons/survey/survey.py:528
+#: code:addons/survey/survey.py:533 code:addons/survey/survey.py:535
+#: code:addons/survey/survey.py:691
+#: code:addons/survey/wizard/survey_answer.py:118
+#: code:addons/survey/wizard/survey_answer.py:125
+#: code:addons/survey/wizard/survey_answer.py:711
+#: code:addons/survey/wizard/survey_answer.py:750
+#: code:addons/survey/wizard/survey_answer.py:770
+#: code:addons/survey/wizard/survey_answer.py:799
+#: code:addons/survey/wizard/survey_answer.py:804
+#: code:addons/survey/wizard/survey_answer.py:812
+#: code:addons/survey/wizard/survey_answer.py:823
+#: code:addons/survey/wizard/survey_answer.py:832
+#: code:addons/survey/wizard/survey_answer.py:837
+#: code:addons/survey/wizard/survey_answer.py:911
+#: code:addons/survey/wizard/survey_answer.py:947
+#: code:addons/survey/wizard/survey_answer.py:965
+#: code:addons/survey/wizard/survey_answer.py:993
+#: code:addons/survey/wizard/survey_answer.py:996
+#: code:addons/survey/wizard/survey_answer.py:999
+#: code:addons/survey/wizard/survey_answer.py:1011
+#: code:addons/survey/wizard/survey_answer.py:1018
+#: code:addons/survey/wizard/survey_answer.py:1021
+#: code:addons/survey/wizard/survey_selection.py:80
+#: code:addons/survey/wizard/survey_selection.py:83
+#: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -1739,11 +1630,9 @@ msgstr "Waarschuwing!"
 #, python-format
 msgid ""
 "Minimum Required Answer                                     you entered is "
-"greater than the number of answer.                                    Please "
-"use a number that is smaller than %d."
-msgstr ""
-"Minimum aantal verplichte antwoorden is groter dan het aantal antwoorden. "
-"Gebruik aub een aantal dat kleiner is dan %d."
+"greater than the number of answer.                                    Please"
+" use a number that is smaller than %d."
+msgstr "Minimum aantal verplichte antwoorden is groter dan het aantal antwoorden. Gebruik aub een aantal dat kleiner is dan %d."
 
 #. module: survey
 #: field:survey.answer,menu_choice:0
@@ -1751,14 +1640,7 @@ msgid "Menu Choices"
 msgstr "Menu keuzes"
 
 #. module: survey
-#: field:survey.label,id:0
-#: field:survey.mail.compose.message,id:0
-#: field:survey.page,id:0
-#: field:survey.question,id:0
-#: field:survey.stage,id:0
-#: field:survey.survey,id:0
-#: field:survey.user_input,id:0
-#: field:survey.user_input_line,id:0
+#: field:survey,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -1768,8 +1650,7 @@ msgstr "ID"
 msgid ""
 "Maximum Required Answer is greater                                     than "
 "Minimum Required Answer"
-msgstr ""
-"Maximum verplichte antwoorden is groter dan minimum verplichte antwoorden"
+msgstr "Maximum verplichte antwoorden is groter dan minimum verplichte antwoorden"
 
 #. module: survey
 #: view:survey.send.invitation.log:0
@@ -1813,13 +1694,9 @@ msgid "Float"
 msgstr "Drijvende komma"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:395
-#: view:survey.browse.answer:0
-#: view:survey.name.wiz:0
-#: view:survey.print:0
-#: view:survey.print.answer:0
-#: view:survey.print.statistics:0
-#: view:survey.send.invitation:0
+#: code:addons/survey/wizard/survey_answer.py:395 view:survey.browse.answer:0
+#: view:survey.name.wiz:0 view:survey.print:0 view:survey.print.answer:0
+#: view:survey.print.statistics:0 view:survey.send.invitation:0
 #, python-format
 msgid "or"
 msgstr "of"
@@ -1840,7 +1717,8 @@ msgid "Date & Time"
 msgstr "Datum & tijd"
 
 #. module: survey
-#: field:survey.user_input_line,date_create:0
+#: field:survey.response,date_create:0
+#: field:survey.response.line,date_create:0
 msgid "Create Date"
 msgstr "Aanmaakdatum"
 
@@ -1852,8 +1730,7 @@ msgstr "Kolomnaam"
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_page_form
 #: model:ir.model,name:survey.model_survey_page
-#: model:ir.ui.menu,name:survey.menu_survey_page_form1
-#: view:survey.page:0
+#: model:ir.ui.menu,name:survey.menu_survey_page_form1 view:survey.page:0
 msgid "Survey Pages"
 msgstr "Enquête pagina's"
 
@@ -1868,8 +1745,7 @@ msgid "Is Answer Type Invisible?"
 msgstr "Is het antwoordsoort onzichtbaar?"
 
 #. module: survey
-#: selection:survey.question,type:0
-#: view:survey.response.line:0
+#: selection:survey.question,type:0 view:survey.response.line:0
 msgid "Table"
 msgstr "Tabel"
 

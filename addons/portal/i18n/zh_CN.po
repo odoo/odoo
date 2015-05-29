@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:10+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -32,14 +33,9 @@ msgstr "请选择要分享信息的至少一个用户"
 #: view:portal.wizard:0
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
-msgstr ""
-"请从下面的列表选择需要显示在门户页面的联系人。\n"
-"    请确认每个联系人的email地址是有效且唯一的。\n"
-"    如果需要，可以直接在列表中修改联系人的email地址。"
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr "请从下面的列表选择需要显示在门户页面的联系人。\n    请确认每个联系人的email地址是有效且唯一的。\n    如果需要，可以直接在列表中修改联系人的email地址。"
 
 #. module: portal
 #: model:mail.group,name:portal.company_jobs
@@ -49,7 +45,7 @@ msgstr "公司招聘职位"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
 msgid "Billing"
-msgstr ""
+msgstr "开发票"
 
 #. module: portal
 #: view:portal.wizard.user:0
@@ -62,8 +58,7 @@ msgid "This text is included in the email sent to new portal users."
 msgstr ""
 
 #. module: portal
-#: view:share.wizard:0
-#: field:share.wizard,group_ids:0
+#: view:share.wizard:0 field:share.wizard,group_ids:0
 msgid "Existing groups"
 msgstr "现有的组"
 
@@ -76,7 +71,7 @@ msgstr "门户组"
 #: code:addons/portal/mail_mail.py:52
 #, python-format
 msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
-msgstr ""
+msgstr "<p>直接在OpenERP中访问该单据 <a href=\"%s\">  </a></p>"
 
 #. module: portal
 #: field:portal.wizard,welcome_message:0
@@ -85,8 +80,7 @@ msgstr "邀请消息"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:0
+#: model:ir.model,name:portal.model_portal_wizard view:portal.wizard:0
 msgid "Portal Access Management"
 msgstr ""
 
@@ -105,7 +99,7 @@ msgstr "请选择要分享信息的至少一个用户组"
 #: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
 msgid "Archives"
-msgstr ""
+msgstr "存档"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -138,9 +132,7 @@ msgstr ""
 msgid ""
 ", so it may use Mako expressions.\n"
 "                                The Mako evaluation context provides:"
-msgstr ""
-"，该处使用 Mako 模版表达式，\n"
-"　　　　Mako 模版的求值上下文提供："
+msgstr "，该处使用 Mako 模版表达式，\n　　　　Mako 模版的求值上下文提供："
 
 #. module: portal
 #: field:portal.wizard.user,email:0
@@ -156,7 +148,7 @@ msgstr "or"
 #: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_starfeeds
 msgid "To-do"
-msgstr ""
+msgstr "待办事项"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:194
@@ -172,8 +164,7 @@ msgid "Jobs"
 msgstr "作业"
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_users
-#: field:portal.wizard,user_ids:0
+#: model:ir.model,name:portal.model_res_users field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "用户"
 
@@ -193,11 +184,10 @@ msgstr "未配置在线交易的账号信息"
 #: code:addons/portal/mail_message.py:60
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. "
-"Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "由于安全限制，请求的操作不能被完成。请联系你的系统管理员。\n\n(单据类型: %s, 操作: %s)"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -224,17 +214,14 @@ msgid ""
 "                    No message found and no message sent yet.\n"
 "                </p><p>\n"
 "                    Click on the top-right icon to compose a message. This\n"
-"                    message will be sent by email if it's an internal "
-"contact.\n"
+"                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    没有发现消息，也没有尚未发送的消息。\n                </p><p>\n                    点击右上角的图标写一个消息，\n                    如果是个内部联系人，这消息将通过email发送。\n                </p>\n            "
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_menu
-#: field:portal.wizard,portal_id:0
-#: field:res.groups,is_portal:0
-#: model:res.groups,name:portal.group_portal
+#: model:ir.ui.menu,name:portal.portal_menu field:portal.wizard,portal_id:0
+#: field:res.groups,is_portal:0 model:res.groups,name:portal.group_portal
 msgid "Portal"
 msgstr "门户"
 
@@ -264,7 +251,7 @@ msgstr "新闻"
 #: code:addons/portal/mail_message.py:59
 #, python-format
 msgid "Access Denied"
-msgstr ""
+msgstr "访问被拒绝"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
@@ -275,8 +262,7 @@ msgstr "收件箱"
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
 msgid ""
-"Portal members have specific access rights (such as record rules and "
-"restricted menus).\n"
+"Portal members have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
 
@@ -298,8 +284,7 @@ msgid "Existing Groups (e.g Portal Groups)"
 msgstr "已经存在组（例如 门户组）"
 
 #. module: portal
-#: view:share.wizard:0
-#: field:share.wizard,user_ids:0
+#: view:share.wizard:0 field:share.wizard,user_ids:0
 msgid "Existing users"
 msgstr "现有用户"
 
@@ -321,13 +306,13 @@ msgstr "访问用户组"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "信息"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"kind: the kind of document on which the payment form is rendered (translated"
+" to user language, e.g. \"Invoice\")"
 msgstr ""
 
 #. module: portal
@@ -378,8 +363,7 @@ msgstr "uid: 当前用户 id"
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
 msgid ""
-"Anonymous users have specific access rights (such as record rules and "
-"restricted menus).\n"
+"Anonymous users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
 
@@ -402,7 +386,8 @@ msgstr "公司新闻"
 #: code:addons/portal/acquirer.py:76
 #, python-format
 msgid ""
-"You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
+"You can finish the configuration in the <a href=\"%s\">Bank&Cash "
+"settings</a>"
 msgstr ""
 
 #. module: portal
@@ -416,21 +401,12 @@ msgid ""
 "<p>\n"
 "                    <b>Good Job!</b> Your inbox is empty.\n"
 "                </p><p>\n"
-"                    Your inbox contains private messages or emails sent to "
-"you\n"
-"                    as well as information related to documents or people "
-"you\n"
+"                    Your inbox contains private messages or emails sent to you\n"
+"                    as well as information related to documents or people you\n"
 "                    follow.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                                 <b>做得不错！</b>你的收件箱是空的.\n"
-"                          </p><p>\n"
-"                                    你的收件箱包含了你的私人消息或者发给你的邮件 ，\n"
-"                                    包括你关注的文档或者个人的信息。\n"
-"                          </p>\n"
-"            "
+msgstr "<p>\n                                 <b>做得不错！</b>你的收件箱是空的.\n                          </p><p>\n                                    你的收件箱包含了你的私人消息或者发给你的邮件 ，\n                                    包括你关注的文档或者个人的信息。\n                          </p>\n            "
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
@@ -486,18 +462,13 @@ msgstr "货币：在发出的单据中使用的货币记录。（例如，curren
 msgid ""
 "\n"
 "% if object.company_id.paypal_account:\n"
-"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
-"target=\"_blank\">\n"
+"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" target=\"_blank\">\n"
 "  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
-"  <input type=\"hidden\" name=\"business\" "
-"value=\"${object.company_id.paypal_account}\"/>\n"
-"  <input type=\"hidden\" name=\"item_name\" "
-"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
+"  <input type=\"hidden\" name=\"business\" value=\"${object.company_id.paypal_account}\"/>\n"
+"  <input type=\"hidden\" name=\"item_name\" value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
 "  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
-"  <input type=\"hidden\" name=\"currency_code\" "
-"value=\"${currency.name}\"/>\n"
-"  <input type=\"image\" name=\"submit\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"  <input type=\"hidden\" name=\"currency_code\" value=\"${currency.name}\"/>\n"
+"  <input type=\"image\" name=\"submit\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "</form>\n"
 "% endif\n"
 "            "
@@ -563,13 +534,11 @@ msgid ""
 "<p>\n"
 "                    <b>No todo.</b>\n"
 "                </p><p>\n"
-"                    When you process messages in your inbox, you can mark "
-"some\n"
-"                    as <i>todo</i>. From this menu, you can process all your "
-"todo.\n"
+"                    When you process messages in your inbox, you can mark some\n"
+"                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    <b>没有待办事项</b>\n                </p><p>\n                    当你处理收件箱里的消息时，你能标记一些消息作为<i>待办事项</i>. \n                    从这个菜单，你能处理你所有的待办事项。\n                </p>\n            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -580,32 +549,3 @@ msgstr ""
 #: view:share.wizard:0
 msgid "Details"
 msgstr "详情"
-
-#, python-format
-#~ msgid "Email required"
-#~ msgstr "必须输入邮件地址"
-
-#~ msgid "Quotations and Sales Orders"
-#~ msgstr "报价单和销售订单"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                    Youd don't have unread company's news.\n"
-#~ "                </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                你没有未读的公司新闻。\n"
-#~ "            </p>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                    Youd don't have unread job offers.\n"
-#~ "                </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                        你已经看过所有的空缺职位。\n"
-#~ "               </p>\n"
-#~ "            "

@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * purchase_requisition
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-06-26 12:57+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 10:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-7/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:20+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -38,35 +39,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to start a new purchase requisition process. \n"
 "          </p><p>\n"
-"            A purchase requisition is the step before a request for "
-"quotation.\n"
-"            In a purchase requisition (or purchase tender), you can record "
-"the\n"
+"            A purchase requisition is the step before a request for quotation.\n"
+"            In a purchase requisition (or purchase tender), you can record the\n"
 "            products you need to buy and trigger the creation of RfQs to\n"
-"            suppliers. After the negotiation, once you have reviewed all "
-"the\n"
+"            suppliers. After the negotiation, once you have reviewed all the\n"
 "            supplier's offers, you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            lik voor het starten van een nieuw inkoopaanvraag proces. \n"
-"          </p><p>\n"
-"            Een inkoopaanvraag is de stap voorafgaand aan de "
-"offerteaanvraag.\n"
-"            In een inkoopaanvraag (of inkoop tender), kunt u producten "
-"zetten\n"
-"            die u moet kopen en het maken van offerteaanvragen naar\n"
-"            leveranciers activeren. Na de onderhandeling, nadat u de "
-"leverancier\n"
-"            aanbiedingen heeft bekeken, kunt u er een aantal bevestigen en "
-"anderen annuleren.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            lik voor het starten van een nieuw inkoopaanvraag proces. \n          </p><p>\n            Een inkoopaanvraag is de stap voorafgaand aan de offerteaanvraag.\n            In een inkoopaanvraag (of inkoop tender), kunt u producten zetten\n            die u moet kopen en het maken van offerteaanvragen naar\n            leveranciers activeren. Na de onderhandeling, nadat u de leverancier\n            aanbiedingen heeft bekeken, kunt u er een aantal bevestigen en anderen annuleren.\n          </p>\n        "
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,user_id:0
+#: view:purchase.requisition:0 field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Verantwoordelijke"
 
@@ -76,8 +59,7 @@ msgid "Cancel Requisition"
 msgstr "Offerteaanvraag annuleren"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,state:0
+#: view:purchase.requisition:0 field:purchase.requisition,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -92,8 +74,7 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "Purchase Done"
 msgstr "Inkopen welke gereed zijn"
 
@@ -114,8 +95,7 @@ msgid "Supplier"
 msgstr "Leverancier"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "New"
 msgstr "Nieuw"
 
@@ -140,8 +120,7 @@ msgstr "Soort"
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
 #: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 #: field:product.product,purchase_requisition:0
-#: field:purchase.order,requisition_id:0
-#: view:purchase.requisition:0
+#: field:purchase.order,requisition_id:0 view:purchase.requisition:0
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
@@ -174,8 +153,7 @@ msgid "Terms and Conditions"
 msgstr "Voorwaarden"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,description:0
+#: report:purchase.requisition:0 field:purchase.requisition,description:0
 msgid "Description"
 msgstr "Omschrijving"
 
@@ -267,9 +245,7 @@ msgstr "Offerte detail"
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr ""
-"Er is al een een %s inkooporder voor deze relatie. De inkooporder moet eerst "
-"geannuleerd worden voordat een nieuwe offerte kan worden gemaakt."
+msgstr "Er is al een een %s inkooporder voor deze relatie. De inkooporder moet eerst geannuleerd worden voordat een nieuwe offerte kan worden gemaakt."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -277,8 +253,7 @@ msgid "End Date"
 msgstr "Einddatum"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,name:0
+#: report:purchase.requisition:0 field:purchase.requisition,name:0
 msgid "Requisition Reference"
 msgstr "Aanvraag referentie"
 
@@ -288,8 +263,7 @@ msgid "Products to Purchase"
 msgstr "In te kopen producten"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "Sent to Suppliers"
 msgstr "Stuur naar leveranciers"
 
@@ -317,16 +291,9 @@ msgstr "Berichten"
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
 msgid ""
-"Purchase Requisition (exclusive):  On the confirmation of a purchase order, "
-"it cancels the remaining purchase order.\n"
-"Purchase Requisition(Multiple):  It allows to have multiple purchase "
-"orders.On confirmation of a purchase order it does not cancel the remaining "
-"orders"
-msgstr ""
-"Inkoopaanvraag (exclusief): Bij de bevestiging van de inkooporder worden de "
-"resterende aanvragen geannuleerd.\n"
-"Inkoopaanvraag (meer): Er kunnen meer inkooporders zijn. Bij bevestiging van "
-"de inkooporder worden de resterende aanvragen niet geannuleerd."
+"Purchase Requisition (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
+"Purchase Requisition(Multiple):  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
+msgstr "Inkoopaanvraag (exclusief): Bij de bevestiging van de inkooporder worden de resterende aanvragen geannuleerd.\nInkoopaanvraag (meer): Er kunnen meer inkooporders zijn. Bij bevestiging van de inkooporder worden de resterende aanvragen niet geannuleerd."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -416,8 +383,7 @@ msgid "Procurement"
 msgstr "Verwerving"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: view:purchase.requisition:0
+#: report:purchase.requisition:0 view:purchase.requisition:0
 msgid "Source"
 msgstr "Bron"
 
@@ -446,10 +412,7 @@ msgstr "Inkoopaanvraag (exclusief)"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -473,8 +436,7 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,date_start:0
+#: report:purchase.requisition:0 field:purchase.requisition,date_start:0
 msgid "Requisition Date"
 msgstr "Aanvraagdatum"
 
@@ -498,9 +460,7 @@ msgstr "Aanvraag"
 msgid ""
 "Check this box to generates purchase requisition instead of generating "
 "requests for quotation from procurement."
-msgstr ""
-"Vink deze optie aan voor het genereren van inkoopaanvragen in plaats van het "
-"genereren van offertes door verwervingen."
+msgstr "Vink deze optie aan voor het genereren van inkoopaanvragen in plaats van het genereren van offertes door verwervingen."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0

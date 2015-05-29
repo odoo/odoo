@@ -1,21 +1,22 @@
-# Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * warning
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:30+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -26,7 +27,7 @@ msgstr "구매 주문 라인"
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "입고예정 배송"
 
 #. module: warning
 #: field:product.product,purchase_line_warn_msg:0
@@ -36,7 +37,7 @@ msgstr "구매 주문 라인을 위한 메시지"
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "출고 목록"
 
 #. module: warning
 #: view:product.product:0
@@ -46,21 +47,18 @@ msgstr "이 상품을 구매할 때의 경고"
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "상품"
 
 #. module: warning
-#: view:product.product:0
-#: view:res.partner:0
+#: view:product.product:0 view:res.partner:0
 msgid "Warnings"
 msgstr "경고"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "메시지 차단"
 
@@ -72,10 +70,8 @@ msgstr "인보이스 상의 경고"
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "No Message"
 msgstr "메시지 없음"
 
@@ -107,21 +103,16 @@ msgid "Message for Purchase Order"
 msgstr "구매 주문을 위한 메시지"
 
 #. module: warning
-#: code:addons/warning/warning.py:32
-#: help:product.product,purchase_line_warn:0
-#: help:product.product,sale_line_warn:0
-#: help:res.partner,invoice_warn:0
-#: help:res.partner,picking_warn:0
-#: help:res.partner,purchase_warn:0
+#: code:addons/warning/warning.py:32 help:product.product,purchase_line_warn:0
+#: help:product.product,sale_line_warn:0 help:res.partner,invoice_warn:0
+#: help:res.partner,picking_warn:0 help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
 #, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr ""
-"\"경고\" 옵션을 선택하면 유저들이 메시지를 받을 수 있습니다. \"메시지 차단\"을 선택하면, 메시지 흐름이 차단됩니다. 메시지는 "
-"다음 필드에 작성되어야 합니다."
+msgstr "\"경고\" 옵션을 선택하면 유저들이 메시지를 받을 수 있습니다. \"메시지 차단\"을 선택하면, 메시지 흐름이 차단됩니다. 메시지는 다음 필드에 작성되어야 합니다."
 
 #. module: warning
 #: view:res.partner:0
@@ -149,14 +140,10 @@ msgid "Warning on the Purchase Order"
 msgstr "구매 주문에 관한 경고"
 
 #. module: warning
-#: code:addons/warning/warning.py:66
-#: code:addons/warning/warning.py:95
-#: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:194
-#: code:addons/warning/warning.py:221
-#: code:addons/warning/warning.py:270
-#: code:addons/warning/warning.py:303
+#: code:addons/warning/warning.py:66 code:addons/warning/warning.py:95
+#: code:addons/warning/warning.py:130 code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:194 code:addons/warning/warning.py:221
+#: code:addons/warning/warning.py:270 code:addons/warning/warning.py:303
 #, python-format
 msgid "Warning for %s"
 msgstr ""
@@ -169,10 +156,8 @@ msgstr ""
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Warning"
 msgstr "경고"
 
@@ -184,21 +169,20 @@ msgstr "스톡 피킹에 관한 경고"
 #. module: warning
 #: model:ir.model,name:warning.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "협력업체"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
+#: model:ir.model,name:warning.model_sale_order field:res.partner,sale_warn:0
 msgid "Sales Order"
-msgstr ""
+msgstr "판매 주문"
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "배송 주문"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
 #: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "판매 주문 입력줄"

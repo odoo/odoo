@@ -1,26 +1,26 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* stock_location
-#
+# * stock_location
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-03-10 20:06+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2015-05-29 13:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-7/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
-msgstr ""
-"Régebben tudtam, melyik vállalathoz tartozik a leválogatás és készletmozgás."
+msgstr "Régebben tudtam, melyik vállalathoz tartozik a leválogatás és készletmozgás."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -87,9 +87,7 @@ msgstr "Belső"
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
-msgstr ""
-"Kihúzási beszerzés ami az %s eredeti állomásról jön, kihúzási szabály %s, az "
-"eredeti beszerzéssel %s (#%d)"
+msgstr "Kihúzási beszerzés ami az %s eredeti állomásról jön, kihúzási szabály %s, az eredeti beszerzéssel %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -105,19 +103,9 @@ msgstr "Számla állapota"
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
-"This is used to define paths the product has to follow within the location "
-"tree.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
-msgstr ""
-"Ez a termék elérési útját határozza meg a helymeghatározó fában nyomon "
-"követhető.\n"
-"Az 'Automatikus mozgás' értéke létrehoz egy raktári mozgást a meglévő "
-"automatikus érvényesítése után. A 'Kézi vezérlés'-nél, a raktári mozgást "
-"érvényesítenie kell egy munkavállalónak. Az 'Nincs automatikus következő "
-"lépcső hozzáadva', a raktárhely ki lesz cserélve az első mozgásnál."
+"This is used to define paths the product has to follow within the location tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+msgstr "Ez a termék elérési útját határozza meg a helymeghatározó fában nyomon követhető.\nAz 'Automatikus mozgás' értéke létrehoz egy raktári mozgást a meglévő automatikus érvényesítése után. A 'Kézi vezérlés'-nél, a raktári mozgást érvényesítenie kell egy munkavállalónak. Az 'Nincs automatikus következő lépcső hozzáadva', a raktárhely ki lesz cserélve az első mozgásnál."
 
 #. module: stock_location
 #: view:product.product:0
@@ -173,9 +161,7 @@ msgstr "Készletmozgás"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
-"Ha be van jelölve, amikor ez a mozgás törlésre került, akkor a kapcsolódó "
-"mozgások is törölve lesznek"
+msgstr "Ha be van jelölve, amikor ez a mozgás törlésre került, akkor a kapcsolódó mozgások is törölve lesznek"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -217,8 +203,7 @@ msgstr "Az átmenet végrehajtásához szükséges napok száma"
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
-msgstr ""
-"Ez a mező tölti ki az eredeti csomagolási helyet és a mozgásainak a nevét"
+msgstr "Ez a mező tölti ki az eredeti csomagolási helyet és a mozgásainak a nevét"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -234,9 +219,7 @@ msgstr "Név"
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr ""
-"A szabály beállítja a teljes elhelyezkedési fában a termékre vonatkozó "
-"pontos elérési utat."
+msgstr "A szabály beállítja a teljes elhelyezkedési fában a termékre vonatkozó pontos elérési utat."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -261,10 +244,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"Ellátás készletből: Ha szükséges, vegye el a készletből, vagy várja meg az "
-"újra-szállítást. Ellátás rendelésből: Ha szükséges, vásároljon vagy "
-"beszerzési igénylés alapján gyártson."
+msgstr "Ellátás készletből: Ha szükséges, vegye el a készletből, vagy várja meg az újra-szállítást. Ellátás rendelésből: Ha szükséges, vásároljon vagy beszerzési igénylés alapján gyártson."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -298,9 +278,7 @@ msgstr "Késedelem (napok)"
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
-msgstr ""
-"Kiválogatás a kihúzási beszerzéshez ebből az eredeti helységből %s, kihúzási "
-"szabály %s, az eredeti beszerzéssel %s (#%d)"
+msgstr "Kiválogatás a kihúzási beszerzéshez ebből az eredeti helységből %s, kihúzási szabály %s, az eredeti beszerzéssel %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -313,9 +291,7 @@ msgstr "Beillesztési folyamat"
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
-msgstr ""
-"Mozgás a kihúzási beszerzés eredeti hely irányából %s, kihúzási szabály %s, "
-"az eredeti beszerzéssel %s (#%d)"
+msgstr "Mozgás a kihúzási beszerzés eredeti hely irányából %s, kihúzási szabály %s, az eredeti beszerzéssel %s (#%d)"
 
 #. module: stock_location
 #: view:product.product:0
@@ -339,8 +315,7 @@ msgid "Destination Location"
 msgstr "Célállomás helye"
 
 #. module: stock_location
-#: field:stock.location.path,auto:0
-#: selection:stock.location.path,auto:0
+#: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
 msgid "Automatic Move"
 msgstr "Automatikus mozgás"
 
@@ -371,8 +346,7 @@ msgstr "Beszerzés módja"
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
-"A vállalattól függ, Válassza ki, hogy termékeket kapni akar vagy küldeni"
+msgstr "A vállalattól függ, Válassza ki, hogy termékeket kapni akar vagy küldeni"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order

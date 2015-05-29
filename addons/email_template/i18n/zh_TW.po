@@ -1,32 +1,31 @@
-# Chinese (Traditional) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * email_template
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/odoo-7/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
+#: field:email.template,email_from:0 field:email_template.preview,email_from:0
 msgid "From"
 msgstr "從"
 
 #. module: email_template
 #: view:res.partner:0
-msgid ""
-"Partners that did not ask not to be included in mass mailing campaigns"
+msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
 
 #. module: email_template
@@ -46,8 +45,7 @@ msgid "Email contents (in raw HTML format)"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
+#: help:email.template,email_from:0 help:email_template.preview,email_from:0
 msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
@@ -85,8 +83,7 @@ msgid "Report Filename"
 msgstr "報表檔名"
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
+#: field:email.template,email_to:0 field:email_template.preview,email_to:0
 msgid "To (Emails)"
 msgstr ""
 
@@ -96,8 +93,7 @@ msgid "Preview"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
+#: field:email.template,reply_to:0 field:email_template.preview,reply_to:0
 msgid "Reply-To"
 msgstr "回覆給"
 
@@ -107,16 +103,15 @@ msgid "Use template"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
+#: field:email.template,body_html:0 field:email_template.preview,body_html:0
 msgid "Body"
-msgstr ""
+msgstr "內文"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:247
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s（副本）"
 
 #. module: email_template
 #: field:mail.compose.message,template_id:0
@@ -127,8 +122,8 @@ msgstr "範本"
 #: help:email.template,user_signature:0
 #: help:email_template.preview,user_signature:0
 msgid ""
-"If checked, the user's signature will be appended to the text version of the "
-"message"
+"If checked, the user's signature will be appended to the text version of the"
+" message"
 msgstr "若勾選, 使用者的簽名將附加到郵件的文字版本"
 
 #. module: email_template
@@ -142,18 +137,16 @@ msgid "Save as new template"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:email.template,sub_object:0 help:email_template.preview,sub_object:0
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr ""
-"當這相關欄位是選為第一欄位, this field shows the document model the relationship goes to."
+msgstr "當這相關欄位是選為第一欄位, this field shows the document model the relationship goes to."
 
 #. module: email_template
 #: view:res.partner:0
 msgid "Available for mass mailing"
-msgstr ""
+msgstr "可以大量寄信"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
@@ -161,20 +154,16 @@ msgid "Email Templates"
 msgstr "郵件範本"
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
+#: help:email.template,model_id:0 help:email_template.preview,model_id:0
 msgid "The kind of document with with this template can be used"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,report_name:0
-#: help:email_template.preview,report_name:0
+#: help:email.template,report_name:0 help:email_template.preview,report_name:0
 msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
-msgstr ""
-"產生的報表文件命名(可能包含佔位符)\n"
-"可以省略分機號碼然後將會成為報表型態."
+msgstr "產生的報表文件命名(可能包含佔位符)\n可以省略分機號碼然後將會成為報表型態."
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:234
@@ -203,11 +192,8 @@ msgstr "文件範本"
 #: help:email_template.preview,model_object_field:0
 msgid ""
 "Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at "
-"the destination of the relationship."
-msgstr ""
-"從相關文件類型選擇目標\n"
-"若它是關聯欄位，您就可以在這關聯關係中，取得這欄位"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr "從相關文件類型選擇目標\n若它是關聯欄位，您就可以在這關聯關係中，取得這欄位"
 
 #. module: email_template
 #: view:email.template:0
@@ -232,14 +218,12 @@ msgid ""
 msgstr ""
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
+#: help:email.template,email_cc:0 help:email_template.preview,email_cc:0
 msgid "Carbon copy recipients (placeholders may be used here)"
 msgstr "副本收件人 (佔位符可在這裡使用)"
 
 #. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
+#: help:email.template,email_to:0 help:email_template.preview,email_to:0
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr "逗號分隔的收件人地址（佔位符可以用在這裡）"
 
@@ -252,7 +236,7 @@ msgstr "提出"
 #: code:addons/email_template/email_template.py:381
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告！"
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -275,16 +259,14 @@ msgid "Templates"
 msgstr "範本"
 
 #. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
+#: field:email.template,name:0 field:email_template.preview,name:0
 msgid "Name"
 msgstr "名稱"
 
 #. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
+#: field:email.template,lang:0 field:email_template.preview,lang:0
 msgid "Language"
-msgstr ""
+msgstr "語言"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
@@ -298,31 +280,26 @@ msgstr "預覽郵件"
 
 #. module: email_template
 #: view:email.template:0
-msgid ""
-"Remove the contextual action to use this template on related documents"
+msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
+#: field:email.template,copyvalue:0 field:email_template.preview,copyvalue:0
 msgid "Placeholder Expression"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
+#: field:email.template,sub_object:0 field:email_template.preview,sub_object:0
 msgid "Sub-model"
 msgstr "子類型"
 
 #. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
+#: help:email.template,subject:0 help:email_template.preview,subject:0
 msgid "Subject (placeholders may be used here)"
 msgstr "主旨 (佔位符可在這裡使用)"
 
 #. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
+#: help:email.template,reply_to:0 help:email_template.preview,reply_to:0
 msgid "Preferred response address (placeholders may be used here)"
 msgstr "首選的回覆地址（佔位符可以用在這裡）"
 
@@ -339,8 +316,7 @@ msgid "Optional report to print and attach"
 msgstr "選擇報表列印與附加"
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
+#: help:email.template,null_value:0 help:email_template.preview,null_value:0
 msgid "Optional value to use if the target field is empty"
 msgstr "若欄位是空的需選擇使用值"
 
@@ -360,8 +336,7 @@ msgid "Add context action"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
+#: help:email.template,lang:0 help:email_template.preview,lang:0
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
@@ -382,16 +357,14 @@ msgid "Auto Delete"
 msgstr "自動刪除"
 
 #. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,copyvalue:0 help:email_template.preview,copyvalue:0
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr "最後的模板欄位，找到要複製-貼上的區塊"
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
+#: field:email.template,model:0 field:email_template.preview,model:0
 msgid "Related Document Model"
 msgstr "相關文檔模型"
 
@@ -420,14 +393,12 @@ msgid "Deletion of the action record failed."
 msgstr "刪除的動作記錄失敗"
 
 #. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
+#: field:email.template,email_cc:0 field:email_template.preview,email_cc:0
 msgid "Cc"
 msgstr "副本"
 
 #. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
+#: field:email.template,model_id:0 field:email_template.preview,model_id:0
 msgid "Applies to"
 msgstr ""
 
@@ -457,8 +428,7 @@ msgid ""
 msgstr "可選擇伺服器發送的郵件。如果沒有設置，優先級最高的將被使用。"
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
+#: help:email.template,auto_delete:0 help:email_template.preview,auto_delete:0
 msgid "Permanently delete this email after sending it, to save space"
 msgstr "永久刪除已發送的郵件以節省空間"
 
@@ -478,7 +448,7 @@ msgstr "當相關欄位已被選擇為第一欄位, 這欄位，讓您選擇目�
 #. module: email_template
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr ""
+msgstr "供應商列表"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:381
@@ -500,10 +470,9 @@ msgid "Partner"
 msgstr "業務夥伴"
 
 #. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
+#: field:email.template,null_value:0 field:email_template.preview,null_value:0
 msgid "Default Value"
-msgstr ""
+msgstr "預設值"
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -514,35 +483,16 @@ msgid ""
 msgstr "這個範本您可以加入附件, 從這範本新建所有郵件"
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
+#: help:email.template,body_html:0 help:email_template.preview,body_html:0
 msgid "Rich-text/HTML version of the message (placeholders may be used here)"
 msgstr "Rich-text/HTML版本的消息（佔位符可以用在這裡）"
 
 #. module: email_template
 #: view:email.template:0
 msgid "Contents"
-msgstr ""
+msgstr "內容"
 
 #. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
+#: field:email.template,subject:0 field:email_template.preview,subject:0
 msgid "Subject"
 msgstr "主旨"
-
-#~ msgid "Sender address (placeholders may be used here)"
-#~ msgstr "發信人地址(佔位符可以用在這)"
-
-#~ msgid ""
-#~ "If checked, this partner will not receive any automated email notifications, "
-#~ "such as the availability of invoices."
-#~ msgstr "若勾選, 這個合作夥伴將不會收到任何自動郵件回復, 例如有效發票"
-
-#~ msgid ""
-#~ "Optional translation language (ISO code) to select when sending out an "
-#~ "email. If not set, the english version will be used. This should usually be "
-#~ "a placeholder expression that provides the appropriate language code, e.g. "
-#~ "${object.partner_id.lang.code}."
-#~ msgstr ""
-#~ "選擇翻譯語言（ISO代碼）選擇發送電子郵件時。如果沒有設置，將使用英文版本。通常，這應該是一個佔位符，表達式，提供適當的語言代碼，例如$ "
-#~ "{object.partner_id.lang.code}。"

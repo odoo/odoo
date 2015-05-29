@@ -1,21 +1,22 @@
-# Swedish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2014-03-31 20:29+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:53+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Swedish (http://www.transifex.com/projects/p/odoo-7/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:24+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -59,17 +60,12 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"Du har valt en mängd enheter %d.\n"
-"Men det är inte förenligt med den valda förpackningen.\n"
-"Här är ett förslag av mängder enligt förpackningen:\n"
-"EAN: %s Antal: %s Typ av UL: %s"
+msgstr "Du har valt en mängd enheter %d.\nMen det är inte förenligt med den valda förpackningen.\nHär är ett förslag av mängder enligt förpackningen:\nEAN: %s Antal: %s Typ av UL: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr ""
-"Dokumentation av bokföringstransaktionen till utleveransen eller till kunden"
+msgstr "Dokumentation av bokföringstransaktionen till utleveransen eller till kunden"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
@@ -108,9 +104,7 @@ msgstr "Kundorder"
 msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
-msgstr ""
-"För varje orderrad skapas en inköpsorder för att täcka upp för den sålda "
-"produkten."
+msgstr "För varje orderrad skapas en inköpsorder för att täcka upp för den sålda produkten."
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -194,11 +188,7 @@ msgid ""
 "the same time as the procurement order. It represents the assignment of "
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
-msgstr ""
-"Plocklisteformuläret skapas så snart kundorder bekräftas i samtidigt som "
-"anskaffningsordern. Den representerar tilldelningen av delar till "
-"kundordern. Det är 1 plocklistan genom orderrad som utvecklas med tillgången "
-"till delar."
+msgstr "Plocklisteformuläret skapas så snart kundorder bekräftas i samtidigt som anskaffningsordern. Den representerar tilldelningen av delar till kundordern. Det är 1 plocklistan genom orderrad som utvecklas med tillgången till delar."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -243,7 +233,7 @@ msgstr "Lagertransaktioner"
 #. module: sale_stock
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Standardalternativ"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
@@ -252,17 +242,15 @@ msgstr ""
 
 #. module: sale_stock
 #: view:sale.order:0
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"If the sale order was set to create the invoice 'On Delivery Order', then an "
-"invoice is automatically created based on what you delivered. If you rather "
-"want to create your invoice based on your sale order, you can set the sale "
+"If the sale order was set to create the invoice 'On Delivery Order', then an"
+" invoice is automatically created based on what you delivered. If you rather"
+" want to create your invoice based on your sale order, you can set the sale "
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
 msgstr ""
@@ -273,8 +261,7 @@ msgid "Procurement"
 msgstr "Anskaffning"
 
 #. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
+#: view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Levererad"
@@ -312,10 +299,7 @@ msgid ""
 "confirmed or as the invoice is paid. It drives the purchasing and the "
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
-msgstr ""
-"En inköpsorder skapas så snart kundordern är bekräftad eller fakturan "
-"betald. Utifrån hur reglerna är satta för kundorderparametrarna så föds "
-"inköpsorder eller produktionsunderlag. "
+msgstr "En inköpsorder skapas så snart kundordern är bekräftad eller fakturan betald. Utifrån hur reglerna är satta för kundorderparametrarna så föds inköpsorder eller produktionsunderlag. "
 
 #. module: sale_stock
 #: help:sale.order,incoterm:0
@@ -328,8 +312,7 @@ msgstr ""
 #: help:sale.config.settings,module_delivery:0
 msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
+"                You can define your own carrier and delivery grids for prices.\n"
 "                This installs the module delivery."
 msgstr ""
 
@@ -375,9 +358,7 @@ msgstr "Butik"
 msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
-msgstr ""
-"Anger att kundordern är levererad. Detta fält uppdateras efter alla "
-"schemalagda åtgärder är sjösatta."
+msgstr "Anger att kundordern är levererad. Detta fält uppdateras efter alla schemalagda åtgärder är sjösatta."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -388,8 +369,8 @@ msgstr "Egenskaper"
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -399,10 +380,8 @@ msgstr ""
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
-"Du kan skapa fakturor baserat på kundorder eller baserat på leveranser."
+msgid "You can generate invoices based on sales orders or based on shippings."
+msgstr "Du kan skapa fakturor baserat på kundorder eller baserat på leveranser."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -418,11 +397,8 @@ msgstr "Företag"
 #: help:sale.config.settings,task_work:0
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
+"                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways\n"
+"                and to automatically creates project tasks from procurement lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
 
@@ -519,8 +495,7 @@ msgstr "Försäljning, avancerad fakturabetalning"
 #: code:addons/sale_stock/sale_stock.py:532
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
-"Du måste först avsluta lagerförändring som hör ihop med denna orderrad."
+msgstr "Du måste först avsluta lagerförändring som hör ihop med denna orderrad."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:570
@@ -568,7 +543,7 @@ msgstr "Relaterad plockning"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0
@@ -598,9 +573,7 @@ msgstr "Bortse från undantag"
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"Du planerar att sälja %.2f %s men har endast %.2f %s tillhanda !\n"
-"Det verkliga lagret är %.2f %s. (utan reservationer)"
+msgstr "Du planerar att sälja %.2f %s men har endast %.2f %s tillhanda !\nDet verkliga lagret är %.2f %s. (utan reservationer)"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -633,19 +606,4 @@ msgid ""
 "Depending on the configuration of the location Output, the move between the "
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
-msgstr ""
-"Beroende på konfigurationen av utlastningen, flytten mellan utlastningen och "
-"kunden sker genom leveransordern manuellt eller automatiskt."
-
-#~ msgid ""
-#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
-#~ "pick' or 'Invoice on order after delivery'."
-#~ msgstr ""
-#~ "Fakturan skapas med automatik om plockpolicyn är 'fakturera från plock' "
-#~ "eller 'fakturera från order efter leverans'."
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr ""
-#~ "Det här är det antal dagar som du lägger till det datum som du lovat kunden "
-#~ "av säkerhetsskäl"
+msgstr "Beroende på konfigurationen av utlastningen, flytten mellan utlastningen och kunden sker genom leveransordern manuellt eller automatiskt."

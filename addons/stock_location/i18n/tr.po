@@ -1,27 +1,26 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* stock_location
-#
+# * stock_location
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0\n"
+"Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2014-05-17 04:50+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2015-05-29 12:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-7/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-05-18 05:53+0000\n"
-"X-Generator: Launchpad (build 17007)\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
-msgstr ""
-"Teslimatların ve hareketlerin hangi şirkete ait olduğunun bilinmesi için "
-"kullanılır"
+msgstr "Teslimatların ve hareketlerin hangi şirkete ait olduğunun bilinmesi için kullanılır"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -88,9 +87,7 @@ msgstr "Dahili"
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
-msgstr ""
-"Çekilir tedarik %s başlangıç konumundan, %s çekme kuralından, başlangıç %s "
-"Tedariki (#%d) yolundan gelir."
+msgstr "Çekilir tedarik %s başlangıç konumundan, %s çekme kuralından, başlangıç %s Tedariki (#%d) yolundan gelir."
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -106,19 +103,9 @@ msgstr "Fatura Durumu"
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
-"This is used to define paths the product has to follow within the location "
-"tree.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
-msgstr ""
-"Bu, konum ağacında ürünün izlemesi gereken rotaları belirtmek için "
-"kullanılır.\n"
-"'Otomatik Hareket' değeri, otomatik olarak onaylanacak olan geçerli birinden "
-"bir stok hareketi oluşturacaktır. 'Manual Operasyon' durumunda, stok "
-"hareketi bir çalışan tarafından onaylanmalıdır. 'Otomatik No Adımı Eklendi' "
-"durumunda, konum orijinal harekette değiştirilir."
+"This is used to define paths the product has to follow within the location tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+msgstr "Bu, konum ağacında ürünün izlemesi gereken rotaları belirtmek için kullanılır.\n'Otomatik Hareket' değeri, otomatik olarak onaylanacak olan geçerli birinden bir stok hareketi oluşturacaktır. 'Manual Operasyon' durumunda, stok hareketi bir çalışan tarafından onaylanmalıdır. 'Otomatik No Adımı Eklendi' durumunda, konum orijinal harekette değiştirilir."
 
 #. module: stock_location
 #: view:product.product:0
@@ -174,8 +161,7 @@ msgstr "Stok Hareketi"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
-"Kontrol edildiyse, bu hareket iptal edildiğinde, ilgi hareketi de iptal edin"
+msgstr "Kontrol edildiyse, bu hareket iptal edildiğinde, ilgi hareketi de iptal edin"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -258,10 +244,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"Stoktan Al: Gerektiğinde ürün stoktan alınacaktır ya da yeniden tedarik "
-"edilmesi beklenecektir. Sipariş Ver: Gerektiğinde ürün, tedarik isteği "
-"üzerine satınalınır ya da üretilir."
+msgstr "Stoktan Al: Gerektiğinde ürün stoktan alınacaktır ya da yeniden tedarik edilmesi beklenecektir. Sipariş Ver: Gerektiğinde ürün, tedarik isteği üzerine satınalınır ya da üretilir."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -295,9 +278,7 @@ msgstr "Geçikme (gün)"
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
-msgstr ""
-"Orijinal konumdan %s çekilen satınalma için alım, çekme kuralı %s, orijinal "
-"Satınalma %s (#%d) aracılığıyla"
+msgstr "Orijinal konumdan %s çekilen satınalma için alım, çekme kuralı %s, orijinal Satınalma %s (#%d) aracılığıyla"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -310,9 +291,7 @@ msgstr "İletilen Akış"
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
-msgstr ""
-"Orijinal konumdan %s iletilen satınalma için hareket, çekme kuralı %s, "
-"orijinal Satınalma %s (#%d) aracılığıyla"
+msgstr "Orijinal konumdan %s iletilen satınalma için hareket, çekme kuralı %s, orijinal Satınalma %s (#%d) aracılığıyla"
 
 #. module: stock_location
 #: view:product.product:0
@@ -336,8 +315,7 @@ msgid "Destination Location"
 msgstr "Hedef Lokasyonu"
 
 #. module: stock_location
-#: field:stock.location.path,auto:0
-#: selection:stock.location.path,auto:0
+#: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
 msgid "Automatic Move"
 msgstr "Otomatik Hareket"
 

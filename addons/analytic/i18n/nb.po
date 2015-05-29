@@ -1,21 +1,22 @@
-# Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Norwegian Bokmål (http://www.transifex.com/projects/p/odoo-7/language/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:40+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -62,13 +63,10 @@ msgstr "Debet"
 #: view:account.analytic.account:0
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
 msgstr ""
 
@@ -96,11 +94,8 @@ msgstr "Følgere."
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
 msgstr ""
 
 #. module: analytic
@@ -182,7 +177,7 @@ msgstr ""
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -231,9 +226,7 @@ msgstr ""
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
-"Beregnet ved å multiplisere antall og pris gitt av produktets kostpris. "
-"Alltid uttrykt i firmaets hovedvaluta."
+msgstr "Beregnet ved å multiplisere antall og pris gitt av produktets kostpris. Alltid uttrykt i firmaets hovedvaluta."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -294,14 +287,10 @@ msgstr ""
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
 msgstr ""
 
 #. module: analytic
@@ -322,7 +311,7 @@ msgstr "Saldo"
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Name"
-msgstr ""
+msgstr "Fullt navn"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -362,8 +351,7 @@ msgid "Amount"
 msgstr "Beløp"
 
 #. module: analytic
-#: view:account.analytic.account:0
-#: selection:account.analytic.account,type:0
+#: view:account.analytic.account:0 selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
@@ -383,7 +371,7 @@ msgstr ""
 #: code:addons/analytic/analytic.py:262
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Advarsel."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -399,25 +387,3 @@ msgstr "Startdato."
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Analytiske registreringer"
-
-#, python-format
-#~ msgid ""
-#~ "If you set a company, the currency selected has to be the same as it's "
-#~ "currency. \n"
-#~ "You can remove the company belonging, and thus change the currency, only on "
-#~ "analytic account of type 'view'. This can be really usefull for "
-#~ "consolidation purposes of several companies charts with different "
-#~ "currencies, for example."
-#~ msgstr ""
-#~ "Hvis du angir et selskap, har valutaen valgt å være det samme som det er "
-#~ "valuta.\n"
-#~ "Du kan fjerne selskap som tilhører, og dermed endre valutaen, bare på "
-#~ "analytisk grunn av type 'view'. Dette kan være veldig nyttig for "
-#~ "konsolideringsformål av flere selskaper diagrammer med ulike valutaer, for "
-#~ "eksempel."
-
-#~ msgid "Date End"
-#~ msgstr "Sluttdato"
-
-#~ msgid "Full Account Name"
-#~ msgstr "Fullt kontonavn"

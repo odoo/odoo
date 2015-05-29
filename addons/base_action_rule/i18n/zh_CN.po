@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-02-17 02:44+0000\n"
-"Last-Translator: hailang <zjian2020@gmail.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-18 05:40+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -113,7 +114,7 @@ msgstr "状态"
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "更新前过滤器"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -134,7 +135,7 @@ msgstr "会更改的字段"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "过滤器必须是本页存在的。"
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
@@ -149,11 +150,10 @@ msgstr "时"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "To create a new filter:"
-msgstr ""
+msgstr "创建新过滤器"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "激活"
 
@@ -223,22 +223,22 @@ msgstr "延迟类型"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server actions to run"
-msgstr ""
+msgstr "要运行的服务器动作"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "如果不选中，此规则被隐藏且不被执行"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #. module: base_action_rule
 #: field:base.action.rule,model:0
 msgid "Model"
-msgstr ""
+msgstr "型号"
 
 #. module: base_action_rule
 #: field:base.action.rule,last_run:0
@@ -253,13 +253,14 @@ msgstr "分"
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "相关的文档模型"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
-msgstr ""
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "在更新记录前此条件必须被满足"
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -278,15 +279,13 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击设置一个新的自动动作规则. \n              </p><p>\n                使用自动操作自动触发动作在各类画面中\n                . 例如: 一个线索被某特定用户创建可以自动设置到到某个销售组中,\n                或者一个商机在等待14天之后自动触发一个提醒邮件.\n               \n              </p>\n            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -296,7 +295,7 @@ msgstr "创建时间"
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "最近动作"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,partner_id:0
@@ -309,12 +308,11 @@ msgid "Trigger Date"
 msgstr "触发日期"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-#: field:base.action.rule,server_action_ids:0
+#: view:base.action.rule:0 field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
-msgstr ""
+msgstr "服务器动作"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0
 msgid "Subject"
-msgstr ""
+msgstr "主题"

@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-06-14 11:33+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 09:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-7/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:13+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -24,45 +25,19 @@ msgid ""
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
 "                In OpenERP, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to "
-"analyse\n"
+"                analytic account. So, you can track costs and revenues to analyse\n"
 "                your margins easily.\n"
 "              </p><p>\n"
-"                Costs will be created automatically when you register "
-"supplier\n"
+"                Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets.\n"
 "              </p><p>\n"
-"                Revenues will be created automatically when you create "
-"customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Nog geen activiteit op dit contract.\n"
-"              </p><p>\n"
-"                In OpenERP, zijn contracten en projecten opgenomen als een "
-"kostenplaats.\n"
-"                Dus, kunt u uw kosten en opbrengsten bijhouden om zo uw "
-"marges te analyseren\n"
-"              </ p>\n"
-"                De kosten zullen automatisch gemaakt wanneer u "
-"inkoopfacturen, declaraties of\n"
-"                urenstaten boekt.\n"
-"              </ p>\n"
-"                Opbregsten worden automatisch gemaakt wanneer u "
-"klantfacturen maakt.\n"
-"                Klant facturen kunnen worden aangemaakt op basis van "
-"verkooporders\n"
-"                (vaste prijs facturen), op urenstaten (op basis van de "
-"verrichte werkzaamheden) of\n"
-"                op de uitgaven (bijv. doorrekeningen van reiskosten).\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Nog geen activiteit op dit contract.\n              </p><p>\n                In OpenERP, zijn contracten en projecten opgenomen als een kostenplaats.\n                Dus, kunt u uw kosten en opbrengsten bijhouden om zo uw marges te analyseren\n              </ p>\n                De kosten zullen automatisch gemaakt wanneer u inkoopfacturen, declaraties of\n                urenstaten boekt.\n              </ p>\n                Opbregsten worden automatisch gemaakt wanneer u klantfacturen maakt.\n                Klant facturen kunnen worden aangemaakt op basis van verkooporders\n                (vaste prijs facturen), op urenstaten (op basis van de verrichte werkzaamheden) of\n                op de uitgaven (bijv. doorrekeningen van reiskosten).\n              </p>\n            "
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -85,14 +60,10 @@ msgstr "Groepeer op..."
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
 msgid ""
 "Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the "
-"analytic account. This feature allows to record at the same time the "
+"is an analytic account and the time spent on a project generate costs on the"
+" analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
-msgstr ""
-"Werknemer kunnen gewerkte tijd boeken op verschillende projecten. Een "
-"project is een kostenplaats en de gewerkte tijd op een project genereert "
-"kosten op de kostenplaats. Dit kenmerk laat tegelijkertijd de aanwezigheid "
-"en de urenverantwoording vastleggen."
+msgstr "Werknemer kunnen gewerkte tijd boeken op verschillende projecten. Een project is een kostenplaats en de gewerkte tijd op een project genereert kosten op de kostenplaats. Dit kenmerk laat tegelijkertijd de aanwezigheid en de urenverantwoording vastleggen."
 
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
@@ -169,8 +140,7 @@ msgid "Work done in the last period"
 msgstr "Gedane arbeid in de laatste periode"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
+#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
 msgid "Employees name"
 msgstr "Naam werknemer"
 
@@ -257,25 +227,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record activities.\n"
 "              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
+"                You can register and track your workings hours by project every\n"
+"                day. Every time spent on a project will become a cost in the\n"
 "                analytic accounting/contract and can be re-invoiced to\n"
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het aanmaken van activiteiten.\n"
-"              </p><p>\n"
-"                U kunt uw gewerkte uren per dag per project registreren en "
-"volgen.\n"
-"                Elke tijd besteed aan een project geeft kosten op de "
-"kostenplaats/contract\n"
-"                en kan, indien nodig,  worden doorberekend aan de klant.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik voor het aanmaken van activiteiten.\n              </p><p>\n                U kunt uw gewerkte uren per dag per project registreren en volgen.\n                Elke tijd besteed aan een project geeft kosten op de kostenplaats/contract\n                en kan, indien nodig,  worden doorberekend aan de klant.\n              </p>\n            "
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -303,8 +261,7 @@ msgid "July"
 msgstr "Juli"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
+#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
 msgstr "Begindatum"
 
@@ -317,8 +274,7 @@ msgstr "Definieer een kosten eenheid voor deze werknemer."
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
-msgstr ""
-"Specificeert de naam van de werknemer als product van het type 'dienst'."
+msgstr "Specificeert de naam van de werknemer als product van het type 'dienst'."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:188
@@ -326,9 +282,7 @@ msgstr ""
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr ""
-"Er is geen kostenplaats gedefinieerd voor dit project.\n"
-"Geef deze in, anders kan het systeem de urenstaat niet automatisch invullen."
+msgstr "Er is geen kostenplaats gedefinieerd voor dit project.\nGeef deze in, anders kan het systeem de urenstaat niet automatisch invullen."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -341,10 +295,7 @@ msgstr "Totale kosten"
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr ""
-"Er is geen 'kostenplaats dagboek' gedefinieerd voor deze werknemer %s \n"
-"Definieer een werknemer voor de geselecteerde gebruiker en wijs een "
-"kostenplaats dagboek toe!"
+msgstr "Er is geen 'kostenplaats dagboek' gedefinieerd voor deze werknemer %s \nDefinieer een werknemer voor de geselecteerde gebruiker en wijs een kostenplaats dagboek toe!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -382,8 +333,7 @@ msgstr "Werkomschrijving"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "or"
 msgstr "of"
@@ -422,8 +372,7 @@ msgid "(Keep empty for current time)"
 msgstr "(Laat leeg voor huidige tijd)"
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:0
+#: field:account.analytic.account,use_timesheets:0 view:hr.employee:0
 msgid "Timesheets"
 msgstr "Urenstaten"
 
@@ -433,10 +382,7 @@ msgid ""
 "You should create an analytic account structure depending on your needs to "
 "analyse costs and revenues. In OpenERP, analytic accounts are also used to "
 "track customer contracts."
-msgstr ""
-"U dient een kostenplaatsstructuur te maken op basis van de gewenste analyses "
-"op kosten en opbrengsten. In OpenERP worden kostenplaatsen ook gebruikt om "
-"klantcontracten te beheren."
+msgstr "U dient een kostenplaatsstructuur te maken op basis van de gewenste analyses op kosten en opbrengsten. In OpenERP worden kostenplaatsen ook gebruikt om klantcontracten te beheren."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
@@ -458,9 +404,7 @@ msgstr "Augustus"
 msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
-msgstr ""
-"Geen kostenplaats gedefinieerd voor '%s'.\n"
-"U dient een kostenplaats dagboek toe te wijzen bij de werknemer instellingen."
+msgstr "Geen kostenplaats gedefinieerd voor '%s'.\nU dient een kostenplaats dagboek toe te wijzen bij de werknemer instellingen."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -472,8 +416,7 @@ msgid "June"
 msgstr "Juni"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
+#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
 msgid "Current Status"
 msgstr "Huidige status"
 
@@ -522,8 +465,7 @@ msgid "Thu"
 msgstr "Do"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
+#: view:hr.sign.in.project:0 view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
 msgstr "In-/Uitklokken per project"
 
@@ -533,8 +475,7 @@ msgid "Print Employee Timesheet & Print My Timesheet"
 msgstr "Werknemer urenverantwoording & Mijn urenverantwoording afdrukken"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
+#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
 msgstr "Werknemer ID"
 
@@ -550,8 +491,7 @@ msgstr "Algemene informatie"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Cancel"
 msgstr "Annuleren"
@@ -582,11 +522,7 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr ""
-"Werknemer kunnen gewerkte tijd boeken op verschillende projecten waaraan ze "
-"zijn toegewezen. Een project is een kostenplaats en de gewerkte tijd op een "
-"project genereert kosten op de kostenplaats. Deze functionaliteit laat "
-"tegelijkertijd de aanwezigheid en de urenverantwoording vastleggen."
+msgstr "Werknemer kunnen gewerkte tijd boeken op verschillende projecten waaraan ze zijn toegewezen. Een project is een kostenplaats en de gewerkte tijd op een project genereert kosten op de kostenplaats. Deze functionaliteit laat tegelijkertijd de aanwezigheid en de urenverantwoording vastleggen."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -600,8 +536,7 @@ msgid "Timesheet Line"
 msgstr "Regel urenstaat"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: field:hr.employee,product_id:0
+#: view:hr.analytic.timesheet:0 field:hr.employee,product_id:0
 msgid "Product"
 msgstr "Product"
 
@@ -654,9 +589,7 @@ msgstr "Uitklokken op project"
 msgid ""
 "Please create an employee for this user, using the menu: Human Resources > "
 "Employees."
-msgstr ""
-"Maak een werknemer aan voor deze gebruiker. Ga naar het menu: Personeel > "
-"Werknemers."
+msgstr "Maak een werknemer aan voor deze gebruiker. Ga naar het menu: Personeel > Werknemers."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -710,8 +643,7 @@ msgid "Accounting"
 msgstr "Financieel"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
+#: xsl:hr.analytical.timesheet:0 xsl:hr.analytical.timesheet_users:0
 msgid "Total"
 msgstr "Totaal"
 

@@ -1,21 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * delivery
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-01-17 10:28+0000\n"
-"Last-Translator: Denis Karataev <dskarataev@gmail.com>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -38,8 +39,7 @@ msgid "Zip"
 msgstr "Индекс"
 
 #. module: delivery
-#: view:delivery.carrier:0
-#: view:delivery.grid:0
+#: view:delivery.carrier:0 view:delivery.grid:0
 msgid "Destination"
 msgstr "Место назначения"
 
@@ -54,25 +54,21 @@ msgid "Delivery Grid Line"
 msgstr "Строка сетки доставки"
 
 #. module: delivery
-#: field:stock.move,weight_uom_id:0
-#: field:stock.picking,weight_uom_id:0
+#: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
 #: field:stock.picking.in,weight_uom_id:0
 #: field:stock.picking.out,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Единица измерения"
 
 #. module: delivery
-#: view:delivery.carrier:0
-#: view:delivery.grid:0
+#: view:delivery.carrier:0 view:delivery.grid:0
 msgid "Delivery grids"
 msgstr "Сетки доставки"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
-#: field:stock.picking.in,volume:0
-#: field:stock.picking.out,volume:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.picking,volume:0
+#: field:stock.picking.in,volume:0 field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Объем"
 
@@ -119,8 +115,7 @@ msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr "Возвращает последовательность вывода списка доставочной сетки."
 
 #. module: delivery
-#: view:delivery.grid:0
-#: field:delivery.grid,country_ids:0
+#: view:delivery.grid:0 field:delivery.grid,country_ids:0
 msgid "Countries"
 msgstr "Страны"
 
@@ -128,32 +123,16 @@ msgstr "Страны"
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a delivery price list for a specific "
-"region.\n"
+"                Click to create a delivery price list for a specific region.\n"
 "              </p><p>\n"
 "                The delivery price list allows you to compute the cost and\n"
 "                sales price of the delivery according to the weight of the\n"
-"                products and other criteria. You can define several price "
-"lists\n"
-"                for each delivery method: per country or a zone in a "
-"specific\n"
+"                products and other criteria. You can define several price lists\n"
+"                for each delivery method: per country or a zone in a specific\n"
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Нажмите для создания прайс-листа на доставку для конкретного "
-"региона.\n"
-"              </p><p>\n"
-"                Прайс-лист на доставку позволяет вам считать себестоимость и "
-"цену продажи доставки в зависимости от веса\n"
-"                продуктов и других критериев. Вы можете определить несколько "
-"прайс-листов\n"
-"                для каждого метода доставки: по стране или зоне в "
-"конкретной\n"
-"                стране, определенной по почтовому индексу.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Нажмите для создания прайс-листа на доставку для конкретного региона.\n              </p><p>\n                Прайс-лист на доставку позволяет вам считать себестоимость и цену продажи доставки в зависимости от веса\n                продуктов и других критериев. Вы можете определить несколько прайс-листов\n                для каждого метода доставки: по стране или зоне в конкретной\n                стране, определенной по почтовому индексу.\n              </p>\n            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -181,8 +160,7 @@ msgid "Fixed"
 msgstr "Фиксированный"
 
 #. module: delivery
-#: field:delivery.carrier,name:0
-#: field:res.partner,property_delivery_carrier:0
+#: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Метод доставки"
@@ -206,8 +184,7 @@ msgid "Carrier Tracking Ref"
 msgstr "Отслеживание доставки перевозчиком"
 
 #. module: delivery
-#: field:stock.picking,weight_net:0
-#: field:stock.picking.in,weight_net:0
+#: field:stock.picking,weight_net:0 field:stock.picking.in,weight_net:0
 #: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "Вес нетто"
@@ -218,8 +195,7 @@ msgid "Grid Lines"
 msgstr "Линии сетки"
 
 #. module: delivery
-#: view:delivery.carrier:0
-#: view:delivery.grid:0
+#: view:delivery.carrier:0 view:delivery.grid:0
 msgid "Grid definition"
 msgstr "Определение сетки"
 
@@ -252,8 +228,8 @@ msgstr "Заказы на доставку"
 #. module: delivery
 #: view:sale.order:0
 msgid ""
-"If you don't 'Add in Quote', the exact price will be computed when invoicing "
-"based on delivery order(s)."
+"If you don't 'Add in Quote', the exact price will be computed when invoicing"
+" based on delivery order(s)."
 msgstr ""
 
 #. module: delivery
@@ -286,23 +262,19 @@ msgstr "Название"
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
-"Если заказ дороже, чем определённая сумма, покупатель может получить выгоду "
-"из бесплатной перевозки"
+msgstr "Если заказ дороже, чем определённая сумма, покупатель может получить выгоду из бесплатной перевозки"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr ""
-"Сумма заказа, чтобы воспользоваться бесплатной доставкой, выраженная в "
-"валюте компании"
+msgstr "Сумма заказа, чтобы воспользоваться бесплатной доставкой, выраженная в валюте компании"
 
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Бесплатно, если общая сумма заказа больше, чем"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -314,9 +286,7 @@ msgstr "Сетка"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr ""
-"Если поле \"Активно\" установлено в «Ложь», будет позволено спрятать "
-"доставочную сетку не удаляя её."
+msgstr "Если поле \"Активно\" установлено в «Ложь», будет позволено спрятать доставочную сетку не удаляя её."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -353,13 +323,9 @@ msgstr "Количество упаковок"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: report:sale.shipping:0
-#: view:stock.move:0
-#: field:stock.move,weight:0
-#: view:stock.picking:0
-#: field:stock.picking,weight:0
-#: field:stock.picking.in,weight:0
+#: selection:delivery.grid.line,variable_factor:0 report:sale.shipping:0
+#: view:stock.move:0 field:stock.move,weight:0 view:stock.picking:0
+#: field:stock.picking,weight:0 field:stock.picking.in,weight:0
 #: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "Вес"
@@ -369,17 +335,13 @@ msgstr "Вес"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr ""
-"Установите этот флажок, если вы хотите управлять ценами доставки, которые "
-"зависят от места назначения, веса, суммы заказа и т.д."
+msgstr "Установите этот флажок, если вы хотите управлять ценами доставки, которые зависят от места назначения, веса, суммы заказа и т.д."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
-"Оставьте пустым, если расценка зависит от расширенной расценки по месту "
-"назначения"
+msgstr "Оставьте пустым, если расценка зависит от расширенной расценки по месту назначения"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -392,8 +354,7 @@ msgid "Lot"
 msgstr "Партия"
 
 #. module: delivery
-#: field:delivery.carrier,active:0
-#: field:delivery.grid,active:0
+#: field:delivery.carrier,active:0 field:delivery.grid,active:0
 msgid "Active"
 msgstr "Активен"
 
@@ -424,17 +385,14 @@ msgid "Order not in Draft State!"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
+#: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
 msgid "Variable"
 msgstr "Переменная"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
-"Этот способ доставки будет использоваться при выставление счета по "
-"комплектованию."
+msgstr "Этот способ доставки будет использоваться при выставление счета по комплектованию."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -442,35 +400,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new deliver method. \n"
 "              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
+"                Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method.\n"
 "              </p><p>\n"
-"                These methods allows to automaticaly compute the delivery "
-"price\n"
-"                according to your settings; on the sales order (based on "
-"the\n"
+"                These methods allows to automaticaly compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Нажмите для добавления нового способа доставки.\n"
-"              </p><p>\n"
-"                Каждая курьерская служба (например UPS) может иметь "
-"несколько способов доставки (например\n"
-"                UPS Express, UPS Standard) с установкой цен для каждого из "
-"способов.\n"
-"              </p><p>\n"
-"                Эти способы позволяют автоматически высчитать стоимость "
-"доставки\n"
-"                в зависимости от ваших настроек; по заказу на продажу "
-"(основанному на заявке)\n"
-"                или по счету (основанному на заказе на доставку).\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Нажмите для добавления нового способа доставки.\n              </p><p>\n                Каждая курьерская служба (например UPS) может иметь несколько способов доставки (например\n                UPS Express, UPS Standard) с установкой цен для каждого из способов.\n              </p><p>\n                Эти способы позволяют автоматически высчитать стоимость доставки\n                в зависимости от ваших настроек; по заказу на продажу (основанному на заявке)\n                или по счету (основанному на заказе на доставку).\n              </p>\n            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -491,9 +430,7 @@ msgstr "Почтовый индекс отправителя"
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
-"Заполните это поле, если вы планируете выставить счет на отгрузку основанный "
-"на комплектовании."
+msgstr "Заполните это поле, если вы планируете выставить счет на отгрузку основанный на комплектовании."
 
 #. module: delivery
 #: code:addons/delivery/sale.py:54
@@ -518,8 +455,7 @@ msgid "<="
 msgstr "<="
 
 #. module: delivery
-#: help:stock.picking,weight_uom_id:0
-#: help:stock.picking.in,weight_uom_id:0
+#: help:stock.picking,weight_uom_id:0 help:stock.picking.in,weight_uom_id:0
 #: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
 msgstr "Единица измерения веса"
@@ -534,9 +470,7 @@ msgstr "Описание"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr ""
-"Если поле \"Активно\" имеет значение ложь, то это позволит вам скрыть "
-"перевозчика, не удаляя его."
+msgstr "Если поле \"Активно\" имеет значение ложь, то это позволит вам скрыть перевозчика, не удаляя его."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -545,8 +479,7 @@ msgid "Delivery Pricelist"
 msgstr "Прайс-лист доставки"
 
 #. module: delivery
-#: field:delivery.carrier,price:0
-#: selection:delivery.grid.line,type:0
+#: field:delivery.carrier,price:0 selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Цена"
@@ -579,12 +512,9 @@ msgid "Advanced Pricing per Destination"
 msgstr "Расширенные расценки по месту назначения"
 
 #. module: delivery
-#: view:delivery.carrier:0
-#: field:delivery.grid,carrier_id:0
-#: model:ir.model,name:delivery.model_delivery_carrier
-#: report:sale.shipping:0
-#: field:stock.picking,carrier_id:0
-#: field:stock.picking.in,carrier_id:0
+#: view:delivery.carrier:0 field:delivery.grid,carrier_id:0
+#: model:ir.model,name:delivery.model_delivery_carrier report:sale.shipping:0
+#: field:stock.picking,carrier_id:0 field:stock.picking.in,carrier_id:0
 #: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Перевозчик"
@@ -599,8 +529,7 @@ msgstr "Способы доставки"
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
-"Состояние заказа должно быть \"Черновик\" для добавления позиций доставки."
+msgstr "Состояние заказа должно быть \"Черновик\" для добавления позиций доставки."
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -623,8 +552,7 @@ msgid "Print Delivery Order"
 msgstr "Печать заказа на доставку"
 
 #. module: delivery
-#: view:delivery.grid:0
-#: field:delivery.grid,state_ids:0
+#: view:delivery.grid:0 field:delivery.grid,state_ids:0
 msgid "States"
 msgstr "Cостояния"
 
@@ -638,15 +566,3 @@ msgstr "Единица измерения (единица измерения) э
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Тип цены"
-
-#, python-format
-#~ msgid "Order not in draft state !"
-#~ msgstr "Заказ не в состоянии \"Черновик\" !"
-
-#, python-format
-#~ msgid "No grid available !"
-#~ msgstr "Доступных сеток нет !"
-
-#, python-format
-#~ msgid "No grid matching for this carrier !"
-#~ msgstr "Нет сетки, подходящей для этого перевозчика!"

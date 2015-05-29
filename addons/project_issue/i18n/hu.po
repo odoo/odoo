@@ -1,21 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-10-12 10:39+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-7/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:17+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -27,9 +28,7 @@ msgstr "Végzetes hiba"
 msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
-msgstr ""
-"Lehetővé teszi a beérkező -email szerver beállítását, És ügyek létrehozását "
-"a beérkező levelekből."
+msgstr "Lehetővé teszi a beérkező -email szerver beállítását, És ügyek létrehozását a beérkező levelekből."
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -37,8 +36,7 @@ msgid "Avg. Delay to Open"
 msgstr "Ált. megnyitási késleltetés"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
 
@@ -73,14 +71,12 @@ msgid "Progress (%)"
 msgstr "Fejlődés (%)"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,message_unread:0
+#: view:project.issue:0 field:project.issue,message_unread:0
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
 #. module: project_issue
-#: field:project.issue,company_id:0
-#: view:project.issue.report:0
+#: field:project.issue,company_id:0 view:project.issue.report:0
 #: field:project.issue.report,company_id:0
 msgid "Company"
 msgstr "Vállalat"
@@ -96,13 +92,8 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
-msgstr ""
-"Az ügyek kanban állapota megmutatja milyen speciális állapotot érint:\n"
-" * Normál az alap állapot\n"
-" * Blokkolt azt jelzi, hogy valami akadályozza az ügy végrehajtását\n"
-" * Készenáll a következő szintre jelzi az ügy egy fokkal feljebb lépését"
+" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+msgstr "Az ügyek kanban állapota megmutatja milyen speciális állapotot érint:\n * Normál az alap állapot\n * Blokkolt azt jelzi, hogy valami akadályozza az ügy végrehajtását\n * Készenáll a következő szintre jelzi az ügy egy fokkal feljebb lépését"
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
@@ -125,9 +116,7 @@ msgstr "Megnyitásig hátralévő napok"
 msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
-msgstr ""
-"Nem tudja leágaztatni ezt az ügyet.\n"
-"Az idevonatkozó projektre nincs beállítva leágaztató projekt!"
+msgstr "Nem tudja leágaztatni ezt az ügyet.\nAz idevonatkozó projektre nincs beállítva leágaztató projekt!"
 
 #. module: project_issue
 #: constraint:project.project:0
@@ -146,8 +135,7 @@ msgid "Difference in days between last action and current date"
 msgstr "Az utolsó művelet és az aktuális dátum különbsége napokban"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,day:0
+#: view:project.issue.report:0 field:project.issue.report,day:0
 msgid "Day"
 msgstr "Nap"
 
@@ -157,8 +145,7 @@ msgid "Days since creation date"
 msgstr "A létrehozástól eltelt napok száma"
 
 #. module: project_issue
-#: field:project.issue,task_id:0
-#: view:project.issue.report:0
+#: field:project.issue,task_id:0 view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
 msgstr "Feladat"
@@ -180,10 +167,8 @@ msgstr "Az utolső cselekvés óta eltelt napok száma"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0
-#: field:project.issue,project_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,project_id:0
+#: view:project.issue:0 field:project.issue,project_id:0
+#: view:project.issue.report:0 field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "Projekt"
 
@@ -193,26 +178,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to report a new issue.\n"
 "          </p><p>\n"
-"            The OpenERP issues tacker allows you to efficiantly manage "
-"things\n"
+"            The OpenERP issues tacker allows you to efficiantly manage things\n"
 "            like internal requests, software development bugs, customer\n"
 "            complaints, project troubles, material breakdowns, etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Kattintson új ügy bejegyzéséhez.\n"
-"          </p><p>\n"
-"            Az OpenERP ügy nyomkövető lehetővé teszi a belső kérések, "
-"software fejlesztési hibák, \n"
-"            ügyfél jótállási igények, project problémák, anyag "
-"tönkremenetel, stb. hatékony kezelését.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Kattintson új ügy bejegyzéséhez.\n          </p><p>\n            Az OpenERP ügy nyomkövető lehetővé teszi a belső kérések, software fejlesztési hibák, \n            ügyfél jótállási igények, project problémák, anyag tönkremenetel, stb. hatékony kezelését.\n          </p>\n        "
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: selection:project.issue.report,state:0
+#: selection:project.issue,state:0 selection:project.issue.report,state:0
 msgid "Cancelled"
 msgstr "Törölt"
 
@@ -251,18 +225,14 @@ msgstr "Gyűjtő/elemző könyvelés"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
-"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
+msgstr "A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
 msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
-msgstr ""
-"Bármely ügy mely ebből a projektből lett ágaztatva, az itt kiválasztott "
-"project alatt lesz listázva"
+msgstr "Bármely ügy mely ebből a projektből lett ágaztatva, az itt kiválasztott project alatt lesz listázva"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -308,18 +278,14 @@ msgid "Project issue <b>converted</b> to task."
 msgstr "Project ügy <b>átalakítása</b> feladattá."
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,priority:0
-#: view:project.issue.report:0
-#: field:project.issue.report,priority:0
+#: view:project.issue:0 field:project.issue,priority:0
+#: view:project.issue.report:0 field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "Prioritás"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,version_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,version_id:0
+#: view:project.issue:0 field:project.issue,version_id:0
+#: view:project.issue.report:0 field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "Verzió"
 
@@ -329,8 +295,7 @@ msgid "Followers"
 msgstr "Követők"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "New"
 msgstr "Új"
@@ -346,8 +311,7 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0
-#: field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "Csatorna"
 
@@ -369,8 +333,7 @@ msgid "Unassigned Issues"
 msgstr "Nem hozzárendelt ügyek"
 
 #. module: project_issue
-#: field:project.issue,create_date:0
-#: view:project.issue.report:0
+#: field:project.issue,create_date:0 view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "Létrehozás dátuma"
@@ -397,8 +360,7 @@ msgid "Create issues from an incoming email account "
 msgstr "Ügy létrehozása beérkező e-mail -ből "
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
 msgstr "Kész"
@@ -415,18 +377,11 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr ""
-"Ez a projekt ügyi jelentés lehetővé teszi a támogatása minőségének és az "
-"eladás utáni szolgáltatásainak az elemzését. Nyomon követheti az ügyet koruk "
-"szerint. Elemezheti az ügy megnyitásához és bezárásához felhasznált időt, az "
-"ügyben váltott emailek számát és az átlag időt, mennyit töltöttek egyes "
-"ügyekkel."
+msgstr "Ez a projekt ügyi jelentés lehetővé teszi a támogatása minőségének és az eladás utáni szolgáltatásainak az elemzését. Nyomon követheti az ügyet koruk szerint. Elemezheti az ügy megnyitásához és bezárásához felhasznált időt, az ügyben váltott emailek számát és az átlag időt, mennyit töltöttek egyes ügyekkel."
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,stage_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,stage_id:0
+#: view:project.issue:0 field:project.issue,stage_id:0
+#: view:project.issue.report:0 field:project.issue.report,stage_id:0
 msgid "Stage"
 msgstr "Szakasz"
 
@@ -449,10 +404,8 @@ msgid "My Project Issues"
 msgstr "Projectjeim ügyei"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,partner_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,partner_id:0
+#: view:project.issue:0 field:project.issue,partner_id:0
+#: view:project.issue.report:0 field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "Kapcsolat"
 
@@ -523,8 +476,7 @@ msgid "Next Action"
 msgstr "Következő művelet"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Blocked"
 msgstr "Zárolt"
 
@@ -549,10 +501,7 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
-"Ezek az email címek lesznek hozzáadva a CC /Carbon copy,másolat/ mezőhöz "
-"minden bejövő és kimenő email-hez amit ezzel a feljegyzéssel küld. Több "
-"email felsorolását vesszővel elválasztva adja meg."
+msgstr "Ezek az email címek lesznek hozzáadva a CC /Carbon copy,másolat/ mezőhöz minden bejövő és kimenő email-hez amit ezzel a feljegyzéssel küld. Több email felsorolását vesszővel elválasztva adja meg."
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -566,8 +515,7 @@ msgid "Low"
 msgstr "Alacsony"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0
-#: selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
 msgid "Closed"
 msgstr "Lezárt"
 
@@ -577,15 +525,13 @@ msgid "Avg. Delay to Close"
 msgstr "Átl. bezárási idő"
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: view:project.issue.report:0
+#: selection:project.issue,state:0 view:project.issue.report:0
 #: selection:project.issue.report,state:0
 msgid "Pending"
 msgstr "Függőben lévő"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,state:0
+#: view:project.issue:0 field:project.issue,state:0
 #: field:project.issue.report,state:0
 msgid "Status"
 msgstr "Állapot"
@@ -601,8 +547,7 @@ msgid "August"
 msgstr "Augusztus"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-#: selection:project.issue,priority:0
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "Normál"
@@ -641,20 +586,14 @@ msgstr "Ez egy követő"
 #: help:project.issue,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
-msgstr ""
-"Az állapot 'Terv', az ügy létrehozásakor.                      Ha az ügy "
-"folyamatban van akkor az állapota 'Nyitott'.                      Ha az ügy "
-"elintézve akkor az állapota 'Elvégezve'.                      Ha az ügyet át "
-"kell tekinteni akkor az állapota                       be lesz állítva "
-"'Függőben'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
+msgstr "Az állapot 'Terv', az ügy létrehozásakor.                      Ha az ügy folyamatban van akkor az állapota 'Nyitott'.                      Ha az ügy elintézve akkor az állapota 'Elvégezve'.                      Ha az ügyet át kell tekinteni akkor az állapota                       be lesz állítva 'Függőben'."
 
 #. module: project_issue
-#: field:project.issue,active:0
-#: field:project.issue.version,active:0
+#: field:project.issue,active:0 field:project.issue.version,active:0
 msgid "Active"
 msgstr "Aktív"
 
@@ -710,8 +649,7 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: project_issue
-#: field:project.issue,user_id:0
-#: view:project.issue.report:0
+#: field:project.issue,user_id:0 view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr "Hozzárendelve"
@@ -752,20 +690,17 @@ msgstr "Nyitott"
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: view:project.issue:0
-#: view:project.project:0
+#: view:project.issue:0 view:project.project:0
 msgid "Issues"
 msgstr "Bejelentések"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 msgid "In Progress"
 msgstr "Folyamatban"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "To Do"
 msgstr "Tennivalók"
 
@@ -796,8 +731,7 @@ msgid "Unclosed Issues"
 msgstr "Befejezetlen ügyek"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr "Következő fokra ugorhat"
 
@@ -807,22 +741,18 @@ msgid "October"
 msgstr "Október"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,section_id:0
+#: view:project.issue.report:0 field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr "Értékesítési csapat"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 #: field:project.issue.report,month:0
 msgid "Month"
 msgstr "Hónap"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,name:0
-#: view:project.project:0
+#: view:project.issue:0 field:project.issue,name:0 view:project.project:0
 msgid "Issue"
 msgstr "Bejelentés"
 
@@ -863,8 +793,7 @@ msgid "Issue Closed"
 msgstr "Ügy lezárva"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,email:0
+#: view:project.issue.report:0 field:project.issue.report,email:0
 msgid "# Emails"
 msgstr "E-mailek száma"
 
@@ -907,29 +836,18 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new version.\n"
 "              </p><p>\n"
-"                Define here the different versions of your products on "
-"which\n"
+"                Define here the different versions of your products on which\n"
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson új verzió hozzáadásához.\n"
-"              </p><p>\n"
-"                Határozzon meg különböző verziókat azokra a  termékekre, "
-"melyeken\n"
-"                ügyeket intézhet.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson új verzió hozzáadásához.\n              </p><p>\n                Határozzon meg különböző verziókat azokra a  termékekre, melyeken\n                ügyeket intézhet.\n              </p>\n            "
 
 #. module: project_issue
 #: help:project.issue,section_id:0
 msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
-msgstr ""
-"Eladó csoport, melyhez ez az eset tartozik. Határozzon meg felelős "
-"felhasználót és email-t az email átjáróhoz."
+msgstr "Eladó csoport, melyhez ez az eset tartozik. Határozzon meg felelős felhasználót és email-t az email átjáróhoz."
 
 #. module: project_issue
 #: view:board.board:0
@@ -1008,8 +926,7 @@ msgid "Last Action"
 msgstr "Utolsó művelet"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,name:0
+#: view:project.issue.report:0 field:project.issue.report,name:0
 msgid "Year"
 msgstr "Év"
 
@@ -1023,24 +940,3 @@ msgstr "Időtartam"
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
 msgstr "Ügy elindítva"
-
-#~ msgid "Categories"
-#~ msgstr "Kategóriák"
-
-#~ msgid "References"
-#~ msgstr "Hivatkozások"
-
-#~ msgid "Issue Categories"
-#~ msgstr "Ügy kategóriák"
-
-#~ msgid "Feature Requests"
-#~ msgstr "Igények tulajdonsága"
-
-#~ msgid "unknown"
-#~ msgstr "ismeretlen"
-
-#~ msgid "Maintenance"
-#~ msgstr "Karbantartás"
-
-#~ msgid "Cancel"
-#~ msgstr "Visszavonás"

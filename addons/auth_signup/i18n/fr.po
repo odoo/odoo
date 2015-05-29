@@ -1,30 +1,29 @@
-# French translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-21 16:27+0000\n"
-"Last-Translator: Florian Hatat <Unknown>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 10:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/projects/p/odoo-7/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:41+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: auth_signup
 #: view:res.users:0
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
-msgstr ""
-"Une réinitialisation du mot de passe a été demandée pour cet utilisateur. Un "
-"courriel lui a été envoyé, contenant le lien suivant :"
+msgstr "Une réinitialisation du mot de passe a été demandée pour cet utilisateur. Un courriel lui a été envoyé, contenant le lien suivant :"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -46,9 +45,7 @@ msgstr "Confirmez le mot de passe"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
-"Si la case est décochée, seules les utilisateurs invités pourront se "
-"connecter."
+msgstr "Si la case est décochée, seules les utilisateurs invités pourront se connecter."
 
 #. module: auth_signup
 #: view:res.users:0
@@ -69,8 +66,7 @@ msgstr "base.config.settings"
 #: code:addons/auth_signup/res_users.py:266
 #, python-format
 msgid "Cannot send email: user has no email address."
-msgstr ""
-"Impossible d'envoyer l'e-mail : l'utilisateur n'a pas d'adresse e-mail."
+msgstr "Impossible d'envoyer l'e-mail : l'utilisateur n'a pas d'adresse e-mail."
 
 #. module: auth_signup
 #. openerp-web
@@ -83,8 +79,7 @@ msgstr "Réinitialiser le mot de passe"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
-msgstr ""
-"Utilisateur modèle pour les nouveaux utilisateurs créés à travers signup"
+msgstr "Utilisateur modèle pour les nouveaux utilisateurs créés à travers signup"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
@@ -107,31 +102,19 @@ msgstr "Envoyer un lien de réinitialisation du mot de passe"
 #: model:email.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the OpenERP account linked to this "
-"email.</p>\n"
+"<p>A password reset was requested for the OpenERP account linked to this email.</p>\n"
 "\n"
-"<p>You may change your password by following <a "
-"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
-"\n"
-"<p>Une demande de ré-initialisation de mot de passe sur le compte OpenERP "
-"associé à cet email.</p>\n"
-"\n"
-"<p>Vous pouvez changer votre mot de passe en utilisant  <a "
-"href=\"${object.signup_url}\">ce lien</a>.</p>\n"
-"\n"
-"<p>Note: vous pouvez ignorer ce mail si vous ne souhaitez pas changer votre "
-"mot de passe.</p>"
+msgstr "\n<p>Une demande de ré-initialisation de mot de passe sur le compte OpenERP associé à cet email.</p>\n\n<p>Vous pouvez changer votre mot de passe en utilisant  <a href=\"${object.signup_url}\">ce lien</a>.</p>\n\n<p>Note: vous pouvez ignorer ce mail si vous ne souhaitez pas changer votre mot de passe.</p>"
 
 #. module: auth_signup
 #: view:res.users:0
 msgid ""
-"An invitation email containing the following subscription link has been sent:"
-msgstr ""
-"Une invitation a été envoyée par courriel. Elle contient le lien suivant "
-"pour s'abonner :"
+"An invitation email containing the following subscription link has been "
+"sent:"
+msgstr "Une invitation a été envoyée par courriel. Elle contient le lien suivant pour s'abonner :"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -169,17 +152,13 @@ msgid ""
 "                        ${object.name},\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        You have been invited to connect to "
-"\"${object.company_id.name}\" in order to get access to your documents in "
-"OpenERP.\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in OpenERP.\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        To accept the invitation, click on the following "
-"link:\n"
+"                        To accept the invitation, click on the following link:\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
 "                    </ul>\n"
 "                    <p>\n"
 "                        Thanks,\n"
@@ -192,36 +171,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
-"\n"
-"                \n"
-"                    <p>\n"
-"                        ${object.name},\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        Vous êtes invités à vous connecter à "
-"\"${object.company_id.name}\" dans le but d'accéder à vos documents dans "
-"OpenERP.\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        Pour accepter l'invitation, cliquez sur le lien ci-"
-"dessous :\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accepter "
-"l'invitation à \"${object.company_id.name}\"</a></li>\n"
-"                    </ul>\n"
-"                    <p>\n"
-"                        Merci,\n"
-"                    </p>\n"
-"                    <pre>\n"
-"--\n"
-"${object.company_id.name or ''}\n"
-"${object.company_id.email or ''}\n"
-"${object.company_id.phone or ''}\n"
-"                    </pre>\n"
-"                \n"
-"            "
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Vous êtes invités à vous connecter à \"${object.company_id.name}\" dans le but d'accéder à vos documents dans OpenERP.\n                    </p>\n                    <p>\n                        Pour accepter l'invitation, cliquez sur le lien ci-dessous :\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Accepter l'invitation à \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Merci,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #. openerp-web
@@ -236,19 +186,14 @@ msgstr "Merci de saisir votre nom d'utilisateur"
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
-msgstr ""
-"Impossible d'envoyer des courriels : aucun serveur de courriel sortant n'est "
-"configuré.\n"
-"Vous pouvez le configurer dans : Configuration/Paramètres généraux."
+msgstr "Impossible d'envoyer des courriels : aucun serveur de courriel sortant n'est configuré.\nVous pouvez le configurer dans : Configuration/Paramètres généraux."
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:178
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
-"Un courriel a été envoyé avec les informations pour recréez votre mot de "
-"passe"
+msgstr "Un courriel a été envoyé avec les informations pour recréez votre mot de passe"
 
 #. module: auth_signup
 #. openerp-web
@@ -286,9 +231,7 @@ msgstr "Expiration de la session de connexion"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
-"Permet à l'utilisateur de demander un changement de mot de passe depuis la "
-"page d'identification."
+msgstr "Permet à l'utilisateur de demander un changement de mot de passe depuis la page d'identification."
 
 #. module: auth_signup
 #. openerp-web
@@ -340,8 +283,7 @@ msgstr "Aucune base de données sélectionnée !"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
-"Permettre la réinitialisation du mot de passe depuis la page de connexion"
+msgstr "Permettre la réinitialisation du mot de passe depuis la page de connexion"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
@@ -372,27 +314,3 @@ msgstr "Session de connexion"
 #, python-format
 msgid "Sign Up"
 msgstr "S'inscrire"
-
-#~ msgid "Send an email to the user to (re)set their password."
-#~ msgstr ""
-#~ "Envoyer un e-mail à l'utilisateurs pour (ré-)initialiser son mot de passe."
-
-#~ msgid "Active"
-#~ msgstr "Activer"
-
-#~ msgid "New"
-#~ msgstr "Nouveau"
-
-#~ msgid "Resetting Password"
-#~ msgstr "Réinitialiser le mot de passe"
-
-#~ msgid "Reset Password"
-#~ msgstr "Réinitialiser le mot de passe"
-
-#, python-format
-#~ msgid "Sign up"
-#~ msgstr "S'enregistrer"
-
-#, python-format
-#~ msgid "Mail sent to:"
-#~ msgstr "Courriel envoyé à :"

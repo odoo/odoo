@@ -1,30 +1,29 @@
-# Croatian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * resource
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-12-12 10:14+0000\n"
-"Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
-"Language-Team: Croatian <hr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/odoo-7/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-13 06:43+0000\n"
-"X-Generator: Launchpad (build 16869)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr ""
-"Ako je prazno, ovo je generički praznik za organizaciju. Ako je resurs "
-"postavljen, praznik/odsustvo je samo za taj resurs."
+msgstr "Ako je prazno, ovo je generički praznik za organizaciju. Ako je resurs postavljen, praznik/odsustvo je samo za taj resurs."
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -56,16 +55,10 @@ msgstr "Dan u tjednu"
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Define working hours and time table that could be scheduled "
-"to your project members\n"
+"                Define working hours and time table that could be scheduled to your project members\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Definirajte radna vremena i rasporede koji mogu biti "
-"zakazani sa članovima projekta\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Definirajte radna vremena i rasporede koji mogu biti zakazani sa članovima projekta\n              </p>\n            "
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -73,8 +66,7 @@ msgid "Thursday"
 msgstr "četvrtak"
 
 #. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
+#: view:resource.calendar.leaves:0 view:resource.resource:0
 msgid "Group By..."
 msgstr "Grupiraj po..."
 
@@ -124,8 +116,7 @@ msgstr "Pretraži radno vrijeme"
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr ""
-"Greška! Datum početka odsustva mora biti manji od završnog datuma odsustva"
+msgstr "Greška! Datum početka odsustva mora biti manji od završnog datuma odsustva"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -133,10 +124,8 @@ msgid "Resource Calendar"
 msgstr "Kalendar resursa"
 
 #. module: resource
-#: field:resource.calendar,company_id:0
-#: view:resource.calendar.leaves:0
-#: field:resource.calendar.leaves,company_id:0
-#: view:resource.resource:0
+#: field:resource.calendar,company_id:0 view:resource.calendar.leaves:0
+#: field:resource.calendar.leaves,company_id:0 view:resource.resource:0
 #: field:resource.resource,company_id:0
 msgid "Company"
 msgstr "Organizacija"
@@ -157,8 +146,7 @@ msgid "Reason"
 msgstr "Razlog"
 
 #. module: resource
-#: view:resource.resource:0
-#: field:resource.resource,user_id:0
+#: view:resource.resource:0 field:resource.resource,user_id:0
 msgid "User"
 msgstr "Korisnik"
 
@@ -195,23 +183,19 @@ msgstr ""
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
-#: field:resource.calendar.leaves,resource_id:0
-#: view:resource.resource:0
+#: field:resource.calendar.leaves,resource_id:0 view:resource.resource:0
 msgid "Resource"
 msgstr "Resurs"
 
 #. module: resource
-#: field:resource.calendar,name:0
-#: field:resource.calendar.attendance,name:0
-#: field:resource.calendar.leaves,name:0
-#: field:resource.resource,name:0
+#: field:resource.calendar,name:0 field:resource.calendar.attendance,name:0
+#: field:resource.calendar.leaves,name:0 field:resource.resource,name:0
 msgid "Name"
 msgstr "Naziv"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar:0 field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
 #: field:resource.calendar.leaves,calendar_id:0
 #: field:resource.resource,calendar_id:0
@@ -224,8 +208,7 @@ msgid "Start and End time of working."
 msgstr "Početno i završno vrijeme rada"
 
 #. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
+#: view:resource.calendar.leaves:0 view:resource.resource:0
 msgid "Working Period"
 msgstr "Razdoblje rada"
 
@@ -249,8 +232,7 @@ msgstr "Aktivan"
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"Ako je ovo polje postavljeno na NE, moežte sakriti resurs bez da ga uklonite."
+msgstr "Ako je ovo polje postavljeno na NE, moežte sakriti resurs bez da ga uklonite."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
@@ -307,8 +289,8 @@ msgstr "Utorak"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
 msgstr ""
 
 #. module: resource
@@ -323,10 +305,7 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr ""
-"Resursi vam omogućuju kreiranje i upravljanje resursima koji trebaju biti "
-"uključeni u neku fazu projekta. Također možete postaviti njihovu razinu "
-"efikasnosti i opterećenje na osnovi njihovih tjednih radnih sati."
+msgstr "Resursi vam omogućuju kreiranje i upravljanje resursima koji trebaju biti uključeni u neku fazu projekta. Također možete postaviti njihovu razinu efikasnosti i opterećenje na osnovi njihovih tjednih radnih sati."
 
 #. module: resource
 #: view:resource.resource:0

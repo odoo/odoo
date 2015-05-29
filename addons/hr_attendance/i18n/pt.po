@@ -1,21 +1,22 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-01-18 11:21+0000\n"
-"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (http://www.transifex.com/projects/p/odoo-7/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:54+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -30,11 +31,10 @@ msgstr "Procura de Presenças"
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
 msgid "Last Sign"
-msgstr ""
+msgstr "Último Acesso"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.employee,state:0
+#: view:hr.attendance:0 field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
 msgstr "Presenças"
@@ -44,12 +44,12 @@ msgstr "Presenças"
 #: code:addons/hr_attendance/static/src/js/attendance.js:34
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "Último acesso em : %s,<br/>%s. <br/> Clique para sair."
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "Erro! Entrar ( resp. Sair) deve seguir Sair (resp. Entre)"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -60,9 +60,7 @@ msgstr "Especificar tipos de Signing In/Signing Out"
 #: report:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Um atraso positivo significa que o funcionário trabalhou menos do que "
-"gravado."
+msgstr "(*) Um atraso positivo significa que o funcionário trabalhou menos do que gravado."
 
 #. module: hr_attendance
 #: view:hr.attendance.month:0
@@ -98,12 +96,11 @@ msgstr "Outubro"
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
 msgid "Attendance Access"
-msgstr ""
+msgstr "Acesso a Assiduidade"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
+#: selection:hr.attendance,action:0 view:hr.employee:0
 #, python-format
 msgid "Sign Out"
 msgstr "Sair"
@@ -115,15 +112,13 @@ msgid "No records are found for your selection!"
 msgstr "Não foram encontrados registos"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Print"
 msgstr "Imprimir"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,employee_id:0
+#: view:hr.attendance:0 field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Funcionário"
@@ -140,15 +135,13 @@ msgstr "Data do registo"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
+#: selection:hr.attendance,action:0 view:hr.employee:0
 #, python-format
 msgid "Sign In"
 msgstr "Entrar"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
+#: field:hr.attendance.error,init_date:0 field:hr.attendance.week,init_date:0
 msgid "Starting Date"
 msgstr "Data Inicial"
 
@@ -178,7 +171,7 @@ msgstr "Aviso"
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
 msgid "Allocates attendance group to all users."
-msgstr ""
+msgstr "Alocar todos os utilizadores a grupo de assiduidade."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -227,10 +220,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using OpenERP's web service features."
-msgstr ""
-"A funcionalidade Time Tracking pretende gerir a assiduidade do funcionário "
-"ações Sign in/Sign out. Também pode vincular este recurso a um dispositivo "
-"de assiduidade utilizando recursos OpenERP de serviços web."
+msgstr "A funcionalidade Time Tracking pretende gerir a assiduidade do funcionário ações Sign in/Sign out. Também pode vincular este recurso a um dispositivo de assiduidade utilizando recursos OpenERP de serviços web."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -264,8 +254,7 @@ msgid "Attendance Error Report"
 msgstr "Relatório de Erro de Presenças"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
+#: view:hr.attendance:0 field:hr.attendance,day:0
 msgid "Day"
 msgstr "Dia"
 
@@ -346,8 +335,7 @@ msgid "Attendance Errors"
 msgstr "Erros de presenças"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
+#: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
 msgstr "Ação"
 
@@ -378,8 +366,7 @@ msgid "Max. Delay (Min)"
 msgstr "Máx. Atraso (Min)"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
+#: field:hr.attendance.error,end_date:0 field:hr.attendance.week,end_date:0
 msgid "Ending Date"
 msgstr "Data Final"
 
@@ -387,7 +374,7 @@ msgstr "Data Final"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No Data Available!"
-msgstr ""
+msgstr "Não há dados disponíveis!"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -414,7 +401,7 @@ msgstr "hr.config.settings"
 #: code:addons/hr_attendance/static/src/js/attendance.js:36
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "Clique para Entrar em %s."
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
@@ -432,7 +419,7 @@ msgstr "Maio"
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
+msgstr "Tentou %s com uma data anterior a outro evento! <br/>\nTente entrar em contato com o Gerente de RH para corrigir atendimentos ."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -440,8 +427,7 @@ msgid "December"
 msgstr "Dezembro"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Cancel"
 msgstr "Cancelar"
@@ -453,15 +439,11 @@ msgstr "Operação"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Um atraso negativo indica que o funcionário trabalhou mais horas que o "
-"previsto"
+msgid "(*) A negative delay means that the employee worked more than encoded."
+msgstr "(*) Um atraso negativo indica que o funcionário trabalhou mais horas que o previsto"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "or"
 msgstr "ou"
@@ -470,9 +452,4 @@ msgstr "ou"
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
-"Especifique as razões de Signing In/Signing Out no caso de horas extras."
-
-#, python-format
-#~ msgid "No Data Available !"
-#~ msgstr "Não há dados disponíveis"
+msgstr "Especifique as razões de Signing In/Signing Out no caso de horas extras."

@@ -1,144 +1,206 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * lunch
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-16 17:39+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2015-05-23 11:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Venezuela) (http://www.transifex.com/projects/p/odoo-7/language/es_VE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:55+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_VE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: lunch
-#: wizard_view:lunch.cashbox.clean,init:0
-msgid "Reset cashbox"
-msgstr "Resetear caja"
+#: field:lunch.product,category_id:0 field:lunch.product.category,name:0
+msgid "Category"
+msgstr "Categoría"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_order_form
-#: model:ir.ui.menu,name:lunch.menu_lunch_order_form
-#: model:ir.ui.menu,name:lunch.menu_lunch_reporting_order
-msgid "Lunch Orders"
-msgstr "Pedidos de comida"
+#: model:ir.ui.menu,name:lunch.menu_lunch_order_by_supplier_form
+msgid "Today's Orders by Supplier"
+msgstr ""
 
 #. module: lunch
-#: wizard_view:lunch.order.cancel,init:0
-msgid "Are you sure you want to cancel this order ?"
-msgstr "¿Seguro que desea cancelar este pedido?"
-
-#. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
-msgid "Cash Moves"
-msgstr "Movimientos de caja"
-
-#. module: lunch
-#: view:lunch.cashmove:0
 #: view:lunch.order:0
-#: view:report.lunch.amount:0
-#: view:report.lunch.order:0
+msgid "My Orders"
+msgstr ""
+
+#. module: lunch
+#: selection:lunch.order,state:0
+msgid "Partially Confirmed"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.cashmove:0 view:lunch.order.line:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_confirm
-msgid "confirm Order"
-msgstr "Confirmar pedido"
+#: field:lunch.alert,sunday:0
+msgid "Sunday"
+msgstr "Domingo"
 
 #. module: lunch
-#: view:report.lunch.order:0
-msgid "    7 Days    "
-msgstr "    7 días    "
+#: field:lunch.order.line,supplier:0 field:lunch.product,supplier:0
+msgid "Supplier"
+msgstr "Proveedor"
 
 #. module: lunch
-#: model:ir.module.module,description:lunch.module_meta_information
-msgid ""
-"\n"
-"    The base module to manage lunch\n"
-"\n"
-"    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.\n"
-"    Apply Different Category for the product.\n"
-"    "
-msgstr ""
-"\n"
-"    El módulo base para manejar comidas.\n"
-"\n"
-"    Permite gestionar los pedidos de comida, los movimientos de efectivo, la "
-"caja y los productos.\n"
-"    Establece diferentes categorías para el producto.\n"
-"    "
-
-#. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order:0
+#: view:lunch.order.line:0
 msgid "Today"
 msgstr "Hoy"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: selection:report.lunch.order.line,month:0
 msgid "March"
 msgstr "Marzo"
 
 #. module: lunch
-#: report:lunch.order:0
-msgid "Total :"
-msgstr "Total :"
+#: view:lunch.cashmove:0
+msgid "By Employee"
+msgstr "Por empleado"
 
 #. module: lunch
-#: field:report.lunch.amount,day:0
-#: view:report.lunch.order:0
-#: field:report.lunch.order,day:0
+#: field:lunch.alert,friday:0
+msgid "Friday"
+msgstr "Viernes"
+
+#. module: lunch
+#: view:lunch.validation:0
+msgid "validate order lines"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.order.line:0
+msgid "Order lines Tree"
+msgstr ""
+
+#. module: lunch
+#: field:lunch.alert,specific_day:0 field:report.lunch.order.line,day:0
 msgid "Day"
 msgstr "Día"
 
 #. module: lunch
-#: model:ir.actions.wizard,name:lunch.wizard_id_cancel
-#: wizard_view:lunch.order.cancel,init:0
-msgid "Cancel Order"
-msgstr "Cancelar pedido"
+#: view:lunch.order.line:0 selection:lunch.order.line,state:0
+msgid "Received"
+msgstr "Recibido"
+
+#. module: lunch
+#: view:lunch.order.line:0
+msgid "By Supplier"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a lunch order. \n"
+"            </p>\n"
+"            <p>\n"
+"                A lunch order is defined by its user, date and order lines.\n"
+"                Each order line corresponds to a product, an additional note and a price.\n"
+"                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area.\n"
+"            </p>\n"
+"            "
+msgstr ""
+
+#. module: lunch
+#: view:lunch.order.line:0
+msgid "Not Received"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_by_supplier_form
+#: model:ir.ui.menu,name:lunch.menu_lunch_control_suppliers
+msgid "Orders by Supplier"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.validation:0
+msgid "Receive Meals"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.cashmove:0
+msgid "cashmove form"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
+msgid ""
+"<p>\n"
+"                Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.\n"
+"                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: lunch
 #: field:lunch.cashmove,amount:0
-#: field:report.lunch.amount,amount:0
 msgid "Amount"
 msgstr "Importe"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_product_form
-#: view:lunch.product:0
+#: model:ir.actions.act_window,name:lunch.action_lunch_products
+#: model:ir.ui.menu,name:lunch.menu_lunch_products
+#: field:lunch.order,order_line_ids:0
 msgid "Products"
 msgstr "Productos"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_report_lunch_amount
-msgid "Amount available by user and box"
-msgstr "Importe disponible por usuario y caja"
+#: view:lunch.order.line:0
+msgid "By Date"
+msgstr ""
 
 #. module: lunch
-#: view:report.lunch.amount:0
-msgid "   Month   "
-msgstr "   Mes   "
+#: selection:lunch.order,state:0 view:lunch.order.line:0
+#: selection:lunch.order.line,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_report_lunch_order
+#: view:lunch.cashmove:0
+msgid "lunch employee payment"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.alert:0
+msgid "alert tree"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_report_lunch_order_line
 msgid "Lunch Orders Statistics"
 msgstr "Estadísticas de pedidos de comida"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
-#: view:lunch.cashmove:0
-#: field:lunch.order,cashmove:0
-msgid "CashMove"
-msgstr "Movimientos de caja"
+#: model:ir.model,name:lunch.model_lunch_alert
+msgid "Lunch Alert"
+msgstr ""
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:193
+#, python-format
+msgid "Select a product and put your order comments on the note."
+msgstr ""
+
+#. module: lunch
+#: selection:lunch.alert,alter_type:0
+msgid "Every Week"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove
+msgid "Register Cash Moves"
+msgstr ""
 
 #. module: lunch
 #: selection:lunch.order,state:0
@@ -146,415 +208,648 @@ msgid "Confirmed"
 msgstr "Confirmado"
 
 #. module: lunch
-#: view:lunch.order.confirm:0
+#: view:lunch.order:0
+msgid "lunch orders"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.order.line:0
 msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: lunch
-#: model:ir.module.module,shortdesc:lunch.module_meta_information
-msgid "Lunch Module"
-msgstr "Módulo de comidas"
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
+msgid "Your Account"
+msgstr ""
 
 #. module: lunch
-#: view:lunch.order:0
-msgid "Search Lunch Order"
-msgstr "Buscar pedido de comida"
+#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
+msgid "Your Lunch Account"
+msgstr ""
 
 #. module: lunch
-#: field:lunch.order,state:0
-msgid "State"
-msgstr "Estado"
+#: field:lunch.alert,active_from:0
+msgid "Between"
+msgstr "Entre"
 
 #. module: lunch
-#: field:report.lunch.order,price_total:0
+#: model:ir.model,name:lunch.model_lunch_order_order
+msgid "Wizard to order a meal"
+msgstr ""
+
+#. module: lunch
+#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
+msgid "New"
+msgstr "Nuevo"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:190
+#, python-format
+msgid "This is the first time you order a meal"
+msgstr ""
+
+#. module: lunch
+#: field:report.lunch.order.line,price_total:0
 msgid "Total Price"
 msgstr "Precio total"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_report_amount_tree
-#: view:report.lunch.amount:0
-msgid "Box Amount by User"
-msgstr "Importe de caja por Usuario"
+#: model:ir.model,name:lunch.model_lunch_validation
+msgid "lunch validation for order"
+msgstr ""
 
 #. module: lunch
-#: field:lunch.cashmove,create_date:0
-msgid "Creation Date"
-msgstr "Fecha de creación"
-
-#. module: lunch
-#: report:lunch.order:0
+#: report:lunch.order.line:0
 msgid "Name/Date"
 msgstr "Nombre/Fecha"
 
 #. module: lunch
-#: field:lunch.order,descript:0
-msgid "Description Order"
-msgstr "Descripción pedido"
+#: report:lunch.order.line:0
+msgid "Total :"
+msgstr "Total :"
 
 #. module: lunch
-#: model:ir.actions.wizard,name:lunch.lunch_order_confirm
-#: wizard_button:lunch.order.confirm,init,go:0
-msgid "Confirm Order"
-msgstr "Confirmar pedido"
-
-#. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: selection:report.lunch.order.line,month:0
 msgid "July"
 msgstr "Julio"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:report.lunch.amount:0
-#: view:report.lunch.order:0
-msgid "Box"
-msgstr "Caja"
+#: model:ir.ui.menu,name:lunch.menu_lunch_config
+msgid "Configuration"
+msgstr "Configuración"
 
 #. module: lunch
-#: view:report.lunch.order:0
-msgid "  365 Days  "
-msgstr "  365 días  "
+#: field:lunch.order,state:0 field:lunch.order.line,state:0
+msgid "Status"
+msgstr "Estado"
 
 #. module: lunch
-#: view:report.lunch.amount:0
-msgid "    Month-1    "
-msgstr "    Mes-1    "
+#: view:lunch.order.order:0
+msgid ""
+"Order a meal doesn't mean that we have to pay it.\n"
+"                        A meal should be paid when it is received."
+msgstr ""
 
 #. module: lunch
-#: field:report.lunch.amount,date:0
-msgid "Created Date"
-msgstr "Fecha de creación"
+#: model:ir.actions.act_window,name:lunch.action_lunch_control_accounts
+#: model:ir.ui.menu,name:lunch.menu_lunch_control_accounts
+msgid "Control Accounts"
+msgstr ""
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_category_form
-msgid " Product Categories "
-msgstr " Categorías de producto "
+#: selection:lunch.alert,alter_type:0
+msgid "Every Day"
+msgstr ""
 
 #. module: lunch
-#: wizard_button:lunch.cashbox.clean,init,zero:0
-msgid "Set to Zero"
-msgstr "Establecer a cero"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
+#: field:lunch.order.line,cashmove:0
 msgid "Cash Move"
 msgstr "Movimiento de caja"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
-msgid "April"
-msgstr "Abril"
+#: model:ir.actions.act_window,name:lunch.order_order_lines
+msgid "Order meals"
+msgstr ""
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: view:lunch.alert:0
+msgid "Schedule Hour"
+msgstr ""
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
 msgid "September"
 msgstr "Septiembre"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
-msgid "December"
-msgstr "Diciembre"
+#: model:ir.actions.act_window,help:lunch.action_lunch_control_suppliers
+msgid ""
+"<p>\n"
+"                Here you can see every orders grouped by suppliers and by date.\n"
+"              </p>\n"
+"              <p>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce that the order isn't available\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: lunch
-#: field:report.lunch.amount,month:0
-#: view:report.lunch.order:0
-#: field:report.lunch.order,month:0
+#: field:lunch.alert,tuesday:0
+msgid "Tuesday"
+msgstr "Martes"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_tree
+msgid "Your Orders"
+msgstr ""
+
+#. module: lunch
+#: field:report.lunch.order.line,month:0
 msgid "Month"
 msgstr "Mes"
 
 #. module: lunch
-#: wizard_field:lunch.order.confirm,init,confirm_cashbox:0
-msgid "Name of box"
-msgstr "Nombre de la caja"
+#: model:ir.actions.act_window,help:lunch.action_lunch_products
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a product for lunch. \n"
+"            </p>\n"
+"              <p>\n"
+"                A product is defined by its name, category, price and supplier.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: lunch
-#: wizard_button:lunch.order.cancel,init,cancel:0
-msgid "Yes"
-msgstr "Sí"
+#: view:lunch.alert:0 field:lunch.alert,message:0
+msgid "Message"
+msgstr "Mensaje"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_category
-#: view:lunch.category:0
-#: field:lunch.product,category_id:0
-msgid "Category"
-msgstr "Categoría"
+#: view:lunch.order.order:0
+msgid "Order Meals"
+msgstr ""
 
 #. module: lunch
-#: view:report.lunch.amount:0
-msgid "  Year  "
-msgstr "  Año  "
+#: view:lunch.cancel:0 view:lunch.order.order:0 view:lunch.validation:0
+msgid "or"
+msgstr ""
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_category_form
+#: model:ir.actions.act_window,help:lunch.action_lunch_product_categories
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a lunch category. \n"
+"            </p>\n"
+"              <p>\n"
+"                Here you can find every lunch categories for products.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: lunch
+#: view:lunch.order.order:0
+msgid "Order meal"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_product_categories
+#: model:ir.ui.menu,name:lunch.menu_lunch_product_categories
 msgid "Product Categories"
 msgstr "Categorías de producto"
 
 #. module: lunch
-#: wizard_button:lunch.order.cancel,init,end:0
-msgid "No"
-msgstr "No"
+#: model:ir.actions.act_window,name:lunch.action_lunch_control_suppliers
+msgid "Control Suppliers"
+msgstr ""
 
 #. module: lunch
-#: wizard_view:lunch.order.confirm,init:0
-msgid "Orders Confirmation"
-msgstr "Confirmación de pedido"
+#: view:lunch.alert:0
+msgid "Schedule Date"
+msgstr ""
 
 #. module: lunch
-#: wizard_view:lunch.cashbox.clean,init:0
-msgid "Are you sure you want to reset this cashbox ?"
-msgstr "¿Está seguro que desea reiniciar esta caja de efectivo?"
+#: model:ir.actions.act_window,name:lunch.action_lunch_alert
+#: model:ir.ui.menu,name:lunch.menu_lunch_alert field:lunch.order,alerts:0
+msgid "Alerts"
+msgstr ""
 
 #. module: lunch
-#: selection:lunch.order,state:0
-msgid "Draft"
-msgstr "Borrador"
+#: field:lunch.order.line,note:0 field:report.lunch.order.line,note:0
+msgid "Note"
+msgstr "Nota"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: code:addons/lunch/lunch.py:267
+#, python-format
+msgid "Add"
+msgstr "Añadir"
+
+#. module: lunch
+#: view:lunch.product:0 view:lunch.product.category:0
+msgid "Products Form"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.cancel_order_lines
+msgid "Cancel meals"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_cashmove view:lunch.cashmove:0
+msgid "lunch cashmove"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.cancel:0
+msgid "Are you sure you want to cancel these meals?"
+msgstr ""
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
 msgid "August"
 msgstr "Agosto"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_report_lunch_order_all
-#: view:report.lunch.order:0
-msgid "Lunch Order Analysis"
-msgstr "Análisis pedidos de comida"
+#: field:lunch.alert,monday:0
+msgid "Monday"
+msgstr "Lunes"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: field:lunch.order.line,name:0
+msgid "unknown"
+msgstr "desconocido"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.validate_order_lines
+msgid "Receive meals"
+msgstr ""
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
 msgid "June"
 msgstr "Junio"
 
 #. module: lunch
-#: field:lunch.cashmove,user_cashmove:0
-#: field:lunch.order,user_id:0
-#: field:report.lunch.amount,user_id:0
+#: field:lunch.cashmove,user_id:0 field:lunch.order,user_id:0
+#: field:report.lunch.order.line,user_id:0
 msgid "User Name"
 msgstr "Nombre usuario"
 
 #. module: lunch
-#: view:report.lunch.order:0
-msgid "Sales Analysis"
-msgstr "Análisis ventas"
-
-#. module: lunch
+#: model:ir.module.category,name:lunch.module_lunch_category
 #: model:ir.ui.menu,name:lunch.menu_lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "Lunch"
 msgstr "Comidas"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:report.lunch.order:0
+#: model:ir.model,name:lunch.model_lunch_order_line
+msgid "lunch order line"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "lunch product"
+msgstr ""
+
+#. module: lunch
+#: field:lunch.order.line,user_id:0
+#: model:res.groups,name:lunch.group_lunch_user
 msgid "User"
 msgstr "Usuario"
 
 #. module: lunch
-#: field:lunch.order,date:0
+#: field:lunch.cashmove,date:0 field:lunch.order,date:0
+#: field:lunch.order.line,date:0
 msgid "Date"
 msgstr "Fecha"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: selection:report.lunch.order.line,month:0
 msgid "November"
 msgstr "Noviembre"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: view:lunch.order:0
+msgid "Orders Tree"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.order:0
+msgid "Orders Form"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.alert:0 view:lunch.order.line:0
+msgid "Search"
+msgstr "Buscar"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
 msgid "October"
 msgstr "Octubre"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: model:ir.actions.act_window,help:lunch.action_lunch_order_by_supplier_form
+msgid ""
+"<p>\n"
+"                Here you can see today's orders grouped by suppliers.\n"
+"              </p>\n"
+"              <p>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that the order isn't available\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
 msgid "January"
 msgstr "Enero"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashbox_clean
-msgid "clean cashbox"
-msgstr "Limpiar caja"
+#: selection:lunch.alert,alter_type:0
+msgid "Specific Day"
+msgstr ""
 
 #. module: lunch
-#: field:lunch.cashmove,active:0
-#: field:lunch.product,active:0
-msgid "Active"
-msgstr "Activo"
+#: field:lunch.alert,wednesday:0
+msgid "Wednesday"
+msgstr "Miércoles"
 
 #. module: lunch
-#: field:report.lunch.order,date:0
+#: view:lunch.product.category:0
+msgid "Product Category: "
+msgstr ""
+
+#. module: lunch
+#: field:lunch.alert,active_to:0
+msgid "And"
+msgstr ""
+
+#. module: lunch
+#: view:lunch.alert:0
+msgid "Write the message you want to display during the defined period..."
+msgstr ""
+
+#. module: lunch
+#: selection:lunch.order.line,state:0
+msgid "Ordered"
+msgstr ""
+
+#. module: lunch
+#: field:report.lunch.order.line,date:0
 msgid "Date Order"
 msgstr "Fecha pedido"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashbox
-msgid "Cashbox for Lunch "
-msgstr "Caja para la comida "
+#: view:lunch.cancel:0
+msgid "Cancel Orders"
+msgstr ""
 
 #. module: lunch
-#: model:ir.actions.wizard,name:lunch.wizard_clean_cashbox
-msgid "Set CashBox to Zero"
-msgstr "Establecer caja a cero"
+#: model:ir.actions.act_window,help:lunch.action_lunch_alert
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a lunch alert. \n"
+"            </p>\n"
+"              <p>\n"
+"                Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
+"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display.\n"
+"            </p>\n"
+"            <p>\n"
+"                Example: <br/>\n"
+"                - Recurency: Everyday<br/>\n"
+"                - Time interval: from 00h00 am to 11h59 pm<br/>\n"
+"                - Message: \"You must order before 10h30 am\"\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: lunch
-#: field:lunch.cashmove,box:0
-#: field:report.lunch.amount,box:0
-msgid "Box Name"
-msgstr "Nombre caja"
+#: view:lunch.cancel:0
+msgid "A cancelled meal should not be paid by employees."
+msgstr ""
 
 #. module: lunch
-#: wizard_button:lunch.cashbox.clean,init,end:0
-#: wizard_button:lunch.order.confirm,init,end:0
+#: model:ir.ui.menu,name:lunch.menu_lunch_cash
+msgid "Administrate Cash Moves"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_cancel
+msgid "cancel lunch order"
+msgstr ""
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "December"
+msgstr "Diciembre"
+
+#. module: lunch
+#: view:lunch.cancel:0 view:lunch.order.line:0 view:lunch.order.order:0
+#: view:lunch.validation:0
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_form
-msgid " Cashboxes "
-msgstr " Cajas "
+#: model:ir.actions.act_window,help:lunch.action_lunch_cashmove
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment. \n"
+"            </p>\n"
+"              <p>\n"
+"                Here you can see the employees' payment. A payment is a cash move from the employee to the company.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: lunch
-#: rml:lunch.order:0
+#: code:addons/lunch/lunch.py:196
+#, python-format
+msgid "Your favorite meals will be created based on your last orders."
+msgstr ""
+
+#. module: lunch
+#: model:ir.module.category,description:lunch.module_lunch_category
+msgid ""
+"Helps you handle your lunch needs, if you are a manager you will be able to "
+"create new products, cashmoves and to confirm or cancel orders."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_control_accounts
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new payment. \n"
+"            </p>\n"
+"              <p>\n"
+"                A cashmove can either be an expense or a payment.<br/>\n"
+"                An expense is automatically created at the order receipt.<br/>\n"
+"                A payment represents the employee reimbursement to the company.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: lunch
+#: field:lunch.alert,alter_type:0
+msgid "Recurrency"
+msgstr "Recurrencia"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:199
+#, python-format
+msgid "Don't forget the alerts displayed in the reddish area"
+msgstr ""
+
+#. module: lunch
+#: field:lunch.alert,thursday:0
+msgid "Thursday"
+msgstr "Jueves"
+
+#. module: lunch
+#: report:lunch.order.line:0
 msgid "Unit Price"
 msgstr "Precio unitario"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_product_form
-#: field:lunch.order,product:0
+#: view:lunch.cashmove:0
+msgid "By User"
+msgstr ""
+
+#. module: lunch
+#: field:lunch.order.line,product_id:0 field:lunch.product,name:0
 msgid "Product"
 msgstr "Producto"
 
 #. module: lunch
-#: rml:lunch.order:0
+#: field:lunch.cashmove,description:0 report:lunch.order.line:0
 #: field:lunch.product,description:0
 msgid "Description"
 msgstr "Descripción"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: selection:report.lunch.order.line,month:0
 msgid "May"
 msgstr "Mayo"
 
 #. module: lunch
-#: field:lunch.order,price:0
-#: field:lunch.product,price:0
+#: field:lunch.order.line,price:0 field:lunch.product,price:0
 msgid "Price"
 msgstr "Precio"
 
 #. module: lunch
+#: field:lunch.cashmove,state:0
+msgid "Is an order or a Payment"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_form
+#: model:ir.ui.menu,name:lunch.menu_lunch_order_form
+msgid "New Order"
+msgstr ""
+
+#. module: lunch
 #: view:lunch.cashmove:0
-msgid "Search CashMove"
-msgstr "Buscar movimiento de caja"
+msgid "cashmove tree"
+msgstr ""
 
 #. module: lunch
-#: view:report.lunch.amount:0
-msgid "Total box"
-msgstr "Total caja"
+#: view:lunch.cancel:0
+msgid "Cancel a meal means that we didn't receive it from the supplier."
+msgstr ""
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product
-msgid "Lunch Product"
-msgstr "Producto comida"
+#: view:lunch.cashmove:0
+msgid "My Account grouped"
+msgstr ""
 
 #. module: lunch
-#: field:lunch.cashbox,sum_remain:0
-msgid "Total Remaining"
-msgstr "Total restante"
+#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove
+msgid "Employee Payments"
+msgstr ""
 
 #. module: lunch
-#: view:lunch.order:0
-msgid "Total price"
-msgstr "Precio total"
+#: view:lunch.cashmove:0 selection:lunch.cashmove,state:0
+msgid "Payment"
+msgstr "Pago"
 
 #. module: lunch
-#: selection:report.lunch.amount,month:0
-#: selection:report.lunch.order,month:0
+#: selection:report.lunch.order.line,month:0
 msgid "February"
 msgstr "Febrero"
 
 #. module: lunch
-#: field:lunch.cashbox,name:0
-#: field:lunch.cashmove,name:0
-#: field:lunch.category,name:0
-#: rml:lunch.order:0
-#: field:lunch.product,name:0
-msgid "Name"
-msgstr "Nombre"
+#: field:report.lunch.order.line,year:0
+msgid "Year"
+msgstr "Año"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-msgid "Total amount"
-msgstr "Importe total"
-
-#. module: lunch
-#: view:lunch.category:0
-msgid "Category Related to Products"
-msgstr "Categoría relacionada con los productos"
-
-#. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_cashbox_form
-#: view:lunch.cashbox:0
-msgid "Cashboxes"
-msgstr "Cajas"
-
-#. module: lunch
-#: view:lunch.category:0
-#: rml:lunch.order:0
 #: view:lunch.order:0
+msgid "List"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_admin
+msgid "Administrate Orders"
+msgstr ""
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "April"
+msgstr "Abril"
+
+#. module: lunch
+#: view:lunch.order:0
+msgid "Select your order"
+msgstr ""
+
+#. module: lunch
+#: field:lunch.cashmove,order_id:0 selection:lunch.cashmove,state:0
+#: report:lunch.order.line:0 view:lunch.order.line:0
+#: field:lunch.order.line,order_id:0
 msgid "Order"
 msgstr "Pedido"
 
 #. module: lunch
+#: code:addons/lunch/lunch.py:43
 #: model:ir.actions.report.xml,name:lunch.report_lunch_order
-#: model:ir.model,name:lunch.model_lunch_order
-#: model:ir.ui.menu,name:lunch.menu_lunch
-#: report:lunch.order:0
+#: model:ir.model,name:lunch.model_lunch_order report:lunch.order.line:0
+#, python-format
 msgid "Lunch Order"
 msgstr "Pedido de comida"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_report_lunch_amount_tree
-#: model:ir.ui.menu,name:lunch.menu_lunch_report_amount_tree
-msgid "Cash Position by User"
-msgstr "Estado de la caja por usuario"
+#: view:lunch.order.order:0
+msgid "Are you sure you want to order these meals?"
+msgstr ""
 
 #. module: lunch
-#: field:lunch.cashbox,manager:0
+#: view:lunch.cancel:0
+msgid "cancel order lines"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "lunch product category"
+msgstr ""
+
+#. module: lunch
+#: field:lunch.alert,saturday:0
+msgid "Saturday"
+msgstr "Sábado"
+
+#. module: lunch
+#: model:res.groups,name:lunch.group_lunch_manager
 msgid "Manager"
 msgstr "Gerente"
 
 #. module: lunch
-#: view:report.lunch.order:0
-msgid "   30 Days   "
-msgstr "   30 días   "
+#: view:lunch.validation:0
+msgid "Did your received these meals?"
+msgstr ""
 
 #. module: lunch
-#: view:lunch.order:0
-msgid "To Confirm"
-msgstr "Para confirmar"
+#: view:lunch.validation:0
+msgid "Once a meal is received a new cash move is created for the employee."
+msgstr ""
 
 #. module: lunch
-#: field:report.lunch.amount,year:0
-#: view:report.lunch.order:0
-#: field:report.lunch.order,year:0
-msgid "Year"
-msgstr "Año"
+#: view:lunch.product:0
+msgid "Products Tree"
+msgstr ""
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nombre del modelo inválido en la definición de acción."
+#. module: lunch
+#: view:lunch.cashmove:0 view:lunch.order:0 field:lunch.order,total:0
+#: view:lunch.order.line:0
+msgid "Total"
+msgstr "Total"
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-#~ "especial!"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML inválido para la definición de la vista!"
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_order_tree
+msgid "Previous Orders"
+msgstr ""

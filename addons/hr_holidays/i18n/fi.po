@@ -1,21 +1,22 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_holidays
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-08-15 10:22+0000\n"
-"Last-Translator: Olivier Dony (Odoo) <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-23 10:34+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-16 06:46+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -38,9 +39,7 @@ msgstr "Odottaa toista hyväksyntää"
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
 "resource manager."
-msgstr ""
-"Et voi muokata poissaolopyyntöä, joka on hyväksytty. Ota yhteyttä "
-"henkilöstöhallinnon esimieheen."
+msgstr "Et voi muokata poissaolopyyntöä, joka on hyväksytty. Ota yhteyttä henkilöstöhallinnon esimieheen."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,remaining_leaves:0
@@ -48,7 +47,7 @@ msgid "Maximum Leaves Allowed - Leaves Already Taken"
 msgstr "Maksimimäärä sallittuja poissaoloja - on jo käytetty"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.allocation_company_new
+#: view:hr.holidays:0
 msgid "Leaves Management"
 msgstr "Poissaolojen hallinta"
 
@@ -68,8 +67,7 @@ msgid "From Date"
 msgstr "Alkupäivä"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
-#: field:hr.holidays,department_id:0
+#: view:hr.holidays:0 field:hr.holidays,department_id:0
 msgid "Department"
 msgstr "Osasto"
 
@@ -90,9 +88,7 @@ msgid "Brown"
 msgstr "Ruskea"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_holiday
-#: view:hr.holidays:hr_holidays.view_holiday_allocation_tree
-#: view:hr.holidays:hr_holidays.view_holiday_simple
+#: view:hr.holidays:0
 msgid "Remaining Days"
 msgstr "Jäljelläolevat päivät"
 
@@ -149,13 +145,12 @@ msgid "Current Leave Type"
 msgstr "Tämänhetkisen poissaolon tyyppi"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.edit_holiday_new
+#: view:hr.holidays:0
 msgid "Validate"
 msgstr "Vahvista"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
@@ -163,19 +158,17 @@ msgid "Approved"
 msgstr "Hyväksytty"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid "Search Leave"
 msgstr "Hae poissaoloa"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.allocation_company_new
-#: view:hr.holidays:hr_holidays.edit_holiday_new
+#: view:hr.holidays:0
 msgid "Refuse"
 msgstr "Hylkää"
 
 #. module: hr_holidays
-#: view:hr.employee:hr_holidays.view_employee_form_leave_inherit
-#: field:hr.employee,leaves_count:0
+#: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
@@ -203,21 +196,19 @@ msgid "Leave Requests to Approve"
 msgstr "Poissaolopyynnöt hyväksyttäväksi"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:hr_holidays.view_hr_holidays_summary_dept
+#: view:hr.holidays.summary.dept:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
 msgstr "Poissaolot osastoittain"
 
 #. module: hr_holidays
-#: field:hr.holidays,manager_id2:0
-#: selection:hr.holidays,state:0
+#: field:hr.holidays,manager_id2:0 selection:hr.holidays,state:0
 msgid "Second Approval"
 msgstr "Jälkimmäinen hyväksyntä"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Peruttu"
 
@@ -225,12 +216,11 @@ msgstr "Peruttu"
 #: help:hr.holidays,type:0
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves "
-"available for someone"
+"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.status:hr_holidays.edit_holiday_status_form
+#: view:hr.holidays.status:0
 msgid "Validation"
 msgstr "Vahvistus"
 
@@ -247,18 +237,12 @@ msgstr "Väri raportilla"
 #. module: hr_holidays
 #: help:hr.holidays,manager_id:0
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr ""
-"Alue on täytetty automaattisesti poissaolon vahvistaneen käyttäjän toimesta."
+msgstr "Alue on täytetty automaattisesti poissaolon vahvistaneen käyttäjän toimesta."
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-#: field:hr.holidays,holiday_status_id:0
+#: xsl:holidays.summary:0 field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
-#: view:hr.holidays.status:hr_holidays.edit_holiday_status_form
-#: view:hr.holidays.status:hr_holidays.view_holiday_status_normal_tree
-#: view:hr.holidays.status:hr_holidays.view_holiday_status_tree
-#: view:hr.holidays.status:hr_holidays.view_hr_holidays_status_search
-#: field:hr.holidays.status,name:0
+#: view:hr.holidays.status:0 field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
 msgid "Leave Type"
@@ -269,16 +253,16 @@ msgstr "Poissaolon tyyppi"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
-"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
+msgstr "Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:274
-#: code:addons/hr_holidays/hr_holidays.py:285
-#: code:addons/hr_holidays/hr_holidays.py:310
-#: code:addons/hr_holidays/hr_holidays.py:496
-#: code:addons/hr_holidays/hr_holidays.py:503
+#: code:addons/hr_holidays/hr_holidays.py:254
+#: code:addons/hr_holidays/hr_holidays.py:265
+#: code:addons/hr_holidays/hr_holidays.py:290
+#: code:addons/hr_holidays/hr_holidays.py:314
+#: code:addons/hr_holidays/hr_holidays.py:437
+#: code:addons/hr_holidays/hr_holidays.py:487
+#: code:addons/hr_holidays/hr_holidays.py:494
 #, python-format
 msgid "Warning!"
 msgstr "Varoitus!"
@@ -316,8 +300,7 @@ msgid "Sum"
 msgstr "Yhteensä"
 
 #. module: hr_holidays
-#: view:hr.holidays.status:hr_holidays.view_holidays_status_filter
-#: view:hr.holidays.status:hr_holidays.view_hr_holidays_status_search
+#: view:hr.holidays.status:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 msgid "Leave Types"
 msgstr "Poissaolon tyypit"
@@ -338,9 +321,7 @@ msgid "Total holidays by type"
 msgstr "Yhteensä vapaapäiviä tyypeittäin"
 
 #. module: hr_holidays
-#: view:hr.employee:hr_holidays.hr_holidays_leaves_assign_tree_view
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
-#: field:hr.holidays,employee_id:0
+#: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
@@ -352,7 +333,7 @@ msgid "New"
 msgstr "Uusi"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid "Type"
 msgstr "Tyyppi"
 
@@ -362,8 +343,7 @@ msgid "Red"
 msgstr "Punainen"
 
 #. module: hr_holidays
-#: view:hr.holidays.remaining.leaves.user:hr_holidays.view_hr_holidays_remaining_leaves_user_graph
-#: view:hr.holidays.remaining.leaves.user:hr_holidays.view_hr_holidays_remaining_leaves_user_tree
+#: view:hr.holidays.remaining.leaves.user:0
 msgid "Leaves by Type"
 msgstr "Poissaolot tyypeittäin"
 
@@ -378,7 +358,7 @@ msgid "Wheat"
 msgstr "Vehnä"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:501
+#: code:addons/hr_holidays/hr_holidays.py:492
 #, python-format
 msgid "Allocation for %s"
 msgstr "Varaus henkilölle  %s"
@@ -386,42 +366,27 @@ msgstr "Varaus henkilölle  %s"
 #. module: hr_holidays
 #: help:hr.holidays,state:0
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.         "
-"   \n"
-"The status is 'To Approve', when holiday request is confirmed by user.       "
-"     \n"
-"The status is 'Refused', when holiday request is refused by manager.         "
-"   \n"
+"The status is set to 'To Submit', when a holiday request is created.            \n"
+"The status is 'To Approve', when holiday request is confirmed by user.            \n"
+"The status is 'Refused', when holiday request is refused by manager.            \n"
 "The status is 'Approved', when holiday request is approved by manager."
-msgstr ""
-"Lomapyyntö on asetettu tilaan:                                   \n"
-"'Kesken', kun se on luotu, mutta ei tallennettu,     \n"
-"'Hyväksyttävänä', kun käyttäjä on sen tallentanut,       \n"
-"'Hylätty', jos esimies ei ole sitä hyväksynyt.              \n"
-"'Hyväksytty', jos esimies on sen vahvistanut."
+msgstr "Lomapyyntö on asetettu tilaan:                                   \n'Kesken', kun se on luotu, mutta ei tallennettu,     \n'Hyväksyttävänä', kun käyttäjä on sen tallentanut,       \n'Hylätty', jos esimies ei ole sitä hyväksynyt.              \n'Hyväksytty', jos esimies on sen vahvistanut."
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_holiday
-#: view:hr.holidays:hr_holidays.view_holiday_simple
-#: field:hr.holidays,number_of_days:0
+#: view:hr.holidays:0 field:hr.holidays,number_of_days:0
 msgid "Number of Days"
 msgstr "Päivien lukumäärä"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:496
+#: code:addons/hr_holidays/hr_holidays.py:487
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when "
-"there is only one leave type with the option 'Allow to Override Limit' "
-"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
-"decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
-"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
-"the employees if the configuration does not allow to use this field."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \\ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.status:hr_holidays.view_holidays_status_filter
+#: view:hr.holidays.status:0
 msgid "Search Leave Type"
 msgstr "Hae poissaolotyyppiä"
 
@@ -441,18 +406,17 @@ msgid "Employee(s)"
 msgstr "Työntekijä(t)"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that "
-"is 'active' (active field is True)"
+"Filters only on allocations and requests that belong to an holiday type that"
+" is 'active' (active field is True)"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
 msgid ""
 "<p>\n"
-"               You can assign remaining Legal Leaves for each employee, "
-"OpenERP\n"
+"               You can assign remaining Legal Leaves for each employee, OpenERP\n"
 "               will automatically create and validate allocation requests.\n"
 "             </p>\n"
 "           "
@@ -474,7 +438,7 @@ msgstr "Valitse vähintään yksi osasto!"
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Edeltävä"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -497,7 +461,9 @@ msgid "leaves."
 msgstr "poissaolot."
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_holiday
+#: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
 msgstr "Poissaolopyynnöt"
 
@@ -507,7 +473,7 @@ msgid "Allow to Override Limit"
 msgstr "Sallii asetetun raja-arvon ylityksen"
 
 #. module: hr_holidays
-#: field:hr.holidays,date_from:0
+#: view:hr.holidays:0 field:hr.holidays,date_from:0
 msgid "Start Date"
 msgstr "Alkupäivä"
 
@@ -520,8 +486,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "or"
 msgstr "tai"
 
@@ -537,19 +502,10 @@ msgid ""
 "                number of open days related to your leave.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikkaa luodaksesi uuden poissaolopyynnön.\n"
-"              </p><p>\n"
-"                Kun olet kirjannut poissaolopyyntösi, niin se lähetetään\n"
-"                esimiehelle vahvistettavaksi. Ole tarkkana ja valitse\n"
-"                poissaolon tyyppi oikein (lomat, vapaat ja poissaolot) \n"
-"                ja anna tarkka kesto päivinä (alku ja loppupäivä ml.).\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikkaa luodaksesi uuden poissaolopyynnön.\n              </p><p>\n                Kun olet kirjannut poissaolopyyntösi, niin se lähetetään\n                esimiehelle vahvistettavaksi. Ole tarkkana ja valitse\n                poissaolon tyyppi oikein (lomat, vapaat ja poissaolot) \n                ja anna tarkka kesto päivinä (alku ja loppupäivä ml.).\n              </p>\n            "
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid "Category"
 msgstr "Ryhmä"
 
@@ -586,7 +542,7 @@ msgstr "Vaalea koralli"
 #. module: hr_holidays
 #: field:hr.employee,leave_date_to:0
 msgid "To Date"
-msgstr ""
+msgstr "Tähän pävään mennessä"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -613,13 +569,10 @@ msgstr "Tapaaminen"
 msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Department."
-msgstr ""
-"Tätä väriä käytetään poissalojen yhteenvedossa raportoitaessa poissaoloja "
-"osastoittain."
+msgstr "Tätä väriä käytetään poissalojen yhteenvedossa raportoitaessa poissaoloja osastoittain."
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
-#: field:hr.holidays,state:0
+#: view:hr.holidays:0 field:hr.holidays,state:0
 msgid "Status"
 msgstr "Tilanne"
 
@@ -667,8 +620,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.allocation_company_new
-#: view:hr.holidays:hr_holidays.edit_holiday_new
+#: view:hr.holidays:0
 msgid "Add a reason..."
 msgstr "Lisää syy..."
 
@@ -688,10 +640,8 @@ msgid "Unpaid"
 msgstr "Palkaton"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-#: view:hr.holidays:hr_holidays.view_holiday_graph
-#: view:hr.holidays:hr_holidays.view_holiday_simple
-#: view:hr.holidays.summary.employee:hr_holidays.view_hr_holidays_summary_employee
+#: xsl:holidays.summary:0 view:hr.holidays:0
+#: view:hr.holidays.summary.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 #: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -700,12 +650,12 @@ msgid "Leaves Summary"
 msgstr "Poissaolot yhteensä"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.allocation_company_new
+#: view:hr.holidays:0
 msgid "Submit to Manager"
 msgstr "Lähetä esimiehelle"
 
 #. module: hr_holidays
-#: view:hr.employee:hr_holidays.hr_holidays_leaves_assign_tree_view
+#: view:hr.employee:0
 msgid "Assign Leaves"
 msgstr "Kohdista poissaolot"
 
@@ -715,7 +665,7 @@ msgid "Light Blue"
 msgstr "Vaaleansininen"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid "My Department Leaves"
 msgstr "Osastoni poissaolot"
 
@@ -737,7 +687,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.status:hr_holidays.edit_holiday_status_form
+#: view:hr.holidays.status:0
 msgid "Misc"
 msgstr "Muu"
 
@@ -758,8 +708,7 @@ msgid "Leaves Analysis"
 msgstr "Poissaoloanalyysi"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:hr_holidays.view_hr_holidays_summary_dept
-#: view:hr.holidays.summary.employee:hr_holidays.view_hr_holidays_summary_employee
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Peruuta"
 
@@ -769,18 +718,18 @@ msgid "Request created and waiting confirmation"
 msgstr "Pyyntö luotu ja odttaa vahvistusta"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid "Validated"
 msgstr "Vahvistettu"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:254
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "Et voi poistaa poissaoloa, joka on tilassa %s."
 
 #. module: hr_holidays
-#: selection:hr.holidays,type:0
+#: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Varauspyyntö"
 
@@ -789,9 +738,7 @@ msgstr "Varauspyyntö"
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
-msgstr ""
-"Työntekijöittäin: Yksittäisen henkilön varaus/pyyntö. Työntekijä "
-"tunnisteittain: varaus/pyyntö työntekijäryhmään."
+msgstr "Työntekijöittäin: Yksittäisen henkilön varaus/pyyntö. Työntekijä tunnisteittain: varaus/pyyntö työntekijäryhmään."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -805,25 +752,22 @@ msgid "Apply Double Validation"
 msgstr "Käytä kahta vahvistusta"
 
 #. module: hr_holidays
-#: view:hr.employee:hr_holidays.view_employee_form_leave_inherit
-#: view:hr.holidays:hr_holidays.edit_holiday_new
+#: view:hr.employee:0 view:hr.holidays:0
 msgid "days"
 msgstr "päivä/päivää"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:hr_holidays.view_hr_holidays_summary_dept
-#: view:hr.holidays.summary.employee:hr_holidays.view_hr_holidays_summary_employee
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Tulosta"
 
 #. module: hr_holidays
-#: view:hr.holidays.status:hr_holidays.edit_holiday_status_form
+#: view:hr.holidays.status:0
 msgid "Details"
 msgstr "Tiedot"
 
 #. module: hr_holidays
-#: view:board.board:0
-#: view:hr.holidays:0
+#: view:board.board:0 view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
 msgstr "Omat poissaolot"
@@ -839,26 +783,19 @@ msgid "To Submit"
 msgstr "Ehdottaa"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:367
-#: view:hr.holidays:hr_holidays.edit_holiday_new
-#: view:hr.holidays:hr_holidays.view_holiday_new_calendar
-#: selection:hr.holidays,type:0
-#: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
-#: field:resource.calendar.leaves,holiday_id:0
+#: code:addons/hr_holidays/hr_holidays.py:359 view:hr.holidays:0
+#: selection:hr.holidays,type:0 field:resource.calendar.leaves,holiday_id:0
 #, python-format
 msgid "Leave Request"
 msgstr "Pooissaolopyynnöt"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
-#: field:hr.holidays,name:0
+#: view:hr.holidays:0 field:hr.holidays,name:0
 msgid "Description"
 msgstr "Kuvaus"
 
 #. module: hr_holidays
-#: view:hr.employee:hr_holidays.hr_holidays_leaves_assign_tree_view
-#: field:hr.employee,remaining_leaves:0
+#: view:hr.employee:0 field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
 msgstr "Jäljelläolevat lainmukaiset poissaolot"
 
@@ -868,8 +805,7 @@ msgid "By Employee Tag"
 msgstr "Työntekijätunnisteittain"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Hylätty"
@@ -885,12 +821,12 @@ msgid "Remaining leaves"
 msgstr "Jäljelläolevat poissaolot"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_holiday_allocation_tree
+#: view:hr.holidays:0
 msgid "Allocated Days"
 msgstr "Varatut päivät"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid "To Confirm"
 msgstr "Vahvistaa"
 
@@ -929,8 +865,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.edit_holiday_new
-#: view:hr.holidays:hr_holidays.view_holiday
+#: view:hr.holidays:0
 msgid "Mode"
 msgstr "Tila"
 
@@ -941,14 +876,13 @@ msgid "Both Approved and Confirmed"
 msgstr "Sekä hyväksytty että vahvistettu."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:466
+#: code:addons/hr_holidays/hr_holidays.py:456
 #, python-format
 msgid "Request approved, waiting second validation."
 msgstr "Pyyntö hyväksytty, mutta odottaa vielä lopullista vahvistusta."
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.allocation_company_new
-#: view:hr.holidays:hr_holidays.edit_holiday_new
+#: view:hr.holidays:0
 msgid "Approve"
 msgstr "Hyväksy"
 
@@ -958,9 +892,8 @@ msgid "Messages and communication history"
 msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:285
-#: code:addons/hr_holidays/hr_holidays.py:310
-#: sql_constraint:hr.holidays:0
+#: code:addons/hr_holidays/hr_holidays.py:265
+#: code:addons/hr_holidays/hr_holidays.py:290 sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
 msgstr "Alkupäivän pitää olla ennen loppupäivää."
@@ -975,12 +908,10 @@ msgstr "Analysoi alkaen"
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr ""
-"Kun tämä valittu, niin tämän tyyppiset varaus- ja poissaolopyynnöt vaativat "
-"vahvistuksen lisäksi toisen vahvistuksen tullakseen hyväksytyksi."
+msgstr "Kun tämä valittu, niin tämän tyyppiset varaus- ja poissaolopyynnöt vaativat vahvistuksen lisäksi toisen vahvistuksen tullakseen hyväksytyksi."
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_holiday_allocation_tree
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
@@ -1005,13 +936,13 @@ msgid "Light Pink"
 msgstr "Vaaleanpunainen"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:503
+#: code:addons/hr_holidays/hr_holidays.py:494
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid "Manager"
 msgstr "Esimies"
 
@@ -1021,18 +952,17 @@ msgid "HR Leaves Summary Report By Department"
 msgstr "Henkilöstöhallinnon yhteenvetoraportti poissaoloista osastoittain"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#: view:hr.holidays:0
 msgid "Year"
 msgstr "Vuosi"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.edit_holiday_new
+#: view:hr.holidays:0
 msgid "Duration"
 msgstr "Kesto"
 
 #. module: hr_holidays
-#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
-#: selection:hr.holidays,state:0
+#: view:hr.holidays:0 selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
 msgstr "Hyväksy"
@@ -1051,7 +981,3 @@ msgstr "Syyt"
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr "Valitse poissaolotyyppi"
-
-#, python-format
-#~ msgid "Leave Request for %s"
-#~ msgstr "Lomapyynnöt henkilölle %s"

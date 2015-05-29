@@ -1,34 +1,34 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_budget
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-12 07:47+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-13 05:29+0000\n"
-"X-Generator: Launchpad (build 17389)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_budget
-#: view:account.budget.analytic:account_budget.account_budget_analytic_view
-#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
-#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
-#: view:account.budget.report:account_budget.account_budget_report_view
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
 msgid "Select Dates Period"
 msgstr ""
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Aseqdac amasay"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -42,12 +42,12 @@ msgid "Budgetary Positions"
 msgstr ""
 
 #. module: account_budget
-#: view:website:account_budget.report_budget
+#: report:account.budget:0
 msgid "Printed at:"
 msgstr ""
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:crossovered.budget:0
 msgid "Confirm"
 msgstr "Sentem"
 
@@ -75,26 +75,24 @@ msgid "End of period"
 msgstr "Tagara n tawal"
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.view_crossovered_budget_search
-#: selection:crossovered.budget,state:0
+#: view:crossovered.budget:0 selection:crossovered.budget,state:0
 msgid "Draft"
 msgstr "Arewway"
 
 #. module: account_budget
-#: view:website:account_budget.report_budget
+#: report:account.budget:0
 msgid "at"
 msgstr "di"
 
 #. module: account_budget
-#: view:account.budget.report:account_budget.account_budget_report_view
+#: view:account.budget.report:0
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
 msgid "Print Budgets"
 msgstr ""
 
 #. module: account_budget
-#: view:website:account_budget.report_budget
-#: view:website:account_budget.report_crossoveredbudget
+#: report:account.budget:0
 msgid "Currency:"
 msgstr "Tanfalit:"
 
@@ -121,7 +119,6 @@ msgstr "Addad"
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 #: model:ir.model,name:account_budget.model_account_analytic_account
-#: view:website:account_budget.report_analyticaccountbudget
 msgid "Analytic Account"
 msgstr "Amiḍan n tusliṭ"
 
@@ -131,41 +128,34 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new budget.\n"
 "              </p><p>\n"
-"                A budget is a forecast of your company's income and/or "
-"expenses\n"
-"                expected for a period in the future. A budget is defined on "
-"some\n"
-"                financial accounts and/or analytic accounts (that may "
-"represent\n"
+"                A budget is a forecast of your company's income and/or expenses\n"
+"                expected for a period in the future. A budget is defined on some\n"
+"                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)\n"
 "              </p><p>\n"
 "                By keeping track of where your money goes, you may be less\n"
 "                likely to overspend, and more likely to meet your financial\n"
-"                goals. Forecast a budget by detailing the expected revenue "
-"per\n"
-"                analytic account and monitor its evolution based on the "
-"actuals\n"
+"                goals. Forecast a budget by detailing the expected revenue per\n"
+"                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: account_budget
-#: view:website:account_budget.report_analyticaccountbudget
-#: view:website:account_budget.report_budget
-#: view:website:account_budget.report_crossoveredbudget
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Description"
 msgstr "Aglam"
 
 #. module: account_budget
-#: view:website:account_budget.report_analyticaccountbudget
+#: report:crossovered.budget.report:0
 msgid "Currency"
 msgstr "Tanfalit"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Total :"
-msgstr ""
+msgstr "Asemday:"
 
 #. module: account_budget
 #: field:account.budget.post,company_id:0
@@ -175,56 +165,44 @@ msgid "Company"
 msgstr "Takebbwanit"
 
 #. module: account_budget
-#: view:website:account_budget.report_analyticaccountbudget
-#: view:website:account_budget.report_budget
-#: view:website:account_budget.report_crossoveredbudget
+#: report:crossovered.budget.report:0
 msgid "to"
 msgstr "ɣer"
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:crossovered.budget:0
 msgid "Reset to Draft"
 msgstr "Rrit d arewway"
 
 #. module: account_budget
-#: view:account.budget.post:account_budget.view_budget_post_form
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:account.budget.post:0 view:crossovered.budget:0
 #: field:crossovered.budget.lines,planned_amount:0
-#: view:website:account_budget.report_budget
 msgid "Planned Amount"
 msgstr ""
 
 #. module: account_budget
-#: view:website:account_budget.report_analyticaccountbudget
-#: view:website:account_budget.report_budget
-#: view:website:account_budget.report_crossoveredbudget
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Perc(%)"
 msgstr "Amfiḍi(%)"
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
-#: selection:crossovered.budget,state:0
+#: view:crossovered.budget:0 selection:crossovered.budget,state:0
 msgid "Done"
 msgstr "Immed"
 
 #. module: account_budget
-#: view:website:account_budget.report_analyticaccountbudget
-#: view:website:account_budget.report_crossoveredbudget
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Practical Amt"
 msgstr ""
 
 #. module: account_budget
-#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
-#: view:account.budget.post:account_budget.view_budget_post_form
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
-#: field:crossovered.budget.lines,practical_amount:0
-#: view:website:account_budget.report_budget
+#: view:account.analytic.account:0 view:account.budget.post:0
+#: view:crossovered.budget:0 field:crossovered.budget.lines,practical_amount:0
 msgid "Practical Amount"
 msgstr ""
 
 #. module: account_budget
-#: field:crossovered.budget,date_to:0
-#: field:crossovered.budget.lines,date_to:0
+#: field:crossovered.budget,date_to:0 field:crossovered.budget.lines,date_to:0
 msgid "End Date"
 msgstr "Azemz n tagara"
 
@@ -235,13 +213,12 @@ msgid "Account Budget report for analytic account"
 msgstr ""
 
 #. module: account_budget
-#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
+#: view:account.analytic.account:0
 msgid "Theoritical Amount"
 msgstr ""
 
 #. module: account_budget
-#: field:account.budget.post,name:0
-#: field:crossovered.budget,name:0
+#: field:account.budget.post,name:0 field:crossovered.budget,name:0
 msgid "Name"
 msgstr "Isem"
 
@@ -251,50 +228,44 @@ msgid "Budget Line"
 msgstr "Izrig n tɣussar"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:124
+#: code:addons/account_budget/account_budget.py:120
 #, python-format
 msgid "The Budget '%s' has no accounts!"
 msgstr ""
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
-#: view:crossovered.budget:account_budget.crossovered_budget_view_tree
-#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+#: report:account.budget:0 view:crossovered.budget:0
 #: field:crossovered.budget.lines,crossovered_budget_id:0
-#: model:ir.actions.report.xml,name:account_budget.action_report_budget
+#: report:crossovered.budget.report:0
+#: model:ir.actions.report.xml,name:account_budget.account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
-#: view:website:account_budget.report_budget
-#: view:website:account_budget.report_crossoveredbudget
 msgid "Budget"
 msgstr "Tiɣussar"
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+#: view:crossovered.budget:0
 msgid "To Approve Budgets"
 msgstr ""
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:crossovered.budget:0
 msgid "Duration"
 msgstr "Timirt"
 
 #. module: account_budget
-#: field:account.budget.post,code:0
-#: field:crossovered.budget,code:0
+#: field:account.budget.post,code:0 field:crossovered.budget,code:0
 msgid "Code"
 msgstr "Tangalt"
 
 #. module: account_budget
-#: view:account.budget.analytic:account_budget.account_budget_analytic_view
-#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
 msgstr ""
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_report
-#: model:ir.actions.report.xml,name:account_budget.action_report_analytic_account_budget
-#: model:ir.actions.report.xml,name:account_budget.action_report_crossovered_budget
+#: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
 #: model:ir.ui.menu,name:account_budget.menu_action_account_budget_post_tree
 #: model:ir.ui.menu,name:account_budget.next_id_31
@@ -303,7 +274,7 @@ msgid "Budgets"
 msgstr "Tiɣussarin"
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.crossvered.summary.report:0
 msgid "This wizard is used to print summary of budgets"
 msgstr ""
 
@@ -313,19 +284,17 @@ msgid "Cancelled"
 msgstr "Ifsax"
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:crossovered.budget:0
 msgid "Approve"
 msgstr "Seɣbel"
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+#: view:crossovered.budget:0
 msgid "To Approve"
 msgstr ""
 
 #. module: account_budget
-#: view:account.budget.post:account_budget.view_budget_post_form
-#: view:account.budget.post:account_budget.view_budget_post_search
-#: view:account.budget.post:account_budget.view_budget_post_tree
+#: view:account.budget.post:0
 #: field:crossovered.budget.lines,general_budget_id:0
 #: model:ir.model,name:account_budget.model_account_budget_post
 msgid "Budgetary Position"
@@ -342,46 +311,41 @@ msgstr "Tazwara n tawala"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
-msgstr ""
+msgstr "Tiɣussar"
 
 #. module: account_budget
-#: view:website:account_budget.report_analyticaccountbudget
-#: view:website:account_budget.report_crossoveredbudget
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Theoretical Amt"
 msgstr ""
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:124
+#: code:addons/account_budget/account_budget.py:120
 #, python-format
 msgid "Error!"
 msgstr "Tuccḍa!"
 
 #. module: account_budget
-#: view:account.budget.analytic:account_budget.account_budget_analytic_view
-#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
-#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
-#: view:account.budget.report:account_budget.account_budget_report_view
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
 msgid "Print"
 msgstr "Siggez"
 
 #. module: account_budget
-#: view:account.budget.post:account_budget.view_budget_post_form
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:account.budget.post:0 view:crossovered.budget:0
 #: field:crossovered.budget.lines,theoritical_amount:0
-#: view:website:account_budget.report_budget
 msgid "Theoretical Amount"
 msgstr ""
 
 #. module: account_budget
-#: view:account.budget.analytic:account_budget.account_budget_analytic_view
-#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
-#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
-#: view:account.budget.report:account_budget.account_budget_report_view
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
 msgid "or"
 msgstr "neɣ"
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:crossovered.budget:0
 msgid "Cancel Budget"
 msgstr "Sefsax tiɣussar"
 
@@ -391,27 +355,23 @@ msgid "Budget :"
 msgstr ""
 
 #. module: account_budget
-#: view:website:account_budget.report_analyticaccountbudget
-#: view:website:account_budget.report_crossoveredbudget
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Planned Amt"
 msgstr ""
 
 #. module: account_budget
-#: view:account.budget.post:account_budget.view_budget_post_form
-#: field:account.budget.post,account_ids:0
+#: view:account.budget.post:0 field:account.budget.post,account_ids:0
 msgid "Accounts"
 msgstr "Imiḍanen"
 
 #. module: account_budget
-#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
+#: view:account.analytic.account:0
 #: field:account.analytic.account,crossovered_budget_line:0
-#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:account.budget.post:0
 #: field:account.budget.post,crossovered_budget_line:0
-#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:crossovered.budget:0
 #: field:crossovered.budget,crossovered_budget_line:0
-#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_form
-#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_search
-#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_tree
+#: view:crossovered.budget.lines:0
 #: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
@@ -419,10 +379,9 @@ msgid "Budget Lines"
 msgstr "Izrigen n tɣussar"
 
 #. module: account_budget
-#: view:account.budget.analytic:account_budget.account_budget_analytic_view
-#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
-#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
-#: view:account.budget.report:account_budget.account_budget_report_view
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
 msgid "Cancel"
 msgstr "Sefsax"
 
@@ -433,11 +392,11 @@ msgid "Start Date"
 msgstr "Azemz n tazwara"
 
 #. module: account_budget
-#: view:website:account_budget.report_analyticaccountbudget
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr ""
 
 #. module: account_budget
-#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+#: view:crossovered.budget:0
 msgid "Draft Budgets"
 msgstr "Tiɣussarin tirewwayin"

@@ -1,132 +1,44 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * knowledge
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-12-27 08:12+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2015-05-22 15:44+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/odoo-7/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:50+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: knowledge
-#: model:ir.ui.menu,name:knowledge.menu_document
-msgid "Knowledge"
-msgstr "Conocimiento"
+#: view:knowledge.config.settings:0
+msgid "Documents"
+msgstr "Documentos"
 
 #. module: knowledge
-#: help:knowledge.installer,wiki_quality_manual:0
-msgid "Creates an example skeleton for a standard quality manual."
-msgstr "Crea un esqueleto de ejemplo para un manual de calidad estándar."
-
-#. module: knowledge
-#: view:knowledge.installer:0
-msgid "Share information within the company with these specific Addons."
-msgstr "Comparta información con la compañía con estos módulos específicos."
-
-#. module: knowledge
-#: field:knowledge.installer,document_ftp:0
-msgid "Shared Repositories (FTP)"
-msgstr "Repositorios compartidos (FTP)"
-
-#. module: knowledge
-#: model:ir.module.module,shortdesc:knowledge.module_meta_information
-msgid "Knowledge Management System"
-msgstr "Sistema de Gestión del Conocimiento"
-
-#. module: knowledge
-#: field:knowledge.installer,wiki:0
-msgid "Collaborative Content (Wiki)"
-msgstr "Contenido colaborativo (Wiki)"
-
-#. module: knowledge
-#: help:knowledge.installer,document_ftp:0
-msgid ""
-"Provides an FTP access to your OpenERP's Document Management System. It lets "
-"you access attachments and virtual documents through a standard FTP client."
+#: model:ir.model,name:knowledge.model_knowledge_config_settings
+msgid "knowledge.config.settings"
 msgstr ""
-"Proporciona un acceso FTP al sistema de gestión documental de OpenERP. Le "
-"permite acceder a los adjuntos y a los documentos virtuales a través de un "
-"cliente FTP estándar."
 
 #. module: knowledge
-#: help:knowledge.installer,document_webdav:0
+#: help:knowledge.config.settings,module_document_webdav:0
 msgid ""
-"Provides a WebDAV access to your OpenERP's Document Management System. Lets "
-"you access attachments and virtual documents through your standard file "
-"browser."
+"Access your documents in OpenERP through WebDAV.\n"
+"                This installs the module document_webdav."
 msgstr ""
-"Proporciona un acceso WebDAV al sistema de gestión documental de OpenERP. Le "
-"permite acceder a los archivos adjuntos y a los documentos virtuales a "
-"través de su navegador de archivos habitual."
 
 #. module: knowledge
-#: view:knowledge.installer:0
-msgid "Configure"
-msgstr "Configurar"
-
-#. module: knowledge
-#: view:knowledge.installer:0
-msgid "title"
-msgstr "título"
-
-#. module: knowledge
-#: model:ir.module.module,description:knowledge.module_meta_information
-msgid ""
-"Installer for knowledge-based tools\n"
-"    "
+#: help:knowledge.config.settings,module_document_page:0
+msgid "This installs the module document_page."
 msgstr ""
-"Instalador para las herramientas relacionadas con la gestión del "
-"conocimiento\n"
-"    "
-
-#. module: knowledge
-#: model:ir.ui.menu,name:knowledge.menu_document_configuration
-msgid "Configuration"
-msgstr "Configuración"
-
-#. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
-msgid "Knowledge Modules Installation"
-msgstr "Instalación de módulos de gestión del conocimiento"
-
-#. module: knowledge
-#: field:knowledge.installer,wiki_quality_manual:0
-msgid "Quality Manual"
-msgstr "Manual calidad"
-
-#. module: knowledge
-#: field:knowledge.installer,document_webdav:0
-msgid "Shared Repositories (WebDAV)"
-msgstr "Repositorios compartidos (WebDAV)"
-
-#. module: knowledge
-#: field:knowledge.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progreso configuración"
-
-#. module: knowledge
-#: help:knowledge.installer,wiki_faq:0
-msgid ""
-"Creates a skeleton internal FAQ pre-filled with documentation about "
-"OpenERP's Document Management System."
-msgstr ""
-"Crea un esqueleto de FAQ internas prerellenadas con documentación sobre el "
-"sistema de gestión documental de OpenERP."
-
-#. module: knowledge
-#: field:knowledge.installer,wiki_faq:0
-msgid "Internal FAQ"
-msgstr "FAQ internas"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document2
@@ -134,36 +46,73 @@ msgid "Collaborative Content"
 msgstr "Contenido colaborativo"
 
 #. module: knowledge
-#: field:knowledge.installer,config_logo:0
-msgid "Image"
-msgstr "Imagen"
-
-#. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
-#: view:knowledge.installer:0
-msgid "Knowledge Application Configuration"
-msgstr "Configuración aplicación del conocimiento"
-
-#. module: knowledge
-#: model:ir.model,name:knowledge.model_knowledge_installer
-msgid "knowledge.installer"
-msgstr "conocimiento.instalador"
-
-#. module: knowledge
-#: view:knowledge.installer:0
-msgid "Configure Your Knowledge Application"
-msgstr "Configure su aplicación de gestión del conocimiento"
-
-#. module: knowledge
-#: help:knowledge.installer,wiki:0
-msgid ""
-"Lets you create wiki pages and page groups in order to keep track of "
-"business knowledge and share it with and  between your employees."
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
+#: view:knowledge.config.settings:0
+msgid "Configure Knowledge"
 msgstr ""
-"Le permite crear páginas wiki y grupos de páginas para no perder de vista el "
-"conocimiento del negocio y compartirlo con y entre sus empleados."
 
 #. module: knowledge
-#: view:knowledge.installer:0
-msgid "Content templates"
-msgstr "Plantillas contenido"
+#: view:knowledge.config.settings:0
+msgid "Knowledge and Documents Management"
+msgstr ""
+
+#. module: knowledge
+#: help:knowledge.config.settings,module_document:0
+msgid ""
+"This is a complete document management system, with: user authentication,\n"
+"                full document search (but pptx and docx are not supported), and a document dashboard.\n"
+"                This installs the module document."
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.config.settings,module_document_page:0
+msgid "Create static web pages"
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.config.settings,module_document_ftp:0
+msgid "Share repositories (FTP)"
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.config.settings,module_document:0
+msgid "Manage documents"
+msgstr ""
+
+#. module: knowledge
+#: view:knowledge.config.settings:0
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: knowledge
+#: view:knowledge.config.settings:0
+msgid "Apply"
+msgstr "Aplicar"
+
+#. module: knowledge
+#: model:ir.ui.menu,name:knowledge.menu_document_configuration
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: knowledge
+#: help:knowledge.config.settings,module_document_ftp:0
+msgid ""
+"Access your documents in OpenERP through an FTP interface.\n"
+"                This installs the module document_ftp."
+msgstr ""
+
+#. module: knowledge
+#: view:knowledge.config.settings:0
+msgid "or"
+msgstr "o"
+
+#. module: knowledge
+#: field:knowledge.config.settings,module_document_webdav:0
+msgid "Share repositories (WebDAV)"
+msgstr ""
+
+#. module: knowledge
+#: model:ir.ui.menu,name:knowledge.menu_document
+#: model:ir.ui.menu,name:knowledge.menu_knowledge_configuration
+msgid "Knowledge"
+msgstr "Conocimiento"
