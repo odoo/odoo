@@ -769,8 +769,9 @@
 <button t-name="ListView.row.button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled' : ''"
-        ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-        t-att-alt="widget.string"/></button>
+        ><img t-if="!widget.icon.indexOf('fa-') == 0" t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+        t-att-alt="widget.string"/><i t-if="widget.icon.indexOf('fa-') == 0" t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
+</button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
          (if not deletable add back padding), otherwise the row being added is
