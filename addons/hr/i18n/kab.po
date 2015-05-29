@@ -1,21 +1,22 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-06 20:29+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:32+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-07 05:42+0000\n"
-"X-Generator: Launchpad (build 17383)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -25,12 +26,12 @@ msgstr ""
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "Allow timesheets validation by managers"
-msgstr ""
+msgstr "Sireg aseɣbel n tferkit n wakud sɣur imasayen"
 
 #. module: hr
 #: field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Imxutaren"
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
@@ -43,12 +44,14 @@ msgid "SIN No"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
-msgstr ""
+msgstr "Tiɣbula n Wemdan"
 
 #. module: hr
 #: help:hr.employee,image_medium:0
@@ -59,25 +62,24 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "Time Tracking"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Sdukel s..."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr ""
+msgstr "Silel Igezda-ik"
 
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees currently occupying this job position."
-msgstr ""
+msgstr "Amḍan n imarisen i geṭṭfen tadekkwant-agi n umahil."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_evaluation:0
@@ -85,18 +87,16 @@ msgid "Organize employees periodic evaluation"
 msgstr ""
 
 #. module: hr
-#: view:hr.department:hr.view_department_filter
-#: view:hr.employee:hr.view_employee_filter
-#: field:hr.employee,department_id:0
-#: view:hr.job:hr.view_job_filter
-#: field:hr.job,department_id:0
+#: view:hr.department:0 view:hr.employee:0 field:hr.employee,department_id:0
+#: view:hr.job:0 field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
-msgstr ""
+msgstr "Agezdu"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
-msgstr ""
+msgstr "Email n umahil"
 
 #. module: hr
 #: help:hr.employee,image:0
@@ -108,29 +108,25 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
 msgid "This installs the module hr_holidays."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir hr_holidays."
 
 #. module: hr
-#: field:hr.department,jobs_ids:0
-#: view:hr.job:hr.view_job_filter
+#: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Tadekkwant n umahil"
 
 #. module: hr
-#: view:hr.job:hr.view_job_filter
+#: view:hr.job:0
 msgid "In Recruitment"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,message_unread:0
 #: field:hr.job,message_unread:0
 msgid "Unread Messages"
 msgstr "Iznan ur neţwaɣer-ara"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:hr.view_employee_filter
-#: view:hr.job:hr.view_job_filter
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Takebbwanit"
@@ -141,9 +137,9 @@ msgid "Expected in Recruitment"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Other Information ..."
-msgstr ""
+msgstr "Tilɣa-nniḍen"
 
 #. module: hr
 #: constraint:hr.employee.category:0
@@ -153,18 +149,18 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
 msgid "This installs the module hr_recruitment."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir hr_recruitment."
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Birth"
-msgstr ""
+msgstr "Talalit"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Employee Tags"
-msgstr ""
+msgstr "Tibzimin n Umaris"
 
 #. module: hr
 #: view:hr.job:0
@@ -179,7 +175,7 @@ msgstr ""
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr ""
+msgstr "Agezdu amaraw"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -192,36 +188,34 @@ msgid "Married"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,message_ids:0
 #: field:hr.job,message_ids:0
 msgid "Messages"
 msgstr "Iznan"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "Talent Management"
 msgstr ""
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir  hr_timesheet_sheet."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Tiliɣri n ufus:"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Position"
 msgstr ""
 
 #. module: hr
-#: help:hr.employee,message_unread:0
 #: help:hr.job,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -243,12 +237,12 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Uṭṭun n usulu"
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr ""
+msgstr "Unti"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -258,34 +252,33 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
-msgstr ""
+msgstr "Tiliɣri n umahil"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr ""
+msgstr "Taggayin tarracin"
 
 #. module: hr
-#: field:hr.job,description:0
+#: field:hr.job,description:0 model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Aglam n Tdekkwant n Umahil"
 
 #. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
-msgstr ""
+msgstr "Asun n Tnarit"
 
 #. module: hr
-#: field:hr.employee,message_follower_ids:0
 #: field:hr.job,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Imagazen"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
-msgstr ""
+msgstr "Amaris"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
@@ -296,14 +289,14 @@ msgstr ""
 #: help:hr.employee,image_small:0
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr ""
 
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Azemz n Tlalit"
 
 #. module: hr
 #: help:hr.job,no_of_recruitment:0
@@ -313,24 +306,21 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
 msgid "Open HR Menu"
-msgstr ""
+msgstr "Lli umuɣ n Teɣbula n Wemdan"
 
 #. module: hr
-#: help:hr.employee,message_summary:0
 #: help:hr.job,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa  deg umasal HTML "
-"iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
+msgstr "Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa  deg umasal HTML iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
-"This installs the module account_analytic_analysis, which will install sales "
-"management too."
-msgstr ""
+"This installs the module account_analytic_analysis, which will install sales"
+" management too."
+msgstr "Ayagi ad isbed azegrir account_analytic_analysis, Netta s timad-is ad isbed diɣen asefrek n uznuzu."
 
 #. module: hr
 #: view:board.board:0
@@ -338,17 +328,14 @@ msgid "Human Resources Dashboard"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_filter
-#: view:hr.job:hr.view_hr_job_form
-#: view:hr.job:hr.view_hr_job_tree
-#: view:hr.job:hr.view_job_filter
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Tadekkwant n umahil"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Current Number of Employees"
-msgstr ""
+msgstr "Amḍan Amiran n Imarisen"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -373,24 +360,24 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Tel:"
-msgstr ""
+msgstr "Tiliɣri:"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Divorced"
-msgstr ""
+msgstr "Ibra"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Taggayt tamarawt"
 
 #. module: hr
-#: view:hr.department:hr.view_department_filter
+#: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 msgid "Departments"
-msgstr ""
+msgstr "Igezda"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
@@ -398,7 +385,7 @@ msgid "Employee Contact"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "e.g. Part Time"
 msgstr ""
 
@@ -408,18 +395,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new job position.\n"
 "              </p><p>\n"
-"                Job Positions are used to define jobs and their "
-"requirements.\n"
-"                You can keep track of the number of employees you have per "
-"job\n"
-"                position and follow the evolution according to what you "
-"planned\n"
+"                Job Positions are used to define jobs and their requirements.\n"
+"                You can keep track of the number of employees you have per job\n"
+"                position and follow the evolution according to what you planned\n"
 "                for the future.\n"
 "              </p><p>\n"
-"                You can attach a survey to a job position. It will be used "
-"in\n"
-"                the recruitment process to evaluate the applicants for this "
-"job\n"
+"                You can attach a survey to a job position. It will be used in\n"
+"                the recruitment process to evaluate the applicants for this job\n"
 "                position.\n"
 "              </p>\n"
 "            "
@@ -440,7 +422,7 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir hr_evaluation."
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -450,41 +432,41 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
 msgid "This installs the module hr_attendance."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir hr_attendance."
 
 #. module: hr
-#: view:hr.employee.category:hr.view_employee_category_form
+#: view:hr.employee.category:0
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr ""
+msgstr "Taggayt n Umaris"
 
 #. module: hr
 #: field:hr.employee,category_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Tibzimin"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
 msgid "This installs the module hr_contract."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir  hr_contract."
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Related User"
-msgstr ""
+msgstr "Aseqdac Uqqin"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "or"
 msgstr "neɣ"
 
 #. module: hr
 #: field:hr.employee.category,name:0
 msgid "Category"
-msgstr ""
+msgstr "Taggayt"
 
 #. module: hr
-#: view:hr.job:hr.view_hr_job_form
+#: view:hr.job:0
 msgid "Stop Recruitment"
 msgstr ""
 
@@ -506,17 +488,17 @@ msgstr "Awennit"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr ""
+msgstr "Taɣessa n Imarisen"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Contact Information"
-msgstr ""
+msgstr "Talɣut n unermes"
 
 #. module: hr
 #: field:res.users,employee_ids:0
 msgid "Related employees"
-msgstr ""
+msgstr "Iseqdacen uqqinen"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
@@ -526,19 +508,17 @@ msgstr ""
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr ""
+msgstr "Igezda arrac"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
-#: view:hr.job:hr.view_job_filter
-#: field:hr.job,state:0
+#: view:hr.employee:0 view:hr.job:0 field:hr.job,state:0
 msgid "Status"
 msgstr "Addad"
 
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr ""
+msgstr "Asulay-nniḍen"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
@@ -546,12 +526,11 @@ msgid "Employee Contract"
 msgstr ""
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "Contracts"
-msgstr ""
+msgstr "Iguta"
 
 #. module: hr
-#: help:hr.employee,message_ids:0
 #: help:hr.job,message_ids:0
 msgid "Messages and communication history"
 msgstr "Amazray n iznan  d  tiywalin"
@@ -562,10 +541,9 @@ msgid "SSN No"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,message_is_follower:0
 #: field:hr.job,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "D amagaz"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_recruitment:0
@@ -573,17 +551,17 @@ msgid "Manage the recruitment process"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Active"
 msgstr "Urmid"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "Human Resources Management"
-msgstr ""
+msgstr "Asefrek n Teɣbula n Wemdan"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "Install your country's payroll"
 msgstr ""
 
@@ -593,12 +571,11 @@ msgid "Bank Account Number"
 msgstr ""
 
 #. module: hr
-#: view:hr.department:hr.view_department_tree
+#: view:hr.department:0
 msgid "Companies"
 msgstr "Tikebbwaniyin"
 
 #. module: hr
-#: field:hr.employee,message_summary:0
 #: field:hr.job,message_summary:0
 msgid "Summary"
 msgstr "Agzul"
@@ -616,24 +593,22 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new employee.\n"
 "              </p><p>\n"
-"                With just a quick glance on the OpenERP employee screen, "
-"you\n"
-"                can easily find all the information you need for each "
-"person;\n"
+"                With just a quick glance on the OpenERP employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "HR Settings"
-msgstr ""
+msgstr "Tawila n Teɣbula n Wemdan"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Citizenship & Other Info"
-msgstr ""
+msgstr "Tiqqerma & Talɣut-nniḍen"
 
 #. module: hr
 #: constraint:hr.department:0
@@ -643,12 +618,12 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,address_id:0
 msgid "Working Address"
-msgstr ""
+msgstr "Tansa n umahil"
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Public Information"
-msgstr ""
+msgstr "Talɣut Tazayezt"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -663,15 +638,15 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
-msgstr ""
+msgstr "Tuqqna Taneggarut"
 
 #. module: hr
 #: field:hr.employee,image:0
 msgid "Photo"
-msgstr ""
+msgstr "Tugna"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "Cancel"
 msgstr "Sefsax"
 
@@ -681,8 +656,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a department.\n"
 "              </p><p>\n"
-"                OpenERP's department structure is used to manage all "
-"documents\n"
+"                OpenERP's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
@@ -692,7 +666,7 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
 msgid "This installs the module hr_timesheet."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir hr_timesheet."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -707,32 +681,31 @@ msgid ""
 "                Click to define a new department.\n"
 "              </p><p>\n"
 "                Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
+"                related to employees by departments: expenses and timesheets,\n"
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_form
+#: view:hr.employee:0
 msgid "Personal Information"
 msgstr ""
 
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr ""
+msgstr "Aɣrem"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Uṭṭun n Uzegrilas"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
-msgstr ""
+msgstr "Tiliɣri ufus n umahil"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -752,20 +725,19 @@ msgid "Welcome to %s! Please help him/her take the first steps with OpenERP!"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee.category:hr.view_employee_category_list
-#: view:hr.employee.category:hr.view_employee_category_tree
+#: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr ""
+msgstr "Taggayin n Imarisen"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
 msgid "Home Address"
-msgstr ""
+msgstr "Tansa n Wexxam"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet:0
 msgid "Manage timesheets"
-msgstr ""
+msgstr "Sefrek tiferkitin n wakud"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_payroll_modules
@@ -780,37 +752,37 @@ msgstr ""
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Isem Tdekkwant n Umahil"
 
 #. module: hr
-#: view:hr.job:hr.view_job_filter
+#: view:hr.job:0
 msgid "In Position"
 msgstr ""
 
 #. module: hr
 #: help:hr.config.settings,module_hr_payroll:0
 msgid "This installs the module hr_payroll."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir hr_payroll."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_contract:0
 msgid "Record contracts per employee"
-msgstr ""
+msgstr "Kles agatu s umaris"
 
 #. module: hr
-#: view:hr.department:hr.view_department_form
+#: view:hr.department:0
 msgid "department"
-msgstr ""
+msgstr "agezdu"
 
 #. module: hr
 #: field:hr.employee,country_id:0
 msgid "Nationality"
-msgstr ""
+msgstr "Taɣelnewt"
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "Additional Features"
-msgstr ""
+msgstr "Iglamen isemmadanen"
 
 #. module: hr
 #: field:hr.employee,notes:0
@@ -825,11 +797,10 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Taɣbalut"
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee,name_related:0
+#: field:hr.department,complete_name:0 field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Isem"
@@ -840,17 +811,14 @@ msgid "Gender"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_filter
-#: view:hr.employee:hr.view_employee_tree
-#: view:hr.employee:hr.view_partner_tree2
-#: field:hr.employee.category,employee_ids:0
+#: view:hr.employee:0 field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 msgid "Employees"
-msgstr ""
+msgstr "Imarisen"
 
 #. module: hr
 #: help:hr.employee,sinid:0
@@ -860,12 +828,12 @@ msgstr ""
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
-msgstr ""
+msgstr "Isem n Ugezdu"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reports"
-msgstr ""
+msgstr "Assaɣen"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
@@ -873,10 +841,10 @@ msgid "Manage payroll"
 msgstr ""
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 #: model:ir.actions.act_window,name:hr.action_human_resources_configuration
 msgid "Configure Human Resources"
-msgstr ""
+msgstr "Swel Tiɣbula n Wemdan"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -896,7 +864,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,login:0
 msgid "Login"
-msgstr ""
+msgstr "Aseqdac"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
@@ -913,13 +881,13 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Iseqdacen"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job_position
+#: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Tidekkwanin n Umahil"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_board_hr
@@ -929,8 +897,7 @@ msgid ""
 "                    <b>Human Resources dashboard is empty.</b>\n"
 "                  </p><p>\n"
 "                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options.\n"
 "                  </p><p>\n"
 "                    You can filter and group data before inserting into the\n"
@@ -941,10 +908,9 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:hr.view_employee_filter
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Asleɣmay"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -954,7 +920,7 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
 msgid "This installs the module hr_expense."
-msgstr ""
+msgstr "Ayagi ad isbed azegrir hr_expense."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_config_settings
@@ -962,8 +928,7 @@ msgid "hr.config.settings"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:hr.view_employee_filter
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Amasay"
@@ -971,7 +936,7 @@ msgstr "Amasay"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr ""
+msgstr "Aǧǧal/Taǧǧalt"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -979,11 +944,11 @@ msgid "Subordinates"
 msgstr ""
 
 #. module: hr
-#: view:hr.config.settings:hr.view_human_resources_configuration
+#: view:hr.config.settings:0
 msgid "Apply"
 msgstr "Snes"
 
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Small-sized photo"
-msgstr ""
+msgstr "Tugna tamecṭuḥt"

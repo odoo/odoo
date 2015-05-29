@@ -1,21 +1,22 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2015-05-22 15:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-7/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:57+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll_account
 #: field:hr.salary.rule,account_credit:0
@@ -26,26 +27,24 @@ msgstr "Conto Credito"
 #: code:addons/hr_payroll_account/hr_payroll_account.py:105
 #, python-format
 msgid "Payslip of %s"
-msgstr ""
+msgstr "Busta paga di %s"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:158
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr ""
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "Il giornale delle spese '%s' non ha correttamente configurato il conto crediti!"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,move_id:0
 msgid "Accounting Entry"
-msgstr ""
+msgstr "Voce contabile"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:174
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "Il giornale delle spese '%s' non ha correttamente configurato il conto debiti!"
 
 #. module: hr_payroll_account
 #: field:hr.salary.rule,account_tax_id:0
@@ -60,7 +59,7 @@ msgstr "Forza Periodo"
 #. module: hr_payroll_account
 #: help:hr.payslip,period_id:0
 msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr ""
+msgstr "Tenere vuoto per utilizzare il periodo della data di validazione (busta paga)"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contract
@@ -81,12 +80,12 @@ msgstr "Conto Debito"
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
 msgid "Payslip Batches"
-msgstr ""
+msgstr "Batch busta paga"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr ""
+msgstr "Genera la busta paga per tutti gli impegati selezionti"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:158
@@ -101,8 +100,7 @@ msgid "hr.salary.rule"
 msgstr "hr.salary.rule"
 
 #. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
+#: view:hr.contract:0 view:hr.salary.rule:0
 msgid "Accounting"
 msgstr "Contabilità"
 
@@ -116,11 +114,10 @@ msgstr "Busta paga"
 #: code:addons/hr_payroll_account/hr_payroll_account.py:176
 #, python-format
 msgid "Adjustment Entry"
-msgstr ""
+msgstr "Voce di aggiustamento"
 
 #. module: hr_payroll_account
-#: field:hr.contract,journal_id:0
-#: field:hr.payslip,journal_id:0
+#: field:hr.contract,journal_id:0 field:hr.payslip,journal_id:0
 #: field:hr.payslip.run,journal_id:0
 msgid "Salary Journal"
-msgstr ""
+msgstr "Giornale stipendi"

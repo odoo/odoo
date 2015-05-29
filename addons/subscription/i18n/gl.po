@@ -1,21 +1,22 @@
-# Galician translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * subscription
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Galician <gl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Galician (http://www.transifex.com/projects/p/odoo-7/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:28+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: gl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -70,10 +71,9 @@ msgid "Weeks"
 msgstr "Semanas"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
+#: view:subscription.subscription:0 field:subscription.subscription,state:0
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.config_recuuring_event
@@ -120,8 +120,7 @@ msgid "Subscription History"
 msgstr "Historial de documentos periódicos"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,user_id:0
+#: view:subscription.subscription:0 field:subscription.subscription,user_id:0
 msgid "User"
 msgstr "Usuario"
 
@@ -145,13 +144,10 @@ msgstr "Número de documentos"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr ""
-"Se se desmarca o campo activo, permite ocultar o documento de subscrición "
-"sen eliminalo."
+msgstr "Se se desmarca o campo activo, permite ocultar o documento de subscrición sen eliminalo."
 
 #. module: subscription
-#: field:subscription.document,name:0
-#: field:subscription.subscription,name:0
+#: field:subscription.document,name:0 field:subscription.subscription,name:0
 msgid "Name"
 msgstr "Nome"
 
@@ -161,8 +157,7 @@ msgid "Fields"
 msgstr "Campos"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,note:0
+#: view:subscription.subscription:0 field:subscription.subscription,note:0
 #: field:subscription.subscription,notes:0
 msgid "Notes"
 msgstr "Notas"
@@ -181,7 +176,7 @@ msgstr "Días"
 #: code:addons/subscription/subscription.py:147
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erro!"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
@@ -237,14 +232,12 @@ msgstr "Documento de subscrición"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr ""
-"Se se desmarca o campo activo, permite ocultar a subscrición sen eliminala."
+msgstr "Se se desmarca o campo activo, permite ocultar a subscrición sen eliminala."
 
 #. module: subscription
 #: help:subscription.document.fields,value:0
 msgid "Default value is considered for field when new document is generated."
-msgstr ""
-"Tense en conta o valor por defecto do campo cando se xera un novo documento."
+msgstr "Tense en conta o valor por defecto do campo cando se xera un novo documento."
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -265,9 +258,7 @@ msgstr "Proceso"
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr ""
-"O usuario pode seleccionar o documento orixinal sobre o cal desexa crear os "
-"documentos."
+msgstr "O usuario pode seleccionar o documento orixinal sobre o cal desexa crear os documentos."
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
@@ -302,13 +293,3 @@ msgstr "Documentos creados"
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Activo"
-
-#, python-format
-#~ msgid "Wrong Source Document !"
-#~ msgstr "Documento fonte erróneo!"
-
-#, python-format
-#~ msgid ""
-#~ "Please provide another source document.\n"
-#~ "This one does not exist !"
-#~ msgstr "Por favor, proporcione outro documento fonte. Este non existe!"

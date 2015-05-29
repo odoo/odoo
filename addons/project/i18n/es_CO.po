@@ -1,21 +1,22 @@
-# Spanish (Colombia) translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-19 03:34+0000\n"
-"Last-Translator: Juan Erazo <juanc.erazo@gmail.com>\n"
-"Language-Team: Spanish (Colombia) <es_CO@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:52+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Colombia) (http://www.transifex.com/projects/p/odoo-7/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:16+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_CO\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project
 #: view:project.project:0
@@ -25,15 +26,12 @@ msgstr "Interface de correo electrónico"
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid ""
-"If checked, this contract will be available in the project menu and you will "
-"be able to manage tasks or track issues"
-msgstr ""
-"Si se marca, este contrato estará disponible en el menú proyecto y se podrán "
-"gestionar las tareas o seguir las incidencias"
+"If checked, this contract will be available in the project menu and you will"
+" be able to manage tasks or track issues"
+msgstr "Si se marca, este contrato estará disponible en el menú proyecto y se podrán gestionar las tareas o seguir las incidencias"
 
 #. module: project
-#: field:project.project,progress_rate:0
-#: view:report.project.task.user:0
+#: field:project.project,progress_rate:0 view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
 msgstr "Progreso"
@@ -69,8 +67,7 @@ msgid "New Project Based on Template"
 msgstr "Nuevo proyecto basado en plantilla"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,day:0
+#: view:report.project.task.user:0 field:report.project.task.user,day:0
 msgid "Day"
 msgstr "Día"
 
@@ -85,8 +82,7 @@ msgid "Start Task"
 msgstr "Iniciar tarea"
 
 #. module: project
-#: help:project.project,message_unread:0
-#: help:project.task,message_unread:0
+#: help:project.project,message_unread:0 help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 
@@ -121,19 +117,14 @@ msgid "Manage time estimation on tasks"
 msgstr "Gestionar estimación de tiempo en tareas"
 
 #. module: project
-#: help:project.project,message_summary:0
-#: help:project.task,message_summary:0
+#: help:project.project,message_summary:0 help:project.task,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contiene el resumen de la charla (número de mensajes, ...). Este resumen "
-"viene directamente en formato HTML para que pueda insertarse en las vistas "
-"kanban."
+msgstr "Contiene el resumen de la charla (número de mensajes, ...). Este resumen viene directamente en formato HTML para que pueda insertarse en las vistas kanban."
 
 #. module: project
-#: code:addons/project/project.py:458
-#: code:addons/project/project.py:969
+#: code:addons/project/project.py:458 code:addons/project/project.py:969
 #: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
@@ -150,8 +141,7 @@ msgid "Allow task delegation"
 msgstr "Permitir la delegación de tareas"
 
 #. module: project
-#: field:project.task.delegate,planned_hours:0
-#: view:report.project.task.user:0
+#: field:project.task.delegate,planned_hours:0 view:report.project.task.user:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "Horas Planeadas"
@@ -182,11 +172,7 @@ msgid ""
 "This report allows you to analyse the performance of your projects and "
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
-msgstr ""
-"Este informe le permite analizar el desempeño de sus proyectos y usuarios. "
-"Puede analizar la cantidad de tareas, las horas invertidas en comparación "
-"con las horas planeadas, el número promedio de días para abrir o cerrar una "
-"tarea, etc."
+msgstr "Este informe le permite analizar el desempeño de sus proyectos y usuarios. Puede analizar la cantidad de tareas, las horas invertidas en comparación con las horas planeadas, el número promedio de días para abrir o cerrar una tarea, etc."
 
 #. module: project
 #: view:project.task.delegate:0
@@ -206,16 +192,13 @@ msgid "Planned Time"
 msgstr "Tiempo Planeado"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
+#: selection:report.project.task.user,state:0 view:res.partner:0
 msgid "Done"
 msgstr "Terminado"
 
@@ -241,8 +224,7 @@ msgid "Task Done"
 msgstr "Tarea Realizada"
 
 #. module: project
-#: view:project.project:0
-#: view:report.project.task.user:0
+#: view:project.project:0 view:report.project.task.user:0
 #: field:report.project.task.user,partner_id:0
 msgid "Contact"
 msgstr "Contacto"
@@ -306,19 +288,15 @@ msgstr "Cancelar Tarea"
 msgid ""
 "Project's members are users who can have an access to the tasks related to "
 "this project."
-msgstr ""
-"Los miembros del proyecto son usuarios que pueden tener acceso a las tareas "
-"relacionadas con este proyecto."
+msgstr "Los miembros del proyecto son usuarios que pueden tener acceso a las tareas relacionadas con este proyecto."
 
 #. module: project
-#: view:project.project:0
-#: field:project.task,manager_id:0
+#: view:project.project:0 field:project.task,manager_id:0
 msgid "Project Manager"
 msgstr "Gerente de Proyecto"
 
 #. module: project
-#: field:project.project,state:0
-#: field:project.task,state:0
+#: field:project.project,state:0 field:project.task,state:0
 #: field:project.task.history,state:0
 #: field:project.task.history.cumulative,state:0
 #: field:report.project.task.user,state:0
@@ -331,8 +309,7 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,complete_name:0
+#: view:project.project:0 field:project.project,complete_name:0
 msgid "Project Name"
 msgstr "Nombre del Proyecto"
 
@@ -356,17 +333,14 @@ msgstr "Octubre"
 msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Suma del total de horas de todas las tareas relacionadas con este proyecto y "
-"sus proyectos hijos."
+msgstr "Suma del total de horas de todas las tareas relacionadas con este proyecto y sus proyectos hijos."
 
 #. module: project
 #: help:project.project,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
-msgstr ""
-"Si el campo activo se desmarca, permite ocultar el proyecto sin eliminarlo."
+msgstr "Si el campo activo se desmarca, permite ocultar el proyecto sin eliminarlo."
 
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
@@ -387,12 +361,10 @@ msgstr "Resumen de la Tarea"
 #. module: project
 #: view:project.project:0
 msgid "Append this project to another one using analytic accounts hierarchy"
-msgstr ""
-"Agregar este proyecto a otro usando la jerarquía de cuentas analíticas"
+msgstr "Agregar este proyecto a otro usando la jerarquía de cuentas analíticas"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "In Progress Tasks"
 msgstr "Tareas en Ejecución"
 
@@ -400,17 +372,11 @@ msgstr "Tareas en Ejecución"
 #: help:res.company,project_time_mode_id:0
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
-msgstr ""
-"Permite fijar la unidad de medida utilizada en proyectos y tareas.\n"
-"Si utiliza las hojas de tiempo relacionadas con proyectos (módulo "
-"project_timesheet), no olvide configurar la unidad de medida correcta en sus "
-"empleados."
+"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
+msgstr "Permite fijar la unidad de medida utilizada en proyectos y tareas.\nSi utiliza las hojas de tiempo relacionadas con proyectos (módulo project_timesheet), no olvide configurar la unidad de medida correcta en sus empleados."
 
 #. module: project
-#: field:project.task,user_id:0
-#: view:report.project.task.user:0
+#: field:project.task,user_id:0 view:report.project.task.user:0
 msgid "Assigned to"
 msgstr "Asignado(a) a"
 
@@ -426,10 +392,8 @@ msgid "Project(s) Manager"
 msgstr "Gerentes de Proyecto"
 
 #. module: project
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
+#: selection:project.project,state:0 view:project.task:0
+#: selection:project.task,state:0 selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: selection:project.task.type,state:0
 #: selection:report.project.task.user,state:0
@@ -547,9 +511,7 @@ msgstr "Horas a Validar"
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr ""
-"Tiempo restante total, puede ser re-estimado periódicamente por quien se le "
-"ha asignado la tarea."
+msgstr "Tiempo restante total, puede ser re-estimado periódicamente por quien se le ha asignado la tarea."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -559,8 +521,7 @@ msgstr "Marzo"
 #. module: project
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project.my_open_tasks_action
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "My Tasks"
 msgstr "Mis Tareas"
 
@@ -603,13 +564,10 @@ msgstr "Fijar como Plantilla"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
-#: view:project.config.settings:0
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.config.settings:0 view:project.project:0 view:project.task:0
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0
-#: view:report.project.task.user:0
+#: field:project.task.work,task_id:0 view:report.project.task.user:0
 msgid "Task"
 msgstr "Tarea"
 
@@ -634,8 +592,7 @@ msgid "Analysis"
 msgstr "Análisis"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Resumen de la Tarea"
 
@@ -674,19 +631,7 @@ msgid ""
 "                  projects or invite customers to share your activities.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Clic para iniciar un nuevo proyecto.\n"
-"</p><p>\n"
-"Los proyectos se usan para organizar sus actividades: planificar "
-"</p><p>tareas, seguir incidencias, facturar partes de horas. Puede "
-"definir</p><p> proyectos internos (I+D, mejorar proceso de ventas), "
-"proyectos privados (mi lista de tareas a realizar) o proyectos de clientes.\n"
-"</p><p>\n"
-"Puede colaborar en los proyectos con los usuarios internos o invitar a "
-"clientes a compartir sus actividades.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClic para iniciar un nuevo proyecto.\n</p><p>\nLos proyectos se usan para organizar sus actividades: planificar </p><p>tareas, seguir incidencias, facturar partes de horas. Puede definir</p><p> proyectos internos (I+D, mejorar proceso de ventas), proyectos privados (mi lista de tareas a realizar) o proyectos de clientes.\n</p><p>\nPuede colaborar en los proyectos con los usuarios internos o invitar a clientes a compartir sus actividades.\n</p>\n            "
 
 #. module: project
 #: view:project.config.settings:0
@@ -694,8 +639,7 @@ msgid "Planning"
 msgstr "Planeación"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,date_deadline:0
+#: view:project.task:0 field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
 msgstr "Fecha límite"
@@ -716,8 +660,7 @@ msgid "Invoice working time on issues"
 msgstr "Facturar tiempo de trabajo en las incidencias"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
@@ -776,8 +719,7 @@ msgid "Miscellaneous"
 msgstr "Misceláneos"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,stage_id:0
+#: view:project.task:0 field:project.task,stage_id:0
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
 msgid "Stage"
@@ -809,8 +751,7 @@ msgid "Stages"
 msgstr "Fases"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -861,14 +802,12 @@ msgid "Task Activities"
 msgstr "Actividades de Tareas"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Tiempo Dedicado"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "í"
 msgstr "í"
 
@@ -907,15 +846,11 @@ msgstr "Fases de Proyecto"
 #: help:project.task,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
-msgstr ""
-"El estado se establece a 'borrador', cuando un caso se crea. Si el caso está "
-"en progreso el estado se establece a 'Abierto'. Cuando el caso finaliza, el "
-"estado se establece a 'Cerrado'. Si el caso necesita ser revisado entonces "
-"el estado se establece a 'Pendiente'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
+msgstr "El estado se establece a 'borrador', cuando un caso se crea. Si el caso está en progreso el estado se establece a 'Abierto'. Cuando el caso finaliza, el estado se establece a 'Cerrado'. Si el caso necesita ser revisado entonces el estado se establece a 'Pendiente'."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -929,8 +864,7 @@ msgstr "Archivado por Defecto"
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "Fecha"
 
@@ -939,9 +873,7 @@ msgstr "Fecha"
 msgid ""
 "Provides management of issues/bugs in projects.\n"
 "                This installs the module project_issue."
-msgstr ""
-"Provee gestión de incidencias/errores en los proyectos.\n"
-"Esto instala el módulo 'project_issue'."
+msgstr "Provee gestión de incidencias/errores en los proyectos.\nEsto instala el módulo 'project_issue'."
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -949,15 +881,8 @@ msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
-msgstr ""
-"Un estado de kanban de una tarea indica situaciones especiales que la "
-"afectan:\n"
-" * 'Normal' es la situación por defecto.\n"
-" * 'Bloqueada' indica que algo está impidiendo el progreso de la tarea.\n"
-" * 'Lista para la siguiente etapa' indica que la tarea puede ser llevada a "
-"la siguiente etapa."
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
+msgstr "Un estado de kanban de una tarea indica situaciones especiales que la afectan:\n * 'Normal' es la situación por defecto.\n * 'Bloqueada' indica que algo está impidiendo el progreso de la tarea.\n * 'Lista para la siguiente etapa' indica que la tarea puede ser llevada a la siguiente etapa."
 
 #. module: project
 #: view:project.task:0
@@ -972,20 +897,15 @@ msgstr "Cancelar Proyecto"
 #. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
-msgstr ""
-"Enlace este proyecto a una cuenta analítica si necesita la gestión "
-"financiera de los proyectos. Le permite conectar los proyectos con "
-"presupuestos, planificación, análisis de costos e ingresos, tiempo dedicado "
-"en los proyectos, etc."
+msgstr "Enlace este proyecto a una cuenta analítica si necesita la gestión financiera de los proyectos. Le permite conectar los proyectos con presupuestos, planificación, análisis de costos e ingresos, tiempo dedicado en los proyectos, etc."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.config.settings:0
-#: view:project.task.delegate:0
+#: view:project.config.settings:0 view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1011,18 +931,14 @@ msgstr "Muy Bajo(a)"
 msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Suma de las horas dedicadas en todas las tareas relacionadas con este "
-"proyecto y sus proyectos hijos."
+msgstr "Suma de las horas dedicadas en todas las tareas relacionadas con este proyecto y sus proyectos hijos."
 
 #. module: project
 #: view:project.project:0
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr ""
-"Seguir este proyecto para rastrear automáticamente los eventos asociados a "
-"las tareas y a las incidencias del mismo."
+msgstr "Seguir este proyecto para rastrear automáticamente los eventos asociados a las tareas y a las incidencias del mismo."
 
 #. module: project
 #: view:project.task:0
@@ -1035,8 +951,7 @@ msgid "Stage Changed"
 msgstr "Etapa Cambiada"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
+#: view:project.project:0 model:res.groups,name:project.group_project_manager
 msgid "Manager"
 msgstr "Gerente/Director"
 
@@ -1047,13 +962,7 @@ msgid ""
 "                Click to add a new tag.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\"><br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;&nbsp;&nbsp;Clic para agregar una nueva etiqueta.<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;</p><br>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\"><br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Clic para agregar una nueva etiqueta.<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p><br>\n            "
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_task_types_view
@@ -1087,8 +996,7 @@ msgid "Common"
 msgstr "Común"
 
 #. module: project
-#: help:project.project,message_ids:0
-#: help:project.task,message_ids:0
+#: help:project.project,message_ids:0 help:project.task,message_ids:0
 msgid "Messages and communication history"
 msgstr "Mensajes e historial de comunicación"
 
@@ -1097,9 +1005,7 @@ msgstr "Mensajes e historial de comunicación"
 msgid ""
 "To invoice or setup invoicing and renewal options, go to the related "
 "contract:"
-msgstr ""
-"Para facturar o configurar la facturación y las opciones de renovación, vaya "
-"al contrato relacionado:"
+msgstr "Para facturar o configurar la facturación y las opciones de renovación, vaya al contrato relacionado:"
 
 #. module: project
 #: field:project.task.delegate,state:0
@@ -1112,15 +1018,12 @@ msgid "Work summary"
 msgstr "Resumen del trabajo"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: view:report.project.task.user:0
+#: view:project.project:0 view:project.task:0 view:report.project.task.user:0
 msgid "Group By..."
 msgstr "Agrupar Por..."
 
 #. module: project
-#: view:project.project:0
-#: selection:project.project,state:0
+#: view:project.project:0 selection:project.project,state:0
 msgid "Template"
 msgstr "Plantilla"
 
@@ -1132,15 +1035,12 @@ msgstr "Re-abrir proyecto"
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying the list of projects"
-msgstr ""
-"Indica el orden de secuencia cuando se muestra la lista de proyectos."
+msgstr "Indica el orden de secuencia cuando se muestra la lista de proyectos."
 
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
-"¡Error! La fecha de inicio del proyecto debe ser anterior a la fecha final "
-"del proyecto."
+msgstr "¡Error! La fecha de inicio del proyecto debe ser anterior a la fecha final del proyecto."
 
 #. module: project
 #: field:project.project,members:0
@@ -1153,16 +1053,13 @@ msgid "Delegated Tasks"
 msgstr "Tareas Delegadas"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,message_unread:0
-#: view:project.task:0
-#: field:project.task,message_unread:0
+#: view:project.project:0 field:project.project,message_unread:0
+#: view:project.task:0 field:project.task,message_unread:0
 msgid "Unread Messages"
 msgstr "Mensajes sin Leer"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
+#: view:project.task:0 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "Tareas Hijas"
 
@@ -1187,8 +1084,7 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Pending Tasks"
 msgstr "Tareas Pendientes"
 
@@ -1225,11 +1121,7 @@ msgid ""
 "The status of your document is automatically changed regarding the selected "
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
-msgstr ""
-"El estado del documento se cambia automáticamente dependiendo de la "
-"fase/etapa seleccionada. Por ejemplo, si una etapa está relacionada con el "
-"estado 'Cerrado(a)', cuando el documento alcanza esa etapa, se cierra "
-"automáticamente."
+msgstr "El estado del documento se cambia automáticamente dependiendo de la fase/etapa seleccionada. Por ejemplo, si una etapa está relacionada con el estado 'Cerrado(a)', cuando el documento alcanza esa etapa, se cierra automáticamente."
 
 #. module: project
 #: view:project.task:0
@@ -1242,8 +1134,7 @@ msgid "Edit..."
 msgstr "Editar…"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,nbr:0
+#: view:report.project.task.user:0 field:report.project.task.user,nbr:0
 msgid "# of tasks"
 msgstr "Nº de tareas"
 
@@ -1253,8 +1144,7 @@ msgid "Number of documents attached"
 msgstr "Número de documentos adjuntos"
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "Prioridad"
 
@@ -1269,10 +1159,7 @@ msgid ""
 "Internal email associated with this project. Incoming emails are "
 "automatically synchronizedwith Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
-msgstr ""
-"Correo electrónico interno asociado con el proyecto. Los correos entrantes "
-"serán sincronizados automáticamente con las tareas (u opcionalmente las "
-"incidencias si el módulo rastreador de incidencias está instalado)."
+msgstr "Correo electrónico interno asociado con el proyecto. Los correos entrantes serán sincronizados automáticamente con las tareas (u opcionalmente las incidencias si el módulo rastreador de incidencias está instalado)."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1281,31 +1168,12 @@ msgid ""
 "                Click to add a stage in the task pipeline.\n"
 "              </p><p>\n"
 "                Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or "
-"issue.\n"
+"                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;&nbsp;&nbsp;Pulse para añadir una fase/etapa en el flujo de trabajo "
-"de las tareas.\n"
-"</p><p>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;&nbsp;&nbsp;Define los pasos que se usarán en el proyecto desde "
-"la<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;&nbsp;&nbsp;creación de la tarea, hasta el cierre de esta o de la "
-"incidencia. <br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;&nbsp;&nbsp;Se usarán dichas fases/etapas para seguir el progreso "
-"en<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;&nbsp;&nbsp;la resolución de la tarea o la incidencia.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pulse para añadir una fase/etapa en el flujo de trabajo de las tareas.\n</p><p>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Define los pasos que se usarán en el proyecto desde la<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;creación de la tarea, hasta el cierre de esta o de la incidencia. <br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Se usarán dichas fases/etapas para seguir el progreso en<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;la resolución de la tarea o la incidencia.\n</p>\n            "
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -1313,8 +1181,7 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Calculado como: Tiempo Dedicado + Tiempo Restante."
 
 #. module: project
-#: code:addons/project/project.py:382
-#: code:addons/project/project.py:403
+#: code:addons/project/project.py:382 code:addons/project/project.py:403
 #: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
@@ -1326,8 +1193,7 @@ msgid "Task Stage Changed"
 msgstr "Fase/Etapa de Tarea Cambiada"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task.history,remaining_hours:0
+#: view:project.task:0 field:project.task.history,remaining_hours:0
 #: field:project.task.history.cumulative,remaining_hours:0
 msgid "Remaining Time"
 msgstr "Tiempo Restante"
@@ -1371,8 +1237,7 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
-msgstr ""
-"Esto establecerá la unidad de medida usada en los proyectos y en las tareas."
+msgstr "Esto establecerá la unidad de medida usada en los proyectos y en las tareas."
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1380,8 +1245,7 @@ msgid "Very important"
 msgstr "Muy importante"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,month:0
+#: view:report.project.task.user:0 field:report.project.task.user,month:0
 msgid "Month"
 msgstr "Mes"
 
@@ -1396,8 +1260,7 @@ msgid "Start Date"
 msgstr "Fecha de Inicio"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,kanban_state:0
@@ -1409,9 +1272,7 @@ msgstr "Bloqueado(a)"
 msgid ""
 "If the task has a progress of 99.99% you should close the task if it's "
 "finished or reevaluate the time"
-msgstr ""
-"Si la tarea tiene un progreso de 99,99% debe cerrarla si está terminada o re-"
-"evaluar el tiempo"
+msgstr "Si la tarea tiene un progreso de 99,99% debe cerrarla si está terminada o re-evaluar el tiempo"
 
 #. module: project
 #: field:project.task,user_email:0
@@ -1445,15 +1306,12 @@ msgid "Closed"
 msgstr "Cerrado(a)"
 
 #. module: project
-#: view:project.project:0
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.project:0 selection:project.project,state:0
+#: view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
 #: selection:report.project.task.user,state:0
 msgid "Pending"
 msgstr "Pendiente"
@@ -1461,8 +1319,7 @@ msgstr "Pendiente"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_category_action
 #: model:ir.ui.menu,name:project.menu_project_category_act
-#: view:project.category:0
-#: field:project.task,categ_ids:0
+#: view:project.category:0 field:project.task,categ_ids:0
 msgid "Tags"
 msgstr "Etiquetas"
 
@@ -1477,9 +1334,7 @@ msgstr "Histórico de Tareas"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
-msgstr ""
-"Nuevo estado de su propia tarea. En estado Pendiente se volverá a abrir "
-"automáticamente cuando la tarea delegada se cierra"
+msgstr "Nuevo estado de su propia tarea. En estado Pendiente se volverá a abrir automáticamente cuando la tarea delegada se cierra"
 
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
@@ -1506,9 +1361,7 @@ msgstr "Horario de trabajo para ajustar el informe del diagrama de Gantt"
 msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
-msgstr ""
-"Calculado como la diferencia del tiempo estimado por el gerente del proyecto "
-"y el tiempo total de la tarea."
+msgstr "Calculado como la diferencia del tiempo estimado por el gerente del proyecto y el tiempo total de la tarea."
 
 #. module: project
 #: view:project.config.settings:0
@@ -1530,9 +1383,7 @@ msgstr "Delegado(a) a"
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr ""
-"Tiempo estimado para realizar la tarea, usualmente fijado por el gerente del "
-"proyecto cuando la tarea está en estado borrador"
+msgstr "Tiempo estimado para realizar la tarea, usualmente fijado por el gerente del proyecto cuando la tarea está en estado borrador"
 
 #. module: project
 #: code:addons/project/project.py:237
@@ -1550,10 +1401,9 @@ msgstr "Versión de la Incidencia"
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
-msgstr ""
-"No puede eliminar un proyecto que contiene tareas. Puede eliminar todas las "
-"tareas y entonces eliminar el proyecto, o simplemente desactivarlo."
+"project's tasks and then delete the project or simply deactivate the "
+"project."
+msgstr "No puede eliminar un proyecto que contiene tareas. Puede eliminar todas las tareas y entonces eliminar el proyecto, o simplemente desactivarlo."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
@@ -1567,8 +1417,7 @@ msgid "Privacy / Visibility"
 msgstr "Privacidad / Visibilidad"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,remaining_hours:0
+#: view:project.task:0 field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
@@ -1583,8 +1432,7 @@ msgstr "Fase/Etapa cambiada"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
-"¡Error! La fecha final de la tarea debe ser mayor que la fecha de inicio"
+msgstr "¡Error! La fecha final de la tarea debe ser mayor que la fecha de inicio"
 
 #. module: project
 #: field:project.task.history,user_id:0
@@ -1624,10 +1472,7 @@ msgid ""
 "This field is computed automatically and have the same behavior than the "
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
-msgstr ""
-"Este campo se calcula automáticamente y tiene el mismo comportamiento que el "
-"campo booleano 'activo': si la tarea está vinculada a una plantilla o a un "
-"proyecto no activo, se ocultarán a menos que se pregunte de forma específica."
+msgstr "Este campo se calcula automáticamente y tiene el mismo comportamiento que el campo booleano 'activo': si la tarea está vinculada a una plantilla o a un proyecto no activo, se ocultarán a menos que se pregunte de forma específica."
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
@@ -1642,17 +1487,10 @@ msgstr "Horas Dedicadas"
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads\n"
+"Lets the company customize which Pad installation should be used to link to new pads\n"
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
-msgstr ""
-"Deja a la compañía personalizar que instalación de Pad debe usarse para "
-"enlazar con los nuevos pads<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "
-"(por defecto, http://ietherpad.com/).<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Esto "
-"instala el módulo 'pad'."
+msgstr "Deja a la compañía personalizar que instalación de Pad debe usarse para enlazar con los nuevos pads<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (por defecto, http://ietherpad.com/).<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Esto instala el módulo 'pad'."
 
 #. module: project
 #: field:project.task,id:0
@@ -1670,9 +1508,7 @@ msgstr "Tareas Sobrepasadas"
 msgid ""
 "Child task still open.\n"
 "Please cancel or complete child task first."
-msgstr ""
-"La tarea hija está abierta aún.<br>\n"
-"Por favor cancele o complete la tarea hija primero."
+msgstr "La tarea hija está abierta aún.<br>\nPor favor cancele o complete la tarea hija primero."
 
 #. module: project
 #: field:project.task.delegate,user_id:0
@@ -1709,9 +1545,7 @@ msgstr "Introduzca aquí el tiempo restante requerido para cerrar la tarea."
 msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
-msgstr ""
-"Esta fase/etapa no es visible, por ejemplo en la barra de estado o vista "
-"kanban, cuando no hay registros en ella para visualizar"
+msgstr "Esta fase/etapa no es visible, por ejemplo en la barra de estado o vista kanban, cuando no hay registros en ella para visualizar"
 
 #. module: project
 #: view:project.task:0
@@ -1743,32 +1577,19 @@ msgid "Progress (%)"
 msgstr "Progreso (%)"
 
 #. module: project
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,company_id:0
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,company_id:0
 msgid "Company"
 msgstr "Compañía"
 
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
-"This allows you to transfer the entries under tasks defined for Project "
-"Management to\n"
-"                the timesheet line entries for particular date and user, "
-"with the effect of creating,\n"
+"This allows you to transfer the entries under tasks defined for Project Management to\n"
+"                the timesheet line entries for particular date and user, with the effect of creating,\n"
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
-msgstr ""
-"Esto le permite transferir las entradas definidas en la gestión de proyectos "
-"a<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;entradas en el registro de tiempo para un usuario y fecha "
-"particulares, con el efecto de crear<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;editar y eliminar en ambas vías.<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;Esto instala el módulo 'project_timesheet'"
+msgstr "Esto le permite transferir las entradas definidas en la gestión de proyectos a<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;entradas en el registro de tiempo para un usuario y fecha particulares, con el efecto de crear<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;editar y eliminar en ambas vías.<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Esto instala el módulo 'project_timesheet'"
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1796,14 +1617,12 @@ msgid "Last Modification Date"
 msgstr ""
 
 #. module: project
-#: field:project.project,message_ids:0
-#: field:project.task,message_ids:0
+#: field:project.project,message_ids:0 field:project.task,message_ids:0
 msgid "Messages"
 msgstr "Mensajes"
 
 #. module: project
-#: field:project.project,color:0
-#: field:project.task,color:0
+#: field:project.project,color:0 field:project.task,color:0
 msgid "Color Index"
 msgstr "Índice de Colores"
 
@@ -1812,20 +1631,16 @@ msgstr "Índice de Colores"
 #: model:ir.model,name:project.model_project_project
 #: model:ir.ui.menu,name:project.menu_project_dashboard
 #: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,project_id:0
+#: view:project.project:0 view:project.task:0 field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
 #: field:project.task.history.cumulative,project_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,project_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
 msgstr "Proyecto"
 
 #. module: project
-#: selection:project.project,state:0
-#: selection:project.task,state:0
+#: selection:project.project,state:0 selection:project.task,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: model:project.task.type,name:project.project_tt_cancel
@@ -1841,32 +1656,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new task.\n"
 "              </p><p>\n"
-"                OpenERP's project management allows you to manage the "
-"pipeline\n"
+"                OpenERP's project management allows you to manage the pipeline\n"
 "                of tasks in order to get things done efficiently. You can\n"
 "                track progress, discuss on tasks, attach documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\"><br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;Clic para crear una nueva tarea.<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;</p><p><br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;La gestión de proyectos de OpenERP le permite gestionar el flujo<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;de las tareas para que las cosas se hagan eficientemente. Usted "
-"puede<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;seguir el progreso, discutir sobre las tareas, adjuntar documentos, "
-"etc.<br>\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\"><br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Clic para crear una nueva tarea.<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p><p><br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;La gestión de proyectos de OpenERP le permite gestionar el flujo<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;de las tareas para que las cosas se hagan eficientemente. Usted puede<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seguir el progreso, discutir sobre las tareas, adjuntar documentos, etc.<br>\n</p>\n            "
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "Fecha de Finalización"
 
@@ -1886,8 +1684,7 @@ msgid "Task created"
 msgstr "Tarea creada"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,no_of_days:0
+#: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
 msgid "# of Days"
 msgstr "Nº de Días"
 
@@ -1898,13 +1695,10 @@ msgid "Followers"
 msgstr "Seguidores"
 
 #. module: project
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
+#: selection:project.project,state:0 view:project.task:0
+#: selection:project.task,state:0 selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
 msgid "New"
 msgstr "Nuevo(a)"
 
@@ -1936,8 +1730,7 @@ msgid "Manage resources planning on gantt view"
 msgstr "Gestionar planificación de recursos en la vista Gantt"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Unassigned Tasks"
 msgstr "Tareas no Asignadas"
 
@@ -1946,9 +1739,7 @@ msgstr "Tareas no Asignadas"
 msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Suma del tiempo planeado de todas las tareas relacionadas con este proyecto "
-"y sus proyectos hijos."
+msgstr "Suma del tiempo planeado de todas las tareas relacionadas con este proyecto y sus proyectos hijos."
 
 #. module: project
 #: view:res.partner:0
@@ -1961,8 +1752,7 @@ msgid "My Task"
 msgstr "Mi Tarea"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
 msgstr "Mis Proyectos"
@@ -1973,18 +1763,15 @@ msgid "Gives the sequence order when displaying a list of tasks."
 msgstr "Indica el orden de las tareas al mostrarlas en la lista."
 
 #. module: project
-#: field:project.task,date_start:0
-#: field:report.project.task.user,date_start:0
+#: field:project.task,date_start:0 field:report.project.task.user,date_start:0
 msgid "Starting Date"
 msgstr "Fecha de Inicio"
 
 #. module: project
 #: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
-#: model:ir.ui.menu,name:project.menu_projects
-#: view:project.project:0
-#: field:project.task.type,project_ids:0
-#: view:res.company:0
+#: model:ir.ui.menu,name:project.menu_projects view:project.project:0
+#: field:project.task.type,project_ids:0 view:res.company:0
 #, python-format
 msgid "Projects"
 msgstr "Proyectos"
@@ -2007,8 +1794,7 @@ msgid "Tasks Analysis"
 msgstr "Análisis de Tareas"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Project Tasks"
 msgstr "Tareas del Proyecto"
 
@@ -2018,9 +1804,7 @@ msgstr "Tareas del Proyecto"
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.project:0
-#: view:project.task:0
-#: view:res.partner:0
+#: view:project.project:0 view:project.task:0 view:res.partner:0
 #: field:res.partner,task_ids:0
 msgid "Tasks"
 msgstr "Tareas"
@@ -2031,8 +1815,7 @@ msgid "December"
 msgstr "Diciembre"
 
 #. module: project
-#: view:project.config.settings:0
-#: view:project.task.delegate:0
+#: view:project.config.settings:0 view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "or"
 msgstr "o"
@@ -2040,24 +1823,11 @@ msgstr "o"
 #. module: project
 #: help:project.config.settings,module_project_mrp:0
 msgid ""
-"This feature automatically creates project tasks from service products in "
-"sale orders.\n"
-"                More precisely, tasks are created for procurement lines with "
-"product of type 'Service',\n"
-"                procurement method 'Make to Order', and supply method "
-"'Manufacture'.\n"
+"This feature automatically creates project tasks from service products in sale orders.\n"
+"                More precisely, tasks are created for procurement lines with product of type 'Service',\n"
+"                procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "                This installs the module project_mrp."
-msgstr ""
-"Esta característica crea automáticamente tareas de los productos/servicios "
-"en las órdenes de venta.<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;De forma más precisa, las tareas se crean para las líneas de "
-"abastecimiento con productos del tipo 'Servicio', <br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;método de abastecimiento 'Obtener bajo pedido', y método de "
-"suministro 'Fabricar'.<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;Esto instala el módulo 'project_mrp'."
+msgstr "Esta característica crea automáticamente tareas de los productos/servicios en las órdenes de venta.<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De forma más precisa, las tareas se crean para las líneas de abastecimiento con productos del tipo 'Servicio', <br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;método de abastecimiento 'Obtener bajo pedido', y método de suministro 'Fabricar'.<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Esto instala el módulo 'project_mrp'."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -2076,8 +1846,7 @@ msgid "Draft"
 msgstr "Borrador"
 
 #. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
+#: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr "Estado Kanban"
@@ -2098,8 +1867,7 @@ msgid "Project Time Unit"
 msgstr "Unidad de Tiempo de Proyecto"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Normal"
@@ -2121,9 +1889,7 @@ msgstr "Usuario"
 msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
-msgstr ""
-"El tipo de documento creado cuando se recibe un correo electrónico en el "
-"alias de correo del proyecto"
+msgstr "El tipo de documento creado cuando se recibe un correo electrónico en el alias de correo del proyecto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
@@ -2174,8 +1940,7 @@ msgid "Projects in which I am a manager"
 msgstr "Proyectos en los cuales soy Gerente"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
@@ -2187,8 +1952,7 @@ msgid "Default for New Projects"
 msgstr "Predeterminado para Nuevos Proyectos"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,description:0
+#: view:project.task:0 field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "Descripción"
@@ -2203,9 +1967,7 @@ msgstr "Mayo"
 msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
-msgstr ""
-"Si marca este campo, esta fase/etapa será propuesta por defecto en cada "
-"proyecto nuevo. No se asignará esta fase/etapa a proyectos ya existentes."
+msgstr "Si marca este campo, esta fase/etapa será propuesta por defecto en cada proyecto nuevo. No se asignará esta fase/etapa a proyectos ya existentes."
 
 #. module: project
 #: field:project.task,partner_id:0
@@ -2220,14 +1982,9 @@ msgstr "Febrero"
 #. module: project
 #: help:project.config.settings,module_project_long_term:0
 msgid ""
-"A long term project management module that tracks planning, scheduling, and "
-"resource allocation.\n"
+"A long term project management module that tracks planning, scheduling, and resource allocation.\n"
 "                This installs the module project_long_term."
-msgstr ""
-"Módulo de gestión de proyectos a largo plazo que permite planificar, "
-"programar y asignar recursos.<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;Esto instalará el módulo 'project_long_term'."
+msgstr "Módulo de gestión de proyectos a largo plazo que permite planificar, programar y asignar recursos.<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Esto instalará el módulo 'project_long_term'."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_closed
@@ -2247,8 +2004,7 @@ msgstr "Tiempo Consumido"
 #. module: project
 #: help:project.project,sequence:0
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
-"Indica el orden de secuencia cuando se muestra una lista de Proyectos."
+msgstr "Indica el orden de secuencia cuando se muestra una lista de Proyectos."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -2260,29 +2016,21 @@ msgstr "Tareas Asignadas"
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
-msgstr ""
-"Provee soporte para las hojas de tiempo para la gestión de "
-"incidencias/fallos en el proyecto.<br>\n"
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp"
-";&nbsp;Esto instala el módulo 'project_issue_sheet'."
+msgstr "Provee soporte para las hojas de tiempo para la gestión de incidencias/fallos en el proyecto.<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Esto instala el módulo 'project_issue_sheet'."
 
 #. module: project
-#: view:board.board:0
-#: field:project.project,task_count:0
+#: view:board.board:0 field:project.project,task_count:0
 msgid "Open Tasks"
 msgstr "Tareas Abiertas"
 
 #. module: project
-#: field:project.project,priority:0
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
-#: field:project.task.type,sequence:0
+#: field:project.project,priority:0 field:project.project,sequence:0
+#: field:project.task,sequence:0 field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.work:0
+#: view:project.task:0 view:project.task.work:0
 msgid "Task Work"
 msgstr "Trabajo de Tarea"
 
@@ -2291,32 +2039,14 @@ msgstr "Trabajo de Tarea"
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
-msgstr ""
-"Tiempo estimado para que Ud. pueda validar el trabajo realizado por el "
-"usuario a quien se ha delegado esta tarea"
+msgstr "Tiempo estimado para que Ud. pueda validar el trabajo realizado por el usuario a quien se ha delegado esta tarea"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,year:0
+#: view:report.project.task.user:0 field:report.project.task.user,year:0
 msgid "Year"
 msgstr "Año"
 
 #. module: project
-#: field:project.project,type_ids:0
-#: view:project.task.type:0
+#: field:project.project,type_ids:0 view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Fases/Etapas de Tareas"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "¡ Advertencia !"
-
-#~ msgid "Public"
-#~ msgstr "Público"
-
-#~ msgid "Followers Only"
-#~ msgstr "Sólo Seguidores"
-
-#, python-format
-#~ msgid "You must assign members on the project '%s' !"
-#~ msgstr "Debería asignar miembros al proyecto '%s'!"

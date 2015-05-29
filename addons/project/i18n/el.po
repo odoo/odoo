@@ -1,23 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* project
-#
+# * project
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
-"Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
+"PO-Revision-Date: 2015-05-29 14:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Greek (http://www.transifex.com/projects/p/odoo-7/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:15+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-"X-Poedit-Country: GREECE\n"
-"X-Poedit-Language: Greek\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project
 #: view:project.project:0
@@ -27,13 +25,12 @@ msgstr ""
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid ""
-"If checked, this contract will be available in the project menu and you will "
-"be able to manage tasks or track issues"
+"If checked, this contract will be available in the project menu and you will"
+" be able to manage tasks or track issues"
 msgstr ""
 
 #. module: project
-#: field:project.project,progress_rate:0
-#: view:report.project.task.user:0
+#: field:project.project,progress_rate:0 view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
 msgstr "Εξέλιξη"
@@ -46,7 +43,7 @@ msgstr "Εργασίες ανά αρμόδιο"
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr ""
+msgstr "Μητρικός"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -69,15 +66,14 @@ msgid "New Project Based on Template"
 msgstr "Νέο Έργο Βάσει Προτύπου"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,day:0
+#: view:report.project.task.user:0 field:report.project.task.user,day:0
 msgid "Day"
 msgstr "Ημέρα"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
 msgid "Merge"
-msgstr ""
+msgstr "Συνένωση"
 
 #. module: project
 #: view:res.partner:0
@@ -85,10 +81,9 @@ msgid "Start Task"
 msgstr "Εκκίνηση Εργασίας"
 
 #. module: project
-#: help:project.project,message_unread:0
-#: help:project.task,message_unread:0
+#: help:project.project,message_unread:0 help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
@@ -103,7 +98,7 @@ msgstr "Η Εργασία Ολοκληρώθηκε"
 #. module: project
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Λάθος"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
@@ -121,20 +116,18 @@ msgid "Manage time estimation on tasks"
 msgstr ""
 
 #. module: project
-#: help:project.project,message_summary:0
-#: help:project.task,message_summary:0
+#: help:project.project,message_summary:0 help:project.task,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Κρατά την συνολική σύνοψη (αριθμός των μυνημάτων, ...). Αυτή η σύνοψη είναι κατ' ευθείαν σε html format για να μπορεί να ενσωματωθεί σε εμφανίσεις kanban."
 
 #. module: project
-#: code:addons/project/project.py:458
-#: code:addons/project/project.py:969
+#: code:addons/project/project.py:458 code:addons/project/project.py:969
 #: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Προειδοποίηση"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -147,8 +140,7 @@ msgid "Allow task delegation"
 msgstr ""
 
 #. module: project
-#: field:project.task.delegate,planned_hours:0
-#: view:report.project.task.user:0
+#: field:project.task.delegate,planned_hours:0 view:report.project.task.user:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "Προγραμματισμένες Ώρες"
@@ -199,16 +191,13 @@ msgid "Planned Time"
 msgstr "Προγραμματισμένος Χρόνος"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
+#: selection:report.project.task.user,state:0 view:res.partner:0
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
 
@@ -234,8 +223,7 @@ msgid "Task Done"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: view:report.project.task.user:0
+#: view:project.project:0 view:report.project.task.user:0
 #: field:report.project.task.user,partner_id:0
 msgid "Contact"
 msgstr "Επαφή"
@@ -282,12 +270,12 @@ msgstr ""
 #. module: project
 #: view:project.config.settings:0
 msgid "Support"
-msgstr ""
+msgstr "Υποστήριξη"
 
 #. module: project
 #: view:project.project:0
 msgid "Member"
-msgstr ""
+msgstr "Μέλος"
 
 #. module: project
 #: view:project.task:0
@@ -302,14 +290,12 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: field:project.task,manager_id:0
+#: view:project.project:0 field:project.task,manager_id:0
 msgid "Project Manager"
 msgstr "Διαχειριστής Έργου"
 
 #. module: project
-#: field:project.project,state:0
-#: field:project.task,state:0
+#: field:project.project,state:0 field:project.task,state:0
 #: field:project.task.history,state:0
 #: field:project.task.history.cumulative,state:0
 #: field:report.project.task.user,state:0
@@ -319,18 +305,17 @@ msgstr "Κατάσταση"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "Αύγουστος"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,complete_name:0
+#: view:project.project:0 field:project.project,complete_name:0
 msgid "Project Name"
 msgstr "Όνομα Έργου"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "June"
-msgstr ""
+msgstr "Ιούνιος"
 
 #. module: project
 #: view:project.task:0
@@ -340,7 +325,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "Οκτώβριος"
 
 #. module: project
 #: help:project.project,total_hours:0
@@ -359,14 +344,13 @@ msgstr ""
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
 msgid "When task is completed, it will come into the done state."
-msgstr ""
-"Όταν η Εργασία ολοκληρωθεί, η κατάστασή της θα μεταβληθεί σε 'Ολοκληρώθηκε'."
+msgstr "Όταν η Εργασία ολοκληρωθεί, η κατάστασή της θα μεταβληθεί σε 'Ολοκληρώθηκε'."
 
 #. module: project
 #: field:project.project,message_summary:0
 #: field:project.task,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Περίληψη"
 
 #. module: project
 #: view:project.task:0
@@ -379,8 +363,7 @@ msgid "Append this project to another one using analytic accounts hierarchy"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "In Progress Tasks"
 msgstr ""
 
@@ -388,16 +371,11 @@ msgstr ""
 #: help:res.company,project_time_mode_id:0
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
-msgstr ""
-"Ορισμός της μονάδας μέτρησης για Έργα και Εργασίες.\n"
-"Αν συνδέετε τα έργα με φύλλα χρόνου εργασίας (άρθρωμα project_timesheet), "
-"μην ξεχάσετε να ρυθμίσετε τη σωστή μονάδα μέτρησης στους υπαλλήλους."
+"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
+msgstr "Ορισμός της μονάδας μέτρησης για Έργα και Εργασίες.\nΑν συνδέετε τα έργα με φύλλα χρόνου εργασίας (άρθρωμα project_timesheet), μην ξεχάσετε να ρυθμίσετε τη σωστή μονάδα μέτρησης στους υπαλλήλους."
 
 #. module: project
-#: field:project.task,user_id:0
-#: view:report.project.task.user:0
+#: field:project.task,user_id:0 view:report.project.task.user:0
 msgid "Assigned to"
 msgstr ""
 
@@ -413,10 +391,8 @@ msgid "Project(s) Manager"
 msgstr ""
 
 #. module: project
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
+#: selection:project.project,state:0 view:project.task:0
+#: selection:project.task,state:0 selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: selection:project.task.type,state:0
 #: selection:report.project.task.user,state:0
@@ -462,7 +438,7 @@ msgstr "Κωδικοποίηση ωρών εργασίας."
 #. module: project
 #: field:project.project,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Ψευδώνυμο"
 
 #. module: project
 #: view:project.task:0
@@ -482,7 +458,7 @@ msgstr ""
 #. module: project
 #: field:project.task,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: project
 #: view:project.task:0
@@ -497,7 +473,7 @@ msgstr ""
 #. module: project
 #: view:project.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Εφαρμογή"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
@@ -534,9 +510,7 @@ msgstr "Ώρες για Επικύρωση"
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr ""
-"Σύνολο εναπομείναντα χρόνου. Μπορεί να αναθεωρηθεί από τον εντολοδόχο της "
-"Εργασίας."
+msgstr "Σύνολο εναπομείναντα χρόνου. Μπορεί να αναθεωρηθεί από τον εντολοδόχο της Εργασίας."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -546,8 +520,7 @@ msgstr "Μάρτιος"
 #. module: project
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project.my_open_tasks_action
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "My Tasks"
 msgstr "Εργασίες μου"
 
@@ -590,13 +563,10 @@ msgstr "Ορισμός ως Πρότυπο"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
-#: view:project.config.settings:0
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.config.settings:0 view:project.project:0 view:project.task:0
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0
-#: view:report.project.task.user:0
+#: field:project.task.work,task_id:0 view:report.project.task.user:0
 msgid "Task"
 msgstr "Εργασία"
 
@@ -621,8 +591,7 @@ msgid "Analysis"
 msgstr "Ανάλυση"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Σύνοψη Εργασίας"
 
@@ -669,8 +638,7 @@ msgid "Planning"
 msgstr "Σχεδιασμός"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,date_deadline:0
+#: view:project.task:0 field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
 msgstr "Προθεσμία"
@@ -678,7 +646,7 @@ msgstr "Προθεσμία"
 #. module: project
 #: view:project.task.history.cumulative:0
 msgid "Ready"
-msgstr ""
+msgstr "Έτοιμο"
 
 #. module: project
 #: view:project.task:0
@@ -691,12 +659,11 @@ msgid "Invoice working time on issues"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
-msgstr ""
+msgstr "Ημερομηνία Λήξης"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
@@ -722,7 +689,7 @@ msgstr "Νέα Περιγραφή Εργασίας"
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "Περασμένη Προθεσμία"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -743,20 +710,19 @@ msgstr "Σύνολο Χρόνου"
 #. module: project
 #: view:report.project.task.user:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: project
 #: view:project.project:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Διάφορα"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,stage_id:0
+#: view:project.task:0 field:project.task,stage_id:0
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Στάδιο"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
@@ -781,13 +747,12 @@ msgstr "Ο Πίνακάς μου"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 msgid "Stages"
-msgstr ""
+msgstr "Στάδια"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Delete"
-msgstr ""
+msgstr "Διαγραφή"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -797,7 +762,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "Σεπτέμβριος"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -836,27 +801,25 @@ msgid "Task Activities"
 msgstr ""
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Χρόνος που Αναλώθηκε"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "í"
 msgstr ""
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0
 msgid "unknown"
-msgstr ""
+msgstr "άγνωστο"
 
 #. module: project
 #: field:project.project,message_is_follower:0
 #: field:project.task,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Είναι Ακόλουθος"
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -866,7 +829,7 @@ msgstr "Δουλειά που έχει γίνει"
 #. module: project
 #: view:report.project.task.user:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Εκτεταμένα Φίλτρα..."
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -882,16 +845,16 @@ msgstr ""
 #: help:project.task,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
 msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Εταιρείες"
 
 #. module: project
 #: field:project.task.type,fold:0
@@ -900,8 +863,7 @@ msgstr ""
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "Ημερομηνία"
 
@@ -918,8 +880,7 @@ msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project
@@ -935,19 +896,15 @@ msgstr ""
 #. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
-msgstr ""
-"Συνδέστε αυτό το Έργο με έναν ανλυτικό λογαριασμό αν χρειάζεστε οικονομική "
-"διαχείριση στα Έργα. Σας επιτρέπει να χρησιμοποιήσετε προϋπολογισμούς, "
-"ανάλυση κόστους και εσόδων, φύλλα χρόνου εργασίας κλπ."
+msgstr "Συνδέστε αυτό το Έργο με έναν ανλυτικό λογαριασμό αν χρειάζεστε οικονομική διαχείριση στα Έργα. Σας επιτρέπει να χρησιμοποιήσετε προϋπολογισμούς, ανάλυση κόστους και εσόδων, φύλλα χρόνου εργασίας κλπ."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.config.settings:0
-#: view:project.task.delegate:0
+#: view:project.config.settings:0 view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Ακύρωση"
@@ -955,7 +912,7 @@ msgstr "Ακύρωση"
 #. module: project
 #: view:project.project:0
 msgid "Other Info"
-msgstr ""
+msgstr "Λοιπές Πληροφορίες"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -985,18 +942,17 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Users"
-msgstr ""
+msgstr "Χρήστες"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Αλλαγές Σταδίων"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
+#: view:project.project:0 model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr ""
+msgstr "Manager"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_category_action
@@ -1015,12 +971,12 @@ msgstr ""
 #. module: project
 #: field:project.category,name:0
 msgid "Name"
-msgstr ""
+msgstr "Όνομα"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "Νοέμβριος"
 
 #. module: project
 #: view:project.task.reevaluate:0
@@ -1039,10 +995,9 @@ msgid "Common"
 msgstr ""
 
 #. module: project
-#: help:project.project,message_ids:0
-#: help:project.task,message_ids:0
+#: help:project.project,message_ids:0 help:project.task,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: project
 #: view:project.project:0
@@ -1062,15 +1017,12 @@ msgid "Work summary"
 msgstr "Περίληψη εργασίας"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: view:report.project.task.user:0
+#: view:project.project:0 view:project.task:0 view:report.project.task.user:0
 msgid "Group By..."
 msgstr "Ομοδοποίηση Με ..."
 
 #. module: project
-#: view:project.project:0
-#: selection:project.project,state:0
+#: view:project.project:0 selection:project.project,state:0
 msgid "Template"
 msgstr "Πρότυπο"
 
@@ -1087,9 +1039,7 @@ msgstr ""
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
-"Λάθος:Η ημερομηνία έναρξης του έργου θα πρέπει να είναι μικρότερη από την "
-"ημερομηνία λήξης"
+msgstr "Λάθος:Η ημερομηνία έναρξης του έργου θα πρέπει να είναι μικρότερη από την ημερομηνία λήξης"
 
 #. module: project
 #: field:project.project,members:0
@@ -1102,16 +1052,13 @@ msgid "Delegated Tasks"
 msgstr "Ανατεθειμένες Εργασίες"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,message_unread:0
-#: view:project.task:0
-#: field:project.task,message_unread:0
+#: view:project.project:0 field:project.project,message_unread:0
+#: view:project.task:0 field:project.task,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Αδιάβαστα Μυνήματα"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
+#: view:project.task:0 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr ""
 
@@ -1136,8 +1083,7 @@ msgid "Notes"
 msgstr "Σημειώσεις"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Pending Tasks"
 msgstr ""
 
@@ -1149,7 +1095,7 @@ msgstr ""
 #. module: project
 #: model:project.category,name:project.project_category_04
 msgid "Usability"
-msgstr ""
+msgstr "Χρησιμότητα"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1166,7 +1112,7 @@ msgstr "Ολοκληρώθηκε από"
 #: code:addons/project/project.py:188
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Μη Έγκυρη Ενέργεια!"
 
 #. module: project
 #: help:project.task.type,state:0
@@ -1184,11 +1130,10 @@ msgstr "Επιπλέον Πληροφορίες"
 #. module: project
 #: view:project.task:0
 msgid "Edit..."
-msgstr ""
+msgstr "Επεξεργασία"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,nbr:0
+#: view:report.project.task.user:0 field:report.project.task.user,nbr:0
 msgid "# of tasks"
 msgstr "#  εργασιών"
 
@@ -1198,10 +1143,9 @@ msgid "Number of documents attached"
 msgstr ""
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Προτεραιότητα"
 
 #. module: project
 #: view:project.project:0
@@ -1223,8 +1167,7 @@ msgid ""
 "                Click to add a stage in the task pipeline.\n"
 "              </p><p>\n"
 "                Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or "
-"issue.\n"
+"                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue.\n"
 "              </p>\n"
@@ -1237,12 +1180,11 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Υπολογισμένο ως εξής: Χρόνος που Αναλώθηκε + Υπολοιπο Χρόνου"
 
 #. module: project
-#: code:addons/project/project.py:382
-#: code:addons/project/project.py:403
+#: code:addons/project/project.py:382 code:addons/project/project.py:403
 #: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (αντίγραφο)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
@@ -1250,8 +1192,7 @@ msgid "Task Stage Changed"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: field:project.task.history,remaining_hours:0
+#: view:project.task:0 field:project.task.history,remaining_hours:0
 #: field:project.task.history.cumulative,remaining_hours:0
 msgid "Remaining Time"
 msgstr ""
@@ -1264,7 +1205,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Ιούλιος"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_reevaluate
@@ -1284,7 +1225,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Team"
-msgstr ""
+msgstr "Ομάδα"
 
 #. module: project
 #: code:addons/project/project.py:458
@@ -1303,29 +1244,27 @@ msgid "Very important"
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,month:0
+#: view:report.project.task.user:0 field:report.project.task.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Μήνας"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_design
 msgid "Design"
-msgstr ""
+msgstr "Σχεδίαση"
 
 #. module: project
 #: view:project.task:0
 msgid "Start Date"
-msgstr ""
+msgstr "Ημερομηνία Έναρξης"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Μπλοκαρισμένο"
 
 #. module: project
 #: help:project.task,progress:0
@@ -1337,7 +1276,7 @@ msgstr ""
 #. module: project
 #: field:project.task,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "Email Χρήστη"
 
 #. module: project
 #: help:project.task.delegate,prefix:0
@@ -1363,18 +1302,15 @@ msgstr "Χαμηλή"
 #. module: project
 #: selection:project.project,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Κλεισμένα"
 
 #. module: project
-#: view:project.project:0
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.project:0 selection:project.project,state:0
+#: view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
 #: selection:report.project.task.user,state:0
 msgid "Pending"
 msgstr "Σε εκκρεμότητα"
@@ -1382,10 +1318,9 @@ msgstr "Σε εκκρεμότητα"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_category_action
 #: model:ir.ui.menu,name:project.menu_project_category_act
-#: view:project.category:0
-#: field:project.task,categ_ids:0
+#: view:project.category:0 field:project.task,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Ετικέτες"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -1440,34 +1375,33 @@ msgstr ""
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
-msgstr ""
+msgstr "Εξουσιοδότηση σε"
 
 #. module: project
 #: help:project.task,planned_hours:0
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr ""
-"Εκτίμηση του χρόνου ολοκλήρωσης Εργασίας. Συνήθως ορίζεται από το "
-"Διαχειριστή Έργου όταν η Εργασία είναι ακόμα πρόχειρη."
+msgstr "Εκτίμηση του χρόνου ολοκλήρωσης Εργασίας. Συνήθως ορίζεται από το Διαχειριστή Έργου όταν η Εργασία είναι ακόμα πρόχειρη."
 
 #. module: project
 #: code:addons/project/project.py:237
 #, python-format
 msgid "Attachments"
-msgstr ""
+msgstr "Συνημμένα"
 
 #. module: project
 #: view:project.category:0
 msgid "Issue Version"
-msgstr ""
+msgstr "Έκδοση"
 
 #. module: project
 #: code:addons/project/project.py:189
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
+"project's tasks and then delete the project or simply deactivate the "
+"project."
 msgstr ""
 
 #. module: project
@@ -1482,8 +1416,7 @@ msgid "Privacy / Visibility"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,remaining_hours:0
+#: view:project.task:0 field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
@@ -1493,7 +1426,7 @@ msgstr "Ώρες που Απομένουν"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Στάδιο άλλαξε"
 
 #. module: project
 #: constraint:project.task:0
@@ -1504,7 +1437,7 @@ msgstr ""
 #: field:project.task.history,user_id:0
 #: field:project.task.history.cumulative,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Υπεύθυνος"
 
 #. module: project
 #: view:project.project:0
@@ -1553,8 +1486,7 @@ msgstr "Πραγματοποιημένες Ώρες"
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads\n"
+"Lets the company customize which Pad installation should be used to link to new pads\n"
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
@@ -1562,7 +1494,7 @@ msgstr ""
 #. module: project
 #: field:project.task,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -1590,7 +1522,7 @@ msgstr ""
 #. module: project
 #: field:project.task,total_hours:0
 msgid "Total"
-msgstr ""
+msgstr "Σύνολο"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
@@ -1605,8 +1537,7 @@ msgstr ""
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
-msgstr ""
-"Πρόσθεσε εδώ το υπόλοιπο ωρών που απαιτήτε για το κλείσιμο της εργασίας"
+msgstr "Πρόσθεσε εδώ το υπόλοιπο ωρών που απαιτήτε για το κλείσιμο της εργασίας"
 
 #. module: project
 #: help:project.task.type,fold:0
@@ -1645,20 +1576,16 @@ msgid "Progress (%)"
 msgstr "Εξέλιξη (%)"
 
 #. module: project
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,company_id:0
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,company_id:0
 msgid "Company"
 msgstr "Εταιρία"
 
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
-"This allows you to transfer the entries under tasks defined for Project "
-"Management to\n"
-"                the timesheet line entries for particular date and user, "
-"with the effect of creating,\n"
+"This allows you to transfer the entries under tasks defined for Project Management to\n"
+"                the timesheet line entries for particular date and user, with the effect of creating,\n"
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
@@ -1686,39 +1613,33 @@ msgstr "Ορισμός Προδιαγραφών και Προγραμματισ�
 #. module: project
 #: field:project.task,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Τελευταία Ημερομηνία Τροποποίησης"
 
 #. module: project
-#: field:project.project,message_ids:0
-#: field:project.task,message_ids:0
+#: field:project.project,message_ids:0 field:project.task,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Μηνύματα"
 
 #. module: project
-#: field:project.project,color:0
-#: field:project.task,color:0
+#: field:project.project,color:0 field:project.task,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Χρωματισμός Δείκτη"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_board_project
 #: model:ir.model,name:project.model_project_project
 #: model:ir.ui.menu,name:project.menu_project_dashboard
 #: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,project_id:0
+#: view:project.project:0 view:project.task:0 field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
 #: field:project.task.history.cumulative,project_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,project_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
 msgstr "Έργο"
 
 #. module: project
-#: selection:project.project,state:0
-#: selection:project.task,state:0
+#: selection:project.project,state:0 selection:project.task,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: model:project.task.type,name:project.project_tt_cancel
@@ -1734,8 +1655,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new task.\n"
 "              </p><p>\n"
-"                OpenERP's project management allows you to manage the "
-"pipeline\n"
+"                OpenERP's project management allows you to manage the pipeline\n"
 "                of tasks in order to get things done efficiently. You can\n"
 "                track progress, discuss on tasks, attach documents, etc.\n"
 "              </p>\n"
@@ -1743,8 +1663,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "Ημερομηνία Λήξης"
 
@@ -1756,7 +1675,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Documents"
-msgstr ""
+msgstr "Έγγραφα"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -1764,8 +1683,7 @@ msgid "Task created"
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,no_of_days:0
+#: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
 msgid "# of Days"
 msgstr "# Ημερών"
 
@@ -1773,18 +1691,15 @@ msgstr "# Ημερών"
 #: field:project.project,message_follower_ids:0
 #: field:project.task,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Ακόλουθοι"
 
 #. module: project
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
+#: selection:project.project,state:0 view:project.task:0
+#: selection:project.task,state:0 selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
 msgid "New"
-msgstr ""
+msgstr "Νέο"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_history_cumulative
@@ -1814,8 +1729,7 @@ msgid "Manage resources planning on gantt view"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Unassigned Tasks"
 msgstr "Μη Ανατεθειμένες Εργασίες"
 
@@ -1837,8 +1751,7 @@ msgid "My Task"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
 msgstr "Τα Έργα μου"
@@ -1849,18 +1762,15 @@ msgid "Gives the sequence order when displaying a list of tasks."
 msgstr ""
 
 #. module: project
-#: field:project.task,date_start:0
-#: field:report.project.task.user,date_start:0
+#: field:project.task,date_start:0 field:report.project.task.user,date_start:0
 msgid "Starting Date"
 msgstr "Ημερ/νία Εκκίνησης"
 
 #. module: project
 #: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
-#: model:ir.ui.menu,name:project.menu_projects
-#: view:project.project:0
-#: field:project.task.type,project_ids:0
-#: view:res.company:0
+#: model:ir.ui.menu,name:project.menu_projects view:project.project:0
+#: field:project.task.type,project_ids:0 view:res.company:0
 #, python-format
 msgid "Projects"
 msgstr "Έργα"
@@ -1883,8 +1793,7 @@ msgid "Tasks Analysis"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Project Tasks"
 msgstr "Εργασίες"
 
@@ -1894,9 +1803,7 @@ msgstr "Εργασίες"
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.project:0
-#: view:project.task:0
-#: view:res.partner:0
+#: view:project.project:0 view:project.task:0 view:res.partner:0
 #: field:res.partner,task_ids:0
 msgid "Tasks"
 msgstr "Εργασίες"
@@ -1904,24 +1811,20 @@ msgstr "Εργασίες"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "Δεκέμβριος"
 
 #. module: project
-#: view:project.config.settings:0
-#: view:project.task.delegate:0
+#: view:project.config.settings:0 view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "or"
-msgstr ""
+msgstr "ή"
 
 #. module: project
 #: help:project.config.settings,module_project_mrp:0
 msgid ""
-"This feature automatically creates project tasks from service products in "
-"sale orders.\n"
-"                More precisely, tasks are created for procurement lines with "
-"product of type 'Service',\n"
-"                procurement method 'Make to Order', and supply method "
-"'Manufacture'.\n"
+"This feature automatically creates project tasks from service products in sale orders.\n"
+"                More precisely, tasks are created for procurement lines with product of type 'Service',\n"
+"                procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
 
@@ -1942,8 +1845,7 @@ msgid "Draft"
 msgstr "Πρόχειρα"
 
 #. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
+#: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr ""
@@ -1964,23 +1866,22 @@ msgid "Project Time Unit"
 msgstr "Μονάδα Χρόνου Έργου"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Normal"
-msgstr ""
+msgstr "Κανονική"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Μέρες για Κλείσιμο"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr ""
+msgstr "Χρήστης"
 
 #. module: project
 #: help:project.project,alias_model:0
@@ -2003,7 +1904,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "Ιανουάριος"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -2038,8 +1939,7 @@ msgid "Projects in which I am a manager"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
@@ -2051,8 +1951,7 @@ msgid "Default for New Projects"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,description:0
+#: view:project.task:0 field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "Περιγραφή"
@@ -2060,7 +1959,7 @@ msgstr "Περιγραφή"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "May"
-msgstr ""
+msgstr "Μάιος"
 
 #. module: project
 #: help:project.task.type,case_default:0
@@ -2072,18 +1971,17 @@ msgstr ""
 #. module: project
 #: field:project.task,partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Πελάτες"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Φεβρουάριος"
 
 #. module: project
 #: help:project.config.settings,module_project_long_term:0
 msgid ""
-"A long term project management module that tracks planning, scheduling, and "
-"resource allocation.\n"
+"A long term project management module that tracks planning, scheduling, and resource allocation.\n"
 "                This installs the module project_long_term."
 msgstr ""
 
@@ -2095,7 +1993,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "April"
-msgstr ""
+msgstr "Απρίλιος"
 
 #. module: project
 #: view:project.task:0
@@ -2120,22 +2018,18 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:board.board:0
-#: field:project.project,task_count:0
+#: view:board.board:0 field:project.project,task_count:0
 msgid "Open Tasks"
 msgstr ""
 
 #. module: project
-#: field:project.project,priority:0
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
-#: field:project.task.type,sequence:0
+#: field:project.project,priority:0 field:project.project,sequence:0
+#: field:project.task,sequence:0 field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "Ιεράρχηση"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.work:0
+#: view:project.task:0 view:project.task.work:0
 msgid "Task Work"
 msgstr ""
 
@@ -2147,13 +2041,11 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,year:0
+#: view:report.project.task.user:0 field:report.project.task.user,year:0
 msgid "Year"
-msgstr ""
+msgstr "Έτος"
 
 #. module: project
-#: field:project.project,type_ids:0
-#: view:project.task.type:0
+#: field:project.project,type_ids:0 view:project.task.type:0
 msgid "Tasks Stages"
 msgstr ""

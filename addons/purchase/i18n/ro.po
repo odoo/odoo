@@ -1,182 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * purchase
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-12-31 11:16+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:19+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: purchase
-#: view:purchase.report:0
-msgid "Order of Year"
-msgstr "Comanda Anului"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-#~ "\n"
-#~ "    <p>Hello$ ${object.partner_id.name},</p>\n"
-#~ "    \n"
-#~ "    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-#~ "quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-#~ "</p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-#~ "${object.pricelist_id.currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.partner_ref:\n"
-#~ "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.validator:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-#~ "or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-#~ "#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-#~ "background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-#~ "#DDD;\">\n"
-#~ "            <strong style=\"text-"
-#~ "transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-#~ "16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-#~ "        % if object.company_id.street:\n"
-#~ "            ${object.company_id.street}<br/>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.street2:\n"
-#~ "            ${object.company_id.street2}<br/>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.city or object.company_id.zip:\n"
-#~ "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.country_id:\n"
-#~ "            ${object.company_id.state_id and ('%s, ' % "
-#~ "object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-#~ "or ''}<br/>\n"
-#~ "        % endif\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-#~ "0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-#~ "0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a "
-#~ "href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-#~ "\n"
-#~ "    <p>Buna ziua$ ${object.partner_id.name},</p>\n"
-#~ "    \n"
-#~ "    <p>Aici este ${object.state in ('draft', 'sent') and 'request for "
-#~ "quotation' or 'purchase order confirmation'} de la "
-#~ "${object.company_id.name}: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERINTE</strong><br />\n"
-#~ "       &nbsp;&nbsp;Numar comanda: <strong>${object.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Total comanda: <strong>${object.amount_total} "
-#~ "${object.pricelist_id.currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Data comanda: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Referinta comanda: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.partner_ref:\n"
-#~ "       &nbsp;&nbsp;Refeninta dumneavoastra: ${object.partner_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.validator:\n"
-#~ "       &nbsp;&nbsp;Contactul dumneavoastra: <a "
-#~ "href=\"mailto:${object.validator.email or "
-#~ "''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>Daca aveti intrebari, nu ezitati sa ne contactati..</p>\n"
-#~ "    <p>Va multumim!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-#~ "#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-#~ "background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-#~ "#DDD;\">\n"
-#~ "            <strong style=\"text-"
-#~ "transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-#~ "16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-#~ "        % if object.company_id.street:\n"
-#~ "            ${object.company_id.street}<br/>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.street2:\n"
-#~ "            ${object.company_id.street2}<br/>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.city or object.company_id.zip:\n"
-#~ "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.country_id:\n"
-#~ "            ${object.company_id.state_id and ('%s, ' % "
-#~ "object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-#~ "or ''}<br/>\n"
-#~ "        % endif\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-#~ "0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-#~ "0px; padding-left: 0px; \">\n"
-#~ "                Telefon:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a "
-#~ "href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -196,17 +36,10 @@ msgstr "Achiziții Lunare după Categorie"
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to purchase a given product or a given supplier.\n"
+"Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
-msgstr ""
-"Permite sa configurati notificari pe produse si sa le declansati atunci cand "
-"un utilizator doreste sa cumpere un anumit produs sau de la un anumit "
-"furnizor.\n"
-"De exemplu: Produs: acest produs este depreciat, nu cumparati mai mult de "
-"5.\n"
-"                Furnizor: nu uitati sa cereti o livrare expres."
+msgstr "Permite sa configurati notificari pe produse si sa le declansati atunci cand un utilizator doreste sa cumpere un anumit produs sau de la un anumit furnizor.\nDe exemplu: Produs: acest produs este depreciat, nu cumparati mai mult de 5.\n                Furnizor: nu uitati sa cereti o livrare expres."
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -223,14 +56,10 @@ msgstr "Tel :"
 msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
-msgstr ""
-"Lista de preturi stabileste moneda utilizata pentru aceasta comanda de "
-"achizitie. Calculeaza, de asemenea, pretul de furnizor pentru "
-"produsele/cantitatile selectate."
+msgstr "Lista de preturi stabileste moneda utilizata pentru aceasta comanda de achizitie. Calculeaza, de asemenea, pretul de furnizor pentru produsele/cantitatile selectate."
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,day:0
+#: view:purchase.report:0 field:purchase.report,day:0
 msgid "Day"
 msgstr "Zi"
 
@@ -271,9 +100,7 @@ msgstr "Cont Analitic"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
-"in format HTML, cu scopul de a se introduce in vizualizari kanban."
+msgstr "Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1087
@@ -285,9 +112,7 @@ msgstr "Eroare de configurare!"
 #: code:addons/purchase/purchase.py:598
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
-msgstr ""
-"Mai intai trebuie sa anulati toate primirile asociate acestei comenzi de "
-"achizitie."
+msgstr "Mai intai trebuie sa anulati toate primirile asociate acestei comenzi de achizitie."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -312,11 +137,10 @@ msgid ""
 "Margin of error for supplier lead times. When the systemgenerates Purchase "
 "Orders for procuring products,they will be scheduled that many days earlier "
 "to cope with unexpected supplier delays."
-msgstr ""
+msgstr "Marja de eroare pentru timpii de furnizor. Când sistemul generează Comenzi de Achiziţie, acestea vor fi programate cu atâtea zile mai devreme, pentru a acoperi intârzierile furnizorilor."
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_average:0
+#: view:purchase.report:0 field:purchase.report,price_average:0
 msgid "Average Price"
 msgstr "Preț mediu"
 
@@ -331,16 +155,13 @@ msgid "Merge Purchase orders"
 msgstr "Unește Comenzile de achiziție"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_total:0
+#: view:purchase.report:0 field:purchase.report,price_total:0
 msgid "Total Price"
 msgstr "Preț total"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,minimum_planned_date:0
-#: report:purchase.quotation:0
-#: field:purchase.report,expected_date:0
+#: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
+#: report:purchase.quotation:0 field:purchase.report,expected_date:0
 msgid "Expected Date"
 msgstr "Data prevazută"
 
@@ -360,8 +181,7 @@ msgid "Alerts by products or supplier"
 msgstr "Alerte dupa produse sau furnizor"
 
 #. module: purchase
-#: field:purchase.order,name:0
-#: view:purchase.order.line:0
+#: field:purchase.order,name:0 view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Referință comandă"
@@ -380,25 +200,20 @@ msgstr "Aprobare"
 #: help:purchase.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
-"Va permite sa selectati si sa mentineti diferite unitati de masura pentru "
-"produse."
+msgstr "Va permite sa selectati si sa mentineti diferite unitati de masura pentru produse."
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
 msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
-msgstr ""
-"Aceasta este calculata drept data minima planificata a tuturor liniilor "
-"comenzilor de achizitie a produselor."
+msgstr "Aceasta este calculata drept data minima planificata a tuturor liniilor comenzilor de achizitie a produselor."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:259
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
-"Pentru a sterge o comanda de achizitie, mai intai trebuie sa o anulati."
+msgstr "Pentru a sterge o comanda de achizitie, mai intai trebuie sa o anulati."
 
 #. module: purchase
 #: view:product.product:0
@@ -416,28 +231,21 @@ msgid "Total Untaxed amount"
 msgstr "Total suma neimpozitata"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,category_id:0
+#: view:purchase.report:0 field:purchase.report,category_id:0
 msgid "Category"
 msgstr "Categorie"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
 msgid ""
-"A purchase order generates a supplier invoice, as soon as it is confirmed by "
-"the buyer. Depending on the Invoicing control of the purchase order, the "
+"A purchase order generates a supplier invoice, as soon as it is confirmed by"
+" the buyer. Depending on the Invoicing control of the purchase order, the "
 "invoice is based on received or on ordered quantities."
-msgstr ""
-"O comandă de achiziție generează o factură de la furnizor de îndată ce este "
-"confirmată de către cumpărător. În funcție de Controlul facturării comenzii "
-"de achiziție, factura se bazează pe cantitățile primite sau pe cele "
-"comandate."
+msgstr "O comandă de achiziție generează o factură de la furnizor de îndată ce este confirmată de către cumpărător. În funcție de Controlul facturării comenzii de achiziție, factura se bazează pe cantitățile primite sau pe cele comandate."
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,state:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,state:0
+#: view:purchase.order:0 field:purchase.order,state:0
+#: view:purchase.order.line:0 field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
 msgstr "Status"
@@ -466,8 +274,7 @@ msgstr "Comenzi de achiziții"
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
-"Va permite sa specificati un cont analitic pentru comenzile de achizitie."
+msgstr "Va permite sa specificati un cont analitic pentru comenzile de achizitie."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -483,21 +290,7 @@ msgid ""
 "            draft invoice and validate it.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Clic pentru a crea o factură ciornă.\n"
-"          </p><p>\n"
-"            Utilizați acest meniu pentru a controla facturile care vor fi "
-"primite de la furnizorul\n"
-"            dumneavoastră. OpenERP generează facturi ciornă din comenzile "
-"dumneavoastră de\n"
-"            achiziție sau din recepții, în funcție de setările "
-"dumneavoastră.\n"
-"          </p><p>\n"
-"            Odată ce primiți o factura a furnizorului, o puteți potrivi cu\n"
-"            factura ciorna și sa o validați.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Clic pentru a crea o factură ciornă.\n          </p><p>\n            Utilizați acest meniu pentru a controla facturile care vor fi primite de la furnizorul\n            dumneavoastră. OpenERP generează facturi ciornă din comenzile dumneavoastră de\n            achiziție sau din recepții, în funcție de setările dumneavoastră.\n          </p><p>\n            Odată ce primiți o factura a furnizorului, o puteți potrivi cu\n            factura ciorna și sa o validați.\n          </p>\n        "
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -510,9 +303,7 @@ msgstr "Octombrie"
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
-msgstr ""
-"Produsul \"%s\" a fost definit in compania dumneavoastra ca revanzator ceea "
-"ce pare a fi o eroare de configurare!"
+msgstr "Produsul \"%s\" a fost definit in compania dumneavoastra ca revanzator ceea ce pare a fi o eroare de configurare!"
 
 #. module: purchase
 #: view:product.product:0
@@ -526,8 +317,7 @@ msgstr "O lista de preluare este generata pentru a urmari produsele primite."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
-#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
-#: view:purchase.order:0
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq view:purchase.order:0
 #: view:purchase.report:0
 msgid "Quotations"
 msgstr "Cotații (oferte)"
@@ -538,8 +328,7 @@ msgid "Do you want to generate the supplier invoices?"
 msgstr "Doriti sa generati facturile furnizorului?"
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0
-#: view:purchase.report:0
+#: field:purchase.order.line,product_qty:0 view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
 msgstr "Cantitate"
@@ -558,7 +347,7 @@ msgstr "Metoda de control a facturarii implicite"
 #: code:addons/purchase/purchase.py:909
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Nu poate fi ștearsă o linie de comandă de achiziție ce este în starea '%s'."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking_in
@@ -573,31 +362,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click here to record a supplier invoice.\n"
 "                </p><p>\n"
-"                    Supplier invoices can be pre-generated based on "
-"purchase\n"
-"                    orders or receptions. This allows you to control "
-"invoices\n"
+"                    Supplier invoices can be pre-generated based on purchase\n"
+"                    orders or receptions. This allows you to control invoices\n"
 "                    you receive from your supplier according to the draft\n"
 "                    document in OpenERP.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Clic aici pentru a inregistra o factura a furnizorului.\n"
-"                </p><p>\n"
-"                    Facturile furnizorului pot fi pre-generate pe baza "
-"comenzilor de\n"
-"                    achizitie sau a receptiilor. Acest lucru  va permite sa "
-"controlati facturile\n"
-"                    pe care le primiti de la furnizorul dumneavoastra, in "
-"functie de documentul\n"
-"                    ciorna in OpenERP.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Clic aici pentru a inregistra o factura a furnizorului.\n                </p><p>\n                    Facturile furnizorului pot fi pre-generate pe baza comenzilor de\n                    achizitie sau a receptiilor. Acest lucru  va permite sa controlati facturile\n                    pe care le primiti de la furnizorul dumneavoastra, in functie de documentul\n                    ciorna in OpenERP.\n                </p>\n            "
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
 msgstr "Caută Comanda de achiziție"
 
@@ -607,8 +381,7 @@ msgid "Date Req."
 msgstr "Data cererii"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Purchase Order Lines"
 msgstr "Linii Comanda de achizții"
 
@@ -617,36 +390,19 @@ msgstr "Linii Comanda de achizții"
 msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr ""
-"Introduceti o adresa daca doriti sa faceti livrarea direct de la furnizor "
-"catre client. In caz contrar, lasati necompletat pentru a face livrarea "
-"catre compania dumneavoastra."
+msgstr "Introduceti o adresa daca doriti sa faceti livrarea direct de la furnizor catre client. In caz contrar, lasati necompletat pentru a face livrarea catre compania dumneavoastra."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
 msgid ""
 "<p>\n"
-"                Here you can track all the lines of purchase orders where "
-"the\n"
-"                invoicing is \"Based on Purchase Order Lines\", and for "
-"which you\n"
-"                have not received a supplier invoice yet. You can generate "
-"a\n"
+"                Here you can track all the lines of purchase orders where the\n"
+"                invoicing is \"Based on Purchase Order Lines\", and for which you\n"
+"                have not received a supplier invoice yet. You can generate a\n"
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Aici puteti urmari toate liniile comenzilor de achizitie "
-"unde\n"
-"                facturarea este \"Pe Baza Liniilor Comenzii de Achizitie\", "
-"si pentru care\n"
-"                nu ati primit inca o factura a furnizorului. Puteti genera "
-"o\n"
-"                factura ciorna a furnizorului pe baza liniilor din aceasta "
-"lista.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Aici puteti urmari toate liniile comenzilor de achizitie unde\n                facturarea este \"Pe Baza Liniilor Comenzii de Achizitie\", si pentru care\n                nu ati primit inca o factura a furnizorului. Puteti genera o\n                factura ciorna a furnizorului pe baza liniilor din aceasta lista.\n              </p>\n            "
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -664,8 +420,7 @@ msgid "Journal"
 msgstr "Jurnal"
 
 #. module: purchase
-#: view:board.board:0
-#: model:ir.actions.act_window,name:purchase.purchase_draft
+#: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
 msgstr "Cerere pentru cotatie"
 
@@ -680,8 +435,7 @@ msgid "Purchase orders that include lines not invoiced."
 msgstr "Comenzi de achizitie care includ linii nefacturate."
 
 #. module: purchase
-#: view:product.product:0
-#: field:product.template,purchase_ok:0
+#: view:product.product:0 field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "Poate fi achizitionat"
 
@@ -698,18 +452,13 @@ msgstr "Cerere pentru Cotatie "
 #. module: purchase
 #: help:purchase.order,partner_ref:0
 msgid ""
-"Reference of the sales order or quotation sent by your supplier. It's mainly "
-"used to do the matching when you receive the products as this reference is "
+"Reference of the sales order or quotation sent by your supplier. It's mainly"
+" used to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
-msgstr ""
-"Referinta comenzii de vanzare sau a cotatiei trimisa de furnizorul "
-"dumneavoastra. Este folosita in principal pentru a potrivi produsele atunci "
-"cand le primiti deoarece aceasta referinta este de obicei scrisa pe ordinul "
-"de livrare trimis de furnizorul dumneavoastra."
+msgstr "Referinta comenzii de vanzare sau a cotatiei trimisa de furnizorul dumneavoastra. Este folosita in principal pentru a potrivi produsele atunci cand le primiti deoarece aceasta referinta este de obicei scrisa pe ordinul de livrare trimis de furnizorul dumneavoastra."
 
 #. module: purchase
-#: view:purchase.config.settings:0
-#: view:purchase.order.group:0
+#: view:purchase.config.settings:0 view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "or"
 msgstr "sau"
@@ -725,10 +474,7 @@ msgid ""
 "The invoice is created automatically if the Invoice control of the purchase "
 "order is 'On order'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
-msgstr ""
-"Factura este creata automat daca Controlul facturii din comanda de achizitie "
-"este ”La comanda”. Factura poate fi de asemenea generata manual de catre "
-"contabil (Controlul facturii = Manual)."
+msgstr "Factura este creata automat daca Controlul facturii din comanda de achizitie este ”La comanda”. Factura poate fi de asemenea generata manual de catre contabil (Controlul facturii = Manual)."
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -750,9 +496,7 @@ msgstr "Suma neimpozitata"
 msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
-msgstr ""
-"Cumpărătorul trebuie să aprobe CdC (cererea de cotație) înainte de a o "
-"trimite furnizorului. CdC devine o Comanda de achiziție confirmată."
+msgstr "Cumpărătorul trebuie să aprobe CdC (cererea de cotație) înainte de a o trimite furnizorului. CdC devine o Comanda de achiziție confirmată."
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
@@ -775,10 +519,8 @@ msgid "Not Invoiced"
 msgstr "Nefacturat"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,partner_id:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 field:purchase.order,partner_id:0
+#: view:purchase.order.line:0 view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
 msgstr "Furnizor"
@@ -787,8 +529,7 @@ msgstr "Furnizor"
 #: code:addons/purchase/purchase.py:473
 #, python-format
 msgid "Define expense account for this company: \"%s\" (id:%d)."
-msgstr ""
-"Definiti contul de cheltuieli pentru aceasta companie: \"%s\" (id:%d)."
+msgstr "Definiti contul de cheltuieli pentru aceasta companie: \"%s\" (id:%d)."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -831,30 +572,15 @@ msgstr "De achizitionat"
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that will be converted into a "
-"purchase order. \n"
+"                Click to create a quotation that will be converted into a purchase order. \n"
 "              </p><p>\n"
 "                Use this menu to search within your purchase orders by\n"
-"                references, supplier, products, etc. For each purchase "
-"order,\n"
-"                you can track the related discussion with the supplier, "
-"control\n"
+"                references, supplier, products, etc. For each purchase order,\n"
+"                you can track the related discussion with the supplier, control\n"
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a crea o cotatie care va fi transformata intr-o "
-"comanda de achizitie. \n"
-"              </p><p>\n"
-"                Folositi acest meniu pentru a cauta in comenzile de "
-"achizitie dupa\n"
-"                referinte, furnizor, produse, etc. Pentru fiecare comanda de "
-"cumparare,\n"
-"                puteti sa urmariti conversatia cu furnizorul, sa controlati\n"
-"                produsele primite si sa controlati facturile furnizorului.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o cotatie care va fi transformata intr-o comanda de achizitie. \n              </p><p>\n                Folositi acest meniu pentru a cauta in comenzile de achizitie dupa\n                referinte, furnizor, produse, etc. Pentru fiecare comanda de cumparare,\n                puteti sa urmariti conversatia cu furnizorul, sa controlati\n                produsele primite si sa controlati facturile furnizorului.\n              </p>\n            "
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -866,13 +592,10 @@ msgstr "Facturi si Receptii"
 msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sales order, the invoice is based on delivered or on ordered quantities."
-msgstr ""
-"O Lista de ridicare genereaza o factura. In functie de Controlul facturarii "
-"comenzii de vanzare, factura se bazeaza pe cantitatile livrate sau comandate."
+msgstr "O Lista de ridicare genereaza o factura. In functie de Controlul facturarii comenzii de vanzare, factura se bazeaza pe cantitatile livrate sau comandate."
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,nbr:0
+#: view:purchase.report:0 field:purchase.report,nbr:0
 msgid "# of Lines"
 msgstr "# de Linii"
 
@@ -892,8 +615,7 @@ msgid "It indicates that a picking has been done"
 msgstr "Indica faptul ca a fost efectuata o ridicare"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:590
-#: code:addons/purchase/purchase.py:597
+#: code:addons/purchase/purchase.py:590 code:addons/purchase/purchase.py:597
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "Imposibil de anulat aceasta comanda de cumparare."
@@ -906,12 +628,9 @@ msgstr "Control factura"
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
 msgid ""
-"Reception Analysis allows you to easily check and analyse your company order "
-"receptions and the performance of your supplier's deliveries."
-msgstr ""
-"Analiza Primirilor va permite sa verificati cu usurinta si sa analizati "
-"primirile din compania dumneavoastra si performanta livrarilor furnizorului "
-"dumneavoastra."
+"Reception Analysis allows you to easily check and analyse your company order"
+" receptions and the performance of your supplier's deliveries."
+msgstr "Analiza Primirilor va permite sa verificati cu usurinta si sa analizati primirile din compania dumneavoastra si performanta livrarilor furnizorului dumneavoastra."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -928,9 +647,7 @@ msgstr "Pozitii comanda"
 msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
-msgstr ""
-"Numar unic al ordinului de cumparare, calculat automat atunci cand ordinul "
-"de cumparare este creat."
+msgstr "Numar unic al ordinului de cumparare, calculat automat atunci cand ordinul de cumparare este creat."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -950,8 +667,7 @@ msgid "Total :"
 msgstr "Total :"
 
 #. module: purchase
-#: field:purchase.order,pricelist_id:0
-#: field:purchase.report,pricelist_id:0
+#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "Lista de preturi"
 
@@ -961,8 +677,7 @@ msgid "Draft PO"
 msgstr "PO Ciorna"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1001
-#: code:addons/purchase/purchase.py:1016
+#: code:addons/purchase/purchase.py:1001 code:addons/purchase/purchase.py:1016
 #: code:addons/purchase/purchase.py:1020
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
@@ -981,10 +696,8 @@ msgid "Send by Email"
 msgstr "Trimite prin Email"
 
 #. module: purchase
-#: report:purchase.order:0
-#: view:purchase.order:0
-#: field:purchase.order,date_order:0
-#: field:purchase.order.line,date_order:0
+#: report:purchase.order:0 view:purchase.order:0
+#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
 msgstr "Data comenzii"
@@ -1082,9 +795,7 @@ msgstr "Filtre Extinse..."
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr ""
-"Va rugam sa selectati comenzi multiple pentru a le uni in vizualizarea "
-"listei."
+msgstr "Va rugam sa selectati comenzi multiple pentru a le uni in vizualizarea listei."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1120,14 +831,12 @@ msgstr "va fi creat pentru a subcontracta activitatea"
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_config
-#: view:res.partner:0
+#: model:ir.ui.menu,name:purchase.menu_purchase_config view:res.partner:0
 msgid "Purchases"
 msgstr "Achiziții"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay:0
+#: view:purchase.report:0 field:purchase.report,delay:0
 msgid "Days to Validate"
 msgstr "Zile pana la validare"
 
@@ -1137,16 +846,14 @@ msgid "Supplier Features"
 msgstr "Caracteristici Furnizori"
 
 #. module: purchase
-#: report:purchase.order:0
-#: report:purchase.quotation:0
+#: report:purchase.order:0 report:purchase.quotation:0
 msgid "Qty"
 msgstr "Cantitate"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
-#: view:purchase.config.settings:0
-#: view:purchase.order.group:0
+#: view:purchase.config.settings:0 view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
 msgstr "Anuleaza"
@@ -1173,14 +880,12 @@ msgid "Order of Month"
 msgstr "Comanda pe luna"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,price_unit:0
+#: report:purchase.order:0 field:purchase.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Pret unitar"
 
 #. module: purchase
-#: field:purchase.order,date_approve:0
-#: field:purchase.report,date_approve:0
+#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
 msgstr "Data aprobata"
 
@@ -1188,6 +893,11 @@ msgstr "Data aprobata"
 #: view:product.product:0
 msgid "a draft purchase order"
 msgstr "o comanda de achizitie ciorna"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Order of Year"
+msgstr "Comanda Anului"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1205,22 +915,14 @@ msgstr "Contabilitate analitica pentru achizitii"
 msgid ""
 "In case there is no supplier for this product, the buyer can fill the form "
 "manually and confirm it. The RFQ becomes a confirmed Purchase Order."
-msgstr ""
-"In cazul in care nu exista nici un furnizor pentru acest produs, "
-"cumparatorul poate completa manual formularul si il poate confirma. Cererea "
-"de cotatie devine o Comanda de achizitie confirmata."
+msgstr "In cazul in care nu exista nici un furnizor pentru acest produs, cumparatorul poate completa manual formularul si il poate confirma. Cererea de cotatie devine o Comanda de achizitie confirmata."
 
 #. module: purchase
 #: help:purchase.config.settings,group_purchase_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of Supplier.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this "
-"product, etc."
-msgstr ""
-"Permite gestionarea diferitelor preturi pe baza regulilor categoriei "
-"Furnizorului.\n"
-"                Exemplu: 10% pentru vanzatorii cu amanuntul, promotie de 5 "
-"EUR la acest produs, etc."
+"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+msgstr "Permite gestionarea diferitelor preturi pe baza regulilor categoriei Furnizorului.\n                Exemplu: 10% pentru vanzatorii cu amanuntul, promotie de 5 EUR la acest produs, etc."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
@@ -1231,9 +933,7 @@ msgstr "Email-uri Expediate"
 #: code:addons/purchase/purchase.py:455
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
-msgstr ""
-"Nu puteti confirma o comanda de achizitie fara nici o linie a comenzii de "
-"achizitie."
+msgstr "Nu puteti confirma o comanda de achizitie fara nici o linie a comenzii de achizitie."
 
 #. module: purchase
 #: help:purchase.order,message_ids:0
@@ -1241,8 +941,7 @@ msgid "Messages and communication history"
 msgstr "Istoric mesaje si conversatii"
 
 #. module: purchase
-#: field:purchase.order,warehouse_id:0
-#: field:stock.picking.in,warehouse_id:0
+#: field:purchase.order,warehouse_id:0 field:stock.picking.in,warehouse_id:0
 msgid "Destination Warehouse"
 msgstr "Depozitul Destinatie"
 
@@ -1250,11 +949,9 @@ msgstr "Depozitul Destinatie"
 #: code:addons/purchase/purchase.py:1001
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure."
-msgstr ""
-"Unitatea de Masura selectata nu apartine aceleiasi categorii ca si Unitatea "
-"de Masura a produsului."
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure."
+msgstr "Unitatea de Masura selectata nu apartine aceleiasi categorii ca si Unitatea de Masura a produsului."
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
@@ -1281,8 +978,7 @@ msgstr "Panou de bord Achiziții"
 #: code:addons/purchase/purchase.py:591
 #, python-format
 msgid "First cancel all receptions related to this purchase order."
-msgstr ""
-"Mai intai anulati toate receptiile asociate acestei comenzi de achizitie."
+msgstr "Mai intai anulati toate receptiile asociate acestei comenzi de achizitie."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1295,9 +991,7 @@ msgid "Date on which this document has been created"
 msgstr "Data la care acest document a fost creat"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
 msgid "Group By..."
 msgstr "Grupeaza dupa..."
 
@@ -1312,8 +1006,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Statistică Comenzi de achiziție"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,message_unread:0
+#: view:purchase.order:0 field:purchase.order,message_unread:0
 msgid "Unread Messages"
 msgstr "Mesaje Necitite"
 
@@ -1332,9 +1025,7 @@ msgstr "Seteaza ca ciorna"
 msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
-msgstr ""
-"Referința documentului care a generat această cerere pentru comanda de "
-"achiziție; o comanda de vânzare sau o recere interna de aprovizionare."
+msgstr "Referința documentului care a generat această cerere pentru comanda de achiziție; o comanda de vânzare sau o recere interna de aprovizionare."
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1347,8 +1038,7 @@ msgid "Manage purchase requisitions"
 msgstr "Gestioneaza cererile de achizitionare"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order,amount_tax:0
+#: report:purchase.order:0 field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "Taxe"
@@ -1371,21 +1061,18 @@ msgid "Stock Move"
 msgstr "Miscare stoc"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:259
-#: code:addons/purchase/purchase.py:909
+#: code:addons/purchase/purchase.py:259 code:addons/purchase/purchase.py:909
 #, python-format
 msgid "Invalid Action!"
 msgstr "Actiune Nevalida!"
 
 #. module: purchase
-#: field:purchase.order,validator:0
-#: view:purchase.report:0
+#: field:purchase.order,validator:0 view:purchase.report:0
 msgid "Validated by"
 msgstr "Validat de catre"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_standard:0
+#: view:purchase.report:0 field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr "Valoare produse"
 
@@ -1429,9 +1116,7 @@ msgstr "Pre-genereaza facturi ciorna pe baza comenzilor de achizitie"
 #. module: purchase
 #: help:product.template,purchase_ok:0
 msgid "Specify if the product can be selected in a purchase order line."
-msgstr ""
-"Specifica daca produsul poate fi selectat intr-o linie a comenzii de "
-"achizitie."
+msgstr "Specifica daca produsul poate fi selectat intr-o linie a comenzii de achizitie."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -1439,10 +1124,7 @@ msgid ""
 "The invoice is created automatically if the Invoice control of the purchase "
 "order is 'On picking'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
-msgstr ""
-"Factura este creata automat dacă controlul facturii comenzii de achiziție "
-"este 'La recepție'. De asemenea, factura poate fi generată manual de către "
-"contabil (Controlul facturii = Manual)."
+msgstr "Factura este creata automat dacă controlul facturii comenzii de achiziție este 'La recepție'. De asemenea, factura poate fi generată manual de către contabil (Controlul facturii = Manual)."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1463,22 +1145,16 @@ msgstr "Produse iesite"
 #: view:product.product:0
 msgid ""
 "to buy the required quantities to the supplier.\n"
-"                        The delivery order will be ready after having "
-"received the\n"
+"                        The delivery order will be ready after having received the\n"
 "                        products."
-msgstr ""
-"pentru a cumpara cantitatile necesare de la furnizor.\n"
-"                        Ordinul de livrare va fi gata dupa primirea\n"
-"                        produselor."
+msgstr "pentru a cumpara cantitatile necesare de la furnizor.\n                        Ordinul de livrare va fi gata dupa primirea\n                        produselor."
 
 #. module: purchase
 #: view:product.product:0
 msgid ""
 "a draft\n"
 "                        purchase order"
-msgstr ""
-"o comanda\n"
-"                        de achizitie ciorna"
+msgstr "o comanda\n                        de achizitie ciorna"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:319
@@ -1493,24 +1169,12 @@ msgid ""
 "                Click to create a new incoming shipment.\n"
 "              </p><p> \n"
 "                Here you can track all the product receptions of purchase\n"
-"                orders where the invoicing is \"Based on Incoming "
-"Shipments\",\n"
+"                orders where the invoicing is \"Based on Incoming Shipments\",\n"
 "                and for which you have not received a supplier invoice yet.\n"
-"                You can generate a supplier invoice based on those "
-"receptions.\n"
+"                You can generate a supplier invoice based on those receptions.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a crea o recepție.\n"
-"                </p><p>\n"
-"                Aici puteți urmări toate recepțiile comenzilor de "
-"aprovizionare \n"
-"                unde facturare este ”Bazată pe comenzi recepționate”,\n"
-"                și la care nu este primită factura de la furnizor.\n"
-"                Puteți genera facturi bazate pe aceste repeții.\n"
-"               </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o recepție.\n                </p><p>\n                Aici puteți urmări toate recepțiile comenzilor de aprovizionare \n                unde facturare este ”Bazată pe comenzi recepționate”,\n                și la care nu este primită factura de la furnizor.\n                Puteți genera facturi bazate pe aceste repeții.\n               </p>\n            "
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1518,8 +1182,7 @@ msgid "Procurement"
 msgstr "Aprovizionare"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
 msgstr "Exceptie la expediere"
 
@@ -1539,8 +1202,7 @@ msgid "Receive Products"
 msgstr "Primire Produse"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,month:0
+#: view:purchase.report:0 field:purchase.report,month:0
 msgid "Month"
 msgstr "Luna"
 
@@ -1556,10 +1218,8 @@ msgid "purchase.config.settings"
 msgstr "purchase.config.settings (achizitie.config.setari)"
 
 #. module: purchase
-#: field:purchase.order,company_id:0
-#: field:purchase.order.line,company_id:0
-#: view:purchase.report:0
-#: field:purchase.report,company_id:0
+#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
+#: view:purchase.report:0 field:purchase.report,company_id:0
 msgid "Company"
 msgstr "Companie"
 
@@ -1582,24 +1242,11 @@ msgid ""
 "              </p><p>\n"
 "                There can be more than one version of a pricelist, each of\n"
 "                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a adauga o versiune a listei de preturi.\n"
-"              </p><p>\n"
-"                Puteti avea mai multe versiuni ale unei liste de preturi, "
-"fiecare dintre\n"
-"                acestea trebuie sa fie valabile pentru o anumita perioada de "
-"timp. Niste\n"
-"                exemple de versiuni: Preturi Principale, 2010, 2011, Preturi "
-"de vara,\n"
-"                etc.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a adauga o versiune a listei de preturi.\n              </p><p>\n                Puteti avea mai multe versiuni ale unei liste de preturi, fiecare dintre\n                acestea trebuie sa fie valabile pentru o anumita perioada de timp. Niste\n                exemple de versiuni: Preturi Principale, 2010, 2011, Preturi de vara,\n                etc.\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
@@ -1626,8 +1273,7 @@ msgstr "Facturare produse iesite"
 #: code:addons/purchase/purchase.py:536
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
-msgstr ""
-"Defineste registrul de cumparaturi pentru aceasta companie:\"%s\" (id:%d)."
+msgstr "Defineste registrul de cumparaturi pentru aceasta companie:\"%s\" (id:%d)."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1637,8 +1283,7 @@ msgstr "Comanda de Achizitie "
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
 msgid "Allows you to compute product cost price based on average cost."
-msgstr ""
-"Va permite sa calculati pretul de cost al produsului pe baza costului mediu."
+msgstr "Va permite sa calculati pretul de cost al produsului pe baza costului mediu."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
@@ -1672,9 +1317,7 @@ msgstr "TVA:"
 msgid ""
 "This is the list of incoming shipments that have been generated for this "
 "purchase order."
-msgstr ""
-"Aceasta este lista recepțiilor care a fost generată pentru aceasta comandă "
-"de achiziție."
+msgstr "Aceasta este lista recepțiilor care a fost generată pentru aceasta comandă de achiziție."
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
@@ -1693,14 +1336,12 @@ msgstr "Data la care comanda de achizitie a fost aprobata"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
-#: view:purchase.order:0
-#: selection:purchase.report,state:0
+#: view:purchase.order:0 selection:purchase.report,state:0
 msgid "Approved"
 msgstr "Aprobat(a)"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
 msgstr "Efectuat"
@@ -1728,30 +1369,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a request for quotation.\n"
 "              </p><p>\n"
-"                The quotation contains the history of the "
-"discussion/negociation\n"
+"                The quotation contains the history of the discussion/negociation\n"
 "                you had with your supplier. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order.\n"
 "              </p><p>\n"
-"                Most propositions of purchase orders are created "
-"automatically\n"
+"                Most propositions of purchase orders are created automatically\n"
 "                by OpenERP based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clic pentru a crea o cerere pentru cotatie.\n"
-"              </p><p>\n"
-"                Cotatia contine istoricul discutiilor/negocierilor\n"
-"                pe care le-ati avut cu furnizorul dumneavoastra. Odata "
-"confirmata, o cerere pentru\n"
-"                cotatie este transformata intr-o comanda de achizitie.\n"
-"              </p><p>\n"
-"                Majoritatea propunerilor de comenzi de achizitie sunt create "
-"automat\n"
-"                de OpenERP pe baza nevoilor de inventar.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o cerere pentru cotatie.\n              </p><p>\n                Cotatia contine istoricul discutiilor/negocierilor\n                pe care le-ati avut cu furnizorul dumneavoastra. Odata confirmata, o cerere pentru\n                cotatie este transformata intr-o comanda de achizitie.\n              </p><p>\n                Majoritatea propunerilor de comenzi de achizitie sunt create automat\n                de OpenERP pe baza nevoilor de inventar.\n              </p>\n            "
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
@@ -1762,9 +1388,7 @@ msgstr "Furnizorul aproba Comanda de aprovizionare."
 #: code:addons/purchase/wizard/purchase_order_group.py:80
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
-#: view:purchase.order:0
-#: view:purchase.report:0
-#: view:res.partner:0
+#: view:purchase.order:0 view:purchase.report:0 view:res.partner:0
 #, python-format
 msgid "Purchase Orders"
 msgstr "Comenzi de achiziție"
@@ -1791,8 +1415,7 @@ msgid "Purchase"
 msgstr "Achiziție"
 
 #. module: purchase
-#: field:purchase.order,create_uid:0
-#: view:purchase.report:0
+#: field:purchase.order,create_uid:0 view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
 msgstr "Responsabil"
@@ -1817,10 +1440,8 @@ msgid "Supplier Invoices"
 msgstr "Facturi furnizori"
 
 #. module: purchase
-#: field:purchase.order,product_id:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,product_id:0
-#: view:purchase.report:0
+#: field:purchase.order,product_id:0 view:purchase.order.line:0
+#: field:purchase.order.line,product_id:0 view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
 msgstr "Produs"
@@ -1844,24 +1465,11 @@ msgstr "Produse dupa Categorie"
 #. module: purchase
 #: help:purchase.order.line,state:0
 msgid ""
-" * The 'Draft' status is set automatically when purchase order in draft "
-"status.                                        \n"
-"* The 'Confirmed' status is set automatically as confirm when purchase order "
-"in confirm status.                                        \n"
-"* The 'Done' status is set automatically when purchase order is set as done. "
-"                                       \n"
-"* The 'Cancelled' status is set automatically when user cancel purchase "
-"order."
-msgstr ""
-" * Starea 'Ciorna' este setata automat atunci cand comanda de aschizitie se "
-"afla in starea de ciorna.                                        \n"
-"* Starea 'Confirmat' este setata automat ca si confirmata atunci cand "
-"comanda de achizitie este in starea confirmata.                              "
-"          \n"
-"* Starea 'Efectaut' este setata automat atunci cand comanda de achizitie "
-"este setata ca efectuata.                                        \n"
-"* Starea 'Anulat' este setata automat atunci cand utilizatorul anuleaza "
-"comanda de achizitie."
+" * The 'Draft' status is set automatically when purchase order in draft status.                                        \n"
+"* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
+"* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
+"* The 'Cancelled' status is set automatically when user cancel purchase order."
+msgstr " * Starea 'Ciorna' este setata automat atunci cand comanda de aschizitie se afla in starea de ciorna.                                        \n* Starea 'Confirmat' este setata automat ca si confirmata atunci cand comanda de achizitie este in starea confirmata.                                        \n* Starea 'Efectaut' este setata automat atunci cand comanda de achizitie este setata ca efectuata.                                        \n* Starea 'Anulat' este setata automat atunci cand utilizatorul anuleaza comanda de achizitie."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -1907,18 +1515,12 @@ msgstr "Total"
 #: help:account.config.settings,module_purchase_analytic_plans:0
 #: help:purchase.config.settings,module_purchase_analytic_plans:0
 msgid ""
-"Allows the user to maintain several analysis plans. These let you split "
-"lines on a purchase order between several accounts and analytic plans.\n"
+"Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
 "                This installs the module purchase_analytic_plans."
-msgstr ""
-"Ii permite utilizatorului sa mentina mai multe planuri de analiza. Acestea "
-"va permit sa impartiti liniile unei comenzi de achizitii in mai multe "
-"conturi si planuri analitice.\n"
-"                Acesta instaleaza modulul purchase_analytic_plans."
+msgstr "Ii permite utilizatorului sa mentina mai multe planuri de analiza. Acestea va permit sa impartiti liniile unei comenzi de achizitii in mai multe conturi si planuri analitice.\n                Acesta instaleaza modulul purchase_analytic_plans."
 
 #. module: purchase
-#: field:purchase.order,location_id:0
-#: view:purchase.report:0
+#: field:purchase.order,location_id:0 view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
 msgstr "Destinatie"
@@ -1943,20 +1545,16 @@ msgstr "Nu exista nici o adresa definita pentru furnizor"
 #: model:email.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -1965,8 +1563,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
 "       % endif\n"
 "       % if object.validator:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -1975,16 +1572,11 @@ msgid ""
 "    <p>Thank you!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -1996,33 +1588,27 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Bună ziua ${object.partner_id.name},</p>\n    \n    <p>Aceasta este ${object.state in ('draft', 'sent') and 'cererea de ofertă' or 'comanda de achiziție'} de la ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERINȚE</strong><br />\n       &nbsp;&nbsp;Număr comandă: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Total comandă: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Dată comandă: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referință comandă: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Referința dumneavoastră: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;Persoană de contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Dacă aveți orice întrebare, nu ezitați să ne contactați.</p>\n    <p>Mulțumim!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "Exceptie factura"
 
@@ -2031,9 +1617,7 @@ msgstr "Exceptie factura"
 msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr ""
-"Această listă de prețuri va fi folosită în locul celei implicite pentru "
-"achizițiile de la partenerul actual"
+msgstr "Această listă de prețuri va fi folosită în locul celei implicite pentru achizițiile de la partenerul actual"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -2070,22 +1654,17 @@ msgstr "Mesaje"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:process.node,name:purchase.process_node_purchaseorder0
-#: field:procurement.order,purchase_id:0
-#: view:purchase.config.settings:0
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
+#: field:procurement.order,purchase_id:0 view:purchase.config.settings:0
+#: view:purchase.order:0 selection:purchase.order,state:0
 #: field:res.partner,purchase_order_ids:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
-#: field:stock.picking,purchase_id:0
-#: field:stock.picking.in,purchase_id:0
+#: field:stock.picking,purchase_id:0 field:stock.picking.in,purchase_id:0
 msgid "Purchase Order"
 msgstr "Comandă de achiziție"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:319
-#: code:addons/purchase/purchase.py:455
-#: code:addons/purchase/purchase.py:473
-#: code:addons/purchase/purchase.py:535
+#: code:addons/purchase/purchase.py:319 code:addons/purchase/purchase.py:455
+#: code:addons/purchase/purchase.py:473 code:addons/purchase/purchase.py:535
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -2104,18 +1683,10 @@ msgid ""
 "the order to change the status to 'Approved'. When the purchase order is "
 "paid and received, the status becomes 'Done'. If a cancel action occurs in "
 "the invoice or in the reception of goods, the status becomes in exception."
-msgstr ""
-"Starea comenzii de achizitii sau a cererii pentru cotatie. O cotatie este o "
-"comanda de achizitie in starea 'Ciorna'. Apoi comanda trebuie confirmata de "
-"catre utilizator, iar starea devine 'Confirmata'. Apoi furnizorul trebuie sa "
-"confirme comanda pentru a modifica starea in 'Aprobata'. Atunci cand comanda "
-"de achizitie este platita si primita, starea devine 'Efectuata'. Daca are "
-"loc o actiune de anulare in factura sau la receptia marfii, starea devine in "
-"exceptie."
+msgstr "Starea comenzii de achizitii sau a cererii pentru cotatie. O cotatie este o comanda de achizitie in starea 'Ciorna'. Apoi comanda trebuie confirmata de catre utilizator, iar starea devine 'Confirmata'. Apoi furnizorul trebuie sa confirme comanda pentru a modifica starea in 'Aprobata'. Atunci cand comanda de achizitie este platita si primita, starea devine 'Efectuata'. Daca are loc o actiune de anulare in factura sau la receptia marfii, starea devine in exceptie."
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "Anulat(a)"
@@ -2147,8 +1718,7 @@ msgstr "Pret Net"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
-#: view:purchase.order.line:0
-#: field:stock.move,purchase_line_id:0
+#: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "Linie comandă de achiziție"
 
@@ -2171,13 +1741,10 @@ msgstr "Referintă furnizor"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
 msgid ""
-"A Pick list generates a supplier invoice. Depending on the Invoicing control "
-"of the purchase order, the invoice is based on received or on ordered "
+"A Pick list generates a supplier invoice. Depending on the Invoicing control"
+" of the purchase order, the invoice is based on received or on ordered "
 "quantities."
-msgstr ""
-"O Lista de ridicare genereaza o factura a furnizorului. In functie de "
-"controlul Facturarii din comanda de achizitie, factura se bazeaza pe "
-"cantitatile primite sau pe cele comandate."
+msgstr "O Lista de ridicare genereaza o factura a furnizorului. In functie de controlul Facturarii din comanda de achizitie, factura se bazeaza pe cantitatile primite sau pe cele comandate."
 
 #. module: purchase
 #: field:purchase.order,message_follower_ids:0
@@ -2187,19 +1754,10 @@ msgstr "Urmari"
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_requisition:0
 msgid ""
-"Purchase Requisitions are used when you want to request quotations from "
-"several suppliers for a given set of products.\n"
-"            You can configure per product if you directly do a Request for "
-"Quotation\n"
-"            to one supplier or if you want a purchase requisition to "
-"negotiate with several suppliers."
-msgstr ""
-"Rechizitiile de cumparare sunt utilizate atunci cand doriti sa cereti oferte "
-"de la mai multi furnizori pentru un anumit set de produse.\n"
-"            Puteti configura fiecare produs daca faceti direct o Cerere de "
-"Cotatie\n"
-"            unui furnizor sau daca doriti o rechizitie de cumparare pentru a "
-"negocia cu mai multi furnizori."
+"Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.\n"
+"            You can configure per product if you directly do a Request for Quotation\n"
+"            to one supplier or if you want a purchase requisition to negotiate with several suppliers."
+msgstr "Rechizitiile de cumparare sunt utilizate atunci cand doriti sa cereti oferte de la mai multi furnizori pentru un anumit set de produse.\n            Puteti configura fiecare produs daca faceti direct o Cerere de Cotatie\n            unui furnizor sau daca doriti o rechizitie de cumparare pentru a negocia cu mai multi furnizori."
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -2212,11 +1770,7 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
-msgstr ""
-"Analiza Achizitiilor va permite sa verificati si sa analizati cu usurinta "
-"istoricul achizitiilor si performanta companiei dumneavoastra. Din acest "
-"meniu puteti sa tineti evidenta performantei de negociere, performantei de "
-"livrare a furnizorilor dumneavoastra, etc."
+msgstr "Analiza Achizitiilor va permite sa verificati si sa analizati cu usurinta istoricul achizitiilor si performanta companiei dumneavoastra. Din acest meniu puteti sa tineti evidenta performantei de negociere, performantei de livrare a furnizorilor dumneavoastra, etc."
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
@@ -2242,7 +1796,7 @@ msgstr "Rezervare Destinatie"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Comanda (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
@@ -2252,13 +1806,9 @@ msgstr "Configurare"
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_double_validation:0
 msgid ""
-"Provide a double validation mechanism for purchases exceeding minimum "
-"amount.\n"
+"Provide a double validation mechanism for purchases exceeding minimum amount.\n"
 "                This installs the module purchase_double_validation."
-msgstr ""
-"Ofera un mecanism dublu de validare pentru achizitiile care depasesc suma "
-"minima.\n"
-"                Acesta instaleaza modulul purchase_double_validation."
+msgstr "Ofera un mecanism dublu de validare pentru achizitiile care depasesc suma minima.\n                Acesta instaleaza modulul purchase_double_validation."
 
 #. module: purchase
 #: code:addons/purchase/edi/purchase_order.py:132
@@ -2272,14 +1822,12 @@ msgid "Reference Unit of Measure"
 msgstr "Unitatea de Masura de Referinta"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.report,validator:0
+#: report:purchase.order:0 field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "Validat de catre"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay_pass:0
+#: view:purchase.report:0 field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
 msgstr "Zile pana la livrare"
 
@@ -2289,8 +1837,7 @@ msgid "April"
 msgstr "Aprilie"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,invoice_ids:0
+#: view:purchase.order:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Facturi"
 
@@ -2330,8 +1877,7 @@ msgid "The total amount"
 msgstr "Suma totala"
 
 #. module: purchase
-#: field:purchase.order,invoiced_rate:0
-#: field:purchase.order.line,invoiced:0
+#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Facturat"
 
@@ -2384,19 +1930,10 @@ msgstr "Ianuarie"
 #. module: purchase
 #: help:purchase.order,invoice_method:0
 msgid ""
-"Based on Purchase Order lines: place individual lines in 'Invoice Control > "
-"Based on P.O. lines' from where you can selectively create an invoice.\n"
+"Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
-"Bases on incoming shipments: let you create an invoice when receptions are "
-"validated."
-msgstr ""
-"Pe baza liniilor din Comenzile de Achiziție: introduceți linii individuale "
-"în 'Control Factură > Pe baza liniilor CdeA' de unde puteți crea o factura "
-"în mod selectiv.\n"
-"Pe baza facturii generate: creați o factură ciornă pe care o puteți valida "
-"mai târziu.\n"
-"Pe baza recepțiilor: va permite să creați o factură atunci când recepțiile "
-"sunt validate."
+"Bases on incoming shipments: let you create an invoice when receptions are validated."
+msgstr "Pe baza liniilor din Comenzile de Achiziție: introduceți linii individuale în 'Control Factură > Pe baza liniilor CdeA' de unde puteți crea o factura în mod selectiv.\nPe baza facturii generate: creați o factură ciornă pe care o puteți valida mai târziu.\nPe baza recepțiilor: va permite să creați o factură atunci când recepțiile sunt validate."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
@@ -2435,8 +1972,7 @@ msgid "No default supplier defined for this product"
 msgstr "Nu exista niciun furnizor implicit definit pentru acest produs"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,warehouse_id:0
+#: view:purchase.report:0 field:purchase.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Depozit"
 
@@ -2446,13 +1982,10 @@ msgstr "Depozit"
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
-msgstr ""
-"Furnizorul selectat are o cantitate minima setata pe %s %s, nu ar trebui sa "
-"cumparati mai putin."
+msgstr "Furnizorul selectat are o cantitate minima setata pe %s %s, nu ar trebui sa cumparati mai putin."
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,name:0
+#: report:purchase.order:0 field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
 msgstr "Descriere"
@@ -2510,22 +2043,9 @@ msgid ""
 " * Purchase Orders are have same stock location, same pricelist \n"
 " \n"
 " Lines will only be merged if: \n"
-" * Order lines are exactly the same except for the product,quantity and unit "
-"\n"
+" * Order lines are exactly the same except for the product,quantity and unit \n"
 " "
-msgstr ""
-" Va rugam sa observati faptul ca: \n"
-" \n"
-" Comenzile vor fi unite doar daca: \n"
-" * Comenzile de achizitie se afla in starea de ciorna \n"
-" * Comenzile de achizitie apartin aceluiasi furnizor \n"
-" * Comenzile de achizitie au aceeasi locatie a stocului, aceeasi lista de "
-"preturi \n"
-" \n"
-" Liniile vor fi unite doar daca: \n"
-" * Liniile comenzii sunt exact la fel, cu excepția produsului, a cantitatii "
-"si a unitatii \n"
-" "
+msgstr " Va rugam sa observati faptul ca: \n \n Comenzile vor fi unite doar daca: \n * Comenzile de achizitie se afla in starea de ciorna \n * Comenzile de achizitie apartin aceluiasi furnizor \n * Comenzile de achizitie au aceeasi locatie a stocului, aceeasi lista de preturi \n \n Liniile vor fi unite doar daca: \n * Liniile comenzii sunt exact la fel, cu excepția produsului, a cantitatii si a unitatii \n "
 
 #. module: purchase
 #: field:purchase.order,message_summary:0
@@ -2546,7 +2066,7 @@ msgstr "Termen de plata"
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been validated"
-msgstr ""
+msgstr "Indică faptul că  factura a fost validată"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -2554,8 +2074,7 @@ msgid "Purchase orders which are in draft state"
 msgstr "Comenzi de achizitie care se afla in starea ciorna"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,name:0
+#: view:purchase.report:0 field:purchase.report,name:0
 msgid "Year"
 msgstr "An"
 
@@ -2568,68 +2087,16 @@ msgstr "Pe baza liniilor comenzii de achizitie"
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    This supplier has no purchase order. Click to create a "
-"new RfQ.\n"
+"                    This supplier has no purchase order. Click to create a new RfQ.\n"
 "                </p><p>\n"
-"                    The request for quotation is the first step of the "
-"purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to "
-"control the reception\n"
+"                    The request for quotation is the first step of the purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to control the reception\n"
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Acest furnizor nu are nicio comanda de achizitie. Clic "
-"pentru a crea o noua CdC.\n"
-"                </p><p>\n"
-"                    Cererea de cotatie este primul pas al fluxului de "
-"cumparare. Odata\n"
-"                    transformata intr-o comanda de achizitie, veti putea sa "
-"controlati receptia\n"
-"                    produselor si factura furnizorului.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Acest furnizor nu are nicio comanda de achizitie. Clic pentru a crea o noua CdC.\n                </p><p>\n                    Cererea de cotatie este primul pas al fluxului de cumparare. Odata\n                    transformata intr-o comanda de achizitie, veti putea sa controlati receptia\n                    produselor si factura furnizorului.\n                </p>\n            "
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "Comenzi"
-
-#~ msgid "This is the leads/security time for each purchase order."
-#~ msgstr "Aceasta este intervalul pentru fiecare comanda de aprovizionare."
-
-#~ msgid "It indicates that an invoice has been paid"
-#~ msgstr "Indiaă faptul ca o factura a fost platita"
-
-#~ msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-#~ msgstr "${object.company_id.name} Comanda (Ref ${object.name or 'n/a' })"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                Here you can track all the product receptions of purchase\n"
-#~ "                orders where the invoicing is \"Based on Incoming "
-#~ "Shipments\",\n"
-#~ "                and for which you have not received a supplier invoice yet.\n"
-#~ "                You can generate a supplier invoice based on those "
-#~ "receptions.\n"
-#~ "              </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                Aici puteti sa urmariti toate receptiile produselor din "
-#~ "comenzile\n"
-#~ "                de cumparare unde facturarea este \"Bazata pe Expedierea "
-#~ "Primita\",\n"
-#~ "                si pentru care nu ati primit inca o factura a furnizorului.\n"
-#~ "                Puteti genera o factura a furnizorului pe baza acelor "
-#~ "receptii.\n"
-#~ "              </p>\n"
-#~ "            "
-
-#, python-format
-#~ msgid "Define expense account for this product: \"%s\" (id:%d)."
-#~ msgstr "Definiti contul de cheltuieli pentru acest produs: \"%s\" (id:%d)."
-
-#~ msgid "Send by EMail"
-#~ msgstr "Trimite prin Email"

@@ -1,21 +1,21 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_bank_statement_extensions
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-11-04 08:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Catalan (http://www.transifex.com/projects/p/odoo-7/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-05 06:59+0000\n"
-"X-Generator: Launchpad (build 17223)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_bank_statement_extensions
 #: help:account.bank.statement.line.global,name:0
@@ -23,15 +23,13 @@ msgid "Originator to Beneficiary Information"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 #: selection:account.bank.statement.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmat"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement:account_bank_statement_extensions.view_bank_statement_form_add_fields
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_list
+#: view:account.bank.statement:0 view:account.bank.statement.line:0
 msgid "Glob. Id"
 msgstr ""
 
@@ -43,15 +41,15 @@ msgstr ""
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,parent_id:0
 msgid "Parent Code"
-msgstr ""
+msgstr "Codi pare"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Debit"
-msgstr ""
+msgstr "Deure"
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:account_bank_statement_extensions.view_cancel_statement_line
+#: view:cancel.statement.line:0
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_cancel_statement_line
 #: model:ir.model,name:account_bank_statement_extensions.model_cancel_statement_line
 msgid "Cancel selected statement lines"
@@ -60,43 +58,44 @@ msgstr ""
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,val_date:0
 msgid "Value Date"
-msgstr ""
+msgstr "Data valor"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupa per..."
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 #: selection:account.bank.statement.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Esborrany"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Statement"
-msgstr ""
+msgstr "Extracte"
 
 #. module: account_bank_statement_extensions
-#: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
+#: view:confirm.statement.line:0
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_confirm_statement_line
 #: model:ir.model,name:account_bank_statement_extensions.model_confirm_statement_line
 msgid "Confirm selected statement lines"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:website:account_bank_statement_extensions.report_bankstatementbalance
+#: report:bank.statement.balance.report:0
+#: model:ir.actions.report.xml,name:account_bank_statement_extensions.bank_statement_balance_report
 msgid "Bank Statement Balances Report"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:account_bank_statement_extensions.view_cancel_statement_line
+#: view:cancel.statement.line:0
 msgid "Cancel Lines"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:account_bank_statement_extensions.view_statement_line_global_form
+#: view:account.bank.statement.line.global:0
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement_line_global
 msgid "Batch Payment Info"
 msgstr ""
@@ -104,10 +103,10 @@ msgstr ""
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Estat"
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:133
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
 #, python-format
 msgid ""
 "Delete operation not allowed.             Please go to the associated bank "
@@ -120,33 +119,32 @@ msgid "or"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
+#: view:confirm.statement.line:0
 msgid "Confirm Lines"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:account_bank_statement_extensions.view_statement_line_global_form
+#: view:account.bank.statement.line.global:0
 msgid "Transactions"
 msgstr ""
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipus"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
-#: view:website:account_bank_statement_extensions.report_bankstatementbalance
+#: view:account.bank.statement.line:0 report:bank.statement.balance.report:0
 msgid "Journal"
-msgstr ""
+msgstr "Diari"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Confirmed Statement Lines."
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Credit Transactions."
 msgstr ""
 
@@ -161,45 +159,45 @@ msgid "Counterparty Number"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:website:account_bank_statement_extensions.report_bankstatementbalance
+#: report:bank.statement.balance.report:0
 msgid "Closing Balance"
-msgstr ""
+msgstr "Balanç en el tancament"
 
 #. module: account_bank_statement_extensions
-#: view:website:account_bank_statement_extensions.report_bankstatementbalance
+#: report:bank.statement.balance.report:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 #: field:account.bank.statement.line,globalisation_amount:0
 msgid "Glob. Amount"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Debit Transactions."
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtres estesos..."
 
 #. module: account_bank_statement_extensions
-#: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
+#: view:confirm.statement.line:0
 msgid "Confirmed lines cannot be changed anymore."
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:account_bank_statement_extensions.view_cancel_statement_line
+#: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:website:account_bank_statement_extensions.report_bankstatementbalance
+#: report:bank.statement.balance.report:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,name:0
@@ -212,29 +210,29 @@ msgid "ISO 20022"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_form
+#: view:account.bank.statement.line:0
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "Manual"
-msgstr ""
+msgstr "Manual"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Bank Transaction"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Credit"
-msgstr ""
+msgstr "Haver"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Import"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -254,15 +252,15 @@ msgstr ""
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,child_ids:0
 msgid "Child Codes"
-msgstr ""
+msgstr "Codis fills"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Search Bank Transactions"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
+#: view:confirm.statement.line:0
 msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr ""
 
@@ -274,24 +272,24 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
+#: view:account.bank.statement.line:0
 msgid "Draft Statement Lines."
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_list
+#: view:account.bank.statement.line:0
 msgid "Glob. Am."
 msgstr ""
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Línia d'extracte bancari"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,code:0
 msgid "Code"
-msgstr ""
+msgstr "Codi"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
@@ -301,15 +299,15 @@ msgstr ""
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Comptes bancaris"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
 msgid "Bank Statement"
-msgstr ""
+msgstr "Extracte bancari"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_form
+#: view:account.bank.statement.line:0
 msgid "Statement Line"
 msgstr ""
 
@@ -326,32 +324,32 @@ msgid "Bank Statement Lines"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:133
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avís!"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:account_bank_statement_extensions.view_statement_line_global_form
+#: view:account.bank.statement.line.global:0
 msgid "Child Batch Payments"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
+#: view:confirm.statement.line:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel·la"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_list
+#: view:account.bank.statement.line:0
 msgid "Statement Lines"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_list
+#: view:account.bank.statement.line:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Import total"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
-msgstr ""
+msgstr "ID"

@@ -1,21 +1,22 @@
-# Latvian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Latvian <lv@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Latvian (http://www.transifex.com/projects/p/odoo-7/language/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:17+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -35,8 +36,7 @@ msgid "Avg. Delay to Open"
 msgstr "Vidējā uzsākšanas aizkave"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "Group By..."
 msgstr "Grupēt pēc..."
 
@@ -71,14 +71,12 @@ msgid "Progress (%)"
 msgstr "Progress (%)"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,message_unread:0
+#: view:project.issue:0 field:project.issue,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neizlasīti ziņojumi"
 
 #. module: project_issue
-#: field:project.issue,company_id:0
-#: view:project.issue.report:0
+#: field:project.issue,company_id:0 view:project.issue.report:0
 #: field:project.issue.report,company_id:0
 msgid "Company"
 msgstr "Uzņēmums"
@@ -94,14 +92,13 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ja atzīmēts, tad jauni ziņojumi pieprasīs jūsu uzmanību."
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
@@ -138,8 +135,7 @@ msgid "Difference in days between last action and current date"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,day:0
+#: view:project.issue.report:0 field:project.issue.report,day:0
 msgid "Day"
 msgstr "Diena"
 
@@ -149,8 +145,7 @@ msgid "Days since creation date"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,task_id:0
-#: view:project.issue.report:0
+#: field:project.issue,task_id:0 view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
 msgstr "Uzdevums"
@@ -172,10 +167,8 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0
-#: field:project.issue,project_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,project_id:0
+#: view:project.issue:0 field:project.issue,project_id:0
+#: view:project.issue.report:0 field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "Projekts"
 
@@ -185,8 +178,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to report a new issue.\n"
 "          </p><p>\n"
-"            The OpenERP issues tacker allows you to efficiantly manage "
-"things\n"
+"            The OpenERP issues tacker allows you to efficiantly manage things\n"
 "            like internal requests, software development bugs, customer\n"
 "            complaints, project troubles, material breakdowns, etc.\n"
 "          </p>\n"
@@ -194,8 +186,7 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: selection:project.issue.report,state:0
+#: selection:project.issue,state:0 selection:project.issue.report,state:0
 msgid "Cancelled"
 msgstr "Atcelts"
 
@@ -217,7 +208,7 @@ msgstr "Incidentu reģistra meklēšana"
 #. module: project_issue
 #: field:project.issue,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Krāsas Indekss"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
@@ -227,7 +218,7 @@ msgstr "Vidējās darba stundas līdz uzsākšanai"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analītiskais Konts"
 
 #. module: project_issue
 #: help:project.issue,message_summary:0
@@ -252,12 +243,12 @@ msgstr "Papildus Info"
 #: code:addons/project_issue/project_issue.py:493
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uzmanību!"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Edit..."
-msgstr ""
+msgstr "Labot..."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -287,32 +278,27 @@ msgid "Project issue <b>converted</b> to task."
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,priority:0
-#: view:project.issue.report:0
-#: field:project.issue.report,priority:0
+#: view:project.issue:0 field:project.issue,priority:0
+#: view:project.issue.report:0 field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "Prioritāte"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,version_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,version_id:0
+#: view:project.issue:0 field:project.issue,version_id:0
+#: view:project.issue.report:0 field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "Versija"
 
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Sekotāji"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "New"
-msgstr ""
+msgstr "Jauns/-a"
 
 #. module: project_issue
 #: view:project.project:0
@@ -325,8 +311,7 @@ msgid "Email"
 msgstr "E-pasts"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0
-#: field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "Kanāls"
 
@@ -340,7 +325,7 @@ msgstr "Zemākā"
 #: code:addons/project_issue/project_issue.py:400
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopēt)"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -348,8 +333,7 @@ msgid "Unassigned Issues"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,create_date:0
-#: view:project.issue.report:0
+#: field:project.issue,create_date:0 view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "Izveidošanas datums"
@@ -376,8 +360,7 @@ msgid "Create issues from an incoming email account "
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
 msgstr "Pabeigts"
@@ -397,10 +380,8 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,stage_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,stage_id:0
+#: view:project.issue:0 field:project.issue,stage_id:0
+#: view:project.issue.report:0 field:project.issue.report,stage_id:0
 msgid "Stage"
 msgstr "Posms"
 
@@ -415,7 +396,7 @@ msgstr "Incidentu analīze"
 #: code:addons/project_issue/project_issue.py:532
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Nav temata"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -423,17 +404,15 @@ msgid "My Project Issues"
 msgstr "Mani projektu incidenti"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,partner_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,partner_id:0
+#: view:project.issue:0 field:project.issue,partner_id:0
+#: view:project.issue.report:0 field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "Kontakts"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Delete"
-msgstr ""
+msgstr "Dzēst"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:383
@@ -459,7 +438,7 @@ msgstr "Decembris"
 #. module: project_issue
 #: field:project.issue,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Birkas"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -497,15 +476,14 @@ msgid "Next Action"
 msgstr "Nākamā darbība"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Bloķēts"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "Lietotāja e-pasts"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -515,7 +493,7 @@ msgstr "Projekta incidentu skaits"
 #. module: project_issue
 #: help:project.issue,channel_id:0
 msgid "Communication channel."
-msgstr ""
+msgstr "Saziņas kanāls."
 
 #. module: project_issue
 #: help:project.issue,email_cc:0
@@ -523,7 +501,7 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
+msgstr "Šīs e-pasta adreses pirms nosūtīšanas tiks pievienotas CC laukam visām šī ieraksta ienākošajām un izejošajām vēstulēm. Atdaliet adeses ar komatu."
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -537,8 +515,7 @@ msgid "Low"
 msgstr "Zema"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0
-#: selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
 msgid "Closed"
 msgstr "Slēgts"
 
@@ -548,15 +525,13 @@ msgid "Avg. Delay to Close"
 msgstr "Vid. kavējums līdz slēgš."
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: view:project.issue.report:0
+#: selection:project.issue,state:0 view:project.issue.report:0
 #: selection:project.issue.report,state:0
 msgid "Pending"
 msgstr "Neizlemts"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,state:0
+#: view:project.issue:0 field:project.issue,state:0
 #: field:project.issue.report,state:0
 msgid "Status"
 msgstr "Statuss"
@@ -572,8 +547,7 @@ msgid "August"
 msgstr "Augusts"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-#: selection:project.issue,priority:0
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "Normāla"
@@ -591,7 +565,7 @@ msgstr "Jūnijs"
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Ziņojumu un komunikācijas vēsture"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -606,21 +580,20 @@ msgstr "Dienas līdz pabeigšanai"
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ir sekotājs"
 
 #. module: project_issue
 #: help:project.issue,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,active:0
-#: field:project.issue.version,active:0
+#: field:project.issue,active:0 field:project.issue.version,active:0
 msgid "Active"
 msgstr "Aktīva"
 
@@ -633,7 +606,7 @@ msgstr "Novembris"
 #: code:addons/project_issue/project_issue.py:513
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Klienta e-pasts"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -643,7 +616,7 @@ msgstr "Meklēt"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Creation Month"
-msgstr ""
+msgstr "Izveides mēnesis"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -668,7 +641,7 @@ msgstr "Šie cilvēki saņems e-pastu"
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Kopsavilkums"
 
 #. module: project_issue
 #: field:project.issue,date:0
@@ -676,8 +649,7 @@ msgid "Date"
 msgstr "Datums"
 
 #. module: project_issue
-#: field:project.issue,user_id:0
-#: view:project.issue.report:0
+#: field:project.issue,user_id:0 view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr "Piešķirts"
@@ -685,7 +657,7 @@ msgstr "Piešķirts"
 #. module: project_issue
 #: view:project.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurēt"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_closed
@@ -718,20 +690,17 @@ msgstr "Atvērt"
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: view:project.issue:0
-#: view:project.project:0
+#: view:project.issue:0 view:project.project:0
 msgid "Issues"
 msgstr "Incidenti"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Tiek izpildīts"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "To Do"
 msgstr "Darāmais"
 
@@ -762,8 +731,7 @@ msgid "Unclosed Issues"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr ""
 
@@ -773,22 +741,18 @@ msgid "October"
 msgstr "Oktobris"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,section_id:0
+#: view:project.issue.report:0 field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr "Pārdošanas komanda"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 #: field:project.issue.report,month:0
 msgid "Month"
 msgstr "Mēnesis"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,name:0
-#: view:project.project:0
+#: view:project.issue:0 field:project.issue,name:0 view:project.project:0
 msgid "Issue"
 msgstr "Incidents"
 
@@ -829,8 +793,7 @@ msgid "Issue Closed"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,email:0
+#: view:project.issue.report:0 field:project.issue.report,email:0
 msgid "# Emails"
 msgstr "E-pastu skaits"
 
@@ -844,7 +807,7 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:511
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Klients"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -855,7 +818,7 @@ msgstr "Februāris"
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Stāvoklis mainīts"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -873,8 +836,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new version.\n"
 "              </p><p>\n"
-"                Define here the different versions of your products on "
-"which\n"
+"                Define here the different versions of your products on which\n"
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
@@ -945,7 +907,7 @@ msgstr ""
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Stāvoklis mainīts"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -964,8 +926,7 @@ msgid "Last Action"
 msgstr "Pēdēja darbība"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,name:0
+#: view:project.issue.report:0 field:project.issue.report,name:0
 msgid "Year"
 msgstr "Gads"
 
@@ -979,21 +940,3 @@ msgstr "Ilgums"
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
 msgstr ""
-
-#~ msgid "Maintenance"
-#~ msgstr "Uzturēšana"
-
-#~ msgid "Issue Categories"
-#~ msgstr "Incidentu kategorijas"
-
-#~ msgid "Categories"
-#~ msgstr "Kategorijas"
-
-#~ msgid "Feature Requests"
-#~ msgstr "Jaunu iespēju pieprasījumi"
-
-#~ msgid "Cancel"
-#~ msgstr "Atcelt"
-
-#~ msgid "References"
-#~ msgstr "Atsauces"

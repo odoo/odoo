@@ -1,21 +1,22 @@
-# Greek translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Greek <el@li.org>\n"
+"PO-Revision-Date: 2015-05-27 08:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Greek (http://www.transifex.com/projects/p/odoo-7/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -38,7 +39,7 @@ msgstr "Αναζήτηση στον Φάκελο Εγγράφων"
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr ""
+msgstr "Το όνομα θα χρησιμοποιηθεί σαν περιγραφή για τους φακέλους προέλευσης. Εάν είναι κενό το \"περιγραφή\" θα χρησιμοποιηθεί."
 
 #. module: document
 #: view:document.directory:0
@@ -48,7 +49,7 @@ msgstr "Ομαδοποίηση ανά..."
 #. module: document
 #: view:ir.attachment:0
 msgid "Modification"
-msgstr ""
+msgstr "Τροποποίηση"
 
 #. module: document
 #: view:document.directory:0
@@ -56,8 +57,7 @@ msgid "Resources"
 msgstr "Πόροι"
 
 #. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:0
+#: field:document.directory,file_ids:0 view:report.document.user:0
 msgid "Files"
 msgstr "Αρχεία"
 
@@ -77,8 +77,7 @@ msgid "Expression"
 msgstr "Έκφραση"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,company_id:0
+#: view:document.directory:0 field:document.directory,company_id:0
 msgid "Company"
 msgstr "Εταιρία"
 
@@ -90,7 +89,7 @@ msgstr "Περιεχόμενο Φακέλου"
 #. module: document
 #: view:ir.attachment:0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Τα Έγγραφα μου"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -101,18 +100,16 @@ msgstr "Διαχείριση Εγγράφου"
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
 msgstr ""
 
 #. module: document
 #: help:document.directory.dctx,field:0
 msgid "The name of the field."
-msgstr ""
+msgstr "Το όνομα του πεδίου"
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Το όνομα του φακέλου θα πρέπει να είναι μοναδικό!"
@@ -120,11 +117,10 @@ msgstr "Το όνομα του φακέλου θα πρέπει να είναι 
 #. module: document
 #: view:ir.attachment:0
 msgid "Filter on my documents"
-msgstr ""
+msgstr "Φίλτρο στα Έγγραφα μου"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
+#: view:ir.attachment:0 field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Αρχειοθετημένα Περιεχόμενα"
 
@@ -133,7 +129,7 @@ msgstr "Αρχειοθετημένα Περιεχόμενα"
 msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
-msgstr ""
+msgstr "Εάν αληθές, όλα τα συνημμένα που ταιριάζουν με αυτόν τον πόρο θα εντοπιστούν. Εάν"
 
 #. module: document
 #: view:document.directory:0
@@ -170,11 +166,10 @@ msgstr "Ημερομηνία τροποποίησης"
 #. module: document
 #: view:document.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr ""
+msgstr "Διαμόρφωση Εφαρμογής Γνώσης"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,partner_id:0
+#: view:ir.attachment:0 field:ir.attachment,partner_id:0
 msgid "Partner"
 msgstr "Συνεργάτης"
 
@@ -190,25 +185,23 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "Επιλέξτε για να δημιουργήσετε ένα νέο έγγραφο. \n</p><p>\nΤο αποθετήριο Εγγράφων σας δίνει πρόσβαση σε όλα τα συνημμένα, όπως\nmails, έγγραφα έργων, τιμολόγια κλπ.\n</p>\n        "
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #: code:addons/document/document.py:348
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "Λάθος Επικύρωσης"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
@@ -220,7 +213,7 @@ msgstr "Έγγραφα"
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
-msgstr ""
+msgstr "Μοντέλο Πόρου"
 
 #. module: document
 #: field:report.document.file,file_size:0
@@ -235,8 +228,7 @@ msgid "Content Type"
 msgstr "Τύπος Περιεχόμενου"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,type:0
+#: view:document.directory:0 field:document.directory,type:0
 msgid "Type"
 msgstr "Τύπος"
 
@@ -246,31 +238,28 @@ msgid "The filename must be unique in a directory !"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:118
-#: code:addons/document/document.py:308
+#: code:addons/document/document.py:118 code:addons/document/document.py:308
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (αντίγραφο)"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
+msgstr "Επιλέξτε ένα αντικείμενο εδώ και θα είναι ένα αρχείο ανά εγγραφή για αυτόν τον πόρο."
 
 #. module: document
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Χρησιμοποιήστε έναν τομέα έαν θέλετε να εφαρμόσετε ένα αυτόματο φίλτρο σε "
-"ορατούς πόρους."
+msgstr "Χρησιμοποιήστε έναν τομέα έαν θέλετε να εφαρμόσετε ένα αυτόματο φίλτρο σε ορατούς πόρους."
 
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr ""
+msgstr "Λάθος! Δεν μπορείτε να δημιουργήσετε αναδρομικούς φακέλους."
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -280,11 +269,10 @@ msgstr "Όνομα πεδίου"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "Πεδία Περιεχομένων"
 
 #. module: document
-#: view:document.directory:0
-#: field:report.document.user,type:0
+#: view:document.directory:0 field:report.document.user,type:0
 msgid "Directory Type"
 msgstr "Τύπος Φακέλου"
 
@@ -312,26 +300,25 @@ msgstr "Εικονικά Αρχεία"
 #: code:addons/document/document.py:574
 #, python-format
 msgid "Error at doc write!"
-msgstr ""
+msgstr "Λάθος στο γράψιμο του εγγράφου!"
 
 #. module: document
 #: view:document.directory:0
 msgid "Generated Files"
-msgstr ""
+msgstr "Αρχεία που Δημιουργήθηκαν"
 
 #. module: document
 #: view:document.configuration:0
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
+msgstr "Όταν εκτελείτε αυτόν το οδηγό, θα διαμορφώσει τους φακέλους σας αυτόματα σύμφωνα με τα module που έχουν εγκατασταθεί."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:0
-#: field:ir.attachment,parent_id:0
+#: view:ir.attachment:0 field:ir.attachment,parent_id:0
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
@@ -343,8 +330,7 @@ msgid "Security"
 msgstr "Ασφάλεια"
 
 #. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Τελευταίος Χρήστης Τροποποίησης"
 
@@ -352,7 +338,7 @@ msgstr "Τελευταίος Χρήστης Τροποποίησης"
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:0
 msgid "Files by User"
-msgstr ""
+msgstr "Αρχεία Ανά Χρήστη"
 
 #. module: document
 #: view:ir.attachment:0
@@ -365,15 +351,14 @@ msgid "Domain"
 msgstr "Τομέας"
 
 #. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Ημερομηνία Τροποποίησης"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
 msgid "Files details by Directory"
-msgstr ""
+msgstr "Λεπτομέρειες Αρχείων ανά Φάκελο"
 
 #. module: document
 #: view:report.document.user:0
@@ -397,15 +382,14 @@ msgid "Static Directory"
 msgstr "Στατικός Φάκελος"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "Μήνας"
 
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
+msgstr "Προσδορίζει λέξεις στο κείμενο, για όλους τους παραγόμενους φακέλους και αρχεία"
 
 #. module: document
 #: view:document.directory:0
@@ -415,13 +399,11 @@ msgstr "Στατικό"
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "άγνωστο"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,user_id:0
-#: view:ir.attachment:0
-#: field:ir.attachment,user_id:0
+#: view:document.directory:0 field:document.directory,user_id:0
+#: view:ir.attachment:0 field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "Κάτοχος"
@@ -445,16 +427,15 @@ msgstr "Ημερομηνία Δημιουργίας"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
+msgstr "Επιλέξτε αυτό το πεδίο εάν θέλετε το όνομα του αρχείου να περιέχει την περιγραφή της εγγραφής.\nΕάν ρυθμιστεί,ο φάκελος θα πρέπει να είναι ένας φάκελος προέλευσης."
 
 #. module: document
 #: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr ""
+msgstr "Διαμόρφωση Φακέλων"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -469,25 +450,23 @@ msgstr "Κωδ. Μοντέλου"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Ελέγξτε αυτό εάν θεέλετε την ίδια δενδροειδή δομή όπως το επιλεγμένο "
-"αντικείμενο στο σύστημα."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "Ελέγξτε αυτό εάν θεέλετε την ίδια δενδροειδή δομή όπως το επιλεγμένο αντικείμενο στο σύστημα."
 
 #. module: document
 #: help:document.directory,ressource_id:0
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
+msgstr "Μαζί με το Μητρικό Μοντέλο, αυτός ο κωδικός επισυνάπτει αυτό το αρχείο σε μια συγκεκριμένη εγγραφή του Μητρικού Μοντέλου."
 
 #. module: document
 #. openerp-web
 #: code:addons/document/static/src/js/document.js:6
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "Συνημμένα"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -502,7 +481,7 @@ msgstr "Δυναμικό Περιεχόμενο"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr ""
+msgstr "Ο Φάκελος δεν μπορεί να είναι μητρικός του εαυτού του!"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -527,11 +506,11 @@ msgstr "Νοέμβριος"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
+msgstr "Εάν τοποθετήσετε ένα αντικείμενο εδώ, αυτός το πρότυπο φακέλου θα εμφανιστεί κάτω από όλα αυτά τα αντικείμενα. Τετοιοι φάκελοι είναι \"συνεμένοι\" στο συγκεκριμένο μοντέλο ή εγγραφή, όπως τα συνημμένα. Μην τοποθετείτε ένα μητρικό φάκελο εάν εσείς επιλέγετε ένα μητρικό μοντέλο."
 
 #. module: document
 #: view:document.directory:0
@@ -561,7 +540,7 @@ msgstr "Ιανουάριος"
 #. module: document
 #: view:document.directory:0
 msgid "Document Directory"
-msgstr ""
+msgstr "Φάκελος Εγγράφου"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -571,7 +550,7 @@ msgstr "Αυτό το όνομα διαδρομής πρέπει να είναι
 #. module: document
 #: view:ir.attachment:0
 msgid "Attachments"
-msgstr ""
+msgstr "Συνημμένα"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -621,7 +600,7 @@ msgstr "Πεδίο"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "Περιεχόμενο Δυναμικού Φακέλου"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -633,7 +612,7 @@ msgstr "Μοντέλο Γονέα"
 msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
-msgstr ""
+msgstr "Αυτές οι ομάδες, όμως, ΔΕΝ εφαρμόζονται σε παραγόμενους φακέλους, οι οποίοι πρέπει να καθορίσουν τις δικές τους ομάδες."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -643,32 +622,32 @@ msgstr "Μάιος"
 #. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
+msgstr "Για κάθε εγγραφή εδώ, εικονικά αρχεία θα εμφανιστούν σε αυτόν το φάκελο"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr ""
+msgstr "Αρχείο Χρήστη"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr ""
+msgstr "Διαμόρφωση Φακέλλων"
 
 #. module: document
 #: help:document.directory,type:0
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
+msgstr "Κάθε φάκελος μπορεί είτε να έχει ένα στατικό τύπο είτε να συνδεθεί με μια άλλη πηγή - πόρο. Ένας στατικός φάκελος, όπως και στα Λειτουργικά Συστήματα , είναι ο κλασικός φάκελος που μπορεί να περιέχει ένα αριθμό αρχείων. Οι φάκελοι που συνδεόνται με πηγές του συστήματος αυτόματα κατακτούν τους υποφάκελους για κάθε τύπο πόρου που καθορίστηκε στο μητρικό φάκελο."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -691,10 +670,9 @@ msgid "April"
 msgstr "Απρίλιος"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
-msgstr ""
+msgstr "# των Αρχείων"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -706,7 +684,7 @@ msgstr "Τύπος Περιεχόμενου Φακέλου"
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
-msgstr ""
+msgstr "Μόνο μέλη αυτών των ομάδων θα έχουν πρόσβαση σε αυτό τον φάκελο και τα αρχεία του."
 
 #. module: document
 #. openerp-web
@@ -738,7 +716,7 @@ msgstr "Δομή Δένδρου"
 #. module: document
 #: view:document.configuration:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree

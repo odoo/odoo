@@ -1,27 +1,27 @@
-# Chinese (Traditional) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-01-29 22:33+0000\n"
-"Last-Translator: Charles Hsu <chaoyee22@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/odoo-7/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 msgid "Work Orders"
 msgstr "工作命令"
 
@@ -42,8 +42,7 @@ msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 msgid "Group By..."
 msgstr "群組依據..."
 
@@ -68,8 +67,7 @@ msgid "Work Centers"
 msgstr "工作中心"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
 msgstr "繼續"
@@ -111,8 +109,7 @@ msgid "Manufacturing order cannot be started in state \"%s\"!"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,day:0
+#: view:mrp.workorder:0 field:mrp.workorder,day:0
 msgid "Day"
 msgstr "日"
 
@@ -210,13 +207,10 @@ msgstr "實際生產日期"
 #: help:mrp.production.workcenter.line,state:0
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
+"* When order is completely processed that time it is set in 'Finished' status."
 msgstr ""
 
 #. module: mrp_operations
@@ -265,8 +259,7 @@ msgid "Planned Date"
 msgstr "計劃日期"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,product_qty:0
+#: view:mrp.workorder:0 field:mrp.workorder,product_qty:0
 msgid "Product Qty"
 msgstr "產品數量"
 
@@ -282,8 +275,7 @@ msgstr "作業名稱"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
-#: field:mrp.production.workcenter.line,state:0
-#: view:mrp.workorder:0
+#: field:mrp.production.workcenter.line,state:0 view:mrp.workorder:0
 #: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
@@ -319,8 +311,7 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
+"            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced.\n"
 "          </p>\n"
 "        "
@@ -352,8 +343,7 @@ msgid "December"
 msgstr "十二月"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,month:0
+#: view:mrp.workorder:0 field:mrp.workorder,month:0
 msgid "Month"
 msgstr "月份"
 
@@ -415,8 +405,7 @@ msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
 msgstr "開始"
@@ -434,14 +423,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 msgid "Set Draft"
 msgstr "設為草稿"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
 msgstr "待處理"
@@ -485,8 +472,7 @@ msgid "June"
 msgstr "六月"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_cycles:0
+#: view:mrp.workorder:0 field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
 msgstr "週期總數"
 
@@ -506,30 +492,29 @@ msgid "Work Orders Planning"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: field:mrp.workorder,date:0
+#: view:mrp.production.workcenter.line:0 field:mrp.workorder,date:0
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "November"
-msgstr ""
+msgstr "十一月"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
-msgstr ""
+msgstr "搜尋"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "October"
-msgstr ""
+msgstr "十月"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "January"
-msgstr ""
+msgstr "一月"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -558,13 +543,13 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Current"
-msgstr ""
+msgstr "當前"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
 #: field:mrp_operations.operation.code,code:0
 msgid "Code"
-msgstr ""
+msgstr "代碼"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
@@ -579,7 +564,7 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
 msgid "Qty"
-msgstr ""
+msgstr "數量"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_doneoperation0
@@ -588,10 +573,9 @@ msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
-#: view:mrp.workorder:0
-#: selection:mrp_operations.operation.code,start_stop:0
+#: view:mrp.workorder:0 selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
-msgstr ""
+msgstr "完成"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
@@ -601,7 +585,7 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:454
@@ -617,7 +601,7 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Information"
-msgstr ""
+msgstr "資訊"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -626,10 +610,8 @@ msgid ""
 "            Click to start a new work order.\n"
 "          </p><p>\n"
 "            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
@@ -644,7 +626,7 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Late"
-msgstr ""
+msgstr "延遲"
 
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
@@ -652,12 +634,11 @@ msgid "Delay"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
-msgstr ""
+msgstr "生產"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -665,8 +646,7 @@ msgid "Search Work Orders"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 #: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
@@ -676,18 +656,16 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "預定日期"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,product:0
-#: view:mrp.workorder:0
+#: field:mrp.production.workcenter.line,product:0 view:mrp.workorder:0
 #: field:mrp.workorder,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "產品"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_hours:0
+#: view:mrp.workorder:0 field:mrp.workorder,total_hours:0
 msgid "Total Hours"
 msgstr ""
 
@@ -701,11 +679,10 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "May"
-msgstr ""
+msgstr "五月"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
@@ -719,7 +696,7 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
 msgid "Working Hours"
-msgstr ""
+msgstr "工時"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -729,7 +706,7 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "February"
-msgstr ""
+msgstr "二月"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
@@ -744,7 +721,7 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "April"
-msgstr ""
+msgstr "四月"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
@@ -764,8 +741,8 @@ msgstr ""
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
 msgid ""
-"When the operation is finished, the operator updates the system by finishing "
-"the work order."
+"When the operation is finished, the operator updates the system by finishing"
+" the work order."
 msgstr ""
 
 #. module: mrp_operations
@@ -774,16 +751,11 @@ msgid "Details of the work order"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,year:0
+#: view:mrp.workorder:0 field:mrp.workorder,year:0
 msgid "Year"
-msgstr ""
+msgstr "年份"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
-msgstr ""
-
-#, python-format
-#~ msgid "Manufacturing order cannot start in state \"%s\"!"
-#~ msgstr "製造命令在 \"%s\" 狀態中無法啟始 !"
+msgstr "持續時間"

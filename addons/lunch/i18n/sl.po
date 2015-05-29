@@ -1,25 +1,25 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * lunch
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-21 11:53+0000\n"
-"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:00+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: lunch
-#: field:lunch.product,category_id:0
-#: field:lunch.product.category,name:0
+#: field:lunch.product,category_id:0 field:lunch.product.category,name:0
 msgid "Category"
 msgstr "Kategorija"
 
@@ -39,8 +39,7 @@ msgid "Partially Confirmed"
 msgstr "Delno potrjeno"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order.line:0
+#: view:lunch.cashmove:0 view:lunch.order.line:0
 msgid "Group By..."
 msgstr "Združeno po..."
 
@@ -50,8 +49,7 @@ msgid "Sunday"
 msgstr "Nedelja"
 
 #. module: lunch
-#: field:lunch.order.line,supplier:0
-#: field:lunch.product,supplier:0
+#: field:lunch.order.line,supplier:0 field:lunch.product,supplier:0
 msgid "Supplier"
 msgstr "Dobavitelj"
 
@@ -86,14 +84,12 @@ msgid "Order lines Tree"
 msgstr "Drevesna struktura vrstic naročila"
 
 #. module: lunch
-#: field:lunch.alert,specific_day:0
-#: field:report.lunch.order.line,day:0
+#: field:lunch.alert,specific_day:0 field:report.lunch.order.line,day:0
 msgid "Day"
 msgstr "Dan"
 
 #. module: lunch
-#: view:lunch.order.line:0
-#: selection:lunch.order.line,state:0
+#: view:lunch.order.line:0 selection:lunch.order.line,state:0
 msgid "Received"
 msgstr "Prejeto"
 
@@ -110,25 +106,11 @@ msgid ""
 "            </p>\n"
 "            <p>\n"
 "                A lunch order is defined by its user, date and order lines.\n"
-"                Each order line corresponds to a product, an additional note "
-"and a price.\n"
-"                Before selecting your order lines, don't forget to read the "
-"warnings displayed in the reddish area.\n"
+"                Each order line corresponds to a product, an additional note and a price.\n"
+"                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area.\n"
 "            </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje naročila obroka. \n"
-"            </p>\n"
-"            <p>\n"
-"                Naročilo obroka je določeno po uporabniku, datumu in "
-"vrsticah naročila.\n"
-"                Vsaka vrstica naročila vsebuje proizvod, dodatno opombo in "
-"ceno.\n"
-"                Preden izberete vaše obroke, ne pozabite prebrati opozoril v "
-"rdeče obarvanem območju.\n"
-"            </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za kreiranje naročila obroka. \n            </p>\n            <p>\n                Naročilo obroka je določeno po uporabniku, datumu in vrsticah naročila.\n                Vsaka vrstica naročila vsebuje proizvod, dodatno opombo in ceno.\n                Preden izberete vaše obroke, ne pozabite prebrati opozoril v rdeče obarvanem območju.\n            </p>\n            "
 
 #. module: lunch
 #: view:lunch.order.line:0
@@ -155,21 +137,11 @@ msgstr "transkacije gotovine"
 #: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
 msgid ""
 "<p>\n"
-"                Here you can see your cash moves.<br/>A cash moves can be "
-"either an expense or a payment.\n"
-"                An expense is automatically created when an order is "
-"received while a payment is a reimbursement to the company encoded by the "
-"manager.\n"
+"                Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.\n"
+"                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Tu vidite gotovinske transakcije.<br/>Gotovinska transakcija "
-"je lahko strošek ali plačilo.\n"
-"                Strošek se avtomatično kreira, ko je naročilo prevzeto, "
-"medtem ko je plačilo nadomestilo podjetju, potrjeno s strani vodje.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Tu vidite gotovinske transakcije.<br/>Gotovinska transakcija je lahko strošek ali plačilo.\n                Strošek se avtomatično kreira, ko je naročilo prevzeto, medtem ko je plačilo nadomestilo podjetju, potrjeno s strani vodje.\n              </p>\n            "
 
 #. module: lunch
 #: field:lunch.cashmove,amount:0
@@ -189,8 +161,7 @@ msgid "By Date"
 msgstr "Po datumu"
 
 #. module: lunch
-#: selection:lunch.order,state:0
-#: view:lunch.order.line:0
+#: selection:lunch.order,state:0 view:lunch.order.line:0
 #: selection:lunch.order.line,state:0
 msgid "Cancelled"
 msgstr "Preklicano"
@@ -267,8 +238,7 @@ msgid "Wizard to order a meal"
 msgstr "čarovnik za naročanje obrokov"
 
 #. module: lunch
-#: selection:lunch.order,state:0
-#: selection:lunch.order.line,state:0
+#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "New"
 msgstr "Novo"
 
@@ -309,8 +279,7 @@ msgid "Configuration"
 msgstr "Prilagoditev"
 
 #. module: lunch
-#: field:lunch.order,state:0
-#: field:lunch.order.line,state:0
+#: field:lunch.order,state:0 field:lunch.order.line,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -319,9 +288,7 @@ msgstr "Status"
 msgid ""
 "Order a meal doesn't mean that we have to pay it.\n"
 "                        A meal should be paid when it is received."
-msgstr ""
-"Narločilo obroka ne pomeni, da ga morate plačati.\n"
-"                        Obrok se plača ob prevzemu."
+msgstr "Narločilo obroka ne pomeni, da ga morate plačati.\n                        Obrok se plača ob prevzemu."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_control_accounts
@@ -358,38 +325,15 @@ msgstr "September"
 #: model:ir.actions.act_window,help:lunch.action_lunch_control_suppliers
 msgid ""
 "<p>\n"
-"                Here you can see every orders grouped by suppliers and by "
-"date.\n"
+"                Here you can see every orders grouped by suppliers and by date.\n"
 "              </p>\n"
 "              <p>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
-"that the order is ordered <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
-"the order is received <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce "
-"that the order isn't available\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce that the order isn't available\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Tu vidite vsa naročila, združena po dobaviteljih in "
-"datumih.\n"
-"              </p>\n"
-"              <p>\n"
-"                - Kliknite na <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> da potrdite "
-"naročilo <br/>\n"
-"                - Klikinte na <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> da potrdite, da je "
-"naročilo sprejeto <br/>\n"
-"                - Kliknite na <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> rdeči X, da "
-"potrdite, da naročilo ni na voljo\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Tu vidite vsa naročila, združena po dobaviteljih in datumih.\n              </p>\n              <p>\n                - Kliknite na <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> da potrdite naročilo <br/>\n                - Klikinte na <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> da potrdite, da je naročilo sprejeto <br/>\n                - Kliknite na <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> rdeči X, da potrdite, da naročilo ni na voljo\n              </p>\n            "
 
 #. module: lunch
 #: field:lunch.alert,tuesday:0
@@ -413,23 +357,13 @@ msgid ""
 "                Click to create a product for lunch. \n"
 "            </p>\n"
 "              <p>\n"
-"                A product is defined by its name, category, price and "
-"supplier.\n"
+"                A product is defined by its name, category, price and supplier.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje proizvoda za obrok. \n"
-"            </p>\n"
-"              <p>\n"
-"                Proizvod je določen z imenom, kategorijo, ceno in "
-"dobaviteljem.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za kreiranje proizvoda za obrok. \n            </p>\n              <p>\n                Proizvod je določen z imenom, kategorijo, ceno in dobaviteljem.\n              </p>\n            "
 
 #. module: lunch
-#: view:lunch.alert:0
-#: field:lunch.alert,message:0
+#: view:lunch.alert:0 field:lunch.alert,message:0
 msgid "Message"
 msgstr "Sporočilo"
 
@@ -439,9 +373,7 @@ msgid "Order Meals"
 msgstr "Naroči obroke"
 
 #. module: lunch
-#: view:lunch.cancel:0
-#: view:lunch.order.order:0
-#: view:lunch.validation:0
+#: view:lunch.cancel:0 view:lunch.order.order:0 view:lunch.validation:0
 msgid "or"
 msgstr "ali"
 
@@ -455,14 +387,7 @@ msgid ""
 "                Here you can find every lunch categories for products.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje kategorije obrokov. \n"
-"            </p>\n"
-"              <p>\n"
-"                Tu najdete vse kategorije obrokov za proizvode.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za kreiranje kategorije obrokov. \n            </p>\n              <p>\n                Tu najdete vse kategorije obrokov za proizvode.\n              </p>\n            "
 
 #. module: lunch
 #: view:lunch.order.order:0
@@ -487,14 +412,12 @@ msgstr "Planirani datum"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_alert
-#: model:ir.ui.menu,name:lunch.menu_lunch_alert
-#: field:lunch.order,alerts:0
+#: model:ir.ui.menu,name:lunch.menu_lunch_alert field:lunch.order,alerts:0
 msgid "Alerts"
 msgstr "Opozorila"
 
 #. module: lunch
-#: field:lunch.order.line,note:0
-#: field:report.lunch.order.line,note:0
+#: field:lunch.order.line,note:0 field:report.lunch.order.line,note:0
 msgid "Note"
 msgstr "Zapisek"
 
@@ -505,8 +428,7 @@ msgid "Add"
 msgstr "Dodaj"
 
 #. module: lunch
-#: view:lunch.product:0
-#: view:lunch.product.category:0
+#: view:lunch.product:0 view:lunch.product.category:0
 msgid "Products Form"
 msgstr "Forma proizvodov"
 
@@ -516,10 +438,9 @@ msgid "Cancel meals"
 msgstr "Prekliči obrok"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
-#: view:lunch.cashmove:0
+#: model:ir.model,name:lunch.model_lunch_cashmove view:lunch.cashmove:0
 msgid "lunch cashmove"
-msgstr ""
+msgstr "gotovinska transakcija za prehrano"
 
 #. module: lunch
 #: view:lunch.cancel:0
@@ -552,8 +473,7 @@ msgid "June"
 msgstr "Junij"
 
 #. module: lunch
-#: field:lunch.cashmove,user_id:0
-#: field:lunch.order,user_id:0
+#: field:lunch.cashmove,user_id:0 field:lunch.order,user_id:0
 #: field:report.lunch.order.line,user_id:0
 msgid "User Name"
 msgstr "Uporabniško ime"
@@ -582,8 +502,7 @@ msgid "User"
 msgstr "Uporabnik"
 
 #. module: lunch
-#: field:lunch.cashmove,date:0
-#: field:lunch.order,date:0
+#: field:lunch.cashmove,date:0 field:lunch.order,date:0
 #: field:lunch.order.line,date:0
 msgid "Date"
 msgstr "Datum"
@@ -604,8 +523,7 @@ msgid "Orders Form"
 msgstr "Forma naročil"
 
 #. module: lunch
-#: view:lunch.alert:0
-#: view:lunch.order.line:0
+#: view:lunch.alert:0 view:lunch.order.line:0
 msgid "Search"
 msgstr "Iskanje"
 
@@ -621,34 +539,12 @@ msgid ""
 "                Here you can see today's orders grouped by suppliers.\n"
 "              </p>\n"
 "              <p>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
-"that the order is ordered <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
-"the order is received <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that "
-"the order isn't available\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that the order isn't available\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Tu lahko vidite današnja naročila, združena po "
-"dobaviteljih.\n"
-"              </p>\n"
-"              <p>\n"
-"                - Kliknite na <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> da potrdite "
-"naročilo obroka <br/>\n"
-"                - Kliknite na <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> da potrdite prejem "
-"obroka <br/>\n"
-"                - Kliknite na <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> da potrdite, da "
-"obrok ni na voljo\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Tu lahko vidite današnja naročila, združena po dobaviteljih.\n              </p>\n              <p>\n                - Kliknite na <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> da potrdite naročilo obroka <br/>\n                - Kliknite na <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> da potrdite prejem obroka <br/>\n                - Kliknite na <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> da potrdite, da obrok ni na voljo\n              </p>\n            "
 
 #. module: lunch
 #: selection:report.lunch.order.line,month:0
@@ -702,11 +598,8 @@ msgid ""
 "                Click to create a lunch alert. \n"
 "            </p>\n"
 "              <p>\n"
-"                Alerts are used to warn employee from possible issues "
-"concerning the lunch orders.\n"
-"                To create a lunch alert you have to define its recurrency, "
-"the time interval during which the alert should be executed and the message "
-"to display.\n"
+"                Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
+"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display.\n"
 "            </p>\n"
 "            <p>\n"
 "                Example: <br/>\n"
@@ -715,23 +608,7 @@ msgid ""
 "                - Message: \"You must order before 10h30 am\"\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje alarma za obrok. \n"
-"            </p>\n"
-"              <p>\n"
-"                Alarmi se uporabljajo za opozorilo zaposlenih gled "
-"morebitnih zadev glede naročanja obrokov.\n"
-"                Za kreiranje alarma obroka morate določite njegovo "
-"ponavljanje, časovni interval izvajanja in sporočilo, ki se naj izpiše.\n"
-"            </p>\n"
-"            <p>\n"
-"                Primer: <br/>\n"
-"                - Ponavljanje: Vsak dan<br/>\n"
-"                - Časovni interval: od 00:00 do 23:59 <br/>\n"
-"                - Sporočilo: naročiti morate pred 10:30\"\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za kreiranje alarma za obrok. \n            </p>\n              <p>\n                Alarmi se uporabljajo za opozorilo zaposlenih gled morebitnih zadev glede naročanja obrokov.\n                Za kreiranje alarma obroka morate določite njegovo ponavljanje, časovni interval izvajanja in sporočilo, ki se naj izpiše.\n            </p>\n            <p>\n                Primer: <br/>\n                - Ponavljanje: Vsak dan<br/>\n                - Časovni interval: od 00:00 do 23:59 <br/>\n                - Sporočilo: naročiti morate pred 10:30\"\n              </p>\n            "
 
 #. module: lunch
 #: view:lunch.cancel:0
@@ -754,9 +631,7 @@ msgid "December"
 msgstr "December"
 
 #. module: lunch
-#: view:lunch.cancel:0
-#: view:lunch.order.line:0
-#: view:lunch.order.order:0
+#: view:lunch.cancel:0 view:lunch.order.line:0 view:lunch.order.order:0
 #: view:lunch.validation:0
 msgid "Cancel"
 msgstr "Prekliči"
@@ -768,36 +643,23 @@ msgid ""
 "                Click to create a payment. \n"
 "            </p>\n"
 "              <p>\n"
-"                Here you can see the employees' payment. A payment is a cash "
-"move from the employee to the company.\n"
+"                Here you can see the employees' payment. A payment is a cash move from the employee to the company.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite a kreiranje plačila. \n"
-"            </p>\n"
-"              <p>\n"
-"                Tu vidite plačila zaposlenih. Plačilo je prejem gotovine od "
-"zaposlenega v podjetje.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite a kreiranje plačila. \n            </p>\n              <p>\n                Tu vidite plačila zaposlenih. Plačilo je prejem gotovine od zaposlenega v podjetje.\n              </p>\n            "
 
 #. module: lunch
 #: code:addons/lunch/lunch.py:196
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
-msgstr ""
-"Vaši najbolj priljubljeni obroki bodo kreirani glede na vaša zadnja naročila."
+msgstr "Vaši najbolj priljubljeni obroki bodo kreirani glede na vaša zadnja naročila."
 
 #. module: lunch
 #: model:ir.module.category,description:lunch.module_lunch_category
 msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
-msgstr ""
-"Pomaga vam upravljati vaše potrebe po obrokih, če ste vodja, boste lahko "
-"kreirali nove proizvode, premike gotovine in potrjevali ali preklicali "
-"naročila."
+msgstr "Pomaga vam upravljati vaše potrebe po obrokih, če ste vodja, boste lahko kreirali nove proizvode, premike gotovine in potrjevali ali preklicali naročila."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_control_accounts
@@ -807,27 +669,16 @@ msgid ""
 "            </p>\n"
 "              <p>\n"
 "                A cashmove can either be an expense or a payment.<br/>\n"
-"                An expense is automatically created at the order "
-"receipt.<br/>\n"
-"                A payment represents the employee reimbursement to the "
-"company.\n"
+"                An expense is automatically created at the order receipt.<br/>\n"
+"                A payment represents the employee reimbursement to the company.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje novega plačila. \n"
-"            </p>\n"
-"              <p>\n"
-"                Gotovinska transakcija je lahko strošek ali plačilo.<br/>\n"
-"                Strošek je kreiran avtomatično ob prevzemu obroka.<br/>\n"
-"                Plačilo predstavlja nadomestilo zaposlenega podjetju.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za kreiranje novega plačila. \n            </p>\n              <p>\n                Gotovinska transakcija je lahko strošek ali plačilo.<br/>\n                Strošek je kreiran avtomatično ob prevzemu obroka.<br/>\n                Plačilo predstavlja nadomestilo zaposlenega podjetju.\n              </p>\n            "
 
 #. module: lunch
 #: field:lunch.alert,alter_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "ponavljanje"
 
 #. module: lunch
 #: code:addons/lunch/lunch.py:199
@@ -851,14 +702,12 @@ msgid "By User"
 msgstr "Po uporabniku"
 
 #. module: lunch
-#: field:lunch.order.line,product_id:0
-#: field:lunch.product,name:0
+#: field:lunch.order.line,product_id:0 field:lunch.product,name:0
 msgid "Product"
 msgstr "Izdelek"
 
 #. module: lunch
-#: field:lunch.cashmove,description:0
-#: report:lunch.order.line:0
+#: field:lunch.cashmove,description:0 report:lunch.order.line:0
 #: field:lunch.product,description:0
 msgid "Description"
 msgstr "Opis"
@@ -869,8 +718,7 @@ msgid "May"
 msgstr "Maj"
 
 #. module: lunch
-#: field:lunch.order.line,price:0
-#: field:lunch.product,price:0
+#: field:lunch.order.line,price:0 field:lunch.product,price:0
 msgid "Price"
 msgstr "Cena"
 
@@ -906,8 +754,7 @@ msgid "Employee Payments"
 msgstr "Plačila zaposlenih"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: selection:lunch.cashmove,state:0
+#: view:lunch.cashmove:0 selection:lunch.cashmove,state:0
 msgid "Payment"
 msgstr "Plačilo"
 
@@ -942,10 +789,8 @@ msgid "Select your order"
 msgstr "Izberite vaše naročilo"
 
 #. module: lunch
-#: field:lunch.cashmove,order_id:0
-#: selection:lunch.cashmove,state:0
-#: report:lunch.order.line:0
-#: view:lunch.order.line:0
+#: field:lunch.cashmove,order_id:0 selection:lunch.cashmove,state:0
+#: report:lunch.order.line:0 view:lunch.order.line:0
 #: field:lunch.order.line,order_id:0
 msgid "Order"
 msgstr "Naročilo"
@@ -953,8 +798,7 @@ msgstr "Naročilo"
 #. module: lunch
 #: code:addons/lunch/lunch.py:43
 #: model:ir.actions.report.xml,name:lunch.report_lunch_order
-#: model:ir.model,name:lunch.model_lunch_order
-#: report:lunch.order.line:0
+#: model:ir.model,name:lunch.model_lunch_order report:lunch.order.line:0
 #, python-format
 msgid "Lunch Order"
 msgstr "Naročilo obroka"
@@ -992,8 +836,7 @@ msgstr "Ali ste prevzeli te obroke?"
 #. module: lunch
 #: view:lunch.validation:0
 msgid "Once a meal is received a new cash move is created for the employee."
-msgstr ""
-"Ko je obrok prevzet, je kreirana gotovinska transakcija za zaposlenega."
+msgstr "Ko je obrok prevzet, je kreirana gotovinska transakcija za zaposlenega."
 
 #. module: lunch
 #: view:lunch.product:0
@@ -1001,9 +844,7 @@ msgid "Products Tree"
 msgstr "Drevo proizvodov"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order:0
-#: field:lunch.order,total:0
+#: view:lunch.cashmove:0 view:lunch.order:0 field:lunch.order,total:0
 #: view:lunch.order.line:0
 msgid "Total"
 msgstr "Skupaj"
@@ -1012,6 +853,3 @@ msgstr "Skupaj"
 #: model:ir.ui.menu,name:lunch.menu_lunch_order_tree
 msgid "Previous Orders"
 msgstr "Prejšnja naročila"
-
-#~ msgid "My Account"
-#~ msgstr "Moj račun"

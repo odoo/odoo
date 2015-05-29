@@ -1,24 +1,25 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * report_webkit
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2015-03-30 19:48+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 09:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-31 05:55+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report_webkit
-#: view:ir.actions.report.xml:report_webkit.act_report_xml_view
+#: view:ir.actions.report.xml:0
 msgid "Webkit Template (used if Report File is not found)"
 msgstr ""
 
@@ -33,7 +34,7 @@ msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:290
+#: code:addons/report_webkit/webkit_report.py:231
 #, python-format
 msgid "No header defined for this Webkit report!"
 msgstr ""
@@ -46,10 +47,11 @@ msgstr ""
 #. module: report_webkit
 #: help:ir.actions.report.xml,precise_mode:0
 msgid ""
-"This mode allow more precise element                                         "
-"                    position as each object is printed on a separate HTML.   "
-"                                                         but memory and disk "
-"usage is wider"
+"This mode allow more precise element"
+"                                                             position as "
+"each object is printed on a separate HTML."
+"                                                            but memory and "
+"disk usage is wider"
 msgstr ""
 
 #. module: report_webkit
@@ -58,13 +60,12 @@ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
 msgstr ""
 
 #. module: report_webkit
-#: field:ir.header_img,company_id:0
-#: field:ir.header_webkit,company_id:0
+#: field:ir.header_img,company_id:0 field:ir.header_webkit,company_id:0
 msgid "Company"
 msgstr "Takebbwanit"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:291
+#: code:addons/report_webkit/webkit_report.py:232
 #, python-format
 msgid "Please set a header in company settings."
 msgstr ""
@@ -111,7 +112,7 @@ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:218
+#: code:addons/report_webkit/webkit_report.py:167
 #, python-format
 msgid "Webkit error"
 msgstr "Tuccḍa Webkit"
@@ -122,11 +123,11 @@ msgid "B2  17  500 x 707 mm"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:325
-#: code:addons/report_webkit/webkit_report.py:333
-#: code:addons/report_webkit/webkit_report.py:338
-#: code:addons/report_webkit/webkit_report.py:347
-#: code:addons/report_webkit/webkit_report.py:354
+#: code:addons/report_webkit/webkit_report.py:259
+#: code:addons/report_webkit/webkit_report.py:270
+#: code:addons/report_webkit/webkit_report.py:279
+#: code:addons/report_webkit/webkit_report.py:292
+#: code:addons/report_webkit/webkit_report.py:303
 #, python-format
 msgid "Webkit render!"
 msgstr ""
@@ -142,7 +143,7 @@ msgid "Precise Mode"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:148
+#: code:addons/report_webkit/webkit_report.py:97
 #, python-format
 msgid ""
 "Please install executable on your system (sudo apt-get install wkhtmltopdf) "
@@ -167,7 +168,7 @@ msgid "Type"
 msgstr "Tawsit"
 
 #. module: report_webkit
-#: code:addons/report_webkit/wizard/report_webkit_actions.py:132
+#: code:addons/report_webkit/wizard/report_webkit_actions.py:133
 #, python-format
 msgid "Client Actions Connections"
 msgstr "Tuqqniwin n Tigawin n Umsaɣ"
@@ -198,14 +199,13 @@ msgid "The header linked to the report"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:147
+#: code:addons/report_webkit/webkit_report.py:96
 #, python-format
 msgid "Wkhtmltopdf library path is not set"
 msgstr ""
 
 #. module: report_webkit
-#: view:ir.actions.report.xml:report_webkit.act_report_xml_view
-#: model:ir.ui.menu,name:report_webkit.menu_webkit
+#: view:ir.actions.report.xml:0 view:res.company:0
 msgid "Webkit"
 msgstr ""
 
@@ -245,7 +245,7 @@ msgid "Top Margin (mm)"
 msgstr ""
 
 #. module: report_webkit
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: view:report.webkit.actions:0
 msgid "_Ok"
 msgstr "_Ok"
 
@@ -277,7 +277,7 @@ msgid "Image"
 msgstr "Tugna"
 
 #. module: report_webkit
-#: view:ir.header_img:report_webkit.header_img
+#: view:ir.header_img:0
 msgid "Header Image"
 msgstr ""
 
@@ -304,7 +304,7 @@ msgid "Portrait"
 msgstr ""
 
 #. module: report_webkit
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: view:report.webkit.actions:0
 msgid "or"
 msgstr "neɣ"
 
@@ -319,7 +319,7 @@ msgid "B8  22  62 x 88 mm"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:219
+#: code:addons/report_webkit/webkit_report.py:168
 #, python-format
 msgid "The command 'wkhtmltopdf' failed with error code = %s. Message: %s"
 msgstr ""
@@ -365,7 +365,7 @@ msgid "Right Margin (mm)"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:285
+#: code:addons/report_webkit/webkit_report.py:226
 #, python-format
 msgid "Webkit report template not found!"
 msgstr ""
@@ -396,7 +396,7 @@ msgid ":B10    16  31 x 44 mm"
 msgstr ""
 
 #. module: report_webkit
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: view:report.webkit.actions:0
 msgid "Cancel"
 msgstr "Sefsax"
 
@@ -417,7 +417,7 @@ msgid "Webkit Logos"
 msgstr "ilogoten Webkit"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:214
+#: code:addons/report_webkit/webkit_report.py:163
 #, python-format
 msgid "No diagnosis message was provided"
 msgstr ""
@@ -453,8 +453,7 @@ msgid "B0  14  1000 x 1414 mm"
 msgstr ""
 
 #. module: report_webkit
-#: field:ir.header_img,name:0
-#: field:ir.header_webkit,name:0
+#: field:ir.header_img,name:0 field:ir.header_webkit,name:0
 msgid "Name"
 msgstr "Isem"
 
@@ -470,7 +469,7 @@ msgstr ""
 
 #. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.wizard_ofdo_report_actions
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: view:report.webkit.actions:0
 msgid "Add Print Buttons"
 msgstr ""
 
@@ -485,7 +484,7 @@ msgid "Left Margin (mm)"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:285
+#: code:addons/report_webkit/webkit_report.py:226
 #, python-format
 msgid "Error!"
 msgstr "Tuccḍa!"
@@ -506,12 +505,12 @@ msgid "ir.actions.report.xml"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:216
+#: code:addons/report_webkit/webkit_report.py:165
 #, python-format
 msgid "The following diagnosis message was provided:\n"
 msgstr ""
 
 #. module: report_webkit
-#: view:ir.header_webkit:report_webkit.header_webkit
+#: view:ir.header_webkit:0
 msgid "HTML Header"
 msgstr ""

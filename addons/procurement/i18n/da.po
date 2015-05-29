@@ -1,21 +1,22 @@
-# Danish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-05 22:24+0000\n"
-"Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
-"Language-Team: Danish <da@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/odoo-7/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:11+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -38,8 +39,8 @@ msgstr ""
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
 msgid ""
-"Triggers an automatic procurement for all products that have a virtual stock "
-"under 0. You should probably not use this option, we suggest using a MTO "
+"Triggers an automatic procurement for all products that have a virtual stock"
+" under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
 msgstr ""
 
@@ -57,24 +58,21 @@ msgstr ""
 #: view:make.procurement:0
 msgid ""
 "Use this assistant to generate a procurement request for this\n"
-"                        product. According to the product configuration, "
-"this may\n"
-"                        trigger a draft purchase order, a manufacturing "
-"order or\n"
+"                        product. According to the product configuration, this may\n"
+"                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
 msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "External note..."
-msgstr ""
+msgstr "Ekstern note"
 
 #. module: procurement
 #: view:product.product:0
 msgid ""
 "If there are not enough quantities available, the delivery order\n"
-"                           will wait for new products. To fulfill the "
-"inventory, you should\n"
+"                           will wait for new products. To fulfill the inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
 
@@ -82,7 +80,7 @@ msgstr ""
 #: field:procurement.order,procure_method:0
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Anskaffelses måde"
 
 #. module: procurement
 #: selection:product.template,supply_method:0
@@ -92,17 +90,17 @@ msgstr ""
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
-msgstr ""
+msgstr "Ydelse"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
-msgstr ""
+msgstr "Beregn kun minimums lager"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Rules"
-msgstr ""
+msgstr "Regler"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -124,12 +122,7 @@ msgstr "Årsag"
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"              You can define your minimum stock rules, so that OpenERP will "
-"automatically create draft manufacturing orders or purchase quotations "
-"according to the stock level.Once the virtual stock of a product (= stock on "
-"hand minus all confirmed orders and reservations) is below the minimum "
-"quantity, OpenERP will generate a procurement request to increase the stock "
-"up to the maximum quantity.\n"
+"              You can define your minimum stock rules, so that OpenERP will automatically create draft manufacturing orders or purchase quotations according to the stock level.Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, OpenERP will generate a procurement request to increase the stock up to the maximum quantity.\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -147,7 +140,7 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Minimum antal"
 
 #. module: procurement
 #: help:mrp.property,composition:0
@@ -162,22 +155,22 @@ msgstr "Seneste indkøb"
 #. module: procurement
 #: field:procurement.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Beskeder"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Cancel Procurement"
-msgstr ""
+msgstr "Annuller indkøb"
 
 #. module: procurement
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Varer"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulleret"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -187,7 +180,7 @@ msgstr "Permanente varemangler"
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Hvis afmærket, kræver nye beskeder din attention"
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -208,14 +201,14 @@ msgstr ""
 #: code:addons/procurement/procurement.py:154
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Ulovlig handling!"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Indeholder chat sammendraget"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -231,16 +224,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
 msgid ""
 "<p>\n"
-"                Procurement Orders represent the need for a certain quantity "
-"of products, at a given time, in a given location. Sales Orders are one "
-"typical source of Procurement Orders (but these are distinct documents). "
-"Depending on the procurement parameters and the product configuration, the "
-"procurement engine will attempt to satisfy the need by reserving products "
-"from stock, ordering products from a supplier, or passing a manufacturing "
-"order, etc. A Procurement Exception occurs when the system cannot find a way "
-"to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message).\n"
+"                Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -256,8 +240,7 @@ msgid "Retry"
 msgstr "Forsøg igen"
 
 #. module: procurement
-#: view:procurement.order.compute:0
-#: view:procurement.orderpoint.compute:0
+#: view:procurement.order.compute:0 view:procurement.orderpoint.compute:0
 msgid "Parameters"
 msgstr "Parametre"
 
@@ -269,7 +252,7 @@ msgstr "Bekræft"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Multipelt antal"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -281,12 +264,12 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "Genanskaffelsesordrer til behandling"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "Minimum lager regel"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:388
@@ -312,11 +295,10 @@ msgstr "Venter"
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Followers"
 
 #. module: procurement
-#: field:procurement.order,location_id:0
-#: view:stock.warehouse.orderpoint:0
+#: field:procurement.order,location_id:0 view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
 msgstr "Placering"
@@ -327,8 +309,7 @@ msgid "Picking List"
 msgstr "Plukkeliste"
 
 #. module: procurement
-#: field:make.procurement,warehouse_id:0
-#: view:stock.warehouse.orderpoint:0
+#: field:make.procurement,warehouse_id:0 view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
 msgstr "Varehus"
@@ -351,7 +332,7 @@ msgstr ""
 #. module: procurement
 #: view:make.procurement:0
 msgid "Ask New Products"
-msgstr ""
+msgstr "Bed om nye varer"
 
 #. module: procurement
 #: field:make.procurement,date_planned:0
@@ -364,8 +345,7 @@ msgid "Group By"
 msgstr "Gruppér efter"
 
 #. module: procurement
-#: field:make.procurement,qty:0
-#: field:procurement.order,product_qty:0
+#: field:make.procurement,qty:0 field:procurement.order,product_qty:0
 msgid "Quantity"
 msgstr "Mængde"
 
@@ -376,8 +356,7 @@ msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
 
 #. module: procurement
-#: field:make.procurement,uom_id:0
-#: view:procurement.order:0
+#: field:make.procurement,uom_id:0 view:procurement.order:0
 msgid "Unit of Measure"
 msgstr "Måleenhed"
 
@@ -385,7 +364,7 @@ msgstr "Måleenhed"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Producer til lager"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -394,15 +373,12 @@ msgid ""
 "                Click to create a procurement order. \n"
 "              </p><p>\n"
 "                A procurement order is used to record a need for a specific\n"
-"                product at a specific location.  Procurement orders are "
-"usually\n"
-"                created automatically from sales orders, pull logistic rules "
-"or\n"
+"                product at a specific location.  Procurement orders are usually\n"
+"                created automatically from sales orders, pull logistic rules or\n"
 "                minimum stock rules.\n"
 "              </p><p>\n"
 "                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
+"                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
@@ -418,7 +394,7 @@ msgstr ""
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr ""
+msgstr "Automatiske genanskaffelser"
 
 #. module: procurement
 #: view:product.product:0
@@ -463,17 +439,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:procurement.act_make_procurement
 #: view:make.procurement:0
 msgid "Procurement Request"
-msgstr ""
+msgstr "Genanskaffelses anmodning"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
-msgstr ""
+msgstr "Beregn beholdning"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "e.g. SO005"
-msgstr ""
+msgstr "Eksempelvis S005"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -483,7 +459,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ulæste beskeder"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -494,14 +470,11 @@ msgstr "plus"
 #: help:procurement.order,state:0
 msgid ""
 "When a procurement is created the status is set to 'Draft'.\n"
-" If the procurement is confirmed, the status is set to 'Confirmed'.          "
-"  \n"
+" If the procurement is confirmed, the status is set to 'Confirmed'.            \n"
 "After confirming the status is set to 'Running'.\n"
-" If any exception arises in the order then the status is set to "
-"'Exception'.\n"
+" If any exception arises in the order then the status is set to 'Exception'.\n"
 " Once the exception is removed the status becomes 'Ready'.\n"
-" It is in 'Waiting'. status when the procurement is waiting for another one "
-"to finish."
+" It is in 'Waiting'. status when the procurement is waiting for another one to finish."
 msgstr ""
 
 #. module: procurement
@@ -525,7 +498,7 @@ msgstr ""
 #: field:procurement.order,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Vare enhed"
 
 #. module: procurement
 #: constraint:stock.warehouse.orderpoint:0
@@ -554,15 +527,15 @@ msgstr "Notat"
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_min_qty:0
 msgid ""
-"When the virtual stock goes below the Min Quantity specified for this field, "
-"OpenERP generates a procurement to bring the forecasted quantity to the Max "
-"Quantity."
+"When the virtual stock goes below the Min Quantity specified for this field,"
+" OpenERP generates a procurement to bring the forecasted quantity to the Max"
+" Quantity."
 msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Kladde"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -577,15 +550,14 @@ msgid "This wizard will schedule procurements."
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-#: field:procurement.order,state:0
+#: view:procurement.order:0 field:procurement.order,state:0
 msgid "Status"
 msgstr "Status"
 
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr ""
+msgstr "Køb"
 
 #. module: procurement
 #: view:product.product:0
@@ -600,20 +572,19 @@ msgstr "Normal"
 #. module: procurement
 #: help:product.template,supply_method:0
 msgid ""
-"Manufacture: When procuring the product, a manufacturing order or a task "
-"will be generated, depending on the product type. \n"
+"Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "Maksimum antal"
 
 #. module: procurement
 #: field:procurement.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Er en \"follower\""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:385
@@ -629,14 +600,14 @@ msgstr "Aktiv"
 #. module: procurement
 #: model:process.node,name:procurement.process_node_procureproducts0
 msgid "Procure Products"
-msgstr ""
+msgstr "Disponér varer"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:330
 #, python-format
 msgid ""
-"Please check the quantity in procurement order(s) for the product \"%s\", it "
-"should not be 0 or less!"
+"Please check the quantity in procurement order(s) for the product \"%s\", it"
+" should not be 0 or less!"
 msgstr ""
 
 #. module: procurement
@@ -647,7 +618,7 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Undtagelse"
 
 #. module: procurement
 #: view:product.product:0
@@ -670,14 +641,13 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr ""
+msgstr "Multipelt antal"
 
 #. module: procurement
 #: view:product.product:0
 msgid ""
 "When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
+"                           to deliver the customer, as you set the procurement method as\n"
 "                           'Make to Stock'."
 msgstr ""
 
@@ -694,12 +664,12 @@ msgstr "Virksomheder"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Extra Information"
-msgstr ""
+msgstr "Ekstra information"
 
 #. module: procurement
 #: field:procurement.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sammendrag"
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -709,7 +679,7 @@ msgstr ""
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
-msgstr ""
+msgstr "Bestil til max"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
@@ -719,13 +689,12 @@ msgstr ""
 #. module: procurement
 #: view:res.company:0
 msgid "Logistics"
-msgstr ""
+msgstr "Logistik"
 
 #. module: procurement
 #: help:product.template,procure_method:0
 msgid ""
-"Make to Stock: When needed, the product is taken from the stock or we wait "
-"for replenishment. \n"
+"Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
 
@@ -736,10 +705,9 @@ msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property_group
-#: field:mrp.property,group_id:0
-#: field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr ""
+msgstr "Egenskabs gruppe"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -754,18 +722,16 @@ msgstr "Indkøb"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Run Procurement"
-msgstr ""
+msgstr "Igangsæt indkøb"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "Udført"
 
 #. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
+#: view:make.procurement:0 view:procurement.order.compute:0
+#: view:procurement.order.compute.all:0 view:procurement.orderpoint.compute:0
 msgid "Cancel"
 msgstr "Annullér"
 
@@ -773,7 +739,7 @@ msgstr "Annullér"
 #: code:addons/procurement/procurement.py:329
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "utilstrækkelige data!"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -783,12 +749,12 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Kilde dokument"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Not urgent"
-msgstr ""
+msgstr "Haster ikke"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action5
@@ -810,17 +776,17 @@ msgstr ""
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr ""
+msgstr "Beregn alle planlægning"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Late"
-msgstr ""
+msgstr "Sen/forsinket"
 
 #. module: procurement
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr ""
+msgstr "Disponerings mangel"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.product_open_orderpoint
@@ -831,7 +797,7 @@ msgstr ""
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "Minimum lager regler"
 
 #. module: procurement
 #: field:procurement.order,close_move:0
@@ -841,12 +807,11 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Planlagt dato"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_product
-#: field:make.procurement,product_id:0
-#: view:procurement.order:0
+#: field:make.procurement,product_id:0 view:procurement.order:0
 #: field:procurement.order,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
@@ -858,8 +823,7 @@ msgid "Temporary"
 msgstr "Midlertidig"
 
 #. module: procurement
-#: field:mrp.property,description:0
-#: field:mrp.property.group,description:0
+#: field:mrp.property,description:0 field:mrp.property.group,description:0
 #: field:procurement.order,name:0
 msgid "Description"
 msgstr "Beskrivelse:"
@@ -879,7 +843,7 @@ msgstr "Kører"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Producér til ordre"
 
 #. module: procurement
 #: field:product.template,supply_method:0
@@ -889,12 +853,12 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,move_id:0
 msgid "Reservation"
-msgstr ""
+msgstr "Reservation"
 
 #. module: procurement
 #: model:process.node,note:procurement.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
-msgstr ""
+msgstr "Disponeringsmetode afhænger af varetypen."
 
 #. module: procurement
 #: view:product.product:0
@@ -914,8 +878,7 @@ msgid "Temporary Procurement Exceptions"
 msgstr "Midlertidige vare mangler"
 
 #. module: procurement
-#: field:mrp.property,name:0
-#: field:stock.warehouse.orderpoint,name:0
+#: field:mrp.property,name:0 field:stock.warehouse.orderpoint,name:0
 msgid "Name"
 msgstr "Navn"
 
@@ -942,12 +905,12 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Vare salgsenhed"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Produktskabelon"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
@@ -968,7 +931,7 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Very Urgent"
-msgstr ""
+msgstr "Haster meget"
 
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
@@ -978,12 +941,12 @@ msgstr ""
 #. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Besked- og kommunikations historik"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement started late"
-msgstr ""
+msgstr "Indkøb startede sent"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -991,12 +954,10 @@ msgid "min"
 msgstr "min."
 
 #. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
+#: view:make.procurement:0 view:procurement.order.compute:0
+#: view:procurement.order.compute.all:0 view:procurement.orderpoint.compute:0
 msgid "or"
-msgstr ""
+msgstr "eller"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:126

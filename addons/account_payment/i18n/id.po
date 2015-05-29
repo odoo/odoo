@@ -1,21 +1,22 @@
-# Indonesian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Indonesian <id@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Indonesian (http://www.transifex.com/projects/p/odoo-7/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:38+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,8 +24,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
@@ -46,8 +46,7 @@ msgid "Select the Payment Mode to be applied."
 msgstr "Pilih mode pembayaran untuk di aplikasikan"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: view:payment.order:0
+#: view:payment.mode:0 view:payment.order:0
 msgid "Group By..."
 msgstr "Dikelompokan berdasarkan ..."
 
@@ -57,15 +56,12 @@ msgid "Payment lines"
 msgstr "Baris pembayaran"
 
 #. module: account_payment
-#: view:payment.line:0
-#: field:payment.line,info_owner:0
-#: view:payment.order:0
+#: view:payment.line:0 field:payment.line,info_owner:0 view:payment.order:0
 msgid "Owner Account"
 msgstr "Pemilik akun"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Perusahaan"
@@ -81,8 +77,7 @@ msgid "Free"
 msgstr "Bebas"
 
 #. module: account_payment
-#: view:payment.order.create:0
-#: field:payment.order.create,entries:0
+#: view:payment.order.create:0 field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Entri"
 
@@ -92,8 +87,7 @@ msgid "Used Account"
 msgstr "Akun yang di gunakan"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Jatuh Tempo"
 
@@ -121,11 +115,10 @@ msgstr ""
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Ada Kesalahan !"
 
 #. module: account_payment
-#: report:payment.order:0
-#: view:payment.order:0
+#: report:payment.order:0 view:payment.order:0
 msgid "Amount"
 msgstr "Jumlah"
 
@@ -145,8 +138,7 @@ msgid "New Payment Order"
 msgstr "Order Pembayaran Baru"
 
 #. module: account_payment
-#: report:payment.order:0
-#: field:payment.order,reference:0
+#: report:payment.order:0 field:payment.order,reference:0
 msgid "Reference"
 msgstr "Referensi"
 
@@ -168,8 +160,7 @@ msgstr "Langsung"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
+#: model:ir.model,name:account_payment.model_payment_line view:payment.line:0
 #: view:payment.order:0
 msgid "Payment Line"
 msgstr "Baris Pembayaran"
@@ -188,8 +179,7 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Confirmed"
 msgstr "Dikonfirmasi"
 
@@ -214,8 +204,7 @@ msgid "Import Payment Lines"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Transaction Information"
 msgstr "Informasi Transaksi"
 
@@ -223,9 +212,7 @@ msgstr "Informasi Transaksi"
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
 #: model:ir.model,name:account_payment.model_payment_mode
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0
-#: view:payment.order:0
-#: field:payment.order,mode:0
+#: view:payment.mode:0 view:payment.order:0 field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Mode Pembayaran"
 
@@ -250,7 +237,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Tanggal Pembuatan"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -263,8 +250,7 @@ msgid "Fixed date"
 msgstr "Tanggal tetap"
 
 #. module: account_payment
-#: field:payment.line,info_partner:0
-#: view:payment.order:0
+#: field:payment.line,info_partner:0 view:payment.order:0
 msgid "Destination Account"
 msgstr "Akun Tujuan"
 
@@ -304,11 +290,10 @@ msgid "Communication Type"
 msgstr "Jenis Komunikasi"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
-msgstr ""
+msgstr "Rekanan"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
@@ -345,9 +330,7 @@ msgstr "Alamat Rekanan Utama"
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr ""
-"Jika tidak ada tanggal pembayaran yang ditentukan, bank akan menangani "
-"bagian ini dengan membayar secara langsung"
+msgstr "Jika tidak ada tanggal pembayaran yang ditentukan, bank akan menangani bagian ini dengan membayar secara langsung"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -381,16 +364,14 @@ msgid "Payment amount in the partner currency"
 msgstr "Jumlah pembayaran dalam mata uang partner"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Draft"
 msgstr "Draft"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
+#: view:payment.order:0 field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -410,9 +391,7 @@ msgstr ""
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
-"Pilih tanggal jika Anda telah memilih Tanggal Preferred yang harus "
-"diperbaiki."
+msgstr "Pilih tanggal jika Anda telah memilih Tanggal Preferred yang harus diperbaiki."
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
@@ -429,8 +408,7 @@ msgstr "Item Jurnal"
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr ""
-"Entri Line ini akan dirujuk untuk informasi pemesanan dari pelanggan."
+msgstr "Entri Line ini akan dirujuk untuk informasi pemesanan dari pelanggan."
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -440,7 +418,7 @@ msgstr "Penelusuran"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Tanggung-jawab"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -503,14 +481,12 @@ msgid "Payment order"
 msgstr "Order Pembayaran"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "General Information"
 msgstr "Informasi Umum"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
+#: view:payment.order:0 selection:payment.order,state:0
 msgid "Done"
 msgstr "selesai"
 
@@ -526,8 +502,7 @@ msgstr "Komunikasi"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "Cancel"
 msgstr "Batal"
 
@@ -537,8 +512,7 @@ msgid "Destination Bank Account"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Information"
 msgstr "Informasi"
 
@@ -572,7 +546,7 @@ msgstr "komunikasi 2"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Tanggal terjadwal"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -580,8 +554,7 @@ msgid "Are you sure you want to make payment?"
 msgstr "Apakah Anda yakin ingin melakukan pembayaran?"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
+#: view:payment.mode:0 field:payment.mode,journal:0
 msgid "Journal"
 msgstr "Jurnal"
 
@@ -596,14 +569,12 @@ msgid "Confirm Payments"
 msgstr "Konfirmasi Pembayaran"
 
 #. module: account_payment
-#: field:payment.line,company_currency:0
-#: report:payment.order:0
+#: field:payment.line,company_currency:0 report:payment.order:0
 msgid "Company Currency"
 msgstr "Mata uang perusahaan"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment
-#: view:payment.line:0
+#: model:ir.ui.menu,name:account_payment.menu_main_payment view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
 msgstr "Pembayaran"
@@ -623,10 +594,7 @@ msgstr "Baris Entri"
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"Digunakan sebagai pesan antara pelanggan pemesanan dan perusahaan saat ini. "
-"Melukiskan \"Apa yang ingin Anda katakan kepada si penerima tentang pesanan "
-"ini?\""
+msgstr "Digunakan sebagai pesan antara pelanggan pemesanan dan perusahaan saat ini. Melukiskan \"Apa yang ingin Anda katakan kepada si penerima tentang pesanan ini?\""
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -639,8 +607,7 @@ msgid "Bank Account"
 msgstr "Akun Bank"
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
+#: view:payment.line:0 view:payment.order:0
 msgid "Entry Information"
 msgstr "Informasi Entri"
 
@@ -668,7 +635,7 @@ msgstr "Total"
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr ""
+msgstr "Baris Masukan"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -688,19 +655,11 @@ msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
+#: view:account.payment.populate.statement:0 view:payment.order.create:0
 msgid "or"
-msgstr ""
+msgstr "atau"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr ""
-
-#~ msgid ""
-#~ "The amount which should be paid at the current date\n"
-#~ "minus the amount which is already in payment order"
-#~ msgstr ""
-#~ "Jumlah yang harus dibayar pada hari ini\n"
-#~ "minus jumlah yang sudah dalam order pembayaran"

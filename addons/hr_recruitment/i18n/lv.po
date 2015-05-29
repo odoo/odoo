@@ -1,21 +1,22 @@
-# Latvian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-10-24 18:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Latvian <lv@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Latvian (http://www.transifex.com/projects/p/odoo-7/language/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-25 05:58+0000\n"
-"X-Generator: Launchpad (build 17203)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -25,13 +26,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
-#: field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "Atlases"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Application Summary"
 msgstr "Pieteikuma kopsavilkums"
 
@@ -41,7 +41,7 @@ msgid "Start Interview"
 msgstr "Sākt interviju"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Mobile:"
 msgstr "Mobīlais:"
 
@@ -63,14 +63,13 @@ msgid "Group By..."
 msgstr "Grupēt pēc..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.applicant:0
 msgid "Filter and view on next actions and date"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-#: field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0 field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "Nodaļa"
 
@@ -85,12 +84,12 @@ msgid "Expected Salary Extra"
 msgstr "Sagaidāmā papildus alga"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: view:hr.recruitment.report:0
 msgid "Jobs"
 msgstr "Amati"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Extra advantages..."
 msgstr ""
 
@@ -100,21 +99,18 @@ msgid "Pending Jobs"
 msgstr "Neizlemtas vakances"
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_unread:0
-#: view:hr.job:hr_recruitment.view_job_filter_recruitment
+#: view:hr.applicant:0 field:hr.applicant,message_unread:0
 msgid "Unread Messages"
 msgstr "Neizlasīti ziņojumi"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "Uzņēmums"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.source:hr_recruitment.hr_recruitment_source_form
-#: view:hr.recruitment.source:hr_recruitment.hr_recruitment_source_tree
+#: view:hr.recruitment.source:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 msgid "Sources of Applicants"
@@ -127,8 +123,7 @@ msgid "You must define Applied Job for this applicant."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.applicant:0
 msgid "Job"
 msgstr "Amats"
 
@@ -144,28 +139,18 @@ msgid ""
 "                Click to add a new job applicant.\n"
 "              </p><p>\n"
 "                OpenERP helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, "
-"etc.\n"
+"                process and follow up all operations: meetings, interviews, etc.\n"
 "              </p><p>\n"
-"                If you setup the email gateway, applicants and their "
-"attached\n"
+"                If you setup the email gateway, applicants and their attached\n"
 "                CV are created automatically when an email is sent to\n"
-"                jobs@yourcompany.com. If you install the document "
-"management\n"
-"                modules, all resumes are indexed automatically, so that you "
-"can\n"
+"                jobs@yourcompany.com. If you install the document management\n"
+"                modules, all resumes are indexed automatically, so that you can\n"
 "                easily search through their content.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-#: field:hr.job,application_count:0
-#: field:hr.job,application_ids:0
-#: field:hr.job,document_ids:0
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applications"
@@ -187,13 +172,12 @@ msgid "Create applicants from an incoming email account"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Diena"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
 msgid "Create Contact"
 msgstr "Izveidot kontaktu"
@@ -219,7 +203,7 @@ msgid "Messages"
 msgstr "Ziņojumi"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.applicant:0
 msgid "Next Actions"
 msgstr "Nākamās darbības"
 
@@ -236,8 +220,7 @@ msgid "Doctoral Degree"
 msgstr "Doktora grāds"
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0
-#: field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "Pieteicās uz amatu"
 
@@ -255,7 +238,6 @@ msgstr "Ja atzīmēts, tad jauni ziņojumi pieprasīs jūsu uzmanību."
 
 #. module: hr_recruitment
 #: field:hr.applicant,color:0
-#: field:hr.job,color:0
 msgid "Color Index"
 msgstr "Krāsas Indekss"
 
@@ -300,7 +282,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:507
+#: code:addons/hr_recruitment/hr_recruitment.py:427
 #, python-format
 msgid "Warning!"
 msgstr "Uzmanību!"
@@ -311,7 +293,7 @@ msgid "Salary Proposed"
 msgstr "Piedāvātā alga"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,partner_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Partneris"
 
@@ -321,13 +303,13 @@ msgid "Avg Proposed Salary"
 msgstr "Vid. piedāvātā alga"
 
 #. module: hr_recruitment
-#: field:hr.applicant,availability:0
+#: view:hr.applicant:0 field:hr.applicant,availability:0
 #: field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "Pieejamība"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0
+#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "Piedāvātā alga"
 
@@ -337,7 +319,7 @@ msgid "Source of Applicants"
 msgstr "Pretendentu avoti"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: view:hr.recruitment.partner.create:0
 msgid "Convert To Partner"
 msgstr "Pārveidot par partneri"
 
@@ -347,7 +329,7 @@ msgid "Recruitments Statistics"
 msgstr "Atlašu statistika"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Print interview report"
 msgstr "Izdrukāt intervijas atskaiti"
 
@@ -362,13 +344,12 @@ msgid "Job Description"
 msgstr "Amata apraksts"
 
 #. module: hr_recruitment
-#: field:hr.applicant,source_id:0
+#: view:hr.applicant:0 field:hr.applicant,source_id:0
 msgid "Source"
 msgstr "Avots"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "Gads"
 
@@ -384,7 +365,6 @@ msgstr "Monstrs"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
-#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
 msgstr "Pretendent uzņemts"
 
@@ -399,8 +379,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to add a new stage in the recruitment process.\n"
 "          </p><p>\n"
-"            Define here your stages of the recruitment process, for "
-"example:\n"
+"            Define here your stages of the recruitment process, for example:\n"
 "            qualification call, first interview, second interview, refused,\n"
 "            hired.\n"
 "          </p>\n"
@@ -436,18 +415,19 @@ msgid "August"
 msgstr "Augusts"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,create_date:0
+#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "Izveidošanas datums"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_hired_employee
+#: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
 msgstr "Veidot darbinieku"
 
 #. module: hr_recruitment
-#: field:hr.applicant,priority:0
+#: view:hr.applicant:0 field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "Atzinums"
@@ -458,17 +438,14 @@ msgid "Initial Qualification"
 msgstr "Sākotnējā kvalifikācija"
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: view:hr.applicant:0
 msgid "Print Interview"
 msgstr "Drukāt interviju"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-#: field:hr.recruitment.report,stage_id:0
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+#: view:hr.applicant:0 field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "Stāvoklis"
 
@@ -483,7 +460,7 @@ msgid "Recruitment / Applicants Stages"
 msgstr "Atlases / pretendentu stāvokļi"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0
+#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr "Sagaidāma alga"
 
@@ -498,15 +475,12 @@ msgid "Watchers Emails"
 msgstr "Sekotāju e-pasti"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:93
-#: view:hr.applicant:hr_recruitment.crm_case_tree_view_job
-#: view:hr.applicant:hr_recruitment.hr_applicant_calendar_view
-#, python-format
+#: view:hr.applicant:0
 msgid "Applicants"
 msgstr "Pretendenti"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:391
+#: code:addons/hr_recruitment/hr_recruitment.py:368
 #, python-format
 msgid "No Subject"
 msgstr "Nav temata"
@@ -527,7 +501,7 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:377
+#: code:addons/hr_recruitment/hr_recruitment.py:354
 #: field:hr.applicant,partner_id:0
 #, python-format
 msgid "Contact"
@@ -542,10 +516,10 @@ msgstr "Alga, ko sagaida pretendents, papildus priekšrocības"
 #: help:hr.applicant,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
 msgstr ""
 
 #. module: hr_recruitment
@@ -554,7 +528,7 @@ msgid "March"
 msgstr "Marts"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_tree
+#: view:hr.recruitment.stage:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
 msgid "Stages"
@@ -566,8 +540,7 @@ msgid "Draft recruitment"
 msgstr "Atlases melnraksts"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: view:hr.applicant:0
 msgid "Delete"
 msgstr "Dzēst"
 
@@ -587,7 +560,7 @@ msgid "Applicant hired"
 msgstr "Pretendents pieņemts darbā"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Jobs - Recruitment Form"
 msgstr "Vakances - atlases forma"
 
@@ -628,18 +601,17 @@ msgid "Category of applicant"
 msgstr "Pretendenta kategorija"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "e.g. Call for interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "Mēnesis"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Answer related job question"
 msgstr "Atbildes saistītas ar amata jautājumu"
 
@@ -659,14 +631,12 @@ msgid "Yes"
 msgstr "Jā"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,name:0
+#: view:hr.applicant:0 field:hr.applicant,name:0
 msgid "Subject"
 msgstr "Temats"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-#: view:hr.recruitment.partner.create:0
+#: view:hired.employee:0 view:hr.recruitment.partner.create:0
 msgid "or"
 msgstr "vai"
 
@@ -727,7 +697,7 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
+msgstr "Šīs e-pasta adreses pirms nosūtīšanas tiks pievienotas CC laukam visām šī ieraksta ienākošajām un izejošajām vēstulēm. Atdaliet adeses ar komatu."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -735,13 +705,12 @@ msgid "Degrees"
 msgstr "Grādi"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0
-#: field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "Slēgts"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+#: view:hr.recruitment.stage:0
 msgid "Stage Definition"
 msgstr "Stāvokļa definīcija"
 
@@ -756,23 +725,20 @@ msgid "Salary Proposed by the Organisation"
 msgstr "Organizācijas piedāvātā alga"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
 #: selection:hr.recruitment.stage,state:0
 msgid "Pending"
 msgstr "Neizlemts"
 
 #. module: hr_recruitment
-#: field:hr.applicant,state:0
-#: field:hr.recruitment.report,state:0
+#: field:hr.applicant,state:0 field:hr.recruitment.report,state:0
 #: field:hr.recruitment.stage,state:0
 msgid "Status"
 msgstr "Statuss"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Schedule interview with this applicant"
 msgstr "Ieplānot interviju ar šo pretendentu"
 
@@ -783,11 +749,8 @@ msgid "Applicant <b>created</b>"
 msgstr "Pretendents <b>izveidots</b>"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_form
-#: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_tree
+#: view:hr.applicant:0 field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -830,8 +793,7 @@ msgid "Active"
 msgstr "Aktīvs"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,nbr:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,nbr:0
 msgid "# of Applications"
 msgstr "Pieteikumu sk."
 
@@ -841,15 +803,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to add a new stage in the recruitment process.\n"
 "          </p><p>\n"
-"            Don't forget to specify the department if your recruitment "
-"process\n"
+"            Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position.\n"
 "          </p>\n"
 "        "
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,response_id:0
+#: field:hr.applicant,response:0
 msgid "Response"
 msgstr "Atbilde"
 
@@ -859,7 +820,7 @@ msgid "October"
 msgstr "Oktobris"
 
 #. module: hr_recruitment
-#: field:hr.config.settings,module_document:0
+#: field:hr.config.settings,module_document_ftp:0
 msgid "Allow the automatic indexation of resumes"
 msgstr "Ļaut CV automātisku indeksēšanu"
 
@@ -885,7 +846,7 @@ msgid "Review Recruitment Stages"
 msgstr "Pārskatīt atlases stāvokļus"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Contact:"
 msgstr "Kontakts:"
 
@@ -895,8 +856,7 @@ msgid "Search Jobs"
 msgstr "Meklēt amatus"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0
-#: field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "Datums"
 
@@ -911,7 +871,7 @@ msgid "Would you like to create an employee ?"
 msgstr "Vai jūs gribētu izveidot darbinieku?"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Degree:"
 msgstr "Grāds:"
 
@@ -949,38 +909,36 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "Grāda vai atlases nosaukumam jābūt unikālam!"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:379
+#: code:addons/hr_recruitment/hr_recruitment.py:356
 #, python-format
 msgid "Contact Email"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: view:hired.employee:0 view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Atcelt"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: view:hr.recruitment.partner.create:0
 msgid "Are you sure you want to create a contact based on this job request ?"
 msgstr ""
 
 #. module: hr_recruitment
 #: help:hr.config.settings,fetchmail_applicants:0
 msgid ""
-"Allow applicants to send their job application to an email address "
-"(jobs@mycompany.com),\n"
+"Allow applicants to send their job application to an email address (jobs@mycompany.com),\n"
 "                and create automatically application documents in the system."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
 #: selection:hr.recruitment.stage,state:0
 msgid "In Progress"
 msgstr "Procesā"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.applicant:0
 msgid "Subject / Applicant"
 msgstr "Tēma / pretendents"
 
@@ -990,20 +948,18 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr ""
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_stage_changed
+#: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
 msgid "Stage changed"
 msgstr "Stāvoklis mainīts"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,user_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "Atbildīgais"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_graph
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: view:hr.recruitment.report:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_all
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_report_all
 msgid "Recruitment Analysis"
@@ -1020,7 +976,7 @@ msgid "LinkedIn"
 msgstr "LinkedIn"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
 msgid "New Applicant"
 msgstr "Jauns pretendents"
 
@@ -1030,18 +986,20 @@ msgid "Stage of Recruitment"
 msgstr "Atlases stāvoklis"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_graph_view_job
+#: view:hr.applicant:0
 msgid "Cases By Stage and Estimates"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
 msgstr "Jauns/-a"
 
 #. module: hr_recruitment
-#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "Intervija"
 
@@ -1051,7 +1009,7 @@ msgid "Source Name"
 msgstr "Avota nosaukums"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Day(s)"
 msgstr "Diena(s)"
 
@@ -1061,7 +1019,7 @@ msgid "Description"
 msgstr "Apraksts"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_stage_changed
+#: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
 msgid "Stage Changed"
 msgstr "Stāvoklis mainīts"
 
@@ -1089,19 +1047,18 @@ msgstr "Slēpt skatus, ja tukši"
 #: help:hr.config.settings,module_document_ftp:0
 msgid ""
 "Manage your CV's and motivation letter related to all applicants.\n"
-"                This installs the module document_ftp. This will install the "
-"knowledge management  module in order to allow you to search using specific "
-"keywords through  the content of all documents (PDF, .DOCx...)"
+"                This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
 msgstr ""
 
 #. module: hr_recruitment
+#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
 msgstr "Atteikts"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
 #: selection:hr.recruitment.stage,state:0
 msgid "Hired"
@@ -1113,7 +1070,7 @@ msgid "Referred By"
 msgstr "Ieteica"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Departement:"
 msgstr "Nodaļa:"
 
@@ -1150,8 +1107,7 @@ msgid "Not Good"
 msgstr "Nav labi"
 
 #. module: hr_recruitment
-#: field:hr.applicant_category,name:0
-#: field:hr.recruitment.degree,name:0
+#: field:hr.applicant_category,name:0 field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "Nosaukums"
@@ -1187,7 +1143,7 @@ msgid "Alias"
 msgstr "Pseidonīms"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Feedback of interviews..."
 msgstr ""
 
@@ -1197,7 +1153,7 @@ msgid "Pending recruitment"
 msgstr "Neizlemtas atlases"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Contract"
 msgstr "Līgums"
 
@@ -1277,6 +1233,6 @@ msgid "Applications to be Processed"
 msgstr "Pieteikumi apstrādei"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Schedule Interview"
 msgstr "Ieplānot interviju"

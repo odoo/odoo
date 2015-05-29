@@ -1,24 +1,25 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * report_intrastat
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2015-03-26 08:52+0000\n"
-"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-27 05:32+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Cancelled Invoice"
 msgstr "Prekilcani račun"
 
@@ -33,12 +34,12 @@ msgid "Disc. (%)"
 msgstr "Popust (%)"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Supplier Invoice"
 msgstr "Račun dobavitelja"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Unit Price"
 msgstr "Cena enote"
 
@@ -48,8 +49,8 @@ msgid "Import"
 msgstr "Uvoz"
 
 #. module: report_intrastat
+#: report:account.invoice.intrastat:0
 #: field:report.intrastat.code,description:0
-#: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Description"
 msgstr "Opis"
 
@@ -64,7 +65,7 @@ msgid "Document"
 msgstr "Dokument"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
@@ -114,7 +115,7 @@ msgid "Tel. :"
 msgstr "Tel.:"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Base"
 msgstr "Osnova"
 
@@ -129,7 +130,7 @@ msgid "July"
 msgstr "Julij"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Quantity"
 msgstr "Količina"
 
@@ -154,7 +155,7 @@ msgid "Intrastat report"
 msgstr "Intrastat poročilo"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Invoice"
 msgstr "Račun"
 
@@ -169,7 +170,7 @@ msgid "September"
 msgstr "September"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Taxes"
 msgstr "Davki"
 
@@ -179,13 +180,12 @@ msgid "April"
 msgstr "April"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Amount"
 msgstr "Znesek"
 
 #. module: report_intrastat
-#: view:report.intrastat:report_intrastat.view_report_intrastat_search
-#: view:report.intrastat:report_intrastat.view_report_intrastat_tree
+#: view:report.intrastat:0
 msgid "Intrastat Data"
 msgstr "Intrastat podatek"
 
@@ -195,14 +195,14 @@ msgid "Value"
 msgstr "Vrednost"
 
 #. module: report_intrastat
+#: report:account.invoice.intrastat:0
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
-#: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Intrastat"
 msgstr "Intrastat"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Draft Invoice"
 msgstr "Osnutek računa"
 
@@ -218,14 +218,13 @@ msgstr "November"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:report_intrastat.view_report_intrastat_code_tree
+#: field:product.template,intrastat_id:0 field:report.intrastat,intrastat_id:0
+#: view:report.intrastat.code:0
 msgid "Intrastat code"
 msgstr "Intrastat koda"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Refund"
 msgstr "Dobropis"
 
@@ -237,11 +236,10 @@ msgstr "Izvorni dokument"
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Opomba za davčno območje:"
 
 #. module: report_intrastat
-#: field:report.intrastat,weight:0
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0 field:report.intrastat,weight:0
 msgid "Weight"
 msgstr "Masa"
 
@@ -261,7 +259,7 @@ msgid "December"
 msgstr "December"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Tax"
 msgstr "Davek"
 
@@ -296,7 +294,7 @@ msgid "Year"
 msgstr "Leto"
 
 #. module: report_intrastat
-#: view:website:report_intrastat.report_intrastatinvoice_document
+#: report:account.invoice.intrastat:0
 msgid "Supplier Refund"
 msgstr "Dobropis dobavitelja"
 
@@ -313,7 +311,6 @@ msgstr "Cena"
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
-#: view:report.intrastat.code:report_intrastat.view_report_intrastat_code_form
-#: field:report.intrastat.code,name:0
+#: view:report.intrastat.code:0 field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Intrastat koda"

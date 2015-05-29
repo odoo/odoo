@@ -1,21 +1,22 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_followup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-10-29 20:57+0000\n"
-"Last-Translator: Bosko Stojakovic <bluesoft83@gmail.com>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-7/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:58+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -31,8 +32,7 @@ msgid "The maximum follow-up level"
 msgstr "Maksimalni nivo praćenih koraka"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-#: view:res.partner:0
+#: view:account_followup.stat:0 view:res.partner:0
 msgid "Group By..."
 msgstr "Grupiraj po..."
 
@@ -68,8 +68,7 @@ msgid "Action To Do"
 msgstr "Akcija za uraditi"
 
 #. module: account_followup
-#: field:account_followup.followup,company_id:0
-#: view:account_followup.stat:0
+#: field:account_followup.followup,company_id:0 view:account_followup.stat:0
 #: field:account_followup.stat,company_id:0
 #: field:account_followup.stat.by.partner,company_id:0
 msgid "Company"
@@ -133,9 +132,7 @@ msgstr "Iznos"
 msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
-msgstr ""
-"Ovo je sljedeća akcija koja će se uraditi. Automatomatski će se postaviti "
-"kada partner dosegne nivo praćenja koji zahtjeva ručne akcije. "
+msgstr "Ovo je sljedeća akcija koja će se uraditi. Automatomatski će se postaviti kada partner dosegne nivo praćenja koji zahtjeva ručne akcije. "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -148,56 +145,30 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
+"We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
 "\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account which means that we will no longer "
-"be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting department, so that we can resolve the "
-"matter quickly.\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department, so that we can resolve the matter quickly.\n"
 "\n"
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
-"\n"
-"Poštovani %(partner_name)s,\n"
-"\n"
-"Razočarani smo time što uprkos slanju podsjetnika, vaše dugovanje se sada "
-"nalazi u ozbiljnom prekoračenju.\n"
-"\n"
-"Od velike važnosti je da se uplata odmah izvrši, u suprotnom će mo morati da "
-"razmotrimo stopiranja isporuka roba/usluga.\n"
-"Molimo, učinite potrebne korake da se plaćanje izvrši u sljedećih 8 dana.\n"
-"\n"
-"Ako postoji problem sa plaćanjem faktura kojeg nismo svjesni, ne okljevajte "
-"da kontaktirate naše računovodstvo, tako da problem možemo riješiti hitno.\n"
-"\n"
-"Detalji dugovanja su ispisana ispod.\n"
-"\n"
-"Ljep pozdrav,\n"
+msgstr "\nPoštovani %(partner_name)s,\n\nRazočarani smo time što uprkos slanju podsjetnika, vaše dugovanje se sada nalazi u ozbiljnom prekoračenju.\n\nOd velike važnosti je da se uplata odmah izvrši, u suprotnom će mo morati da razmotrimo stopiranja isporuka roba/usluga.\nMolimo, učinite potrebne korake da se plaćanje izvrši u sljedećih 8 dana.\n\nAko postoji problem sa plaćanjem faktura kojeg nismo svjesni, ne okljevajte da kontaktirate naše računovodstvo, tako da problem možemo riješiti hitno.\n\nDetalji dugovanja su ispisana ispod.\n\nLjep pozdrav,\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "\n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
+"    Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take\n"
 "appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to\n"
 "contact our accounting department.  \n"
 "\n"
 "    </p>\n"
@@ -217,39 +188,7 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"\n"
-"    <p>Poštovani ${object.name},</p>\n"
-"    <p>\n"
-"    Izuzetak je učinjen ako je greška do nas, ali čini se da sljedeći iznosi "
-"nisu plaćeni. Molimo Vas, preuzmite\n"
-"potrebne mjere da izmirite dugovanja u roku od 8 dana.\n"
-"\n"
-"Ako izvršite plaćanje nakon ove poruke, molimo da zanemarite ovu obavjest. "
-"Ne okljevajte da pozovete naše računovodstvo\n"
-"u slučaju nekog problema ili ne razjašnjenog pitanja.  \n"
-"\n"
-"    </p>\n"
-"<br/>\n"
-"Ljep pozdrav,\n"
-"<br/>\n"
-"   <br/>\n"
-"${user.name}\n"
-"\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Poštovani ${object.name},</p>\n    <p>\n    Izuzetak je učinjen ako je greška do nas, ali čini se da sljedeći iznosi nisu plaćeni. Molimo Vas, preuzmite\npotrebne mjere da izmirite dugovanja u roku od 8 dana.\n\nAko izvršite plaćanje nakon ove poruke, molimo da zanemarite ovu obavjest. Ne okljevajte da pozovete naše računovodstvo\nu slučaju nekog problema ili ne razjašnjenog pitanja.  \n\n    </p>\n<br/>\nLjep pozdrav,\n<br/>\n   <br/>\n${user.name}\n\n<br/>\n<br/>\n\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:260
@@ -284,8 +223,7 @@ msgstr "Dodjeli odgovornog"
 
 #. module: account_followup
 #: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
-#: view:res.partner:0
+#: field:account_followup.followup,followup_line:0 view:res.partner:0
 msgid "Follow-up"
 msgstr "Opomena"
 
@@ -295,8 +233,7 @@ msgid "VAT:"
 msgstr "PDV:"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-#: field:account_followup.stat,partner_id:0
+#: view:account_followup.stat:0 field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
 #: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
@@ -313,11 +250,9 @@ msgid ""
 "To remind customers of paying their invoices, you can\n"
 "                        define different actions depending on how severely\n"
 "                        overdue the customer is. These actions are bundled\n"
-"                        into follow-up levels that are triggered when the "
-"due\n"
+"                        into follow-up levels that are triggered when the due\n"
 "                        date of an invoice has passed a certain\n"
-"                        number of days. If there are other overdue invoices "
-"for the \n"
+"                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
 msgstr ""
@@ -377,22 +312,15 @@ msgstr "%(partner_name)s"
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "   <p>\n"
-"    We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account\n"
-"which means that we will no longer be able to supply your company with "
-"(goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting\n"
+"    We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account\n"
+"which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting\n"
 "department. so that we can resolve the matter quickly.\n"
 "Details of due payments is printed below.\n"
 " </p>\n"
@@ -465,10 +393,9 @@ msgstr "Praćenja plaćanja"
 #: code:addons/account_followup/report/account_followup_print.py:86
 #, python-format
 msgid ""
-"The followup plan defined for the current company does not have any followup "
-"action."
-msgstr ""
-"Plan praćenja definisan za trenutnu kompaniju nema ni jednu akciju praćenja."
+"The followup plan defined for the current company does not have any followup"
+" action."
+msgstr "Plan praćenja definisan za trenutnu kompaniju nema ni jednu akciju praćenja."
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
@@ -476,8 +403,7 @@ msgid "Due Days"
 msgstr "Dani preko valute"
 
 #. module: account_followup
-#: field:account.move.line,followup_line_id:0
-#: view:account_followup.stat:0
+#: field:account.move.line,followup_line_id:0 view:account_followup.stat:0
 msgid "Follow-up Level"
 msgstr "Stupanj opomene"
 
@@ -499,7 +425,7 @@ msgstr "Izvedi ručna praćenja"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
+msgstr "Li."
 
 #. module: account_followup
 #: field:account_followup.print,email_conf:0
@@ -585,9 +511,7 @@ msgstr "Praćenje konta"
 msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
-msgstr ""
-"Opcionalno možete da dodjelite korisnika ovom polju, koji će postati "
-"odgovoran za ovu akciju."
+msgstr "Opcionalno možete da dodjelite korisnika ovom polju, koji će postati odgovoran za ovu akciju."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -604,9 +528,7 @@ msgstr "Rezultati slanja različitih pisama i email-ova"
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
-"Vaš opis nije validan, koristite legendu na desno ili %% ako želite koristit "
-"karaktere za postotak."
+msgstr "Vaš opis nije validan, koristite legendu na desno ili %% ako želite koristit karaktere za postotak."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
@@ -634,9 +556,7 @@ msgstr "Pretraži praćenja"
 msgid ""
 "He said the problem was temporary and promised to pay 50% before 15th of "
 "May, balance before 1st of July."
-msgstr ""
-"Rekao je da je problem privremeni i obećao je platiti 50% prije 15 Maja, "
-"saldo prije prvog Jula."
+msgstr "Rekao je da je problem privremeni i obećao je platiti 50% prije 15 Maja, saldo prije prvog Jula."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -677,9 +597,7 @@ msgstr "Analiza praćenja"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
-msgstr ""
-"Akcija za izvršiti, npr.: Napravi telefonski poziv, provjeri da li je "
-"plaćeno, ..."
+msgstr "Akcija za izvršiti, npr.: Napravi telefonski poziv, provjeri da li je plaćeno, ..."
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -688,11 +606,7 @@ msgid ""
 "current date when the partner gets a follow-up level that requires a manual "
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
-msgstr ""
-"Ovo je kada je potrebno ručno praćenje. Datum će biti postavljen na trenutni "
-"datum kada partner dobije nivo praćenja koji zahtjeva ručnu akciju. Može "
-"biti praktično da se postavi ručno, npr.: da se provjeri ispunjavanje "
-"obećanja partnera"
+msgstr "Ovo je kada je potrebno ručno praćenje. Datum će biti postavljen na trenutni datum kada partner dobije nivo praćenja koji zahtjeva ručnu akciju. Može biti praktično da se postavi ručno, npr.: da se provjeri ispunjavanje obećanja partnera"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -701,8 +615,7 @@ msgstr "Šatampaj izvještaj prekoračenja plaćanja ne ovisno o stavci praćenj
 
 #. module: account_followup
 #: help:account_followup.print,date:0
-msgid ""
-"This field allow you to select a forecast date to plan your follow-ups"
+msgid "This field allow you to select a forecast date to plan your follow-ups"
 msgstr "Ovo polje omogućuje odabir budućeg datuma za planiranje opomena"
 
 #. module: account_followup
@@ -711,8 +624,7 @@ msgid "Follow-up Sending Date"
 msgstr "Datum slanja opomene"
 
 #. module: account_followup
-#: view:res.partner:0
-#: field:res.partner,payment_responsible_id:0
+#: view:res.partner:0 field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
 msgstr "Odgovoran za praćenje"
 
@@ -720,20 +632,15 @@ msgstr "Odgovoran za praćenje"
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
 "    Despite several reminders, your account is still not settled.\n"
-"Unless full payment is made in next 8 days, legal action for the recovery of "
-"the debt will be taken without\n"
+"Unless full payment is made in next 8 days, legal action for the recovery of the debt will be taken without\n"
 "further notice.\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "</p>\n"
 "<br/>\n"
 "Best Regards,\n"
@@ -771,14 +678,11 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
 "            "
@@ -816,29 +720,22 @@ msgstr "Štampani izvještaj prekoračenih plaćanja"
 #, python-format
 msgid ""
 "You became responsible to do the next action for the payment follow-up of"
-msgstr ""
-"Vi postajete odgovorni da uradite sljedeću akciju za praćenje plaćanja"
+msgstr "Vi postajete odgovorni da uradite sljedeću akciju za praćenje plaćanja"
 
 #. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
 msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
-msgstr ""
-"Kada se obraćuje, postaviti će ručnu akciju za uraditi prema tom kupcu. "
+msgstr "Kada se obraćuje, postaviti će ručnu akciju za uraditi prema tom kupcu. "
 
 #. module: account_followup
 #: view:res.partner:0
 msgid ""
 "Below is the history of the transactions of this\n"
 "                            customer. You can check \"No Follow-up\" in\n"
-"                            order to exclude it from the next follow-up "
-"actions."
-msgstr ""
-"Ispod se nalazi istorija transakcija za ovog\n"
-"                            Kupca. Možete da zakačite \"Ne prati\"\n"
-"                            da bi ste ga isključili iz sljedeće akcije "
-"praćenja."
+"                            order to exclude it from the next follow-up actions."
+msgstr "Ispod se nalazi istorija transakcija za ovog\n                            Kupca. Možete da zakačite \"Ne prati\"\n                            da bi ste ga isključili iz sljedeće akcije praćenja."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -899,13 +796,10 @@ msgstr ""
 msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
-msgstr ""
-"Maksimalan nivo praćenja bez uzimanja u obzir stavki kretanja konta sa "
-"litigacijom"
+msgstr "Maksimalan nivo praćenja bez uzimanja u obzir stavki kretanja konta sa litigacijom"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-#: field:res.partner,latest_followup_date:0
+#: view:account_followup.stat:0 field:res.partner,latest_followup_date:0
 msgid "Latest Follow-up Date"
 msgstr "Posljednji datum praćenja"
 
@@ -913,17 +807,13 @@ msgstr "Posljednji datum praćenja"
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
+"    Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take\n"
 "appropriate measures in order to carry out this payment in the next 8 days.\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to\n"
 "contact our accounting department.\n"
 "    </p>\n"
 "<br/>\n"
@@ -942,8 +832,7 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
-#: field:account.move.line,result:0
-#: view:account_followup.stat:0
+#: field:account.move.line,result:0 view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
 msgid "Balance"
@@ -970,13 +859,9 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"Exception made if there was a mistake of ours, it seems that the following "
-"amount stays unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days.\n"
+"Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to contact our accounting department.  "
-"\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
 msgstr ""
@@ -1008,9 +893,7 @@ msgstr "Izvještaj praćenja"
 msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
-msgstr ""
-", posljendnj praćenja plaćanja\n"
-"                            je:"
+msgstr ", posljendnj praćenja plaćanja\n                            je:"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -1059,12 +942,8 @@ msgstr ": Trenutni datum"
 #: view:account_followup.print:0
 msgid ""
 "This action will send follow-up emails, print the letters and\n"
-"                        set the manual actions per customer, according to "
-"the follow-up levels defined."
-msgstr ""
-"Ova akcija će poslati emailove praćenja, štampati pisma i\n"
-"                        postaviti ručna praćenja po kupcima, u odnosu na "
-"postavljeni nivo praćenja."
+"                        set the manual actions per customer, according to the follow-up levels defined."
+msgstr "Ova akcija će poslati emailove praćenja, štampati pisma i\n                        postaviti ručna praćenja po kupcima, u odnosu na postavljeni nivo praćenja."
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
@@ -1137,14 +1016,11 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
 msgstr ""
@@ -1154,26 +1030,17 @@ msgstr ""
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
-msgstr ""
-"Ne mijenjajte tekstualne poruke, ako želite poslati e-mail u partnerskom "
-"jeziku, ili konfigurisati iz kompanije"
+msgstr "Ne mijenjajte tekstualne poruke, ako želite poslati e-mail u partnerskom jeziku, ili konfigurisati iz kompanije"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ""
 "Write here the introduction in the letter,\n"
-"                            according to the level of the follow-up. You "
-"can\n"
+"                            according to the level of the follow-up. You can\n"
 "                            use the following keywords in the text. Don't\n"
-"                            forget to translate in all languages you "
-"installed\n"
+"                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
-msgstr ""
-"Napišite ovdje uvod pisma,\n"
-"                            u odnosu na nivo praćenja. Možete koristiti\n"
-"                            sljedeće ključne riječi u tekstu. Ne zaboravite\n"
-"                            da prevedete na sve jezike koje ste instalirali\n"
-"                            koristeći ikontu desno u vrhu."
+msgstr "Napišite ovdje uvod pisma,\n                            u odnosu na nivo praćenja. Možete koristiti\n                            sljedeće ključne riječi u tekstu. Ne zaboravite\n                            da prevedete na sve jezike koje ste instalirali\n                            koristeći ikontu desno u vrhu."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1225,25 +1092,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define follow-up levels and their related actions.\n"
 "              </p><p>\n"
-"                For each step, specify the actions to be taken and delay in "
-"days. It is\n"
-"                possible to use print and e-mail templates to send specific "
-"messages to\n"
+"                For each step, specify the actions to be taken and delay in days. It is\n"
+"                possible to use print and e-mail templates to send specific messages to\n"
 "                the customer.\n"
 "              </p>\n"
 "          "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite da definišete nivoe praćenja i njihove povezane "
-"akcije.\n"
-"              </p><p>\n"
-"                Za svaki korak, specifirajte akciju koja će se dogoditi i "
-"odgodu u danima.\n"
-"                Moguće je koristiti predloge štampanja i email-a da "
-"pošaljete specifične\n"
-"                poruke kupcima.\n"
-"              </p>\n"
-"          "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite da definišete nivoe praćenja i njihove povezane akcije.\n              </p><p>\n                Za svaki korak, specifirajte akciju koja će se dogoditi i odgodu u danima.\n                Moguće je koristiti predloge štampanja i email-a da pošaljete specifične\n                poruke kupcima.\n              </p>\n          "
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
@@ -1272,9 +1126,7 @@ msgstr "Ukupno potražuje"
 msgid ""
 "The partner does not have any accounting entries to print in the overdue "
 "report for the current company."
-msgstr ""
-"Partner nema računovodstvenih zapisa za štampanje u izvještajima "
-"prekoračenja za trenutnu kompaniju."
+msgstr "Partner nema računovodstvenih zapisa za štampanje u izvještajima prekoračenja za trenutnu kompaniju."
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1302,9 +1154,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr ""
-"Broj dana poslje datuma valute fakture za čekanje prije slanja podsjetnika. "
-"Može biti negativno ako želite poslati pristojna upozorenja prije vremena."
+msgstr "Broj dana poslje datuma valute fakture za čekanje prije slanja podsjetnika. Može biti negativno ako želite poslati pristojna upozorenja prije vremena."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
@@ -1331,9 +1181,7 @@ msgstr "Računovodstvo"
 msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default email template"
-msgstr ""
-"Ako nije specifirano posljednjim nivoom, poslati će se iz zadanog prijedloga "
-"email-a"
+msgstr "Ako nije specifirano posljednjim nivoom, poslati će se iz zadanog prijedloga email-a"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:318

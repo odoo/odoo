@@ -1,48 +1,43 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_test
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-03-21 19:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:59+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
+"Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
@@ -56,52 +51,51 @@ msgstr "测试2: 打开一个会计年度"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
-msgstr ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
+msgstr "检查已收和已付科目中已被核销的条目相关的销售/采购发票"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
-msgid ""
-"Check if movement lines are balanced and have the same date and period"
-msgstr ""
+msgid "Check if movement lines are balanced and have the same date and period"
+msgstr "检查凭证行是否平衡并且有相同的时间和日期"
 
 #. module: account_test
 #: field:accounting.assert.test,name:0
 msgid "Test Name"
-msgstr ""
+msgstr "测试项"
 
 #. module: account_test
 #: report:account.test.assert.print:0
 msgid "Accouting tests on"
-msgstr ""
+msgstr "会计测试"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "测试 1: 总账平衡"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
+msgstr "检查支付/对账发票并未在'开启'状态"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr ""
+msgstr "检查已核销的科目的变动，包括属于已核销发票的应付科目和应收科目"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Tests"
-msgstr ""
+msgstr "测试"
 
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr ""
+msgstr "测试描述"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -111,7 +105,7 @@ msgstr "描述"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
 msgid "Check that there's no move for any account with « View » account type"
-msgstr ""
+msgstr "检查没有相关的« 视图 »科目类型 被更改。"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_08
@@ -134,12 +128,12 @@ msgstr "测试通过"
 #. module: account_test
 #: field:accounting.assert.test,active:0
 msgid "Active"
-msgstr ""
+msgstr "生效"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "测试6  : 发票状态"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
@@ -150,7 +144,7 @@ msgstr ""
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
+msgstr "测试 5.1 : 已核销发票的应收及应付条目"
 
 #. module: account_test
 #: field:accounting.assert.test,code_exec:0
@@ -160,51 +154,51 @@ msgstr "Python代码"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
-msgstr ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
+msgstr "银行报表检查,期末余额 = 期初余额 + 本期发生额"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 8 : Closing balance on bank statements"
-msgstr ""
+msgstr "测试 8 : 关闭银行对账单"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "测试 3: 凭证行"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "测试 5.2  : 已核销的发票和应收/应付科目"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Expression"
-msgstr ""
+msgstr "表达式"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
 msgid "Test 4: Totally reconciled mouvements"
-msgstr ""
+msgstr "测试 4: 全部的核销过程"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_04
 msgid "Check if the totally reconciled movements are balanced"
-msgstr ""
+msgstr "检查凭证行总计是否平衡"
 
 #. module: account_test
 #: field:accounting.assert.test,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "序列"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
 msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
-msgstr ""
+msgstr "检查新开启的会计年度是否与去年的平衡"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -218,24 +212,24 @@ msgid ""
 "                Click to create Accounting Test.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建会计测试.\n              </p>\n            "
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "检查是否平衡：借方合计=贷方合计"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
 msgid "Check that general accounts and partners on account moves are active"
-msgstr ""
+msgstr "检查总账和业务伙伴的变动是有效的"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
 msgid "Test 7: « View  » account type"
-msgstr ""
+msgstr "测试 7: « View  » 账户类型"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Code Help"
-msgstr ""
+msgstr "代码帮助"

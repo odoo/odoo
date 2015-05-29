@@ -1,21 +1,22 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-09-19 15:17+0000\n"
-"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 14:31+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:22+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -28,13 +29,9 @@ msgid "UoS"
 msgstr "EM prodaje"
 
 #. module: sale
-#: report:sale.order:0
-#: view:sale.order:0
-#: field:sale.order,user_id:0
-#: view:sale.order.line:0
-#: field:sale.order.line,salesman_id:0
-#: view:sale.report:0
-#: field:sale.report,user_id:0
+#: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
+#: view:sale.order.line:0 field:sale.order.line,salesman_id:0
+#: view:sale.report:0 field:sale.report,user_id:0
 msgid "Salesperson"
 msgstr "Prodajalec"
 
@@ -44,8 +41,7 @@ msgid "Pricelist for current sales order."
 msgstr "Cenik za trenutni prodajni nalog."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,day:0
+#: view:sale.report:0 field:sale.report,day:0
 msgid "Day"
 msgstr "Dan"
 
@@ -96,16 +92,12 @@ msgstr "Davek"
 #: help:sale.order,state:0
 msgid ""
 "Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs     "
-"          in the invoice validation (Invoice Exception) or in the picking "
-"list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed           "
-"    but waiting for the scheduler to run on the order date."
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
 msgstr "Status ponudbe ali prodajnega naloga."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,analytic_account_id:0
+#: view:sale.report:0 field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Analitični konto"
@@ -118,14 +110,12 @@ msgid ""
 msgstr "Povzetek (število sporočil,..)"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,product_uom_qty:0
+#: view:sale.report:0 field:sale.report,product_uom_qty:0
 msgid "# of Qty"
 msgstr "# od Kos"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
-#: view:sale.report:0
+#: model:ir.model,name:sale.model_res_partner view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "Partner"
@@ -135,10 +125,7 @@ msgstr "Partner"
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-"Omogoča upravljanje različnih cen na osnovi pravil za posamezne skupine "
-"kupcev.\n"
-"Primer: 10% za trgovce na drobno, 5 EUR za promocijo tega produkta, itd."
+msgstr "Omogoča upravljanje različnih cen na osnovi pravil za posamezne skupine kupcev.\nPrimer: 10% za trgovce na drobno, 5 EUR za promocijo tega produkta, itd."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -172,8 +159,7 @@ msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Prosim določite konto prihodkov za ta produkt: \"%s\" (id:%d)."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,price_total:0
+#: view:sale.report:0 field:sale.report,price_total:0
 msgid "Total Price"
 msgstr "Skupna cena"
 
@@ -190,17 +176,10 @@ msgstr "Označite polje za združitev računov za iste stranke"
 #. module: sale
 #: help:sale.config.settings,timesheet:0
 msgid ""
-"For modifying account analytic view to show important data to project "
-"manager of services companies.\n"
-"                You can also view the report of account analytic summary "
-"user-wise as well as month wise.\n"
+"For modifying account analytic view to show important data to project manager of services companies.\n"
+"                You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "                This installs the module account_analytic_analysis."
-msgstr ""
-"Za analitični pogled, ki prikaže pomembne podatke projektnemu vodji "
-"storitvene dejavnosti.\n"
-"                Zbirno poročilo po analitičnih kontih lahko vidite po "
-"uporabniku ali po mesecu.\n"
-"                To instalira modul account_analytic_analysis."
+msgstr "Za analitični pogled, ki prikaže pomembne podatke projektnemu vodji storitvene dejavnosti.\n                Zbirno poročilo po analitičnih kontih lahko vidite po uporabniku ali po mesecu.\n                To instalira modul account_analytic_analysis."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -208,8 +187,7 @@ msgid "Ordered Quantities"
 msgstr "Naročene količine"
 
 #. module: sale
-#: field:sale.order,name:0
-#: field:sale.order.line,order_id:0
+#: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Referenčna številka"
 
@@ -295,24 +273,13 @@ msgstr "Ni možno potrditi prodajnega naloga brez postavk"
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
 msgid ""
 "<p>\n"
-"                Here is a list of each sales order line to be invoiced. You "
-"can\n"
-"                invoice sales orders partially, by lines of sales order. You "
-"do\n"
-"                not need this list if you invoice from the delivery orders "
-"or\n"
+"                Here is a list of each sales order line to be invoiced. You can\n"
+"                invoice sales orders partially, by lines of sales order. You do\n"
+"                not need this list if you invoice from the delivery orders or\n"
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Prodajni nalogi se lahko fakturirajo delno, po pozicijah \n"
-"                prodajnega naloga. Tu je seznam pozicij posameznih \n"
-"                prodajnih nalogov, ki jih je potrebno fakturirati. Če\n"
-"                fakturirate na osnovi dobavnic ali fakturirate prodajo v \n"
-"                celoti, tega seznama ne potrebujete.  \n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Prodajni nalogi se lahko fakturirajo delno, po pozicijah \n                prodajnega naloga. Tu je seznam pozicij posameznih \n                prodajnih nalogov, ki jih je potrebno fakturirati. Če\n                fakturirate na osnovi dobavnic ali fakturirate prodajo v \n                celoti, tega seznama ne potrebujete.  \n              </p>\n            "
 
 #. module: sale
 #: view:sale.order:0
@@ -336,11 +303,8 @@ msgid "A partner to whom the particular product needs to be allotted."
 msgstr "Partner, kateremu mora biti dodeljen posamezen produkt."
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,state:0
-#: view:sale.order.line:0
-#: field:sale.order.line,state:0
-#: view:sale.report:0
+#: view:sale.order:0 field:sale.order,state:0 view:sale.order.line:0
+#: field:sale.order.line,state:0 view:sale.report:0
 msgid "Status"
 msgstr "Status"
 
@@ -373,32 +337,21 @@ msgstr "Oktober"
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sales "
-"flow:\n"
+"                OpenERP will help you efficiently handle the complete sales flow:\n"
 "                quotation, sales order, delivery, invoicing and payment.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova ponudba , ki jo lahko spremenite v prodajni nalog <p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova ponudba , ki jo lahko spremenite v prodajni nalog <p>\n            "
 
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid ""
-"All items in these order lines will be invoiced. You can also invoice a "
-"percentage of the sales order\n"
-"                    or a fixed price (for advances) directly from the sales "
-"order form if you prefer."
-msgstr ""
-"Vse vrstice tega naročila bodo fakturirane. Fakturiramo lahko tudi odstotke "
-"prodajnega naročila\n"
-"                     ali fiksno ceno (za predplačila) direktno iz prodajnih "
-"nalogov, če želimo."
+"All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
+"                    or a fixed price (for advances) directly from the sales order form if you prefer."
+msgstr "Vse vrstice tega naročila bodo fakturirane. Fakturiramo lahko tudi odstotke prodajnega naročila\n                     ali fiksno ceno (za predplačila) direktno iz prodajnih nalogov, če želimo."
 
 #. module: sale
 #: field:sale.order,message_summary:0
@@ -419,15 +372,13 @@ msgstr "%s %s avans"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_quotations view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
 msgstr "Ponudbe"
 
 #. module: sale
-#: field:sale.advance.payment.inv,qtty:0
-#: report:sale.order:0
+#: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Količina"
@@ -463,16 +414,8 @@ msgid ""
 "Use All to create the final invoice.\n"
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
-"                Use Some Order Lines to invoice a selection of the sales "
-"order lines."
-msgstr ""
-"Uporabi Vse za kreiranje končne fakture.\n"
-"                 Uporabi Odstotek za fakturiranje odstotka celotnega "
-"zneska.\n"
-"                 Uporabi Fiksna Cena za fakturiranje določenega zneska v "
-"naprej.\n"
-"                 Uporabi Nekatere vrstice naročila za fakturiranje izbranih "
-"vrstic naročila."
+"                Use Some Order Lines to invoice a selection of the sales order lines."
+msgstr "Uporabi Vse za kreiranje končne fakture.\n                 Uporabi Odstotek za fakturiranje odstotka celotnega zneska.\n                 Uporabi Fiksna Cena za fakturiranje določenega zneska v naprej.\n                 Uporabi Nekatere vrstice naročila za fakturiranje izbranih vrstic naročila."
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -484,9 +427,7 @@ msgstr "V obdelavi"
 msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
-msgstr ""
-"Prodajalec potrdi ponudbo. Status prodajnega naloga je 'V obdelavi' ali  "
-"'Ročno v obdelavi'."
+msgstr "Prodajalec potrdi ponudbo. Status prodajnega naloga je 'V obdelavi' ali  'Ročno v obdelavi'."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -499,9 +440,7 @@ msgstr "Postavke prodajnega naloga pripravljene za fakturiranje"
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
-msgstr ""
-"Če spremenimo cenik za to naročilo (ali valuto), cene obstoječih vrstic "
-"naroča ne bodo spremenjene."
+msgstr "Če spremenimo cenik za to naročilo (ali valuto), cene obstoječih vrstic naroča ne bodo spremenjene."
 
 #. module: sale
 #: report:sale.order:0
@@ -513,7 +452,7 @@ msgstr "Tel. :"
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Predračun' or 'Naročilo'} (Sklic ${object.name or 'n/a' })"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -536,8 +475,7 @@ msgstr "Pred dobavo"
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
-msgstr ""
-"Nastavitve \"Kategorija proizvoda\" nimajo definiranega konta prihodkov."
+msgstr "Nastavitve \"Kategorija proizvoda\" nimajo definiranega konta prihodkov."
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -557,8 +495,7 @@ msgid ""
 msgstr "Prodaj z istim partnerjem in različnimi valutami ne morete združiti."
 
 #. module: sale
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
+#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "or"
 msgstr "ali"
@@ -570,8 +507,7 @@ msgid "Quotation sent"
 msgstr "Ponudba poslana"
 
 #. module: sale
-#: field:sale.order,invoice_exists:0
-#: field:sale.order.line,invoiced:0
+#: field:sale.order,invoice_exists:0 field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Fakturirano"
 
@@ -647,8 +583,7 @@ msgid "Quotation / Order"
 msgstr "Povpraševanje / Naročilo"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,nbr:0
+#: view:sale.report:0 field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# pozicij"
 
@@ -678,8 +613,7 @@ msgid "Order N°"
 msgstr "Naročilo št."
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,order_line:0
+#: view:sale.order:0 field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Pozicije naročila"
 
@@ -691,14 +625,10 @@ msgstr "Na prodaji uporabi več analitičnih kontov"
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
 msgid ""
-"Allows you to categorize your sales and deliveries (picking lists) between "
-"different journals,\n"
+"Allows you to categorize your sales and deliveries (picking lists) between different journals,\n"
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
-msgstr ""
-"Prodajo in odpreme lahko zbirate v različnih dnevnikih.\n"
-"                in izvajate preglede po dnevnikih.\n"
-"                To se namesti z modulom sale_journal."
+msgstr "Prodajo in odpreme lahko zbirate v različnih dnevnikih.\n                in izvajate preglede po dnevnikih.\n                To se namesti z modulom sale_journal."
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -726,8 +656,7 @@ msgid "My Sales"
 msgstr "Moja Prodaja"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.report,pricelist_id:0
+#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Cenik"
@@ -735,25 +664,12 @@ msgstr "Cenik"
 #. module: sale
 #: help:sale.order.line,state:0
 msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.    "
-"                 \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.   "
-"                  \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.        "
-"             \n"
+"* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
-"Status \"Osnutek\" pomeni, da je prodajno naročilo v statusu osnutka.        "
-"              \n"
-"Status \"Potrjeno\" je izbran, ko je prodajno naročilo potjeno.              "
-"        \n"
-"Status \"Izjema\" je nastavljen, ko je prodajno naročilo opredeljeno kot "
-"izjema.                      \n"
-"Status \"Opravljeno\" dobi prodajno naročilo, ko so vrstice odpremljene.     "
-"                 \n"
-"Status \"Preklican\" dobi prodajno naročilo, če ga uporabnik prekliče."
+msgstr "Status \"Osnutek\" pomeni, da je prodajno naročilo v statusu osnutka.                      \nStatus \"Potrjeno\" je izbran, ko je prodajno naročilo potjeno.                      \nStatus \"Izjema\" je nastavljen, ko je prodajno naročilo opredeljeno kot izjema.                      \nStatus \"Opravljeno\" dobi prodajno naročilo, ko so vrstice odpremljene.                      \nStatus \"Preklican\" dobi prodajno naročilo, če ga uporabnik prekliče."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:93
@@ -819,8 +735,7 @@ msgid ""
 msgstr "Preden izberete produkt morate izbrati cenik ali kupca."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,categ_id:0
+#: view:sale.report:0 field:sale.report,categ_id:0
 msgid "Category of Product"
 msgstr "Skupina izdelka"
 
@@ -843,38 +758,29 @@ msgstr "Davki :"
 #. module: sale
 #: code:addons/sale/sale.py:279
 #, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgid "In order to delete a confirmed sales order, you must cancel it before!"
+msgstr "Potrjen prodajni nalog mora biti preklican preden ga lahko izbrišete!"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation or sales order for this "
-"customer.\n"
+"                Click to create a quotation or sales order for this customer.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sale "
-"flow:\n"
+"                OpenERP will help you efficiently handle the complete sale flow:\n"
 "                quotation, sales order, delivery, invoicing and\n"
 "                payment.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customer to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customer to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova ponudba , ki jo lahko spremenite v prodajni nalog <p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova ponudba , ki jo lahko spremenite v prodajni nalog <p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.ui.menu,name:sale.menu_sale_order
-#: view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
 msgid "Sales Orders"
 msgstr "Prodajni nalogi"
 
@@ -890,16 +796,11 @@ msgid ""
 "                Click to define a new sale shop.\n"
 "              </p><p>\n"
 "                Each quotation or sales order must be linked to a shop. The\n"
-"                shop also defines the warehouse from which the products will "
-"be\n"
+"                shop also defines the warehouse from which the products will be\n"
 "                delivered for each particular sales.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova prodajalna.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova prodajalna.\n              </p>\n            "
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -922,8 +823,7 @@ msgid "Exception"
 msgstr "Napaka"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop
-#: view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
 msgid "Sales Shop"
 msgstr "Prodajalna"
 
@@ -931,22 +831,16 @@ msgstr "Prodajalna"
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
-"                You may have to create it and set it as a default value on "
-"this field."
-msgstr ""
+"                You may have to create it and set it as a default value on this field."
+msgstr "Izberite proizvod tipa storitev, ki se imenuje \"Vnaprejšnji proizvod\". Morda ga potrebno ustvariti in ga nastaviti za privzeto vrednost tega polja."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to sale a given product or a given customer.\n"
+"Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
-msgstr ""
-"Omogoča vpis opombe na proizvodu, ki se izpiše, ko uporabnik želi prodati ta "
-"proizvod. Isto velja za partnerja.\n"
-"Primer: Proizovod: ta proizvod je opuščen, ne nabavite več kot 5 enot.\n"
-"                 Dobavitelj: ne pozabite naročiti ekspresne dobave."
+msgstr "Omogoča vpis opombe na proizvodu, ki se izpiše, ko uporabnik želi prodati ta proizvod. Isto velja za partnerja.\nPrimer: Proizovod: ta proizvod je opuščen, ne nabavite več kot 5 enot.\n                 Dobavitelj: ne pozabite naročiti ekspresne dobave."
 
 #. module: sale
 #: code:addons/sale/sale.py:961
@@ -965,9 +859,7 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr ""
-"To je seznam računov, ki so bili ustvarjeni za ta prodajni nalog. Isti "
-"prodajni nalog se lahko večkrat fakturira (npr. po poziciji)."
+msgstr "To je seznam računov, ki so bili ustvarjeni za ta prodajni nalog. Isti prodajni nalog se lahko večkrat fakturira (npr. po poziciji)."
 
 #. module: sale
 #: report:sale.order:0
@@ -986,8 +878,7 @@ msgstr "Moje pozicije prodajnega naloga"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
+#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Prekliči"
@@ -1003,17 +894,13 @@ msgstr "Referenca naročila za podjetje mora biti enolična"
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
-"Ne najdem pozicije cenika, ki bi se ujemala s tem produktom in količino.\n"
-"Prosim spremenite produkt, količino ali cenik."
+msgstr "Ne najdem pozicije cenika, ki bi se ujemala s tem produktom in količino.\nProsim spremenite produkt, količino ali cenik."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
-#: view:sale.order.line:0
+#: view:sale.advance.payment.inv:0 view:sale.order:0
+#: field:sale.order,order_policy:0 view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Ustvari račun"
 
@@ -1025,12 +912,9 @@ msgstr "Referenca naročila"
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
 msgid ""
-"Allows you to Make Quotation, Sale Order using different Order policy and "
-"Manage Related Stock.\n"
+"Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "                    This installs the module sale_stock."
-msgstr ""
-"Povpraševanja, prevzemi , zaloge.\n"
-"                     To namesti modul sale_stock."
+msgstr "Povpraševanja, prevzemi , zaloge.\n                     To namesti modul sale_stock."
 
 #. module: sale
 #: report:sale.order:0
@@ -1048,23 +932,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a quotation, the first step of a new sale.\n"
 "              </p><p>\n"
-"                OpenERP will help you handle efficiently the complete sale "
-"flow:\n"
+"                OpenERP will help you handle efficiently the complete sale flow:\n"
 "                from the quotation to the sales order, the\n"
 "                delivery, the invoicing and the payment collection.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customers to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customers to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova ponudba.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova ponudba.\n              </p>\n            "
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1135,7 +1012,7 @@ msgstr "Datum prodajenga naloga"
 #: code:addons/sale/sale.py:871
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Kupec ni določen!"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1149,9 +1026,7 @@ msgid "Order Lines to Invoice"
 msgstr "Ne fakturirane postavke naročila"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.report:0
+#: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
 msgid "Group By..."
 msgstr "Združi po ..."
 
@@ -1161,14 +1036,12 @@ msgid "Product Features"
 msgstr "Lastnosti produkta"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Čakalni seznam"
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.report,product_uom:0
+#: view:sale.order.line:0 field:sale.report,product_uom:0
 msgid "Unit of Measure"
 msgstr "Enota mere"
 
@@ -1178,8 +1051,7 @@ msgid "Procurement Method"
 msgstr "Metoda nabave"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,message_unread:0
+#: view:sale.order:0 field:sale.order,message_unread:0
 msgid "Unread Messages"
 msgstr "Neprebrana sporočila"
 
@@ -1194,8 +1066,7 @@ msgid "Draft Quotation"
 msgstr "Osnutek ponudbe"
 
 #. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Davki"
 
@@ -1207,16 +1078,11 @@ msgstr "Prodajni nalog pripravljen za fakturiranje"
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
 msgid ""
-"Allows you to define what is the default function of a specific user on a "
-"given account.\n"
-"                This is mostly used when a user encodes his timesheet. The "
-"values are retrieved and the fields are auto-filled.\n"
-"                But the possibility to change these values is still "
-"available.\n"
+"Allows you to define what is the default function of a specific user on a given account.\n"
+"                This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.\n"
+"                But the possibility to change these values is still available.\n"
 "                This installs the module analytic_user_function."
-msgstr ""
-"Omogoča definiranje funkcij za določenega uporabnika na \n"
-"                določenem analitičnem kontu (modul: analytic_user_function)"
+msgstr "Omogoča definiranje funkcij za določenega uporabnika na \n                določenem analitičnem kontu (modul: analytic_user_function)"
 
 #. module: sale
 #: help:sale.order,create_date:0
@@ -1229,14 +1095,12 @@ msgid "Terms and conditions..."
 msgstr "Pravila in pogoji..."
 
 #. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
 msgstr "Ustvari račune"
 
 #. module: sale
-#: code:addons/sale/sale.py:279
-#: code:addons/sale/sale.py:826
+#: code:addons/sale/sale.py:279 code:addons/sale/sale.py:826
 #: code:addons/sale/sale.py:989
 #, python-format
 msgid "Invalid Action!"
@@ -1268,9 +1132,7 @@ msgid ""
 "The sales order will automatically create the invoice proposition (draft "
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
-msgstr ""
-"Prodajni nalog bo samodejno ustvaril osnutek računa.Določiti morate ali "
-"želite fakturirati na osnovi naročenih "
+msgstr "Prodajni nalog bo samodejno ustvaril osnutek računa.Določiti morate ali želite fakturirati na osnovi naročenih "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1284,8 +1146,7 @@ msgid "Allows you to specify an analytic account on sales orders."
 msgstr "Omogoča analitične konte na prodajnih nalogih."
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "To Invoice"
 msgstr "Za fakturiranje"
 
@@ -1304,9 +1165,7 @@ msgstr "Julij"
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr ""
-"Po izbiri \"Prikaži vrstice za fakturiranje\", izberi vrstice za fakturo in "
-"kreiraj fakturo s pomočjo menija \"Več\"."
+msgstr "Po izbiri \"Prikaži vrstice za fakturiranje\", izberi vrstice za fakturo in kreiraj fakturo s pomočjo menija \"Več\"."
 
 #. module: sale
 #: view:sale.order:0
@@ -1314,8 +1173,7 @@ msgid "Cancel Quotation"
 msgstr "Preklic ponudbe"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Shipping Exception"
 msgstr "Napake pri odpremi"
 
@@ -1330,8 +1188,7 @@ msgid "Contracts Management"
 msgstr "Upravljanje pogodb"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,month:0
+#: view:sale.report:0 field:sale.report,month:0
 msgid "Month"
 msgstr "Mesec"
 
@@ -1346,8 +1203,7 @@ msgid "My Sales Orders"
 msgstr "Moji prodajni nalogi"
 
 #. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create invoices"
 msgstr "Ustvari račune"
 
@@ -1368,14 +1224,12 @@ msgstr "Plačano"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
-#: model:ir.ui.menu,name:sale.menu_report_product_all
-#: view:sale.report:0
+#: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
 msgid "Sales Analysis"
 msgstr "Prodajne Analize"
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_quotation0 view:sale.order:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Ponudba"
@@ -1383,13 +1237,10 @@ msgstr "Ponudba"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
 msgid ""
-"The Salesman creates an invoice manually, if the sales order shipping policy "
-"is 'Shipping and Manual in Progress'. The invoice is created automatically "
+"The Salesman creates an invoice manually, if the sales order shipping policy"
+" is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
-msgstr ""
-"Prodajnik kreira fakturo ročno, če je način odpreme naročila \"Odprema in "
-"ročna izvedba\". Faktura se kreira avtomatično, če je način odpreme naročila "
-"\"Plačilo pred odpremo\"."
+msgstr "Prodajnik kreira fakturo ročno, če je način odpreme naročila \"Odprema in ročna izvedba\". Faktura se kreira avtomatično, če je način odpreme naročila \"Plačilo pred odpremo\"."
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -1422,9 +1273,7 @@ msgstr "Izdani računi"
 #: model:ir.actions.act_window,name:sale.open_board_sales
 #: model:ir.ui.menu,name:sale.menu_dashboard_sales
 #: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
-#: view:sale.order:0
-#: view:sale.report:0
+#: view:res.partner:0 view:sale.order:0 view:sale.report:0
 msgid "Sales"
 msgstr "Prodaja"
 
@@ -1432,35 +1281,25 @@ msgstr "Prodaja"
 #: help:sale.config.settings,module_sale_margin:0
 msgid ""
 "This adds the 'Margin' on sales order.\n"
-"                This gives the profitability by calculating the difference "
-"between the Unit Price and Cost Price.\n"
+"                This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
-msgstr ""
-"Ta modul doda \"Razliko v ceni\" na prodajno naročilo.\n"
-"                Izračuna se razlika v ceni kot razlika med (prodajno) ceno "
-"artikla in lastno (stroškovno) ceno.\n"
-"                Namestite modula sale_margin."
+msgstr "Ta modul doda \"Razliko v ceni\" na prodajno naročilo.\n                Izračuna se razlika v ceni kot razlika med (prodajno) ceno artikla in lastno (stroškovno) ceno.\n                Namestite modula sale_margin."
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
+#: report:sale.order:0 field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Cena enote"
 
 #. module: sale
-#: view:sale.order:0
-#: selection:sale.order,state:0
-#: view:sale.order.line:0
-#: selection:sale.order.line,state:0
-#: selection:sale.report,state:0
+#: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order.line,state:0 selection:sale.report,state:0
 msgid "Done"
 msgstr "Opravljeno"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:120
 #: model:ir.model,name:sale.model_account_invoice
-#: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_invoice0 view:sale.order:0
 #, python-format
 msgid "Invoice"
 msgstr "Račun"
@@ -1494,19 +1333,16 @@ msgstr "Avansni račun"
 #: model:email.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -1515,8 +1351,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
 "       % endif\n"
 "       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -1524,8 +1359,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -1534,16 +1368,11 @@ msgid ""
 "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -1555,141 +1384,41 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Pozdravljeni ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Tu je ${object.state in ('draft', 'sent') and 'quotation' or 'order "
-"confirmation'} od ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Naročilo: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Skupaj: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Datum: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Sklic: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Vaš sklic: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Pozdravljeni ${object.partner_id.name},</p>\n    \n    <p>Tu je ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} od ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Naročilo: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Skupaj: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Datum: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Sklic: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Vaš sklic: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    % if object.paypal_url:\n    <br/>\n    <p>It is also possible to directly pay with Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>If you have any question, do not hesitate to contact us.</p>\n    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.order.line,product_id:0
-#: view:sale.report:0
-#: field:sale.report,product_id:0
+#: view:sale.order.line:0 field:sale.order.line,product_id:0
+#: view:sale.report:0 field:sale.report,product_id:0
 msgid "Product"
 msgstr "Izdelek"
 
 #. module: sale
 #: help:sale.order,order_policy:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. "
-"\n"
-"On delivery order: A draft invoice can be created from the delivery order "
-"when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be "
-"paid before the products can be delivered."
-msgstr ""
-"Na zahtevo: Osnutek računa se lahko kreira na osnovi prodajnega naročila.\n"
-"Po dobavnici: Osnutek računa se lahko kreira na osnovi dobavnice, ko je "
-"blago že dobavljeno.\n"
-"Pred dobavo: Osnutek računa je kreiran na osnovi prodajnega naloga in mora "
-"biti plačan pred dobavo."
+"On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr "Na zahtevo: Osnutek računa se lahko kreira na osnovi prodajnega naročila.\nPo dobavnici: Osnutek računa se lahko kreira na osnovi dobavnice, ko je blago že dobavljeno.\nPred dobavo: Osnutek računa je kreiran na osnovi prodajnega naloga in mora biti plačan pred dobavo."
 
 #. module: sale
-#: view:account.invoice.report:0
-#: view:board.board:0
+#: view:account.invoice.report:0 view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
 msgstr "Mesečni Promet"
@@ -1746,10 +1475,7 @@ msgid ""
 "based on delivered or on ordered quantities. Thus, a sales order can "
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
-msgstr ""
-"Odvisno od kontrole fakturiranja na prodajnem nalogu lahko faktura temelji "
-"na odpremljenih ali na naročenih količinah. Tako se lahko generira faktura "
-"ali odpremnica takoj, ko je prodajni nalog potrjen s strani prodajne osebe."
+msgstr "Odvisno od kontrole fakturiranja na prodajnem nalogu lahko faktura temelji na odpremljenih ali na naročenih količinah. Tako se lahko generira faktura ali odpremnica takoj, ko je prodajni nalog potrjen s strani prodajne osebe."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1772,8 +1498,7 @@ msgid "Customer Reference"
 msgstr "Sklic stranke"
 
 #. module: sale
-#: field:sale.order,amount_total:0
-#: view:sale.order.line:0
+#: field:sale.order,amount_total:0 view:sale.order.line:0
 msgid "Total"
 msgstr "Skupaj"
 
@@ -1783,10 +1508,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr ""
-"Izberite način fakturiranja tega naloga. To\n"
-"                        bo kreiralo osnutek računa, ki se lahko spremeni\n"
-"                        pred potrditvijo."
+msgstr "Izberite način fakturiranja tega naloga. To\n                        bo kreiralo osnutek računa, ki se lahko spremeni\n                        pred potrditvijo."
 
 #. module: sale
 #: view:board.board:0
@@ -1802,25 +1524,18 @@ msgstr "Postavke prodajnega naloga v statusu 'Končano'."
 #: help:sale.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allows to define your customer contracts conditions: invoicing\n"
-"            method (fixed price, on timesheet, advance invoice), the exact "
-"pricing\n"
-"            (650€/day for a developer), the duration (one year support "
-"contract).\n"
-"            You will be able to follow the progress of the contract and "
-"invoice automatically.\n"
+"            method (fixed price, on timesheet, advance invoice), the exact pricing\n"
+"            (650€/day for a developer), the duration (one year support contract).\n"
+"            You will be able to follow the progress of the contract and invoice automatically.\n"
 "            It installs the account_analytic_analysis module."
-msgstr ""
-"Omogoča določanje pogodb s kupci: način zaračunavnja , cene ,\n"
-"            trajanje ... (modul:account_analytic_analysis)"
+msgstr "Omogoča določanje pogodb s kupci: način zaračunavnja , cene ,\n            trajanje ... (modul:account_analytic_analysis)"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
-"${(object.name or '').zamenjaj('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+msgstr "${(object.name or '').zamenjaj('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -1834,10 +1549,8 @@ msgid "First cancel all invoices attached to this sales order."
 msgstr "Najprej prekliči vse račune, vezane na ta prodajni nalog."
 
 #. module: sale
-#: field:sale.order,company_id:0
-#: field:sale.order.line,company_id:0
-#: view:sale.report:0
-#: field:sale.report,company_id:0
+#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
+#: view:sale.report:0 field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
 msgstr "Podjetje"
@@ -1853,8 +1566,7 @@ msgid "The amount to be invoiced in advance."
 msgstr "Znesek za avansni račun."
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Invoice Exception"
 msgstr "Napake računa"
 
@@ -1889,12 +1601,9 @@ msgid "Project"
 msgstr "Projekt"
 
 #. module: sale
-#: code:addons/sale/sale.py:187
-#: code:addons/sale/sale.py:365
-#: code:addons/sale/sale.py:506
-#: code:addons/sale/sale.py:604
-#: code:addons/sale/sale.py:769
-#: code:addons/sale/sale.py:786
+#: code:addons/sale/sale.py:187 code:addons/sale/sale.py:365
+#: code:addons/sale/sale.py:506 code:addons/sale/sale.py:604
+#: code:addons/sale/sale.py:769 code:addons/sale/sale.py:786
 #, python-format
 msgid "Error!"
 msgstr "Napaka!"
@@ -1907,16 +1616,12 @@ msgstr "Skupaj neto:"
 #. module: sale
 #: help:sale.order.line,type:0
 msgid ""
-"From stock: When needed, the product is taken from the stock or we wait for "
-"replenishment.\n"
+"From stock: When needed, the product is taken from the stock or we wait for replenishment.\n"
 "On order: When needed, the product is purchased or produced."
-msgstr ""
-"Iz zaloge: Produkt se vzame iz zaloge ali se počaka na dopolnitev zalog.\n"
-"Po naročilu: Produkt se naroči ali proizvede."
+msgstr "Iz zaloge: Produkt se vzame iz zaloge ali se počaka na dopolnitev zalog.\nPo naročilu: Produkt se naroči ali proizvede."
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
+#: selection:sale.order,state:0 selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
 msgstr "Preklicano"
@@ -1938,9 +1643,7 @@ msgstr "Čarovnik za sestavljanje e-pošte"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: field:sale.order,shop_id:0
-#: view:sale.report:0
-#: field:sale.report,shop_id:0
+#: field:sale.order,shop_id:0 view:sale.report:0 field:sale.report,shop_id:0
 msgid "Shop"
 msgstr "Trgovina"
 
@@ -1961,14 +1664,12 @@ msgid "Contract Features"
 msgstr "Lastnost pogodbe"
 
 #. module: sale
-#: code:addons/sale/sale.py:289
-#: code:addons/sale/sale.py:590
+#: code:addons/sale/sale.py:289 code:addons/sale/sale.py:590
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
 #: field:res.partner,sale_order_ids:0
-#: model:res.request.link,name:sale.req_link_sale_order
-#: view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
 #: selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
@@ -2012,8 +1713,7 @@ msgstr "Pozicije računa"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Sales Order Lines"
 msgstr "Pozicije prodajnega naloga"
 
@@ -2057,15 +1757,10 @@ msgstr "Zaključene postavke"
 #: code:addons/sale/wizard/sale_line_invoice.py:106
 #, python-format
 msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
+"Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
-msgstr ""
-"Račun za to pozicijo prodajnega naloga se ne more kreirati zaradi enega "
-"izmed naslednjih razlogov:\n"
-"1. Status pozicije prodajnega naloga je bodisi \"osnutek\" ali \"storno\"!\n"
-"2. Pozicija prodajnega naloga je že fakturirana!"
+msgstr "Račun za to pozicijo prodajnega naloga se ne more kreirati zaradi enega izmed naslednjih razlogov:\n1. Status pozicije prodajnega naloga je bodisi \"osnutek\" ali \"storno\"!\n2. Pozicija prodajnega naloga je že fakturirana!"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2142,20 +1837,16 @@ msgstr "Predloge e-pošte"
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
 msgid ""
-"To allow your salesman to make invoices for sales order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-"Omogoči prodajnikom, da kreirajo fakture za vrstice prodajnega naloga z "
-"uporabo menija \"Vrstice za fakturiranje\"."
+"To allow your salesman to make invoices for sales order lines using the menu"
+" 'Lines to Invoice'."
+msgstr "Omogoči prodajnikom, da kreirajo fakture za vrstice prodajnega naloga z uporabo menija \"Vrstice za fakturiranje\"."
 
 #. module: sale
 #: view:sale.order.line:0
 msgid ""
-"Sales Order Lines that are confirmed, done or in exception state and haven't "
-"yet been invoiced"
-msgstr ""
-"Vrstice prodajnega naloga, ki so potrjene, izvedena ali v statusu izjeme in "
-"še niso bile fakturirane."
+"Sales Order Lines that are confirmed, done or in exception state and haven't"
+" yet been invoiced"
+msgstr "Vrstice prodajnega naloga, ki so potrjene, izvedena ali v statusu izjeme in še niso bile fakturirane."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2193,8 +1884,7 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "Sklic na dokument, ki je ustvaril zahtevo za prodajni nalog."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,delay:0
+#: view:sale.report:0 field:sale.report,delay:0
 msgid "Commitment Delay"
 msgstr "Odložitev obveznosti"
 
@@ -2250,8 +1940,7 @@ msgid "It indicates that an invoice has been paid."
 msgstr "To pomeni, da je bil račun plačan"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,name:0
+#: report:sale.order:0 field:sale.order.line,name:0
 msgid "Description"
 msgstr "Opis"
 
@@ -2271,8 +1960,7 @@ msgid "Order Number"
 msgstr "Številka naročila"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,partner_id:0
+#: view:sale.order:0 field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Kupec"
@@ -2296,17 +1984,12 @@ msgstr "April"
 #: view:sale.config.settings:0
 msgid ""
 "Use contract to be able to manage your services with\n"
-"                        multiple invoicing as part of the same contract "
-"with\n"
+"                        multiple invoicing as part of the same contract with\n"
 "                        your customer."
-msgstr ""
-"Uporabite pogodbo, da lahko upravljate vaše storitve\n"
-"                        z večimi fakturami, vezanimi na isto pogodbo z\n"
-"                        vašim kupcem."
+msgstr "Uporabite pogodbo, da lahko upravljate vaše storitve\n                        z večimi fakturami, vezanimi na isto pogodbo z\n                        vašim kupcem."
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Search Sales Order"
 msgstr "Iskanje prodajnih nalogov"
 
@@ -2326,8 +2009,7 @@ msgid "Sequence"
 msgstr "Zaporedje"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order,payment_term:0
+#: report:sale.order:0 field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Plačilni pogoj"
 
@@ -2340,16 +2022,11 @@ msgstr "Omogoča namestitev modula: sale_analytic_plans."
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr ""
-"To poročilo pripravi analizo vaših ponudb in prodajnih nalogov. Analiza "
-"preveri vaše prihodke od prodaje in jih uredi po različnih skupinah "
-"(prodajnik, partner, produkt itd.). Uporabite to poročilo za pripravo "
-"analize prodaje, ki še ni bila fakturirana. Če želite analizirati vašo "
-"prodajo, uporabite Analizo računov v aplikaciji Računovodstvo."
+msgstr "To poročilo pripravi analizo vaših ponudb in prodajnih nalogov. Analiza preveri vaše prihodke od prodaje in jih uredi po različnih skupinah (prodajnik, partner, produkt itd.). Uporabite to poročilo za pripravo analize prodaje, ki še ni bila fakturirana. Če želite analizirati vašo prodajo, uporabite Analizo računov v aplikaciji Računovodstvo."
 
 #. module: sale
 #: report:sale.order:0
@@ -2362,26 +2039,6 @@ msgid "Picked"
 msgstr "Prevzeto"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,year:0
+#: view:sale.report:0 field:sale.report,year:0
 msgid "Year"
 msgstr "Leto"
-
-#, python-format
-#~ msgid "No Customer Defined !"
-#~ msgstr "Kupec ni določen!"
-
-#~ msgid "Quotation send"
-#~ msgstr "Ponudba poslana"
-
-#, python-format
-#~ msgid ""
-#~ "In order to delete a confirmed sales order, you must cancel it before !"
-#~ msgstr "Prodajni nalog morate najprej preklicati."
-
-#~ msgid ""
-#~ "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name} ${object.state in ('draft', 'sent') in 'Ponudba' "
-#~ "ali 'Naročilo'} (Ref ${object.name or 'n/a' })"

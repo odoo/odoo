@@ -1,22 +1,23 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_asset
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-03-28 21:22+0000\n"
-"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
-"Language-Team: ESKON-INZENERING\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-7/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:57+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
 "Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -25,8 +26,7 @@ msgstr "Средства во состојби нацрт и отворено"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Краен датум"
 
@@ -51,25 +51,19 @@ msgid "Gross Amount"
 msgstr "Бруто износ"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,asset_id:0
+#: view:account.asset.asset:0 field:account.asset.depreciation.line,asset_id:0
+#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
+#: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
 msgstr "Средство"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
-"Покажува дека првиот внес за амортизација за ова средство треба да се "
-"направи од датумот на набавката наместо од први јануари"
+msgstr "Покажува дека првиот внес за амортизација за ова средство треба да се направи од датумот на набавката наместо од први јануари"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -79,8 +73,7 @@ msgstr "Линеарно"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0
-#: view:asset.asset.report:0
+#: field:account.asset.category,company_id:0 view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
 msgstr "Компанија"
@@ -91,8 +84,7 @@ msgid "Modify"
 msgstr "Измени"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
+#: selection:account.asset.asset,state:0 view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
 msgstr "Работи"
@@ -153,8 +145,7 @@ msgstr "Време помеѓу две амортизации, во месеци
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_date:0
+#: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
 msgstr "Датум на амортизација"
 
@@ -169,8 +160,7 @@ msgid "Posted Amount"
 msgstr "Објавен износ"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.asset.report:0
+#: view:account.asset.asset:0 view:asset.asset.report:0
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_finance_assets
@@ -184,11 +174,8 @@ msgid "Depreciation Account"
 msgstr "Сметка за Амортизација"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:account.asset.category:0
-#: view:account.asset.history:0
-#: view:asset.modify:0
-#: field:asset.modify,note:0
+#: view:account.asset.asset:0 view:account.asset.category:0
+#: view:account.asset.history:0 view:asset.modify:0 field:asset.modify,note:0
 msgid "Notes"
 msgstr "Белешки"
 
@@ -204,8 +191,7 @@ msgid "Error!"
 msgstr "Грешка!"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,nbr:0
+#: view:asset.asset.report:0 field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "# на ставки за амортизација"
 
@@ -251,8 +237,7 @@ msgid "Period Length"
 msgstr "Должина на период"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
+#: selection:account.asset.asset,state:0 view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
 msgstr "Нацрт"
@@ -272,8 +257,7 @@ msgstr "Промени времетраење"
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
-"Број на амортизации кои се потребни за да се амортизира вашето средство"
+msgstr "Број на амортизации кои се потребни за да се амортизира вашето средство"
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -286,8 +270,7 @@ msgid "Analytic account"
 msgstr "Аналитичка сметка"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
+#: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Метод за пресметување"
 
@@ -296,9 +279,7 @@ msgstr "Метод за пресметување"
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr ""
-"Prorata temporis може да се примени единствено на временскиот метод \"број "
-"на амортизации\"."
+msgstr "Prorata temporis може да се примени единствено на временскиот метод \"број на амортизации\"."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
@@ -323,10 +304,8 @@ msgid "Salvage Value"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,category_id:0
-#: view:account.asset.category:0
-#: field:account.invoice.line,asset_category_id:0
-#: view:asset.asset.report:0
+#: field:account.asset.asset,category_id:0 view:account.asset.category:0
+#: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
 msgid "Asset Category"
 msgstr "Категорија на средства"
 
@@ -379,14 +358,12 @@ msgid "Time Method"
 msgstr "Временски метод"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
 msgid "or"
 msgstr "или"
 
 #. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
+#: field:account.asset.asset,note:0 field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Белешка"
@@ -395,35 +372,18 @@ msgstr "Белешка"
 #: help:account.asset.history,method_time:0
 msgid ""
 "The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Методот што се користи за пресметување на датуми и број на ставки за "
-"амортизација.\n"
-"Број на амортизации: Корекција на бројот на ставки за амортизација и времето "
-"помеѓу 2 амортизации.\n"
-"Датум на завршување: Изберете го времето помеѓу 2 амортизации и датумот што "
-"амортизациите нема да го поминат."
+"Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Методот што се користи за пресметување на датуми и број на ставки за амортизација.\nБрој на амортизации: Корекција на бројот на ставки за амортизација и времето помеѓу 2 амортизации.\nДатум на завршување: Изберете го времето помеѓу 2 амортизации и датумот што амортизациите нема да го поминат."
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
 #: help:account.asset.category,method_time:0
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Изберете метод што ќе го користите за пресметување на датуми и број на "
-"ставки за амортизација.\n"
-"Број на амортизации: Фиксирајте го бројот на ставки за амортизација и "
-"времето помеѓу 2 амортизации.\n"
-"Датум на завршување: Изберете го времето помеѓу 2 амортизации и датумот што "
-"амортизациите нема да го поминат."
+"Choose the method to use to compute the dates and number of depreciation lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Изберете метод што ќе го користите за пресметување на датуми и број на ставки за амортизација.\nБрој на амортизации: Фиксирајте го бројот на ставки за амортизација и времето помеѓу 2 амортизации.\nДатум на завршување: Изберете го времето помеѓу 2 амортизации и датумот што амортизациите нема да го поминат."
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -439,21 +399,12 @@ msgstr "Затворено"
 #: help:account.asset.asset,state:0
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-"Кога средството е креирано, статусот е 'Нацрт'.\n"
-"Доколку средството е потврдено, статусот поминува во 'Работи' и ставките за "
-"амортизација може да бидат објавени во сметководството.\n"
-"Може рачно да го затворите средството кога амортизацијата е завршена. "
-"Доколку последната ставка од амортизацијата е објавена, средството "
-"автоматски поминува во тој статус."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
+msgstr "Кога средството е креирано, статусот е 'Нацрт'.\nДоколку средството е потврдено, статусот поминува во 'Работи' и ставките за амортизација може да бидат објавени во сметководството.\nМоже рачно да го затворите средството кога амортизацијата е завршена. Доколку последната ставка од амортизацијата е објавена, средството автоматски поминува во тој статус."
 
 #. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
+#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
 msgid "Status"
 msgstr "Статус"
 
@@ -494,8 +445,7 @@ msgid "Extended Filters..."
 msgstr "Проширени филтри..."
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.depreciation.confirmation.wizard:0
+#: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
 msgstr "Пресметај"
 
@@ -525,8 +475,7 @@ msgid "Depreciation Name"
 msgstr "Име на амортизација"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,history_ids:0
+#: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
 msgid "History"
 msgstr "Историја"
 
@@ -546,8 +495,7 @@ msgid "General"
 msgstr "Општо"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr "Prorata Temporis"
 
@@ -562,14 +510,12 @@ msgid "Set to Close"
 msgstr "Подеси на затворено"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
 msgid "Cancel"
 msgstr "Откажи"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Затвори"
 
@@ -584,8 +530,7 @@ msgid "Asset Durations to Modify"
 msgstr "Изменување на времетраењето на средството"
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_date:0
-#: view:asset.asset.report:0
+#: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
 msgstr "Датум на набавка"
@@ -612,8 +557,7 @@ msgstr "Тековно"
 #: code:addons/account_asset/account_asset.py:82
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
-"Не може да избришете средство кое содржи објавени ставки за амортизација."
+msgstr "Не може да избришете средство кое содржи објавени ставки за амортизација."
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -661,22 +605,16 @@ msgid "Amount Already Depreciated"
 msgstr "Износ кој е веќе амортизиран"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.asset,method:0 help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
-"Изберете метод за да ја пресметате сумата на ставките за амортизација.\n"
-"* Линеарен: Пресметан врз основа на: Бруто вредност / Број на амортизации\n"
-"* Дегресивен: Пресметан на основа на: Преостаната вредност * Фактор на "
-"дигресија"
+msgstr "Изберете метод за да ја пресметате сумата на ставките за амортизација.\n* Линеарен: Пресметан врз основа на: Бруто вредност / Број на амортизации\n* Дегресивен: Пресметан на основа на: Преостаната вредност * Фактор на дигресија"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,move_check:0
+#: view:asset.asset.report:0 field:asset.asset.report,move_check:0
 msgid "Posted"
 msgstr "Објавено"
 
@@ -684,22 +622,12 @@ msgstr "Објавено"
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview on all depreciation. "
-"The\n"
-"            tool search can also be used to personalise your Assets reports "
-"and\n"
+"            From this report, you can have an overview on all depreciation. The\n"
+"            tool search can also be used to personalise your Assets reports and\n"
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"            Од овој извештај имате преглед на сите амортизации. \n"
-"            Алатката за пребарување може да се користи за персонализирање "
-"на\n"
-"            извештаите за средствата за да одговара на анализите што вам ви "
-"се потребни;\n"
-"          </p>\n"
-"        "
+msgstr "<p>\n            Од овој извештај имате преглед на сите амортизации. \n            Алатката за пребарување може да се користи за персонализирање на\n            извештаите за средствата за да одговара на анализите што вам ви се потребни;\n          </p>\n        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -716,9 +644,7 @@ msgstr "Име"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
-"Означете го ова доколку сакате автоматски да ги потврдите средствата од оваа "
-"категорија кога креирате фактури."
+msgstr "Означете го ова доколку сакате автоматски да ги потврдите средствата од оваа категорија кога креирате фактури."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -731,15 +657,13 @@ msgid "Asset depreciation line"
 msgstr "Ставка за амортизација на средство"
 
 #. module: account_asset
-#: view:account.asset.category:0
-#: field:asset.asset.report,asset_category_id:0
+#: view:account.asset.category:0 field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
 msgstr "Категорија на средство"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_value:0
+#: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
 msgstr "Износ на ставките за амортизација"
 

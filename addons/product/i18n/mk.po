@@ -1,23 +1,23 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * product
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
-"macedonian@lists.launchpad.net >\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-28 23:28+0000\n"
-"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
-"Language-Team: ESKON-INZENERING\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-7/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:13+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
 "Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -27,7 +27,7 @@ msgstr "Број на слоеви"
 #. module: product
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "матична компанија"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -65,9 +65,7 @@ msgstr "Втора единица мерка"
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr ""
-"Овој ценовник ќе биде употребен, наместо стандардниот, за продажби на "
-"тековен партнер"
+msgstr "Овој ценовник ќе биде употребен, наместо стандардниот, за продажби на тековен партнер"
 
 #. module: product
 #: field:product.product,seller_qty:0
@@ -98,9 +96,9 @@ msgstr "Име на правило"
 #. module: product
 #: help:product.template,list_price:0
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
-msgstr ""
-"Основна цена за пресметување на цената за купувачот, т.н. каталошка цена."
+"Base price to compute the customer price. Sometimes called the catalog "
+"price."
+msgstr "Основна цена за пресметување на цената за купувачот, т.н. каталошка цена."
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -113,13 +111,10 @@ msgstr "PC Assemble SC234"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е "
-"директно во html формат со цел да биде вметнато во kanban преглед."
+msgstr "Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: product
-#: code:addons/product/pricelist.py:198
-#: code:addons/product/product.py:208
+#: code:addons/product/pricelist.py:198 code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr "Предупредување!"
@@ -135,9 +130,7 @@ msgstr "Слика со мала димензија"
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
-"Претварање од ЕМ на производот %s во стандардната ЕМ %s не е можно ако и "
-"двете припаѓаат на различна категорија!."
+msgstr "Претварање од ЕМ на производот %s во стандардната ЕМ %s не е можно ако и двете припаѓаат на различна категорија!."
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -169,12 +162,9 @@ msgstr "PC Assemble SC349"
 #: help:product.product,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
-"and the reception of goods for this product and for the default supplier. It "
-"is used by the scheduler to order requests based on reordering delays."
-msgstr ""
-"Ова е просечното задоцнување во денови помеѓу потврдување на нарачката и "
-"примање на производите за стандардниот добавувач. Распоредувачот тоа го "
-"користи за нарачките, базирани на задоцнувањата."
+"and the reception of goods for this product and for the default supplier. It"
+" is used by the scheduler to order requests based on reordering delays."
+msgstr "Ова е просечното задоцнување во денови помеѓу потврдување на нарачката и примање на производите за стандардниот добавувач. Распоредувачот тоа го користи за нарачките, базирани на задоцнувањата."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
@@ -193,8 +183,7 @@ msgid "Sale Pricelist"
 msgstr "Продажен ценовник"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,type:0
+#: view:product.template:0 field:product.template,type:0
 msgid "Product Type"
 msgstr "Тип на производ"
 
@@ -209,9 +198,7 @@ msgstr "Производи: "
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr ""
-"Грешка! Децималната точност за 'Сметка' не може да биде поголема од факторот "
-"на заокружување на валутата на компанијата."
+msgstr "Грешка! Децималната точност за 'Сметка' не може да биде поголема од факторот на заокружување на валутата на компанијата."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -239,33 +226,17 @@ msgstr "Име на добавувач, цена, код на производ, 
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr ""
-"Грешка! Факторот на заокружување на валутата на компанијата не може да биде "
-"помал од децималната точност на 'Сметка'."
+msgstr "Грешка! Факторот на заокружување на валутата на компанијата не може да биде помал од децималната точност на 'Сметка'."
 
 #. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this "
-"Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock "
-"Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods leaving the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' "
-"type."
-msgstr ""
-"Количина на производи планирана за испорачка.\n"
-"Во својство на единечна локација на производите, тоа вклучува напуштање на "
-"производите на таа локација или други локации произлезени од неа.\n"
-"Во својство на единечен склад, тоа вклучува напуштање на локацијата на "
-"производите од тој склад или други локации произлезени од тој склад.\n"
-"Во својство на единечна продавница, тоа вклучува напуштање на локацијата на "
-"производите од тој склад за таа продавница или други локации произлезени од "
-"неа.\n"
-"Во спротивно, тоа вклучува напуштање на локацијата на производите со "
-"'внатрешен' тип."
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods leaving the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+msgstr "Количина на производи планирана за испорачка.\nВо својство на единечна локација на производите, тоа вклучува напуштање на производите на таа локација или други локации произлезени од неа.\nВо својство на единечен склад, тоа вклучува напуштање на локацијата на производите од тој склад или други локации произлезени од тој склад.\nВо својство на единечна продавница, тоа вклучува напуштање на локацијата на производите од тој склад за таа продавница или други локации произлезени од неа.\nВо спротивно, тоа вклучува напуштање на локацијата на производите со 'внатрешен' тип."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_42_product_template
@@ -273,9 +244,7 @@ msgstr ""
 msgid ""
 "Office Editing Software with word processing, spreadsheets, presentations, "
 "graphics, and databases..."
-msgstr ""
-"Софтвер за канцелариско работење за обработка на текст, презентации, "
-"графици, бази на податоци и др."
+msgstr "Софтвер за канцелариско работење за обработка на текст, презентации, графици, бази на податоци и др."
 
 #. module: product
 #: field:product.product,seller_id:0
@@ -286,9 +255,7 @@ msgstr "Главен Добавувач"
 #: model:ir.actions.act_window,name:product.product_ul_form_action
 #: model:ir.model,name:product.model_product_packaging
 #: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.packaging:0
-#: view:product.product:0
-#: view:product.ul:0
+#: view:product.packaging:0 view:product.product:0 view:product.ul:0
 msgid "Packaging"
 msgstr "Пакување"
 
@@ -296,13 +263,10 @@ msgstr "Пакување"
 #: help:product.product,active:0
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
-"Доколку не е штиклирано, ви овозможува да го сокриете производот без да го "
-"отстраните."
+msgstr "Доколку не е штиклирано, ви овозможува да го сокриете производот без да го отстраните."
 
 #. module: product
-#: view:product.product:0
-#: field:product.template,categ_id:0
+#: view:product.product:0 field:product.template,categ_id:0
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Категорија"
@@ -341,8 +305,7 @@ msgid "Pen drive, SP-2"
 msgstr "Pen drive, SP-2"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 #: field:product.template,state:0
 msgid "Status"
 msgstr "Статус"
@@ -374,22 +337,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new packaging type.\n"
 "              </p><p>\n"
-"                The packaging type define the dimensions as well as the "
-"number\n"
-"                of products per package. This will ensure salesperson sell "
-"the\n"
+"                The packaging type define the dimensions as well as the number\n"
+"                of products per package. This will ensure salesperson sell the\n"
 "                right number of products according to the package selected.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за додавање на нов тип на пакување.\n"
-"              </p><p>\n"
-"                Типот на пакување ги дефинира димензиите како и бројот\n"
-"                на производи за секој пакет. Ова овозможува продавачот \n"
-"                да ја продаде точната нарачка според избраниот пакет.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за додавање на нов тип на пакување.\n              </p><p>\n                Типот на пакување ги дефинира димензиите како и бројот\n                на производи за секој пакет. Ова овозможува продавачот \n                да ја продаде точната нарачка според избраниот пакет.\n              </p>\n            "
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -413,8 +366,7 @@ msgid "Products Price Search"
 msgstr "Пребарување на цена на производ"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,description_sale:0
+#: view:product.template:0 field:product.template,description_sale:0
 msgid "Sale Description"
 msgstr "Опис на продажба"
 
@@ -434,25 +386,21 @@ msgid "The net weight in Kg."
 msgstr "Нето тежина во кг."
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
+#: field:pricelist.partnerinfo,min_quantity:0 field:product.supplierinfo,qty:0
 msgid "Quantity"
 msgstr "Количина"
 
 #. module: product
 #: view:product.price_list:0
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr ""
-"Пресметка на цената на производот за секој одделно врз база на ценовникот."
+msgstr "Пресметка на цената на производот за секој одделно врз база на ценовникот."
 
 #. module: product
 #: help:product.pricelist.item,product_id:0
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr ""
-"Избери производ доколку правилото важи само за еден производ. Во спротивно "
-"оставете го празно."
+msgstr "Избери производ доколку правилото важи само за еден производ. Во спротивно оставете го празно."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -463,26 +411,11 @@ msgstr "Тежина"
 #: help:product.product,virtual_available:0
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in "
-"this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-"Предвидена количина на производи (пресметана како моментална - излезна + "
-"влезна)\n"
-"Во својство на единечна локација на производите, тоа вклучува складирање на "
-"производите на таа локација или други локации произлезени од неа.\n"
-"Во својство на единечен склад, тоа вклучува складирање на локацијата на "
-"производите од тој склад или други локации произлезени од тој склад.\n"
-"Во својство на единечна продавница, тоа вклучува складирање на локацијата на "
-"производите од тој склад за таа продавница или други локации произлезени од "
-"неа.\n"
-"Во спротивно, тоа вклучува складирање на локацијата на производите со "
-"'внатрешен' тип."
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr "Предвидена количина на производи (пресметана како моментална - излезна + влезна)\nВо својство на единечна локација на производите, тоа вклучува складирање на производите на таа локација или други локации произлезени од неа.\nВо својство на единечен склад, тоа вклучува складирање на локацијата на производите од тој склад или други локации произлезени од тој склад.\nВо својство на единечна продавница, тоа вклучува складирање на локацијата на производите од тој склад за таа продавница или други локации произлезени од неа.\nВо спротивно, тоа вклучува складирање на локацијата на производите со 'внатрешен' тип."
 
 #. module: product
 #: field:product.packaging,height:0
@@ -502,13 +435,9 @@ msgstr "Управување со својствата на производот
 #. module: product
 #: help:product.uom,factor:0
 msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of "
-"Measure for this category:\n"
+"How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-"Колку е помала или поголема, оваа единица се споредува со референтната мерна "
-"единица за оваа категорија:\n"
-"1 * (reference unit) = ratio * (this unit)"
+msgstr "Колку е помала или поголема, оваа единица се споредува со референтната мерна единица за оваа категорија:\n1 * (reference unit) = ratio * (this unit)"
 
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
@@ -577,34 +506,18 @@ msgstr "Ден(ови)"
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods arriving to the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with "
-"'internal' type."
-msgstr ""
-"Количина на производи што треба да пристигнат.\n"
-"Во својство на единечна локација на производите, тоа вклучува пристигање на "
-"производите на таа локација или други локации произлезени од неа.\n"
-"Во својство на единечен склад, тоа вклучува пристигање на локацијата на "
-"производите од тој склад или други локации произлезени од тој склад.\n"
-"Во својство на единечна продавница, тоа вклучува пристигање на локацијата на "
-"производите од тој склад за таа продавница или други локации произлезени од "
-"неа.\n"
-"Во спротивно, тоа вклучува пристигање на локацијата на производите со "
-"'внатрешен' тип."
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+msgstr "Количина на производи што треба да пристигнат.\nВо својство на единечна локација на производите, тоа вклучува пристигање на производите на таа локација или други локации произлезени од неа.\nВо својство на единечен склад, тоа вклучува пристигање на локацијата на производите од тој склад или други локации произлезени од тој склад.\nВо својство на единечна продавница, тоа вклучува пристигање на локацијата на производите од тој склад за таа продавница или други локации произлезени од неа.\nВо спротивно, тоа вклучува пристигање на локацијата на производите со 'внатрешен' тип."
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr ""
-"Грешка: Стандардната мерна единица и мерната единица на порачката мора да "
-"бидат во иста категорија."
+msgstr "Грешка: Стандардната мерна единица и мерната единица на порачката мора да бидат во иста категорија."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -631,9 +544,7 @@ msgstr "Пресметување на цена"
 msgid ""
 "You provided an invalid \"EAN13 Barcode\" reference. You may use the "
 "\"Internal Reference\" field instead."
-msgstr ""
-"Вие приложивте погрешен референтен \"EAN13 Баркод\". Наместо тоа, треба да "
-"го користите полето \"Внатрешна референца\"."
+msgstr "Вие приложивте погрешен референтен \"EAN13 Баркод\". Наместо тоа, треба да го користите полето \"Внатрешна референца\"."
 
 #. module: product
 #: model:res.groups,name:product.group_purchase_pricelist
@@ -694,9 +605,7 @@ msgstr "Одредете ја максималната маржа врз баз�
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr ""
-"Грешка! Неможе да го назначите Главниот ценовник како Друг ценовник во "
-"Ценовници!"
+msgstr "Грешка! Неможе да го назначите Главниот ценовник како Друг ценовник во Ценовници!"
 
 #. module: product
 #: view:product.price_list:0
@@ -751,10 +660,7 @@ msgid ""
 "When a version is duplicated it is set to non active, so that the dates do "
 "not overlaps with original version. You should change the dates and "
 "reactivate the pricelist"
-msgstr ""
-"Кога верзијата е дуплирана таа е подесена на не активна, така што датумите "
-"да не се преклопуваат со оригиналната верзија. Треба да ги промените "
-"датумита и повторно да го активирате ценовникот."
+msgstr "Кога верзијата е дуплирана таа е подесена на не активна, така што датумите да не се преклопуваат со оригиналната верзија. Треба да ги промените датумита и повторно да го активирате ценовникот."
 
 #. module: product
 #: model:product.template,name:product.product_product_18_product_template
@@ -769,21 +675,16 @@ msgid "HDD SH-1"
 msgstr "HDD SH-1"
 
 #. module: product
-#: field:product.supplierinfo,name:0
-#: field:product.template,seller_ids:0
+#: field:product.supplierinfo,name:0 field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Добавувач"
 
 #. module: product
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year). \n"
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year). \n"
 "Average Price: The cost price is recomputed at each incoming shipment."
-msgstr ""
-"Стандардна цена: Цената рачно се ажурира на крајот на одреден период (обично "
-"секоја година).\n"
-"Просечна цена: Цената се пресметува со пристигање на секоја пратка."
+msgstr "Стандардна цена: Цената рачно се ажурира на крајот на одреден период (обично секоја година).\nПросечна цена: Цената се пресметува со пристигање на секоја пратка."
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -808,8 +709,7 @@ msgstr "EAN13 Баркод"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
 #: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:0
-#: report:product.pricelist:0
+#: view:product.price_list:0 report:product.pricelist:0
 #: field:product.pricelist.version,pricelist_id:0
 msgid "Price List"
 msgstr "Ценовник"
@@ -869,7 +769,7 @@ msgstr "опишете ги карактеристиките на произво
 #. module: product
 #: view:res.partner:0
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "Ценовниците се менаџирани на"
 
 #. module: product
 #: field:product.category,child_id:0
@@ -892,9 +792,7 @@ msgid "Print"
 msgstr "Печати"
 
 #. module: product
-#: view:product.product:0
-#: field:product.ul,type:0
-#: field:product.uom,uom_type:0
+#: view:product.product:0 field:product.ul,type:0 field:product.uom,uom_type:0
 msgid "Type"
 msgstr "Тип"
 
@@ -919,8 +817,7 @@ msgstr "Копче"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,pricelist_id:0
-#: view:product.supplierinfo:0
+#: field:product.product,pricelist_id:0 view:product.supplierinfo:0
 msgid "Pricelist"
 msgstr "Ценовник"
 
@@ -944,9 +841,7 @@ msgstr "Партнер"
 msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
-msgstr ""
-"1 од неколку добавувач(и) може да биде поврзан за производот. Сите "
-"информации стојат во формуларот за производот."
+msgstr "1 од неколку добавувач(и) може да биде поврзан за производот. Сите информации стојат во формуларот за производот."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -972,8 +867,7 @@ msgstr "Информации за добавувачот"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
-#: field:product.price.type,currency_id:0
-#: report:product.pricelist:0
+#: field:product.price.type,currency_id:0 report:product.pricelist:0
 #: field:product.pricelist,currency_id:0
 msgid "Currency"
 msgstr "Валута"
@@ -989,10 +883,7 @@ msgstr "Податочна картица"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
-msgstr ""
-"Коефициент за конверзија на стандардната мерна единица во продажна мерна "
-"единица\n"
-" uos = uom * coeff"
+msgstr "Коефициент за конверзија на стандардната мерна единица во продажна мерна единица\n uos = uom * coeff"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1045,17 +936,12 @@ msgstr "Информации за добавувачот на производо
 #. module: product
 #: help:product.uom,factor_inv:0
 msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of "
-"Measure in this category:\n"
+"How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-"За колку пати оваа мерна единица е поголема од референтната мерна единица на "
-"оваа категорија:\n"
-"1 * (this unit) = ratio * (reference unit)"
+msgstr "За колку пати оваа мерна единица е поголема од референтната мерна единица на оваа категорија:\n1 * (this unit) = ratio * (reference unit)"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,description_purchase:0
+#: view:product.template:0 field:product.template,description_purchase:0
 msgid "Purchase Description"
 msgstr "Опис на нарачка"
 
@@ -1069,9 +955,7 @@ msgstr "Не може да имате 2 верзии на ценовник ко�
 msgid ""
 "Specify the minimum quantity that needs to be bought/sold for the rule to "
 "apply."
-msgstr ""
-"Одредете ја минималната количина што треба да се купи/продаде за правилото "
-"да може да се примени."
+msgstr "Одредете ја минималната количина што треба да се купи/продаде за правилото да може да се примени."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1084,10 +968,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr ""
-"Потребно време во денови помеѓу потврдувањето на налогот за набавка и "
-"приемот на производите во вашиот магацин. Се користи од страна на "
-"распоредувачот за автоматско пресметување на планираниот налог за набавка."
+msgstr "Потребно време во денови помеѓу потврдувањето на налогот за набавка и приемот на производите во вашиот магацин. Се користи од страна на распоредувачот за автоматско пресметување на планираниот налог за набавка."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
@@ -1097,11 +978,7 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr ""
-"17\" LCD Монитор\n"
-"Процесор AMD 8-Core\n"
-"512MB RAM\n"
-"HDD SH-1"
+msgstr "17\" LCD Монитор\nПроцесор AMD 8-Core\n512MB RAM\nHDD SH-1"
 
 #. module: product
 #: selection:product.template,type:0
@@ -1141,8 +1018,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new product.\n"
 "              </p><p>\n"
-"                You must define a product for everything you sell, whether "
-"it's\n"
+"                You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers.\n"
 "              </p><p>\n"
@@ -1151,21 +1027,7 @@ msgid ""
 "                procurement methods, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за дефинирање на нов производ.\n"
-"              </p><p>\n"
-"                Мора да дефинирате производ за се што продавате,  било тоа\n"
-"                да е физички производ, потрошен или услуга што се нуди на\n"
-"                клиентите.\n"
-"              </p><p>\n"
-"                Формата за производот содржи информации за поедноставување "
-"на продажниот\n"
-"                процес: цена, белешки во понудата, сметководствени "
-"податоци,\n"
-"                методи за набавка, итн.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за дефинирање на нов производ.\n              </p><p>\n                Мора да дефинирате производ за се што продавате,  било тоа\n                да е физички производ, потрошен или услуга што се нуди на\n                клиентите.\n              </p><p>\n                Формата за производот содржи информации за поедноставување на продажниот\n                процес: цена, белешки во понудата, сметководствени податоци,\n                методи за набавка, итн.\n              </p>\n            "
 
 #. module: product
 #: view:product.price_list:0
@@ -1181,17 +1043,13 @@ msgstr "Печатач Се Во Едно со факс и скенер."
 #. module: product
 #: help:product.supplierinfo,min_qty:0
 msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product Unit of Measure if not empty, in the default unit of measure of the "
-"product otherwise."
-msgstr ""
-"Минимална количина за набавка од овој добавувач, изразена во единицата мерка "
-"за производот на добавувачот доколку не е празно, во спротивно во "
-"стандардната единица мерка за производот."
+"The minimal quantity to purchase to this supplier, expressed in the supplier"
+" Product Unit of Measure if not empty, in the default unit of measure of the"
+" product otherwise."
+msgstr "Минимална количина за набавка од овој добавувач, изразена во единицата мерка за производот на добавувачот доколку не е празно, во спротивно во стандардната единица мерка за производот."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 msgid "Information"
 msgstr "Информација"
 
@@ -1234,7 +1092,7 @@ msgstr "Доплата на цена"
 #: code:addons/product/pricelist.py:401
 #, python-format
 msgid "Supplier Prices on the product form"
-msgstr ""
+msgstr "Добавувачки цени на формуларот на производот"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1253,12 +1111,9 @@ msgid "Logistical Units"
 msgstr "Логистички единици"
 
 #. module: product
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
+#: field:product.category,complete_name:0 field:product.category,name:0
+#: field:product.pricelist.type,name:0 field:product.pricelist.version,name:0
+#: field:product.template,name:0 field:product.ul,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr "Назив"
@@ -1295,11 +1150,8 @@ msgstr "Цена"
 
 #. module: product
 #: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
-msgstr ""
-"Го дава редоследот на секвенците кога ја прикажува листата на категории на "
-"производи."
+msgid "Gives the sequence order when displaying a list of product categories."
+msgstr "Го дава редоследот на секвенците кога ја прикажува листата на категории на производи."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1307,8 +1159,7 @@ msgid "Dozen(s)"
 msgstr "Десетици"
 
 #. module: product
-#: field:product.uom,factor:0
-#: field:product.uom,factor_inv:0
+#: field:product.uom,factor:0 field:product.uom,factor_inv:0
 msgid "Ratio"
 msgstr "Размер"
 
@@ -1323,10 +1174,8 @@ msgid "Associated field in the product form."
 msgstr "Поврзано поле во формуларот за производот."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,uom_id:0
-#: field:product.uom,name:0
+#: view:product.product:0 view:product.template:0
+#: field:product.template,uom_id:0 field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr "Единица мерка"
 
@@ -1354,8 +1203,7 @@ msgstr "Категории на единица мерка"
 #. module: product
 #: help:product.product,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
-msgstr ""
-"Главен добавувач што има највисок приоритет во листата на добавувачи."
+msgstr "Главен добавувач што има највисок приоритет во листата на добавувачи."
 
 #. module: product
 #: model:product.category,name:product.product_category_5
@@ -1372,21 +1220,12 @@ msgstr "Интернеционален број на производот што
 #: model:ir.actions.act_window,help:product.product_category_action
 msgid ""
 "<p>\n"
-"                Here is a list of all your products classified by category. "
-"You\n"
-"                can click a category to get the list of all products linked "
-"to\n"
+"                Here is a list of all your products classified by category. You\n"
+"                can click a category to get the list of all products linked to\n"
 "                this category or to a child of this category.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Ова е листа на сите производи класифицирани по категорија. "
-"За да\n"
-"                изберете листа од сите производи поврзани со одредена "
-"категорија или подкатегорија на оваа категорија кликнете на Категорија.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Ова е листа на сите производи класифицирани по категорија. За да\n                изберете листа од сите производи поврзани со одредена категорија или подкатегорија на оваа категорија кликнете на Категорија.\n              </p>\n            "
 
 #. module: product
 #: code:addons/product/product.py:361
@@ -1394,13 +1233,9 @@ msgstr ""
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
 "as of old Unit of Measure '%s'. If you need to change the unit of measure, "
-"you may deactivate this product from the 'Procurements' tab and create a new "
-"one."
-msgstr ""
-"Новата единица мерка '%s' мора да припаѓа на истата категорија единици мерки "
-"'%s' како старата единица мерка '%s'. Доколку е потребно да се промени "
-"единицата мерка, треба да го деактивирате производот од менито 'Набавки' и "
-"да креирате нов."
+"you may deactivate this product from the 'Procurements' tab and create a new"
+" one."
+msgstr "Новата единица мерка '%s' мора да припаѓа на истата категорија единици мерки '%s' како старата единица мерка '%s'. Доколку е потребно да се промени единицата мерка, треба да го деактивирате производот од менито 'Набавки' и да креирате нов."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1408,8 +1243,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
-#: model:ir.ui.menu,name:product.prod_config_main
-#: view:product.product:0
+#: model:ir.ui.menu,name:product.prod_config_main view:product.product:0
 msgid "Products"
 msgstr "Производи"
 
@@ -1441,8 +1275,7 @@ msgid "Net Weight"
 msgstr "Нето тежина"
 
 #. module: product
-#: view:product.packaging:0
-#: view:product.product:0
+#: view:product.packaging:0 view:product.product:0
 msgid "Pallet Dimension"
 msgstr "Димензии на палета"
 
@@ -1451,19 +1284,14 @@ msgstr "Димензии на палета"
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr ""
-"Ова поле ја содржи сликата што се користи за производот, ограничена на "
-"1024x1024px."
+msgstr "Ова поле ја содржи сликата што се користи за производот, ограничена на 1024x1024px."
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr ""
-"Назначи категорија на производ доколку ова правило припаѓа само на оваа "
-"категорија или на категориите што произлегуваат од неа. Во спротивно "
-"оставете го празно."
+msgstr "Назначи категорија на производ доколку ова правило припаѓа само на оваа категорија или на категориите што произлегуваат од неа. Во спротивно оставете го празно."
 
 #. module: product
 #: view:product.product:0
@@ -1501,8 +1329,7 @@ msgstr "Касета со тонер"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
+#: model:ir.ui.menu,name:product.next_id_16 view:product.uom:0
 msgid "Units of Measure"
 msgstr "Единици мерки"
 
@@ -1516,16 +1343,14 @@ msgstr "Минимална количина"
 msgid ""
 "The prices below will only be taken into account when your pricelist is set "
 "as based on supplier prices."
-msgstr ""
+msgstr "Цените подолу ќе се земат во предвид само кога вашиот ценовник е подесен како база на добавувачки цени."
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
 msgid ""
 "This supplier's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-"Овој код на производот на добавувачот ќе се употреби при принтањето на "
-"барање за понуда. Оставете го празно за да внесете внатрешен код."
+msgstr "Овој код на производот на добавувачот ќе се употреби при принтањето на барање за понуда. Оставете го празно за да внесете внатрешен код."
 
 #. module: product
 #: model:product.template,name:product.product_product_43_product_template
@@ -1541,17 +1366,13 @@ msgstr "Верзија на ценовник"
 #. module: product
 #: help:product.pricelist.item,sequence:0
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation "
-"gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation"
+" gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
-msgstr ""
-"Го дава редоследот по кој ќе се означуваат ставките од цеовникот. "
-"Евалуацијата дава највисок приоритет на најниската секвенца и запира штом се "
-"пронајде ставката која одговара."
+msgstr "Го дава редоследот по кој ќе се означуваат ставките од цеовникот. Евалуацијата дава највисок приоритет на најниската секвенца и запира штом се пронајде ставката која одговара."
 
 #. module: product
-#: view:product.product:0
-#: selection:product.template,type:0
+#: view:product.product:0 selection:product.template,type:0
 msgid "Consumable"
 msgstr "Потрошен"
 
@@ -1583,8 +1404,7 @@ msgid "Processor AMD 8-Core"
 msgstr "Процесор AMD 8-Core"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 msgid "Weights"
 msgstr "Тежини"
 
@@ -1596,11 +1416,9 @@ msgstr "Опис на понудите"
 #. module: product
 #: help:pricelist.partnerinfo,price:0
 msgid ""
-"This price will be considered as a price for the supplier Unit of Measure if "
-"any or the default Unit of Measure of the product otherwise"
-msgstr ""
-"Оваа цена ќе биде сметана како цена за единицата мерка на добавувачот "
-"доколку има таква или во спротивно стандардната единица мерка за производот"
+"This price will be considered as a price for the supplier Unit of Measure if"
+" any or the default Unit of Measure of the product otherwise"
+msgstr "Оваа цена ќе биде сметана како цена за единицата мерка на добавувачот доколку има таква или во спротивно стандардната единица мерка за производот"
 
 #. module: product
 #: field:product.template,uom_po_id:0
@@ -1652,30 +1470,18 @@ msgid ""
 "              </p><p>\n"
 "                There can be more than one version of a pricelist, each of\n"
 "                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за додавање на верзија на ценовник.\n"
-"              </p><p>\n"
-"                Може да има повеќе од една верзија на ценовник и секоја од\n"
-"                нив мора да биде валодна одреден временски период. Некои \n"
-"                примери на верзии: Главни цени, 2010, 2011, летна продажба,\n"
-"                итн.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за додавање на верзија на ценовник.\n              </p><p>\n                Може да има повеќе од една верзија на ценовник и секоја од\n                нив мора да биде валодна одреден временски период. Некои \n                примери на верзии: Главни цени, 2010, 2011, летна продажба,\n                итн.\n              </p>\n            "
 
 #. module: product
 #: help:product.template,uom_po_id:0
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr ""
-"Стандардна единица мерка користена за налозите за нарачка. Мора да биде во "
-"истата категорија како стандардната единица мерка."
+msgstr "Стандардна единица мерка користена за налозите за нарачка. Мора да биде во истата категорија како стандардната единица мерка."
 
 #. module: product
 #: view:product.pricelist:0
@@ -1690,11 +1496,7 @@ msgid ""
 "6GB RAM\n"
 "Hi-Speed 234Q Processor\n"
 "QWERTY keyboard"
-msgstr ""
-"17\" Монитор\n"
-"6GB RAM\n"
-"Hi-Speed 234Q Процесор\n"
-"QWERTY тастатура"
+msgstr "17\" Монитор\n6GB RAM\nHi-Speed 234Q Процесор\nQWERTY тастатура"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1732,10 +1534,8 @@ msgid "HDD on Demand"
 msgstr "HDD по порачка"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
+#: field:product.price.type,active:0 field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0 field:product.product,active:0
 #: field:product.uom,active:0
 msgid "Active"
 msgstr "Активен"
@@ -1822,32 +1622,18 @@ msgid ""
 "              </p><p>\n"
 "                Units of measure belonging to the same category can be\n"
 "                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of "
-"measure:\n"
+"                <i>'Time'</i>, you will have the following units of measure:\n"
 "                Hours, Days.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за додавање на нова категорија на мерни единици.\n"
-"              </p><p>\n"
-"                Мерните единици што припаѓаат на иста категорија можат\n"
-"                да се конвертират меѓусебно. На пример, во категоријата "
-"<i>'Време'</i>\n"
-"                ќе ги имате следните мерни единици:\n"
-"                Часови, Денови.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за додавање на нова категорија на мерни единици.\n              </p><p>\n                Мерните единици што припаѓаат на иста категорија можат\n                да се конвертират меѓусебно. На пример, во категоријата <i>'Време'</i>\n                ќе ги имате следните мерни единици:\n                Часови, Денови.\n              </p>\n            "
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
 msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
-"Measure if any or in the default Unit of Measure of the product otherrwise."
-msgstr ""
-"Минимална количина за активирање на ова правило, изразена во единицата мерка "
-"на добавувачот доколку има таква, во спротивно во стандардната единица мерка "
-"за производот."
+"The minimal quantity to trigger this rule, expressed in the supplier Unit of"
+" Measure if any or in the default Unit of Measure of the product otherrwise."
+msgstr "Минимална количина за активирање на ова правило, изразена во единицата мерка на добавувачот доколку има таква, во спротивно во стандардната единица мерка за производот."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1868,9 +1654,7 @@ msgstr "Код на производ на добавувач"
 #: help:product.pricelist,active:0
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr ""
-"Доколку не е штиклирано, ви овозможува криење на ценовникот без да го "
-"отстраните."
+msgstr "Доколку не е штиклирано, ви овозможува криење на ценовникот без да го отстраните."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1887,8 +1671,7 @@ msgstr "Пакувања по слој"
 #: model:process.node,name:product.process_node_product0
 #: model:process.process,name:product.process_process_productprocess0
 #: field:product.packaging,product_id:0
-#: field:product.pricelist.item,product_id:0
-#: view:product.product:0
+#: field:product.pricelist.item,product_id:0 view:product.product:0
 #: field:product.supplierinfo,product_id:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
@@ -1912,8 +1695,7 @@ msgstr "Бруто тежина"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
-msgstr ""
-"Вкупен број на производи кои може да ги ставите по палета или кутија."
+msgstr "Вкупен број на производи кои може да ги ставите по палета или кутија."
 
 #. module: product
 #: field:product.product,variants:0
@@ -1958,9 +1740,7 @@ msgstr "Управување со секундарната мерна едини
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr ""
-"Пресметаната количина ќе биде повеќекратна од оваа вредност. Користете 1.0 "
-"како мерна единица што неможе да се дели, како парче."
+msgstr "Пресметаната количина ќе биде повеќекратна од оваа вредност. Користете 1.0 како мерна единица што неможе да се дели, како парче."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -2010,17 +1790,13 @@ msgstr "USB Адаптер"
 msgid ""
 "Sepcify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Наведи мерна единица доколку фактурирањето е извршено со друга мерна единица "
-"што се разликува од инвентарот. За користење на стандардната мерна единица, "
-"оставете го празно ова поле."
+msgstr "Наведи мерна единица доколку фактурирањето е извршено со друга мерна единица што се разликува од инвентарот. За користење на стандардната мерна единица, оставете го празно ова поле."
 
 #. module: product
 #: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
-msgstr ""
-"Неможе да се промени категоријата на веќе постоечка мерна единица '%s'."
+msgstr "Неможе да се промени категоријата на веќе постоечка мерна единица '%s'."
 
 #. module: product
 #: help:product.packaging,height:0
@@ -2035,10 +1811,8 @@ msgstr "Ценовник на производи"
 #. module: product
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: view:product.product:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
+#: field:product.pricelist.version,company_id:0 view:product.product:0
+#: field:product.supplierinfo,company_id:0 field:product.template,company_id:0
 msgid "Company"
 msgstr "Компанија"
 
@@ -2101,8 +1875,7 @@ msgid "Components"
 msgstr "Компоненти"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
+#: field:product.product,code:0 field:product.product,default_code:0
 msgid "Internal Reference"
 msgstr "Внатрешна референца"
 
@@ -2133,8 +1906,7 @@ msgid "Specify if the product can be selected in a sales order line."
 msgstr "Наведи дали производот може да се одбере при нарачката."
 
 #. module: product
-#: view:product.product:0
-#: field:product.template,sale_ok:0
+#: view:product.product:0 field:product.template,sale_ok:0
 msgid "Can be Sold"
 msgstr "Може да се продаде"
 
@@ -2176,35 +1948,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new product.\n"
 "              </p><p>\n"
-"                You must define a product for everything you purchase, "
-"whether\n"
-"                it's a physical product, a consumable or services you buy "
-"to\n"
+"                You must define a product for everything you purchase, whether\n"
+"                it's a physical product, a consumable or services you buy to\n"
 "                subcontractants.\n"
 "              </p><p>\n"
-"                The product form contains detailed information to improve "
-"the\n"
-"                purchase process: prices, procurement logistics, accounting "
-"data,\n"
+"                The product form contains detailed information to improve the\n"
+"                purchase process: prices, procurement logistics, accounting data,\n"
 "                available suppliers, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за дефинирање на нов производ.\n"
-"              </p><p>\n"
-"                Мора да дефинирате продукт за се што купувате,  било тоа\n"
-"                да е физички производ, потрошлив или услуга што се купува "
-"од\n"
-"                произведувачите.\n"
-"              </p><p>\n"
-"                Формата за производот содржи информации за упростување на "
-"набавниот\n"
-"                процес: цени, логистика за набавката, сметководствени "
-"податоци,\n"
-"                достапни добавувачи, итн.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за дефинирање на нов производ.\n              </p><p>\n                Мора да дефинирате продукт за се што купувате,  било тоа\n                да е физички производ, потрошлив или услуга што се купува од\n                произведувачите.\n              </p><p>\n                Формата за производот содржи информации за упростување на набавниот\n                процес: цени, логистика за набавката, сметководствени податоци,\n                достапни добавувачи, итн.\n              </p>\n            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
@@ -2214,8 +1967,7 @@ msgstr "Софтвер за уредување на слики"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:0
-#: view:product.pricelist.version:0
+#: view:product.pricelist:0 view:product.pricelist.version:0
 msgid "Pricelist Version"
 msgstr "Верзија на ценовник"
 
@@ -2241,8 +1993,7 @@ msgid "Sale Conditions"
 msgstr "Услови за продажба"
 
 #. module: product
-#: view:product.packaging:0
-#: view:product.product:0
+#: view:product.packaging:0 view:product.product:0
 msgid "Palletization"
 msgstr "Палетизација"
 
@@ -2271,9 +2022,7 @@ msgstr "месеци"
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
-msgstr ""
-"Со отселектирање на активното поле може да ја оневозможите единицата мерка "
-"без да ја избришете."
+msgstr "Со отселектирање на активното поле може да ја оневозможите единицата мерка без да ја избришете."
 
 #. module: product
 #: field:product.product,seller_delay:0
@@ -2295,53 +2044,31 @@ msgstr "Кутија"
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr ""
-"Наведи ја фиксната сума што ќе се додаде или одземе (доколку е негативна) на "
-"пресметаната сума со попустот."
+msgstr "Наведи ја фиксната сума што ќе се додаде или одземе (доколку е негативна) на пресметаната сума со попустот."
 
 #. module: product
 #: help:product.product,qty_available:0
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-"Тековна количина на производи.\n"
-"Во својство на единечна локација на производите, тоа ги вклучува "
-"складираните производи на таа локација или други локации произлезени од "
-"неа.\n"
-"Во својство на единечен склад, тоа ги вклучува складираните производи на "
-"локацијата на производите од тој склад или други локации произлезени од тој "
-"склад.\n"
-"Во својство на единечна продавница, тоа ги вклучува складираните производи "
-"на локацијата на производите од тој склад за таа продавница или други "
-"локации произлезени од неа.\n"
-"Во спротивно, тоа ги вклучува складираните производи на локацијата на "
-"производите со 'внатрешен' тип."
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr "Тековна количина на производи.\nВо својство на единечна локација на производите, тоа ги вклучува складираните производи на таа локација или други локации произлезени од неа.\nВо својство на единечен склад, тоа ги вклучува складираните производи на локацијата на производите од тој склад или други локации произлезени од тој склад.\nВо својство на единечна продавница, тоа ги вклучува складираните производи на локацијата на производите од тој склад за таа продавница или други локации произлезени од неа.\nВо спротивно, тоа ги вклучува складираните производи на локацијата на производите со 'внатрешен' тип."
 
 #. module: product
 #: help:product.template,type:0
 msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
-msgstr ""
-"Потрошливи: Нема да влијае на управувањето на залихата за овој производ.\n"
-"Производи за на залиха: Ќе влијае на залихата за овој производ."
+msgstr "Потрошливи: Нема да влијае на управувањето на залихата за овој производ.\nПроизводи за на залиха: Ќе влијае на залихата за овој производ."
 
 #. module: product
 #: help:product.pricelist.type,key:0
 msgid ""
 "Used in the code to select specific prices based on the context. Keep "
 "unchanged."
-msgstr ""
-"Се користи во кодот за да се селектираат специфични цени засновано на "
-"контекстот. Оставете го непроменето."
+msgstr "Се користи во кодот за да се селектираат специфични цени засновано на контекстот. Оставете го непроменето."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2353,15 +2080,7 @@ msgid ""
 "                whether it's a physical product, a consumable or service.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за дефинирање на нов производ.\n"
-"              </p><p>\n"
-"                Мора да дефинирате продукт за се што купувате или "
-"продавате,\n"
-"                било тоа да е физички производ, потрошлив или услуга.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за дефинирање на нов производ.\n              </p><p>\n                Мора да дефинирате продукт за се што купувате или продавате,\n                било тоа да е физички производ, потрошлив или услуга.\n              </p>\n            "
 
 #. module: product
 #: view:product.product:0
@@ -2378,10 +2097,7 @@ msgstr "Тип на пакет"
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr ""
-"Категорија за видот на прегледување претставува категорија што може да се "
-"користи како родител на друга категорија за создавање на хиерархиска "
-"структура."
+msgstr "Категорија за видот на прегледување претставува категорија што може да се користи како родител на друга категорија за создавање на хиерархиска структура."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2393,9 +2109,7 @@ msgstr "Пакет"
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr ""
-"Избери шаблон доколку правилото важи само за еден шаблон за производ. Во "
-"спротивно оставете го празно."
+msgstr "Избери шаблон доколку правилото важи само за еден шаблон за производ. Во спротивно оставете го празно."
 
 #. module: product
 #: model:product.template,description:product.product_product_2_product_template
@@ -2403,9 +2117,7 @@ msgstr ""
 msgid ""
 "This type of service include assistance for security questions, system "
 "configuration requirements, implementation or special needs."
-msgstr ""
-"Овој вид на услуга вклучува помош околу сигурносни прашања, побарувања на "
-"системски конфигурации, имплементација или специјални потреби."
+msgstr "Овој вид на услуга вклучува помош околу сигурносни прашања, побарувања на системски конфигурации, имплементација или специјални потреби."
 
 #. module: product
 #: field:product.product,image:0
@@ -2425,11 +2137,7 @@ msgid ""
 "Processor Core i5 2.70 Ghz\n"
 "2GB RAM\n"
 "HDD SH-1"
-msgstr ""
-"19\" LCD Монитор\n"
-"Процесор Core i5 2.70 Ghz\n"
-"2GB RAM\n"
-"HDD SH-1"
+msgstr "19\" LCD Монитор\nПроцесор Core i5 2.70 Ghz\n2GB RAM\nHDD SH-1"
 
 #. module: product
 #: view:product.template:0
@@ -2455,12 +2163,10 @@ msgstr "Рутер R430"
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr ""
-"Го дава редоследот на секвенцата кога ја прикажува листата на пакувањето."
+msgstr "Го дава редоследот на секвенцата кога ја прикажува листата на пакувањето."
 
 #. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
+#: selection:product.category,type:0 selection:product.template,state:0
 msgid "Normal"
 msgstr "Нормално"
 
@@ -2470,9 +2176,7 @@ msgstr "Нормално"
 msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
-msgstr ""
-"Најмалку еден ценовник нема активна верзија !\n"
-"Креирајте или активирајте еден."
+msgstr "Најмалку еден ценовник нема активна верзија !\nКреирајте или активирајте еден."
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -2484,18 +2188,14 @@ msgstr "Макс. ценовна маржа"
 msgid ""
 "Cost price of the product used for standard stock valuation in accounting "
 "and used as a base price on purchase orders."
-msgstr ""
-"Цена на производот што се користи за стандардно вреднување на стоката во "
-"сметководството и се користи како основна цена при нарачки."
+msgstr "Цена на производот што се користи за стандардно вреднување на стоката во сметководството и се користи како основна цена при нарачки."
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-"Ова име на производот од добавувачот ќе се појави кога ќе печатите барање за "
-"понуда. Оставете празно за да употребите внатрешно име."
+msgstr "Ова име на производот од добавувачот ќе се појави кога ќе печатите барање за понуда. Оставете празно за да употребите внатрешно име."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
@@ -2503,40 +2203,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a pricelist.\n"
 "              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
-"                the purchase price. The default price list has only one "
-"rule; use\n"
-"                the cost price defined on the product form, so that you do "
-"not have to\n"
-"                worry about supplier pricelists if you have very simple "
-"needs.\n"
+"                A price list contains rules to be evaluated in order to compute\n"
+"                the purchase price. The default price list has only one rule; use\n"
+"                the cost price defined on the product form, so that you do not have to\n"
+"                worry about supplier pricelists if you have very simple needs.\n"
 "              </p><p>\n"
-"                But you can also import complex price lists form your "
-"supplier\n"
+"                But you can also import complex price lists form your supplier\n"
 "                that may depends on the quantities ordered or the current\n"
 "                promotions.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за креирање на ценовник.\n"
-"              </p><p>\n"
-"                Ценовникот содржи правила што треба да се применат со цел да "
-"се пресмета\n"
-"                продажната цена. Стандардниот ценовник има само едно "
-"правило; користење\n"
-"                на продажната цена дефинирана во формата на производот, така "
-"што немора\n"
-"                да се грижите за цените на добавувачот доколку имате "
-"едноставни потреби.\n"
-"              </p><p>\n"
-"                Но исто така може да импортирате комплексни ценовници од "
-"добавувачот\n"
-"                што можат да зависат од нарачаната количина или моментални "
-"промоции.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за креирање на ценовник.\n              </p><p>\n                Ценовникот содржи правила што треба да се применат со цел да се пресмета\n                продажната цена. Стандардниот ценовник има само едно правило; користење\n                на продажната цена дефинирана во формата на производот, така што немора\n                да се грижите за цените на добавувачот доколку имате едноставни потреби.\n              </p><p>\n                Но исто така може да импортирате комплексни ценовници од добавувачот\n                што можат да зависат од нарачаната количина или моментални промоции.\n              </p>\n            "
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2581,15 +2258,10 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr ""
-"17\" Монитор\n"
-"4GB RAM\n"
-"Hi-Speed-1294P Процесор\n"
-"QWERTY тастатура"
+msgstr "17\" Монитор\n4GB RAM\nHi-Speed-1294P Процесор\nQWERTY тастатура"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
+#: field:product.category,sequence:0 field:product.packaging,sequence:0
 #: field:product.pricelist.item,sequence:0
 #: field:product.supplierinfo,sequence:0
 msgid "Sequence"
@@ -2600,10 +2272,7 @@ msgstr "Секвенца"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
-"Просечен број на денови на доцнење за производство на овој производ. Во "
-"случај на повеќекратен норматив, ќе биде додадено времето на предност при "
-"производството на секоја од компонентите."
+msgstr "Просечен број на денови на доцнење за производство на овој производ. Во случај на повеќекратен норматив, ќе биде додадено времето на предност при производството на секоја од компонентите."
 
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
@@ -2625,15 +2294,7 @@ msgid ""
 "                Measure within the same category.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за додавање на нова мерна единица.\n"
-"              </p><p>\n"
-"                Мора да дефинирате стапка на конверзија помеѓу неколку "
-"мерни\n"
-"                единици во склоп на истата категорија.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за додавање на нова мерна единица.\n              </p><p>\n                Мора да дефинирате стапка на конверзија помеѓу неколку мерни\n                единици во склоп на истата категорија.\n              </p>\n            "
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
@@ -2657,10 +2318,8 @@ msgid "Creation of the product"
 msgstr "Креирање на производот"
 
 #. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: report:product.pricelist:0
-#: view:product.product:0
+#: field:pricelist.partnerinfo,name:0 field:product.packaging,name:0
+#: report:product.pricelist:0 view:product.product:0
 #: field:product.template,description:0
 msgid "Description"
 msgstr "Опис"
@@ -2685,12 +2344,9 @@ msgstr "Волумен"
 #: help:product.product,image_small:0
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Слика од производот со мала големина. Автоматски се врши промена на "
-"големината во 64x64px со зачувување на односот. Ова поле се користи каде што "
-"има потреба од мала слика."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Слика од производот со мала големина. Автоматски се врши промена на големината во 64x64px со зачувување на односот. Ова поле се користи каде што има потреба од мала слика."
 
 #. module: product
 #: model:product.template,name:product.product_product_40_product_template
@@ -2737,41 +2393,21 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a pricelist.\n"
 "              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
+"                A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products.\n"
 "              </p><p>\n"
-"                Price lists may have several versions (2010, 2011, Promotion "
-"of\n"
-"                February 2010, etc.) and each version may have several "
-"rules.\n"
-"                (e.g. the customer price of a product category will be based "
-"on\n"
+"                Price lists may have several versions (2010, 2011, Promotion of\n"
+"                February 2010, etc.) and each version may have several rules.\n"
+"                (e.g. the customer price of a product category will be based on\n"
 "                the supplier price multiplied by 1.80).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за креирање на ценовник.\n"
-"              </p><p>\n"
-"                Ценовникот содржи правила што треба да се применат со цел да "
-"се пресмета\n"
-"                продажната цена на производите.\n"
-"              </p><p>\n"
-"                Ценовниците може да имаат неколку верзии (2010, 2011, "
-"Февруарска\n"
-"                Промоција 2010, итн.) и секоја верзија има неколку правила.\n"
-"                (пример. цената на одреден производ за клиентот ќе се "
-"пресмета врз база\n"
-"                на цената на добавувачот помножена со 1.80).\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за креирање на ценовник.\n              </p><p>\n                Ценовникот содржи правила што треба да се применат со цел да се пресмета\n                продажната цена на производите.\n              </p><p>\n                Ценовниците може да имаат неколку верзии (2010, 2011, Февруарска\n                Промоција 2010, итн.) и секоја верзија има неколку правила.\n                (пример. цената на одреден производ за клиентот ќе се пресмета врз база\n                на цената на добавувачот помножена со 1.80).\n              </p>\n            "
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
 #: field:product.pricelist.item,product_tmpl_id:0
-#: field:product.product,product_tmpl_id:0
-#: view:product.template:0
+#: field:product.product,product_tmpl_id:0 view:product.template:0
 msgid "Product Template"
 msgstr "Урнек на производ"
 
@@ -2809,9 +2445,7 @@ msgstr "RAM SR3"
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr ""
-"Дава различни начини за пакување на ист производ. Ова нема влијание на "
-"налогот за требување и главно се користи доколку се користи EDI модулот."
+msgstr "Дава различни начини за пакување на ист производ. Ова нема влијание на налогот за требување и главно се користи доколку се користи EDI модулот."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -2826,11 +2460,7 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-"Ја подесува цената така што таа е множител на оваа вредност.\n"
-"Заокружувањето се применува после попустот и пред доплатата.\n"
-"За да имате цени кои завршуваат на 9.99, подесете заокружување 10, доплата -"
-"0.01"
+msgstr "Ја подесува цената така што таа е множител на оваа вредност.\nЗаокружувањето се применува после попустот и пред доплатата.\nЗа да имате цени кои завршуваат на 9.99, подесете заокружување 10, доплата -0.01"
 
 #. module: product
 #: field:product.template,list_price:0
@@ -2842,9 +2472,7 @@ msgstr "Продажна цена"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr ""
-"Конверзија помеѓу мерните единици може да се случи доколку припаѓаат на иста "
-"категорија. Конверзијата ќе се изврши врз база на стапките на конверзија."
+msgstr "Конверзија помеѓу мерните единици може да се случи доколку припаѓаат на иста категорија. Конверзијата ќе се изврши врз база на стапките на конверзија."
 
 #. module: product
 #: constraint:product.category:0
@@ -2857,10 +2485,7 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr ""
-"Слика од производот со средна големина. Автоматски се врши промена на "
-"големината во 128x128px со зачувување на односот. Ова поле се користи кај "
-"формите за преглед."
+msgstr "Слика од производот со средна големина. Автоматски се врши промена на големината во 128x128px со зачувување на односот. Ова поле се користи кај формите за преглед."
 
 #. module: product
 #: view:product.uom:0
@@ -2881,7 +2506,3 @@ msgstr "Волумен во m3."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Ценовен попуст"
-
-#, python-format
-#~ msgid "Partner section of the product form"
-#~ msgstr "Дел за партнер од формуларот за производот"

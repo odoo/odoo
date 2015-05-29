@@ -1,21 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_long_term
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-26 09:11+0000\n"
-"Last-Translator: Olga <chikiro.spam@gmail.com>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -23,10 +24,9 @@ msgid "force the phase to finish before this date"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Выполняется"
 
 #. module: project_long_term
 #: field:account.analytic.account,use_phases:0
@@ -38,8 +38,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
+#: view:project.phase:0 view:project.user.allocation:0
 msgid "Team Planning"
 msgstr ""
 
@@ -49,8 +48,7 @@ msgid "Assigned Users"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,next_phase_ids:0
+#: view:project.phase:0 field:project.phase,next_phase_ids:0
 msgid "Next Phases"
 msgstr "Следующие фазы"
 
@@ -67,15 +65,14 @@ msgstr "Задачи проекта"
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
 msgid ""
-"To schedule phases of all or a specified project. It then open a gantt "
-"view.\n"
+"To schedule phases of all or a specified project. It then open a gantt view.\n"
 "               "
 msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Задания проекта"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
@@ -87,12 +84,12 @@ msgstr ""
 #. module: project_long_term
 #: field:project.phase,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Последовательность"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Action"
-msgstr ""
+msgstr "Действие"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -110,16 +107,14 @@ msgid "Draft"
 msgstr "Черновик"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "C_ompute"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "New"
-msgstr ""
+msgstr "Создать"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
@@ -132,10 +127,9 @@ msgid "Resource Leaves"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "Pending"
-msgstr ""
+msgstr "В ожидании"
 
 #. module: project_long_term
 #: help:project.phase,progress:0
@@ -151,7 +145,7 @@ msgstr ""
 #: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (копия)"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
@@ -160,15 +154,14 @@ msgid "Please specify a project to schedule."
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: view:project.user.allocation:0
+#: view:project.phase:0 view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Группировать по ..."
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Оставшееся время"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
@@ -202,21 +195,20 @@ msgstr ""
 msgid ""
 "If the phase is created the status 'Draft'.\n"
 " If the phase is started, the status becomes 'In Progress'.\n"
-" If review is needed the phase is in 'Pending' status.                       "
-"           \n"
+" If review is needed the phase is in 'Pending' status.                                  \n"
 " If the phase is over, the status is set to 'Done'."
 msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "Выполнение"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
 msgid "Resources"
-msgstr ""
+msgstr "Ресурсы"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -224,10 +216,9 @@ msgid "My Projects"
 msgstr "Мои проекты"
 
 #. module: project_long_term
-#: view:project.project:0
-#: view:project.user.allocation:0
+#: view:project.project:0 view:project.user.allocation:0
 msgid "Phase"
-msgstr ""
+msgstr "Этап"
 
 #. module: project_long_term
 #: help:project.phase,duration:0
@@ -237,7 +228,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
 msgid "Working Time"
-msgstr ""
+msgstr "Рабочее время"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -257,13 +248,12 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Month"
-msgstr ""
+msgstr "Месяц начала"
 
 #. module: project_long_term
-#: field:project.phase,date_end:0
-#: field:project.user.allocation,date_end:0
+#: field:project.phase,date_end:0 field:project.user.allocation,date_end:0
 msgid "End Date"
-msgstr ""
+msgstr "Дата окончания"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
@@ -287,8 +277,7 @@ msgid "Compute a Single Project"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,previous_phase_ids:0
+#: view:project.phase:0 field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
 msgstr "Предыдущие фазы"
 
@@ -310,7 +299,8 @@ msgstr ""
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
-" It's computed by the scheduler according to the start date and the duration."
+" It's computed by the scheduler according to the start date and the "
+"duration."
 msgstr ""
 
 #. module: project_long_term
@@ -319,28 +309,23 @@ msgid "Loops in phases not allowed"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.user.allocation:0
-#: field:project.user.allocation,user_id:0
+#: view:project.user.allocation:0 field:project.user.allocation,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
 #: field:project.compute.phases,project_id:0
-#: field:project.compute.tasks,project_id:0
-#: view:project.phase:0
-#: field:project.phase,project_id:0
-#: view:project.task:0
-#: view:project.user.allocation:0
-#: field:project.user.allocation,project_id:0
+#: field:project.compute.tasks,project_id:0 view:project.phase:0
+#: field:project.phase,project_id:0 view:project.task:0
+#: view:project.user.allocation:0 field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Проект"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -349,9 +334,7 @@ msgstr ""
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
-#: view:project.phase:0
-#: view:project.task:0
-#: field:project.task,phase_id:0
+#: view:project.phase:0 view:project.task:0 field:project.task,phase_id:0
 #: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr ""
@@ -359,7 +342,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
 msgid "Scheduling"
-msgstr ""
+msgstr "Планирование"
 
 #. module: project_long_term
 #: constraint:project.phase:0
@@ -374,7 +357,7 @@ msgstr "Отменен"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Общее время"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -382,21 +365,19 @@ msgid "Project Compute Phases"
 msgstr ""
 
 #. module: project_long_term
-#: field:project.phase,date_start:0
-#: field:project.user.allocation,date_start:0
+#: field:project.phase,date_start:0 field:project.user.allocation,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Дата начала"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Constraints"
-msgstr ""
+msgstr "Ограничения"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,state:0
+#: view:project.phase:0 field:project.phase,state:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
@@ -406,7 +387,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Tasks"
-msgstr ""
+msgstr "Задачи"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
@@ -422,8 +403,8 @@ msgstr "Ошибка!"
 #. module: project_long_term
 #: help:project.phase,date_start:0
 msgid ""
-"It's computed by the scheduler according the project date or the end date of "
-"the previous phase."
+"It's computed by the scheduler according the project date or the end date of"
+" the previous phase."
 msgstr ""
 
 #. module: project_long_term
@@ -431,8 +412,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
-#: view:project.phase:0
-#: field:project.project,phase_ids:0
+#: view:project.phase:0 field:project.project,phase_ids:0
 msgid "Project Phases"
 msgstr ""
 
@@ -444,17 +424,17 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Month"
-msgstr ""
+msgstr "&#1052;&#1077;&#1089;&#1103;&#1094;"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Счет аналитики"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
-msgstr ""
+msgstr "Срок"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
@@ -469,10 +449,9 @@ msgid "Schedule Tasks"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "Done"
-msgstr ""
+msgstr "Сделано"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -485,23 +464,21 @@ msgid "Force Assigned Users"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,duration:0
+#: view:project.phase:0 field:project.phase,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Длительность"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #. module: project_long_term
 #: field:project.phase,name:0
 msgid "Name"
-msgstr ""
+msgstr "Название"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "or"
-msgstr ""
+msgstr "или"

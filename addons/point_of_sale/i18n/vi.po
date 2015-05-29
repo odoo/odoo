@@ -1,21 +1,22 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * point_of_sale
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-06-27 16:14+0000\n"
-"Last-Translator: Binh Nguyen <bin8nguyen@gmail.com>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"PO-Revision-Date: 2015-05-27 08:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Vietnamese (http://www.transifex.com/projects/p/odoo-7/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:09+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -37,8 +38,7 @@ msgid ""
 "                touchscreen interface.\n"
 "              </p><p>\n"
 "                If you put a photo on the category, the layout of the\n"
-"                touchscreen interface will automatically. We suggest not to "
-"put\n"
+"                touchscreen interface will automatically. We suggest not to put\n"
 "                a photo on categories for small (1024x768) screens.\n"
 "              </p>\n"
 "            "
@@ -55,8 +55,7 @@ msgid "Computed Balance"
 msgstr "Cân đối tính toán"
 
 #. module: point_of_sale
-#: view:pos.session:0
-#: view:report.pos.order:0
+#: view:pos.session:0 view:report.pos.order:0
 msgid "Today"
 msgstr "Hôm nay"
 
@@ -83,8 +82,7 @@ msgid "&atilde;"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.config,journal_id:0
-#: field:pos.order,sale_journal:0
+#: field:pos.config,journal_id:0 field:pos.order,sale_journal:0
 msgid "Sale Journal"
 msgstr "Nhật ký báng hàng"
 
@@ -95,8 +93,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Details of Sales"
 msgstr "Chi tiết bán hàng"
 
@@ -106,17 +103,14 @@ msgid "You cannot have two cash controls in one Point Of Sale !"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.payment.report.user,user_id:0
-#: field:pos.sale.user,user_id:0
-#: field:pos.sales.user.today,user_id:0
-#: view:report.pos.order:0
+#: field:pos.payment.report.user,user_id:0 field:pos.sale.user,user_id:0
+#: field:pos.sales.user.today,user_id:0 view:report.pos.order:0
 #: field:report.pos.order,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Nhân viên bán hàng"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,day:0
+#: view:report.pos.order:0 field:report.pos.order,day:0
 msgid "Day"
 msgstr "Ngày"
 
@@ -141,17 +135,13 @@ msgstr ""
 #: view:pos.session.opening:0
 msgid ""
 "You may have to control your cash amount in your cash register, before\n"
-"                          being able to start selling through the "
-"touchscreen interface."
+"                          being able to start selling through the touchscreen interface."
 msgstr ""
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: field:pos.box.entries,amount:0
-#: report:pos.invoice:0
-#: field:pos.make.payment,amount:0
-#: report:pos.user.product:0
-#: field:report.transaction.pos,amount:0
+#: report:account.statement:0 field:pos.box.entries,amount:0
+#: report:pos.invoice:0 field:pos.make.payment,amount:0
+#: report:pos.user.product:0 field:report.transaction.pos,amount:0
 msgid "Amount"
 msgstr "Số tiền"
 
@@ -186,8 +176,7 @@ msgstr "Tham chiếu"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1085
-#: code:addons/point_of_sale/point_of_sale.py:1102
-#: report:pos.invoice:0
+#: code:addons/point_of_sale/point_of_sale.py:1102 report:pos.invoice:0
 #: report:pos.lines:0
 #, python-format
 msgid "Tax"
@@ -241,21 +230,19 @@ msgid "Closing Cash Control"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Total of the day"
 msgstr "Tổng trong ngày"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,average_price:0
+#: view:report.pos.order:0 field:report.pos.order,average_price:0
 msgid "Average Price"
 msgstr "Giá TB"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Thông tin tài chính"
 
 #. module: point_of_sale
 #. openerp-web
@@ -275,8 +262,7 @@ msgid "Disc. (%)"
 msgstr "Chiết khấu (%)"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Total discount"
 msgstr "Tổng chiết khấu"
 
@@ -312,8 +298,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
+#: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 msgid "Sales by User"
 msgstr "Bán hàng theo người sử dụng"
 
@@ -329,8 +314,7 @@ msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,price_total:0
+#: view:report.pos.order:0 field:report.pos.order,price_total:0
 msgid "Total Price"
 msgstr "Giá tổng"
 
@@ -410,8 +394,7 @@ msgid "Margin"
 msgstr "Lợi nhuận biên"
 
 #. module: point_of_sale
-#: field:pos.discount,discount:0
-#: field:pos.order.line,discount:0
+#: field:pos.discount,discount:0 field:pos.order.line,discount:0
 msgid "Discount (%)"
 msgstr "Chiết khấu (%)"
 
@@ -470,8 +453,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Please set your profit and loss accounts on your payment method '%s'. This "
-"will allow OpenERP to post the difference of %.2f in your ending balance. To "
-"close this session, you can update the 'Closing Cash Control' to avoid any "
+"will allow OpenERP to post the difference of %.2f in your ending balance. To"
+" close this session, you can update the 'Closing Cash Control' to avoid any "
 "difference."
 msgstr ""
 
@@ -510,16 +493,14 @@ msgid "Validate & Open Session"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:99
-#: selection:pos.session,state:0
+#: code:addons/point_of_sale/point_of_sale.py:99 selection:pos.session,state:0
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "In Progress"
-msgstr ""
+msgstr "Đang thực hiện"
 
 #. module: point_of_sale
-#: view:pos.session:0
-#: field:pos.session,opening_details_ids:0
+#: view:pos.session:0 field:pos.session,opening_details_ids:0
 msgid "Opening Cash Control"
 msgstr ""
 
@@ -564,17 +545,12 @@ msgid "Search Cash Statements"
 msgstr ""
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: field:pos.config,state:0
-#: view:pos.order:0
-#: field:pos.order,state:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: field:pos.session,state:0
-#: field:pos.session.opening,pos_state_str:0
-#: field:report.pos.order,state:0
+#: view:account.bank.statement:0 field:pos.config,state:0 view:pos.order:0
+#: field:pos.order,state:0 report:pos.sales.user:0
+#: report:pos.sales.user.today:0 field:pos.session,state:0
+#: field:pos.session.opening,pos_state_str:0 field:report.pos.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Trạng thái"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -624,16 +600,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to start a new session.\n"
 "              </p><p>\n"
-"                A session is a period of time, usually one day, during "
-"which\n"
-"                you sell through the point of sale. The user has to check "
-"the\n"
-"                currencies in your cash registers at the beginning and the "
-"end\n"
+"                A session is a period of time, usually one day, during which\n"
+"                you sell through the point of sale. The user has to check the\n"
+"                currencies in your cash registers at the beginning and the end\n"
 "                of each session.\n"
 "              </p><p>\n"
-"                Note that you should better to use the menu <i>Your "
-"Session</i>\n"
+"                Note that you should better to use the menu <i>Your Session</i>\n"
 "                to quickly open a new session.\n"
 "              </p>\n"
 "            "
@@ -643,18 +615,17 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:909
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Hóa đơn khách hàng"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid ""
-"You can continue sales from the touchscreen interface by clicking on \"Start "
-"Selling\" or close the cash register session."
+"You can continue sales from the touchscreen interface by clicking on \"Start"
+" Selling\" or close the cash register session."
 msgstr ""
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,stop_at:0
 msgid "Closing Date"
 msgstr "Ngày đóng cửa"
@@ -675,8 +646,7 @@ msgid "Coca-Cola Light 1L"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Summary"
 msgstr "Tóm tắt"
 
@@ -691,9 +661,7 @@ msgid "Chaudfontaine 50cl"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-#: report:pos.lines:0
-#: field:pos.order.line,qty:0
+#: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,qty:0
 #: field:report.sales.by.user.pos,qty:0
 #: field:report.sales.by.user.pos.month,qty:0
 msgid "Quantity"
@@ -719,7 +687,7 @@ msgstr "Chu kỳ"
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Net Total:"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
@@ -756,8 +724,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,total_discount:0
+#: view:report.pos.order:0 field:report.pos.order,total_discount:0
 msgid "Total Discount"
 msgstr "Tổng giảm giá"
 
@@ -766,12 +733,9 @@ msgstr "Tổng giảm giá"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:39
 #, python-format
 msgid ""
-"The Point of Sale is not supported by Microsoft Internet Explorer. Please "
-"use\n"
+"The Point of Sale is not supported by Microsoft Internet Explorer. Please use\n"
 "                        a modern browser like"
-msgstr ""
-"Điểm bán hàng không hỗ trợ chạy trên trình duyệt Microsoft Internet "
-"Explorer. Vui lòng sử dụng một trình duyệt khác như"
+msgstr "Điểm bán hàng không hỗ trợ chạy trên trình duyệt Microsoft Internet Explorer. Vui lòng sử dụng một trình duyệt khác như"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -779,9 +743,7 @@ msgid "Click to start a session."
 msgstr "Nhấn để bắt đầu phiên làm việc."
 
 #. module: point_of_sale
-#: view:pos.details:0
-#: view:pos.payment.report:0
-#: view:pos.payment.report.user:0
+#: view:pos.details:0 view:pos.payment.report:0 view:pos.payment.report.user:0
 #: view:pos.sale.user:0
 msgid "Print Report"
 msgstr "In Báo cáo"
@@ -860,8 +822,7 @@ msgid "Post All Orders"
 msgstr ""
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,cash_register_balance_end_real:0
 msgid "Ending Balance"
 msgstr "Số dư cuối kỳ"
@@ -897,7 +858,8 @@ msgid ""
 "sale by reusing existing bank and cash through \"Accounting / Configuration "
 "/ Journals / Journals\". Select a journal and check the field \"PoS Payment "
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
-"methods directly from menu \"PoS Backend / Configuration / Payment Methods\"."
+"methods directly from menu \"PoS Backend / Configuration / Payment "
+"Methods\"."
 msgstr ""
 
 #. module: point_of_sale
@@ -916,8 +878,7 @@ msgid "Spa Reine 1L"
 msgstr ""
 
 #. module: point_of_sale
-#: constraint:res.partner:0
-#: constraint:res.users:0
+#: constraint:res.partner:0 constraint:res.users:0
 msgid "Error: Invalid ean code"
 msgstr "Lỗi: mã EAN không hợp lệ"
 
@@ -934,8 +895,7 @@ msgid "Open Statements"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.details,date_end:0
-#: field:pos.sale.user,date_end:0
+#: field:pos.details,date_end:0 field:pos.sale.user,date_end:0
 msgid "Date End"
 msgstr ""
 
@@ -945,8 +905,7 @@ msgid "Jonagold apples"
 msgstr ""
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: report:account.statement:0
+#: view:account.bank.statement:0 report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: field:report.pos.order,journal_id:0
@@ -956,7 +915,7 @@ msgstr "Sổ nhật ký"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Statements"
-msgstr ""
+msgstr "Statements"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -966,13 +925,12 @@ msgstr ""
 #. module: point_of_sale
 #: help:pos.config,group_by:0
 msgid ""
-"Check this if you want to group the Journal Items by Product while closing a "
-"Session"
+"Check this if you want to group the Journal Items by Product while closing a"
+" Session"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Total paid"
 msgstr "Tổng số đã trả"
 
@@ -1060,7 +1018,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Journals"
-msgstr ""
+msgstr "Các sổ nhật ký"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_prosciutto_product_template
@@ -1117,8 +1075,7 @@ msgid "Scan Item Success"
 msgstr ""
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,cash_register_balance_start:0
 msgid "Starting Balance"
 msgstr "Số dư đầu ngày"
@@ -1172,15 +1129,13 @@ msgstr "Thanh toán theo người dùng"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:285
 #: code:addons/point_of_sale/wizard/pos_payment.py:79
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
-#: report:pos.details:0
-#: view:pos.order:0
+#: report:pos.details:0 view:pos.order:0
 #, python-format
 msgid "Payment"
 msgstr "Thanh toán"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,nbr:0
+#: view:report.pos.order:0 field:report.pos.order,nbr:0
 msgid "# of Lines"
 msgstr "Số lượng dòng"
 
@@ -1252,7 +1207,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:811
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "In"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_dame_blanche_2,5l_product_template
@@ -1316,17 +1271,14 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.sales.by.margin.pos:0
-#: view:report.sales.by.margin.pos.month:0
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
+#: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS "
 msgstr "POS "
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:pos.user.product:0
+#: report:account.statement:0 report:pos.user.product:0
 msgid "Total :"
 msgstr "Tổng :"
 
@@ -1351,8 +1303,7 @@ msgid "Pricelist"
 msgstr "Bảng giá"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Total invoiced"
 msgstr ""
 
@@ -1363,8 +1314,7 @@ msgid "Point of Sale Category"
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,product_qty:0
+#: view:report.pos.order:0 field:report.pos.order,product_qty:0
 msgid "# of Qty"
 msgstr ""
 
@@ -1393,8 +1343,7 @@ msgid "Yellow Peppers"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,date_order:0
+#: view:pos.order:0 field:pos.order,date_order:0
 #: field:report.sales.by.margin.pos,date_order:0
 #: field:report.sales.by.margin.pos.month,date_order:0
 #: field:report.sales.by.user.pos,date_order:0
@@ -1443,7 +1392,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Fiscal Position Remark :"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -1451,8 +1400,7 @@ msgid "September"
 msgstr "Tháng Chín"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,start_at:0
 msgid "Opening Date"
 msgstr "Ngày mở cửa"
@@ -1496,7 +1444,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category
 msgid "Product Categories"
-msgstr ""
+msgstr "Loại sản phẩm"
 
 #. module: point_of_sale
 #: help:pos.config,journal_id:0
@@ -1580,13 +1528,9 @@ msgid "Apply Discount"
 msgstr "Áp dụng chiết khấu"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
-#: field:pos.box.entries,user_id:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: view:pos.session:0
-#: report:pos.user.product:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
+#: field:pos.box.entries,user_id:0 report:pos.sales.user:0
+#: report:pos.sales.user.today:0 view:pos.session:0 report:pos.user.product:0
 #: field:report.sales.by.margin.pos,user_id:0
 #: field:report.sales.by.margin.pos.month,user_id:0
 #: field:report.sales.by.user.pos,user_id:0
@@ -1594,7 +1538,7 @@ msgstr "Áp dụng chiết khấu"
 #: field:report.transaction.pos,user_id:0
 #: model:res.groups,name:point_of_sale.group_pos_user
 msgid "User"
-msgstr ""
+msgstr "Người dùng"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:414
@@ -1638,15 +1582,14 @@ msgid "transaction for the pos"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: field:report.transaction.pos,date_create:0
+#: report:pos.details:0 field:report.transaction.pos,date_create:0
 msgid "Date"
 msgstr "Ngày"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_entries
 msgid "Pos Box Entries"
-msgstr ""
+msgstr "POS"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boon_framboise_37,5cl_product_template
@@ -1711,24 +1654,16 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.config:0
-#: selection:pos.config,state:0
+#: view:pos.config:0 selection:pos.config,state:0
 msgid "Inactive"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:313
-#: view:pos.confirm:0
-#: view:pos.details:0
-#: view:pos.discount:0
-#: view:pos.ean_wizard:0
-#: view:pos.make.payment:0
-#: view:pos.open.statement:0
-#: view:pos.payment.report:0
-#: view:pos.payment.report.user:0
-#: view:pos.receipt:0
-#: view:pos.sale.user:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:313 view:pos.confirm:0
+#: view:pos.details:0 view:pos.discount:0 view:pos.ean_wizard:0
+#: view:pos.make.payment:0 view:pos.open.statement:0 view:pos.payment.report:0
+#: view:pos.payment.report.user:0 view:pos.receipt:0 view:pos.sale.user:0
 #, python-format
 msgid "Cancel"
 msgstr "Hủy bỏ"
@@ -1755,7 +1690,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:768
 #, python-format
 msgid "Pay"
-msgstr ""
+msgstr "Trả"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_kriek_37,5cl_product_template
@@ -1768,9 +1703,7 @@ msgid "Order IDs Sequence"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-#: report:pos.lines:0
-#: field:pos.order.line,price_unit:0
+#: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,price_unit:0
 #: report:pos.payment.report.user:0
 msgid "Unit Price"
 msgstr "Đơn giá"
@@ -1801,8 +1734,7 @@ msgid "Lines of Point of Sale"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: view:report.transaction.pos:0
+#: view:pos.order:0 view:report.transaction.pos:0
 msgid "Amount total"
 msgstr ""
 
@@ -1815,7 +1747,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
 #: view:pos.session:0
 msgid "Cash Registers"
-msgstr ""
+msgstr "Các két tiền mặt"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_end:0
@@ -1841,10 +1773,8 @@ msgstr "Tham chiếu"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:94
-#: report:pos.details:0
-#: report:pos.invoice:0
-#: report:pos.lines:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:94 report:pos.details:0
+#: report:pos.invoice:0 report:pos.lines:0
 #, python-format
 msgid "Price"
 msgstr "Giá"
@@ -1855,10 +1785,8 @@ msgid "Coca-Cola Light 33cl"
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.sales.by.margin.pos:0
-#: view:report.sales.by.margin.pos.month:0
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
+#: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS"
 msgstr "POS"
@@ -1885,7 +1813,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.session,cash_register_difference:0
 msgid "Difference"
-msgstr ""
+msgstr "Khác biệt"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_agrumes
@@ -1893,16 +1821,13 @@ msgid "Other Citrus"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Start Period"
 msgstr "Bắt đầu Chu kỳ"
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: field:pos.category,complete_name:0
-#: field:pos.category,name:0
-#: report:pos.sales.user:0
+#: report:account.statement:0 field:pos.category,complete_name:0
+#: field:pos.category,name:0 report:pos.sales.user:0
 #: report:pos.sales.user.today:0
 msgid "Name"
 msgstr "Tên"
@@ -1915,8 +1840,8 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid ""
-"Generate all sale journal entries for non invoiced orders linked to a closed "
-"cash register or statement."
+"Generate all sale journal entries for non invoiced orders linked to a closed"
+" cash register or statement."
 msgstr ""
 
 #. module: point_of_sale
@@ -1927,23 +1852,22 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
 msgid "Apply"
-msgstr ""
+msgstr "Áp dụng"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:288
 #, python-format
 msgid ""
-"Please insert your card in the reader and follow the instructions to "
-"complete\n"
+"Please insert your card in the reader and follow the instructions to complete\n"
 "            your purchase"
 msgstr ""
 
 #. module: point_of_sale
 #: help:product.product,income_pdt:0
 msgid ""
-"Check if, this is a product you can use to put cash into a statement for the "
-"point of sale backend."
+"Check if, this is a product you can use to put cash into a statement for the"
+" point of sale backend."
 msgstr ""
 
 #. module: point_of_sale
@@ -1983,13 +1907,9 @@ msgid "POS ordered created during current year"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
-#: report:pos.lines:0
-#: report:pos.payment.report.user:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: report:pos.user.product:0
+#: report:pos.details:0 report:pos.details_summary:0 report:pos.lines:0
+#: report:pos.payment.report.user:0 report:pos.sales.user:0
+#: report:pos.sales.user.today:0 report:pos.user.product:0
 msgid "Print Date"
 msgstr "Ngày In"
 
@@ -2000,14 +1920,11 @@ msgstr ""
 
 #. module: point_of_sale
 #: help:pos.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
+msgid "Gives the sequence order when displaying a list of product categories."
 msgstr ""
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: view:pos.order:0
-#: view:pos.session:0
+#: view:account.bank.statement:0 view:pos.order:0 view:pos.session:0
 #: view:report.pos.order:0
 msgid "Group By..."
 msgstr "Nhóm theo..."
@@ -2081,7 +1998,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.categ_others
 msgid "Others"
-msgstr ""
+msgstr "Khác"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2089,7 +2006,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:881
 #, python-format
 msgid "Validate"
-msgstr ""
+msgstr "Xác nhận"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_legumes_frais
@@ -2124,9 +2041,7 @@ msgid "Coca-Cola Light Lemon 2L"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.invoice:0
-#: field:pos.order,amount_tax:0
+#: report:pos.details:0 report:pos.invoice:0 field:pos.order,amount_tax:0
 msgid "Taxes"
 msgstr "Các loại thuế"
 
@@ -2147,8 +2062,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_normal_action
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_product
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_products
-#: view:pos.order:0
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_products view:pos.order:0
 msgid "Products"
 msgstr "Các sản phẩm"
 
@@ -2174,10 +2088,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:84
-#: report:pos.details:0
-#: report:pos.payment.report.user:0
-#: report:pos.user.product:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:84 report:pos.details:0
+#: report:pos.payment.report.user:0 report:pos.user.product:0
 #: field:report.sales.by.margin.pos,qty:0
 #: field:report.sales.by.margin.pos.month,qty:0
 #, python-format
@@ -2195,7 +2107,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:717
 #, python-format
 msgid "Help"
-msgstr ""
+msgstr "Trợ giúp"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2208,8 +2120,7 @@ msgid "Spa Fruit and Orange 50cl"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.config:0
-#: field:pos.config,journal_ids:0
+#: view:pos.config:0 field:pos.config,journal_ids:0
 #: field:pos.session,journal_ids:0
 msgid "Available Payment Methods"
 msgstr ""
@@ -2223,10 +2134,8 @@ msgid ""
 "                You must define a product for everything you sell through\n"
 "                the point of sale interface.\n"
 "              </p><p>\n"
-"                Do not forget to set the price and the point of sale "
-"category\n"
-"                in which it should appear. If a product has no point of "
-"sale\n"
+"                Do not forget to set the price and the point of sale category\n"
+"                in which it should appear. If a product has no point of sale\n"
 "                category, you can not sell it through the point of sale\n"
 "                interface.\n"
 "              </p>\n"
@@ -2252,7 +2161,7 @@ msgstr ""
 #: report:account.statement:0
 #: model:ir.actions.report.xml,name:point_of_sale.account_statement
 msgid "Statement"
-msgstr ""
+msgstr "Statement"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2264,7 +2173,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Source"
-msgstr ""
+msgstr "Nguồn"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2276,7 +2185,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.make.payment,journal_id:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Hình thức thanh toán"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_45g_product_template
@@ -2291,8 +2200,7 @@ msgstr "Sổ phụ ngân hàng"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:101
-#: selection:pos.session,state:0
-#: selection:pos.session.opening,pos_state:0
+#: selection:pos.session,state:0 selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closed & Posted"
 msgstr ""
@@ -2309,7 +2217,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:562
 #, python-format
 msgid "Phone:"
-msgstr ""
+msgstr "Điện thoại"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_1l_product_template
@@ -2333,14 +2241,12 @@ msgstr "Tháng Bảy"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
-#: view:pos.session:0
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos view:pos.session:0
 msgid "Point of Sales"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "Qty of product"
 msgstr "Số lượng sản phẩm"
 
@@ -2360,8 +2266,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:100
-#: selection:pos.session,state:0
-#: selection:pos.session.opening,pos_state:0
+#: selection:pos.session,state:0 selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closing Control"
 msgstr ""
@@ -2406,8 +2311,7 @@ msgid "Jupiler 50cl"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
+#: report:pos.details:0 report:pos.details_summary:0
 msgid "End Period"
 msgstr "Kết thúc Chu kỳ"
 
@@ -2439,8 +2343,7 @@ msgid "Chimay Red 33cl"
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,month:0
+#: view:report.pos.order:0 field:report.pos.order,month:0
 msgid "Month"
 msgstr "Tháng"
 
@@ -2460,8 +2363,7 @@ msgid "Year of order date"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
+#: report:pos.sales.user:0 report:pos.sales.user.today:0
 #: field:report.pos.order,date:0
 msgid "Date Order"
 msgstr ""
@@ -2475,8 +2377,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
-#: field:pos.box.entries,journal_id:0
-#: field:pos.session,cash_register_id:0
+#: field:pos.box.entries,journal_id:0 field:pos.session,cash_register_id:0
 msgid "Cash Register"
 msgstr ""
 
@@ -2510,18 +2411,17 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
-msgstr ""
+msgstr "Sổ nhật ký Bán hàng"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Opening Balance"
-msgstr ""
+msgstr "Số dư đầu kỳ"
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: selection:report.pos.order,state:0
+#: view:account.bank.statement:0 selection:report.pos.order,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Đã đóng"
 
 #. module: point_of_sale
 #: field:pos.config,iface_cashdrawer:0
@@ -2569,10 +2469,9 @@ msgid "An internal identification of the point of sale"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.config:0
-#: selection:pos.config,state:0
+#: view:pos.config:0 selection:pos.config,state:0
 msgid "Active"
-msgstr ""
+msgstr "Hoạt động"
 
 #. module: point_of_sale
 #: field:pos.session,name:0
@@ -2601,18 +2500,16 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:220
 #: code:addons/point_of_sale/static/src/xml/pos.xml:426
 #: code:addons/point_of_sale/static/src/xml/pos.xml:601
-#: report:all.closed.cashbox.of.the.day:0
-#: report:pos.invoice:0
-#: report:pos.lines:0
-#: report:pos.payment.report.user:0
+#: report:all.closed.cashbox.of.the.day:0 report:pos.invoice:0
+#: report:pos.lines:0 report:pos.payment.report.user:0
 #, python-format
 msgid "Total:"
-msgstr ""
+msgstr "Tổng:"
 
 #. module: point_of_sale
 #: field:res.users,ean13:0
 msgid "EAN13"
-msgstr ""
+msgstr "EAN13"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2629,7 +2526,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Statement lines"
-msgstr ""
+msgstr "Statement lines"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_paprika_45g_product_template
@@ -2685,9 +2582,7 @@ msgstr "Hoàn tất"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:328
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
-#: report:pos.invoice:0
-#: view:pos.order:0
-#: field:pos.order,invoice_id:0
+#: report:pos.invoice:0 view:pos.order:0 field:pos.order,invoice_id:0
 #, python-format
 msgid "Invoice"
 msgstr "Hóa đơn"
@@ -2706,14 +2601,12 @@ msgid "Rochefort \"8\" 33cl"
 msgstr ""
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: view:pos.session:0
+#: view:account.bank.statement:0 view:pos.session:0
 msgid "Open"
 msgstr "Mở"
 
 #. module: point_of_sale
-#: field:pos.order,name:0
-#: field:pos.order.line,order_id:0
+#: field:pos.order,name:0 field:pos.order.line,order_id:0
 msgid "Order Ref"
 msgstr "Tham chiếu đơn hàng"
 
@@ -2748,10 +2641,9 @@ msgid "Payment Terminal"
 msgstr ""
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: field:pos.session,user_id:0
+#: view:account.bank.statement:0 field:pos.session,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Chịu trách nhiệm"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_bolognaise_250g_product_template
@@ -2793,15 +2685,13 @@ msgid "Today's Payment By User"
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.sales.by.margin.pos:0
-#: view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:427
-#: report:pos.invoice:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:427 report:pos.invoice:0
 #, python-format
 msgid "Taxes:"
 msgstr "Các loại thuế:"
@@ -2818,12 +2708,9 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
-#: report:pos.details:0
-#: field:pos.order.line,product_id:0
-#: report:pos.payment.report.user:0
-#: report:pos.user.product:0
-#: view:report.pos.order:0
-#: field:report.pos.order,product_id:0
+#: report:pos.details:0 field:pos.order.line,product_id:0
+#: report:pos.payment.report.user:0 report:pos.user.product:0
+#: view:report.pos.order:0 field:report.pos.order,product_id:0
 msgid "Product"
 msgstr "Sản phẩm"
 
@@ -2863,8 +2750,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_session_opening.py:67
-#: field:pos.box.entries,session_id:0
-#: view:pos.order:0
+#: field:pos.box.entries,session_id:0 view:pos.order:0
 #: field:pos.order,session_id:0
 #, python-format
 msgid "Session"
@@ -2881,10 +2767,9 @@ msgid "Dr. Oetker La Margherita"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: selection:pos.order,state:0
+#: view:pos.order:0 selection:pos.order,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Posted"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2940,13 +2825,12 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Order"
-msgstr ""
+msgstr "Đơn đặt hàng"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_res_users
-#: report:pos.details:0
+#: model:ir.model,name:point_of_sale.model_res_users report:pos.details:0
 msgid "Users"
-msgstr ""
+msgstr "Các người dùng"
 
 #. module: point_of_sale
 #: view:pos.details:0
@@ -2963,7 +2847,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Tổng số thực:"
 
 #. module: point_of_sale
 #: field:pos.session,cash_journal_id:0
@@ -2973,7 +2857,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr ""
+msgstr "Người quản lý"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_poivre_sel_oven_150g_product_template
@@ -2981,16 +2865,13 @@ msgid "Lays Salt and Pepper Oven Baked 150g"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.details,date_start:0
-#: field:pos.sale.user,date_start:0
+#: field:pos.details,date_start:0 field:pos.sale.user,date_start:0
 msgid "Date Start"
 msgstr "Ngày bắt đầu"
 
 #. module: point_of_sale
-#: field:pos.order,amount_total:0
-#: report:pos.payment.report.user:0
-#: view:pos.session:0
-#: field:report.sales.by.user.pos,amount:0
+#: field:pos.order,amount_total:0 report:pos.payment.report.user:0
+#: view:pos.session:0 field:report.sales.by.user.pos,amount:0
 #: field:report.sales.by.user.pos.month,amount:0
 msgid "Total"
 msgstr "Tổng số"
@@ -3036,7 +2917,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Tìm kiếm Đơn hàng"
 
 #. module: point_of_sale
 #: field:pos.config,iface_self_checkout:0
@@ -3056,8 +2937,8 @@ msgstr ""
 #. module: point_of_sale
 #: help:pos.order,user_id:0
 msgid ""
-"Person who uses the the cash register. It can be a reliever, a student or an "
-"interim employee."
+"Person who uses the the cash register. It can be a reliever, a student or an"
+" interim employee."
 msgstr ""
 
 #. module: point_of_sale
@@ -3091,17 +2972,11 @@ msgid "Generate Journal Entries"
 msgstr ""
 
 #. module: point_of_sale
-#: report:account.statement:0
-#: report:all.closed.cashbox.of.the.day:0
-#: report:pos.details:0
-#: report:pos.details_summary:0
-#: report:pos.lines:0
-#: field:pos.order,company_id:0
-#: field:pos.order.line,company_id:0
-#: report:pos.payment.report.user:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: report:pos.user.product:0
+#: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
+#: report:pos.details:0 report:pos.details_summary:0 report:pos.lines:0
+#: field:pos.order,company_id:0 field:pos.order.line,company_id:0
+#: report:pos.payment.report.user:0 report:pos.sales.user:0
+#: report:pos.sales.user.today:0 report:pos.user.product:0
 #: field:report.pos.order,company_id:0
 msgid "Company"
 msgstr "Công ty"
@@ -3114,7 +2989,7 @@ msgstr "Ngày hóa đơn"
 #. module: point_of_sale
 #: field:pos.box.entries,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Lý do"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_33cl_product_template
@@ -3159,7 +3034,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:342
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Đồng ý"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3215,10 +3090,9 @@ msgid "No. Of Articles"
 msgstr ""
 
 #. module: point_of_sale
-#: selection:pos.order,state:0
-#: selection:report.pos.order,state:0
+#: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Đã hủy bỏ"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
@@ -3248,8 +3122,7 @@ msgid "Ice Cream"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.config,shop_id:0
-#: field:pos.order,shop_id:0
+#: field:pos.config,shop_id:0 field:pos.order,shop_id:0
 #: field:report.pos.order,shop_id:0
 msgid "Shop"
 msgstr "Cửa hàng"
@@ -3263,7 +3136,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Bank Statement Line"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.belle_vue_kriek_25cl_product_template
@@ -3281,8 +3154,7 @@ msgid "IJsboerke Stracciatella 2.5L"
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
+#: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS Report"
 msgstr "Báo cáo POS"
@@ -3321,17 +3193,17 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Entries"
-msgstr ""
+msgstr "Generate Entries"
 
 #. module: point_of_sale
 #: field:pos.box.entries,product_id:0
 msgid "Operation"
-msgstr ""
+msgstr "Thao tác"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Journal Entry"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:769
@@ -3373,11 +3245,10 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: selection:pos.order,state:0
+#: view:pos.order:0 selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "Mới"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
@@ -3477,7 +3348,7 @@ msgstr "Tháng Mười hai"
 #. module: point_of_sale
 #: field:pos.category,image:0
 msgid "Image"
-msgstr ""
+msgstr "Hình ảnh"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_1,5l_product_template
@@ -3485,8 +3356,7 @@ msgid "Spa Barisart 1.5l"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:831
-#: view:pos.order:0
+#: code:addons/point_of_sale/point_of_sale.py:831 view:pos.order:0
 #, python-format
 msgid "Return Products"
 msgstr ""
@@ -3501,7 +3371,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:484
 #, python-format
 msgid "Print Invoice"
-msgstr ""
+msgstr "In hóa đơn"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.peche_product_template
@@ -3514,47 +3384,32 @@ msgid "Sales Details"
 msgstr ""
 
 #. module: point_of_sale
-#: view:account.journal:0
-#: model:ir.model,name:point_of_sale.model_pos_order
+#: view:account.journal:0 model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
-#: field:pos.session,config_id:0
-#: field:pos.session.opening,pos_config_id:0
-#: view:product.product:0
-#: view:res.partner:0
-#: view:res.users:0
+#: field:pos.session,config_id:0 field:pos.session.opening,pos_config_id:0
+#: view:product.product:0 view:res.partner:0 view:res.users:0
 msgid "Point of Sale"
 msgstr "Điểm bán hàng"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,user_id:0
+#: view:pos.order:0 field:pos.order,user_id:0
 msgid "Salesman"
 msgstr "Nhân viên bán hàng"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:41
-#: view:pos.confirm:0
-#: view:pos.details:0
-#: view:pos.discount:0
-#: view:pos.ean_wizard:0
-#: view:pos.make.payment:0
-#: view:pos.open.statement:0
-#: view:pos.payment.report:0
-#: view:pos.payment.report.user:0
-#: view:pos.receipt:0
-#: view:pos.sale.user:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:41 view:pos.confirm:0
+#: view:pos.details:0 view:pos.discount:0 view:pos.ean_wizard:0
+#: view:pos.make.payment:0 view:pos.open.statement:0 view:pos.payment.report:0
+#: view:pos.payment.report.user:0 view:pos.receipt:0 view:pos.sale.user:0
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "hoặc"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: view:pos.order:0
-#: selection:pos.order,state:0
-#: view:report.pos.order:0
-#: selection:report.pos.order,state:0
+#: report:pos.details:0 view:pos.order:0 selection:pos.order,state:0
+#: view:report.pos.order:0 selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Đã được hóa đơn"
 
@@ -3574,10 +3429,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new order.\n"
 "              </p><p>\n"
-"                Use this menu to browse your preceeding orders. To record "
-"new\n"
-"                orders, you should better use the menu <i>Your Session</i> "
-"for\n"
+"                Use this menu to browse your preceeding orders. To record new\n"
+"                orders, you should better use the menu <i>Your Session</i> for\n"
 "                the touchscreen interface.\n"
 "              </p>\n"
 "            "
@@ -3627,10 +3480,9 @@ msgid "Mode of Taxes"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order,amount_paid:0
-#: selection:pos.order,state:0
+#: field:pos.order,amount_paid:0 selection:pos.order,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Đã thanh toán"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3642,7 +3494,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "PRO-FORMA"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:860
@@ -3690,8 +3542,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:483
-#: view:pos.receipt:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:483 view:pos.receipt:0
 #, python-format
 msgid "Print Receipt"
 msgstr "In phiếu thu"
@@ -3771,8 +3622,7 @@ msgid "Dr. Oetker Ristorante Mozzarella"
 msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.payment.report.user:0
+#: report:pos.details:0 report:pos.payment.report.user:0
 msgid "Disc(%)"
 msgstr "Chiết khấu (%)"
 
@@ -3784,7 +3634,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "General Information"
-msgstr ""
+msgstr "Thông tin chung"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -3875,26 +3725,25 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Sản phẩm chào hàng"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Customer Code"
-msgstr ""
+msgstr "Mã khách hàng"
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-#: report:pos.lines:0
+#: report:pos.invoice:0 report:pos.lines:0
 msgid "Description"
 msgstr "Mô tả"
 
 #. module: point_of_sale
 #: help:account.journal,amount_authorized_diff:0
 msgid ""
-"This field depicts the maximum difference allowed between the ending balance "
-"and the theorical cash when closing a session, for non-POS managers. If this "
-"maximum is reached, the user will have an error message at the closing of "
-"his session saying that he needs to contact his manager."
+"This field depicts the maximum difference allowed between the ending balance"
+" and the theorical cash when closing a session, for non-POS managers. If "
+"this maximum is reached, the user will have an error message at the closing "
+"of his session saying that he needs to contact his manager."
 msgstr ""
 
 #. module: point_of_sale
@@ -3927,8 +3776,8 @@ msgstr ""
 #: help:pos.category,image_small:0
 msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr ""
 
 #. module: point_of_sale
@@ -3947,21 +3796,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a payment method.\n"
 "              </p><p>\n"
-"                Payment methods are defined by accounting journals having "
-"the\n"
-"                field <i>PoS Payment Method</i> checked. In order to be "
-"useable\n"
-"                from the touchscreen interface, you must set the payment "
-"method\n"
+"                Payment methods are defined by accounting journals having the\n"
+"                field <i>PoS Payment Method</i> checked. In order to be useable\n"
+"                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,partner_id:0
-#: view:report.pos.order:0
+#: view:pos.order:0 field:pos.order,partner_id:0 view:report.pos.order:0
 msgid "Customer"
 msgstr "Khách hàng"
 
@@ -3973,7 +3817,7 @@ msgstr "Tháng Hai"
 #. module: point_of_sale
 #: view:res.partner:0
 msgid "Edit"
-msgstr ""
+msgstr "Sửa"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -4001,8 +3845,7 @@ msgid "April"
 msgstr "Tháng Tư"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,statement_ids:0
+#: view:pos.order:0 field:pos.order,statement_ids:0
 msgid "Payments"
 msgstr "Các thanh toán"
 
@@ -4050,11 +3893,10 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.category,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Trình tự"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_return.py:316
-#: view:pos.make.payment:0
+#: code:addons/point_of_sale/wizard/pos_return.py:316 view:pos.make.payment:0
 #, python-format
 msgid "Make Payment"
 msgstr "Tạo thanh toán"
@@ -4077,8 +3919,7 @@ msgid "Next Order"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:98
-#: selection:pos.session,state:0
+#: code:addons/point_of_sale/point_of_sale.py:98 selection:pos.session,state:0
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Opening Control"
@@ -4090,8 +3931,7 @@ msgid "Month of order date"
 msgstr ""
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,year:0
+#: view:report.pos.order:0 field:report.pos.order,year:0
 msgid "Year"
 msgstr "Năm"
 
@@ -4100,7 +3940,7 @@ msgstr "Năm"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:505
 #, python-format
 msgid "at"
-msgstr ""
+msgstr "ở"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_cash_box_in
@@ -4114,10 +3954,3 @@ msgstr ""
 #: field:pos.session,order_ids:0
 msgid "Orders"
 msgstr ""
-
-#~ msgid "VAT :"
-#~ msgstr "Thuế GTGT :"
-
-#, python-format
-#~ msgid "No Pricelist !"
-#~ msgstr "Không có bảng giá !"

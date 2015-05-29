@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:17+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -35,8 +36,7 @@ msgid "Avg. Delay to Open"
 msgstr "開くための平均遅延"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "Group By..."
 msgstr "グループ化…"
 
@@ -71,14 +71,12 @@ msgid "Progress (%)"
 msgstr "進捗（%）"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,message_unread:0
+#: view:project.issue:0 field:project.issue,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未読メッセージ"
 
 #. module: project_issue
-#: field:project.issue,company_id:0
-#: view:project.issue.report:0
+#: field:project.issue,company_id:0 view:project.issue.report:0
 #: field:project.issue.report,company_id:0
 msgid "Company"
 msgstr "会社"
@@ -94,8 +92,7 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
@@ -119,9 +116,7 @@ msgstr "開始日"
 msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
-msgstr ""
-"この問題の拡大はできません。\n"
-"関連するプロジェクトでは拡大プロジェクトを設定していません。"
+msgstr "この問題の拡大はできません。\n関連するプロジェクトでは拡大プロジェクトを設定していません。"
 
 #. module: project_issue
 #: constraint:project.project:0
@@ -140,8 +135,7 @@ msgid "Difference in days between last action and current date"
 msgstr "最終アクションと現在の日付の間の日数差"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,day:0
+#: view:project.issue.report:0 field:project.issue.report,day:0
 msgid "Day"
 msgstr "日"
 
@@ -151,8 +145,7 @@ msgid "Days since creation date"
 msgstr "作成日からの日数"
 
 #. module: project_issue
-#: field:project.issue,task_id:0
-#: view:project.issue.report:0
+#: field:project.issue,task_id:0 view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
 msgstr "タスク"
@@ -174,10 +167,8 @@ msgstr "最終アクションからの日数"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0
-#: field:project.issue,project_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,project_id:0
+#: view:project.issue:0 field:project.issue,project_id:0
+#: view:project.issue.report:0 field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "プロジェクト"
 
@@ -187,8 +178,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to report a new issue.\n"
 "          </p><p>\n"
-"            The OpenERP issues tacker allows you to efficiantly manage "
-"things\n"
+"            The OpenERP issues tacker allows you to efficiantly manage things\n"
 "            like internal requests, software development bugs, customer\n"
 "            complaints, project troubles, material breakdowns, etc.\n"
 "          </p>\n"
@@ -196,8 +186,7 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: selection:project.issue.report,state:0
+#: selection:project.issue,state:0 selection:project.issue.report,state:0
 msgid "Cancelled"
 msgstr "キャンセル済"
 
@@ -229,7 +218,7 @@ msgstr "開くための平均作業時間数"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "分析勘定"
 
 #. module: project_issue
 #: help:project.issue,message_summary:0
@@ -254,7 +243,7 @@ msgstr "追加情報"
 #: code:addons/project_issue/project_issue.py:493
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -280,7 +269,7 @@ msgstr "統計"
 #. module: project_issue
 #: field:project.issue,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "かんばん状態"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:378
@@ -289,29 +278,24 @@ msgid "Project issue <b>converted</b> to task."
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,priority:0
-#: view:project.issue.report:0
-#: field:project.issue.report,priority:0
+#: view:project.issue:0 field:project.issue,priority:0
+#: view:project.issue.report:0 field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "優先度"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,version_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,version_id:0
+#: view:project.issue:0 field:project.issue,version_id:0
+#: view:project.issue.report:0 field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "バージョン"
 
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "フォロワー"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "New"
 msgstr "新規"
@@ -327,8 +311,7 @@ msgid "Email"
 msgstr "Eメール"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0
-#: field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "チャネル"
 
@@ -342,7 +325,7 @@ msgstr "最低"
 #: code:addons/project_issue/project_issue.py:400
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s（コピー）"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -350,8 +333,7 @@ msgid "Unassigned Issues"
 msgstr "未割当の問題"
 
 #. module: project_issue
-#: field:project.issue,create_date:0
-#: view:project.issue.report:0
+#: field:project.issue,create_date:0 view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "作成日"
@@ -378,8 +360,7 @@ msgid "Create issues from an incoming email account "
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
 msgstr "完了"
@@ -396,15 +377,11 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr ""
-"プロジェクトの問題に関するこのレポートは、あなたのサポートやアフターサービスの品質を分析することができます。年齢ごとに問題を追跡可能です。問題を開くまたは"
-"閉じるために要した時間、問題ごとに交換したEメールの数や消費時間の平均を分析できます。"
+msgstr "プロジェクトの問題に関するこのレポートは、あなたのサポートやアフターサービスの品質を分析することができます。年齢ごとに問題を追跡可能です。問題を開くまたは閉じるために要した時間、問題ごとに交換したEメールの数や消費時間の平均を分析できます。"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,stage_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,stage_id:0
+#: view:project.issue:0 field:project.issue,stage_id:0
+#: view:project.issue.report:0 field:project.issue.report,stage_id:0
 msgid "Stage"
 msgstr "工程"
 
@@ -419,7 +396,7 @@ msgstr "問題分析"
 #: code:addons/project_issue/project_issue.py:532
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "件名なし"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -427,17 +404,15 @@ msgid "My Project Issues"
 msgstr "私のプロジェクトの問題"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,partner_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,partner_id:0
+#: view:project.issue:0 field:project.issue,partner_id:0
+#: view:project.issue.report:0 field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "連絡先"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Delete"
-msgstr ""
+msgstr "削除"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:383
@@ -463,7 +438,7 @@ msgstr "12月"
 #. module: project_issue
 #: field:project.issue,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "タグ"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -501,10 +476,9 @@ msgid "Next Action"
 msgstr "次のアクション"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "ブロック"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
@@ -541,8 +515,7 @@ msgid "Low"
 msgstr "低い"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0
-#: selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
 msgid "Closed"
 msgstr "閉じた"
 
@@ -552,15 +525,13 @@ msgid "Avg. Delay to Close"
 msgstr "閉じるための平均遅延"
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: view:project.issue.report:0
+#: selection:project.issue,state:0 view:project.issue.report:0
 #: selection:project.issue.report,state:0
 msgid "Pending"
 msgstr "保留中"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,state:0
+#: view:project.issue:0 field:project.issue,state:0
 #: field:project.issue.report,state:0
 msgid "Status"
 msgstr "状態"
@@ -576,8 +547,7 @@ msgid "August"
 msgstr "8月"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-#: selection:project.issue,priority:0
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "通常"
@@ -595,7 +565,7 @@ msgstr "6月"
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "メッセージと通信履歴"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -616,15 +586,14 @@ msgstr ""
 #: help:project.issue,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,active:0
-#: field:project.issue.version,active:0
+#: field:project.issue,active:0 field:project.issue.version,active:0
 msgid "Active"
 msgstr "アクティブ"
 
@@ -672,7 +641,7 @@ msgstr "これらの人がEメールを受け取ります。"
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "要約"
 
 #. module: project_issue
 #: field:project.issue,date:0
@@ -680,8 +649,7 @@ msgid "Date"
 msgstr "日付"
 
 #. module: project_issue
-#: field:project.issue,user_id:0
-#: view:project.issue.report:0
+#: field:project.issue,user_id:0 view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr "割当先"
@@ -689,7 +657,7 @@ msgstr "割当先"
 #. module: project_issue
 #: view:project.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "設定"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_closed
@@ -722,20 +690,17 @@ msgstr "開く"
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: view:project.issue:0
-#: view:project.project:0
+#: view:project.issue:0 view:project.project:0
 msgid "Issues"
 msgstr "問題"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 msgid "In Progress"
 msgstr "進行中"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "To Do"
 msgstr "ToDo"
 
@@ -748,7 +713,7 @@ msgstr "プロジェクトの問題"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Add an internal note..."
-msgstr ""
+msgstr "内部注記を追加..."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -766,8 +731,7 @@ msgid "Unclosed Issues"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr ""
 
@@ -777,22 +741,18 @@ msgid "October"
 msgstr "10月"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,section_id:0
+#: view:project.issue.report:0 field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr "販売チーム"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 #: field:project.issue.report,month:0
 msgid "Month"
 msgstr "月"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,name:0
-#: view:project.project:0
+#: view:project.issue:0 field:project.issue,name:0 view:project.project:0
 msgid "Issue"
 msgstr "問題"
 
@@ -833,8 +793,7 @@ msgid "Issue Closed"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,email:0
+#: view:project.issue.report:0 field:project.issue.report,email:0
 msgid "# Emails"
 msgstr "Eメールの数"
 
@@ -848,7 +807,7 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:511
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "顧客"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -877,8 +836,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new version.\n"
 "              </p><p>\n"
-"                Define here the different versions of your products on "
-"which\n"
+"                Define here the different versions of your products on which\n"
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
@@ -924,7 +882,7 @@ msgstr "問題を閉じるための作業時間数"
 #. module: project_issue
 #: field:project.issue,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
@@ -968,8 +926,7 @@ msgid "Last Action"
 msgstr "最終アクション"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,name:0
+#: view:project.issue.report:0 field:project.issue.report,name:0
 msgid "Year"
 msgstr "年"
 
@@ -983,21 +940,3 @@ msgstr "期間"
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
 msgstr ""
-
-#~ msgid "Maintenance"
-#~ msgstr "メンテナンス"
-
-#~ msgid "Issue Categories"
-#~ msgstr "問題分類"
-
-#~ msgid "Categories"
-#~ msgstr "分類"
-
-#~ msgid "Feature Requests"
-#~ msgstr "機能要求"
-
-#~ msgid "Cancel"
-#~ msgstr "キャンセル"
-
-#~ msgid "References"
-#~ msgstr "参照"

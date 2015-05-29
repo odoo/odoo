@@ -1,25 +1,25 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * lunch
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-7/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:00+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: lunch
-#: field:lunch.product,category_id:0
-#: field:lunch.product.category,name:0
+#: field:lunch.product,category_id:0 field:lunch.product.category,name:0
 msgid "Category"
 msgstr "Kategorie"
 
@@ -39,21 +39,19 @@ msgid "Partially Confirmed"
 msgstr ""
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order.line:0
+#: view:lunch.cashmove:0 view:lunch.order.line:0
 msgid "Group By..."
 msgstr "Seskupit podle..."
 
 #. module: lunch
 #: field:lunch.alert,sunday:0
 msgid "Sunday"
-msgstr ""
+msgstr "Neděle"
 
 #. module: lunch
-#: field:lunch.order.line,supplier:0
-#: field:lunch.product,supplier:0
+#: field:lunch.order.line,supplier:0 field:lunch.product,supplier:0
 msgid "Supplier"
-msgstr ""
+msgstr "Dodavatel"
 
 #. module: lunch
 #: view:lunch.order.line:0
@@ -68,12 +66,12 @@ msgstr "Březen"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "By Employee"
-msgstr ""
+msgstr "Podle zaměstnance"
 
 #. module: lunch
 #: field:lunch.alert,friday:0
 msgid "Friday"
-msgstr ""
+msgstr "Pátek"
 
 #. module: lunch
 #: view:lunch.validation:0
@@ -86,16 +84,14 @@ msgid "Order lines Tree"
 msgstr ""
 
 #. module: lunch
-#: field:lunch.alert,specific_day:0
-#: field:report.lunch.order.line,day:0
+#: field:lunch.alert,specific_day:0 field:report.lunch.order.line,day:0
 msgid "Day"
 msgstr "Den"
 
 #. module: lunch
-#: view:lunch.order.line:0
-#: selection:lunch.order.line,state:0
+#: view:lunch.order.line:0 selection:lunch.order.line,state:0
 msgid "Received"
-msgstr ""
+msgstr "Přijaté"
 
 #. module: lunch
 #: view:lunch.order.line:0
@@ -110,10 +106,8 @@ msgid ""
 "            </p>\n"
 "            <p>\n"
 "                A lunch order is defined by its user, date and order lines.\n"
-"                Each order line corresponds to a product, an additional note "
-"and a price.\n"
-"                Before selecting your order lines, don't forget to read the "
-"warnings displayed in the reddish area.\n"
+"                Each order line corresponds to a product, an additional note and a price.\n"
+"                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area.\n"
 "            </p>\n"
 "            "
 msgstr ""
@@ -143,11 +137,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
 msgid ""
 "<p>\n"
-"                Here you can see your cash moves.<br/>A cash moves can be "
-"either an expense or a payment.\n"
-"                An expense is automatically created when an order is "
-"received while a payment is a reimbursement to the company encoded by the "
-"manager.\n"
+"                Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.\n"
+"                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager.\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -170,11 +161,10 @@ msgid "By Date"
 msgstr ""
 
 #. module: lunch
-#: selection:lunch.order,state:0
-#: view:lunch.order.line:0
+#: selection:lunch.order,state:0 view:lunch.order.line:0
 #: selection:lunch.order.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -248,8 +238,7 @@ msgid "Wizard to order a meal"
 msgstr ""
 
 #. module: lunch
-#: selection:lunch.order,state:0
-#: selection:lunch.order.line,state:0
+#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "New"
 msgstr "Nový"
 
@@ -287,13 +276,12 @@ msgstr "Červenec"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_config
 msgid "Configuration"
-msgstr ""
+msgstr "Nastavení"
 
 #. module: lunch
-#: field:lunch.order,state:0
-#: field:lunch.order.line,state:0
+#: field:lunch.order,state:0 field:lunch.order.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 #. module: lunch
 #: view:lunch.order.order:0
@@ -337,19 +325,12 @@ msgstr "Září"
 #: model:ir.actions.act_window,help:lunch.action_lunch_control_suppliers
 msgid ""
 "<p>\n"
-"                Here you can see every orders grouped by suppliers and by "
-"date.\n"
+"                Here you can see every orders grouped by suppliers and by date.\n"
 "              </p>\n"
 "              <p>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
-"that the order is ordered <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
-"the order is received <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce "
-"that the order isn't available\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce that the order isn't available\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -357,7 +338,7 @@ msgstr ""
 #. module: lunch
 #: field:lunch.alert,tuesday:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Úterý"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_tree
@@ -376,17 +357,15 @@ msgid ""
 "                Click to create a product for lunch. \n"
 "            </p>\n"
 "              <p>\n"
-"                A product is defined by its name, category, price and "
-"supplier.\n"
+"                A product is defined by its name, category, price and supplier.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: lunch
-#: view:lunch.alert:0
-#: field:lunch.alert,message:0
+#: view:lunch.alert:0 field:lunch.alert,message:0
 msgid "Message"
-msgstr ""
+msgstr "Zpráva"
 
 #. module: lunch
 #: view:lunch.order.order:0
@@ -394,11 +373,9 @@ msgid "Order Meals"
 msgstr ""
 
 #. module: lunch
-#: view:lunch.cancel:0
-#: view:lunch.order.order:0
-#: view:lunch.validation:0
+#: view:lunch.cancel:0 view:lunch.order.order:0 view:lunch.validation:0
 msgid "or"
-msgstr ""
+msgstr "nebo"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_product_categories
@@ -431,30 +408,27 @@ msgstr ""
 #. module: lunch
 #: view:lunch.alert:0
 msgid "Schedule Date"
-msgstr ""
+msgstr "Naplánované datum"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_alert
-#: model:ir.ui.menu,name:lunch.menu_lunch_alert
-#: field:lunch.order,alerts:0
+#: model:ir.ui.menu,name:lunch.menu_lunch_alert field:lunch.order,alerts:0
 msgid "Alerts"
 msgstr ""
 
 #. module: lunch
-#: field:lunch.order.line,note:0
-#: field:report.lunch.order.line,note:0
+#: field:lunch.order.line,note:0 field:report.lunch.order.line,note:0
 msgid "Note"
-msgstr ""
+msgstr "Poznámky"
 
 #. module: lunch
 #: code:addons/lunch/lunch.py:267
 #, python-format
 msgid "Add"
-msgstr ""
+msgstr "Přidat"
 
 #. module: lunch
-#: view:lunch.product:0
-#: view:lunch.product.category:0
+#: view:lunch.product:0 view:lunch.product.category:0
 msgid "Products Form"
 msgstr ""
 
@@ -464,8 +438,7 @@ msgid "Cancel meals"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
-#: view:lunch.cashmove:0
+#: model:ir.model,name:lunch.model_lunch_cashmove view:lunch.cashmove:0
 msgid "lunch cashmove"
 msgstr ""
 
@@ -482,12 +455,12 @@ msgstr "Srpen"
 #. module: lunch
 #: field:lunch.alert,monday:0
 msgid "Monday"
-msgstr ""
+msgstr "Pondělí"
 
 #. module: lunch
 #: field:lunch.order.line,name:0
 msgid "unknown"
-msgstr ""
+msgstr "neznámý"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.validate_order_lines
@@ -500,8 +473,7 @@ msgid "June"
 msgstr "Červen"
 
 #. module: lunch
-#: field:lunch.cashmove,user_id:0
-#: field:lunch.order,user_id:0
+#: field:lunch.cashmove,user_id:0 field:lunch.order,user_id:0
 #: field:report.lunch.order.line,user_id:0
 msgid "User Name"
 msgstr "Uživatelské jméno"
@@ -530,8 +502,7 @@ msgid "User"
 msgstr "Uživatel"
 
 #. module: lunch
-#: field:lunch.cashmove,date:0
-#: field:lunch.order,date:0
+#: field:lunch.cashmove,date:0 field:lunch.order,date:0
 #: field:lunch.order.line,date:0
 msgid "Date"
 msgstr "Datum"
@@ -552,10 +523,9 @@ msgid "Orders Form"
 msgstr ""
 
 #. module: lunch
-#: view:lunch.alert:0
-#: view:lunch.order.line:0
+#: view:lunch.alert:0 view:lunch.order.line:0
 msgid "Search"
-msgstr ""
+msgstr "Hledat"
 
 #. module: lunch
 #: selection:report.lunch.order.line,month:0
@@ -569,15 +539,9 @@ msgid ""
 "                Here you can see today's orders grouped by suppliers.\n"
 "              </p>\n"
 "              <p>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
-"that the order is ordered <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
-"the order is received <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that "
-"the order isn't available\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that the order isn't available\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -595,7 +559,7 @@ msgstr ""
 #. module: lunch
 #: field:lunch.alert,wednesday:0
 msgid "Wednesday"
-msgstr ""
+msgstr "Středa"
 
 #. module: lunch
 #: view:lunch.product.category:0
@@ -605,7 +569,7 @@ msgstr ""
 #. module: lunch
 #: field:lunch.alert,active_to:0
 msgid "And"
-msgstr ""
+msgstr "a"
 
 #. module: lunch
 #: view:lunch.alert:0
@@ -634,11 +598,8 @@ msgid ""
 "                Click to create a lunch alert. \n"
 "            </p>\n"
 "              <p>\n"
-"                Alerts are used to warn employee from possible issues "
-"concerning the lunch orders.\n"
-"                To create a lunch alert you have to define its recurrency, "
-"the time interval during which the alert should be executed and the message "
-"to display.\n"
+"                Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
+"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display.\n"
 "            </p>\n"
 "            <p>\n"
 "                Example: <br/>\n"
@@ -670,9 +631,7 @@ msgid "December"
 msgstr "Prosinec"
 
 #. module: lunch
-#: view:lunch.cancel:0
-#: view:lunch.order.line:0
-#: view:lunch.order.order:0
+#: view:lunch.cancel:0 view:lunch.order.line:0 view:lunch.order.order:0
 #: view:lunch.validation:0
 msgid "Cancel"
 msgstr "Zrušit"
@@ -684,8 +643,7 @@ msgid ""
 "                Click to create a payment. \n"
 "            </p>\n"
 "              <p>\n"
-"                Here you can see the employees' payment. A payment is a cash "
-"move from the employee to the company.\n"
+"                Here you can see the employees' payment. A payment is a cash move from the employee to the company.\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -711,10 +669,8 @@ msgid ""
 "            </p>\n"
 "              <p>\n"
 "                A cashmove can either be an expense or a payment.<br/>\n"
-"                An expense is automatically created at the order "
-"receipt.<br/>\n"
-"                A payment represents the employee reimbursement to the "
-"company.\n"
+"                An expense is automatically created at the order receipt.<br/>\n"
+"                A payment represents the employee reimbursement to the company.\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -722,7 +678,7 @@ msgstr ""
 #. module: lunch
 #: field:lunch.alert,alter_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Opakování"
 
 #. module: lunch
 #: code:addons/lunch/lunch.py:199
@@ -733,7 +689,7 @@ msgstr ""
 #. module: lunch
 #: field:lunch.alert,thursday:0
 msgid "Thursday"
-msgstr ""
+msgstr "Čtvrtek"
 
 #. module: lunch
 #: report:lunch.order.line:0
@@ -746,14 +702,12 @@ msgid "By User"
 msgstr ""
 
 #. module: lunch
-#: field:lunch.order.line,product_id:0
-#: field:lunch.product,name:0
+#: field:lunch.order.line,product_id:0 field:lunch.product,name:0
 msgid "Product"
 msgstr "Výrobek"
 
 #. module: lunch
-#: field:lunch.cashmove,description:0
-#: report:lunch.order.line:0
+#: field:lunch.cashmove,description:0 report:lunch.order.line:0
 #: field:lunch.product,description:0
 msgid "Description"
 msgstr "Popis"
@@ -764,8 +718,7 @@ msgid "May"
 msgstr "Květen"
 
 #. module: lunch
-#: field:lunch.order.line,price:0
-#: field:lunch.product,price:0
+#: field:lunch.order.line,price:0 field:lunch.product,price:0
 msgid "Price"
 msgstr "Cena"
 
@@ -801,10 +754,9 @@ msgid "Employee Payments"
 msgstr ""
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: selection:lunch.cashmove,state:0
+#: view:lunch.cashmove:0 selection:lunch.cashmove,state:0
 msgid "Payment"
-msgstr ""
+msgstr "Platba"
 
 #. module: lunch
 #: selection:report.lunch.order.line,month:0
@@ -819,7 +771,7 @@ msgstr "Rok"
 #. module: lunch
 #: view:lunch.order:0
 msgid "List"
-msgstr ""
+msgstr "Seznam"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -837,10 +789,8 @@ msgid "Select your order"
 msgstr ""
 
 #. module: lunch
-#: field:lunch.cashmove,order_id:0
-#: selection:lunch.cashmove,state:0
-#: report:lunch.order.line:0
-#: view:lunch.order.line:0
+#: field:lunch.cashmove,order_id:0 selection:lunch.cashmove,state:0
+#: report:lunch.order.line:0 view:lunch.order.line:0
 #: field:lunch.order.line,order_id:0
 msgid "Order"
 msgstr "Objednávka"
@@ -848,8 +798,7 @@ msgstr "Objednávka"
 #. module: lunch
 #: code:addons/lunch/lunch.py:43
 #: model:ir.actions.report.xml,name:lunch.report_lunch_order
-#: model:ir.model,name:lunch.model_lunch_order
-#: report:lunch.order.line:0
+#: model:ir.model,name:lunch.model_lunch_order report:lunch.order.line:0
 #, python-format
 msgid "Lunch Order"
 msgstr "Obědnávka obědu"
@@ -872,7 +821,7 @@ msgstr ""
 #. module: lunch
 #: field:lunch.alert,saturday:0
 msgid "Saturday"
-msgstr ""
+msgstr "Sobota"
 
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_manager
@@ -895,12 +844,10 @@ msgid "Products Tree"
 msgstr ""
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order:0
-#: field:lunch.order,total:0
+#: view:lunch.cashmove:0 view:lunch.order:0 field:lunch.order,total:0
 #: view:lunch.order.line:0
 msgid "Total"
-msgstr ""
+msgstr "Celkem"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_order_tree

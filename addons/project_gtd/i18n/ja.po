@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_gtd
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:16+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -74,8 +75,7 @@ msgid ""
 "Timeboxes are defined in the \"Getting Things Done\" methodology. A timebox "
 "defines a period of time in order to categorize your tasks: today, this "
 "week, this month, long term."
-msgstr ""
-"タイムボックスは物事を行う方法論として定義されます。タイムボックスはタスクを分類することにより時間の期間を定義します：本日、今週、今月、長期。"
+msgstr "タイムボックスは物事を行う方法論として定義されます。タイムボックスはタスクを分類することにより時間の期間を定義します：本日、今週、今月、長期。"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
@@ -103,8 +103,7 @@ msgid "Pending"
 msgstr "保留中"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0
-#: field:project.gtd.timebox,name:0
+#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
 #: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "タイムボックス"
@@ -198,7 +197,7 @@ msgstr ""
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "エラー！"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
@@ -214,8 +213,7 @@ msgstr "進行中とドラフトのタスク"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0
-#: field:project.gtd.context,name:0
+#: view:project.gtd.context:0 field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "コンテキスト"
@@ -223,7 +221,7 @@ msgstr "コンテキスト"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Display"
-msgstr ""
+msgstr "表示"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
@@ -231,8 +229,7 @@ msgid "Office"
 msgstr "会社"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0
-#: field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "順序"
 
@@ -249,7 +246,7 @@ msgstr "コンテキストのリストを表示するときに並び順を与え
 #. module: project_gtd
 #: view:project.task:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未読メッセージ"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -274,7 +271,7 @@ msgstr "タイムボックスを取得"
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
@@ -287,9 +284,7 @@ msgid ""
 "Contexts are defined in the \"Getting Things Done\" methodology. It allows "
 "you to categorize your tasks according to the context in which they have to "
 "be done: at the office, at home, when I take my car, etc."
-msgstr ""
-"コンテキストは物事を行う方法論として定義されます。実行しなければならないコンテキストに応じてタスクを分類することができます：会社で、自宅で、車に乗った時な"
-"ど。"
+msgstr "コンテキストは物事を行う方法論として定義されます。実行しなければならないコンテキストに応じてタスクを分類することができます：会社で、自宅で、車に乗った時など。"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -299,8 +294,4 @@ msgstr "タスクの再開"
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "or"
-msgstr ""
-
-#, python-format
-#~ msgid "No timebox child of this one !"
-#~ msgstr "この子にタイムボックスがありません。"
+msgstr "または"

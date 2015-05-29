@@ -1,21 +1,22 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_analytic_analysis
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-10-27 22:27+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"PO-Revision-Date: 2015-05-27 09:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-7/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -92,25 +93,14 @@ msgstr "Suma ponuda za ovaj ugovor"
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
 "                Use sale orders to track everything that should be invoiced\n"
 "                at a fix price on a contract.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za izradu predračuna koji se može konvertovati u "
-"prodajnu\n"
-"                narudžbu.\n"
-"              </p><p>\n"
-"                Koristite prodajne narudžbe za praćenje svega što treba biti "
-"fakturisano\n"
-"                po fiksnoj cijeni na ugovoru.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za izradu predračuna koji se može konvertovati u prodajnu\n                narudžbu.\n              </p><p>\n                Koristite prodajne narudžbe za praćenje svega što treba biti fakturisano\n                po fiksnoj cijeni na ugovoru.\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -175,26 +165,12 @@ msgid ""
 "                end date is passed or the working effort is higher than the\n"
 "                maximum authorized one.\n"
 "              </p><p>\n"
-"                OpenERP automatically sets contracts to be renewed in a "
-"pending\n"
-"                state. After the negociation, the salesman should close or "
-"renew\n"
+"                OpenERP automatically sets contracts to be renewed in a pending\n"
+"                state. After the negociation, the salesman should close or renew\n"
 "                pending contracts.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za definiranje novog ugovora.\n"
-"              </p><p>\n"
-"                Ovdje se nalaze ugovori koje bi trebalo obnoviti\n"
-"                jer je prošao datum završetka.\n"
-"              </p><p>\n"
-"                OpenERP automatski postavlja ugovore koji se trebaju "
-"obnaviti u status 'na čekanju'. \n"
-"                Nakon pregovora, prodavač bi trebao zatvoriti ili obnoviti "
-"ugovore na čekanju.. \n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za definiranje novog ugovora.\n              </p><p>\n                Ovdje se nalaze ugovori koje bi trebalo obnoviti\n                jer je prošao datum završetka.\n              </p><p>\n                OpenERP automatski postavlja ugovore koji se trebaju obnaviti u status 'na čekanju'. \n                Nakon pregovora, prodavač bi trebao zatvoriti ili obnoviti ugovore na čekanju.. \n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -278,9 +254,7 @@ msgstr "Obvezno korištenje predložaka u ugovorima"
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
-msgstr ""
-"Ako fakturirate iz troškova, ovo je krajnji datum rada ili troška koji je "
-"bio fakturiran."
+msgstr "Ako fakturirate iz troškova, ovo je krajnji datum rada ili troška koji je bio fakturiran."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -317,8 +291,7 @@ msgstr "Ugovori na čekanju"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
-"Računa se korištenjem formule: (Stvarna granica / Ukupni troškovi) * 100"
+msgstr "Računa se korištenjem formule: (Stvarna granica / Ukupni troškovi) * 100"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -381,18 +354,14 @@ msgid ""
 "        % for account in accounts:\n"
 "        <tr>\n"
 "            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
+"            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or '???'}</td>\n"
 "            <td>\n"
 "            % if account.quantity_max != 0.0:\n"
 "                ${account.remaining_hours}/${account.quantity_max} units\n"
 "            % endif\n"
 "            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
+"            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n"
 "        </tr>\n"
 "        % endfor\n"
 "    % endfor\n"
@@ -447,9 +416,7 @@ msgstr "Zatvoreno"
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
-msgstr ""
-"Vrijeme (sati / dani) (iz dnevnika tipa 'opšte') koje se može fakturisati "
-"ako se fakturiše na osnovu analitičkog konta."
+msgstr "Vrijeme (sati / dani) (iz dnevnika tipa 'opšte') koje se može fakturisati ako se fakturiše na osnovu analitičkog konta."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -495,9 +462,7 @@ msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
-msgstr ""
-"Zasnovano na troškovima koje ste imali na projektu, koji bi bio prihod ako "
-"bi svi troškovi bili fakturirani po normalnim prodajnim cijenama iz cjenika."
+msgstr "Zasnovano na troškovima koje ste imali na projektu, koji bi bio prihod ako bi svi troškovi bili fakturirani po normalnim prodajnim cijenama iz cjenika."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -517,21 +482,11 @@ msgid ""
 "                    Click here to create a template of contract.\n"
 "                </p><p>\n"
 "                    Templates are used to prefigure contract/project that \n"
-"                    can be selected by the salespeople to quickly configure "
-"the\n"
+"                    can be selected by the salespeople to quickly configure the\n"
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Kliknite ovdje da biste stvorili predložak ugovora.\n"
-"                </p><p>\n"
-"                    Predlošci se koriste kako bi unaprijed postavili ugovor "
-"/ projekt koji\n"
-"                    prodavač može odabrati da bi brzo podesio \n"
-"                    uslove ugovora.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kliknite ovdje da biste stvorili predložak ugovora.\n                </p><p>\n                    Predlošci se koriste kako bi unaprijed postavili ugovor / projekt koji\n                    prodavač može odabrati da bi brzo podesio \n                    uslove ugovora.\n                </p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -548,18 +503,14 @@ msgstr "Ugovor"
 msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
-msgstr ""
-"Omogućuje vam da postavite polje predloška kao obvezno prilikom izrade "
-"analitičkog konta ili ugovora."
+msgstr "Omogućuje vam da postavite polje predloška kao obvezno prilikom izrade analitičkog konta ili ugovora."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
 msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
-msgstr ""
-"Vrijeme (sati / dani) koje se može fakturisati plus ono koje je već "
-"fakturisano."
+msgstr "Vrijeme (sati / dani) koje se može fakturisati plus ono koje je već fakturisano."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -577,25 +528,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click to create a new contract.\n"
 "                </p><p>\n"
-"                    Use contracts to follow tasks, issues, timesheets or "
-"invoicing based on\n"
-"                    work done, expenses and/or sales orders. OpenERP will "
-"automatically manage\n"
-"                    the alerts for the renewal of the contracts to the right "
-"salesperson.\n"
+"                    Use contracts to follow tasks, issues, timesheets or invoicing based on\n"
+"                    work done, expenses and/or sales orders. OpenERP will automatically manage\n"
+"                    the alerts for the renewal of the contracts to the right salesperson.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Kliknite za stvaranje novog ugovora.\n"
-"                </p><p>\n"
-"                    Koristite ugovore za praćenje zadataka, pitanja, "
-"evidencije rada ili fakturisanja na osnovu\n"
-"                   obavljenog posla, troškova i/ili prodajnih naloga. \n"
-"                   OpenERP će automatski upravljati upozorenjima za obnovu "
-"ugovora dodijeljenom prodavaču.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kliknite za stvaranje novog ugovora.\n                </p><p>\n                    Koristite ugovore za praćenje zadataka, pitanja, evidencije rada ili fakturisanja na osnovu\n                   obavljenog posla, troškova i/ili prodajnih naloga. \n                   OpenERP će automatski upravljati upozorenjima za obnovu ugovora dodijeljenom prodavaču.\n                </p>\n            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
@@ -625,9 +563,7 @@ msgstr "U toku"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
-"Izračunato korištenjem forumule: Maksimalna fakturna cijena - Fakturirana "
-"vrijednost"
+msgstr "Izračunato korištenjem forumule: Maksimalna fakturna cijena - Fakturirana vrijednost"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -649,24 +585,12 @@ msgstr "Preostalo jedinica"
 msgid ""
 "<p>\n"
 "                You will find here timesheets and purchases you did for\n"
-"                contracts that can be reinvoiced to the customer.  If you "
-"want\n"
-"                to record new activities to invoice, you should use the "
-"timesheet\n"
+"                contracts that can be reinvoiced to the customer.  If you want\n"
+"                to record new activities to invoice, you should use the timesheet\n"
 "                menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Ovdje ćete pronaći evidencije rada i nabave koje ste obavili "
-"za\n"
-"                ugovore i koji se mogu prefakturisati klijentu. Ako pak "
-"želite\n"
-"                zapisati nove aktivnosti koje će se fakturisati, trebali bi "
-"umjesto ovog\n"
-"                koristiti meni evidencije rada.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Ovdje ćete pronaći evidencije rada i nabave koje ste obavili za\n                ugovore i koji se mogu prefakturisati klijentu. Ako pak želite\n                zapisati nove aktivnosti koje će se fakturisati, trebali bi umjesto ovog\n                koristiti meni evidencije rada.\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -689,10 +613,7 @@ msgid ""
 "Expectation of remaining income for this contract. Computed as the sum of "
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
-msgstr ""
-"Procjena preostalog prihoda za ovaj ugovor. Izračunava kao zbroj preostalih "
-"podzbrojeva koji se, pak, računaju se kao maksimum između '(procjena - "
-"fakturisanja)' i 'za fakturisati' iznose"
+msgstr "Procjena preostalog prihoda za ovaj ugovor. Izračunava kao zbroj preostalih podzbrojeva koji se, pak, računaju se kao maksimum između '(procjena - fakturisanja)' i 'za fakturisati' iznose"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
@@ -742,12 +663,7 @@ msgid ""
 "                            pricelist of the contract which uses the price\n"
 "                            defined on the product related (e.g timesheet \n"
 "                            products are defined on each employee)."
-msgstr ""
-"Kod prefakturisanja troškova, OpenERP koristi\n"
-"                            cjenovnik ugovora koji koristi cijenu\n"
-"                            definisanu na povezanom artiklu  (npr. artikli "
-"evidencije\n"
-"                            rada su definisani na svakom zaposlenom)."
+msgstr "Kod prefakturisanja troškova, OpenERP koristi\n                            cjenovnik ugovora koji koristi cijenu\n                            definisanu na povezanom artiklu  (npr. artikli evidencije\n                            rada su definisani na svakom zaposlenom)."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
@@ -770,9 +686,7 @@ msgstr "Predložak ugovora"
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
-msgstr ""
-"Ukupno troškova za ovaj račun. Uključuje stvarne troškove (iz faktura) i "
-"neizravne troškove, kao vrijeme potrošeno na timesheetovima."
+msgstr "Ukupno troškova za ovaj račun. Uključuje stvarne troškove (iz faktura) i neizravne troškove, kao vrijeme potrošeno na timesheetovima."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
@@ -789,9 +703,7 @@ msgstr "Preostali prihod"
 msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
-msgstr ""
-"Ako fakturirate iz analitičkog računa, preostali iznos kojeg možete "
-"fakturirati kupcu zasnovan na ukupnim troškovima."
+msgstr "Ako fakturirate iz analitičkog računa, preostali iznos kojeg možete fakturirati kupcu zasnovan na ukupnim troškovima."
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0

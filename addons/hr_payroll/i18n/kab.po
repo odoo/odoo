@@ -1,21 +1,21 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_payroll
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-11 19:41+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:32+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-12 04:56+0000\n"
-"X-Generator: Launchpad (build 17389)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
@@ -26,7 +26,7 @@ msgstr ""
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Monthly"
-msgstr ""
+msgstr "Mensuelle"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,rate:0
@@ -34,9 +34,9 @@ msgid "Rate (%)"
 msgstr "Amfiḍi (%)"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
-#: view:website:hr_payroll.report_payslipdetails
+#: report:paylip.details:0
 msgid "Salary Rule Category"
 msgstr ""
 
@@ -53,20 +53,17 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: view:hr.salary.rule:0
+#: view:hr.payslip:0 view:hr.payslip.line:0 view:hr.salary.rule:0
 msgid "Group By..."
-msgstr ""
+msgstr "Sdukel s..."
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "States"
-msgstr "Iddaden"
+msgstr "Addad"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,input_ids:0
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: field:hr.payslip.line,input_ids:0 view:hr.salary.rule:0
 #: field:hr.salary.rule,input_ids:0
 msgid "Inputs"
 msgstr "Inekcam"
@@ -78,13 +75,8 @@ msgid "Parent Salary Rule"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:hr_payroll.payroll_hr_employee_view_form
-#: field:hr.employee,payslip_count:0
-#: field:hr.employee,slip_ids:0
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: view:hr.payslip:hr_payroll.view_hr_payslip_tree
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
-#: field:hr.payslip.run,slip_ids:0
+#: view:hr.employee:0 field:hr.employee,slip_ids:0 view:hr.payslip:0
+#: view:hr.payslip.run:0 field:hr.payslip.run,slip_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
 msgstr ""
@@ -97,22 +89,19 @@ msgstr "Amaraw"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,company_id:0
-#: field:hr.payroll.structure,company_id:0
-#: field:hr.payslip,company_id:0
-#: field:hr.payslip.line,company_id:0
-#: field:hr.salary.rule,company_id:0
+#: field:hr.payroll.structure,company_id:0 field:hr.payslip,company_id:0
+#: field:hr.payslip.line,company_id:0 field:hr.salary.rule,company_id:0
 #: field:hr.salary.rule.category,company_id:0
 msgid "Company"
 msgstr "Takebbwanit"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "Done Slip"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: view:hr.payslip:0 view:hr.payslip.run:0
 msgid "Set to Draft"
 msgstr "Rrit d arewway"
 
@@ -122,47 +111,43 @@ msgid "hr.salary.rule"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.run:0
+#: view:hr.payslip:0 view:hr.payslip.run:0
 msgid "to"
-msgstr ""
+msgstr "ɣer"
 
 #. module: hr_payroll
-#: field:hr.payslip,payslip_run_id:0
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: field:hr.payslip,payslip_run_id:0 view:hr.payslip.run:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Batches"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+#: view:hr.payslip.employees:0
 msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the "
-"dates and credit note specified on Payslips Run."
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
 msgstr ""
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: report:contribution.register.lines:0 report:paylip.details:0
+#: report:payslip:0
 msgid "Quantity/Rate"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Children Definition"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.input,payslip_id:0
-#: field:hr.payslip.line,slip_id:0
+#: field:hr.payslip.input,payslip_id:0 field:hr.payslip.line,slip_id:0
 #: field:hr.payslip.worked_days,payslip_id:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: model:ir.model,name:hr_payroll.model_hr_payslip report:payslip:0
 msgid "Pay Slip"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+#: view:hr.payslip.employees:0
 msgid "Generate"
 msgstr ""
 
@@ -175,7 +160,7 @@ msgstr ""
 #. module: hr_payroll
 #: report:contribution.register.lines:0
 msgid "Total:"
-msgstr ""
+msgstr "Asemday:"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
@@ -183,8 +168,7 @@ msgid "All Children Rules"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.payslip:0 view:hr.salary.rule:0
 msgid "Input Data"
 msgstr "Isefka inekcam"
 
@@ -194,32 +178,28 @@ msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_form
+#: view:hr.salary.rule.category:0
 msgid "Notes"
-msgstr "Iwenniten"
+msgstr "Awennit"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:851
-#: code:addons/hr_payroll/hr_payroll.py:856
-#: code:addons/hr_payroll/hr_payroll.py:862
-#: code:addons/hr_payroll/hr_payroll.py:879
-#: code:addons/hr_payroll/hr_payroll.py:885
+#: code:addons/hr_payroll/hr_payroll.py:873
+#: code:addons/hr_payroll/hr_payroll.py:878
+#: code:addons/hr_payroll/hr_payroll.py:884
+#: code:addons/hr_payroll/hr_payroll.py:901
+#: code:addons/hr_payroll/hr_payroll.py:907
 #, python-format
 msgid "Error!"
 msgstr "Tuccḍa!"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,amount:0
-#: field:hr.payslip.line,amount:0
-#: view:website:hr_payroll.report_contributionregister
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:contribution.register.lines:0 field:hr.payslip.input,amount:0
+#: field:hr.payslip.line,amount:0 report:paylip.details:0 report:payslip:0
 msgid "Amount"
 msgstr "Azal"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_form
+#: view:hr.payslip:0 view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
 msgid "Payslip Line"
 msgstr ""
@@ -227,7 +207,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Other Information"
-msgstr ""
+msgstr "Talɣut nniḍen"
 
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
@@ -235,13 +215,12 @@ msgid "Link your payroll to accounting system"
 msgstr ""
 
 #. module: hr_payroll
-#: help:hr.payslip.line,amount_select:0
-#: help:hr.salary.rule,amount_select:0
+#: help:hr.payslip.line,amount_select:0 help:hr.salary.rule,amount_select:0
 msgid "The computation method for the rule amount."
 msgstr ""
 
 #. module: hr_payroll
-#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+#: view:payslip.lines.contribution.register:0
 msgid "Contribution Register's Payslip Lines"
 msgstr ""
 
@@ -251,26 +230,23 @@ msgid "Details by Salary Rule Category:"
 msgstr ""
 
 #. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
+#: report:paylip.details:0 report:payslip:0
 msgid "Note"
-msgstr ""
+msgstr "Awennit"
 
 #. module: hr_payroll
-#: field:hr.payroll.structure,code:0
-#: field:hr.payslip,number:0
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: field:hr.payroll.structure,code:0 field:hr.payslip,number:0
+#: report:paylip.details:0 report:payslip:0
 msgid "Reference"
-msgstr "Tamsisɣelt"
+msgstr "Tamselyut"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "Draft Slip"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:415
+#: code:addons/hr_payroll/hr_payroll.py:433
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr ""
@@ -282,10 +258,9 @@ msgid "Maximum Range"
 msgstr ""
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:paylip.details:0 report:payslip:0
 msgid "Identification No"
-msgstr ""
+msgstr "Uṭṭun n usulu"
 
 #. module: hr_payroll
 #: field:hr.payslip,struct_id:0
@@ -298,7 +273,7 @@ msgid "Partner"
 msgstr "Amendid"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Total Working Days"
 msgstr ""
 
@@ -308,8 +283,7 @@ msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr ""
 
 #. module: hr_payroll
-#: help:hr.payslip.line,code:0
-#: help:hr.salary.rule,code:0
+#: help:hr.payslip.line,code:0 help:hr.salary.rule,code:0
 msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
@@ -323,10 +297,10 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "From"
-msgstr ""
+msgstr "Si"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Confirm"
 msgstr "Sentem"
 
@@ -336,10 +310,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new contribution register.\n"
 "              </p><p>\n"
-"                A contribution register is a third party involved in the "
-"salary\n"
-"                payment of the employees. It can be the social security, "
-"the\n"
+"                A contribution register is a third party involved in the salary\n"
+"                payment of the employees. It can be the social security, the\n"
 "                estate or anyone that collect or inject money on payslips.\n"
 "              </p>\n"
 "            "
@@ -360,13 +332,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: report:paylip.details:0
+#: report:contribution.register.lines:0 report:paylip.details:0
 msgid "Register Name"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+#: view:hr.payslip.employees:0
 msgid "Payslips by Employees"
 msgstr ""
 
@@ -389,13 +360,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+#: view:hr.salary.rule:0
 msgid "Search Salary Rule"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,employee_id:0
-#: field:hr.payslip.line,employee_id:0
+#: field:hr.payslip,employee_id:0 field:hr.payslip.line,employee_id:0
 #: model:ir.model,name:hr_payroll.model_hr_employee
 msgid "Employee"
 msgstr "Amaris"
@@ -406,13 +376,12 @@ msgid "Semi-annually"
 msgstr ""
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:paylip.details:0 report:payslip:0
 msgid "Email"
 msgstr "Email"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip.run:0
 msgid "Search Payslip Batches"
 msgstr ""
 
@@ -423,7 +392,7 @@ msgid "Percentage based on"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:77
+#: code:addons/hr_payroll/hr_payroll.py:90
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Anɣel )"
@@ -439,22 +408,20 @@ msgid "Made Payment Order ? "
 msgstr ""
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: report:contribution.register.lines:0
 msgid "PaySlip Lines by Contribution Register"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: field:hr.payslip,line_ids:0
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:hr.payslip:0 field:hr.payslip,line_ids:0 view:hr.payslip.line:0
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
 msgid "Payslip Lines"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Divers"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -462,19 +429,15 @@ msgid "Rejected"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
-#: field:hr.payroll.structure,rule_ids:0
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_list
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_tree
-#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+#: view:hr.payroll.structure:0 field:hr.payroll.structure,rule_ids:0
+#: view:hr.salary.rule:0
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
 msgid "Salary Rules"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:324
+#: code:addons/hr_payroll/hr_payroll.py:342
 #, python-format
 msgid "Refund: "
 msgstr ""
@@ -485,9 +448,7 @@ msgid "PaySlip Lines by Contribution Registers"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: selection:hr.payslip,state:0
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
 msgid "Done"
 msgstr "Immed"
 
@@ -499,41 +460,37 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_fix:0
-#: selection:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_fix:0
+#: selection:hr.payslip.line,amount_select:0 field:hr.salary.rule,amount_fix:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Fixed Amount"
-msgstr ""
+msgstr "Montant fixe"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:353
+#: code:addons/hr_payroll/hr_payroll.py:371
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
 msgid "Warning!"
 msgstr "ɣuṛ-ek !"
 
 #. module: hr_payroll
-#: help:hr.payslip.line,active:0
-#: help:hr.salary.rule,active:0
+#: help:hr.payslip.line,active:0 help:hr.salary.rule,active:0
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,state:0
-#: field:hr.payslip.run,state:0
+#: field:hr.payslip,state:0 field:hr.payslip.run,state:0
 msgid "Status"
 msgstr "Addad"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Worked Days & Inputs"
 msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payslip,details_by_salary_rule_category:0
-#: view:website:hr_payroll.report_payslipdetails
 msgid "Details by Salary Rule Category"
 msgstr ""
 
@@ -543,8 +500,7 @@ msgid "PaySlip Lines"
 msgstr ""
 
 #. module: hr_payroll
-#: help:hr.payslip.line,register_id:0
-#: help:hr.salary.rule,register_id:0
+#: help:hr.payslip.line,register_id:0 help:hr.salary.rule,register_id:0
 msgid "Eventual third party involved in the salary payment of the employees."
 msgstr ""
 
@@ -554,7 +510,7 @@ msgid "Number of Hours"
 msgstr "Amḍan n isragen"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "PaySlip Batch"
 msgstr ""
 
@@ -565,17 +521,14 @@ msgid "Minimum Range"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.line,child_ids:0
-#: field:hr.salary.rule,child_ids:0
+#: field:hr.payslip.line,child_ids:0 field:hr.salary.rule,child_ids:0
 msgid "Child Salary Rule"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,date_to:0
-#: field:hr.payslip.run,date_end:0
+#: report:contribution.register.lines:0 field:hr.payslip,date_to:0
+#: field:hr.payslip.run,date_end:0 report:paylip.details:0 report:payslip:0
 #: field:payslip.lines.contribution.register,date_to:0
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
 msgid "Date To"
 msgstr ""
 
@@ -583,7 +536,7 @@ msgstr ""
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Range"
-msgstr ""
+msgstr "Intervalle"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
@@ -597,20 +550,17 @@ msgid "Sum of all current contract's wage of employee."
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
+#: view:hr.payslip:0
 msgid "Payslip"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,credit_note:0
-#: field:hr.payslip.run,credit_note:0
+#: field:hr.payslip,credit_note:0 field:hr.payslip.run,credit_note:0
 msgid "Credit Note"
-msgstr ""
+msgstr "Avoir"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: field:hr.payslip,payslip_count:0
+#: view:hr.payslip:0
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
 msgid "Payslip Computation Details"
 msgstr ""
@@ -627,16 +577,14 @@ msgid "Payslip Input"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_tree
-#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_tree_view
-#: view:hr.salary.rule.category:hr_payroll.view_hr_salary_rule_category_filter
+#: view:hr.salary.rule.category:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 msgid "Salary Rule Categories"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Cancel Payslip"
 msgstr ""
 
@@ -647,12 +595,12 @@ msgid "The contract for which applied this input"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Computation"
 msgstr "Asiḍen"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:879
+#: code:addons/hr_payroll/hr_payroll.py:901
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
@@ -660,27 +608,25 @@ msgstr ""
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
 msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of "
-"basic salary for per product can defined in expression like result = "
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
-#: field:hr.payslip.line,amount_select:0
+#: view:hr.payslip.line:0 field:hr.payslip.line,amount_select:0
 #: field:hr.salary.rule,amount_select:0
 msgid "Amount Type"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.line,category_id:0
-#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+#: field:hr.payslip.line,category_id:0 view:hr.salary.rule:0
 #: field:hr.salary.rule,category_id:0
 msgid "Category"
 msgstr "Taggayt"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Company Contribution"
 msgstr ""
 
@@ -692,7 +638,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:856
+#: code:addons/hr_payroll/hr_payroll.py:878
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
@@ -704,29 +650,25 @@ msgid "Salary Structures"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip.run:0
 msgid "Draft Payslip Batches"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: selection:hr.payslip,state:0
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
 #: selection:hr.payslip.run,state:0
 msgid "Draft"
 msgstr "Arewway"
 
 #. module: hr_payroll
-#: field:hr.payslip,date_from:0
-#: field:hr.payslip.run,date_start:0
+#: report:contribution.register.lines:0 field:hr.payslip,date_from:0
+#: field:hr.payslip.run,date_start:0 report:paylip.details:0 report:payslip:0
 #: field:payslip.lines.contribution.register,date_from:0
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
 msgid "Date From"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip.run:0
 msgid "Done Payslip Batches"
 msgstr ""
 
@@ -736,7 +678,7 @@ msgid "Payslip Lines by Contribution Register:"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Conditions"
 msgstr "Tiwtilin"
 
@@ -749,19 +691,18 @@ msgid "Percentage (%)"
 msgstr "Amfiḍi (%)"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:851
+#: code:addons/hr_payroll/hr_payroll.py:873
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Worked Day"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
-#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_list_view
+#: view:hr.payroll.structure:0
 msgid "Employee Function"
 msgstr ""
 
@@ -781,18 +722,17 @@ msgid "PaySlip Details"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Compute Sheet"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.line,active:0
-#: field:hr.salary.rule,active:0
+#: field:hr.payslip.line,active:0 field:hr.salary.rule,active:0
 msgid "Active"
 msgstr "Urmid"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Child Rules"
 msgstr ""
 
@@ -809,25 +749,22 @@ msgid "Python Expression"
 msgstr ""
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:paylip.details:0 report:payslip:0
 msgid "Designation"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "Companies"
-msgstr "tikebbaniyin"
+msgstr "Tikebbwaniyin"
 
 #. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
+#: report:paylip.details:0 report:payslip:0
 msgid "Authorized Signature"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,contract_id:0
-#: field:hr.payslip.input,contract_id:0
+#: field:hr.payslip,contract_id:0 field:hr.payslip.input,contract_id:0
 #: field:hr.payslip.line,contract_id:0
 #: field:hr.payslip.worked_days,contract_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contract
@@ -841,10 +778,9 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
 
 #. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
+#: report:paylip.details:0 report:payslip:0
 msgid "Credit"
-msgstr ""
+msgstr "Asmad"
 
 #. module: hr_payroll
 #: field:hr.contract,schedule_pay:0
@@ -858,12 +794,12 @@ msgid "Python Condition"
 msgstr "Tawtilt Python"
 
 #. module: hr_payroll
-#: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
+#: view:hr.contribution.register:0
 msgid "Contribution"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:334
+#: code:addons/hr_payroll/hr_payroll.py:352
 #, python-format
 msgid "Refund Payslip"
 msgstr ""
@@ -875,26 +811,21 @@ msgid "Salary Rule Input"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.line,quantity:0
-#: field:hr.salary.rule,quantity:0
+#: field:hr.payslip.line,quantity:0 field:hr.salary.rule,quantity:0
 msgid "Quantity"
 msgstr "Tanecta"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Refund"
-msgstr ""
+msgstr "Avoir"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,code:0
-#: field:hr.payslip.line,code:0
-#: field:hr.payslip.worked_days,code:0
-#: field:hr.rule.input,code:0
-#: field:hr.salary.rule,code:0
-#: field:hr.salary.rule.category,code:0
-#: view:website:hr_payroll.report_contributionregister
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:contribution.register.lines:0 field:hr.payslip.input,code:0
+#: field:hr.payslip.line,code:0 field:hr.payslip.worked_days,code:0
+#: field:hr.rule.input,code:0 field:hr.salary.rule,code:0
+#: field:hr.salary.rule.category,code:0 report:paylip.details:0
+#: report:payslip:0
 msgid "Code"
 msgstr "Tangalt"
 
@@ -904,19 +835,16 @@ msgstr "Tangalt"
 #: field:hr.salary.rule,amount_python_compute:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Python Code"
-msgstr ""
+msgstr "Code Python"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,sequence:0
-#: field:hr.payslip.line,sequence:0
-#: field:hr.payslip.worked_days,sequence:0
-#: field:hr.salary.rule,sequence:0
+#: field:hr.payslip.input,sequence:0 field:hr.payslip.line,sequence:0
+#: field:hr.payslip.worked_days,sequence:0 field:hr.salary.rule,sequence:0
 msgid "Sequence"
 msgstr "Agzum"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: view:hr.payslip:0
 msgid "Period"
 msgstr "Tawala"
 
@@ -926,12 +854,12 @@ msgid "Period from"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "General"
 msgstr "Amatu"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:658
+#: code:addons/hr_payroll/hr_payroll.py:676
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr ""
@@ -942,10 +870,8 @@ msgid "Generate payslips for all selected employees"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contract,struct_id:0
-#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_tree
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_tree
+#: field:hr.contract,struct_id:0 view:hr.payroll.structure:0 view:hr.payslip:0
+#: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
 msgid "Salary Structure"
 msgstr ""
@@ -956,10 +882,9 @@ msgid "Register Line"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
-#: selection:hr.payslip.run,state:0
+#: view:hr.payslip.run:0 selection:hr.payslip.run,state:0
 msgid "Close"
-msgstr "Mdel"
+msgstr "Fermer"
 
 #. module: hr_payroll
 #: help:hr.payslip,struct_id:0
@@ -974,7 +899,7 @@ msgstr ""
 #: field:hr.payroll.structure,children_ids:0
 #: field:hr.salary.rule.category,children_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Enfant"
 
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
@@ -1003,52 +928,46 @@ msgid "hr.config.settings"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
-#: field:hr.payslip.line,register_id:0
+#: view:hr.payslip.line:0 field:hr.payslip.line,register_id:0
 #: field:hr.salary.rule,register_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
 msgid "Contribution Register"
 msgstr ""
 
 #. module: hr_payroll
-#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+#: view:payslip.lines.contribution.register:0
 msgid "Print"
 msgstr "Siggez"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_form
+#: view:hr.payslip.line:0
 msgid "Calculations"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Worked Days"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "Search Payslips"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_tree
+#: view:hr.payslip.run:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
 msgid "Payslips Batches"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
-#: field:hr.contribution.register,note:0
-#: field:hr.payroll.structure,note:0
-#: field:hr.payslip.input,name:0
-#: field:hr.payslip.line,note:0
-#: field:hr.payslip.worked_days,name:0
-#: field:hr.rule.input,name:0
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
-#: field:hr.salary.rule,note:0
-#: field:hr.salary.rule.category,note:0
+#: view:hr.contribution.register:0 field:hr.contribution.register,note:0
+#: field:hr.payroll.structure,note:0 field:hr.payslip,name:0
+#: field:hr.payslip,note:0 field:hr.payslip.input,name:0
+#: field:hr.payslip.line,note:0 field:hr.payslip.worked_days,name:0
+#: field:hr.rule.input,name:0 view:hr.salary.rule:0
+#: field:hr.salary.rule,note:0 field:hr.salary.rule.category,note:0
 msgid "Description"
 msgstr "Aglam"
 
@@ -1058,8 +977,7 @@ msgid "Total Basic Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.contribution.register:hr_payroll.hr_contribution_register_filter
-#: view:hr.contribution.register:hr_payroll.hr_contribution_register_tree
+#: view:hr.contribution.register:0
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
 msgid "Contribution Registers"
@@ -1073,19 +991,18 @@ msgid "Payroll"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
+#: model:ir.actions.report.xml,name:hr_payroll.contribution_register
 msgid "PaySlip Lines By Conribution Register"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:353
+#: code:addons/hr_payroll/hr_payroll.py:371
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:paylip.details:0 report:payslip:0
 msgid "Address"
 msgstr "Tansa"
 
@@ -1096,20 +1013,16 @@ msgid "Payslip Worked Days"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_form
+#: view:hr.salary.rule.category:0
 msgid "Salary Categories"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contribution.register,name:0
-#: field:hr.payroll.structure,name:0
-#: field:hr.payslip.line,name:0
-#: field:hr.payslip.run,name:0
-#: field:hr.salary.rule,name:0
-#: field:hr.salary.rule.category,name:0
-#: view:website:hr_payroll.report_contributionregister
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:contribution.register.lines:0 field:hr.contribution.register,name:0
+#: field:hr.payroll.structure,name:0 field:hr.payslip.line,name:0
+#: field:hr.payslip.run,name:0 field:hr.salary.rule,name:0
+#: field:hr.salary.rule.category,name:0 report:paylip.details:0
+#: report:payslip:0
 msgid "Name"
 msgstr "Isem"
 
@@ -1120,27 +1033,23 @@ msgid "For example, enter 50.0 to apply a percentage of 50%"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_filter
+#: view:hr.payroll.structure:0
 msgid "Payroll Structures"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
-#: field:hr.payslip.employees,employee_ids:0
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:hr.payslip:0 view:hr.payslip.employees:0
+#: field:hr.payslip.employees,employee_ids:0 view:hr.payslip.line:0
 msgid "Employees"
-msgstr ""
+msgstr "Imarisen"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:paylip.details:0 report:payslip:0
 msgid "Bank Account"
 msgstr "Amiḍan n lbanka"
 
 #. module: hr_payroll
-#: help:hr.payslip.line,sequence:0
-#: help:hr.salary.rule,sequence:0
+#: help:hr.payslip.line,sequence:0 help:hr.salary.rule,sequence:0
 msgid "Use to arrange calculation sequence"
 msgstr ""
 
@@ -1148,8 +1057,7 @@ msgstr ""
 #: help:hr.payslip,state:0
 msgid ""
 "* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is 'Waiting'.             "
-"\n"
+"* If the payslip is under verification, the status is 'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
@@ -1158,9 +1066,9 @@ msgstr ""
 #: help:hr.payslip.line,condition_range:0
 #: help:hr.salary.rule,condition_range:0
 msgid ""
-"This will be used to compute the % fields values; in general it is on basic, "
-"but you can also use categories code fields in lowercase as a variable names "
-"(hra, ma, lta, etc.) and the variable basic."
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
 msgstr ""
 
 #. module: hr_payroll
@@ -1174,7 +1082,7 @@ msgid "Payslip Inputs"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Other Inputs"
 msgstr "Inekcam n niḍen"
 
@@ -1185,50 +1093,47 @@ msgid "Salary Rule Categories Hierarchy"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:862
+#: code:addons/hr_payroll/hr_payroll.py:884
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.line,total:0
-#: view:website:hr_payroll.report_contributionregister
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: report:contribution.register.lines:0 field:hr.payslip.line,total:0
+#: report:paylip.details:0 report:payslip:0
 msgid "Total"
 msgstr "Asemday"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Salary Computation"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Details By Salary Rule Category"
 msgstr ""
 
 #. module: hr_payroll
-#: help:hr.payslip.input,code:0
-#: help:hr.payslip.worked_days,code:0
+#: help:hr.payslip.input,code:0 help:hr.payslip.worked_days,code:0
 #: help:hr.rule.input,code:0
 msgid "The code that can be used in the salary rules"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:885
+#: code:addons/hr_payroll/hr_payroll.py:907
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: view:hr.payslip.run:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 msgid "Generate Payslips"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:hr.payslip.line:0
 msgid "Search Payslip Lines"
 msgstr ""
 
@@ -1244,12 +1149,12 @@ msgid "Always True"
 msgstr ""
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: report:contribution.register.lines:0
 msgid "PaySlip Name"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Accounting"
 msgstr "Tasiḍent"
 
@@ -1258,6 +1163,3 @@ msgstr "Tasiḍent"
 #: field:hr.salary.rule,condition_range:0
 msgid "Range Based on"
 msgstr ""
-
-#~ msgid "Cancel"
-#~ msgstr "Sefsax"

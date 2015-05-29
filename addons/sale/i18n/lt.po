@@ -1,26 +1,27 @@
-# Lithuanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# Giedrius Slavinskas <giedrius@inovera.lt>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale
+# 
+# Translators:
+# Giedrius Slavinskas <giedrius@inovera.lt>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-04-30 16:29+0000\n"
-"Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
-"Language-Team: Lithuanian <lt@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Lithuanian (http://www.transifex.com/projects/p/odoo-7/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:21+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: sale
 #: view:sale.order:0
@@ -28,26 +29,19 @@ msgid "UoS"
 msgstr "Pardavimo matai"
 
 #. module: sale
-#: report:sale.order:0
-#: view:sale.order:0
-#: field:sale.order,user_id:0
-#: view:sale.order.line:0
-#: field:sale.order.line,salesman_id:0
-#: view:sale.report:0
-#: field:sale.report,user_id:0
+#: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
+#: view:sale.order.line:0 field:sale.order.line,salesman_id:0
+#: view:sale.report:0 field:sale.report,user_id:0
 msgid "Salesperson"
 msgstr "Pardavėjas"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
-"Kainoraštis, kuris bus naudojamas apskaičiuojant produktų, esančių pardavimų "
-"užsakyme, kainą."
+msgstr "Kainoraštis, kuris bus naudojamas apskaičiuojant produktų, esančių pardavimų užsakyme, kainą."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,day:0
+#: view:sale.report:0 field:sale.report,day:0
 msgid "Day"
 msgstr "Data"
 
@@ -87,7 +81,7 @@ msgstr "PVM"
 #. module: sale
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Ne"
 
 #. module: sale
 #: report:sale.order:0
@@ -98,16 +92,12 @@ msgstr "Mokesčiai"
 #: help:sale.order,state:0
 msgid ""
 "Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs     "
-"          in the invoice validation (Invoice Exception) or in the picking "
-"list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed           "
-"    but waiting for the scheduler to run on the order date."
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
 msgstr ""
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,analytic_account_id:0
+#: view:sale.report:0 field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Analitinė sąskaita"
@@ -117,19 +107,15 @@ msgstr "Analitinė sąskaita"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html "
-"formatu, kad būtų galima įterpti į kanban rodinius."
+msgstr "Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html formatu, kad būtų galima įterpti į kanban rodinius."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,product_uom_qty:0
+#: view:sale.report:0 field:sale.report,product_uom_qty:0
 msgid "# of Qty"
 msgstr "Kiekis"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
-#: view:sale.report:0
+#: model:ir.model,name:sale.model_res_partner view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "Partneris"
@@ -170,11 +156,10 @@ msgstr "Nuol. (%)"
 #: code:addons/sale/sale.py:770
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Prašome nustatyti pajamų sąskaitą šiam produktui: \"% s\" (ID:% d)."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,price_total:0
+#: view:sale.report:0 field:sale.report,price_total:0
 msgid "Total Price"
 msgstr "Iš viso"
 
@@ -191,10 +176,8 @@ msgstr "Pažymėjus, pirkėjo sąskaitos faktūros bus sulietos į vieną S/F."
 #. module: sale
 #: help:sale.config.settings,timesheet:0
 msgid ""
-"For modifying account analytic view to show important data to project "
-"manager of services companies.\n"
-"                You can also view the report of account analytic summary "
-"user-wise as well as month wise.\n"
+"For modifying account analytic view to show important data to project manager of services companies.\n"
+"                You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "                This installs the module account_analytic_analysis."
 msgstr ""
 
@@ -204,8 +187,7 @@ msgid "Ordered Quantities"
 msgstr "Užsakyti kiekiai"
 
 #. module: sale
-#: field:sale.order,name:0
-#: field:sale.order.line,order_id:0
+#: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Užsakymo numeris"
 
@@ -285,33 +267,19 @@ msgstr "Skyriaus pavadinimas"
 #: code:addons/sale/sale.py:604
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr ""
-"Negalima patvirtinti pardavimų užsakymo, kuris neturi užsakymo eilučių."
+msgstr "Negalima patvirtinti pardavimų užsakymo, kuris neturi užsakymo eilučių."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
 msgid ""
 "<p>\n"
-"                Here is a list of each sales order line to be invoiced. You "
-"can\n"
-"                invoice sales orders partially, by lines of sales order. You "
-"do\n"
-"                not need this list if you invoice from the delivery orders "
-"or\n"
+"                Here is a list of each sales order line to be invoiced. You can\n"
+"                invoice sales orders partially, by lines of sales order. You do\n"
+"                not need this list if you invoice from the delivery orders or\n"
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Čia pateikiamas neužpajamuotų pardavimų užsakymų eilučių "
-"sąrašas. Jūs\n"
-"                galite užpajamuoti dalį užsakymo pagal užsakymo eilutes. Šio "
-"sąrašo\n"
-"                jums neprireiks, jeigu pajamuojate pagal siunčiamas siuntas "
-"arba\n"
-"                jei išrašote sąskaitas pilnai užsakymo sumai.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Čia pateikiamas neužpajamuotų pardavimų užsakymų eilučių sąrašas. Jūs\n                galite užpajamuoti dalį užsakymo pagal užsakymo eilutes. Šio sąrašo\n                jums neprireiks, jeigu pajamuojate pagal siunčiamas siuntas arba\n                jei išrašote sąskaitas pilnai užsakymo sumai.\n              </p>\n            "
 
 #. module: sale
 #: view:sale.order:0
@@ -335,11 +303,8 @@ msgid "A partner to whom the particular product needs to be allotted."
 msgstr "Adresas, kuriuo bus pristatytas šis konkretus produktas."
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,state:0
-#: view:sale.order.line:0
-#: field:sale.order.line,state:0
-#: view:sale.report:0
+#: view:sale.order:0 field:sale.order,state:0 view:sale.order.line:0
+#: field:sale.order.line,state:0 view:sale.report:0
 msgid "Status"
 msgstr "Būsena"
 
@@ -361,9 +326,7 @@ msgstr "Pardavimų užsakymų statistika"
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
-"Analitinė sąskaita, kurioje bus fiksuojamos pajamos gautos iš šio pardavimų "
-"užsakymo."
+msgstr "Analitinė sąskaita, kurioje bus fiksuojamos pajamos gautos iš šio pardavimų užsakymo."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -374,34 +337,20 @@ msgstr "Spalis"
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sales "
-"flow:\n"
+"                OpenERP will help you efficiently handle the complete sales flow:\n"
 "                quotation, sales order, delivery, invoicing and payment.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Spauskite, kad sukurtumėte komercinį pasiūlymą, kuris gali "
-"būti\n"
-"                konvertuojamas į pardavimų užsakymą.\n"
-"              </p><p>\n"
-"                OpenERP padeda efektyviau valdyti visą pardavimų procesą:\n"
-"                komercinis pasiūlymas, pardavimų užsakymas, siunta,\n"
-"                sąskaita-faktūra ir apmokėjimai.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Spauskite, kad sukurtumėte komercinį pasiūlymą, kuris gali būti\n                konvertuojamas į pardavimų užsakymą.\n              </p><p>\n                OpenERP padeda efektyviau valdyti visą pardavimų procesą:\n                komercinis pasiūlymas, pardavimų užsakymas, siunta,\n                sąskaita-faktūra ir apmokėjimai.\n              </p>\n            "
 
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid ""
-"All items in these order lines will be invoiced. You can also invoice a "
-"percentage of the sales order\n"
-"                    or a fixed price (for advances) directly from the sales "
-"order form if you prefer."
+"All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
+"                    or a fixed price (for advances) directly from the sales order form if you prefer."
 msgstr ""
 
 #. module: sale
@@ -423,15 +372,13 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_quotations view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
 msgstr "Komerciniai pasiūlymai"
 
 #. module: sale
-#: field:sale.advance.payment.inv,qtty:0
-#: report:sale.order:0
+#: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Kiekis"
@@ -467,17 +414,8 @@ msgid ""
 "Use All to create the final invoice.\n"
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
-"                Use Some Order Lines to invoice a selection of the sales "
-"order lines."
-msgstr ""
-"Naudojant „Užpajamuoti visą užsakymą“ bus sukurta galutinė sąskaita-"
-"faktūra.\n"
-"Naudojant „Procentinė dalis“ bus užpajamuota tam tikra procentinė dalis nuo "
-"bendros užsakymo sumos.\n"
-"Naudojant „Fiksuota suma“ bus sukurta sąskaita-faktūra su nurodyta avansine "
-"suma.\n"
-"Naudojant „Pasirenkamos užsakymo eilutės“ bus sukurta sąskaita-faktūra su "
-"pasirinktomis užsakymo eilutėmis."
+"                Use Some Order Lines to invoice a selection of the sales order lines."
+msgstr "Naudojant „Užpajamuoti visą užsakymą“ bus sukurta galutinė sąskaita-faktūra.\nNaudojant „Procentinė dalis“ bus užpajamuota tam tikra procentinė dalis nuo bendros užsakymo sumos.\nNaudojant „Fiksuota suma“ bus sukurta sąskaita-faktūra su nurodyta avansine suma.\nNaudojant „Pasirenkamos užsakymo eilutės“ bus sukurta sąskaita-faktūra su pasirinktomis užsakymo eilutėmis."
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -524,7 +462,7 @@ msgstr "Iš pardavimų užsakymo sukurtos sąskaitos-faktūros adresas."
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -557,8 +495,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
+#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "or"
 msgstr "arba"
@@ -570,8 +507,7 @@ msgid "Quotation sent"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,invoice_exists:0
-#: field:sale.order.line,invoiced:0
+#: field:sale.order,invoice_exists:0 field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Sąskaitos faktūros"
 
@@ -647,8 +583,7 @@ msgid "Quotation / Order"
 msgstr "Pasiūlymas / Užsakymas"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,nbr:0
+#: view:sale.report:0 field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# eilučių"
 
@@ -678,8 +613,7 @@ msgid "Order N°"
 msgstr "Užsakymo Nr."
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,order_line:0
+#: view:sale.order:0 field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Užsakymo eilutės"
 
@@ -691,8 +625,7 @@ msgstr ""
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
 msgid ""
-"Allows you to categorize your sales and deliveries (picking lists) between "
-"different journals,\n"
+"Allows you to categorize your sales and deliveries (picking lists) between different journals,\n"
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
 msgstr ""
@@ -723,8 +656,7 @@ msgid "My Sales"
 msgstr "Mano pardavimai"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.report,pricelist_id:0
+#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Kainoraštis"
@@ -732,14 +664,10 @@ msgstr "Kainoraštis"
 #. module: sale
 #: help:sale.order.line,state:0
 msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.    "
-"                 \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.   "
-"                  \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.        "
-"             \n"
+"* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
 
@@ -807,8 +735,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,categ_id:0
+#: view:sale.report:0 field:sale.report,categ_id:0
 msgid "Category of Product"
 msgstr "Produkto kategorija"
 
@@ -831,50 +758,29 @@ msgstr "Mokesčiai:"
 #. module: sale
 #: code:addons/sale/sale.py:279
 #, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before!"
+msgid "In order to delete a confirmed sales order, you must cancel it before!"
 msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation or sales order for this "
-"customer.\n"
+"                Click to create a quotation or sales order for this customer.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sale "
-"flow:\n"
+"                OpenERP will help you efficiently handle the complete sale flow:\n"
 "                quotation, sales order, delivery, invoicing and\n"
 "                payment.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customer to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customer to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Spauskite, kad sukurtumėte komercinį pasiūlymą ar pardavimų "
-"užsakymą šiam pirkėjui.\n"
-"              </p><p>\n"
-"                OpenERP padeda efektyviau valdyti visą pardavimų procesą:\n"
-"                komercinis pasiūlymas, pardavimų užsakymas, siunta,\n"
-"                sąskaita-faktūra ir apmokėjimai.\n"
-"              </p><p>\n"
-"                Socialinio tinklo funkcijos padeda organizuoti bendravimą "
-"prie\n"
-"                kiekvieno pardavimo užsakymo ir leidžia jūsų pirkėjams "
-"stebėti \n"
-"                užsakymo vykdymo eigą.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Spauskite, kad sukurtumėte komercinį pasiūlymą ar pardavimų užsakymą šiam pirkėjui.\n              </p><p>\n                OpenERP padeda efektyviau valdyti visą pardavimų procesą:\n                komercinis pasiūlymas, pardavimų užsakymas, siunta,\n                sąskaita-faktūra ir apmokėjimai.\n              </p><p>\n                Socialinio tinklo funkcijos padeda organizuoti bendravimą prie\n                kiekvieno pardavimo užsakymo ir leidžia jūsų pirkėjams stebėti \n                užsakymo vykdymo eigą.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.ui.menu,name:sale.menu_sale_order
-#: view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
 msgid "Sales Orders"
 msgstr "Pardavimų užsakymai"
 
@@ -890,22 +796,11 @@ msgid ""
 "                Click to define a new sale shop.\n"
 "              </p><p>\n"
 "                Each quotation or sales order must be linked to a shop. The\n"
-"                shop also defines the warehouse from which the products will "
-"be\n"
+"                shop also defines the warehouse from which the products will be\n"
 "                delivered for each particular sales.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Spauskite, kad įvestumėte naują pardavimų skyrių.\n"
-"              </p><p>\n"
-"                Kiekvienas komercinis pasiūlymas ar pardavimų užsakymas yra "
-"susietas\n"
-"                su pardavimo skyriumi. Pardavimų skyrius taip pat nurodo, iš "
-"kurio\n"
-"                sandėlio prekės bus pristatomos pirkėjui.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Spauskite, kad įvestumėte naują pardavimų skyrių.\n              </p><p>\n                Kiekvienas komercinis pasiūlymas ar pardavimų užsakymas yra susietas\n                su pardavimo skyriumi. Pardavimų skyrius taip pat nurodo, iš kurio\n                sandėlio prekės bus pristatomos pirkėjui.\n              </p>\n            "
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -928,8 +823,7 @@ msgid "Exception"
 msgstr "Neįvykdyta"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop
-#: view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
 msgid "Sales Shop"
 msgstr "Pardavimų skyrius"
 
@@ -937,19 +831,13 @@ msgstr "Pardavimų skyrius"
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
-"                You may have to create it and set it as a default value on "
-"this field."
-msgstr ""
-"Pasirinkite paslaugos tipo produktą, kuris bus naudojamas kaip „Avansinis "
-"produktas“.\n"
-"                Jums gali reikėti jį sukurti ir nustatyti kaip numatytąją "
-"reikšmę ant šio lauko."
+"                You may have to create it and set it as a default value on this field."
+msgstr "Pasirinkite paslaugos tipo produktą, kuris bus naudojamas kaip „Avansinis produktas“.\n                Jums gali reikėti jį sukurti ir nustatyti kaip numatytąją reikšmę ant šio lauko."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to sale a given product or a given customer.\n"
+"Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
@@ -990,8 +878,7 @@ msgstr "Mano pardavimų užsakymo eilutės"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
+#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Atšaukti"
@@ -1012,10 +899,8 @@ msgstr ""
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
-#: view:sale.order.line:0
+#: view:sale.advance.payment.inv:0 view:sale.order:0
+#: field:sale.order,order_policy:0 view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Išrašyti sąskaitą"
 
@@ -1027,8 +912,7 @@ msgstr "Užsakymo numeris"
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
 msgid ""
-"Allows you to Make Quotation, Sale Order using different Order policy and "
-"Manage Related Stock.\n"
+"Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "                    This installs the module sale_stock."
 msgstr ""
 
@@ -1048,34 +932,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a quotation, the first step of a new sale.\n"
 "              </p><p>\n"
-"                OpenERP will help you handle efficiently the complete sale "
-"flow:\n"
+"                OpenERP will help you handle efficiently the complete sale flow:\n"
 "                from the quotation to the sales order, the\n"
 "                delivery, the invoicing and the payment collection.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customers to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customers to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Spauskite, kad sukurtumėte komercinį pasiūlymą - pirmąjį "
-"pardavimų žingsnį.\n"
-"              </p><p>\n"
-"                OpenERP padeda efektyviau valdyti visą pardavimų procesą:\n"
-"                iš komercinio pasiūlymo į pardavimų užsakymą, siunta\n"
-"                , sąskaita-faktūra ir mokėjimų surinkimas.\n"
-"              </p><p>\n"
-"                Socialinio tinklo funkcijos padeda organizuoti bendravimą "
-"prie\n"
-"                kiekvieno pardavimo užsakymo ir leidžia jūsų pirkėjams "
-"stebėti \n"
-"                užsakymo vykdymo eigą.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Spauskite, kad sukurtumėte komercinį pasiūlymą - pirmąjį pardavimų žingsnį.\n              </p><p>\n                OpenERP padeda efektyviau valdyti visą pardavimų procesą:\n                iš komercinio pasiūlymo į pardavimų užsakymą, siunta\n                , sąskaita-faktūra ir mokėjimų surinkimas.\n              </p><p>\n                Socialinio tinklo funkcijos padeda organizuoti bendravimą prie\n                kiekvieno pardavimo užsakymo ir leidžia jūsų pirkėjams stebėti \n                užsakymo vykdymo eigą.\n              </p>\n            "
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1160,9 +1026,7 @@ msgid "Order Lines to Invoice"
 msgstr "S/F pagal užsakymo eilutes"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.report:0
+#: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
 msgid "Group By..."
 msgstr "Grupuoti pagal..."
 
@@ -1172,14 +1036,12 @@ msgid "Product Features"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Laukiantis"
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.report,product_uom:0
+#: view:sale.order.line:0 field:sale.report,product_uom:0
 msgid "Unit of Measure"
 msgstr "Matavimo vienetas"
 
@@ -1189,8 +1051,7 @@ msgid "Procurement Method"
 msgstr "Užsakymo būdas"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,message_unread:0
+#: view:sale.order:0 field:sale.order,message_unread:0
 msgid "Unread Messages"
 msgstr "Neperžiūrėtos žinutės"
 
@@ -1205,8 +1066,7 @@ msgid "Draft Quotation"
 msgstr "Pasiūlymo juodraštis"
 
 #. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Mokesčiai"
 
@@ -1218,12 +1078,9 @@ msgstr "Pardavimų užsakymai paruošti sąskaitos-faktūros išrašymui"
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
 msgid ""
-"Allows you to define what is the default function of a specific user on a "
-"given account.\n"
-"                This is mostly used when a user encodes his timesheet. The "
-"values are retrieved and the fields are auto-filled.\n"
-"                But the possibility to change these values is still "
-"available.\n"
+"Allows you to define what is the default function of a specific user on a given account.\n"
+"                This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.\n"
+"                But the possibility to change these values is still available.\n"
 "                This installs the module analytic_user_function."
 msgstr ""
 
@@ -1238,14 +1095,12 @@ msgid "Terms and conditions..."
 msgstr "Sąlygos..."
 
 #. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
 msgstr "Sukurti sąskaitas faktūras"
 
 #. module: sale
-#: code:addons/sale/sale.py:279
-#: code:addons/sale/sale.py:826
+#: code:addons/sale/sale.py:279 code:addons/sale/sale.py:826
 #: code:addons/sale/sale.py:989
 #, python-format
 msgid "Invalid Action!"
@@ -1291,8 +1146,7 @@ msgid "Allows you to specify an analytic account on sales orders."
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "To Invoice"
 msgstr "Neužpajamuota"
 
@@ -1311,9 +1165,7 @@ msgstr "Liepa"
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr ""
-"Paspaudus „Rodyti eilutes užpajamavimui“, pažymėkite pajamuojamas eilutes ir "
-"sukurkite sąskaitą-faktūrą paspaudę „Užpajamuoti“ iš meniu „Daugiau“."
+msgstr "Paspaudus „Rodyti eilutes užpajamavimui“, pažymėkite pajamuojamas eilutes ir sukurkite sąskaitą-faktūrą paspaudę „Užpajamuoti“ iš meniu „Daugiau“."
 
 #. module: sale
 #: view:sale.order:0
@@ -1321,8 +1173,7 @@ msgid "Cancel Quotation"
 msgstr "Atšaukti pasiūlymą"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Shipping Exception"
 msgstr "Pristatymo klaida"
 
@@ -1337,8 +1188,7 @@ msgid "Contracts Management"
 msgstr ""
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,month:0
+#: view:sale.report:0 field:sale.report,month:0
 msgid "Month"
 msgstr "Mėnuo"
 
@@ -1353,8 +1203,7 @@ msgid "My Sales Orders"
 msgstr "Mano pardavimų užsakymai"
 
 #. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create invoices"
 msgstr "Sukurti sąskaitas faktūras"
 
@@ -1375,14 +1224,12 @@ msgstr "Apmokėta"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
-#: model:ir.ui.menu,name:sale.menu_report_product_all
-#: view:sale.report:0
+#: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
 msgid "Sales Analysis"
 msgstr "Pardavimų analizė"
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_quotation0 view:sale.order:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Pasiūlymas"
@@ -1390,8 +1237,8 @@ msgstr "Pasiūlymas"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
 msgid ""
-"The Salesman creates an invoice manually, if the sales order shipping policy "
-"is 'Shipping and Manual in Progress'. The invoice is created automatically "
+"The Salesman creates an invoice manually, if the sales order shipping policy"
+" is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
 
@@ -1403,7 +1250,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "PayPal'o nuoroda (URL)"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
@@ -1426,9 +1273,7 @@ msgstr "Kliento sąskaitos"
 #: model:ir.actions.act_window,name:sale.open_board_sales
 #: model:ir.ui.menu,name:sale.menu_dashboard_sales
 #: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
-#: view:sale.order:0
-#: view:sale.report:0
+#: view:res.partner:0 view:sale.order:0 view:sale.report:0
 msgid "Sales"
 msgstr "Pardavimai"
 
@@ -1436,31 +1281,25 @@ msgstr "Pardavimai"
 #: help:sale.config.settings,module_sale_margin:0
 msgid ""
 "This adds the 'Margin' on sales order.\n"
-"                This gives the profitability by calculating the difference "
-"between the Unit Price and Cost Price.\n"
+"                This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
 msgstr ""
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
+#: report:sale.order:0 field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Kaina"
 
 #. module: sale
-#: view:sale.order:0
-#: selection:sale.order,state:0
-#: view:sale.order.line:0
-#: selection:sale.order.line,state:0
-#: selection:sale.report,state:0
+#: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order.line,state:0 selection:sale.report,state:0
 msgid "Done"
 msgstr "Atlikta"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:120
 #: model:ir.model,name:sale.model_account_invoice
-#: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_invoice0 view:sale.order:0
 #, python-format
 msgid "Invoice"
 msgstr "Sąskaita faktūra"
@@ -1494,19 +1333,16 @@ msgstr ""
 #: model:email.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -1515,8 +1351,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
 "       % endif\n"
 "       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -1524,8 +1359,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -1534,16 +1368,11 @@ msgid ""
 "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -1555,22 +1384,17 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -1580,33 +1404,21 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.order.line,product_id:0
-#: view:sale.report:0
-#: field:sale.report,product_id:0
+#: view:sale.order.line:0 field:sale.order.line,product_id:0
+#: view:sale.report:0 field:sale.report,product_id:0
 msgid "Product"
 msgstr "Produktas"
 
 #. module: sale
 #: help:sale.order,order_policy:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. "
-"\n"
-"On delivery order: A draft invoice can be created from the delivery order "
-"when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be "
-"paid before the products can be delivered."
-msgstr ""
-"Pagal poreikį: sąskaita-faktūra gali būti sukurta bet kuriuo metu iš "
-"pardavimų užsakymo.\n"
-"Išsiunčiant siuntą: sąskaita-faktūra gali būti sukurta pagal išvykstančią "
-"siuntą, po išsiuntimo.\n"
-"Prieš siuntos išsiuntimą: sąskaita-faktūra sukuriama iš pardavimų užsakymo "
-"ir turi būti apmokėta, kad būtų galima išsiųsti siuntą."
+"On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr "Pagal poreikį: sąskaita-faktūra gali būti sukurta bet kuriuo metu iš pardavimų užsakymo.\nIšsiunčiant siuntą: sąskaita-faktūra gali būti sukurta pagal išvykstančią siuntą, po išsiuntimo.\nPrieš siuntos išsiuntimą: sąskaita-faktūra sukuriama iš pardavimų užsakymo ir turi būti apmokėta, kad būtų galima išsiųsti siuntą."
 
 #. module: sale
-#: view:account.invoice.report:0
-#: view:board.board:0
+#: view:account.invoice.report:0 view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
 msgstr "Mėnesinė apyvarta"
@@ -1686,8 +1498,7 @@ msgid "Customer Reference"
 msgstr "Pirkėjo identifikatorius"
 
 #. module: sale
-#: field:sale.order,amount_total:0
-#: view:sale.order.line:0
+#: field:sale.order,amount_total:0 view:sale.order.line:0
 msgid "Total"
 msgstr "Iš viso"
 
@@ -1697,11 +1508,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr ""
-"Pasirinkite sąskaitos išrašymo būdą. Bus\n"
-"                        sukurta juodraštinė sąskaita-faktūra, kurią "
-"galėsite\n"
-"                        keisti prieš patvirtinant."
+msgstr "Pasirinkite sąskaitos išrašymo būdą. Bus\n                        sukurta juodraštinė sąskaita-faktūra, kurią galėsite\n                        keisti prieš patvirtinant."
 
 #. module: sale
 #: view:board.board:0
@@ -1717,12 +1524,9 @@ msgstr ""
 #: help:sale.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allows to define your customer contracts conditions: invoicing\n"
-"            method (fixed price, on timesheet, advance invoice), the exact "
-"pricing\n"
-"            (650€/day for a developer), the duration (one year support "
-"contract).\n"
-"            You will be able to follow the progress of the contract and "
-"invoice automatically.\n"
+"            method (fixed price, on timesheet, advance invoice), the exact pricing\n"
+"            (650€/day for a developer), the duration (one year support contract).\n"
+"            You will be able to follow the progress of the contract and invoice automatically.\n"
 "            It installs the account_analytic_analysis module."
 msgstr ""
 
@@ -1745,10 +1549,8 @@ msgid "First cancel all invoices attached to this sales order."
 msgstr ""
 
 #. module: sale
-#: field:sale.order,company_id:0
-#: field:sale.order.line,company_id:0
-#: view:sale.report:0
-#: field:sale.report,company_id:0
+#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
+#: view:sale.report:0 field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
 msgstr "Įmonė"
@@ -1764,8 +1566,7 @@ msgid "The amount to be invoiced in advance."
 msgstr "Užsakymo sumos dalis sumokama avansu."
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Invoice Exception"
 msgstr "Sąskaitos faktūros išimtis"
 
@@ -1797,15 +1598,12 @@ msgstr "Pranešimai"
 #. module: sale
 #: field:sale.config.settings,module_project:0
 msgid "Project"
-msgstr ""
+msgstr "Projektas"
 
 #. module: sale
-#: code:addons/sale/sale.py:187
-#: code:addons/sale/sale.py:365
-#: code:addons/sale/sale.py:506
-#: code:addons/sale/sale.py:604
-#: code:addons/sale/sale.py:769
-#: code:addons/sale/sale.py:786
+#: code:addons/sale/sale.py:187 code:addons/sale/sale.py:365
+#: code:addons/sale/sale.py:506 code:addons/sale/sale.py:604
+#: code:addons/sale/sale.py:769 code:addons/sale/sale.py:786
 #, python-format
 msgid "Error!"
 msgstr "Klaida!"
@@ -1818,17 +1616,12 @@ msgstr "Suma be PVM:"
 #. module: sale
 #: help:sale.order.line,type:0
 msgid ""
-"From stock: When needed, the product is taken from the stock or we wait for "
-"replenishment.\n"
+"From stock: When needed, the product is taken from the stock or we wait for replenishment.\n"
 "On order: When needed, the product is purchased or produced."
-msgstr ""
-"Iš atsargų: kada reikia, produktas paimamas iš atsargų arba laukiama atsargų "
-"papildymo.\n"
-"Užsakant: kada reikia, produktas nuperkamas ar pagaminamas."
+msgstr "Iš atsargų: kada reikia, produktas paimamas iš atsargų arba laukiama atsargų papildymo.\nUžsakant: kada reikia, produktas nuperkamas ar pagaminamas."
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
+#: selection:sale.order,state:0 selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
 msgstr "Atšauktas"
@@ -1846,13 +1639,11 @@ msgstr "Pasiūlymas išsiųstas"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "El. laiško sukūrimo vedlys"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: field:sale.order,shop_id:0
-#: view:sale.report:0
-#: field:sale.report,shop_id:0
+#: field:sale.order,shop_id:0 view:sale.report:0 field:sale.report,shop_id:0
 msgid "Shop"
 msgstr "Pardavimų skyriai"
 
@@ -1873,14 +1664,12 @@ msgid "Contract Features"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:289
-#: code:addons/sale/sale.py:590
+#: code:addons/sale/sale.py:289 code:addons/sale/sale.py:590
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
 #: field:res.partner,sale_order_ids:0
-#: model:res.request.link,name:sale.req_link_sale_order
-#: view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
 #: selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
@@ -1924,8 +1713,7 @@ msgstr "Sąskaitos eilutės"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Sales Order Lines"
 msgstr "Pardavimų užsakymų eilutės"
 
@@ -1969,8 +1757,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_line_invoice.py:106
 #, python-format
 msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
+"Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
@@ -1994,7 +1781,7 @@ msgstr "Gruodis"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:97
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Nėra pajamųsąskaitos, apibrėžtos šiame produkte : \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -2050,15 +1837,15 @@ msgstr "El. laiškų šablonai"
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
 msgid ""
-"To allow your salesman to make invoices for sales order lines using the menu "
-"'Lines to Invoice'."
+"To allow your salesman to make invoices for sales order lines using the menu"
+" 'Lines to Invoice'."
 msgstr ""
 
 #. module: sale
 #: view:sale.order.line:0
 msgid ""
-"Sales Order Lines that are confirmed, done or in exception state and haven't "
-"yet been invoiced"
+"Sales Order Lines that are confirmed, done or in exception state and haven't"
+" yet been invoiced"
 msgstr ""
 
 #. module: sale
@@ -2097,15 +1884,14 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "Dokumento numeris, pagal kurį sugeneruotas šis pardavimų užsakymas."
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,delay:0
+#: view:sale.report:0 field:sale.report,delay:0
 msgid "Commitment Delay"
 msgstr "Įvykdymo vėlavimas"
 
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Užsakymo statusas"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2115,7 +1901,7 @@ msgstr "Rodyti eilutes užpajamavimui"
 #. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Užsakymo data"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
@@ -2154,8 +1940,7 @@ msgid "It indicates that an invoice has been paid."
 msgstr "Tai parodo, kad susijusi sąskaita-faktūra buvo apmokėta."
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,name:0
+#: report:sale.order:0 field:sale.order.line,name:0
 msgid "Description"
 msgstr "Aprašymas"
 
@@ -2175,8 +1960,7 @@ msgid "Order Number"
 msgstr "Užsakymo numeris"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,partner_id:0
+#: view:sale.order:0 field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Pirkėjas"
@@ -2200,16 +1984,14 @@ msgstr "Balandis"
 #: view:sale.config.settings:0
 msgid ""
 "Use contract to be able to manage your services with\n"
-"                        multiple invoicing as part of the same contract "
-"with\n"
+"                        multiple invoicing as part of the same contract with\n"
 "                        your customer."
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Ieškoti pardavimų užsakymo"
 
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
@@ -2227,8 +2009,7 @@ msgid "Sequence"
 msgstr "Seka"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order,payment_term:0
+#: report:sale.order:0 field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Mokėjimo sąlygos"
 
@@ -2241,8 +2022,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
@@ -2258,11 +2039,6 @@ msgid "Picked"
 msgstr "Pristatyta"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,year:0
+#: view:sale.report:0 field:sale.report,year:0
 msgid "Year"
 msgstr "Metai"
-
-#, python-format
-#~ msgid "No Customer Defined !"
-#~ msgstr "Nenurodytas klientas!"

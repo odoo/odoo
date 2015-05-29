@@ -1,48 +1,43 @@
-# Bulgarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_test
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-11-18 09:14+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"PO-Revision-Date: 2015-05-27 09:17+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/odoo-7/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-19 06:21+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bg\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_test
-#: view:accounting.assert.test:account_test.account_assert_form
+#: view:accounting.assert.test:0
 msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
+"Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
@@ -56,14 +51,13 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
 msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
-msgid ""
-"Check if movement lines are balanced and have the same date and period"
+msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
 
 #. module: account_test
@@ -72,7 +66,7 @@ msgid "Test Name"
 msgstr ""
 
 #. module: account_test
-#: view:website:account_test.report_accounttest
+#: report:account.test.assert.print:0
 msgid "Accouting tests on"
 msgstr ""
 
@@ -94,10 +88,9 @@ msgid ""
 msgstr ""
 
 #. module: account_test
-#: view:accounting.assert.test:account_test.account_assert_form
-#: view:accounting.assert.test:account_test.account_assert_tree
+#: view:accounting.assert.test:0
 msgid "Tests"
-msgstr ""
+msgstr "Тестове"
 
 #. module: account_test
 #: field:accounting.assert.test,desc:0
@@ -105,9 +98,9 @@ msgid "Test Description"
 msgstr ""
 
 #. module: account_test
-#: view:accounting.assert.test:account_test.account_assert_form
+#: view:accounting.assert.test:0
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
@@ -127,7 +120,7 @@ msgid "Accounting Tests"
 msgstr ""
 
 #. module: account_test
-#: code:addons/account_test/report/account_test_report.py:78
+#: code:addons/account_test/report/account_test_report.py:74
 #, python-format
 msgid "The test was passed successfully"
 msgstr ""
@@ -156,13 +149,13 @@ msgstr ""
 #. module: account_test
 #: field:accounting.assert.test,code_exec:0
 msgid "Python code"
-msgstr ""
+msgstr "Python код"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
 msgstr ""
 
 #. module: account_test
@@ -181,9 +174,9 @@ msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
 msgstr ""
 
 #. module: account_test
-#: view:accounting.assert.test:account_test.account_assert_form
+#: view:accounting.assert.test:0
 msgid "Expression"
-msgstr ""
+msgstr "Израз"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
@@ -198,7 +191,7 @@ msgstr ""
 #. module: account_test
 #: field:accounting.assert.test,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Последователност"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
@@ -208,9 +201,9 @@ msgid ""
 msgstr ""
 
 #. module: account_test
-#: view:accounting.assert.test:account_test.account_assert_form
+#: view:accounting.assert.test:0
 msgid "Python Code"
-msgstr ""
+msgstr "Python код"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -237,6 +230,6 @@ msgid "Test 7: « View  » account type"
 msgstr ""
 
 #. module: account_test
-#: view:accounting.assert.test:account_test.account_assert_form
+#: view:accounting.assert.test:0
 msgid "Code Help"
 msgstr ""

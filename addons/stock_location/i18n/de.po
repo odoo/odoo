@@ -1,21 +1,22 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* stock_location
-#
-# Ferdinand Gassauer <f.gassauer@chricar.at>, 2010.
+# * stock_location
+# 
+# Translators:
+# Ferdinand Gassauer <f.gassauer@chricar.at>, 2010
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
-"Language-Team: German <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2015-05-29 13:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: German (http://www.transifex.com/projects/p/odoo-7/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -57,9 +58,7 @@ msgstr "Lagerort (Quelle)"
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr ""
-"Ermöglicht Abbruch von Bestandsbuchungen durch einen konfigurierten Pull "
-"Pfad im Rahmen einer vollständigen Konfiguration"
+msgstr "Ermöglicht Abbruch von Bestandsbuchungen durch einen konfigurierten Pull Pfad im Rahmen einer vollständigen Konfiguration"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
@@ -89,9 +88,7 @@ msgstr "Umlagerung"
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
-msgstr ""
-"Pull Disposition vom Lagerort %s, Pull Pfad %s, ausgelöst durch die "
-"ursprüngliche Beschaffung %s (#%d)"
+msgstr "Pull Disposition vom Lagerort %s, Pull Pfad %s, ausgelöst durch die ursprüngliche Beschaffung %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -107,22 +104,9 @@ msgstr "Status Rechnung"
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
-"This is used to define paths the product has to follow within the location "
-"tree.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
-msgstr ""
-"Festgelegt wird der Pfad des Produktes durch die Lagerorte des "
-"Unternehmens.\n"
-"Der Eintrag für 'Automatische Erstellung Lieferauftrag' erzeugt automatisch "
-"einen weiteren Lieferauftrag unmittelbar im Anschluss an den aktuellen "
-"Lieferauftrag. Mit 'Manuelle Erstellung Lieferauftrag' muss der weitere "
-"Lieferauftrag  erst durch einen Lagermitarbeiter validiert werden. Mit "
-"'Automatische Erstellung Lieferauftrag ohne Beleg' wird ausschließlich der "
-"ursprüngliche Zielort ersetzt, ohne dabei einen neuen Lieferauftrag zu "
-"erstellen."
+"This is used to define paths the product has to follow within the location tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+msgstr "Festgelegt wird der Pfad des Produktes durch die Lagerorte des Unternehmens.\nDer Eintrag für 'Automatische Erstellung Lieferauftrag' erzeugt automatisch einen weiteren Lieferauftrag unmittelbar im Anschluss an den aktuellen Lieferauftrag. Mit 'Manuelle Erstellung Lieferauftrag' muss der weitere Lieferauftrag  erst durch einen Lagermitarbeiter validiert werden. Mit 'Automatische Erstellung Lieferauftrag ohne Beleg' wird ausschließlich der ursprüngliche Zielort ersetzt, ohne dabei einen neuen Lieferauftrag zu erstellen."
 
 #. module: stock_location
 #: view:product.product:0
@@ -178,9 +162,7 @@ msgstr "Lieferauftrag"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
-"Durch Aktivierung wird die verbundene Lieferung bei Abbruch ebenfalls "
-"abgebrochen"
+msgstr "Durch Aktivierung wird die verbundene Lieferung bei Abbruch ebenfalls abgebrochen"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -263,11 +245,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"'Disponiere vom Lager' bedeutet: Wenn benötigt den Lagerbestand verwenden "
-"oder auf neue Lieferungen warten.\r\n"
-"'Disponiere von Auftrag'  bedeutet: Wenn benötigt, einkaufen oder "
-"produzieren der Waren, die für die Erledigung erforderlich sind."
+msgstr "'Disponiere vom Lager' bedeutet: Wenn benötigt den Lagerbestand verwenden oder auf neue Lieferungen warten.\r\n'Disponiere von Auftrag'  bedeutet: Wenn benötigt, einkaufen oder produzieren der Waren, die für die Erledigung erforderlich sind."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -301,10 +279,7 @@ msgstr "Zeitverzögerung (Tage)"
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
-msgstr ""
-"Lieferauftrag  für Bezug unter Berücksichtigung einer vorhandenen Pull Regel "
-"für das Lager %s, Pull Pfad %s und ursprünglichem Beschaffungsauftrag %s "
-"(#%d)"
+msgstr "Lieferauftrag  für Bezug unter Berücksichtigung einer vorhandenen Pull Regel für das Lager %s, Pull Pfad %s und ursprünglichem Beschaffungsauftrag %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -317,10 +292,7 @@ msgstr "Push Workflow"
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
-msgstr ""
-"Bestandsbewertung für Bezug unter Berücksichtigung einer vorhandenen Pull "
-"Regel vom ursprünglichen Lager %s, mit Pull Regel %s und  ursprünglichem "
-"Beschaffungauftrag %s (#%d)"
+msgstr "Bestandsbewertung für Bezug unter Berücksichtigung einer vorhandenen Pull Regel vom ursprünglichen Lager %s, mit Pull Regel %s und  ursprünglichem Beschaffungauftrag %s (#%d)"
 
 #. module: stock_location
 #: view:product.product:0
@@ -344,8 +316,7 @@ msgid "Destination Location"
 msgstr "Lagerort (Ziel)"
 
 #. module: stock_location
-#: field:stock.location.path,auto:0
-#: selection:stock.location.path,auto:0
+#: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
 msgid "Automatic Move"
 msgstr "Automatischer neuer Lieferschein"
 
@@ -376,9 +347,7 @@ msgstr "Beschaffungsmethode"
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
-"Abhängig vom Unternehmen, treffen Sie eine beliebige Auswahl für den "
-"Warenversand oder Wareneingang"
+msgstr "Abhängig vom Unternehmen, treffen Sie eine beliebige Auswahl für den Warenversand oder Wareneingang"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order

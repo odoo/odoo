@@ -1,21 +1,22 @@
-# Persian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2014-12-25 11:34+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Persian <fa@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Persian (http://www.transifex.com/projects/p/odoo-7/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-12-26 06:21+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -36,7 +37,7 @@ msgid "Deliveries to Invoice"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:275
+#: code:addons/sale_stock/sale_stock.py:579
 #, python-format
 msgid "Picking Information ! : "
 msgstr ""
@@ -52,7 +53,7 @@ msgid "Packaging"
 msgstr "بسته‌بندی"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:270
+#: code:addons/sale_stock/sale_stock.py:574
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -74,15 +75,15 @@ msgstr ""
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
 msgid "Validate"
-msgstr ""
+msgstr "معتبر سازی"
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "لغو سفارش"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:210
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
@@ -94,7 +95,7 @@ msgid "Create Procurement Order"
 msgstr ""
 
 #. module: sale_stock
-#: field:stock.picking,sale_id:0
+#: field:stock.picking.out,sale_id:0
 msgid "Sale Order"
 msgstr "سفارش فروش"
 
@@ -129,7 +130,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:164
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "عملیات نامعتبر!"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
@@ -139,11 +140,11 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "اجازه استفاده از نشانی های متفاوت برای تحویل و صدور فاکتور "
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:277
-#: code:addons/sale_stock/sale_stock.py:351
+#: code:addons/sale_stock/sale_stock.py:581
+#: code:addons/sale_stock/sale_stock.py:634
 #, python-format
 msgid "Configuration Error!"
 msgstr "خطا در پیکربندی!"
@@ -165,16 +166,18 @@ msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
+#: field:stock.picking,sale_id:0
 msgid "Sales Order"
 msgstr "سفارش فروش"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "سفارشات تحویل"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
+#: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
 msgstr ""
 
@@ -193,8 +196,7 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: field:sale.shop,warehouse_id:0
 msgid "Warehouse"
 msgstr "انبار"
 
@@ -219,7 +221,7 @@ msgid "Document of the move to the customer."
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "View Delivery Order"
 msgstr "نمایش سفارش تحویل"
 
@@ -229,7 +231,7 @@ msgid "Inventory Moves"
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
+#: view:sale.config.settings:0
 msgid "Default Options"
 msgstr ""
 
@@ -239,18 +241,16 @@ msgid "Project MRP"
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+#: view:sale.order:0
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"If the sale order was set to create the invoice 'On Delivery Order', then an "
-"invoice is automatically created based on what you delivered. If you rather "
-"want to create your invoice based on your sale order, you can set the sale "
+"If the sale order was set to create the invoice 'On Delivery Order', then an"
+" invoice is automatically created based on what you delivered. If you rather"
+" want to create your invoice based on your sale order, you can set the sale "
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
 msgstr ""
@@ -258,10 +258,10 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
 msgid "Procurement"
-msgstr ""
+msgstr "تدارک"
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
+#: view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "حمل شد"
@@ -288,7 +288,7 @@ msgid "Allow adding shipping costs"
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "days"
 msgstr "روز"
 
@@ -312,8 +312,7 @@ msgstr ""
 #: help:sale.config.settings,module_delivery:0
 msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
+"                You can define your own carrier and delivery grids for prices.\n"
 "                This installs the module delivery."
 msgstr ""
 
@@ -344,7 +343,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:160
+#: code:addons/sale_stock/sale_stock.py:209
 #, python-format
 msgid "Cannot cancel sales order!"
 msgstr ""
@@ -364,14 +363,14 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
-msgstr ""
+msgstr "ویژگی‌ها"
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -381,8 +380,7 @@ msgstr ""
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr ""
 
 #. module: sale_stock
@@ -399,11 +397,8 @@ msgstr "شرکت‌ها"
 #: help:sale.config.settings,task_work:0
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
+"                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways\n"
+"                and to automatically creates project tasks from procurement lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
 
@@ -412,7 +407,7 @@ msgstr ""
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
+msgstr "به شما اجازه میدهد تا نشانی های متفاوت برای تحویل و صدور فاکتور برای یک سفارش فروش مشخص کنید."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -427,7 +422,7 @@ msgid "Assign"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:346
+#: code:addons/sale_stock/sale_stock.py:629
 #, python-format
 msgid "Not enough stock ! : "
 msgstr ""
@@ -455,13 +450,13 @@ msgstr ""
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
 msgid "Invoice"
-msgstr ""
+msgstr "سیاهه"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
 msgid "Cancel"
-msgstr ""
+msgstr "لغو"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:164
@@ -484,7 +479,7 @@ msgstr "تحویل داده شد"
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
 msgid "Create Invoice"
-msgstr ""
+msgstr "ایجاد فاکتور"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
@@ -494,7 +489,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "فاکتور پیش پرداخت فروش"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:532
@@ -503,7 +498,7 @@ msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:266
+#: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "(n/a)"
 msgstr ""
@@ -520,7 +515,7 @@ msgid "Cannot cancel sales order line!"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/res_config.py:78
+#: code:addons/sale_stock/res_config.py:81
 #, python-format
 msgid "Only administrators can change the settings"
 msgstr "فقط مدیران می توانند تنظیمات را تغییر دهند"
@@ -548,7 +543,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0
@@ -568,12 +563,12 @@ msgid "Create Delivery Order"
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "Ignore Exception"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:342
+#: code:addons/sale_stock/sale_stock.py:625
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -581,7 +576,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "Recreate Delivery Order"
 msgstr "بازایجاد سفارش تحویل"
 
@@ -591,7 +586,7 @@ msgid "This allows to configure and use multiple shops."
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.report:sale_stock.view_order_product_search_sale_stock_inherit
+#: field:sale.order,picked_rate:0
 msgid "Picked"
 msgstr ""
 

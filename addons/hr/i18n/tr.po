@@ -1,20 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* hr
-#
+# * hr
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-28 22:41+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-7/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:54+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -57,10 +58,7 @@ msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
-"Çalışanın orta boyutta fotoğrafı. Genellikle otomatik olarak 128x128px "
-"olarak boyutlandırılan en boy oranı sabit resimdir. Bu alanı form "
-"görünümünde ya da bazı kanban görünümlerinde kullanın."
+msgstr "Çalışanın orta boyutta fotoğrafı. Genellikle otomatik olarak 128x128px olarak boyutlandırılan en boy oranı sabit resimdir. Bu alanı form görünümünde ya da bazı kanban görünümlerinde kullanın."
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -68,8 +66,7 @@ msgid "Time Tracking"
 msgstr "Zaman İzleme"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "Gruplandır İle..."
 
@@ -89,11 +86,8 @@ msgid "Organize employees periodic evaluation"
 msgstr "Personelin dönemsel değerlendirilmesi"
 
 #. module: hr
-#: view:hr.department:0
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
+#: view:hr.department:0 view:hr.employee:0 field:hr.employee,department_id:0
+#: view:hr.job:0 field:hr.job,department_id:0
 #: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Departmen"
@@ -108,9 +102,7 @@ msgstr "İş Epostası"
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
-msgstr ""
-"Bu alan çalışanın resmi olarak kullanılan bir fotoğrafı tutar, 1024x1024px "
-"olarak sınırlıdır."
+msgstr "Bu alan çalışanın resmi olarak kullanılan bir fotoğrafı tutar, 1024x1024px olarak sınırlıdır."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
@@ -133,9 +125,7 @@ msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Şirket"
@@ -236,9 +226,7 @@ msgstr "Renk İndeksi"
 msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
-msgstr ""
-"Personel formundaki İlişkili kullanıcı alanı OpenERP kullanıcısının çalışana "
-"bağlanmasını sağlar."
+msgstr "Personel formundaki İlişkili kullanıcı alanı OpenERP kullanıcısının çalışana bağlanmasını sağlar."
 
 #. module: hr
 #: field:hr.employee,image_medium:0
@@ -271,8 +259,7 @@ msgid "Child Categories"
 msgstr "Alt Kategoriler"
 
 #. module: hr
-#: field:hr.job,description:0
-#: model:ir.model,name:hr.model_hr_job
+#: field:hr.job,description:0 model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "İş Tanımı"
 
@@ -287,8 +274,7 @@ msgid "Followers"
 msgstr "İzleyiciler"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Personel"
@@ -302,12 +288,9 @@ msgstr "Diğer Bilgileri"
 #: help:hr.employee,image_small:0
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Çalışanın ufak boyutta fotoğrafı. Genellikle kendiliğinden 64x64px olarak "
-"boyutlandırılan en boy oranı sabit resimdir. Bu alanı küçük resim gerektiren "
-"herhangi bir yerde kullanın."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Çalışanın ufak boyutta fotoğrafı. Genellikle kendiliğinden 64x64px olarak boyutlandırılan en boy oranı sabit resimdir. Bu alanı küçük resim gerektiren herhangi bir yerde kullanın."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -329,18 +312,14 @@ msgstr "İK Menüsünü Aç"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sohbetçi özetini (mesaj sayısı, ...) barındırır. Bu özet doğrudan html "
-"formatında sipariş kanban görünümlerinde eklenecek."
+msgstr "Sohbetçi özetini (mesaj sayısı, ...) barındırır. Bu özet doğrudan html formatında sipariş kanban görünümlerinde eklenecek."
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
-"This installs the module account_analytic_analysis, which will install sales "
-"management too."
-msgstr ""
-"Bu, account_analytic_analysis modülünü kurar,aynı anda satış yönetimini de "
-"kuracaktır."
+"This installs the module account_analytic_analysis, which will install sales"
+" management too."
+msgstr "Bu, account_analytic_analysis modülünü kurar,aynı anda satış yönetimini de kuracaktır."
 
 #. module: hr
 #: view:board.board:0
@@ -348,9 +327,7 @@ msgid "Human Resources Dashboard"
 msgstr "İnsan Kaynakları Paneli"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "İş"
 
@@ -417,36 +394,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new job position.\n"
 "              </p><p>\n"
-"                Job Positions are used to define jobs and their "
-"requirements.\n"
-"                You can keep track of the number of employees you have per "
-"job\n"
-"                position and follow the evolution according to what you "
-"planned\n"
+"                Job Positions are used to define jobs and their requirements.\n"
+"                You can keep track of the number of employees you have per job\n"
+"                position and follow the evolution according to what you planned\n"
 "                for the future.\n"
 "              </p><p>\n"
-"                You can attach a survey to a job position. It will be used "
-"in\n"
-"                the recruitment process to evaluate the applicants for this "
-"job\n"
+"                You can attach a survey to a job position. It will be used in\n"
+"                the recruitment process to evaluate the applicants for this job\n"
 "                position.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Yeni bir iş pozisyonu oluşturmak için tıklayın.\n"
-"              </p><p>\n"
-"                İş Pozisyonları işleri ve gereksinimlerini tanımlamak için "
-"kullanılır.\n"
-"                Her iş pozisyonunda olan çalışanların sayısını tutabilir ve "
-"planlanan\n"
-"                gelişime uygun olarak izleyebilirsiniz.\n"
-"              </p><p>\n"
-"                Bir iş pozisyonu için bir anket ekleyebilirsiniz. Bu işi çin "
-"başvuranların\n"
-"                işe alım sürecinde değerlendirilmesi için kullanılacaktır.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Yeni bir iş pozisyonu oluşturmak için tıklayın.\n              </p><p>\n                İş Pozisyonları işleri ve gereksinimlerini tanımlamak için kullanılır.\n                Her iş pozisyonunda olan çalışanların sayısını tutabilir ve planlanan\n                gelişime uygun olarak izleyebilirsiniz.\n              </p><p>\n                Bir iş pozisyonu için bir anket ekleyebilirsiniz. Bu işi çin başvuranların\n                işe alım sürecinde değerlendirilmesi için kullanılacaktır.\n              </p>\n            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -458,9 +416,7 @@ msgstr "Erkek"
 msgid ""
 "$('.oe_employee_picture').load(function() { if($(this).width() > "
 "$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-"$('.oe_employee_picture').load(function() { if($(this).width() > "
-"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
+msgstr "$('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
@@ -554,9 +510,7 @@ msgid "Child Departments"
 msgstr "Alt Departmenler"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.employee:0 view:hr.job:0 field:hr.job,state:0
 msgid "Status"
 msgstr "Durumu"
 
@@ -638,22 +592,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new employee.\n"
 "              </p><p>\n"
-"                With just a quick glance on the OpenERP employee screen, "
-"you\n"
-"                can easily find all the information you need for each "
-"person;\n"
+"                With just a quick glance on the OpenERP employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Yeni bir personel eklemek için tıklayınız.\n"
-"              </p><p>\n"
-"                OpenERP personel ekranında sadece hızlı bir bakış ile,\n"
-"                her kişi için gerekli tüm bilgileri kolayca bulabilirsiniz;\n"
-"                kişisel verileri, iş pozisyonu, uygunluğu, vb\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Yeni bir personel eklemek için tıklayınız.\n              </p><p>\n                OpenERP personel ekranında sadece hızlı bir bakış ile,\n                her kişi için gerekli tüm bilgileri kolayca bulabilirsiniz;\n                kişisel verileri, iş pozisyonu, uygunluğu, vb\n              </p>\n            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -711,22 +655,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a department.\n"
 "              </p><p>\n"
-"                OpenERP's department structure is used to manage all "
-"documents\n"
+"                OpenERP's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Bir departman oluşturmak için tıklayın.\n"
-"              </p><p>\n"
-"                OpenERP bölüm yapısı bölümlere göre personelle ilgili tüm\n"
-"                tüm belgeleri yönetmek için kullanılır:giderler, zaman "
-"çizelgeleri,\n"
-"                izinler ve tatiller, işe alımlar, vb\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Bir departman oluşturmak için tıklayın.\n              </p><p>\n                OpenERP bölüm yapısı bölümlere göre personelle ilgili tüm\n                tüm belgeleri yönetmek için kullanılır:giderler, zaman çizelgeleri,\n                izinler ve tatiller, işe alımlar, vb\n              </p>\n            "
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
@@ -746,22 +680,11 @@ msgid ""
 "                Click to define a new department.\n"
 "              </p><p>\n"
 "                Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
+"                related to employees by departments: expenses and timesheets,\n"
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Yeni bir departman tanımlamak için tıklayın.\n"
-"              </p><p>\n"
-"                Sizin departmanlar yapısı tüm belgeleri yönetmek için "
-"kullanılır\n"
-"                departmanlar tarafından personel ile ilgili: giderleri ve "
-"zamanÇizelgeleri,\n"
-"                izinler ve tatiller, eleman alımları, vb\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Yeni bir departman tanımlamak için tıklayın.\n              </p><p>\n                Sizin departmanlar yapısı tüm belgeleri yönetmek için kullanılır\n                departmanlar tarafından personel ile ilgili: giderleri ve zamanÇizelgeleri,\n                izinler ve tatiller, eleman alımları, vb\n              </p>\n            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -792,9 +715,7 @@ msgstr "İşe Alım Sürüyor"
 #: field:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allow invoicing based on timesheets (the sale application will be installed)"
-msgstr ""
-"Zaman Çizelgelerine dayalı faturalamaya izin ver (satış uygulaması "
-"yüklenecektir)"
+msgstr "Zaman Çizelgelerine dayalı faturalamaya izin ver (satış uygulaması yüklenecektir)"
 
 #. module: hr
 #: code:addons/hr/hr.py:227
@@ -878,8 +799,7 @@ msgid "Resource"
 msgstr "Kaynak"
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee,name_related:0
+#: field:hr.department,complete_name:0 field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Adı"
@@ -890,8 +810,7 @@ msgid "Gender"
 msgstr "Cinsiyeti"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee.category,employee_ids:0
+#: view:hr.employee:0 field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -956,9 +875,7 @@ msgstr "Toplam Tahmini Personel"
 msgid ""
 "By default 'In position', set it to 'In Recruitment' if recruitment process "
 "is going on for this job position."
-msgstr ""
-"Varsayılan olarak 'Pozisyonda' ayarlaıdır, bu iş pozisyonu için işe alım "
-"süreci yürütülüyorsa 'İşe Alım Sürecinde' olarak ayarlayın."
+msgstr "Varsayılan olarak 'Pozisyonda' ayarlaıdır, bu iş pozisyonu için işe alım süreci yürütülüyorsa 'İşe Alım Sürecinde' olarak ayarlayın."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -979,8 +896,7 @@ msgid ""
 "                    <b>Human Resources dashboard is empty.</b>\n"
 "                  </p><p>\n"
 "                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options.\n"
 "                  </p><p>\n"
 "                    You can filter and group data before inserting into the\n"
@@ -988,28 +904,10 @@ msgid ""
 "                  </p>\n"
 "              </div>\n"
 "            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>İnsan Kaynakları kontrol panel boştur.</b>\n"
-"                  </p><p>\n"
-"                    Kontrol paneline ilk raporunuzu eklemek için menüye "
-"gidib,\n"
-"                    liste ya da grafik görünümüne geçin ve genişletilmiş "
-"arama\n"
-"                    seçeneklerinde <i>'Kontrol Paneline Ekle'</i> ye "
-"tıklayın.\n"
-"                  </p><p>\n"
-"                    Arama seçeneklerini kullanarak kontrol paneline "
-"eklemeden\n"
-"                    önce veriyi  süzebilir ve gruplandırabilirsiniz.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
+msgstr "<div class=\"oe_empty_custom_dashboard\">\n                  <p>\n                    <b>İnsan Kaynakları kontrol panel boştur.</b>\n                  </p><p>\n                    Kontrol paneline ilk raporunuzu eklemek için menüye gidib,\n                    liste ya da grafik görünümüne geçin ve genişletilmiş arama\n                    seçeneklerinde <i>'Kontrol Paneline Ekle'</i> ye tıklayın.\n                  </p><p>\n                    Arama seçeneklerini kullanarak kontrol paneline eklemeden\n                    önce veriyi  süzebilir ve gruplandırabilirsiniz.\n                  </p>\n              </div>\n            "
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Çalıştırıcı"
 
@@ -1029,8 +927,7 @@ msgid "hr.config.settings"
 msgstr "hr.config.settings"
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Yönetici"
@@ -1053,7 +950,4 @@ msgstr "Uygula"
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Small-sized photo"
-msgstr ""
-
-#~ msgid "Smal-sized photo"
-#~ msgstr "Küçük boyutlu fotoğraf"
+msgstr "Küçük boyutlu fotoğraf"

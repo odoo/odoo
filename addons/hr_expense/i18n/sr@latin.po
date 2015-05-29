@@ -1,21 +1,22 @@
-# Serbian Latin translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Serbian Latin <sr@latin@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Serbian (Latin) (http://www.transifex.com/projects/p/odoo-7/language/sr@latin/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:55+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr@latin\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -53,8 +54,7 @@ msgid "Confirmation Date"
 msgstr "Datum potvrde"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 msgid "Group By..."
 msgstr "Grupiši po..."
 
@@ -66,13 +66,11 @@ msgstr "Avionska karta"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Validated By"
-msgstr ""
+msgstr "Potvrđeno od"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,department_id:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Odeljenje"
 
@@ -82,10 +80,9 @@ msgid "New Expense"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,uom_id:0
-#: view:product.product:0
+#: field:hr.expense.line,uom_id:0 view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Jedinica mere"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -103,8 +100,7 @@ msgid "Waiting Payment"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr "Firma"
@@ -133,8 +129,7 @@ msgid "Expenses Statistics"
 msgstr "Statistika troškova"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,day:0
+#: view:hr.expense.report:0 field:hr.expense.report,day:0
 msgid "Day"
 msgstr "Dan"
 
@@ -143,8 +138,7 @@ msgstr "Dan"
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
-msgstr ""
-"Datum prihvatanja troškova. Popunjava se kada se dugme Prihvatam pritisne."
+msgstr "Datum prihvatanja troškova. Popunjava se kada se dugme Prihvatam pritisne."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -154,7 +148,7 @@ msgstr "Beleške"
 #. module: hr_expense
 #: field:hr.expense.expense,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Poruke"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:170
@@ -164,7 +158,7 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:355
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Greška"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
@@ -175,7 +169,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Proizvodi"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -227,12 +221,10 @@ msgstr "Sertifikovan pošten i u skladu,"
 msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
 "Confirm is pressed."
-msgstr ""
-"Datum potvrde kartice troškova. Popunjava se kada se dugmePotvrti pritisne."
+msgstr "Datum potvrde kartice troškova. Popunjava se kada se dugmePotvrti pritisne."
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,nbr:0
+#: view:hr.expense.report:0 field:hr.expense.report,nbr:0
 msgid "# of Lines"
 msgstr "# redova"
 
@@ -247,7 +239,7 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:455
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Upozorenje"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -273,11 +265,9 @@ msgstr "Srednja cena"
 #: help:hr.expense.expense,state:0
 msgid ""
 "When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
+" It is confirmed by the user and request is sent to admin, the status is 'Waiting Confirmation'.            \n"
 "If the admin accepts it, the status is 'Accepted'.\n"
-" If the accounting entries are made for the expense request, the status is "
-"'Waiting Payment'."
+" If the accounting entries are made for the expense request, the status is 'Waiting Payment'."
 msgstr ""
 
 #. module: hr_expense
@@ -302,15 +292,13 @@ msgid "Gives the sequence order when displaying a list of expense lines."
 msgstr "Daje redosled prilikom prikazivanja liste troškova"
 
 #. module: hr_expense
-#: field:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,state:0 view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:0
+#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Analitički račun"
@@ -331,28 +319,23 @@ msgid "Followers"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0
-#: view:hr.expense.report:0
+#: report:hr.expense:0 view:hr.expense.expense:0
+#: field:hr.expense.expense,employee_id:0 view:hr.expense.report:0
 msgid "Employee"
 msgstr "Zaposleni"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: selection:hr.expense.expense,state:0
+#: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
 msgid "New"
-msgstr ""
+msgstr "Novi"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.report,product_qty:0
+#: report:hr.expense:0 field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr "Kol"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,price_total:0
+#: view:hr.expense.report:0 field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Ukupna cena"
 
@@ -368,8 +351,7 @@ msgid "The employee must have a home address."
 msgstr ""
 
 #. module: hr_expense
-#: view:board.board:0
-#: view:hr.expense.expense:0
+#: view:board.board:0 view:hr.expense.expense:0
 #: model:ir.actions.act_window,name:hr_expense.action_my_expense
 msgid "My Expenses"
 msgstr "Moji troškovi"
@@ -395,14 +377,12 @@ msgid "Reimburse expense"
 msgstr "Nadoknađeni troškovi"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "Prevremeni žurnal"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,no_of_products:0
+#: view:hr.expense.report:0 field:hr.expense.report,no_of_products:0
 msgid "# of Products"
 msgstr "# proizvoda"
 
@@ -420,7 +400,7 @@ msgstr "Nakon fakturisanja ,nadoknađeni troškovi"
 #: code:addons/hr_expense/hr_expense.py:119
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Upozorenje!"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
@@ -428,8 +408,7 @@ msgid "Reimbursement"
 msgstr "Nadoknađivanje"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "Datum odobrenja"
 
@@ -453,16 +432,14 @@ msgid "Expenses Analysis"
 msgstr "Analiza troškova"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr "Trošak"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,line_ids:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr "Redovi troška"
@@ -483,8 +460,7 @@ msgid "December"
 msgstr "Decembar"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
 msgstr "Mesec"
@@ -519,8 +495,8 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:455
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
 msgstr ""
 
 #. module: hr_expense
@@ -546,7 +522,7 @@ msgstr "Nacrt"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Plaćeno"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:355
@@ -572,8 +548,7 @@ msgid "The direct manager approves the sheet"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,amount:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "Ukupan iznos"
 
@@ -598,8 +573,7 @@ msgid "Review Your Expenses Products"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,date:0
+#: report:hr.expense:0 field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr "Datum"
@@ -635,10 +609,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to register new expenses. \n"
 "              </p><p>\n"
-"                OpenERP will ensure the whole process is followed; the "
-"expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
+"                OpenERP will ensure the whole process is followed; the expense\n"
+"                sheet is validated by manager(s), the employee is reimbursed\n"
 "                from his expenses, some expenses must be re-invoiced to the\n"
 "                customers.\n"
 "              </p>\n"
@@ -663,12 +635,12 @@ msgstr "HR Troškovi"
 #. module: hr_expense
 #: field:hr.expense.expense,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sumarno"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Stavke dnevnika"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
@@ -709,7 +681,7 @@ msgstr "Nacrt troškova"
 #. module: hr_expense
 #: field:hr.expense.report,voucher_id:0
 msgid "Receipt"
-msgstr ""
+msgstr "Racun"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -717,16 +689,14 @@ msgid "Approved Expenses"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.line,unit_amount:0
+#: report:hr.expense:0 field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
 msgstr "Pojedinačna cena"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: selection:hr.expense.report,state:0
+#: view:hr.expense.report:0 selection:hr.expense.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Zavrseno"
 
 #. module: hr_expense
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
@@ -734,8 +704,7 @@ msgid "Invoice"
 msgstr "Faktura"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,year:0
+#: view:hr.expense.report:0 field:hr.expense.report,year:0
 msgid "Year"
 msgstr "Godina"
 
@@ -805,26 +774,22 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
 msgstr "Odobreno"
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0
-#: view:hr.expense.report:0
+#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,product_id:0
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
 msgstr "Proizvod"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,name:0
-#: field:hr.expense.line,description:0
+#: report:hr.expense:0 view:hr.expense.expense:0
+#: field:hr.expense.expense,name:0 field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Opis"
 
@@ -876,8 +841,7 @@ msgid "Employee's Name"
 msgstr "Ime zaposlenog"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,user_id:0
+#: view:hr.expense.report:0 field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr "Korisnik koji je odobrio"
 
@@ -940,7 +904,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvenca"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
@@ -964,7 +928,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Accounting"
-msgstr ""
+msgstr "Računovodstvo"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -973,8 +937,7 @@ msgid "To Approve"
 msgstr "Dozvoliti"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.line:0
+#: view:hr.expense.expense:0 view:hr.expense.line:0
 #: field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr "Total"

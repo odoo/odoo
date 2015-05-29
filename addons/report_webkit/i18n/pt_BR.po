@@ -1,22 +1,22 @@
-# Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * report_webkit
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-01-27 08:08+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@zupy.com.br>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:52+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-7/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:20+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
@@ -47,14 +47,12 @@ msgstr "Formato da imagem (png, gif, jpeg)"
 #. module: report_webkit
 #: help:ir.actions.report.xml,precise_mode:0
 msgid ""
-"This mode allow more precise element                                         "
-"                    position as each object is printed on a separate HTML.   "
-"                                                         but memory and disk "
-"usage is wider"
-msgstr ""
-"Este modo permite que a posição do elemento seja mais preciso quando cada "
-"objeto é impresso em um HTML separado, mas o uso de memória e disco são "
-"maiores."
+"This mode allow more precise element"
+"                                                             position as "
+"each object is printed on a separate HTML."
+"                                                            but memory and "
+"disk usage is wider"
+msgstr "Este modo permite que a posição do elemento seja mais preciso quando cada objeto é impresso em um HTML separado, mas o uso de memória e disco são maiores."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -62,8 +60,7 @@ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
 msgstr "Executivo 4 7.5 x 10 inches, 190.5 x 254 mm"
 
 #. module: report_webkit
-#: field:ir.header_img,company_id:0
-#: field:ir.header_webkit,company_id:0
+#: field:ir.header_img,company_id:0 field:ir.header_webkit,company_id:0
 msgid "Company"
 msgstr "Empresa"
 
@@ -153,11 +150,7 @@ msgid ""
 "or download it from here: "
 "http://code.google.com/p/wkhtmltopdf/downloads/list and set the path in the "
 "ir.config_parameter with the webkit_path key.Minimal version is 0.9.9"
-msgstr ""
-"Instale o executável em seu sistema (sudo apt-get install wkhtmltopdf) ou "
-"faça o download aqui: http://code.google.com/p/wkhtmltopdf/downloads/list e "
-"configure o caminho em ir.config_parameter com o webkit_path key. A versão "
-"mínima é 0.9.9"
+msgstr "Instale o executável em seu sistema (sudo apt-get install wkhtmltopdf) ou faça o download aqui: http://code.google.com/p/wkhtmltopdf/downloads/list e configure o caminho em ir.config_parameter com o webkit_path key. A versão mínima é 0.9.9"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -212,8 +205,7 @@ msgid "Wkhtmltopdf library path is not set"
 msgstr "Caminho da biblioteca Wkhtmltopdf não está especificado"
 
 #. module: report_webkit
-#: view:ir.actions.report.xml:0
-#: view:res.company:0
+#: view:ir.actions.report.xml:0 view:res.company:0
 msgid "Webkit"
 msgstr "Webkit"
 
@@ -240,8 +232,7 @@ msgstr "A6  10  105 x 148 mm"
 #. module: report_webkit
 #: help:ir.actions.report.xml,report_webkit_data:0
 msgid "This template will be used if the main report file is not found"
-msgstr ""
-"Este modelo será usado se o arquivo de relatório principal não for encontrado"
+msgstr "Este modelo será usado se o arquivo de relatório principal não for encontrado"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -263,9 +254,7 @@ msgstr "_Ok"
 msgid ""
 "Check this to add a Print action for this Report in the sidebar of the "
 "corresponding document types"
-msgstr ""
-"Confira isto para adicionar uma ação de impressão para este Relatório na "
-"barra lateral dos tipos de documento correspondentes"
+msgstr "Confira isto para adicionar uma ação de impressão para este Relatório na barra lateral dos tipos de documento correspondentes"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -302,9 +291,7 @@ msgstr "Html disponível"
 msgid ""
 "Check this to view the newly added internal print action after creating it "
 "(technical view) "
-msgstr ""
-"Marque para visualizar a recém adicionada ação de impressão depois de cria-"
-"la (vista técnica) "
+msgstr "Marque para visualizar a recém adicionada ação de impressão depois de cria-la (vista técnica) "
 
 #. module: report_webkit
 #: view:res.company:0
@@ -335,8 +322,7 @@ msgstr "B8  22  62 x 88 mm"
 #: code:addons/report_webkit/webkit_report.py:168
 #, python-format
 msgid "The command 'wkhtmltopdf' failed with error code = %s. Message: %s"
-msgstr ""
-"O comando 'wkhtmltopdf' falhou com o código de erro = %s. Message: %s"
+msgstr "O comando 'wkhtmltopdf' falhou com o código de erro = %s. Message: %s"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -467,8 +453,7 @@ msgid "B0  14  1000 x 1414 mm"
 msgstr "B0  14  1000 x 1414 mm"
 
 #. module: report_webkit
-#: field:ir.header_img,name:0
-#: field:ir.header_webkit,name:0
+#: field:ir.header_img,name:0 field:ir.header_webkit,name:0
 msgid "Name"
 msgstr "Nome"
 

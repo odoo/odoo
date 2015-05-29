@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * survey
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-07-11 06:56+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:30+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -48,8 +49,7 @@ msgid "Answers:"
 msgstr "回答："
 
 #. module: survey
-#: view:survey:0
-#: field:survey,invited_user_ids:0
+#: view:survey:0 field:survey,invited_user_ids:0
 msgid "Invited User"
 msgstr "受邀用户"
 
@@ -76,9 +76,7 @@ msgid "Cancel Request"
 msgstr "取消请求"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 #: view:survey.request:0
 msgid "Group By..."
 msgstr "分组..."
@@ -119,11 +117,8 @@ msgid "History Lines"
 msgstr "日志明细"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-#: field:survey.question,descriptive_text:0
-#: selection:survey.question,type:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
+#: field:survey.question,descriptive_text:0 selection:survey.question,type:0
 msgid "Descriptive Text"
 msgstr "描述性文字"
 
@@ -214,8 +209,9 @@ msgstr "survey.name.wiz"
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
-"your maximum is greater than the number of answer.                           "
-"           Please use a number that is smaller than %d."
+"your maximum is greater than the number of answer."
+"                                      Please use a number that is smaller "
+"than %d."
 msgstr "你输入用于最多答案数的最多需要的答案数大于答案的总数。请用小于%d的数量。"
 
 #. module: survey
@@ -238,10 +234,8 @@ msgid ""
 msgstr "你输入用于最多答案数的最多需要的答案数大于答案的总数。请用小于%d的数量。"
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_question
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: model:ir.model,name:survey.model_survey_question view:survey:0
+#: view:survey.page:0 view:survey.question:0
 msgid "Survey Question"
 msgstr "调查问题"
 
@@ -251,14 +245,12 @@ msgid "Use if question type is rating_scale"
 msgstr "用于问题类型rating_scale"
 
 #. module: survey
-#: field:survey.print,page_number:0
-#: field:survey.print.answer,page_number:0
+#: field:survey.print,page_number:0 field:survey.print.answer,page_number:0
 msgid "Include Page Number"
 msgstr "包含页码"
 
 #. module: survey
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey.page:0 view:survey.question:0
 msgid "Ok"
 msgstr "确认"
 
@@ -273,14 +265,12 @@ msgid "Survey History"
 msgstr "调查历史"
 
 #. module: survey
-#: field:survey.response.answer,comment:0
-#: field:survey.response.line,comment:0
+#: field:survey.response.answer,comment:0 field:survey.response.line,comment:0
 msgid "Notes"
 msgstr "备注"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.request:0
+#: view:survey:0 view:survey.request:0
 msgid "Search Survey"
 msgstr "查询调查"
 
@@ -317,8 +307,7 @@ msgid "Survey Statistics"
 msgstr "调查统计"
 
 #. module: survey
-#: selection:survey,state:0
-#: selection:survey.request,state:0
+#: selection:survey,state:0 selection:survey.request,state:0
 msgid "Cancelled"
 msgstr "已取消"
 
@@ -328,12 +317,11 @@ msgid "Rating Scale"
 msgstr "rating scale"
 
 #. module: survey
-#: code:addons/survey/survey.py:153
-#: code:addons/survey/survey.py:188
+#: code:addons/survey/survey.py:153 code:addons/survey/survey.py:188
 #, python-format
 msgid ""
-"This survey has no question defined. Please define the questions and answers "
-"first."
+"This survey has no question defined. Please define the questions and answers"
+" first."
 msgstr "这些调查没有定义提问。请首先定义提问和答案。"
 
 #. module: survey
@@ -398,8 +386,7 @@ msgid "At Most"
 msgstr "最多"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.request:0
+#: view:survey:0 view:survey.request:0
 msgid "My Survey(s)"
 msgstr "我的调查"
 
@@ -435,24 +422,7 @@ msgid ""
 "\n"
 "\n"
 "Thanks,"
-msgstr ""
-"\n"
-"Hello %%(name)s, \n"
-"\n"
-"\n"
-"恳请您花费一些时间帮助我们做一下调查。: \n"
-"%s\n"
-"\n"
-"您能通过下列参数访问此次调查:\n"
-" URL: %s\n"
-"您的注册 ID: %%(login)s\n"
-"\n"
-"您的密码: %%(passwd)s\n"
-"\n"
-"\n"
-"\n"
-"\n"
-"再次感谢,"
+msgstr "\nHello %%(name)s, \n\n\n恳请您花费一些时间帮助我们做一下调查。: \n%s\n\n您能通过下列参数访问此次调查:\n URL: %s\n您的注册 ID: %%(login)s\n\n您的密码: %%(passwd)s\n\n\n\n\n再次感谢,"
 
 #. module: survey
 #: field:survey.response.line,single_text:0
@@ -472,8 +442,7 @@ msgid "Letter (8.5\" x 11\")"
 msgstr "信纸(8.5\" x 11\")"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,responsible_id:0
+#: view:survey:0 field:survey,responsible_id:0
 msgid "Responsible"
 msgstr "负责人"
 
@@ -486,7 +455,7 @@ msgstr "survey.request"
 #: code:addons/survey/wizard/survey_answer.py:379
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "上一个"
 
 #. module: survey
 #: field:survey.question,comment_maximum_float:0
@@ -500,8 +469,7 @@ msgid "survey.tbl.column.heading"
 msgstr "survey.tbl.column.heading"
 
 #. module: survey
-#: view:survey.send.invitation:0
-#: field:survey.send.invitation,send_mail:0
+#: view:survey.send.invitation:0 field:survey.send.invitation,send_mail:0
 msgid "Send Mail for New User"
 msgstr "发送邮件给新用户"
 
@@ -534,8 +502,7 @@ msgid "Must Be A Whole Number"
 msgstr "必须是一个整数"
 
 #. module: survey
-#: field:survey.answer,question_id:0
-#: view:survey.question:0
+#: field:survey.answer,question_id:0 view:survey.question:0
 #: field:survey.question,question:0
 #: field:survey.question.column.heading,question_id:0
 #: field:survey.response.line,question_id:0
@@ -551,7 +518,7 @@ msgstr "查询问卷页"
 #: code:addons/survey/wizard/survey_answer.py:380
 #, python-format
 msgid "Next"
-msgstr ""
+msgstr "下一个"
 
 #. module: survey
 #: view:survey.request:0
@@ -567,15 +534,12 @@ msgid "Unknown"
 msgstr "未知"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Between"
 msgstr "介于"
 
 #. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
+#: view:survey.print:0 view:survey.print.answer:0
 #: view:survey.print.statistics:0
 msgid "Print"
 msgstr "打印"
@@ -591,35 +555,28 @@ msgid "Make Comment Field an Answer Choice"
 msgstr "使注释字段作为答案选择"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,type:0
+#: view:survey:0 field:survey,type:0
 msgid "Type"
 msgstr "类型"
 
 #. module: survey
-#: selection:survey.answer,type:0
-#: field:survey.request,email:0
+#: selection:survey.answer,type:0 field:survey.request,email:0
 msgid "Email"
 msgstr "电子邮箱"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Required Answer"
 msgstr "需要的答复"
 
 #. module: survey
-#: code:addons/survey/survey.py:425
-#: code:addons/survey/survey.py:513
+#: code:addons/survey/survey.py:425 code:addons/survey/survey.py:513
 #, python-format
-msgid ""
-"You must enter one or more column headings for question \"%s\" of page %s."
+msgid "You must enter one or more column headings for question \"%s\" of page %s."
 msgstr "你必须为提问 \"%s\" 输入一个或者多个列首（ %s页）。"
 
 #. module: survey
-#: code:addons/survey/survey.py:97
-#: code:addons/survey/survey.py:260
+#: code:addons/survey/survey.py:97 code:addons/survey/survey.py:260
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -670,8 +627,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_type_form
-#: model:ir.model,name:survey.model_survey_type
-#: view:survey.type:0
+#: model:ir.model,name:survey.model_survey_type view:survey.type:0
 msgid "Survey Type"
 msgstr "问卷类型"
 
@@ -723,9 +679,7 @@ msgid "survey.print"
 msgstr "survey.print"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: field:survey.question,page_id:0
+#: view:survey:0 view:survey.page:0 field:survey.question,page_id:0
 msgid "Survey Page"
 msgstr "问卷页面"
 
@@ -763,8 +717,9 @@ msgstr "编辑..."
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
-"your maximum is greater than the number of answer.                           "
-"          Please use a number that is smaller than %d."
+"your maximum is greater than the number of answer."
+"                                     Please use a number that is smaller "
+"than %d."
 msgstr "你输入的最多需要的答案数大于答案数。请用小于%d的数字。"
 
 #. module: survey
@@ -773,16 +728,12 @@ msgid "Survey description..."
 msgstr "调查的说明..."
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the question is not answered, display this error message:"
 msgstr "当问题没有回答的时候，显示此错误消息："
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Options"
 msgstr "选项"
 
@@ -798,17 +749,14 @@ msgid "Delete"
 msgstr "删除"
 
 #. module: survey
-#: field:survey.response.answer,comment_field:0
-#: view:survey.response.line:0
+#: field:survey.response.answer,comment_field:0 view:survey.response.line:0
 msgid "Comment"
 msgstr "注释"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_answer
 #: model:ir.model,name:survey.model_survey_response_answer
-#: view:survey.answer:0
-#: view:survey.response:0
-#: view:survey.response.answer:0
+#: view:survey.answer:0 view:survey.response:0 view:survey.response.answer:0
 #: view:survey.response.line:0
 msgid "Survey Answer"
 msgstr "问卷答案"
@@ -825,9 +773,7 @@ msgid "Answer Survey"
 msgstr "填写问卷"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Comment Field"
 msgstr "备注字段"
 
@@ -847,9 +793,7 @@ msgid "User responsible for survey"
 msgstr "问卷的用户职责"
 
 #. module: survey
-#: field:survey,page_ids:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: field:survey,page_ids:0 view:survey.page:0 view:survey.question:0
 #: field:survey.response.line,page_id:0
 msgid "Page"
 msgstr "页面"
@@ -871,9 +815,7 @@ msgid "Print Without Page Breaks"
 msgstr "不分页符打印"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the comment is an invalid format, display this error message"
 msgstr "当备注的格式无效的时候，显示此错误消息"
 
@@ -896,8 +838,7 @@ msgid " Answer :- "
 msgstr ""
 
 #. module: survey
-#: model:ir.model,name:survey.model_res_users
-#: field:survey,users:0
+#: model:ir.model,name:survey.model_res_users field:survey,users:0
 msgid "Users"
 msgstr "用户"
 
@@ -931,15 +872,12 @@ msgid "Page Number"
 msgstr "页码"
 
 #. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
+#: view:survey.print:0 view:survey.print.answer:0
 msgid "Print Option"
 msgstr "打印选项"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "and"
 msgstr "和"
 
@@ -955,9 +893,7 @@ msgid "Log"
 msgstr "日志"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
 msgstr "当选项合计不正确时，显示此错误消息"
 
@@ -980,16 +916,7 @@ msgid ""
 "                of several types: text, multiple choices, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击创建新调查。 \n"
-"              </p><p>\n"
-"                可以为不同目的创建新调查。比如招聘面试，\n"
-"                员工定期评估，市场营销等。\n"
-"              </p><p>\n"
-"                调查由数页不同种类问题组成，包括文本，选项等。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建新调查。 \n              </p><p>\n                可以为不同目的创建新调查。比如招聘面试，\n                员工定期评估，市场营销等。\n              </p><p>\n                调查由数页不同种类问题组成，包括文本，选项等。\n              </p>\n            "
 
 #. module: survey
 #: selection:survey.question,comment_field_type:0
@@ -1007,8 +934,7 @@ msgid "Validate Text"
 msgstr "验证文本"
 
 #. module: survey
-#: view:survey.browse.answer:0
-#: view:survey.name.wiz:0
+#: view:survey.browse.answer:0 view:survey.name.wiz:0
 msgid "Start"
 msgstr "开始"
 
@@ -1016,8 +942,8 @@ msgstr "开始"
 #: code:addons/survey/wizard/survey_selection.py:83
 #, python-format
 msgid ""
-"You cannot give more responses. Please contact the author of this survey for "
-"further assistance."
+"You cannot give more responses. Please contact the author of this survey for"
+" further assistance."
 msgstr "你不能给出多个相应。请联系此调查的作者以获得进一步的帮助。"
 
 #. module: survey
@@ -1027,8 +953,7 @@ msgid "Maximum number"
 msgstr "最大数"
 
 #. module: survey
-#: selection:survey.request,state:0
-#: selection:survey.response.line,state:0
+#: selection:survey.request,state:0 selection:survey.response.line,state:0
 msgid "Draft"
 msgstr "草稿"
 
@@ -1048,20 +973,14 @@ msgid "Matrix of Drop-down Menus"
 msgstr "下拉菜单矩阵"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:226
-#: view:survey:0
-#: field:survey.answer,answer:0
-#: field:survey.name.wiz,response:0
-#: view:survey.page:0
-#: view:survey.print.answer:0
-#: field:survey.print.answer,response_ids:0
-#: view:survey.question:0
-#: field:survey.question,answer_choice_ids:0
-#: field:survey.request,response:0
+#: code:addons/survey/wizard/survey_answer.py:226 view:survey:0
+#: field:survey.answer,answer:0 field:survey.name.wiz,response:0
+#: view:survey.page:0 view:survey.print.answer:0
+#: field:survey.print.answer,response_ids:0 view:survey.question:0
+#: field:survey.question,answer_choice_ids:0 field:survey.request,response:0
 #: field:survey.response,question_ids:0
 #: field:survey.response.answer,answer_id:0
-#: field:survey.response.answer,response_id:0
-#: view:survey.response.line:0
+#: field:survey.response.answer,response_id:0 view:survey.response.line:0
 #: field:survey.response.line,response_answer_ids:0
 #: field:survey.response.line,response_id:0
 #: field:survey.response.line,response_table_ids:0
@@ -1098,11 +1017,8 @@ msgid "Date and Time"
 msgstr "日期和时间"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,state:0
-#: view:survey.request:0
-#: field:survey.request,state:0
-#: field:survey.response,state:0
+#: view:survey:0 field:survey,state:0 view:survey.request:0
+#: field:survey.request,state:0 field:survey.response,state:0
 #: field:survey.response.line,state:0
 msgid "Status"
 msgstr "状态"
@@ -1130,8 +1046,7 @@ msgstr "已开始"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_print_answer
-#: view:survey:0
-#: view:survey.print.answer:0
+#: view:survey:0 view:survey.print.answer:0
 msgid "Print Answer"
 msgstr "打印回复"
 
@@ -1172,15 +1087,12 @@ msgid "Customer Feeback"
 msgstr "客户反馈"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Validation"
 msgstr "验证"
 
 #. module: survey
-#: view:survey.request:0
-#: selection:survey.request,state:0
+#: view:survey.request:0 selection:survey.request,state:0
 msgid "Waiting Answer"
 msgstr "等待回复"
 
@@ -1196,8 +1108,7 @@ msgid "Groups"
 msgstr "组"
 
 #. module: survey
-#: selection:survey.answer,type:0
-#: selection:survey.question,type:0
+#: selection:survey.answer,type:0 selection:survey.question,type:0
 msgid "Date"
 msgstr "日期"
 
@@ -1207,8 +1118,7 @@ msgid "All New Survey"
 msgstr "所有新的调查"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
+#: view:survey:0 view:survey.page:0
 msgid "Description on the survey page..."
 msgstr "在调查页的说明..."
 
@@ -1218,10 +1128,8 @@ msgid "survey.send.invitation"
 msgstr "survey.send.invitation"
 
 #. module: survey
-#: field:survey.history,user_id:0
-#: view:survey.request:0
-#: field:survey.request,user_id:0
-#: field:survey.response,user_id:0
+#: field:survey.history,user_id:0 view:survey.request:0
+#: field:survey.request,user_id:0 field:survey.response,user_id:0
 msgid "User"
 msgstr "用户"
 
@@ -1242,8 +1150,7 @@ msgid "You cannot select same answer more than one time.'"
 msgstr "你不能选择相同的答案多余1次"
 
 #. module: survey
-#: field:survey.print,paper_size:0
-#: field:survey.print.answer,paper_size:0
+#: field:survey.print,paper_size:0 field:survey.print.answer,paper_size:0
 msgid "Paper Size"
 msgstr "纸张尺寸"
 
@@ -1282,22 +1189,14 @@ msgstr "此调查没有页面被定义，请首先定义页面。"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.report_survey_form
-#: model:ir.model,name:survey.model_survey
-#: view:survey:0
-#: view:survey.browse.answer:0
-#: field:survey.browse.answer,survey_id:0
-#: field:survey.history,survey_id:0
-#: view:survey.name.wiz:0
-#: field:survey.name.wiz,survey_id:0
-#: view:survey.page:0
-#: field:survey.page,survey_id:0
-#: view:survey.print:0
-#: field:survey.print,survey_ids:0
-#: field:survey.print.statistics,survey_ids:0
-#: field:survey.question,survey:0
-#: view:survey.request:0
-#: field:survey.request,survey_id:0
-#: field:survey.response,survey_id:0
+#: model:ir.model,name:survey.model_survey view:survey:0
+#: view:survey.browse.answer:0 field:survey.browse.answer,survey_id:0
+#: field:survey.history,survey_id:0 view:survey.name.wiz:0
+#: field:survey.name.wiz,survey_id:0 view:survey.page:0
+#: field:survey.page,survey_id:0 view:survey.print:0
+#: field:survey.print,survey_ids:0 field:survey.print.statistics,survey_ids:0
+#: field:survey.question,survey:0 view:survey.request:0
+#: field:survey.request,survey_id:0 field:survey.response,survey_id:0
 msgid "Survey"
 msgstr "问卷"
 
@@ -1342,15 +1241,12 @@ msgid "Surveys Statistics"
 msgstr "问卷统计"
 
 #. module: survey
-#: field:survey.print,orientation:0
-#: field:survey.print.answer,orientation:0
+#: field:survey.print,orientation:0 field:survey.print.answer,orientation:0
 msgid "Orientation"
 msgstr "定位"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.answer:0
-#: view:survey.page:0
+#: view:survey:0 view:survey.answer:0 view:survey.page:0
 #: view:survey.question:0
 msgid "Seq"
 msgstr "序号"
@@ -1372,8 +1268,7 @@ msgid "#Required Answer"
 msgstr "回复#"
 
 #. module: survey
-#: field:survey.answer,sequence:0
-#: field:survey.question,sequence:0
+#: field:survey.answer,sequence:0 field:survey.question,sequence:0
 msgid "Sequence"
 msgstr "序号"
 
@@ -1383,8 +1278,7 @@ msgid "Field Label"
 msgstr "字段标签"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:382
-#: view:survey.request:0
+#: code:addons/survey/wizard/survey_answer.py:382 view:survey.request:0
 #: selection:survey.request,state:0
 #, python-format
 msgid "Done"
@@ -1401,11 +1295,8 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr "每个栏位只允许一个答复（强制性排名）"
 
 #. module: survey
-#: view:survey.browse.answer:0
-#: view:survey.name.wiz:0
-#: view:survey.print:0
-#: view:survey.print.answer:0
-#: view:survey.print.statistics:0
+#: view:survey.browse.answer:0 view:survey.name.wiz:0 view:survey.print:0
+#: view:survey.print.answer:0 view:survey.print.statistics:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "取消"
@@ -1422,8 +1313,7 @@ msgid "Minimum decimal number"
 msgstr "最小的十进制数"
 
 #. module: survey
-#: view:survey:0
-#: selection:survey,state:0
+#: view:survey:0 selection:survey,state:0
 msgid "Open"
 msgstr "开始"
 
@@ -1555,11 +1445,8 @@ msgid "Survey Questions"
 msgstr "调查问题"
 
 #. module: survey
-#: field:survey,note:0
-#: field:survey.name.wiz,note:0
-#: view:survey.page:0
-#: field:survey.page,note:0
-#: view:survey.response.line:0
+#: field:survey,note:0 field:survey.name.wiz,note:0 view:survey.page:0
+#: field:survey.page,note:0 view:survey.response.line:0
 msgid "Description"
 msgstr "描述"
 
@@ -1602,7 +1489,7 @@ msgstr "选择供应商"
 #: code:addons/survey/report/survey_browse_response.py:232
 #, python-format
 msgid "Finished"
-msgstr ""
+msgstr "已完成"
 
 #. module: survey
 #: code:addons/survey/survey.py:691
@@ -1699,28 +1586,17 @@ msgid "Error message"
 msgstr "错误消息"
 
 #. module: survey
-#: code:addons/survey/survey.py:153
-#: code:addons/survey/survey.py:170
-#: code:addons/survey/survey.py:188
-#: code:addons/survey/survey.py:425
-#: code:addons/survey/survey.py:437
-#: code:addons/survey/survey.py:451
-#: code:addons/survey/survey.py:456
-#: code:addons/survey/survey.py:466
-#: code:addons/survey/survey.py:472
-#: code:addons/survey/survey.py:478
-#: code:addons/survey/survey.py:484
-#: code:addons/survey/survey.py:488
-#: code:addons/survey/survey.py:494
-#: code:addons/survey/survey.py:498
-#: code:addons/survey/survey.py:509
-#: code:addons/survey/survey.py:513
-#: code:addons/survey/survey.py:518
-#: code:addons/survey/survey.py:524
-#: code:addons/survey/survey.py:526
-#: code:addons/survey/survey.py:528
-#: code:addons/survey/survey.py:533
-#: code:addons/survey/survey.py:535
+#: code:addons/survey/survey.py:153 code:addons/survey/survey.py:170
+#: code:addons/survey/survey.py:188 code:addons/survey/survey.py:425
+#: code:addons/survey/survey.py:437 code:addons/survey/survey.py:451
+#: code:addons/survey/survey.py:456 code:addons/survey/survey.py:466
+#: code:addons/survey/survey.py:472 code:addons/survey/survey.py:478
+#: code:addons/survey/survey.py:484 code:addons/survey/survey.py:488
+#: code:addons/survey/survey.py:494 code:addons/survey/survey.py:498
+#: code:addons/survey/survey.py:509 code:addons/survey/survey.py:513
+#: code:addons/survey/survey.py:518 code:addons/survey/survey.py:524
+#: code:addons/survey/survey.py:526 code:addons/survey/survey.py:528
+#: code:addons/survey/survey.py:533 code:addons/survey/survey.py:535
 #: code:addons/survey/survey.py:691
 #: code:addons/survey/wizard/survey_answer.py:118
 #: code:addons/survey/wizard/survey_answer.py:125
@@ -1754,8 +1630,8 @@ msgstr "警告！"
 #, python-format
 msgid ""
 "Minimum Required Answer                                     you entered is "
-"greater than the number of answer.                                    Please "
-"use a number that is smaller than %d."
+"greater than the number of answer.                                    Please"
+" use a number that is smaller than %d."
 msgstr "你输入的最少需要的答复数大于答复总数。请用小于%d的数。"
 
 #. module: survey
@@ -1818,13 +1694,9 @@ msgid "Float"
 msgstr "浮点数"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:395
-#: view:survey.browse.answer:0
-#: view:survey.name.wiz:0
-#: view:survey.print:0
-#: view:survey.print.answer:0
-#: view:survey.print.statistics:0
-#: view:survey.send.invitation:0
+#: code:addons/survey/wizard/survey_answer.py:395 view:survey.browse.answer:0
+#: view:survey.name.wiz:0 view:survey.print:0 view:survey.print.answer:0
+#: view:survey.print.statistics:0 view:survey.send.invitation:0
 #, python-format
 msgid "or"
 msgstr "or"
@@ -1858,8 +1730,7 @@ msgstr "列名"
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_page_form
 #: model:ir.model,name:survey.model_survey_page
-#: model:ir.ui.menu,name:survey.menu_survey_page_form1
-#: view:survey.page:0
+#: model:ir.ui.menu,name:survey.menu_survey_page_form1 view:survey.page:0
 msgid "Survey Pages"
 msgstr "问卷页面"
 
@@ -1874,8 +1745,7 @@ msgid "Is Answer Type Invisible?"
 msgstr "答案类型是隐藏的吗？"
 
 #. module: survey
-#: selection:survey.question,type:0
-#: view:survey.response.line:0
+#: selection:survey.question,type:0 view:survey.response.line:0
 msgid "Table"
 msgstr "表格(Table)"
 

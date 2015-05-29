@@ -1,21 +1,22 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_followup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-07-06 06:51+0000\n"
-"Last-Translator: gobi <Unknown>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-7/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:58+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -31,8 +32,7 @@ msgid "The maximum follow-up level"
 msgstr "Мөшгөлтийн максимум түвшин"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-#: view:res.partner:0
+#: view:account_followup.stat:0 view:res.partner:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
 
@@ -68,8 +68,7 @@ msgid "Action To Do"
 msgstr "Хийх Ажил"
 
 #. module: account_followup
-#: field:account_followup.followup,company_id:0
-#: view:account_followup.stat:0
+#: field:account_followup.followup,company_id:0 view:account_followup.stat:0
 #: field:account_followup.stat,company_id:0
 #: field:account_followup.stat.by.partner,company_id:0
 msgid "Company"
@@ -133,10 +132,7 @@ msgstr "Дүн"
 msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
-msgstr ""
-"Энэ нь дараагийн авах арга хэмжээ байна. Энэ нь харилцагч мөшгөлтийн "
-"дараагийн түвшинд хүрч гар ажиллагаа шаардлагатай болоход автоматаар "
-"тохируулагдана. "
+msgstr "Энэ нь дараагийн авах арга хэмжээ байна. Энэ нь харилцагч мөшгөлтийн дараагийн түвшинд хүрч гар ажиллагаа шаардлагатай болоход автоматаар тохируулагдана. "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -149,59 +145,30 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
+"We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
 "\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account which means that we will no longer "
-"be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting department, so that we can resolve the "
-"matter quickly.\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department, so that we can resolve the matter quickly.\n"
 "\n"
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
-"\n"
-"Сайн байна уу? Эрхэм %(partner_name)s,\n"
-"\n"
-"Бид танд хэдэнтээ сануулга явуулсан хэдий ч таны тооцоо ноцтойгоор хугацаа "
-"хэтрээд байгааг мэдэгдэж байгаадаа харамсаж байна.\n"
-"\n"
-"Даруйхан төлбөрөө төлөх явдал чухал байна. Эс бөгөөс бид таны данстай "
-"харилцах харилцааг зогсоох бөгөөд ингэснээр бид танай компанид аливаа бараа, "
-"үйлчилгээг нийлүүлэхгүй болно.\n"
-"Ойрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга хэмжээг гүйцэтгэнэ "
-"үү.\n"
-"\n"
-"Хэрэв нэхэмжлэлийг төлөхтэй холбоотой бидний анхаарахгүй, мэдэхгүй байгаа "
-"асуудал байгаа бол бидэнд санаа зоволгүй мэдэгдэнэ үү. Бид асуудлыг хурдан "
-"шийдвэрлэх болно.\n"
-"\n"
-"Хугацаа хэтэрсэн төлбөрийн талаарх дэлгэрэнгүйг доор хэвлэлээ.\n"
-"\n"
-"Хүндэтгэсэн,\n"
+msgstr "\nСайн байна уу? Эрхэм %(partner_name)s,\n\nБид танд хэдэнтээ сануулга явуулсан хэдий ч таны тооцоо ноцтойгоор хугацаа хэтрээд байгааг мэдэгдэж байгаадаа харамсаж байна.\n\nДаруйхан төлбөрөө төлөх явдал чухал байна. Эс бөгөөс бид таны данстай харилцах харилцааг зогсоох бөгөөд ингэснээр бид танай компанид аливаа бараа, үйлчилгээг нийлүүлэхгүй болно.\nОйрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга хэмжээг гүйцэтгэнэ үү.\n\nХэрэв нэхэмжлэлийг төлөхтэй холбоотой бидний анхаарахгүй, мэдэхгүй байгаа асуудал байгаа бол бидэнд санаа зоволгүй мэдэгдэнэ үү. Бид асуудлыг хурдан шийдвэрлэх болно.\n\nХугацаа хэтэрсэн төлбөрийн талаарх дэлгэрэнгүйг доор хэвлэлээ.\n\nХүндэтгэсэн,\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "\n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
+"    Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take\n"
 "appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to\n"
 "contact our accounting department.  \n"
 "\n"
 "    </p>\n"
@@ -221,38 +188,7 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"\n"
-"    <p>Сайн байна уу? Эрхэм ${object.name},</p>\n"
-"    <p>\n"
-"Саатал тохиолдлоо. Хэрэв энэ нь бидний алдаа байсан бол дараах дүн "
-"төлөгдөөгүй үлдлээ. Ойрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга "
-"хэмжээг гүйцэтгэнэ үү.\n"
-"\n"
-"Энэ имэйл илгээгдсэн дараа таны төлбөр хийгдсэн бол энэ имэйлийг хэрэгсэхгүй "
-"байж болно. Манай санхүүгийн албатай эргэлзэлгүйгээр холбогдож болно.\n"
-"\n"
-"    </p>\n"
-"<br/>\n"
-"Хүндэтгэсэн,\n"
-"<br/>\n"
-"   <br/>\n"
-"${user.name}\n"
-"\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Сайн байна уу? Эрхэм ${object.name},</p>\n    <p>\nСаатал тохиолдлоо. Хэрэв энэ нь бидний алдаа байсан бол дараах дүн төлөгдөөгүй үлдлээ. Ойрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга хэмжээг гүйцэтгэнэ үү.\n\nЭнэ имэйл илгээгдсэн дараа таны төлбөр хийгдсэн бол энэ имэйлийг хэрэгсэхгүй байж болно. Манай санхүүгийн албатай эргэлзэлгүйгээр холбогдож болно.\n\n    </p>\n<br/>\nХүндэтгэсэн,\n<br/>\n   <br/>\n${user.name}\n\n<br/>\n<br/>\n\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:260
@@ -287,8 +223,7 @@ msgstr "Хариуцагч Оноох"
 
 #. module: account_followup
 #: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
-#: view:res.partner:0
+#: field:account_followup.followup,followup_line:0 view:res.partner:0
 msgid "Follow-up"
 msgstr "Мөшгөлт"
 
@@ -298,8 +233,7 @@ msgid "VAT:"
 msgstr "НӨАТ:"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-#: field:account_followup.stat,partner_id:0
+#: view:account_followup.stat:0 field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
 #: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
@@ -316,27 +250,12 @@ msgid ""
 "To remind customers of paying their invoices, you can\n"
 "                        define different actions depending on how severely\n"
 "                        overdue the customer is. These actions are bundled\n"
-"                        into follow-up levels that are triggered when the "
-"due\n"
+"                        into follow-up levels that are triggered when the due\n"
 "                        date of an invoice has passed a certain\n"
-"                        number of days. If there are other overdue invoices "
-"for the \n"
+"                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
-msgstr ""
-"Захиалагчид нэхэмжлэлээ төлөх явдлыг сануулахын \n"
-"                         тулд хугацаа дуусах талаар хэр зэрэг ойрхон ямар "
-"арга \n"
-"                         хэмжээнүүд авахыг тодорхойлно. Эдгээр арга \n"
-"                         хэмжээнүүд нь мөшгөлтийн түвшингүүдэд багцлагдаж \n"
-"                         нэхэмжлэлийн хугацаа дууссанаас хэд хоног "
-"өнгөрснөөс \n"
-"                         хамааруулан төрөл бүрийн арга хэмжээг эхлүүлнэ. "
-"Хэрэв \n"
-"                         нэг захиалагч дээр хугацаа хэтэрсэн олон нэхэмжлэл "
-"\n"
-"                         байвал хамгийн их хугацаа хэтэрсэн нэхэмжлэлийн \n"
-"                         дагууд арга хэмжээнүүд авагдана."
+msgstr "Захиалагчид нэхэмжлэлээ төлөх явдлыг сануулахын \n                         тулд хугацаа дуусах талаар хэр зэрэг ойрхон ямар арга \n                         хэмжээнүүд авахыг тодорхойлно. Эдгээр арга \n                         хэмжээнүүд нь мөшгөлтийн түвшингүүдэд багцлагдаж \n                         нэхэмжлэлийн хугацаа дууссанаас хэд хоног өнгөрснөөс \n                         хамааруулан төрөл бүрийн арга хэмжээг эхлүүлнэ. Хэрэв \n                         нэг захиалагч дээр хугацаа хэтэрсэн олон нэхэмжлэл \n                         байвал хамгийн их хугацаа хэтэрсэн нэхэмжлэлийн \n                         дагууд арга хэмжээнүүд авагдана."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -393,22 +312,15 @@ msgstr "%(partner_name)s"
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "   <p>\n"
-"    We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account\n"
-"which means that we will no longer be able to supply your company with "
-"(goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting\n"
+"    We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account\n"
+"which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting\n"
 "department. so that we can resolve the matter quickly.\n"
 "Details of due payments is printed below.\n"
 " </p>\n"
@@ -428,45 +340,7 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Сайн байна уу? Эрхэм ${object.name},</p>\n"
-"   <p>\n"
-"Бид танд хэдэнтээ сануулга явуулсан хэдий ч таны тооцоо ноцтойгоор хугацаа "
-"хэтрээд байгааг мэдэгдэж байгаадаа харамсаж байна.\n"
-"\n"
-"Даруйхан төлбөрөө төлөх явдал чухал байна. Эс бөгөөс бид таны данстай "
-"харилцах харилцааг зогсоох бөгөөд ингэснээр бид танай компанид аливаа бараа, "
-"үйлчилгээг нийлүүлэхгүй болно.\n"
-"Ойрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга хэмжээг гүйцэтгэнэ "
-"үү.\n"
-"\n"
-"Хэрэв нэхэмжлэлийг төлөхтэй холбоотой бидний анхаарахгүй, мэдэхгүй байгаа "
-"асуудал байгаа бол бидэнд санаа зоволгүй мэдэгдэнэ үү. Бид асуудлыг хурдан "
-"шийдвэрлэх болно.\n"
-"Хугацаа хэтэрсэн нэхэмжлэлийн талаарх дэлгэрэнгүйг доор хэвлэлээ.\n"
-"\n"
-" </p>\n"
-"<br/>\n"
-"Best Regards,\n"
-"    \n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"    \n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>Сайн байна уу? Эрхэм ${object.name},</p>\n   <p>\nБид танд хэдэнтээ сануулга явуулсан хэдий ч таны тооцоо ноцтойгоор хугацаа хэтрээд байгааг мэдэгдэж байгаадаа харамсаж байна.\n\nДаруйхан төлбөрөө төлөх явдал чухал байна. Эс бөгөөс бид таны данстай харилцах харилцааг зогсоох бөгөөд ингэснээр бид танай компанид аливаа бараа, үйлчилгээг нийлүүлэхгүй болно.\nОйрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга хэмжээг гүйцэтгэнэ үү.\n\nХэрэв нэхэмжлэлийг төлөхтэй холбоотой бидний анхаарахгүй, мэдэхгүй байгаа асуудал байгаа бол бидэнд санаа зоволгүй мэдэгдэнэ үү. Бид асуудлыг хурдан шийдвэрлэх болно.\nХугацаа хэтэрсэн нэхэмжлэлийн талаарх дэлгэрэнгүйг доор хэвлэлээ.\n\n </p>\n<br/>\nBest Regards,\n    \n<br/>\n<br/>\n${user.name}\n    \n<br/>\n<br/>\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -519,11 +393,9 @@ msgstr "Төлбөрийн мөшгөлтүүд"
 #: code:addons/account_followup/report/account_followup_print.py:86
 #, python-format
 msgid ""
-"The followup plan defined for the current company does not have any followup "
-"action."
-msgstr ""
-"Идэвхтэй компанид тодорхойлогдсон мөшгөлтөнд ямар ч мөшгөлтийн арга "
-"хэмжээнүүд байхгүй байна."
+"The followup plan defined for the current company does not have any followup"
+" action."
+msgstr "Идэвхтэй компанид тодорхойлогдсон мөшгөлтөнд ямар ч мөшгөлтийн арга хэмжээнүүд байхгүй байна."
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
@@ -531,8 +403,7 @@ msgid "Due Days"
 msgstr "Товлосон өдрүүд"
 
 #. module: account_followup
-#: field:account.move.line,followup_line_id:0
-#: view:account_followup.stat:0
+#: field:account.move.line,followup_line_id:0 view:account_followup.stat:0
 msgid "Follow-up Level"
 msgstr "Мөшгөлтийн түвшин"
 
@@ -640,9 +511,7 @@ msgstr "Дансны мөшгөлт"
 msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
-msgstr ""
-"Энэ талбарт хэрэглэгчийг оноож болох бөгөөд ингэснээр түүнийг арга хэмжээ "
-"бүрт хариуцагч болгоно."
+msgstr "Энэ талбарт хэрэглэгчийг оноож болох бөгөөд ингэснээр түүнийг арга хэмжээ бүрт хариуцагч болгоно."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -659,9 +528,7 @@ msgstr "Ялгаатай захидал болон имэйл илгээглти
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
-"Таны тодорхойломж буруу, зөв тайлбар эсвэл %%-г процент тэмдэг хэрэглэх гэж "
-"байгаа бол ашиглана уу."
+msgstr "Таны тодорхойломж буруу, зөв тайлбар эсвэл %%-г процент тэмдэг хэрэглэх гэж байгаа бол ашиглана уу."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
@@ -689,9 +556,7 @@ msgstr "Мөшгөлтүүдийг Хайх"
 msgid ""
 "He said the problem was temporary and promised to pay 50% before 15th of "
 "May, balance before 1st of July."
-msgstr ""
-"Түр зуур асуудалтай байгаа бөгөөд 50%-г нь 5 сарын 15-с өмнө, үлдсэнийг нь 7 "
-"сарын 1-нд төлөхөөр амласан байгаа."
+msgstr "Түр зуур асуудалтай байгаа бөгөөд 50%-г нь 5 сарын 15-с өмнө, үлдсэнийг нь 7 сарын 1-нд төлөхөөр амласан байгаа."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -741,23 +606,17 @@ msgid ""
 "current date when the partner gets a follow-up level that requires a manual "
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
-msgstr ""
-"Энэ нь гар мөшгилт шаардлагатай тохиолдол юм. Харилцагч нь гар мөшгилт "
-"хэрэгтэй түвшинд хүрсэн бол огноо нь одоогийн огноогоор тохируулагдана. "
-"Гараараа амлалт дээр нь үндэслэн өөрчилж болно."
+msgstr "Энэ нь гар мөшгилт шаардлагатай тохиолдол юм. Харилцагч нь гар мөшгилт хэрэгтэй түвшинд хүрсэн бол огноо нь одоогийн огноогоор тохируулагдана. Гараараа амлалт дээр нь үндэслэн өөрчилж болно."
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Print overdue payments report independent of follow-up line"
-msgstr ""
-"Мөшгөлтийн мөрөөс үл хамааруулан хугацаа хэтэрсэн төлбөрийн тайланг хэвлэх"
+msgstr "Мөшгөлтийн мөрөөс үл хамааруулан хугацаа хэтэрсэн төлбөрийн тайланг хэвлэх"
 
 #. module: account_followup
 #: help:account_followup.print,date:0
-msgid ""
-"This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
-"Энэ талбар нь мөшгилтийг төлөвлөх ирээдүйн огноог сонгоход ашиглагддаг"
+msgid "This field allow you to select a forecast date to plan your follow-ups"
+msgstr "Энэ талбар нь мөшгилтийг төлөвлөх ирээдүйн огноог сонгоход ашиглагддаг"
 
 #. module: account_followup
 #: field:account_followup.print,date:0
@@ -765,8 +624,7 @@ msgid "Follow-up Sending Date"
 msgstr "Мөшгөлт илгээх огноо"
 
 #. module: account_followup
-#: view:res.partner:0
-#: field:res.partner,payment_responsible_id:0
+#: view:res.partner:0 field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
 msgstr "Мөшгөлтийн Хариуцагч"
 
@@ -774,20 +632,15 @@ msgstr "Мөшгөлтийн Хариуцагч"
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
 "    Despite several reminders, your account is still not settled.\n"
-"Unless full payment is made in next 8 days, legal action for the recovery of "
-"the debt will be taken without\n"
+"Unless full payment is made in next 8 days, legal action for the recovery of the debt will be taken without\n"
 "further notice.\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "</p>\n"
 "<br/>\n"
 "Best Regards,\n"
@@ -804,36 +657,7 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Эрхэм ${object.name},</p>\n"
-"    <p>\n"
-"    Танд олон удаа сануулсан боловч тооцоо дуусаагүй хэвээр байна.\n"
-"8 хоногийн хугацаанд бүрэн төлбөр хийгдэхгүй бол дахин мэдэгдэл үгүйгээр "
-"хуулийн арга хэмжээнд шилжих болно.\n"
-"Төлбөрийн тухай мэдээллийг доор хэвлэлээ.  \n"
-"Үүнтэй холбоотой асуух, магадлах зүйлс байвал санаа зоволгүйгээр манай "
-"санхүүгийн албатай холбогдоно уу.\n"
-"</p>\n"
-"<br/>\n"
-"Хүндэтгэсэн\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>Эрхэм ${object.name},</p>\n    <p>\n    Танд олон удаа сануулсан боловч тооцоо дуусаагүй хэвээр байна.\n8 хоногийн хугацаанд бүрэн төлбөр хийгдэхгүй бол дахин мэдэгдэл үгүйгээр хуулийн арга хэмжээнд шилжих болно.\nТөлбөрийн тухай мэдээллийг доор хэвлэлээ.  \nҮүнтэй холбоотой асуух, магадлах зүйлс байвал санаа зоволгүйгээр манай санхүүгийн албатай холбогдоно уу.\n</p>\n<br/>\nХүндэтгэсэн\n<br/>\n<br/>\n${user.name}\n<br/>\n<br/>\n\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -854,30 +678,15 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
 "            "
-msgstr ""
-"\n"
-"Эрхэм ${object.name},\n"
-"\n"
-"Танд олон удаа сануулсан боловч тооцоо дуусаагүй хэвээр байна.\n"
-"8 хоногийн хугацаанд бүрэн төлбөр хийгдэхгүй бол дахин мэдэгдэл үгүйгээр "
-"хуулийн арга хэмжээнд шилжих болно.\n"
-"Төлбөрийн тухай мэдээллийг доор хэвлэлээ.  \n"
-"Үүнтэй холбоотой асуух, магадлах зүйлс байвал санаа зоволгүйгээр манай "
-"санхүүгийн албатай холбогдоно уу.\n"
-"\n"
-"Хүндэтгэсэн\n"
-"            "
+msgstr "\nЭрхэм ${object.name},\n\nТанд олон удаа сануулсан боловч тооцоо дуусаагүй хэвээр байна.\n8 хоногийн хугацаанд бүрэн төлбөр хийгдэхгүй бол дахин мэдэгдэл үгүйгээр хуулийн арга хэмжээнд шилжих болно.\nТөлбөрийн тухай мэдээллийг доор хэвлэлээ.  \nҮүнтэй холбоотой асуух, магадлах зүйлс байвал санаа зоволгүйгээр манай санхүүгийн албатай холбогдоно уу.\n\nХүндэтгэсэн\n            "
 
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
@@ -925,12 +734,8 @@ msgstr "Боловсруулалт хийхэд захиалагчид авах 
 msgid ""
 "Below is the history of the transactions of this\n"
 "                            customer. You can check \"No Follow-up\" in\n"
-"                            order to exclude it from the next follow-up "
-"actions."
-msgstr ""
-"Доор энэ захиалагчийн гүйлгээний түүх \n"
-"                            байна. Хэрэв мөшгилт хэрэггүй гэж үзвэл \n"
-"                            \"Мөшгилт үгүй\" сонголтыг арилгаж болно."
+"                            order to exclude it from the next follow-up actions."
+msgstr "Доор энэ захиалагчийн гүйлгээний түүх \n                            байна. Хэрэв мөшгилт хэрэггүй гэж үзвэл \n                            \"Мөшгилт үгүй\" сонголтыг арилгаж болно."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -984,20 +789,17 @@ msgstr "Хугацаа хэтэрсэн дүн"
 #: code:addons/account_followup/account_followup.py:263
 #, python-format
 msgid "Lit."
-msgstr ""
+msgstr "Лит."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
 msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
-msgstr ""
-"Маргаантай санхүүгийн хөдөлгөөний мөрүүдийг тооцолгүйгээр мөшгилтийн "
-"максимум түвшин"
+msgstr "Маргаантай санхүүгийн хөдөлгөөний мөрүүдийг тооцолгүйгээр мөшгилтийн максимум түвшин"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-#: field:res.partner,latest_followup_date:0
+#: view:account_followup.stat:0 field:res.partner,latest_followup_date:0
 msgid "Latest Follow-up Date"
 msgstr "Сүүлийн Мөшгилтийн Огноо"
 
@@ -1005,17 +807,13 @@ msgstr "Сүүлийн Мөшгилтийн Огноо"
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
+"    Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take\n"
 "appropriate measures in order to carry out this payment in the next 8 days.\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to\n"
 "contact our accounting department.\n"
 "    </p>\n"
 "<br/>\n"
@@ -1031,37 +829,10 @@ msgid ""
 "<br/>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Эрхэм ${object.name},</p>\n"
-"    <p>\n"
-"    Хэрэв бидний алдаа байвал залруулах болно. Гэхдээ дүн төлөгдөөгүй байгаа "
-"бололтой байна. Ойрын 8 хоногийн хугацаанд холбогдох тооцоог хийнэ үү. Хэрэв "
-"энэ имэйл илгээгдсэн дараа төлбөр тань хийгдсэн байгаа бол энэ имэйлийг "
-"хэрэгсэхгүй байж болно. Манай санхүүгийн албатай санаа зоволтгүй холбогдож "
-"асууж болно.\n"
-"    </p>\n"
-"<br/>\n"
-"Амжилт хүсье,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"<br/>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>Эрхэм ${object.name},</p>\n    <p>\n    Хэрэв бидний алдаа байвал залруулах болно. Гэхдээ дүн төлөгдөөгүй байгаа бололтой байна. Ойрын 8 хоногийн хугацаанд холбогдох тооцоог хийнэ үү. Хэрэв энэ имэйл илгээгдсэн дараа төлбөр тань хийгдсэн байгаа бол энэ имэйлийг хэрэгсэхгүй байж болно. Манай санхүүгийн албатай санаа зоволтгүй холбогдож асууж болно.\n    </p>\n<br/>\nАмжилт хүсье,\n<br/>\n<br/>\n${user.name}\n<br/>\n<br/>\n\n${object.get_followup_table_html() | safe}\n\n<br/>\n</div>\n            "
 
 #. module: account_followup
-#: field:account.move.line,result:0
-#: view:account_followup.stat:0
+#: field:account.move.line,result:0 view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
 msgid "Balance"
@@ -1088,27 +859,12 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"Exception made if there was a mistake of ours, it seems that the following "
-"amount stays unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days.\n"
+"Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to contact our accounting department.  "
-"\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
-msgstr ""
-"\n"
-"Эрхэм %(partner_name)s,\n"
-"\n"
-"    Хэрэв бидний алдаа байвал залруулах болно. Гэхдээ дүн төлөгдөөгүй байгаа "
-"бололтой байна. Ойрын 8 хоногийн хугацаанд холбогдох тооцоог хийнэ үү. \n"
-"\n"
-"Хэрэв энэ имэйл илгээгдсэн дараа төлбөр тань хийгдсэн байгаа бол энэ "
-"имэйлийг хэрэгсэхгүй байж болно. Манай санхүүгийн албатай санаа зоволтгүй "
-"холбогдож асууж болно.\n"
-"\n"
-"Амжилт хүсье,\n"
+msgstr "\nЭрхэм %(partner_name)s,\n\n    Хэрэв бидний алдаа байвал залруулах болно. Гэхдээ дүн төлөгдөөгүй байгаа бололтой байна. Ойрын 8 хоногийн хугацаанд холбогдох тооцоог хийнэ үү. \n\nХэрэв энэ имэйл илгээгдсэн дараа төлбөр тань хийгдсэн байгаа бол энэ имэйлийг хэрэгсэхгүй байж болно. Манай санхүүгийн албатай санаа зоволтгүй холбогдож асууж болно.\n\nАмжилт хүсье,\n"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -1137,9 +893,7 @@ msgstr "Мөшгилтийн Тайлан"
 msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
-msgstr ""
-", төлбөрийн сүүлийн мөшгилт \n"
-"                            нь:"
+msgstr ", төлбөрийн сүүлийн мөшгилт \n                            нь:"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -1188,13 +942,8 @@ msgstr ": Одоогийн Огноо"
 #: view:account_followup.print:0
 msgid ""
 "This action will send follow-up emails, print the letters and\n"
-"                        set the manual actions per customer, according to "
-"the follow-up levels defined."
-msgstr ""
-"Энэ арга хэмжээ нь мөшгилтийн имэйл илгээх, захидал \n"
-"                        хэвлэх, гар арга хэмжээ тохируулах ажлыг захиалагчид "
-"дээр тохируулсан \n"
-"                        мөшгилтийн түвшингээр хийнэ."
+"                        set the manual actions per customer, according to the follow-up levels defined."
+msgstr "Энэ арга хэмжээ нь мөшгилтийн имэйл илгээх, захидал \n                        хэвлэх, гар арга хэмжээ тохируулах ажлыг захиалагчид дээр тохируулсан \n                        мөшгилтийн түвшингээр хийнэ."
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
@@ -1267,54 +1016,31 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
-"\n"
-"Эрхэм %(partner_name)s,\n"
-"\n"
-"Танд олон удаа сануулсан боловч тооцоо дуусаагүй хэвээр байна.\n"
-"8 хоногийн хугацаанд бүрэн төлбөр хийгдэхгүй бол дахин мэдэгдэл үгүйгээр "
-"хуулийн арга хэмжээнд шилжих болно.\n"
-"Төлбөрийн тухай мэдээллийг доор хэвлэлээ.  \n"
-"Үүнтэй холбоотой асуух, магадлах зүйлс байвал санаа зоволгүйгээр манай "
-"санхүүгийн албатай холбогдоно уу.\n"
-"\n"
-"Хүндэтгэсэн\n"
+msgstr "\nЭрхэм %(partner_name)s,\n\nТанд олон удаа сануулсан боловч тооцоо дуусаагүй хэвээр байна.\n8 хоногийн хугацаанд бүрэн төлбөр хийгдэхгүй бол дахин мэдэгдэл үгүйгээр хуулийн арга хэмжээнд шилжих болно.\nТөлбөрийн тухай мэдээллийг доор хэвлэлээ.  \nҮүнтэй холбоотой асуух, магадлах зүйлс байвал санаа зоволгүйгээр манай санхүүгийн албатай холбогдоно уу.\n\nХүндэтгэсэн\n"
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
-msgstr ""
-"Хэрэв захиалагчийн хэлээр эсвэл компанийн тохиргооны хэлээр имэйл илгээхээр "
-"бол текстийг битгий өөрчил"
+msgstr "Хэрэв захиалагчийн хэлээр эсвэл компанийн тохиргооны хэлээр имэйл илгээхээр бол текстийг битгий өөрчил"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ""
 "Write here the introduction in the letter,\n"
-"                            according to the level of the follow-up. You "
-"can\n"
+"                            according to the level of the follow-up. You can\n"
 "                            use the following keywords in the text. Don't\n"
-"                            forget to translate in all languages you "
-"installed\n"
+"                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
-msgstr ""
-"Энэ танилцуулга захидлыг бичнэ,\n"
-"                            Энэ нь мөшгилтийн түвшинтэй уялдсан байна. \n"
-"                            Дараах түлхүүр үгүүдийг ашиглаж болно. Суулгасан "
-"бүх хэлний \n"
-"                            хувьд орчуулахаа мартаж болохгүй."
+msgstr "Энэ танилцуулга захидлыг бичнэ,\n                            Энэ нь мөшгилтийн түвшинтэй уялдсан байна. \n                            Дараах түлхүүр үгүүдийг ашиглаж болно. Суулгасан бүх хэлний \n                            хувьд орчуулахаа мартаж болохгүй."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1366,24 +1092,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define follow-up levels and their related actions.\n"
 "              </p><p>\n"
-"                For each step, specify the actions to be taken and delay in "
-"days. It is\n"
-"                possible to use print and e-mail templates to send specific "
-"messages to\n"
+"                For each step, specify the actions to be taken and delay in days. It is\n"
+"                possible to use print and e-mail templates to send specific messages to\n"
 "                the customer.\n"
 "              </p>\n"
 "          "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Энд мөшгилтийн түвшин болон холбогдох арга хэмжээг "
-"тодорхойлохдоо дарна уу.\n"
-"              </p><p>\n"
-"                Алхам бүрт, авах арга хэмжээ болон хүлээх хоногийг зааж "
-"өгнө.\n"
-"                Захиалагчид илгээх имэйл, захидалд үлгэрүүдийг ашиглах "
-"боломжтой.\n"
-"              </p>\n"
-"          "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Энд мөшгилтийн түвшин болон холбогдох арга хэмжээг тодорхойлохдоо дарна уу.\n              </p><p>\n                Алхам бүрт, авах арга хэмжээ болон хүлээх хоногийг зааж өгнө.\n                Захиалагчид илгээх имэйл, захидалд үлгэрүүдийг ашиглах боломжтой.\n              </p>\n          "
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
@@ -1394,7 +1108,7 @@ msgstr "Дараахийн мөшгилтийн захидал "
 #. module: account_followup
 #: view:res.partner:0
 msgid "The"
-msgstr ""
+msgstr "Энэ"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -1412,9 +1126,7 @@ msgstr "Нийт кредит"
 msgid ""
 "The partner does not have any accounting entries to print in the overdue "
 "report for the current company."
-msgstr ""
-"Идэвхтэй компанийн хувьд хугацаа хэтэрсэн тайланд хэвлэх санхүүгийн бичилт "
-"байхгүй байна."
+msgstr "Идэвхтэй компанийн хувьд хугацаа хэтэрсэн тайланд хэвлэх санхүүгийн бичилт байхгүй байна."
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1442,9 +1154,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr ""
-"Хугацаа хэтэрснээс хойш сануулга илгээхийн өмнө хүлээх хоногийн тоо. Хугацаа "
-"дуусахаас өмнө эелдэг сануулга өгөхөөр бол сөрөг тоо байж болно."
+msgstr "Хугацаа хэтэрснээс хойш сануулга илгээхийн өмнө хүлээх хоногийн тоо. Хугацаа дуусахаас өмнө эелдэг сануулга өгөхөөр бол сөрөг тоо байж болно."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
@@ -1471,9 +1181,7 @@ msgstr "Санхүү"
 msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default email template"
-msgstr ""
-"Хэрэв сүүлийн мөшгилтийн түвшинд зааж өгөөгүй бол энэ нь үндсэн имэйл "
-"үлгэрээс илгээх болно"
+msgstr "Хэрэв сүүлийн мөшгилтийн түвшинд зааж өгөөгүй бол энэ нь үндсэн имэйл үлгэрээс илгээх болно"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:318
@@ -1485,14 +1193,3 @@ msgstr "Идэвхтэй компанид мөшгилтийн төлөвлөг�
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
 msgstr "Захиалагчийн Төлөх Амлалт"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                    No journal items found.\n"
-#~ "                </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                    Журналын бичилт олдсонгүй.\n"
-#~ "                </p>\n"
-#~ "            "

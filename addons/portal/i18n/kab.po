@@ -1,21 +1,22 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-23 21:12+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-24 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -29,13 +30,11 @@ msgid "Please select at least one user to share with"
 msgstr ""
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
 
 #. module: portal
@@ -49,23 +48,22 @@ msgid "Billing"
 msgstr "Afeter"
 
 #. module: portal
-#: view:portal.wizard.user:portal.wizard_user_tree_view
+#: view:portal.wizard.user:0
 msgid "Contacts"
 msgstr "Inarmisen"
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
 
 #. module: portal
-#: view:share.wizard:portal.share_step1_form_portal
-#: field:share.wizard,group_ids:0
+#: view:share.wizard:0 field:share.wizard,group_ids:0
 msgid "Existing groups"
 msgstr "Igrawen illan"
 
 #. module: portal
-#: view:res.groups:portal.group_search_view
+#: view:res.groups:0
 msgid "Portal Groups"
 msgstr ""
 
@@ -82,13 +80,12 @@ msgstr ""
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:portal.wizard_view
+#: model:ir.model,name:portal.model_portal_wizard view:portal.wizard:0
 msgid "Portal Access Management"
 msgstr ""
 
 #. module: portal
-#: view:res.groups:portal.group_search_view
+#: view:res.groups:0
 msgid "Non-Portal Groups"
 msgstr ""
 
@@ -143,7 +140,7 @@ msgid "Email"
 msgstr "Email"
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid "or"
 msgstr "neɣ"
 
@@ -154,7 +151,7 @@ msgid "To-do"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:226
+#: code:addons/portal/wizard/portal_wizard.py:194
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
@@ -164,10 +161,10 @@ msgstr ""
 #: model:ir.actions.client,name:portal.action_jobs
 #: model:ir.ui.menu,name:portal.portal_jobs
 msgid "Jobs"
-msgstr ""
+msgstr "Tadekkwant n umahil"
 
 #. module: portal
-#: field:portal.wizard,user_ids:0
+#: model:ir.model,name:portal.model_res_users field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Iseqdacen"
 
@@ -187,8 +184,7 @@ msgstr ""
 #: code:addons/portal/mail_message.py:60
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. "
-"Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
@@ -218,16 +214,14 @@ msgid ""
 "                    No message found and no message sent yet.\n"
 "                </p><p>\n"
 "                    Click on the top-right icon to compose a message. This\n"
-"                    message will be sent by email if it's an internal "
-"contact.\n"
+"                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_menu
-#: field:portal.wizard,portal_id:0
-#: field:res.groups,is_portal:0
+#: model:ir.ui.menu,name:portal.portal_menu field:portal.wizard,portal_id:0
+#: field:res.groups,is_portal:0 model:res.groups,name:portal.group_portal
 msgid "Portal"
 msgstr ""
 
@@ -251,7 +245,7 @@ msgstr ""
 #: model:ir.actions.client,name:portal.action_news
 #: model:ir.ui.menu,name:portal.portal_company_news
 msgid "News"
-msgstr ""
+msgstr "Isallen"
 
 #. module: portal
 #: code:addons/portal/mail_message.py:59
@@ -268,8 +262,7 @@ msgstr ""
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
 msgid ""
-"Portal members have specific access rights (such as record rules and "
-"restricted menus).\n"
+"Portal members have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
 
@@ -291,8 +284,7 @@ msgid "Existing Groups (e.g Portal Groups)"
 msgstr ""
 
 #. module: portal
-#: view:share.wizard:portal.share_step1_form_portal
-#: field:share.wizard,user_ids:0
+#: view:share.wizard:0 field:share.wizard,user_ids:0
 msgid "Existing users"
 msgstr "Iseqdancen illan"
 
@@ -304,7 +296,7 @@ msgstr "Amarag"
 #. module: portal
 #: field:portal.payment.acquirer,name:0
 msgid "Name"
-msgstr ""
+msgstr "Isem"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -314,13 +306,13 @@ msgstr "Irawen n unekcum"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Izen"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"kind: the kind of document on which the payment form is rendered (translated"
+" to user language, e.g. \"Invoice\")"
 msgstr ""
 
 #. module: portal
@@ -361,7 +353,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
 msgid "Messaging"
-msgstr ""
+msgstr "Tirawt"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -371,8 +363,7 @@ msgstr ""
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
 msgid ""
-"Anonymous users have specific access rights (such as record rules and "
-"restricted menus).\n"
+"Anonymous users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
 
@@ -384,7 +375,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
 msgid "After Sale Services"
-msgstr ""
+msgstr "Tinfawin n deffir uznuzu"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -395,7 +386,8 @@ msgstr ""
 #: code:addons/portal/acquirer.py:76
 #, python-format
 msgid ""
-"You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
+"You can finish the configuration in the <a href=\"%s\">Bank&Cash "
+"settings</a>"
 msgstr ""
 
 #. module: portal
@@ -409,10 +401,8 @@ msgid ""
 "<p>\n"
 "                    <b>Good Job!</b> Your inbox is empty.\n"
 "                </p><p>\n"
-"                    Your inbox contains private messages or emails sent to "
-"you\n"
-"                    as well as information related to documents or people "
-"you\n"
+"                    Your inbox contains private messages or emails sent to you\n"
+"                    as well as information related to documents or people you\n"
 "                    follow.\n"
 "                </p>\n"
 "            "
@@ -472,18 +462,13 @@ msgstr ""
 msgid ""
 "\n"
 "% if object.company_id.paypal_account:\n"
-"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
-"target=\"_blank\">\n"
+"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" target=\"_blank\">\n"
 "  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
-"  <input type=\"hidden\" name=\"business\" "
-"value=\"${object.company_id.paypal_account}\"/>\n"
-"  <input type=\"hidden\" name=\"item_name\" "
-"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
+"  <input type=\"hidden\" name=\"business\" value=\"${object.company_id.paypal_account}\"/>\n"
+"  <input type=\"hidden\" name=\"item_name\" value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
 "  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
-"  <input type=\"hidden\" name=\"currency_code\" "
-"value=\"${currency.name}\"/>\n"
-"  <input type=\"image\" name=\"submit\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"  <input type=\"hidden\" name=\"currency_code\" value=\"${currency.name}\"/>\n"
+"  <input type=\"image\" name=\"submit\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "</form>\n"
 "% endif\n"
 "            "
@@ -507,18 +492,18 @@ msgid "Visible"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:225
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
 msgid "Email Required"
 msgstr ""
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid "Cancel"
 msgstr "Sefsax"
 
 #. module: portal
-#: view:portal.wizard:portal.wizard_view
+#: view:portal.wizard:0
 msgid "Apply"
 msgstr "Snes"
 
@@ -549,10 +534,8 @@ msgid ""
 "<p>\n"
 "                    <b>No todo.</b>\n"
 "                </p><p>\n"
-"                    When you process messages in your inbox, you can mark "
-"some\n"
-"                    as <i>todo</i>. From this menu, you can process all your "
-"todo.\n"
+"                    When you process messages in your inbox, you can mark some\n"
+"                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -563,6 +546,6 @@ msgid "Form Template"
 msgstr ""
 
 #. module: portal
-#: view:share.wizard:portal.share_step2_form_portal
+#: view:share.wizard:0
 msgid "Details"
 msgstr ""

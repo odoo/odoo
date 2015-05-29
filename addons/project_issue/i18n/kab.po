@@ -1,21 +1,21 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-23 23:21+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-24 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -35,10 +35,9 @@ msgid "Avg. Delay to Open"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Sdukel s..."
 
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
@@ -53,7 +52,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,date_open:0
 msgid "Opened"
-msgstr ""
+msgstr "Illi"
 
 #. module: project_issue
 #: field:project.issue.report,opening_date:0
@@ -63,7 +62,7 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Meɣres"
 
 #. module: project_issue
 #: field:project.issue,progress:0
@@ -71,14 +70,12 @@ msgid "Progress (%)"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,message_unread:0
+#: view:project.issue:0 field:project.issue,message_unread:0
 msgid "Unread Messages"
 msgstr "Iznan ur neţwaɣer-ara"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,company_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: field:project.issue,company_id:0 view:project.issue.report:0
 #: field:project.issue.report,company_id:0
 msgid "Company"
 msgstr "Takebbwanit"
@@ -94,14 +91,13 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
@@ -114,7 +110,7 @@ msgid "Days to Open"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:397
+#: code:addons/project_issue/project_issue.py:493
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -138,10 +134,9 @@ msgid "Difference in days between last action and current date"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,day:0
+#: view:project.issue.report:0 field:project.issue.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Ass"
 
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
@@ -149,9 +144,7 @@ msgid "Days since creation date"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,task_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: field:project.issue,task_id:0 view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
 msgstr "Tawuri"
@@ -173,10 +166,8 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,project_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,project_id:0
+#: view:project.issue:0 field:project.issue,project_id:0
+#: view:project.issue.report:0 field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "Asenfaṛ"
 
@@ -186,8 +177,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to report a new issue.\n"
 "          </p><p>\n"
-"            The OpenERP issues tacker allows you to efficiantly manage "
-"things\n"
+"            The OpenERP issues tacker allows you to efficiantly manage things\n"
 "            like internal requests, software development bugs, customer\n"
 "            complaints, project troubles, material breakdowns, etc.\n"
 "          </p>\n"
@@ -195,10 +185,9 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: selection:project.issue.report,state:0
+#: selection:project.issue,state:0 selection:project.issue.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Ifsax"
 
 #. module: project_issue
 #: field:project.issue,description:0
@@ -211,7 +200,7 @@ msgid "Date of Closing"
 msgstr "Azemz n umdel"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
+#: view:project.issue:0
 msgid "Issue Tracker Search"
 msgstr ""
 
@@ -235,9 +224,7 @@ msgstr "Amiḍan usliḍ"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa  deg umasal HTML "
-"iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
+msgstr "Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa  deg umasal HTML iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -247,25 +234,25 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: view:project.issue:0
 msgid "Extra Info"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:397
+#: code:addons/project_issue/project_issue.py:493
 #, python-format
 msgid "Warning!"
 msgstr "ɣuṛ-ek !"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_kanban_view
+#: view:project.issue:0
 msgid "Edit..."
 msgstr "Ẓreg..."
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
+#: view:project.issue:0
 msgid "Responsible"
-msgstr ""
+msgstr "Amasay"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
@@ -274,7 +261,7 @@ msgid "Issue Blocked"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: view:project.issue:0
 msgid "Statistics"
 msgstr "Tiddadanin"
 
@@ -290,18 +277,14 @@ msgid "Project issue <b>converted</b> to task."
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_feature_tree_view
-#: view:project.issue:project_issue.project_issue_tree_view
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,priority:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,priority:0
+#: view:project.issue:0 field:project.issue,priority:0
+#: view:project.issue.report:0 field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "Tazwart"
 
 #. module: project_issue
-#: field:project.issue,version_id:0
-#: field:project.issue.report,version_id:0
+#: view:project.issue:0 field:project.issue,version_id:0
+#: view:project.issue.report:0 field:project.issue.report,version_id:0
 msgid "Version"
 msgstr ""
 
@@ -311,13 +294,13 @@ msgid "Followers"
 msgstr "Imagazen"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: view:project.issue:0 selection:project.issue,state:0
+#: view:project.issue.report:0
 msgid "New"
-msgstr "Amaynut"
+msgstr "Nouveau"
 
 #. module: project_issue
-#: view:project.project:project_issue.view_project_form_inherited
+#: view:project.project:0
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 msgstr ""
 
@@ -327,8 +310,7 @@ msgid "Email"
 msgstr "Email"
 
 #. module: project_issue
-#: field:project.issue,channel:0
-#: field:project.issue.report,channel:0
+#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "Abadu"
 
@@ -339,7 +321,7 @@ msgid "Lowest"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:299
+#: code:addons/project_issue/project_issue.py:400
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Anɣel )"
@@ -350,7 +332,8 @@ msgid "Unassigned Issues"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,create_date:0
+#: field:project.issue,create_date:0 view:project.issue.report:0
+#: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "Azemz  n usilel"
 
@@ -376,16 +359,15 @@ msgid "Create issues from an incoming email account "
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
-msgstr ""
+msgstr "Immed"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Yulyu"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -397,24 +379,23 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,stage_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,stage_id:0
+#: view:project.issue:0 field:project.issue,stage_id:0
+#: view:project.issue.report:0 field:project.issue.report,stage_id:0
 msgid "Stage"
 msgstr "Amecwaṛ"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
+#: view:project.issue.report:0
 msgid "Issues Analysis"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:440
+#: code:addons/project_issue/project_issue.py:532
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Ulac taɣawsa"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -422,13 +403,13 @@ msgid "My Project Issues"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,partner_id:0
-#: field:project.issue.report,partner_id:0
+#: view:project.issue:0 field:project.issue,partner_id:0
+#: view:project.issue.report:0 field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "Anarmis"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_kanban_view
+#: view:project.issue:0
 msgid "Delete"
 msgstr "Kkes"
 
@@ -436,7 +417,7 @@ msgstr "Kkes"
 #: code:addons/project_issue/project_issue.py:383
 #, python-format
 msgid "Tasks"
-msgstr ""
+msgstr "Tiwura"
 
 #. module: project_issue
 #: field:project.issue.report,nbr:0
@@ -446,12 +427,12 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Ctember"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Bujember"
 
 #. module: project_issue
 #: field:project.issue,categ_ids:0
@@ -459,7 +440,7 @@ msgid "Tags"
 msgstr "Tibzimin"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_tree_view
+#: view:project.issue:0
 msgid "Issue Tracker Tree"
 msgstr ""
 
@@ -479,7 +460,7 @@ msgid "Update Date"
 msgstr "Azemz n uleqqem"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_kanban_view
+#: view:project.issue:0
 msgid "Project:"
 msgstr ""
 
@@ -494,7 +475,7 @@ msgid "Next Action"
 msgstr "Tigawt d iteddun"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Blocked"
 msgstr ""
 
@@ -509,7 +490,7 @@ msgid "#Number of Project Issues"
 msgstr ""
 
 #. module: project_issue
-#: help:project.issue,channel:0
+#: help:project.issue,channel_id:0
 msgid "Communication channel."
 msgstr "Abadu n teywalt."
 
@@ -524,7 +505,7 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Arewway"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -533,7 +514,7 @@ msgid "Low"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,date_closed:0
+#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
 msgid "Closed"
 msgstr "Imdel"
 
@@ -543,14 +524,14 @@ msgid "Avg. Delay to Close"
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: view:project.issue.report:0
+#: selection:project.issue,state:0 view:project.issue.report:0
 #: selection:project.issue.report,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Iţraǧu"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: view:project.issue:0 field:project.issue,state:0
+#: field:project.issue.report,state:0
 msgid "Status"
 msgstr "Addad"
 
@@ -562,24 +543,23 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Ɣuct"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-#: selection:project.issue,priority:0
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_kanban_view
+#: view:project.issue:0
 msgid "Category:"
 msgstr "Taggayt:"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Yunyu"
 
 #. module: project_issue
 #: help:project.issue,message_ids:0
@@ -594,7 +574,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Ussan i wemdal"
 
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
@@ -605,38 +585,37 @@ msgstr "D amagaz"
 #: help:project.issue,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,active:0
-#: field:project.issue.version,active:0
+#: field:project.issue,active:0 field:project.issue.version,active:0
 msgid "Active"
 msgstr "Urmid"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Number"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:426
+#: code:addons/project_issue/project_issue.py:513
 #, python-format
 msgid "Customer Email"
 msgstr "Email n umsaɣ"
 
 #. module: project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: view:project.issue.report:0
 msgid "Search"
 msgstr "Nnadi"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
+#: view:project.issue:0
 msgid "Creation Month"
-msgstr ""
+msgstr "Aggur n usilel"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -646,10 +625,10 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Yennayer"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_feature_tree_view
+#: view:project.issue:0
 msgid "Feature Tracker Tree"
 msgstr ""
 
@@ -669,15 +648,13 @@ msgid "Date"
 msgstr "Azemz"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,user_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: field:project.issue,user_id:0 view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr ""
 
 #. module: project_issue
-#: view:project.config.settings:project_issue.view_config_settings
+#: view:project.config.settings:0
 msgid "Configure"
 msgstr "Swel"
 
@@ -692,8 +669,7 @@ msgid "Current Features"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.version:project_issue.project_issue_version_form_view
-#: view:project.issue.version:project_issue.project_issue_version_search_view
+#: view:project.issue.version:0
 msgid "Issue Version"
 msgstr ""
 
@@ -705,43 +681,36 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Open"
-msgstr ""
+msgstr "illi"
 
 #. module: project_issue
 #: field:account.analytic.account,use_issues:0
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
-#: model:ir.actions.act_window,name:project_issue.action_view_issues
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: view:project.issue:project_issue.project_issue_calendar_view
-#: view:project.project:project_issue.view_project_form_inherited
-#: view:project.project:project_issue.view_project_kanban_inherited
-#: field:project.project,issue_count:0
-#: view:res.partner:project_issue.res_partner_issues_button_view
+#: view:project.issue:0 view:project.project:0
 msgid "Issues"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Anazzal"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "To Do"
-msgstr ""
+msgstr "Ad imag"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_graph
+#: view:project.issue.report:0
 msgid "Project Issue"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: view:project.issue:0
 msgid "Add an internal note..."
 msgstr "Rrnu awennit agensan…"
 
@@ -761,31 +730,28 @@ msgid "Unclosed Issues"
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Ihegga iwemecwaṛ d iteddun"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Tuber"
 
 #. module: project_issue
-#: field:project.issue.report,section_id:0
+#: view:project.issue.report:0 field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr "Tarbaɣt  n uzenzi"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 #: field:project.issue.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Aggur"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,name:0
+#: view:project.issue:0 field:project.issue,name:0 view:project.project:0
 msgid "Issue"
 msgstr ""
 
@@ -800,7 +766,7 @@ msgid "Feature Tracker Search"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: view:project.issue:0
 msgid "Description"
 msgstr "Aglam"
 
@@ -812,7 +778,7 @@ msgstr "Tarbaɛt n uzenzi"
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Maggu"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
@@ -826,7 +792,7 @@ msgid "Issue Closed"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue.report,email:0
+#: view:project.issue.report:0 field:project.issue.report,email:0
 msgid "# Emails"
 msgstr "# Email"
 
@@ -837,7 +803,7 @@ msgid "Issue Created"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:424
+#: code:addons/project_issue/project_issue.py:511
 #, python-format
 msgid "Customer"
 msgstr "Amsaɣ"
@@ -845,16 +811,16 @@ msgstr "Amsaɣ"
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Furar"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Amecwaṛ ibeddel"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_feature_tree_view
+#: view:project.issue:0
 msgid "Feature description"
 msgstr ""
 
@@ -869,8 +835,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new version.\n"
 "              </p><p>\n"
-"                Define here the different versions of your products on "
-"which\n"
+"                Define here the different versions of your products on which\n"
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
@@ -884,8 +849,7 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: view:board.board:0
 msgid "My Issues"
 msgstr ""
 
@@ -897,10 +861,10 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Yebrir"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: view:project.issue:0
 msgid "⇒ Escalate"
 msgstr ""
 
@@ -916,8 +880,6 @@ msgstr ""
 
 #. module: project_issue
 #: field:project.issue,id:0
-#: field:project.issue.report,id:0
-#: field:project.issue.version,id:0
 msgid "ID"
 msgstr "Asulay"
 
@@ -944,7 +906,7 @@ msgstr ""
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Amecwar ibeddel"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -963,10 +925,9 @@ msgid "Last Action"
 msgstr "Tigawt taneggarut"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,name:0
+#: view:project.issue.report:0 field:project.issue.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Aseggawas"
 
 #. module: project_issue
 #: field:project.issue,duration:0
@@ -978,6 +939,3 @@ msgstr "Timirt"
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
 msgstr ""
-
-#~ msgid "unknown"
-#~ msgstr "arussin"

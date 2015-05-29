@@ -1,21 +1,22 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * purchase_requisition
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-03-03 05:26+0000\n"
-"Last-Translator: gobi <Unknown>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-7/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:20+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -38,32 +39,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to start a new purchase requisition process. \n"
 "          </p><p>\n"
-"            A purchase requisition is the step before a request for "
-"quotation.\n"
-"            In a purchase requisition (or purchase tender), you can record "
-"the\n"
+"            A purchase requisition is the step before a request for quotation.\n"
+"            In a purchase requisition (or purchase tender), you can record the\n"
 "            products you need to buy and trigger the creation of RfQs to\n"
-"            suppliers. After the negotiation, once you have reviewed all "
-"the\n"
+"            suppliers. After the negotiation, once you have reviewed all the\n"
 "            supplier's offers, you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Шинэ худалдан авалтын хүсэлтийн ажлыг эхлүүлэхдээ дарна. \n"
-"          </p><p>\n"
-"            Худалдан авалтын шаардах гэдэг нь үнийн санал хүсэхийн \n"
-"            өмнөх дотоод алхам юм. Худалдан авалтын шаардахад (эсвэл \n"
-"            худалдан авалтын тендерт), өөрт хэрэгтэй бараагаа хөтлөж \n"
-"            тэндээсээ үнийн саналын хүсэлтийг үүсгэж нийлүүлэгчид \n"
-"            илгээх боломжтой. Тохиролцоо явагдсан дараа нягтлан үзэж\n"
-"            цохолт хийх, цуцлах ажлыг хийнэ. \n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Шинэ худалдан авалтын хүсэлтийн ажлыг эхлүүлэхдээ дарна. \n          </p><p>\n            Худалдан авалтын шаардах гэдэг нь үнийн санал хүсэхийн \n            өмнөх дотоод алхам юм. Худалдан авалтын шаардахад (эсвэл \n            худалдан авалтын тендерт), өөрт хэрэгтэй бараагаа хөтлөж \n            тэндээсээ үнийн саналын хүсэлтийг үүсгэж нийлүүлэгчид \n            илгээх боломжтой. Тохиролцоо явагдсан дараа нягтлан үзэж\n            цохолт хийх, цуцлах ажлыг хийнэ. \n          </p>\n        "
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,user_id:0
+#: view:purchase.requisition:0 field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Хариуцагч"
 
@@ -73,8 +59,7 @@ msgid "Cancel Requisition"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,state:0
+#: view:purchase.requisition:0 field:purchase.requisition,state:0
 msgid "Status"
 msgstr "Төлөв"
 
@@ -89,8 +74,7 @@ msgid "Group By..."
 msgstr "Бүлэглэх..."
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "Purchase Done"
 msgstr "Худалдан авалт хийсэн"
 
@@ -111,8 +95,7 @@ msgid "Supplier"
 msgstr "Нийлүүлэгч"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "New"
 msgstr "Шинэ"
 
@@ -137,8 +120,7 @@ msgstr "Төрөл"
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
 #: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 #: field:product.product,purchase_requisition:0
-#: field:purchase.order,requisition_id:0
-#: view:purchase.requisition:0
+#: field:purchase.order,requisition_id:0 view:purchase.requisition:0
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
@@ -171,8 +153,7 @@ msgid "Terms and Conditions"
 msgstr "Гэрээний заалт/нөхцөл"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,description:0
+#: report:purchase.requisition:0 field:purchase.requisition,description:0
 msgid "Description"
 msgstr "Тайлбар"
 
@@ -195,7 +176,7 @@ msgstr "Үнийн санал үүсгэх"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "e.g. PO0025"
-msgstr ""
+msgstr "Жнь: OP0025"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_ids:0
@@ -264,10 +245,7 @@ msgstr "Үнэ саналын дэлгэрэнгүй"
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr ""
-"Танд %s гэсэн хэзээний нэг худалд авалтын захиалга энэ харилцагчид байна, "
-"шинэ үнийн санал үүсгэхийн тулд эхлээд энэ худалдан авалтын захиалгыг цуцлах "
-"ёстой."
+msgstr "Танд %s гэсэн хэзээний нэг худалд авалтын захиалга энэ харилцагчид байна, шинэ үнийн санал үүсгэхийн тулд эхлээд энэ худалдан авалтын захиалгыг цуцлах ёстой."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -275,8 +253,7 @@ msgid "End Date"
 msgstr "Дуусах огноо"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,name:0
+#: report:purchase.requisition:0 field:purchase.requisition,name:0
 msgid "Requisition Reference"
 msgstr "Шаардахын Дугаар"
 
@@ -286,8 +263,7 @@ msgid "Products to Purchase"
 msgstr "Бараа худалдан авах"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
+#: view:purchase.requisition:0 selection:purchase.requisition,state:0
 msgid "Sent to Suppliers"
 msgstr "Нийлүүлэгчрүү илгээх"
 
@@ -315,17 +291,9 @@ msgstr "Зурвасууд"
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
 msgid ""
-"Purchase Requisition (exclusive):  On the confirmation of a purchase order, "
-"it cancels the remaining purchase order.\n"
-"Purchase Requisition(Multiple):  It allows to have multiple purchase "
-"orders.On confirmation of a purchase order it does not cancel the remaining "
-"orders"
-msgstr ""
-"Худалдан авалтын шаардах (онцгойлсон):  Худалдан авах захиалгыг батлахад "
-"бусад худалдан авалтын захиалгыг цуцладаг.\n"
-"Худалдан авалтын шаардах (олон): Энэ олон худалдан авалтын захиалгатай "
-"байхыг зөвшөөрдөг. Худалдан авалтын захиалгыг батлахад бусад худалдан "
-"авалтын захиалгыг цуцладаггүй."
+"Purchase Requisition (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
+"Purchase Requisition(Multiple):  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
+msgstr "Худалдан авалтын шаардах (онцгойлсон):  Худалдан авах захиалгыг батлахад бусад худалдан авалтын захиалгыг цуцладаг.\nХудалдан авалтын шаардах (олон): Энэ олон худалдан авалтын захиалгатай байхыг зөвшөөрдөг. Худалдан авалтын захиалгыг батлахад бусад худалдан авалтын захиалгыг цуцладаггүй."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -415,8 +383,7 @@ msgid "Procurement"
 msgstr "Татан авалт"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: view:purchase.requisition:0
+#: report:purchase.requisition:0 view:purchase.requisition:0
 msgid "Source"
 msgstr "Эх үүсвэр"
 
@@ -445,9 +412,7 @@ msgstr "Худалдан авалтын шаардах (онцгойлсон)"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
-"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
+msgstr "Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -471,8 +436,7 @@ msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,date_start:0
+#: report:purchase.requisition:0 field:purchase.requisition,date_start:0
 msgid "Requisition Date"
 msgstr "Шаардахын огноо"
 
@@ -496,9 +460,7 @@ msgstr "Шаардах"
 msgid ""
 "Check this box to generates purchase requisition instead of generating "
 "requests for quotation from procurement."
-msgstr ""
-"Энэ талбарыг тэмдэглэснээр татан авалтын хүсэлтээс үнийн саналын хүсэлт "
-"үүсгэхийн оронд худалдан авалтын шаардах үүсгэдэг."
+msgstr "Энэ талбарыг тэмдэглэснээр татан авалтын хүсэлтээс үнийн саналын хүсэлт үүсгэхийн оронд худалдан авалтын шаардах үүсгэдэг."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0

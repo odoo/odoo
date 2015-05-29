@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * fleet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-07-13 06:55+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:53+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -38,8 +39,7 @@ msgid "Unique number written on the vehicle motor (VIN/SN number)"
 msgstr "发动机上的唯一编号（VIN/SN 号）"
 
 #. module: fleet
-#: selection:fleet.service.type,category:0
-#: view:fleet.vehicle.log.contract:0
+#: selection:fleet.service.type,category:0 view:fleet.vehicle.log.contract:0
 #: view:fleet.vehicle.log.services:0
 msgid "Service"
 msgstr "服务"
@@ -82,10 +82,8 @@ msgid "Resurface Rotors"
 msgstr "重置转轮"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.model:0
-#: view:fleet.vehicle.odometer:0
+#: view:fleet.vehicle.cost:0 view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.model:0 view:fleet.vehicle.odometer:0
 msgid "Group By..."
 msgstr "分组于..."
 
@@ -208,21 +206,18 @@ msgid "Head Gasket(s) Replacement"
 msgstr "HEAD GASKET更换"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: selection:fleet.vehicle.cost,cost_type:0
+#: view:fleet.vehicle:0 selection:fleet.vehicle.cost,cost_type:0
 msgid "Services"
 msgstr "服务"
 
 #. module: fleet
-#: help:fleet.vehicle,odometer:0
-#: help:fleet.vehicle.cost,odometer:0
+#: help:fleet.vehicle,odometer:0 help:fleet.vehicle.cost,odometer:0
 #: help:fleet.vehicle.cost,odometer_id:0
 msgid "Odometer measure of the vehicle at the moment of this log"
 msgstr "查看在此日志中为那一刻车辆的里程表"
 
 #. module: fleet
-#: view:fleet.vehicle.log.contract:0
-#: field:fleet.vehicle.log.contract,notes:0
+#: view:fleet.vehicle.log.contract:0 field:fleet.vehicle.log.contract,notes:0
 msgid "Terms and Conditions"
 msgstr "条款和条件"
 
@@ -277,15 +272,13 @@ msgstr "计算实际利益"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,expiration_date:0
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after "
-"begin date)"
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
 msgstr "合同的覆盖范围的有效日期（默认情况下，开始日期一年之后）"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: field:fleet.vehicle.log.fuel,notes:0
-#: view:fleet.vehicle.log.services:0
-#: field:fleet.vehicle.log.services,notes:0
+#: view:fleet.vehicle.log.fuel:0 field:fleet.vehicle.log.fuel,notes:0
+#: view:fleet.vehicle.log.services:0 field:fleet.vehicle.log.services,notes:0
 msgid "Notes"
 msgstr "备注"
 
@@ -394,8 +387,7 @@ msgid "Transmission Used by the vehicle"
 msgstr "车辆的变速器"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:740
-#: view:fleet.vehicle.log.contract:0
+#: code:addons/fleet/fleet.py:740 view:fleet.vehicle.log.contract:0
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #, python-format
 msgid "Renew Contract"
@@ -438,25 +430,14 @@ msgid ""
 "                Click to create a new contract. \n"
 "              </p><p>\n"
 "                Manage all your contracts (leasing, insurances, etc.) with\n"
-"                their related services, costs. OpenERP will automatically "
-"warn\n"
+"                their related services, costs. OpenERP will automatically warn\n"
 "                you when some contracts have to be renewed.\n"
 "              </p><p>\n"
 "                Each contract (e.g.: leasing) may include several services\n"
 "                (reparation, insurances, periodic maintenance).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击创建一个新的合同。 \n"
-"              </p><p>\n"
-"                管理您所有的合同（租赁，保险等）\n"
-"\t\t 与他们相关的服务费用。OpenERP会自动发出警告,\n"
-"                当一些过期合同时，必须更新。\n"
-"              </p><p>\n"
-"\t\t 每份合同（如：租赁）可能包含多个服务\n"
-"                （赔偿，保险，定期维护)。\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建一个新的合同。 \n              </p><p>\n                管理您所有的合同（租赁，保险等）\n\t\t 与他们相关的服务费用。OpenERP会自动发出警告,\n                当一些过期合同时，必须更新。\n              </p><p>\n\t\t 每份合同（如：租赁）可能包含多个服务\n                （赔偿，保险，定期维护)。\n            "
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -492,9 +473,7 @@ msgstr "车辆加油记录"
 msgid ""
 "$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
 "$(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-"$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
-"$(this).addClass('oe_employee_picture_wide') } });"
+msgstr "$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: fleet
 #: view:board.board:0
@@ -512,14 +491,7 @@ msgid ""
 "                contracts (fixed or recurring) and fuel logs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                                       单击，创建一个新的成本费用。\n"
-"                          </p><p>\n"
-"                           OpenERP 帮你管理不同车辆的成本费用. 成本费用被自动从\n"
-"                            服务，合同（固定或者定期的）和加油记录中创建.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                                       单击，创建一个新的成本费用。\n                          </p><p>\n                           OpenERP 帮你管理不同车辆的成本费用. 成本费用被自动从\n                            服务，合同（固定或者定期的）和加油记录中创建.\n              </p>\n            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -696,31 +668,21 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a vehicule status.\n"
 "              </p><p>\n"
-"                You can customize available status to track the evolution "
-"of\n"
+"                You can customize available status to track the evolution of\n"
 "                each vehicule. Example: Active, Being Repaired, Sold.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击创建车辆状况信息。\n"
-"              </p><p>\n"
-"                您可以自定义可用状态，跟踪每个车辆的行踪。例如：在用的，正在维修，销售出去的等。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建车辆状况信息。\n              </p><p>\n                您可以自定义可用状态，跟踪每个车辆的行踪。例如：在用的，正在维修，销售出去的等。\n              </p>\n            "
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: field:fleet.vehicle,log_fuel:0
+#: view:fleet.vehicle:0 field:fleet.vehicle,log_fuel:0
 #: view:fleet.vehicle.log.fuel:0
 msgid "Fuel Logs"
 msgstr "燃油日志"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:409
-#: code:addons/fleet/fleet.py:413
-#: code:addons/fleet/fleet.py:417
-#: code:addons/fleet/fleet.py:420
+#: code:addons/fleet/fleet.py:409 code:addons/fleet/fleet.py:413
+#: code:addons/fleet/fleet.py:417 code:addons/fleet/fleet.py:420
 #, python-format
 msgid "None"
 msgstr "无"
@@ -768,11 +730,7 @@ msgid ""
 "                Click to create a new brand.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击创建一个新的品牌。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建一个新的品牌。\n              </p>\n            "
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,start_date:0
@@ -805,8 +763,7 @@ msgid "Date when the cost has been executed"
 msgstr "费用已形成的日期"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: view:fleet.vehicle.model:0
+#: view:fleet.vehicle.cost:0 view:fleet.vehicle.model:0
 msgid "Vehicles costs"
 msgstr "车辆费用"
 
@@ -848,14 +805,12 @@ msgid "Other Maintenance"
 msgstr "其他维护"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,parent_id:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,parent_id:0
 msgid "Parent"
 msgstr "上一级"
 
 #. module: fleet
-#: field:fleet.vehicle,state_id:0
-#: view:fleet.vehicle.state:0
+#: field:fleet.vehicle,state_id:0 view:fleet.vehicle.state:0
 msgid "State"
 msgstr "状态"
 
@@ -875,20 +830,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new fuel log. \n"
 "              </p><p>\n"
-"                Here you can add refuelling entries for all vehicles.  You "
-"can\n"
+"                Here you can add refuelling entries for all vehicles.  You can\n"
 "                also filter logs of a particular vehicle using the search\n"
 "                field.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击创建一个新的加油日志。 \n"
-"              </p><p>\n"
-"               在这里，你可以添加条目为所有车辆添加加油日志。\n"
-"\t\t您也可以使用搜索领域的特殊车辆过滤加油日志。\n"
-"\t\t</p><p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个新的加油日志。 \n              </p><p>\n               在这里，你可以添加条目为所有车辆添加加油日志。\n\t\t您也可以使用搜索领域的特殊车辆过滤加油日志。\n\t\t</p><p>\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_11
@@ -953,10 +900,8 @@ msgid "Horsepower"
 msgstr "马力"
 
 #. module: fleet
-#: field:fleet.vehicle,image:0
-#: field:fleet.vehicle,image_medium:0
-#: field:fleet.vehicle,image_small:0
-#: field:fleet.vehicle.model,image:0
+#: field:fleet.vehicle,image:0 field:fleet.vehicle,image_medium:0
+#: field:fleet.vehicle,image_small:0 field:fleet.vehicle.model,image:0
 #: field:fleet.vehicle.model,image_medium:0
 #: field:fleet.vehicle.model,image_small:0
 #: field:fleet.vehicle.model.brand,image:0
@@ -969,8 +914,7 @@ msgid "Horsepower Taxation"
 msgstr "车船税（应该是）"
 
 #. module: fleet
-#: field:fleet.vehicle,log_services:0
-#: view:fleet.vehicle.log.services:0
+#: field:fleet.vehicle,log_services:0 view:fleet.vehicle.log.services:0
 msgid "Services Logs"
 msgstr "服务日志"
 
@@ -1012,8 +956,7 @@ msgid "All vehicles"
 msgstr "所有"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.log.services:0
+#: view:fleet.vehicle.log.fuel:0 view:fleet.vehicle.log.services:0
 msgid "Additional Details"
 msgstr "其他详细资料"
 
@@ -1109,8 +1052,7 @@ msgid "Tags"
 msgstr "Tags"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: field:fleet.vehicle,log_contracts:0
+#: view:fleet.vehicle:0 field:fleet.vehicle,log_contracts:0
 msgid "Contracts"
 msgstr "合同"
 
@@ -1120,8 +1062,7 @@ msgid "Brake Pad(s) Replacement"
 msgstr "更换刹车片"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.log.services:0
+#: view:fleet.vehicle.log.fuel:0 view:fleet.vehicle.log.services:0
 msgid "Odometer Details"
 msgstr "里程表详细信息"
 
@@ -1134,8 +1075,8 @@ msgstr "驾驶员"
 #: help:fleet.vehicle.model.brand,image_small:0
 msgid ""
 "Small-sized photo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr "小尺寸照片的品牌。它会自动调整大小为64X64像素的图像，保存采用宽高比。使用此字段可存放任意一个小图片。"
 
 #. module: fleet
@@ -1196,20 +1137,11 @@ msgid ""
 "              </p>\n"
 "              <p>\n"
 "                Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle "
-"using\n"
+"                You can also show odometer value for a particular vehicle using\n"
 "                the search field.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击创建一个新的里程记录 \n"
-"              </p>\n"
-"              <p>\n"
-"                这里可以为所有车辆添加不同的里程记录.\n"
-"                你也能使用 搜索字段为部分车辆展示里程记录值 。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个新的里程记录 \n              </p>\n              <p>\n                这里可以为所有车辆添加不同的里程记录.\n                你也能使用 搜索字段为部分车辆展示里程记录值 。\n              </p>\n            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1227,17 +1159,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new model.\n"
 "              </p><p>\n"
-"                You can define several models (e.g. A3, A4) for each brand "
-"(Audi).\n"
+"                You can define several models (e.g. A3, A4) for each brand (Audi).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击添加新的型号。\n"
-"              </p><p>\n"
-"                你能为每个品牌(Audi)定义多个型号(例如：A3, A4)。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击添加新的型号。\n              </p><p>\n                你能为每个品牌(Audi)定义多个型号(例如：A3, A4)。\n              </p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -1245,24 +1170,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new vehicle. \n"
 "              </p><p>\n"
-"                You will be able to manage your fleet by keeping track of "
-"the\n"
-"                contracts, services, fixed and recurring costs, odometers "
-"and\n"
+"                You will be able to manage your fleet by keeping track of the\n"
+"                contracts, services, fixed and recurring costs, odometers and\n"
 "                fuel logs associated to each vehicle.\n"
 "            </p><p>\n"
 "                OpenERP will warn you when services or contract have to be\n"
 "                renewed.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"\t\t点击“创建一个新的车辆信息。\n"
-"              </p><p>\n"
-"                您将能够管理您的车队.跟踪\n"
-"                合同，服务，固定及经常性费用，里程表和\n"
-"                记录相关的燃料给每台车辆。\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n\t\t点击“创建一个新的车辆信息。\n              </p><p>\n                您将能够管理您的车队.跟踪\n                合同，服务，固定及经常性费用，里程表和\n                记录相关的燃料给每台车辆。\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
@@ -1287,8 +1203,7 @@ msgid ""
 "                    <b>Fleet dashboard is empty.</b>\n"
 "                  </p><p>\n"
 "                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options.\n"
 "                  </p><p>\n"
 "                    You can filter and group data before inserting into the\n"
@@ -1296,15 +1211,7 @@ msgid ""
 "                  </p>\n"
 "              </div>\n"
 "            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>车辆仪表盘是空的。</b>\n"
-"                  </p><p>\n"
-"                    这个仪表盘添加您的首份报告，到任何\n"
-"                    菜单，切换到列表或图表视图，然后在扩展搜索选项中单击<i>“添加到\n"
-"                    仪表盘“</i>。\n"
-"            "
+msgstr "<div class=\"oe_empty_custom_dashboard\">\n                  <p>\n                    <b>车辆仪表盘是空的。</b>\n                  </p><p>\n                    这个仪表盘添加您的首份报告，到任何\n                    菜单，切换到列表或图表视图，然后在扩展搜索选项中单击<i>“添加到\n                    仪表盘“</i>。\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
@@ -1340,8 +1247,7 @@ msgid "Battery Replacement"
 msgstr "更换电池"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,date:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,date:0
 #: field:fleet.vehicle.odometer,date:0
 msgid "Date"
 msgstr "日期"
@@ -1381,25 +1287,14 @@ msgstr "车辆型号"
 msgid ""
 "<p>\n"
 "          OpenERP helps you managing the costs for your different vehicles\n"
-"          Costs are generally created from services and contract and appears "
-"here.\n"
+"          Costs are generally created from services and contract and appears here.\n"
 "        </p>\n"
 "        <p>\n"
-"          Thanks to the different filters, OpenERP can only print the "
-"effective\n"
+"          Thanks to the different filters, OpenERP can only print the effective\n"
 "          costs, sort them by type and by vehicle.\n"
 "        </p>\n"
 "      "
-msgstr ""
-"<p>\n"
-"\t\tOpenERP的帮助您管理不同车辆的费用，\n"
-"\t\t并在这里出现成本常规服务的创建和合同订约。\n"
-"        </p>\n"
-"        <p>\n"
-"\t\t基于不同的过滤器，OpenERP 只能打印有效的\n"
-"\t\t费用成本。并按类型和车辆对它们进行排序。\n"
-"        </p>\n"
-"      "
+msgstr "<p>\n\t\tOpenERP的帮助您管理不同车辆的费用，\n\t\t并在这里出现成本常规服务的创建和合同订约。\n        </p>\n        <p>\n\t\t基于不同的过滤器，OpenERP 只能打印有效的\n\t\t费用成本。并按类型和车辆对它们进行排序。\n        </p>\n      "
 
 #. module: fleet
 #: field:fleet.vehicle,car_value:0
@@ -1447,8 +1342,7 @@ msgid "Tax roll"
 msgstr "税单"
 
 #. module: fleet
-#: view:fleet.vehicle.model:0
-#: field:fleet.vehicle.model,vendors:0
+#: view:fleet.vehicle.model:0 field:fleet.vehicle.model,vendors:0
 msgid "Vendors"
 msgstr "供应商"
 
@@ -1471,8 +1365,7 @@ msgid "Weekly"
 msgstr "每周"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: view:fleet.vehicle.odometer:0
+#: view:fleet.vehicle:0 view:fleet.vehicle.odometer:0
 msgid "Odometer Logs"
 msgstr "里程记录"
 
@@ -1538,8 +1431,7 @@ msgid "Indicative Cost"
 msgstr "指标性成本"
 
 #. module: fleet
-#: field:fleet.vehicle.model,brand_id:0
-#: view:fleet.vehicle.model.brand:0
+#: field:fleet.vehicle.model,brand_id:0 view:fleet.vehicle.model.brand:0
 msgid "Model Brand"
 msgstr "品牌型号"
 
@@ -1719,31 +1611,25 @@ msgid "Vehicle %s has been added to the fleet!"
 msgstr "车辆%s 加入车队"
 
 #. module: fleet
-#: view:fleet.vehicle.log.contract:0
-#: view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.log.contract:0 view:fleet.vehicle.log.fuel:0
 #: view:fleet.vehicle.log.services:0
 msgid "Price"
 msgstr "价格"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,odometer:0
-#: field:fleet.vehicle.odometer,value:0
+#: field:fleet.vehicle.cost,odometer:0 field:fleet.vehicle.odometer,value:0
 msgid "Odometer Value"
 msgstr "行驶里程数"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,vehicle_id:0
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.odometer:0
-#: field:fleet.vehicle.odometer,vehicle_id:0
+#: view:fleet.vehicle:0 view:fleet.vehicle.cost:0
+#: field:fleet.vehicle.cost,vehicle_id:0 view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.odometer:0 field:fleet.vehicle.odometer,vehicle_id:0
 msgid "Vehicle"
 msgstr "车辆"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,cost_ids:0
-#: view:fleet.vehicle.log.contract:0
+#: field:fleet.vehicle.cost,cost_ids:0 view:fleet.vehicle.log.contract:0
 #: view:fleet.vehicle.log.services:0
 msgid "Included Services"
 msgstr "包括服务"
@@ -1752,16 +1638,10 @@ msgstr "包括服务"
 #: model:ir.actions.act_window,help:fleet.action_fleet_vehicle_kanban
 msgid ""
 "<p>\n"
-"          Here are displayed vehicles for which one or more contracts need "
-"to be renewed. If you see this message, then there is no contracts to "
-"renew.\n"
+"          Here are displayed vehicles for which one or more contracts need to be renewed. If you see this message, then there is no contracts to renew.\n"
 "        </p>\n"
 "      "
-msgstr ""
-"<p>\n"
-"          这里显示了车辆的一个或者多个需要续签的合同。如果你看到这个信息，没有合同要续签。\n"
-"        </p>\n"
-"      "
+msgstr "<p>\n          这里显示了车辆的一个或者多个需要续签的合同。如果你看到这个信息，没有合同要续签。\n        </p>\n      "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -1806,14 +1686,10 @@ msgid "Contract Reference"
 msgstr "合同编号"
 
 #. module: fleet
-#: field:fleet.service.type,name:0
-#: field:fleet.vehicle,name:0
-#: field:fleet.vehicle.cost,name:0
-#: field:fleet.vehicle.log.contract,name:0
-#: field:fleet.vehicle.model,name:0
-#: field:fleet.vehicle.odometer,name:0
-#: field:fleet.vehicle.state,name:0
-#: field:fleet.vehicle.tag,name:0
+#: field:fleet.service.type,name:0 field:fleet.vehicle,name:0
+#: field:fleet.vehicle.cost,name:0 field:fleet.vehicle.log.contract,name:0
+#: field:fleet.vehicle.model,name:0 field:fleet.vehicle.odometer,name:0
+#: field:fleet.vehicle.state,name:0 field:fleet.vehicle.tag,name:0
 msgid "Name"
 msgstr "名称"
 
@@ -1848,14 +1724,7 @@ msgid ""
 "                repair, fixed maintenance, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击创建一个服务入口。\n"
-"              </p><p>\n"
-"                OpenERP 帮你跟踪所有汽车上完成的服务的。\n"
-"                服务有多种类型：偶然维修，定期维护保养，等等。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建一个服务入口。\n              </p><p>\n                OpenERP 帮你跟踪所有汽车上完成的服务的。\n                服务有多种类型：偶然维修，定期维护保养，等等。\n              </p>\n            "
 
 #. module: fleet
 #: field:fleet.vehicle,co2:0
@@ -1883,8 +1752,7 @@ msgid "Contracts Costs by Month"
 msgstr "按月的预估成本"
 
 #. module: fleet
-#: field:fleet.vehicle,model_id:0
-#: view:fleet.vehicle.model:0
+#: field:fleet.vehicle,model_id:0 view:fleet.vehicle.model:0
 msgid "Model"
 msgstr "型号"
 
@@ -1940,16 +1808,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new type of service.\n"
 "              </p><p>\n"
-"                Each service can used in contracts, as a standalone service "
-"or both.\n"
+"                Each service can used in contracts, as a standalone service or both.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"\t\t点击创建服务类型。\n"
-"\t\t</p><p>\n"
-"\t\t每个服务都可以在合同中存在，作为一个独立的服务或两者具备同样的类型\t\t</p><p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n\t\t点击创建服务类型。\n\t\t</p><p>\n\t\t每个服务都可以在合同中存在，作为一个独立的服务或两者具备同样的类型\t\t</p><p>\n            "
 
 #. module: fleet
 #: view:board.board:0
@@ -1988,8 +1850,7 @@ msgid "Starter Replacement"
 msgstr "更换启动器"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,year:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,year:0
 msgid "Year"
 msgstr "年"
 
@@ -2015,8 +1876,7 @@ msgstr "合计"
 
 #. module: fleet
 #: help:fleet.service.type,category:0
-msgid ""
-"Choose wheter the service refer to contracts, vehicle services or both"
+msgid "Choose wheter the service refer to contracts, vehicle services or both"
 msgstr "选择是服务合同还是车辆服务，或两者的"
 
 #. module: fleet
@@ -2028,15 +1888,3 @@ msgstr "仅限内部用途"
 #: help:fleet.vehicle.state,sequence:0
 msgid "Used to order the note stages"
 msgstr "用通知阶段来排序"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                Here you can add various odometer entries for all vehicles.\n"
-#~ "                You can also show odometer value for a particular vehicle "
-#~ "using\n"
-#~ "                the search field.\n"
-#~ "              </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "在这里，您可以为添加各种车辆一天的里程项目。您也可以使用搜索字段显示为一个特定的车辆的里程计值\n"
-#~ "            "

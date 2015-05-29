@@ -1,25 +1,24 @@
-# Hebrew translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * process
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-12-30 19:15+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hebrew <he@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hebrew (http://www.transifex.com/projects/p/odoo-7/language/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-31 05:26+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: process
-#: model:ir.model,name:process.model_process_node
-#: view:process.node:0
+#: model:ir.model,name:process.model_process_node view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
 msgstr ""
@@ -34,12 +33,12 @@ msgstr ""
 #. module: process
 #: field:process.node,menu_id:0
 msgid "Related Menu"
-msgstr ""
+msgstr "תפריט מקושר"
 
 #. module: process
 #: selection:process.node,kind:0
 msgid "Status"
-msgstr ""
+msgstr "סטטוס"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -47,10 +46,9 @@ msgid "Buttons"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Group By..."
-msgstr ""
+msgstr "קבץ לפי..."
 
 #. module: process
 #: view:process.node:0
@@ -69,23 +67,20 @@ msgstr ""
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.ui.menu,name:process.menu_process_node_form
-#: view:process.node:0
+#: model:ir.ui.menu,name:process.menu_process_node_form view:process.node:0
 #: view:process.process:0
 msgid "Process Nodes"
 msgstr ""
 
 #. module: process
-#: view:process.process:0
-#: field:process.process,node_ids:0
+#: view:process.process:0 field:process.process,node_ids:0
 msgid "Nodes"
 msgstr ""
 
 #. module: process
-#: field:process.node,condition_ids:0
-#: view:process.process:0
+#: field:process.node,condition_ids:0 view:process.process:0
 msgid "Conditions"
-msgstr ""
+msgstr "תנאים"
 
 #. module: process
 #: view:process.transition:0
@@ -105,7 +100,7 @@ msgstr ""
 #. module: process
 #: field:process.transition,note:0
 msgid "Description"
-msgstr ""
+msgstr "תיאור"
 
 #. module: process
 #: model:ir.model,name:process.model_process_transition_action
@@ -113,13 +108,11 @@ msgid "Process Transitions Actions"
 msgstr ""
 
 #. module: process
-#: field:process.condition,model_id:0
-#: view:process.node:0
-#: field:process.node,model_id:0
-#: view:process.process:0
+#: field:process.condition,model_id:0 view:process.node:0
+#: field:process.node,model_id:0 view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
-msgstr ""
+msgstr "אובייקט"
 
 #. module: process
 #: field:process.transition,source_node_id:0
@@ -127,8 +120,7 @@ msgid "Source Node"
 msgstr ""
 
 #. module: process
-#: view:process.transition:0
-#: field:process.transition,transition_ids:0
+#: view:process.transition:0 field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr ""
 
@@ -160,12 +152,12 @@ msgstr ""
 #. module: process
 #: model:ir.model,name:process.model_process_condition
 msgid "Condition"
-msgstr ""
+msgstr "תנאי"
 
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Dummy"
-msgstr ""
+msgstr "מדומה"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_form
@@ -176,16 +168,14 @@ msgstr ""
 #. module: process
 #: field:process.transition.action,transition_id:0
 msgid "Transition"
-msgstr ""
+msgstr "שינוי"
 
 #. module: process
-#: field:process.condition,name:0
-#: field:process.node,name:0
-#: field:process.process,name:0
-#: field:process.transition,name:0
+#: field:process.condition,name:0 field:process.node,name:0
+#: field:process.process,name:0 field:process.transition,name:0
 #: field:process.transition.action,name:0
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #. module: process
 #: field:process.node,transition_in:0
@@ -200,13 +190,10 @@ msgid "Related:"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: field:process.node,note:0
-#: view:process.process:0
-#: field:process.process,note:0
-#: view:process.transition:0
+#: view:process.node:0 field:process.node,note:0 view:process.process:0
+#: field:process.process,note:0 view:process.transition:0
 msgid "Notes"
-msgstr ""
+msgstr "פתקים"
 
 #. module: process
 #. openerp-web
@@ -230,7 +217,7 @@ msgstr ""
 #. module: process
 #: field:process.process,active:0
 msgid "Active"
-msgstr ""
+msgstr "פעיל"
 
 #. module: process
 #: view:process.transition:0
@@ -245,7 +232,7 @@ msgstr ""
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Action"
-msgstr ""
+msgstr "פעולה"
 
 #. module: process
 #. openerp-web
@@ -257,7 +244,7 @@ msgstr ""
 #. module: process
 #: field:process.condition,model_states:0
 msgid "Expression"
-msgstr ""
+msgstr "ביטוי"
 
 #. module: process
 #: field:process.transition,group_ids:0
@@ -265,15 +252,14 @@ msgid "Required Groups"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "שינויים נכנסים"
 
 #. module: process
 #: field:process.transition.action,state:0
 msgid "Type"
-msgstr ""
+msgstr "סוג"
 
 #. module: process
 #: field:process.node,transition_out:0
@@ -285,11 +271,10 @@ msgstr ""
 #: code:addons/process/static/src/js/process.js:243
 #: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
-#: field:process.node,process_id:0
-#: view:process.process:0
+#: field:process.node,process_id:0 view:process.process:0
 #, python-format
 msgid "Process"
-msgstr ""
+msgstr "תהליך"
 
 #. module: process
 #: view:process.node:0
@@ -297,8 +282,7 @@ msgid "Search ProcessNode"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Other Conditions"
 msgstr ""
 
@@ -310,13 +294,12 @@ msgstr ""
 #. module: process
 #: view:process.transition:0
 msgid "Actions"
-msgstr ""
+msgstr "פעולות"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Properties"
-msgstr ""
+msgstr "מאפיינים"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
@@ -342,10 +325,9 @@ msgid "Subflows:"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Outgoing Transitions"
-msgstr ""
+msgstr "תרגומים יוצאים"
 
 #. module: process
 #. openerp-web
@@ -355,16 +337,14 @@ msgid "Notes:"
 msgstr ""
 
 #. module: process
-#: selection:process.node,kind:0
-#: field:process.node,subflow_id:0
+#: selection:process.node,kind:0 field:process.node,subflow_id:0
 msgid "Subflow"
-msgstr ""
+msgstr "תת זרם"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Transitions"
-msgstr ""
+msgstr "העברות"
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -376,4 +356,4 @@ msgstr ""
 #: code:addons/process/static/src/xml/process.xml:77
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "בחר"

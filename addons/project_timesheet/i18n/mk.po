@@ -1,22 +1,23 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-28 23:28+0000\n"
-"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
-"Language-Team: ESKON-INZENERING\n"
+"PO-Revision-Date: 2015-05-22 16:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-7/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:18+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
 "Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -38,9 +39,7 @@ msgstr "Групирај по година од датумот"
 #, python-format
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
-"Не може да селектирате Аналитичка сметка која е во состојба Затворено или "
-"Откажано."
+msgstr "Не може да селектирате Аналитичка сметка која е во состојба Затворено или Откажано."
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -58,9 +57,7 @@ msgstr "Id на поврзана временска линија"
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
-msgstr ""
-"Не може да избришете партнер кој е назначен на проект, но може да го "
-"отштиклирате активното поле."
+msgstr "Не може да избришете партнер кој е назначен на проект, но може да го отштиклирате активното поле."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
@@ -71,7 +68,7 @@ msgstr "Работа на проектна задача"
 #: code:addons/project_timesheet/project_timesheet.py:295
 #, python-format
 msgid "Invalid Analytic Account!"
-msgstr ""
+msgstr "Невалидно аналитичко конто!"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -105,14 +102,7 @@ msgid ""
 "                projects in order to track the invoicing progress.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Кликнете за да додадете договор на купувач.\n"
-"</p><p>\n"
-"Овде ќе ги најдете договорите поврзани со проектите на вашиот купувач\n"
-"со цел да го следите прогресот на фактурирање.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nКликнете за да додадете договор на купувач.\n</p><p>\nОвде ќе ги најдете договорите поврзани со проектите на вашиот купувач\nсо цел да го следите прогресот на фактурирање.\n</p>\n            "
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
@@ -133,8 +123,7 @@ msgstr "Проекти на купувач"
 #: code:addons/project_timesheet/project_timesheet.py:89
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the HR Settings tab of the employee form."
 msgstr ""
 
@@ -169,9 +158,7 @@ msgstr "Мај"
 msgid ""
 "Please define journal on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr ""
-"Дефинирајте дневник на поврзан вработен.\n"
-"Пополнете во јазичето за временската таблица од формуларот на вработениот."
+msgstr "Дефинирајте дневник на поврзан вработен.\nПополнете во јазичето за временската таблица од формуларот на вработениот."
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
@@ -210,8 +197,7 @@ msgid "User"
 msgstr "Корисник"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,name:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,name:0
 msgid "Date"
 msgstr "Датум"
 
@@ -239,20 +225,11 @@ msgstr "Февруари"
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
 msgid ""
 "<p>\n"
-"                You will find here timesheets and purchases you did for "
-"contracts that can be reinvoiced to the customer.\n"
-"                If you want to record new jobs to invoice, you should use "
-"the timesheet menu instead.\n"
+"                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use the timesheet menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Овде ќе пронајдете распореди и нарачки кои сте ги направиле "
-"за договори кои може повторно да бидат     фактурирани на купувачот.\n"
-"                Доколку сакате да ги снимите новите работи за да ги "
-"фактурирате, треба да го употребите менито временска таблица.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Овде ќе пронајдете распореди и нарачки кои сте ги направиле за договори кои може повторно да бидат     фактурирани на купувачот.\n                Доколку сакате да ги снимите новите работи за да ги фактурирате, треба да го употребите менито временска таблица.\n              </p>\n            "
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -339,8 +316,7 @@ msgstr "Активирај фактури од ставките на налог�
 #: code:addons/project_timesheet/project_timesheet.py:100
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
 
@@ -350,9 +326,7 @@ msgstr ""
 msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
-msgstr ""
-"<p>Распоредите на овој проект може да бидат фактурирани до %s, во согласност "
-"со условите дефинирани во договорот.</p>"
+msgstr "<p>Распоредите на овој проект може да бидат фактурирани до %s, во согласност со условите дефинирани во договорот.</p>"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
@@ -394,8 +368,7 @@ msgid "Invalid Action!"
 msgstr "Погрешна операција!"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,month:0
 msgid "Month"
 msgstr "Месец"
 
@@ -403,11 +376,9 @@ msgstr "Месец"
 #: code:addons/project_timesheet/project_timesheet.py:57
 #, python-format
 msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">Зачувајте ги распоредите за проектот "
-"'%s'.</p>"
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
+" '%s'.</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">Зачувајте ги распоредите за проектот '%s'.</p>"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:84
@@ -416,11 +387,10 @@ msgstr ""
 #: code:addons/project_timesheet/project_timesheet.py:99
 #, python-format
 msgid "Bad Configuration!"
-msgstr ""
+msgstr "Лоша конфигурација!"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
+#: view:report.timesheet.task.user:0 field:report.timesheet.task.user,year:0
 msgid "Year"
 msgstr "Година"
 
@@ -428,11 +398,3 @@ msgstr "Година"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Пополни временска таблица"
-
-#, python-format
-#~ msgid "Bad Configuration !"
-#~ msgstr "Грешка конфигурација !"
-
-#, python-format
-#~ msgid "Invalid Analytic Account !"
-#~ msgstr "Погрешна аналитичка сметка !"

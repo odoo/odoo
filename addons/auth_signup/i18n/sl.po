@@ -1,30 +1,29 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-09 09:42+0000\n"
-"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:41+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: auth_signup
 #: view:res.users:0
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
-msgstr ""
-"Za tega uporabnika je zahtevana sprememba gesla. Poslano je bilo elektronsko "
-"sporočilo z naslendnjo povezavo:"
+msgstr "Za tega uporabnika je zahtevana sprememba gesla. Poslano je bilo elektronsko sporočilo z naslendnjo povezavo:"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -103,30 +102,19 @@ msgstr "Pošlji povezavo za ponastavitev gesla po elektronski pošti."
 #: model:email.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the OpenERP account linked to this "
-"email.</p>\n"
+"<p>A password reset was requested for the OpenERP account linked to this email.</p>\n"
 "\n"
-"<p>You may change your password by following <a "
-"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
-"\n"
-"<p>Za OpenERP račun, povezan s tem elektronskim naslovom, je bila zahtevana "
-"ponastavitev gesla.</p>\n"
-"\n"
-"<p>Geslo lahko spremenite tukaj <a href=\"${object.signup_url}\">this "
-"link</a>.</p>\n"
-"\n"
-"<p>Opomba: če tega ne pričakujete, ignorirajte to sporočilo.</p>"
+msgstr "\n<p>Za OpenERP račun, povezan s tem elektronskim naslovom, je bila zahtevana ponastavitev gesla.</p>\n\n<p>Geslo lahko spremenite tukaj <a href=\"${object.signup_url}\">this link</a>.</p>\n\n<p>Opomba: če tega ne pričakujete, ignorirajte to sporočilo.</p>"
 
 #. module: auth_signup
 #: view:res.users:0
 msgid ""
-"An invitation email containing the following subscription link has been sent:"
-msgstr ""
-"Poslano je bilo elektronsko sporočilo s povabilom in naslednjo prijavno "
-"povezavo:"
+"An invitation email containing the following subscription link has been "
+"sent:"
+msgstr "Poslano je bilo elektronsko sporočilo s povabilom in naslednjo prijavno povezavo:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -164,17 +152,13 @@ msgid ""
 "                        ${object.name},\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        You have been invited to connect to "
-"\"${object.company_id.name}\" in order to get access to your documents in "
-"OpenERP.\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in OpenERP.\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        To accept the invitation, click on the following "
-"link:\n"
+"                        To accept the invitation, click on the following link:\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
 "                    </ul>\n"
 "                    <p>\n"
 "                        Thanks,\n"
@@ -187,35 +171,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
-"\n"
-"                \n"
-"                    <p>\n"
-"                        ${object.name},\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        Povabljeni ste k prijavi "
-"\"${object.company_id.name}\" , da boste lahko dostopali do dokumentov v "
-"OpenERP.\n"
-"                    </p>\n"
-"                    <p>\n"
-"                       Za sprejem povabila kliknite na to povezavo:\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
-"                    </ul>\n"
-"                    <p>\n"
-"                        Hvala,\n"
-"                    </p>\n"
-"                    <pre>\n"
-"--\n"
-"${object.company_id.name or ''}\n"
-"${object.company_id.email or ''}\n"
-"${object.company_id.phone or ''}\n"
-"                    </pre>\n"
-"                \n"
-"            "
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Povabljeni ste k prijavi \"${object.company_id.name}\" , da boste lahko dostopali do dokumentov v OpenERP.\n                    </p>\n                    <p>\n                       Za sprejem povabila kliknite na to povezavo:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Hvala,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #. openerp-web
@@ -230,17 +186,14 @@ msgstr "Prosimo, vpišite uporabniško ime."
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
-msgstr ""
-"Ne morem poslati elektronskega sporočila: izhodni server ni nastavljen.\n"
-"Lahko ga nastavite pod Nastavitve/Splošne nastavitve."
+msgstr "Ne morem poslati elektronskega sporočila: izhodni server ni nastavljen.\nLahko ga nastavite pod Nastavitve/Splošne nastavitve."
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:178
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
-"Elektronsko sporočilo s podatki za ponastavitev vašega gesla je bilo poslano."
+msgstr "Elektronsko sporočilo s podatki za ponastavitev vašega gesla je bilo poslano."
 
 #. module: auth_signup
 #. openerp-web
@@ -361,9 +314,3 @@ msgstr "Prijavni podatki"
 #, python-format
 msgid "Sign Up"
 msgstr "Prijava"
-
-#~ msgid "New"
-#~ msgstr "Novo"
-
-#~ msgid "Active"
-#~ msgstr "Aktivno"

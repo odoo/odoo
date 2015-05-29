@@ -1,21 +1,22 @@
-# Swedish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-04-04 06:54+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Swedish (http://www.transifex.com/projects/p/odoo-7/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:54+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -33,8 +34,7 @@ msgid "Last Sign"
 msgstr "Senaste stämpling"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.employee,state:0
+#: view:hr.attendance:0 field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
 msgstr "Närvaro"
@@ -49,9 +49,7 @@ msgstr "Senaste instämpling: %s,<br />%s.<br />Klicka för att stämpla ut."
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Fel ! Stämpla in (resp stämpla ut) måste följas av utstämpling (resp "
-"instämpling)"
+msgstr "Fel ! Stämpla in (resp stämpla ut) måste följas av utstämpling (resp instämpling)"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -62,9 +60,7 @@ msgstr "Ange in/utstämplingsorsak"
 #: report:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Ett positiv uppehåll innebär att den anställde arbetat mindre än "
-"registrerat."
+msgstr "(*) Ett positiv uppehåll innebär att den anställde arbetat mindre än registrerat."
 
 #. module: hr_attendance
 #: view:hr.attendance.month:0
@@ -104,8 +100,7 @@ msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
+#: selection:hr.attendance,action:0 view:hr.employee:0
 #, python-format
 msgid "Sign Out"
 msgstr "Logga ut"
@@ -117,15 +112,13 @@ msgid "No records are found for your selection!"
 msgstr "Rader saknas för urvalet!"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Print"
 msgstr "Utskrift"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,employee_id:0
+#: view:hr.attendance:0 field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Medarbetare"
@@ -142,15 +135,13 @@ msgstr "Date Recorded"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
+#: selection:hr.attendance,action:0 view:hr.employee:0
 #, python-format
 msgid "Sign In"
 msgstr "Logga in"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
+#: field:hr.attendance.error,init_date:0 field:hr.attendance.week,init_date:0
 msgid "Starting Date"
 msgstr "Startdatum"
 
@@ -229,10 +220,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using OpenERP's web service features."
-msgstr ""
-"Komma-gå-funktionen syftar till att hantera anställdas närvaro från komma/gå-"
-"rapportering. Du kan också knyta denna funktion till olika former av "
-"passagesystem/stämpeklocka genom ett webservice-gränssnitt."
+msgstr "Komma-gå-funktionen syftar till att hantera anställdas närvaro från komma/gå-rapportering. Du kan också knyta denna funktion till olika former av passagesystem/stämpeklocka genom ett webservice-gränssnitt."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -266,8 +254,7 @@ msgid "Attendance Error Report"
 msgstr "Närvarofelrapport"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
+#: view:hr.attendance:0 field:hr.attendance,day:0
 msgid "Day"
 msgstr "Dag"
 
@@ -348,8 +335,7 @@ msgid "Attendance Errors"
 msgstr "Närvarofel"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
+#: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
 msgstr "Åtgärd"
 
@@ -380,8 +366,7 @@ msgid "Max. Delay (Min)"
 msgstr "Max. Delay (Min)"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
+#: field:hr.attendance.error,end_date:0 field:hr.attendance.week,end_date:0
 msgid "Ending Date"
 msgstr "Slutdatum"
 
@@ -409,7 +394,7 @@ msgstr "Skriv ut veckovis närvarorapport"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_attendance
 #. openerp-web
@@ -434,9 +419,7 @@ msgstr "maj"
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
-"Du försökte %s med ett datum som föregår en annan händelse!\n"
-"Försök att kontakta personalansvarig för att korrigera närvaro."
+msgstr "Du försökte %s med ett datum som föregår en annan händelse!\nFörsök att kontakta personalansvarig för att korrigera närvaro."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -444,8 +427,7 @@ msgid "December"
 msgstr "december"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Cancel"
 msgstr "Avbryt"
@@ -457,15 +439,11 @@ msgstr "Åtgärd"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) en negativ försening betyder att den anställde arbetade mer än "
-"registrerat."
+msgid "(*) A negative delay means that the employee worked more than encoded."
+msgstr "(*) en negativ försening betyder att den anställde arbetade mer än registrerat."
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "or"
 msgstr "eller"
@@ -475,7 +453,3 @@ msgstr "eller"
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "Information om orsak till komma/gå vid övertid"
-
-#, python-format
-#~ msgid "No Data Available !"
-#~ msgstr "Data saknas!"

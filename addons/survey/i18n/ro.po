@@ -1,21 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * survey
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-03-07 17:44+0000\n"
-"Last-Translator: ERPSystems.ro <Unknown>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:29+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -29,9 +30,7 @@ msgid ""
 "Minimum Required Answer you                                     entered is "
 "greater than the number of answer.                                      "
 "Please use a number that is smaller than %d."
-msgstr ""
-"Raspunsul Minim Solicitat pe care l-ati introdus este mai mare decat numarul "
-"de raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
+msgstr "Raspunsul Minim Solicitat pe care l-ati introdus este mai mare decat numarul de raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
 
 #. module: survey
 #: view:survey.question.wiz:0
@@ -50,8 +49,7 @@ msgid "Answers:"
 msgstr "Raspunsuri:"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,invited_user_ids:0
+#: view:survey:0 field:survey,invited_user_ids:0
 msgid "Invited User"
 msgstr "Utilizator invitat"
 
@@ -78,9 +76,7 @@ msgid "Cancel Request"
 msgstr "Anulati Cererea"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 #: view:survey.request:0
 msgid "Group By..."
 msgstr "Grupeaza dupa..."
@@ -121,11 +117,8 @@ msgid "History Lines"
 msgstr "Istoric Linii"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-#: field:survey.question,descriptive_text:0
-#: selection:survey.question,type:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
+#: field:survey.question,descriptive_text:0 selection:survey.question,type:0
 msgid "Descriptive Text"
 msgstr "Text Descriptiv"
 
@@ -194,9 +187,7 @@ msgid ""
 "#Required Answer you entered                                     is greater "
 "than the number of answer.                                     Please use a "
 "number that is smaller than %d."
-msgstr ""
-"#Raspunsul Solicitat pe care l-ati introdus este mai mare decat numarul "
-"raspunsurilor. Va rugam sa folositi un numar care este mai mic decat %d."
+msgstr "#Raspunsul Solicitat pe care l-ati introdus este mai mare decat numarul raspunsurilor. Va rugam sa folositi un numar care este mai mic decat %d."
 
 #. module: survey
 #: field:survey.question,tot_resp:0
@@ -218,12 +209,10 @@ msgstr "asistent.nume.sondaj"
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
-"your maximum is greater than the number of answer.                           "
-"           Please use a number that is smaller than %d."
-msgstr ""
-"Raspunsul Maxim Solicitat pe care l-ati introdus pentru maximul "
-"dumneavoastra este mai mare decat numarul raspunsurilor. Va rugam sa "
-"folositi un numar care este mai mic decat %d."
+"your maximum is greater than the number of answer."
+"                                      Please use a number that is smaller "
+"than %d."
+msgstr "Raspunsul Maxim Solicitat pe care l-ati introdus pentru maximul dumneavoastra este mai mare decat numarul raspunsurilor. Va rugam sa folositi un numar care este mai mic decat %d."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -242,34 +231,26 @@ msgstr "Trimite memento pentru utilizator existent"
 msgid ""
 "Maximum Required Answer you entered for your maximum is greater than the "
 "number of answer. Please use a number that is smaller than %d."
-msgstr ""
-"Raspunsul Maxim Solicitat pe care l-ati introdus pentru maxima dumneavoastra "
-"este mai mare decat numarul raspunsurilor. Va rugam sa folositi un număr "
-"care este mai mic decat %d."
+msgstr "Raspunsul Maxim Solicitat pe care l-ati introdus pentru maxima dumneavoastra este mai mare decat numarul raspunsurilor. Va rugam sa folositi un număr care este mai mic decat %d."
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_question
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: model:ir.model,name:survey.model_survey_question view:survey:0
+#: view:survey.page:0 view:survey.question:0
 msgid "Survey Question"
 msgstr "Intrebare sondaj"
 
 #. module: survey
 #: view:survey.question.column.heading:0
 msgid "Use if question type is rating_scale"
-msgstr ""
-"Folositi daca tipul intrebarii este rating_scale (scara_de _clasificare)"
+msgstr "Folositi daca tipul intrebarii este rating_scale (scara_de _clasificare)"
 
 #. module: survey
-#: field:survey.print,page_number:0
-#: field:survey.print.answer,page_number:0
+#: field:survey.print,page_number:0 field:survey.print.answer,page_number:0
 msgid "Include Page Number"
 msgstr "Include Numarul Paginii"
 
 #. module: survey
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey.page:0 view:survey.question:0
 msgid "Ok"
 msgstr "Ok"
 
@@ -284,14 +265,12 @@ msgid "Survey History"
 msgstr "Istoric Sondaj"
 
 #. module: survey
-#: field:survey.response.answer,comment:0
-#: field:survey.response.line,comment:0
+#: field:survey.response.answer,comment:0 field:survey.response.line,comment:0
 msgid "Notes"
 msgstr "Note"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.request:0
+#: view:survey:0 view:survey.request:0
 msgid "Search Survey"
 msgstr "Cauta Sondaj"
 
@@ -320,9 +299,7 @@ msgstr "Sondaj completat in intregime"
 #. module: survey
 #: view:survey.response.answer:0
 msgid "(Use Only Question Type is matrix_of_drop_down_menus)"
-msgstr ""
-"(Foloseste Doar Tipul Intrebarii este matrix_of_drop_down_menus) "
-"(matricea_meniurilor_verticale)"
+msgstr "(Foloseste Doar Tipul Intrebarii este matrix_of_drop_down_menus) (matricea_meniurilor_verticale)"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_analysis
@@ -330,8 +307,7 @@ msgid "Survey Statistics"
 msgstr "Statistica Sondaj"
 
 #. module: survey
-#: selection:survey,state:0
-#: selection:survey.request,state:0
+#: selection:survey,state:0 selection:survey.request,state:0
 msgid "Cancelled"
 msgstr "Anulat(a)"
 
@@ -341,15 +317,12 @@ msgid "Rating Scale"
 msgstr "Scara de clasificare"
 
 #. module: survey
-#: code:addons/survey/survey.py:153
-#: code:addons/survey/survey.py:188
+#: code:addons/survey/survey.py:153 code:addons/survey/survey.py:188
 #, python-format
 msgid ""
-"This survey has no question defined. Please define the questions and answers "
-"first."
-msgstr ""
-"Acest sondaj nu are intrebari definite. Mai intai trebuie sa definiti "
-"intrabarile si raspunsurile."
+"This survey has no question defined. Please define the questions and answers"
+" first."
+msgstr "Acest sondaj nu are intrebari definite. Mai intai trebuie sa definiti intrabarile si raspunsurile."
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -405,8 +378,7 @@ msgstr "Meniu optiuni"
 msgid ""
 "You must enter one or more menu choices                                 in "
 "column heading."
-msgstr ""
-"Trebuie sa introduceti una sau mai multe optiuni in titlul de coloana."
+msgstr "Trebuie sa introduceti una sau mai multe optiuni in titlul de coloana."
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -414,8 +386,7 @@ msgid "At Most"
 msgstr "Cel mult"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.request:0
+#: view:survey:0 view:survey.request:0
 msgid "My Survey(s)"
 msgstr "Sondajul meu (Sondajele mele)"
 
@@ -451,24 +422,7 @@ msgid ""
 "\n"
 "\n"
 "Thanks,"
-msgstr ""
-"\n"
-"Buna ziua %%(nume)s, \n"
-"\n"
-"\n"
-" Va rugam sa va faceti putin timp pentru a raspunde la sondajul nostru: \n"
-" %s\n"
-"\n"
-" Puteti accesa acest sondaj cu parametri urmatori:\n"
-" URL: %s\n"
-" ID autentificare: %%(login)s\n"
-"\n"
-" Parola: %%(passwd)s\n"
-"\n"
-"\n"
-"\n"
-"\n"
-" Va multumim,"
+msgstr "\nBuna ziua %%(nume)s, \n\n\n Va rugam sa va faceti putin timp pentru a raspunde la sondajul nostru: \n %s\n\n Puteti accesa acest sondaj cu parametri urmatori:\n URL: %s\n ID autentificare: %%(login)s\n\n Parola: %%(passwd)s\n\n\n\n\n Va multumim,"
 
 #. module: survey
 #: field:survey.response.line,single_text:0
@@ -488,8 +442,7 @@ msgid "Letter (8.5\" x 11\")"
 msgstr "Scrisoare (8.5\" x 11\")"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,responsible_id:0
+#: view:survey:0 field:survey,responsible_id:0
 msgid "Responsible"
 msgstr "Responsabil"
 
@@ -502,7 +455,7 @@ msgstr "cerere.sondaj"
 #: code:addons/survey/wizard/survey_answer.py:379
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Precedent(a)"
 
 #. module: survey
 #: field:survey.question,comment_maximum_float:0
@@ -516,8 +469,7 @@ msgid "survey.tbl.column.heading"
 msgstr "titlu.coloana.tabel.sondaj"
 
 #. module: survey
-#: view:survey.send.invitation:0
-#: field:survey.send.invitation,send_mail:0
+#: view:survey.send.invitation:0 field:survey.send.invitation,send_mail:0
 msgid "Send Mail for New User"
 msgstr "Trimite e-mail pentru noul utilizator"
 
@@ -541,8 +493,7 @@ msgstr "Nu validati textul comentariului"
 #: code:addons/survey/survey.py:533
 #, python-format
 msgid "You must enter one or more menu choices in column heading."
-msgstr ""
-"Trebuie sa introduceti una sau mai multe optiuni de meniu in titlul coloanei."
+msgstr "Trebuie sa introduceti una sau mai multe optiuni de meniu in titlul coloanei."
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -551,8 +502,7 @@ msgid "Must Be A Whole Number"
 msgstr "Trebuie sa fie un numar intreg"
 
 #. module: survey
-#: field:survey.answer,question_id:0
-#: view:survey.question:0
+#: field:survey.answer,question_id:0 view:survey.question:0
 #: field:survey.question,question:0
 #: field:survey.question.column.heading,question_id:0
 #: field:survey.response.line,question_id:0
@@ -568,7 +518,7 @@ msgstr "Cauta Pagina sondajului"
 #: code:addons/survey/wizard/survey_answer.py:380
 #, python-format
 msgid "Next"
-msgstr ""
+msgstr "Urmatorul (urmatoarea)"
 
 #. module: survey
 #: view:survey.request:0
@@ -584,15 +534,12 @@ msgid "Unknown"
 msgstr "Necunoscut(a)"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Between"
 msgstr "Intre"
 
 #. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
+#: view:survey.print:0 view:survey.print.answer:0
 #: view:survey.print.statistics:0
 msgid "Print"
 msgstr "Printeaza"
@@ -608,37 +555,28 @@ msgid "Make Comment Field an Answer Choice"
 msgstr "Face Campul Comentariu o Alegere de Raspuns"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,type:0
+#: view:survey:0 field:survey,type:0
 msgid "Type"
 msgstr "Tip"
 
 #. module: survey
-#: selection:survey.answer,type:0
-#: field:survey.request,email:0
+#: selection:survey.answer,type:0 field:survey.request,email:0
 msgid "Email"
 msgstr "Email"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Required Answer"
 msgstr "Raspuns Necesar"
 
 #. module: survey
-#: code:addons/survey/survey.py:425
-#: code:addons/survey/survey.py:513
+#: code:addons/survey/survey.py:425 code:addons/survey/survey.py:513
 #, python-format
-msgid ""
-"You must enter one or more column headings for question \"%s\" of page %s."
-msgstr ""
-"Trebuie sa introduceti unul sau mai multe capete de coloana pentru "
-"intrebarea \"%s\" de la pagina %s."
+msgid "You must enter one or more column headings for question \"%s\" of page %s."
+msgstr "Trebuie sa introduceti unul sau mai multe capete de coloana pentru intrebarea \"%s\" de la pagina %s."
 
 #. module: survey
-#: code:addons/survey/survey.py:97
-#: code:addons/survey/survey.py:260
+#: code:addons/survey/survey.py:97 code:addons/survey/survey.py:260
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -664,9 +602,7 @@ msgstr "Selecteaza Partenerul"
 #: code:addons/survey/survey.py:528
 #, python-format
 msgid "Maximum Required Answer is greater than Minimum Required Answer."
-msgstr ""
-"Raspunsurile Maxime Solicitate sunt mai multe decat Raspunsurile Minime "
-"Solicitate."
+msgstr "Raspunsurile Maxime Solicitate sunt mai multe decat Raspunsurile Minime Solicitate."
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_reporting
@@ -691,8 +627,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_type_form
-#: model:ir.model,name:survey.model_survey_type
-#: view:survey.type:0
+#: model:ir.model,name:survey.model_survey_type view:survey.type:0
 msgid "Survey Type"
 msgstr "Tip de sondaj"
 
@@ -744,9 +679,7 @@ msgid "survey.print"
 msgstr "imprimare.sondaj"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: field:survey.question,page_id:0
+#: view:survey:0 view:survey.page:0 field:survey.question,page_id:0
 msgid "Survey Page"
 msgstr "Pagina sondaj"
 
@@ -784,12 +717,10 @@ msgstr "Editeaza..."
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
-"your maximum is greater than the number of answer.                           "
-"          Please use a number that is smaller than %d."
-msgstr ""
-"Maximul de raspunsuri necesare pe care l-ati introdus pentru maximul "
-"dumneavoastra este mai mare decat numarul raspunsurilor. Va rugam sa "
-"folositi un număr care este mai mic decat %d."
+"your maximum is greater than the number of answer."
+"                                     Please use a number that is smaller "
+"than %d."
+msgstr "Maximul de raspunsuri necesare pe care l-ati introdus pentru maximul dumneavoastra este mai mare decat numarul raspunsurilor. Va rugam sa folositi un număr care este mai mic decat %d."
 
 #. module: survey
 #: view:survey:0
@@ -797,17 +728,12 @@ msgid "Survey description..."
 msgstr "Descriere sondaj..."
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the question is not answered, display this error message:"
-msgstr ""
-"Atunci cand nu se răspunde la o intrebare, afiseaza acest mesaj de eroare:"
+msgstr "Atunci cand nu se răspunde la o intrebare, afiseaza acest mesaj de eroare:"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Options"
 msgstr "Optiuni"
 
@@ -815,9 +741,7 @@ msgstr "Optiuni"
 #: code:addons/survey/survey.py:437
 #, python-format
 msgid "You must enter one or more Answers for question \"%s\" of page %s."
-msgstr ""
-"Trebuie sa introduceti unul sau mai multe Raspunsuri pentru intrebarea "
-"\"%s\" de la pagina %s."
+msgstr "Trebuie sa introduceti unul sau mai multe Raspunsuri pentru intrebarea \"%s\" de la pagina %s."
 
 #. module: survey
 #: view:survey:0
@@ -825,17 +749,14 @@ msgid "Delete"
 msgstr "Sterge"
 
 #. module: survey
-#: field:survey.response.answer,comment_field:0
-#: view:survey.response.line:0
+#: field:survey.response.answer,comment_field:0 view:survey.response.line:0
 msgid "Comment"
 msgstr "Comentariu"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_answer
 #: model:ir.model,name:survey.model_survey_response_answer
-#: view:survey.answer:0
-#: view:survey.response:0
-#: view:survey.response.answer:0
+#: view:survey.answer:0 view:survey.response:0 view:survey.response.answer:0
 #: view:survey.response.line:0
 msgid "Survey Answer"
 msgstr "Raspuns la Sondaj"
@@ -852,9 +773,7 @@ msgid "Answer Survey"
 msgstr "Raspunde la Sondaj"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Comment Field"
 msgstr "Camp comentarii"
 
@@ -874,9 +793,7 @@ msgid "User responsible for survey"
 msgstr "Utilizatorul responsabil cu sondajul"
 
 #. module: survey
-#: field:survey,page_ids:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: field:survey,page_ids:0 view:survey.page:0 view:survey.question:0
 #: field:survey.response.line,page_id:0
 msgid "Page"
 msgstr "Pagina"
@@ -898,12 +815,9 @@ msgid "Print Without Page Breaks"
 msgstr "Imprima fara intreruperea paginilor"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the comment is an invalid format, display this error message"
-msgstr ""
-"Atunci cand comentariul are un format invalid, afiseaza acest mesaj de eroare"
+msgstr "Atunci cand comentariul are un format invalid, afiseaza acest mesaj de eroare"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
@@ -924,8 +838,7 @@ msgid " Answer :- "
 msgstr ""
 
 #. module: survey
-#: model:ir.model,name:survey.model_res_users
-#: field:survey,users:0
+#: model:ir.model,name:survey.model_res_users field:survey,users:0
 msgid "Users"
 msgstr "Utilizatori"
 
@@ -946,9 +859,7 @@ msgstr "Subiect"
 msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)."
-msgstr ""
-"Trebuie sa introduceti una sau mai multe optiuni de meniu in titlul de "
-"coloana (spatiile goale nu sunt acceptate)."
+msgstr "Trebuie sa introduceti una sau mai multe optiuni de meniu in titlul de coloana (spatiile goale nu sunt acceptate)."
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
@@ -961,15 +872,12 @@ msgid "Page Number"
 msgstr "Numar pagina"
 
 #. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
+#: view:survey.print:0 view:survey.print.answer:0
 msgid "Print Option"
 msgstr "Optiunea de imprimare"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "and"
 msgstr "si"
 
@@ -985,13 +893,9 @@ msgid "Log"
 msgstr "Jurnal"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
-msgstr ""
-"Atunci cand optiunile nu se completeaza corect, afiseaza acest mesaj de "
-"eroare"
+msgstr "Atunci cand optiunile nu se completeaza corect, afiseaza acest mesaj de eroare"
 
 #. module: survey
 #: field:survey,date_close:0
@@ -1012,18 +916,7 @@ msgid ""
 "                of several types: text, multiple choices, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Clic pentru a crea un sondaj nou. \n"
-"              </p><p>\n"
-"                Puteti crea sondaje pentru diverse scopuri: interviuri de\n"
-"                recrutare, evaluari periodice ale angajatilor, campanii de\n"
-"                marketing, etc.\n"
-"              </p><p>\n"
-"                A survey is made of pages containing questions\n"
-"                of several types: text, multiple choices, etc.\n"
-"              </p>\n"
-"            "
+msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Clic pentru a crea un sondaj nou. \n              </p><p>\n                Puteti crea sondaje pentru diverse scopuri: interviuri de\n                recrutare, evaluari periodice ale angajatilor, campanii de\n                marketing, etc.\n              </p><p>\n                A survey is made of pages containing questions\n                of several types: text, multiple choices, etc.\n              </p>\n            "
 
 #. module: survey
 #: selection:survey.question,comment_field_type:0
@@ -1041,8 +934,7 @@ msgid "Validate Text"
 msgstr "Valideaza Text"
 
 #. module: survey
-#: view:survey.browse.answer:0
-#: view:survey.name.wiz:0
+#: view:survey.browse.answer:0 view:survey.name.wiz:0
 msgid "Start"
 msgstr "Incepe"
 
@@ -1050,11 +942,9 @@ msgstr "Incepe"
 #: code:addons/survey/wizard/survey_selection.py:83
 #, python-format
 msgid ""
-"You cannot give more responses. Please contact the author of this survey for "
-"further assistance."
-msgstr ""
-"Nu puteti da mai multe raspunsuri. Contactati autorul acestui sondaj pentru "
-"mai multe informatii."
+"You cannot give more responses. Please contact the author of this survey for"
+" further assistance."
+msgstr "Nu puteti da mai multe raspunsuri. Contactati autorul acestui sondaj pentru mai multe informatii."
 
 #. module: survey
 #: field:survey.question,comment_maximum_no:0
@@ -1063,8 +953,7 @@ msgid "Maximum number"
 msgstr "Numarul maxim"
 
 #. module: survey
-#: selection:survey.request,state:0
-#: selection:survey.response.line,state:0
+#: selection:survey.request,state:0 selection:survey.response.line,state:0
 msgid "Draft"
 msgstr "Ciorna"
 
@@ -1084,20 +973,14 @@ msgid "Matrix of Drop-down Menus"
 msgstr "Matrice Meniuri Verticale"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:226
-#: view:survey:0
-#: field:survey.answer,answer:0
-#: field:survey.name.wiz,response:0
-#: view:survey.page:0
-#: view:survey.print.answer:0
-#: field:survey.print.answer,response_ids:0
-#: view:survey.question:0
-#: field:survey.question,answer_choice_ids:0
-#: field:survey.request,response:0
+#: code:addons/survey/wizard/survey_answer.py:226 view:survey:0
+#: field:survey.answer,answer:0 field:survey.name.wiz,response:0
+#: view:survey.page:0 view:survey.print.answer:0
+#: field:survey.print.answer,response_ids:0 view:survey.question:0
+#: field:survey.question,answer_choice_ids:0 field:survey.request,response:0
 #: field:survey.response,question_ids:0
 #: field:survey.response.answer,answer_id:0
-#: field:survey.response.answer,response_id:0
-#: view:survey.response.line:0
+#: field:survey.response.answer,response_id:0 view:survey.response.line:0
 #: field:survey.response.line,response_answer_ids:0
 #: field:survey.response.line,response_id:0
 #: field:survey.response.line,response_table_ids:0
@@ -1134,11 +1017,8 @@ msgid "Date and Time"
 msgstr "Data si ora"
 
 #. module: survey
-#: view:survey:0
-#: field:survey,state:0
-#: view:survey.request:0
-#: field:survey.request,state:0
-#: field:survey.response,state:0
+#: view:survey:0 field:survey,state:0 view:survey.request:0
+#: field:survey.request,state:0 field:survey.response,state:0
 #: field:survey.response.line,state:0
 msgid "Status"
 msgstr "Stare"
@@ -1166,8 +1046,7 @@ msgstr "Inceput"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_print_answer
-#: view:survey:0
-#: view:survey.print.answer:0
+#: view:survey:0 view:survey.print.answer:0
 msgid "Print Answer"
 msgstr "Imprima Raspunsul"
 
@@ -1208,15 +1087,12 @@ msgid "Customer Feeback"
 msgstr "Feedback Client"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
+#: view:survey:0 view:survey.page:0 view:survey.question:0
 msgid "Validation"
 msgstr "Validare"
 
 #. module: survey
-#: view:survey.request:0
-#: selection:survey.request,state:0
+#: view:survey.request:0 selection:survey.request,state:0
 msgid "Waiting Answer"
 msgstr "In asteptarea raspunsului"
 
@@ -1232,8 +1108,7 @@ msgid "Groups"
 msgstr "Grupuri"
 
 #. module: survey
-#: selection:survey.answer,type:0
-#: selection:survey.question,type:0
+#: selection:survey.answer,type:0 selection:survey.question,type:0
 msgid "Date"
 msgstr "Data"
 
@@ -1243,8 +1118,7 @@ msgid "All New Survey"
 msgstr "Un Sondaj Nou"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
+#: view:survey:0 view:survey.page:0
 msgid "Description on the survey page..."
 msgstr "Descriere a paginii sondajului..."
 
@@ -1254,10 +1128,8 @@ msgid "survey.send.invitation"
 msgstr "trimite.invitatie.sondaj"
 
 #. module: survey
-#: field:survey.history,user_id:0
-#: view:survey.request:0
-#: field:survey.request,user_id:0
-#: field:survey.response,user_id:0
+#: field:survey.history,user_id:0 view:survey.request:0
+#: field:survey.request,user_id:0 field:survey.response,user_id:0
 msgid "User"
 msgstr "Utilizator"
 
@@ -1278,8 +1150,7 @@ msgid "You cannot select same answer more than one time.'"
 msgstr "Nu puteti selecta acelasi raspuns decat o singura data.'"
 
 #. module: survey
-#: field:survey.print,paper_size:0
-#: field:survey.print.answer,paper_size:0
+#: field:survey.print,paper_size:0 field:survey.print.answer,paper_size:0
 msgid "Paper Size"
 msgstr "Dimensiune hartie"
 
@@ -1318,22 +1189,14 @@ msgstr "Acest sondaj nu are pagini definite. Definiti mai intai paginile."
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.report_survey_form
-#: model:ir.model,name:survey.model_survey
-#: view:survey:0
-#: view:survey.browse.answer:0
-#: field:survey.browse.answer,survey_id:0
-#: field:survey.history,survey_id:0
-#: view:survey.name.wiz:0
-#: field:survey.name.wiz,survey_id:0
-#: view:survey.page:0
-#: field:survey.page,survey_id:0
-#: view:survey.print:0
-#: field:survey.print,survey_ids:0
-#: field:survey.print.statistics,survey_ids:0
-#: field:survey.question,survey:0
-#: view:survey.request:0
-#: field:survey.request,survey_id:0
-#: field:survey.response,survey_id:0
+#: model:ir.model,name:survey.model_survey view:survey:0
+#: view:survey.browse.answer:0 field:survey.browse.answer,survey_id:0
+#: field:survey.history,survey_id:0 view:survey.name.wiz:0
+#: field:survey.name.wiz,survey_id:0 view:survey.page:0
+#: field:survey.page,survey_id:0 view:survey.print:0
+#: field:survey.print,survey_ids:0 field:survey.print.statistics,survey_ids:0
+#: field:survey.question,survey:0 view:survey.request:0
+#: field:survey.request,survey_id:0 field:survey.response,survey_id:0
 msgid "Survey"
 msgstr "Sondaj"
 
@@ -1378,15 +1241,12 @@ msgid "Surveys Statistics"
 msgstr "Statistica Sondaj"
 
 #. module: survey
-#: field:survey.print,orientation:0
-#: field:survey.print.answer,orientation:0
+#: field:survey.print,orientation:0 field:survey.print.answer,orientation:0
 msgid "Orientation"
 msgstr "Orientare"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.answer:0
-#: view:survey.page:0
+#: view:survey:0 view:survey.answer:0 view:survey.page:0
 #: view:survey.question:0
 msgid "Seq"
 msgstr "Secventa"
@@ -1408,8 +1268,7 @@ msgid "#Required Answer"
 msgstr "# Raspuns Necesar"
 
 #. module: survey
-#: field:survey.answer,sequence:0
-#: field:survey.question,sequence:0
+#: field:survey.answer,sequence:0 field:survey.question,sequence:0
 msgid "Sequence"
 msgstr "Secventa"
 
@@ -1419,8 +1278,7 @@ msgid "Field Label"
 msgstr "Eticheta campului"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:382
-#: view:survey.request:0
+#: code:addons/survey/wizard/survey_answer.py:382 view:survey.request:0
 #: selection:survey.request,state:0
 #, python-format
 msgid "Done"
@@ -1437,11 +1295,8 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr "Permite un singur raspuns per coloana (Clasament fortat)"
 
 #. module: survey
-#: view:survey.browse.answer:0
-#: view:survey.name.wiz:0
-#: view:survey.print:0
-#: view:survey.print.answer:0
-#: view:survey.print.statistics:0
+#: view:survey.browse.answer:0 view:survey.name.wiz:0 view:survey.print:0
+#: view:survey.print.answer:0 view:survey.print.statistics:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Anuleaza"
@@ -1458,8 +1313,7 @@ msgid "Minimum decimal number"
 msgstr "Numar zecimal minim"
 
 #. module: survey
-#: view:survey:0
-#: selection:survey,state:0
+#: view:survey:0 selection:survey,state:0
 msgid "Open"
 msgstr "Deschide"
 
@@ -1467,9 +1321,7 @@ msgstr "Deschide"
 #: code:addons/survey/survey.py:509
 #, python-format
 msgid "You must enter one or more answers for question \"%s\" of page %s ."
-msgstr ""
-"Trebuie sa introduceti unul sau mai multe raspunsuri la intrebarea \"%s\" de "
-"la pagina %s."
+msgstr "Trebuie sa introduceti unul sau mai multe raspunsuri la intrebarea \"%s\" de la pagina %s."
 
 #. module: survey
 #: field:survey,tot_start_survey:0
@@ -1488,9 +1340,7 @@ msgstr ""
 msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
 "use a number that is smaller than %d."
-msgstr ""
-"#Raspunsul Solicitat pe care l-ati introdus este mai mare decat numarul de "
-"raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
+msgstr "#Raspunsul Solicitat pe care l-ati introdus este mai mare decat numarul de raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
 
 #. module: survey
 #: help:survey,max_response_limit:0
@@ -1526,9 +1376,7 @@ msgstr "Raspunde la Sondaj"
 #: help:survey.browse.answer,response_id:0
 msgid ""
 "If this field is empty, all answers of the selected survey will be print."
-msgstr ""
-"Daca acest camp ramane necompletat, vor fi tiparite toate raspunsurile "
-"sondajului selectat."
+msgstr "Daca acest camp ramane necompletat, vor fi tiparite toate raspunsurile sondajului selectat."
 
 #. module: survey
 #: selection:survey.response.line,state:0
@@ -1579,9 +1427,7 @@ msgstr "Nu puteti raspunde la acest sondaj mai mult de %s ori."
 msgid ""
 "You must enter one or more menu choices in column heading (white spaces not "
 "allowed)."
-msgstr ""
-"Trebuie sa introduceti una sau mai multe optiuni de meniu in titlul de "
-"coloana (spatiile goale nu sunt acceptate)."
+msgstr "Trebuie sa introduceti una sau mai multe optiuni de meniu in titlul de coloana (spatiile goale nu sunt acceptate)."
 
 #. module: survey
 #: view:survey.question:0
@@ -1599,11 +1445,8 @@ msgid "Survey Questions"
 msgstr "Intrebari Sondaj"
 
 #. module: survey
-#: field:survey,note:0
-#: field:survey.name.wiz,note:0
-#: view:survey.page:0
-#: field:survey.page,note:0
-#: view:survey.response.line:0
+#: field:survey,note:0 field:survey.name.wiz,note:0 view:survey.page:0
+#: field:survey.page,note:0 view:survey.response.line:0
 msgid "Description"
 msgstr "Descriere"
 
@@ -1646,7 +1489,7 @@ msgstr "Selectia Furnizorilor"
 #: code:addons/survey/report/survey_browse_response.py:232
 #, python-format
 msgid "Finished"
-msgstr ""
+msgstr "Finalizat(a)"
 
 #. module: survey
 #: code:addons/survey/survey.py:691
@@ -1660,9 +1503,7 @@ msgstr "Nu puteti copia resursa!"
 msgid ""
 "Minimum Required Answer you entered is greater than the number of answer. "
 "Please use a number that is smaller than %d."
-msgstr ""
-"Raspunsul minim necesar pe care l-ati introdus este mai mare decat numarul "
-"de raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
+msgstr "Raspunsul minim necesar pe care l-ati introdus este mai mare decat numarul de raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
 
 #. module: survey
 #: field:survey.question.wiz,name:0
@@ -1703,9 +1544,7 @@ msgid ""
 "#Required Answer you entered is                                     greater "
 "than the number of answer.                                    Please use a "
 "number that is smaller than %d."
-msgstr ""
-"#Raspunsul solicitat pe care l-ati introdus este mai mare decat numarul de "
-"raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
+msgstr "#Raspunsul solicitat pe care l-ati introdus este mai mare decat numarul de raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -1747,28 +1586,17 @@ msgid "Error message"
 msgstr "Mesaj de eroare"
 
 #. module: survey
-#: code:addons/survey/survey.py:153
-#: code:addons/survey/survey.py:170
-#: code:addons/survey/survey.py:188
-#: code:addons/survey/survey.py:425
-#: code:addons/survey/survey.py:437
-#: code:addons/survey/survey.py:451
-#: code:addons/survey/survey.py:456
-#: code:addons/survey/survey.py:466
-#: code:addons/survey/survey.py:472
-#: code:addons/survey/survey.py:478
-#: code:addons/survey/survey.py:484
-#: code:addons/survey/survey.py:488
-#: code:addons/survey/survey.py:494
-#: code:addons/survey/survey.py:498
-#: code:addons/survey/survey.py:509
-#: code:addons/survey/survey.py:513
-#: code:addons/survey/survey.py:518
-#: code:addons/survey/survey.py:524
-#: code:addons/survey/survey.py:526
-#: code:addons/survey/survey.py:528
-#: code:addons/survey/survey.py:533
-#: code:addons/survey/survey.py:535
+#: code:addons/survey/survey.py:153 code:addons/survey/survey.py:170
+#: code:addons/survey/survey.py:188 code:addons/survey/survey.py:425
+#: code:addons/survey/survey.py:437 code:addons/survey/survey.py:451
+#: code:addons/survey/survey.py:456 code:addons/survey/survey.py:466
+#: code:addons/survey/survey.py:472 code:addons/survey/survey.py:478
+#: code:addons/survey/survey.py:484 code:addons/survey/survey.py:488
+#: code:addons/survey/survey.py:494 code:addons/survey/survey.py:498
+#: code:addons/survey/survey.py:509 code:addons/survey/survey.py:513
+#: code:addons/survey/survey.py:518 code:addons/survey/survey.py:524
+#: code:addons/survey/survey.py:526 code:addons/survey/survey.py:528
+#: code:addons/survey/survey.py:533 code:addons/survey/survey.py:535
 #: code:addons/survey/survey.py:691
 #: code:addons/survey/wizard/survey_answer.py:118
 #: code:addons/survey/wizard/survey_answer.py:125
@@ -1802,11 +1630,9 @@ msgstr "Avertisment!"
 #, python-format
 msgid ""
 "Minimum Required Answer                                     you entered is "
-"greater than the number of answer.                                    Please "
-"use a number that is smaller than %d."
-msgstr ""
-"Raspunsul minim solicitat pe care l-ati introdus este mai mare decat numarul "
-"de raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
+"greater than the number of answer.                                    Please"
+" use a number that is smaller than %d."
+msgstr "Raspunsul minim solicitat pe care l-ati introdus este mai mare decat numarul de raspunsuri. Va rugam sa folositi un numar care este mai mic decat %d."
 
 #. module: survey
 #: field:survey.answer,menu_choice:0
@@ -1824,9 +1650,7 @@ msgstr "ID"
 msgid ""
 "Maximum Required Answer is greater                                     than "
 "Minimum Required Answer"
-msgstr ""
-"Raspunsurile maxime solicitate sunt mai multe decat Raspunsurile minime "
-"solicitate"
+msgstr "Raspunsurile maxime solicitate sunt mai multe decat Raspunsurile minime solicitate"
 
 #. module: survey
 #: view:survey.send.invitation.log:0
@@ -1870,13 +1694,9 @@ msgid "Float"
 msgstr "Stabilizare"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:395
-#: view:survey.browse.answer:0
-#: view:survey.name.wiz:0
-#: view:survey.print:0
-#: view:survey.print.answer:0
-#: view:survey.print.statistics:0
-#: view:survey.send.invitation:0
+#: code:addons/survey/wizard/survey_answer.py:395 view:survey.browse.answer:0
+#: view:survey.name.wiz:0 view:survey.print:0 view:survey.print.answer:0
+#: view:survey.print.statistics:0 view:survey.send.invitation:0
 #, python-format
 msgid "or"
 msgstr "sau"
@@ -1910,8 +1730,7 @@ msgstr "Nume Coloana"
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_page_form
 #: model:ir.model,name:survey.model_survey_page
-#: model:ir.ui.menu,name:survey.menu_survey_page_form1
-#: view:survey.page:0
+#: model:ir.ui.menu,name:survey.menu_survey_page_form1 view:survey.page:0
 msgid "Survey Pages"
 msgstr "Pagini Sondaj"
 
@@ -1926,8 +1745,7 @@ msgid "Is Answer Type Invisible?"
 msgstr "Este Tipul de Raspuns Invizibil?"
 
 #. module: survey
-#: selection:survey.question,type:0
-#: view:survey.response.line:0
+#: selection:survey.question,type:0 view:survey.response.line:0
 msgid "Table"
 msgstr "Tabel"
 

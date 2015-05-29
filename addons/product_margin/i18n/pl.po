@@ -1,25 +1,25 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * product_margin
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-22 15:53+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-7/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:28+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,turnover:0
+#: view:product.product:0 field:product.product,turnover:0
 msgid "Turnover"
 msgstr "Obrót"
 
@@ -37,7 +37,7 @@ msgstr "Od"
 #: help:product.product,total_cost:0
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
-msgstr ""
+msgstr "Suma iloczynów ceny fakturowej i ilości z faktur od dostawców "
 
 #. module: product_margin
 #: field:product.margin,to_date:0
@@ -47,12 +47,12 @@ msgstr "Do"
 #. module: product_margin
 #: help:product.product,total_margin:0
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "Obrót - Cena przeciętna"
 
 #. module: product_margin
 #: field:product.product,total_margin_rate:0
 msgid "Total Margin Rate(%)"
-msgstr ""
+msgstr "Suma współczynnika marży (%)"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -78,7 +78,7 @@ msgstr "Średnia cena jedn."
 #. module: product_margin
 #: field:product.product,sale_num_invoiced:0
 msgid "# Invoiced in Sale"
-msgstr ""
+msgstr "# fakturowanych sprzedaży"
 
 #. module: product_margin
 #: view:product.product:0
@@ -92,15 +92,14 @@ msgid "Paid"
 msgstr "Zapłacona"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
+#: view:product.product:0 field:product.product,sales_gap:0
 msgid "Sales Gap"
 msgstr "Deficyt sprzedaży"
 
 #. module: product_margin
 #: help:product.product,sales_gap:0
 msgid "Expected Sale - Turn Over"
-msgstr ""
+msgstr "Spodziewana cena - Obrót"
 
 #. module: product_margin
 #: field:product.product,sale_expected:0
@@ -120,7 +119,7 @@ msgstr "Suma ilości z faktur dostawcy"
 #. module: product_margin
 #: field:product.product,date_to:0
 msgid "Margin Date To"
-msgstr ""
+msgstr "Końcowa data marży"
 
 #. module: product_margin
 #: view:product.product:0
@@ -128,15 +127,14 @@ msgid "Analysis Criteria"
 msgstr "Kryteria analizy"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,total_cost:0
+#: view:product.product:0 field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Suma kosztów"
 
 #. module: product_margin
 #: help:product.product,normal_cost:0
 msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
-msgstr ""
+msgstr "Suma iloczynów Ceny kosztowej i ilości z faktur od dostawców"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -156,7 +154,7 @@ msgstr "Spodziewana marża * 100 / Spodziewana sprzedaż"
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Średnia cena w fakturach klientów"
 
 #. module: product_margin
 #: help:product.product,purchase_avg_price:0
@@ -164,21 +162,21 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Średnia cena z faktur dostawców "
 
 #. module: product_margin
-#: field:product.margin,invoice_state:0
-#: field:product.product,invoice_state:0
+#: field:product.margin,invoice_state:0 field:product.product,invoice_state:0
 msgid "Invoice State"
 msgstr "Stan faktury"
 
 #. module: product_margin
 #: help:product.product,purchase_gap:0
 msgid "Normal Cost - Total Cost"
-msgstr ""
+msgstr "Normalny koszt - Suma kosztów"
 
 #. module: product_margin
 #: help:product.product,sale_expected:0
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
+msgstr "Suma iloczynów Ceny katalogowej i ilości z faktur dla klientów"
 
 #. module: product_margin
 #: field:product.product,total_margin:0
@@ -188,18 +186,18 @@ msgstr "Suma marży"
 #. module: product_margin
 #: field:product.product,date_from:0
 msgid "Margin Date From"
-msgstr ""
+msgstr "Początkowa data marży"
 
 #. module: product_margin
 #: help:product.product,turnover:0
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
+msgstr "Suma iloczynów Ceny fakturowej i ilości z faktur dla klientów"
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
 msgid "Normal Cost"
-msgstr ""
+msgstr "Normalny koszt"
 
 #. module: product_margin
 #: view:product.product:0
@@ -209,17 +207,17 @@ msgstr "Zakupy"
 #. module: product_margin
 #: field:product.product,purchase_num_invoiced:0
 msgid "# Invoiced in Purchase"
-msgstr ""
+msgstr "# fakturowanych zakupów"
 
 #. module: product_margin
 #: help:product.product,expected_margin:0
 msgid "Expected Sale - Normal Cost"
-msgstr ""
+msgstr "Spodziewana sprzedaż - Normalny koszt"
 
 #. module: product_margin
 #: view:product.margin:0
 msgid "Properties categories"
-msgstr ""
+msgstr "Kategorie właściwości"
 
 #. module: product_margin
 #: help:product.product,total_margin_rate:0
@@ -229,7 +227,7 @@ msgstr "Suma marży * 100 / Obrót"
 #. module: product_margin
 #: view:product.margin:0
 msgid "Open Margins"
-msgstr ""
+msgstr "Otwarte Marże"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -245,12 +243,12 @@ msgstr "Sprzedaż"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: product_margin
 #: view:product.margin:0
 msgid "General Information"
-msgstr ""
+msgstr "Informacje ogólne"
 
 #. module: product_margin
 #: field:product.product,purchase_gap:0
@@ -275,9 +273,9 @@ msgstr "Suma ilości z faktur klientów"
 #. module: product_margin
 #: view:product.margin:0
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
-msgstr ""
+msgstr "Marża na produkcie"

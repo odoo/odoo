@@ -1,21 +1,21 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-03-14 16:59+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:32+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-15 05:28+0000\n"
-"X-Generator: Launchpad (build 17389)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -24,20 +24,15 @@ msgid ""
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
 "                In OpenERP, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to "
-"analyse\n"
+"                analytic account. So, you can track costs and revenues to analyse\n"
 "                your margins easily.\n"
 "              </p><p>\n"
-"                Costs will be created automatically when you register "
-"supplier\n"
+"                Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets.\n"
 "              </p><p>\n"
-"                Revenues will be created automatically when you create "
-"customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
@@ -48,7 +43,7 @@ msgstr ""
 #: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Wed"
-msgstr ""
+msgstr "Aha"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -58,14 +53,14 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Group By..."
-msgstr ""
+msgstr "Sdukel s..."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
 msgid ""
 "Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the "
-"analytic account. This feature allows to record at the same time the "
+"is an analytic account and the time spent on a project generate costs on the"
+" analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
 
@@ -80,7 +75,7 @@ msgid "Analytic Journal"
 msgstr "Aɣemis usliḍ"
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+#: view:hr.sign.out.project:0
 msgid "Stop Working"
 msgstr "Ffak amahil"
 
@@ -91,10 +86,7 @@ msgid "Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_graph
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-#: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
+#: view:hr.analytic.timesheet:0
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
 msgid "Timesheet"
 msgstr "Tiferkit n wakud"
@@ -110,10 +102,10 @@ msgstr ""
 #: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Mon"
-msgstr ""
+msgstr "Ari"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:0
 msgid "Sign in"
 msgstr "Kcem"
 
@@ -125,8 +117,7 @@ msgid "Fri"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: view:hr.analytic.timesheet:0
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
@@ -143,13 +134,12 @@ msgid "Monthly Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+#: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
+#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
 msgid "Employees name"
 msgstr ""
 
@@ -164,7 +154,7 @@ msgid "Print Employees Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "Please define employee for your user."
 msgstr "Ma ulac aɣilif, sbadu amaris i useqdac inek"
@@ -179,10 +169,9 @@ msgstr ""
 #: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Tue"
-msgstr ""
+msgstr "Ara"
 
 #. module: hr_timesheet
-#: field:hr.timesheet.report,account_id:0
 #: model:ir.model,name:hr_timesheet.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Amiḍan usliḍ"
@@ -193,9 +182,11 @@ msgid "Costs and Revenues"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:158
-#: code:addons/hr_timesheet/hr_timesheet.py:189
-#: code:addons/hr_timesheet/hr_timesheet.py:191
+#: code:addons/hr_timesheet/hr_timesheet.py:150
+#: code:addons/hr_timesheet/hr_timesheet.py:155
+#: code:addons/hr_timesheet/hr_timesheet.py:186
+#: code:addons/hr_timesheet/hr_timesheet.py:188
+#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Warning!"
 msgstr "ɣuṛ-ek !"
@@ -210,14 +201,14 @@ msgstr "Amendid"
 #: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sat"
-msgstr ""
+msgstr "sed"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
 #: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sun"
-msgstr ""
+msgstr "Ace"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
@@ -225,7 +216,7 @@ msgid "Sum"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr "Amiḍan usliḍ"
 
@@ -235,10 +226,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record activities.\n"
 "              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
+"                You can register and track your workings hours by project every\n"
+"                day. Every time spent on a project will become a cost in the\n"
 "                analytic accounting/contract and can be re-invoiced to\n"
 "                customers if required.\n"
 "              </p>\n"
@@ -249,7 +238,7 @@ msgstr ""
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
-msgstr ""
+msgstr "Siggez"
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
@@ -268,13 +257,12 @@ msgstr ""
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "July"
-msgstr ""
+msgstr "Yulyu"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
+#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
-msgstr "Azemz n beddu"
+msgstr "Azemz n tazwara"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -288,7 +276,7 @@ msgid "Specifies employee's designation as a product with type 'service'."
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:191
+#: code:addons/hr_timesheet/hr_timesheet.py:188
 #, python-format
 msgid ""
 "No analytic account is defined on the project.\n"
@@ -296,12 +284,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: view:hr.analytic.timesheet:0
 msgid "Total cost"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:189
+#: code:addons/hr_timesheet/hr_timesheet.py:186
 #, python-format
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
@@ -315,7 +303,7 @@ msgstr ""
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "September"
-msgstr ""
+msgstr "Ctember"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -324,7 +312,7 @@ msgstr ""
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "December"
-msgstr ""
+msgstr "Bujember"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -332,7 +320,8 @@ msgid "employees"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: field:hr.analytical.timesheet.employee,month:0
+#: field:hr.analytical.timesheet.users,month:0
 msgid "Month"
 msgstr "Aggur"
 
@@ -342,9 +331,9 @@ msgid "Work Description"
 msgstr "Aglam n umahil"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+#: view:hr.analytical.timesheet.employee:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
+#: view:hr.sign.out.project:0
 msgid "or"
 msgstr "neɣ"
 
@@ -370,21 +359,19 @@ msgid "Define your Analytic Structure"
 msgstr "Sbadu taɣessa yinek tusliṭ"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:145
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
+#: view:hr.sign.in.project:0
 #, python-format
 msgid "Sign in / Sign out"
 msgstr "Kcem/Ffeɣ"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+#: view:hr.sign.in.project:0
 msgid "(Keep empty for current time)"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:hr_timesheet.hr_timesheet_employee_extd_form
+#: field:account.analytic.account,use_timesheets:0 view:hr.employee:0
 msgid "Timesheets"
 msgstr "Tiferkitin n wakud"
 
@@ -408,10 +395,10 @@ msgstr "Izrig usliḍ"
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "August"
-msgstr ""
+msgstr "Ɣuct"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:158
+#: code:addons/hr_timesheet/hr_timesheet.py:155
 #, python-format
 msgid ""
 "No analytic journal defined for '%s'.\n"
@@ -425,16 +412,15 @@ msgstr ""
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "June"
-msgstr ""
+msgstr "Yunyu"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
+#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Addad amiran"
 
 #. module: hr_timesheet
-#: field:hr.timesheet.report,date:0
+#: view:hr.analytic.timesheet:0
 msgid "Date"
 msgstr "Azemz"
 
@@ -445,7 +431,7 @@ msgstr "Azemz"
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "November"
-msgstr ""
+msgstr "Number"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -459,7 +445,7 @@ msgstr "Azemz n tagara"
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "October"
-msgstr ""
+msgstr "Tuber"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -468,19 +454,17 @@ msgstr ""
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "January"
-msgstr ""
+msgstr "Yennayer"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
 #: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Thu"
-msgstr ""
+msgstr "Amh"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+#: view:hr.sign.in.project:0 view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
 msgstr "Kcem /Ffeɣ s usenfaṛ"
 
@@ -490,25 +474,24 @@ msgid "Print Employee Timesheet & Print My Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
+#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
 msgstr "Asulay n umaris"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Period"
-msgstr ""
+msgstr "Tawala"
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+#: view:hr.sign.out.project:0
 msgid "General Information"
 msgstr "Tilɣa timatutin"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+#: view:hr.analytical.timesheet.employee:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
+#: view:hr.sign.out.project:0
 msgid "Cancel"
 msgstr "Sefsax"
 
@@ -521,17 +504,18 @@ msgid "Employees Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:0
 msgid "Information"
-msgstr "Talɣut"
+msgstr "Information"
 
 #. module: hr_timesheet
+#: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
 msgstr "Amaris"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+#: view:hr.sign.in.project:0
 msgid ""
 "Employees can encode their time spent on the different projects they are "
 "assigned on. A  project is an analytic account and the time spent on a "
@@ -551,15 +535,12 @@ msgid "Timesheet Line"
 msgstr "Izrig n tiferkit n wakud"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-#: field:hr.employee,product_id:0
-#: field:hr.timesheet.report,product_id:0
+#: view:hr.analytic.timesheet:0 field:hr.employee,product_id:0
 msgid "Product"
 msgstr "Afaris"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:hr.analytic.timesheet:0
 msgid "Users"
 msgstr "Iseqdacen"
 
@@ -570,15 +551,15 @@ msgstr "Iseqdacen"
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "May"
-msgstr ""
+msgstr "Maggu"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: view:hr.analytic.timesheet:0
 msgid "Total time"
 msgstr "Asemday n wakud"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:0
 msgid "(local time on the server side)"
 msgstr ""
 
@@ -594,7 +575,7 @@ msgstr "Kcem s usenfaṛ"
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "February"
-msgstr ""
+msgstr "Furar"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
@@ -612,7 +593,7 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
+msgstr "Imarisen"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -621,7 +602,7 @@ msgstr ""
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "March"
-msgstr ""
+msgstr "Meɣres"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -630,17 +611,17 @@ msgstr ""
 #: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "April"
-msgstr ""
+msgstr "Yebrir"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "User Error!"
 msgstr "Tuccḍa n useqdac !"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Bdu amahil"
 
@@ -648,26 +629,24 @@ msgstr "Bdu amahil"
 #: field:hr.analytical.timesheet.employee,year:0
 #: field:hr.analytical.timesheet.users,year:0
 msgid "Year"
-msgstr ""
+msgstr "Aseggawas"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: view:hr.analytic.timesheet:0
 msgid "Duration"
 msgstr "Timirt"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:0
 msgid "Accounting"
 msgstr "Tasiḍent"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
+#: xsl:hr.analytical.timesheet:0 xsl:hr.analytical.timesheet_users:0
 msgid "Total"
-msgstr ""
+msgstr "Asemday"
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+#: view:hr.sign.out.project:0
 msgid "Change Work"
 msgstr "Snifel amahil"

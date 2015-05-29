@@ -1,25 +1,25 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet_sheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-02-17 04:59+0000\n"
-"Last-Translator: Harri Luuppala <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:59+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0
-#: field:hr.attendance,sheet_id:0
+#: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.account,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
@@ -29,11 +29,10 @@ msgstr "Kortti"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:101
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "Virhe! Sisään kirjaantumista pitää seurata ulos kirjaantuminen (ja päinvastoin)."
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,quantity:0
-#: field:timesheet.report,quantity:0
+#: field:hr.timesheet.report,quantity:0 field:timesheet.report,quantity:0
 msgid "Time"
 msgstr "Aika"
 
@@ -41,13 +40,11 @@ msgstr "Aika"
 #: help:hr.config.settings,timesheet_max_difference:0
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet\n"
-"                computation for one sheet. Set this to 0 if you do not want "
-"any control."
+"                computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
+#: view:hr.timesheet.report:0 view:hr_timesheet_sheet.sheet:0
 #: view:timesheet.report:0
 msgid "Group By..."
 msgstr "Ryhmittely.."
@@ -59,8 +56,7 @@ msgstr "Läsnä kaikkiaan"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,department_id:0
-#: view:timesheet.report:0
+#: field:hr_timesheet_sheet.sheet,department_id:0 view:timesheet.report:0
 #: field:timesheet.report,department_id:0
 msgid "Department"
 msgstr "Osasto"
@@ -80,8 +76,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "March"
 msgstr "Maaliskuu"
 
@@ -91,28 +86,24 @@ msgid "Service"
 msgstr "Palvelu"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,cost:0
+#: view:timesheet.report:0 field:timesheet.report,cost:0
 msgid "#Cost"
 msgstr "#kulut"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lukemattomia viestejä"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,company_id:0
-#: field:hr_timesheet_sheet.sheet,company_id:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,company_id:0
+#: field:hr_timesheet_sheet.sheet,company_id:0 view:timesheet.report:0
 #: field:timesheet.report,company_id:0
 msgid "Company"
 msgstr "Yritys"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
+#: view:hr.timesheet.report:0 view:hr_timesheet_sheet.sheet:0
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_timesheet_report
@@ -132,15 +123,14 @@ msgid "Timesheet Period"
 msgstr "Tuntikortin jakso"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0
-#: field:timesheet.report,date_to:0
+#: field:hr_timesheet_sheet.sheet,date_to:0 field:timesheet.report,date_to:0
 msgid "Date to"
 msgstr "Päivämäärä"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "to"
-msgstr ""
+msgstr "lähetti vastaanottajalle"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -154,8 +144,7 @@ msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr "Et voi muuttaa vahvistetulla tuntikortilla olevaa tietoa."
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Group by day of date"
 msgstr "Ryhmittele viikonpäivän mukaan"
 
@@ -207,8 +196,7 @@ msgstr "Ole hyvä ja luo työntekijä ja yhdistä hänet tähän käyttäjään.
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr ""
-"Et voi antaa läsnäolopäivää valitun tuntikortin päivämäärien ulkopuolelta."
+msgstr "Et voi antaa läsnäolopäivää valitun tuntikortin päivämäärien ulkopuolelta."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:236
@@ -223,8 +211,8 @@ msgid ""
 "the system. From the same form, you can register your attendances (Sign "
 "In/Out) and describe the working hours made on the different projects. At "
 "the end of the period defined in the company, the timesheet is confirmed by "
-"the user and can be validated by his manager. If required, as defined on the "
-"project, you can generate the invoices based on the timesheet."
+"the user and can be validated by his manager. If required, as defined on the"
+" project, you can generate the invoices based on the timesheet."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -235,17 +223,10 @@ msgstr "Viestit"
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"timesheet.                 \n"
-"* The 'Confirmed' status is used for to confirm the timesheet by user.       "
-"          \n"
-"* The 'Done' status is used when users timesheet is accepted by his/her "
-"senior."
-msgstr ""
-" * \"Ehdotus\" -tilaa käytetään, kun käyttäjä kirjaa uudet,vahviastamattomat "
-"tunnit tuntikortille.\n"
-"* \"Vahvistettu\" -tila syntyy käyttäjän vahvistaessa tuntikorttinsa.\n"
-"* \"Valmis\" -tilassa käyttäjän tuntikortin on hyväksynyt hänen esimiehensä."
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
+"* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
+"* The 'Done' status is used when users timesheet is accepted by his/her senior."
+msgstr " * \"Ehdotus\" -tilaa käytetään, kun käyttäjä kirjaa uudet,vahviastamattomat tunnit tuntikortille.\n* \"Vahvistettu\" -tila syntyy käyttäjän vahvistaessa tuntikorttinsa.\n* \"Valmis\" -tilassa käyttäjän tuntikortin on hyväksynyt hänen esimiehensä."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:67
@@ -273,8 +254,7 @@ msgstr "Sallii aikaeron tuntikorttien ja läsnäolotuntien välillä."
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr ""
-"Ole hyvä ja tarkasta että kokonaisero tuntikortilla on pienempi kuin %.2f."
+msgstr "Ole hyvä ja tarkasta että kokonaisero tuntikortilla on pienempi kuin %.2f."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
@@ -301,7 +281,7 @@ msgstr "Varoitus !"
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:72
@@ -310,9 +290,7 @@ msgstr ""
 msgid ""
 "In order to create a timesheet for this employee, you must assign it to a "
 "user."
-msgstr ""
-"Luodaksesi tälle käyttäjälle tuntikortin, sinun pitää antaa se tehtäväksi "
-"ao. käyttäjälle."
+msgstr "Luodaksesi tälle käyttäjälle tuntikortin, sinun pitää antaa se tehtäväksi ao. käyttäjälle."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
@@ -327,10 +305,8 @@ msgid "Invalid Action!"
 msgstr "Virheellinen toiminto!"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,account_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,account_id:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,account_id:0
+#: view:timesheet.report:0 field:timesheet.report,account_id:0
 msgid "Analytic Account"
 msgstr "Analyyttinen tili"
 
@@ -339,9 +315,7 @@ msgstr "Analyyttinen tili"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
-"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
+msgstr "Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
@@ -355,8 +329,7 @@ msgid "Date from"
 msgstr "Päiväys alkaen"
 
 #. module: hr_timesheet_sheet
-#: view:hr.employee:0
-#: view:hr_timesheet_sheet.sheet:0
+#: view:hr.employee:0 view:hr_timesheet_sheet.sheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
 #: view:res.company:0
 msgid "Timesheets"
@@ -364,8 +337,7 @@ msgstr "Tuntikortit"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
+#: view:timesheet.report:0 selection:timesheet.report,state:0
 msgid "Confirmed"
 msgstr "Vahvistettu"
 
@@ -424,14 +396,12 @@ msgid "Timesheets to Validate"
 msgstr "Tuntikortit vahvistettavaksi"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
+#: view:hr.timesheet.report:0 view:hr_timesheet_sheet.sheet:0
 msgid "Hours"
 msgstr "Tunnit"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Group by month of date"
 msgstr "Ryhmittele kuukauden mukaan"
 
@@ -441,8 +411,7 @@ msgid "The project manager validates the timesheets."
 msgstr "Projektipäällikkö vahvistaa tuntikortit."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "July"
 msgstr "Heinäkuu"
 
@@ -459,8 +428,7 @@ msgid "Configuration Error!"
 msgstr "Konfiguraatiovirhe!"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,state:0
-#: view:timesheet.report:0
+#: field:hr_timesheet_sheet.sheet,state:0 view:timesheet.report:0
 #: field:timesheet.report,state:0
 msgid "Status"
 msgstr "Tila"
@@ -498,8 +466,7 @@ msgid "Sign In"
 msgstr "Kirjaudu sisään"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_timesheet:0
+#: view:timesheet.report:0 field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
 msgstr "Tuntikortti yhteensä"
 
@@ -512,21 +479,17 @@ msgstr "hr.timesheet.current.open"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:74
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product, like 'Consultant'."
-msgstr ""
-"Luodaksesi tuntikortin tälle työntekijälle, hänen työtehtävänsä pitää kytkeä "
-"tuotteeseen. Esim. työtehtävä 'Konsultti'."
+"In order to create a timesheet for this employee, you must link the employee"
+" to a product, like 'Consultant'."
+msgstr "Luodaksesi tuntikortin tälle työntekijälle, hänen työtehtävänsä pitää kytkeä tuotteeseen. Esim. työtehtävä 'Konsultti'."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "September"
 msgstr "Syyskuu"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "December"
 msgstr "Joulukuu"
 
@@ -536,18 +499,14 @@ msgid "It will open your current timesheet"
 msgstr "Avaa nykyisen tuntikorttisi"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,month:0
-#: selection:res.company,timesheet_range:0
-#: view:timesheet.report:0
-#: field:timesheet.report,month:0
+#: selection:hr.config.settings,timesheet_range:0 view:hr.timesheet.report:0
+#: field:hr.timesheet.report,month:0 selection:res.company,timesheet_range:0
+#: view:timesheet.report:0 field:timesheet.report,month:0
 msgid "Month"
 msgstr "Kuukausi"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_diff:0
+#: view:timesheet.report:0 field:timesheet.report,total_diff:0
 msgid "#Total Diff"
 msgstr "Kokonaiserotus"
 
@@ -565,8 +524,8 @@ msgstr "Kirjaudu sisään/ulos"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:90
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product."
+"In order to create a timesheet for this employee, you must link the employee"
+" to a product."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -593,8 +552,7 @@ msgstr "Laskutus"
 msgid ""
 "The timesheet line represents the time spent by the employee on a specific "
 "service provided."
-msgstr ""
-"Tuntikortin rivi tarkoittaa työntekijän tiettyyn palveluun käyttämää aikaa"
+msgstr "Tuntikortin rivi tarkoittaa työntekijän tiettyyn palveluun käyttämää aikaa"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,name:0
@@ -609,8 +567,7 @@ msgid "Add"
 msgstr "Lisää"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
+#: view:timesheet.report:0 selection:timesheet.report,state:0
 msgid "Draft"
 msgstr "Luonnos"
 
@@ -639,8 +596,7 @@ msgid ""
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager.\n"
 "              </p><p>\n"
-"                Timesheets can also be invoiced to customers, depending on "
-"the\n"
+"                Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract.\n"
 "              </p>\n"
 "            "
@@ -652,8 +608,7 @@ msgid "Analytic Line"
 msgstr "Analyyttinen rivi"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "August"
 msgstr "Elokuu"
 
@@ -663,8 +618,7 @@ msgid "Differences"
 msgstr "Erot"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "June"
 msgstr "Kesäkuu"
 
@@ -691,10 +645,8 @@ msgid "Is a Follower"
 msgstr "on seuraaja"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,user_id:0
-#: field:hr_timesheet_sheet.sheet,user_id:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,user_id:0
+#: field:hr_timesheet_sheet.sheet,user_id:0 view:timesheet.report:0
 #: field:timesheet.report,user_id:0
 msgid "User"
 msgstr "Käyttäjä"
@@ -705,21 +657,18 @@ msgid "Timesheet by Account"
 msgstr "Tuntiikortti tileittäin"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,date:0
-#: field:hr_timesheet_sheet.sheet.day,name:0
+#: field:hr.timesheet.report,date:0 field:hr_timesheet_sheet.sheet.day,name:0
 #: field:timesheet.report,date:0
 msgid "Date"
 msgstr "Päivämäärä"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "November"
 msgstr "Marraskuu"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Extended Filters..."
 msgstr "Laajennetut suodattimet..."
 
@@ -734,8 +683,7 @@ msgid "My Total Attendance By Week"
 msgstr "Oma kokonaisläsnäolo viikoittain"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "October"
 msgstr "Lokakuu"
 
@@ -745,13 +693,10 @@ msgstr "Lokakuu"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr ""
-"Tuntikorttia ei voi vahvistaa, ellei se sisällä yhtä paljon työntekijän "
-"sisään ja ulos kirjautumisia."
+msgstr "Tuntikorttia ei voi vahvistaa, ellei se sisällä yhtä paljon työntekijän sisään ja ulos kirjautumisia."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "January"
 msgstr "Tammikuu"
 
@@ -788,10 +733,7 @@ msgstr "Vahvistamattomat tuntikotit"
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
-"Sinulla ei voi olla kahta päällekkäistä tuntikorttia!\n"
-"Käytä valikon valintaa \"Minun tuntikorttini\" välttääksesi tämän "
-"päällekkäisyyden."
+msgstr "Sinulla ei voi olla kahta päällekkäistä tuntikorttia!\nKäytä valikon valintaa \"Minun tuntikorttini\" välttääksesi tämän päällekkäisyyden."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -807,10 +749,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,general_account_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,general_account_id:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,general_account_id:0
+#: view:timesheet.report:0 field:timesheet.report,general_account_id:0
 msgid "General Account"
 msgstr "Yleinen tili"
 
@@ -836,25 +776,18 @@ msgstr "Et voi muuttaa vahvistetun tuntikortin kirjauksia"
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr ""
-"Sallittu laskentaero tunteina kirjautumisten (sisään/ulos) ja tuntikortin "
-"välillä yhdellä tuntikortilla. Aseta arvoksi 0 (nolla) jos et halua mitään "
-"kontrollia."
+msgstr "Sallittu laskentaero tunteina kirjautumisten (sisään/ulos) ja tuntikortin välillä yhdellä tuntikortilla. Aseta arvoksi 0 (nolla) jos et halua mitään kontrollia."
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,period_ids:0
+#: view:hr_timesheet_sheet.sheet:0 field:hr_timesheet_sheet.sheet,period_ids:0
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Period"
 msgstr "Jakso"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,day:0
-#: selection:res.company,timesheet_range:0
-#: view:timesheet.report:0
-#: field:timesheet.report,day:0
+#: selection:hr.config.settings,timesheet_range:0 view:hr.timesheet.report:0
+#: field:hr.timesheet.report,day:0 selection:res.company,timesheet_range:0
+#: view:timesheet.report:0 field:timesheet.report,day:0
 msgid "Day"
 msgstr "Päivä"
 
@@ -863,10 +796,7 @@ msgstr "Päivä"
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
-"Sinulla ei voi olla kahta päällekkäistä tuntikorttia!\n"
-"Käytä valikon valintaa \"Minun nykyinen tuntikorttini\" välttääksesi tämän "
-"päällekkäisyyden."
+msgstr "Sinulla ei voi olla kahta päällekkäistä tuntikorttia!\nKäytä valikon valintaa \"Minun nykyinen tuntikorttini\" välttääksesi tämän päällekkäisyyden."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -876,8 +806,7 @@ msgid "My Timesheet"
 msgstr "Minun tuntikorttini"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
+#: view:timesheet.report:0 selection:timesheet.report,state:0
 msgid "Done"
 msgstr "Valmis"
 
@@ -913,8 +842,7 @@ msgid "Open Timesheet"
 msgstr "Avaa tuntikortti"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Group by year of date"
 msgstr "Ryhmittele vuoden mukaan"
 
@@ -933,7 +861,7 @@ msgstr "Tila on 'vahvistettu'"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -976,10 +904,8 @@ msgid "You cannot delete a timesheet which is already confirmed."
 msgstr "Et voi poistaa jo vahvistettua tuntikorttia."
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,product_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,product_id:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,product_id:0
+#: view:timesheet.report:0 field:timesheet.report,product_id:0
 msgid "Product"
 msgstr "Tuote"
 
@@ -991,8 +917,7 @@ msgid "Attendances"
 msgstr "Läsnäolot"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,name:0
-#: field:timesheet.report,name:0
+#: field:hr.timesheet.report,name:0 field:timesheet.report,name:0
 msgid "Description"
 msgstr "Kuvaus"
 
@@ -1002,8 +927,7 @@ msgid "The employee periodically confirms his own timesheets."
 msgstr "Työntekijä vahvistaa määräajoin omat tuntikorttinsa."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "May"
 msgstr "Toukokuu"
 
@@ -1052,8 +976,7 @@ msgid "Absent"
 msgstr "Poissaolo"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "February"
 msgstr "Helmikuu"
 
@@ -1063,8 +986,7 @@ msgid ""
 "<p>\n"
 "                This report performs analysis on timesheets created by your\n"
 "                human resources in the system. It allows you to have a full\n"
-"                overview of  entries done by your employees. You can group "
-"them\n"
+"                overview of  entries done by your employees. You can group them\n"
 "                by specific selection criteria thanks to the search tool.\n"
 "              </p>\n"
 "            "
@@ -1086,8 +1008,7 @@ msgid "Information of time spent on a service"
 msgstr "Tiedot palveluun käytetystä ajasta"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "April"
 msgstr "Huhtikuu"
 
@@ -1135,14 +1056,12 @@ msgid "Analytic accounts"
 msgstr "Analyyttiset tilit"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,to_invoice:0
+#: view:timesheet.report:0 field:timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
 msgstr "Laskutuksen tyyppi"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_attendance:0
+#: view:timesheet.report:0 field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
 msgstr "Kokonaisläsnäolo"
 
@@ -1162,16 +1081,13 @@ msgid "Hr Timesheet"
 msgstr "HR-tuntikortti"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,year:0
-#: view:timesheet.report:0
-#: field:timesheet.report,year:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,year:0
+#: view:timesheet.report:0 field:timesheet.report,year:0
 msgid "Year"
 msgstr "Vuosi"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-#: selection:hr_timesheet_sheet.sheet,state:0
+#: view:hr.timesheet.current.open:0 selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
 msgstr "Avaa"
 

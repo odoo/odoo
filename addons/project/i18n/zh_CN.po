@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-07 02:03+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:16+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project
 #: view:project.project:0
@@ -25,13 +26,12 @@ msgstr "电子邮件接口"
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid ""
-"If checked, this contract will be available in the project menu and you will "
-"be able to manage tasks or track issues"
+"If checked, this contract will be available in the project menu and you will"
+" be able to manage tasks or track issues"
 msgstr "如果选中，则该合同将可在项目菜单中，您将能够管理任务或追踪问题"
 
 #. module: project
-#: field:project.project,progress_rate:0
-#: view:report.project.task.user:0
+#: field:project.project,progress_rate:0 view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
 msgstr "进度"
@@ -67,8 +67,7 @@ msgid "New Project Based on Template"
 msgstr "基于该模板新建项目"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,day:0
+#: view:report.project.task.user:0 field:report.project.task.user,day:0
 msgid "Day"
 msgstr "日"
 
@@ -83,8 +82,7 @@ msgid "Start Task"
 msgstr "开始任务"
 
 #. module: project
-#: help:project.project,message_unread:0
-#: help:project.task,message_unread:0
+#: help:project.project,message_unread:0 help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "如果选中此项，你需要注意新的消息。"
 
@@ -119,16 +117,14 @@ msgid "Manage time estimation on tasks"
 msgstr "管理任务的估计时间"
 
 #. module: project
-#: help:project.project,message_summary:0
-#: help:project.task,message_summary:0
+#: help:project.project,message_summary:0 help:project.task,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr "保存对话概要信息，这些概要信息将为直接以HTML格式插入到看板视图。"
 
 #. module: project
-#: code:addons/project/project.py:458
-#: code:addons/project/project.py:969
+#: code:addons/project/project.py:458 code:addons/project/project.py:969
 #: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
@@ -145,8 +141,7 @@ msgid "Allow task delegation"
 msgstr "允许任务委派"
 
 #. module: project
-#: field:project.task.delegate,planned_hours:0
-#: view:report.project.task.user:0
+#: field:project.task.delegate,planned_hours:0 view:report.project.task.user:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "已计划的小时数"
@@ -197,16 +192,13 @@ msgid "Planned Time"
 msgstr "已计划的时间"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
+#: selection:report.project.task.user,state:0 view:res.partner:0
 msgid "Done"
 msgstr "完成"
 
@@ -232,8 +224,7 @@ msgid "Task Done"
 msgstr "已完成的任务"
 
 #. module: project
-#: view:project.project:0
-#: view:report.project.task.user:0
+#: view:project.project:0 view:report.project.task.user:0
 #: field:report.project.task.user,partner_id:0
 msgid "Contact"
 msgstr "联系"
@@ -300,14 +291,12 @@ msgid ""
 msgstr "项目成员是可以访问此项目的用户"
 
 #. module: project
-#: view:project.project:0
-#: field:project.task,manager_id:0
+#: view:project.project:0 field:project.task,manager_id:0
 msgid "Project Manager"
 msgstr "项目经理"
 
 #. module: project
-#: field:project.project,state:0
-#: field:project.task,state:0
+#: field:project.project,state:0 field:project.task,state:0
 #: field:project.task.history,state:0
 #: field:project.task.history.cumulative,state:0
 #: field:report.project.task.user,state:0
@@ -320,8 +309,7 @@ msgid "August"
 msgstr "八月"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,complete_name:0
+#: view:project.project:0 field:project.project,complete_name:0
 msgid "Project Name"
 msgstr "项目名称"
 
@@ -376,8 +364,7 @@ msgid "Append this project to another one using analytic accounts hierarchy"
 msgstr "这个项目追加到另一个分析帐户结构"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "In Progress Tasks"
 msgstr "进行中的任务"
 
@@ -385,15 +372,11 @@ msgstr "进行中的任务"
 #: help:res.company,project_time_mode_id:0
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
-msgstr ""
-"此操作用于设置项目和任务的所采用的计量单位\n"
-"如果您安装了project_timesheet模块，工作时间表会与项目连接，请记得在员工设置中选择正确的计量单位。"
+"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
+msgstr "此操作用于设置项目和任务的所采用的计量单位\n如果您安装了project_timesheet模块，工作时间表会与项目连接，请记得在员工设置中选择正确的计量单位。"
 
 #. module: project
-#: field:project.task,user_id:0
-#: view:report.project.task.user:0
+#: field:project.task,user_id:0 view:report.project.task.user:0
 msgid "Assigned to"
 msgstr "指派到"
 
@@ -409,10 +392,8 @@ msgid "Project(s) Manager"
 msgstr "项目管理员"
 
 #. module: project
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
+#: selection:project.project,state:0 view:project.task:0
+#: selection:project.task,state:0 selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: selection:project.task.type,state:0
 #: selection:report.project.task.user,state:0
@@ -540,8 +521,7 @@ msgstr "三月"
 #. module: project
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project.my_open_tasks_action
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "My Tasks"
 msgstr "我的任务"
 
@@ -584,13 +564,10 @@ msgstr "设为模板"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
-#: view:project.config.settings:0
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.config.settings:0 view:project.project:0 view:project.task:0
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0
-#: view:report.project.task.user:0
+#: field:project.task.work,task_id:0 view:report.project.task.user:0
 msgid "Task"
 msgstr "任务"
 
@@ -615,8 +592,7 @@ msgid "Analysis"
 msgstr "分析"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "任务摘要"
 
@@ -655,16 +631,7 @@ msgid ""
 "                  projects or invite customers to share your activities.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  创建一个新项目\n"
-"                </p><p>\n"
-"                  "
-"项目是组织活动，计划任务，跟踪问题，记录人力资源成本的组织形式。项目可以分为内部项目（研发活动，加快销售进度），私有项目或者客户参与的项目。\n"
-"                </p><p>\n"
-"                内部用户以项目成员的方式参与到项目中，也可以邀请客户加入到项目中分享项目活动。\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                  创建一个新项目\n                </p><p>\n                  项目是组织活动，计划任务，跟踪问题，记录人力资源成本的组织形式。项目可以分为内部项目（研发活动，加快销售进度），私有项目或者客户参与的项目。\n                </p><p>\n                内部用户以项目成员的方式参与到项目中，也可以邀请客户加入到项目中分享项目活动。\n                </p>\n            "
 
 #. module: project
 #: view:project.config.settings:0
@@ -672,8 +639,7 @@ msgid "Planning"
 msgstr "计划"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,date_deadline:0
+#: view:project.task:0 field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
 msgstr "计划完成日期"
@@ -694,8 +660,7 @@ msgid "Invoice working time on issues"
 msgstr "依据问题工作时间开票"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
@@ -754,8 +719,7 @@ msgid "Miscellaneous"
 msgstr "杂项"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,stage_id:0
+#: view:project.task:0 field:project.task,stage_id:0
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
 msgid "Stage"
@@ -787,8 +751,7 @@ msgid "Stages"
 msgstr "阶段"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Delete"
 msgstr "删除"
 
@@ -839,14 +802,12 @@ msgid "Task Activities"
 msgstr "任务活动"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "花费的时间"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "í"
 msgstr "í"
 
@@ -885,12 +846,11 @@ msgstr ""
 #: help:project.task,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
-msgstr ""
-"当事件被创建时,状态设置为'草稿'。如果事件是在进行的状态设置为'打开'。如果事件已经完成时，状态设置为'做'。如果事件需要审核时，状态设置为'等待'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
+msgstr "当事件被创建时,状态设置为'草稿'。如果事件是在进行的状态设置为'打开'。如果事件已经完成时，状态设置为'做'。如果事件需要审核时，状态设置为'等待'."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -904,8 +864,7 @@ msgstr "默认折叠"
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "日期"
 
@@ -922,16 +881,8 @@ msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
-msgstr ""
-"一个任务的看板状态表明，特殊情况下的影响：\n"
-"\n"
-"*正常是默认情况\n"
-"\n"
-"*封锁表明什么是防止进展这一任务\n"
-"\n"
-"*准备下一阶段表明任务是准备拉到下一个阶段"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
+msgstr "一个任务的看板状态表明，特殊情况下的影响：\n\n*正常是默认情况\n\n*封锁表明什么是防止进展这一任务\n\n*准备下一阶段表明任务是准备拉到下一个阶段"
 
 #. module: project
 #: view:project.task:0
@@ -946,16 +897,15 @@ msgstr ""
 #. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr "如果你需要项目的财务管理链接到这项目的辅助核算项目行,它能让你在链接的项目的有预算、计划、成本和收益分析、项目的时间表等."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.config.settings:0
-#: view:project.task.delegate:0
+#: view:project.config.settings:0 view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "取消"
@@ -1001,8 +951,7 @@ msgid "Stage Changed"
 msgstr "阶段变更"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
+#: view:project.project:0 model:res.groups,name:project.group_project_manager
 msgid "Manager"
 msgstr "经理"
 
@@ -1047,8 +996,7 @@ msgid "Common"
 msgstr "公共"
 
 #. module: project
-#: help:project.project,message_ids:0
-#: help:project.task,message_ids:0
+#: help:project.project,message_ids:0 help:project.task,message_ids:0
 msgid "Messages and communication history"
 msgstr "信息和通信历史记录"
 
@@ -1070,15 +1018,12 @@ msgid "Work summary"
 msgstr "工作摘要"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: view:report.project.task.user:0
+#: view:project.project:0 view:project.task:0 view:report.project.task.user:0
 msgid "Group By..."
 msgstr "分组于..."
 
 #. module: project
-#: view:project.project:0
-#: selection:project.project,state:0
+#: view:project.project:0 selection:project.project,state:0
 msgid "Template"
 msgstr "模板"
 
@@ -1108,16 +1053,13 @@ msgid "Delegated Tasks"
 msgstr "已委派任务"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,message_unread:0
-#: view:project.task:0
-#: field:project.task,message_unread:0
+#: view:project.project:0 field:project.project,message_unread:0
+#: view:project.task:0 field:project.task,message_unread:0
 msgid "Unread Messages"
 msgstr "未读消息"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
+#: view:project.task:0 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "上级任务"
 
@@ -1142,8 +1084,7 @@ msgid "Notes"
 msgstr "备注"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Pending Tasks"
 msgstr "未决任务"
 
@@ -1193,8 +1134,7 @@ msgid "Edit..."
 msgstr "编辑..."
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,nbr:0
+#: view:report.project.task.user:0 field:report.project.task.user,nbr:0
 msgid "# of tasks"
 msgstr "任务编号"
 
@@ -1204,8 +1144,7 @@ msgid "Number of documents attached"
 msgstr "附件数量"
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "优先级"
 
@@ -1229,8 +1168,7 @@ msgid ""
 "                Click to add a stage in the task pipeline.\n"
 "              </p><p>\n"
 "                Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or "
-"issue.\n"
+"                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue.\n"
 "              </p>\n"
@@ -1243,8 +1181,7 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "计算:花费的时间 + 剩余的时间"
 
 #. module: project
-#: code:addons/project/project.py:382
-#: code:addons/project/project.py:403
+#: code:addons/project/project.py:382 code:addons/project/project.py:403
 #: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
@@ -1256,8 +1193,7 @@ msgid "Task Stage Changed"
 msgstr "任务阶段已改变"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task.history,remaining_hours:0
+#: view:project.task:0 field:project.task.history,remaining_hours:0
 #: field:project.task.history.cumulative,remaining_hours:0
 msgid "Remaining Time"
 msgstr "剩余时间"
@@ -1309,8 +1245,7 @@ msgid "Very important"
 msgstr "非常重要"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,month:0
+#: view:report.project.task.user:0 field:report.project.task.user,month:0
 msgid "Month"
 msgstr "月"
 
@@ -1325,8 +1260,7 @@ msgid "Start Date"
 msgstr "开始日期"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,kanban_state:0
@@ -1372,15 +1306,12 @@ msgid "Closed"
 msgstr "已关闭"
 
 #. module: project
-#: view:project.project:0
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.project:0 selection:project.project,state:0
+#: view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
 #: selection:report.project.task.user,state:0
 msgid "Pending"
 msgstr "未决"
@@ -1388,8 +1319,7 @@ msgstr "未决"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_category_action
 #: model:ir.ui.menu,name:project.menu_project_category_act
-#: view:project.category:0
-#: field:project.task,categ_ids:0
+#: view:project.category:0 field:project.task,categ_ids:0
 msgid "Tags"
 msgstr "标签"
 
@@ -1464,14 +1394,15 @@ msgstr "附件"
 #. module: project
 #: view:project.category:0
 msgid "Issue Version"
-msgstr ""
+msgstr "问题版本"
 
 #. module: project
 #: code:addons/project/project.py:189
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
+"project's tasks and then delete the project or simply deactivate the "
+"project."
 msgstr "您不能删除一个项目，其中包含任务。您可以删除所有项目的任务，然后删除项目或干脆取消的项目。"
 
 #. module: project
@@ -1486,8 +1417,7 @@ msgid "Privacy / Visibility"
 msgstr "隐私/能见度"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,remaining_hours:0
+#: view:project.task:0 field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
@@ -1557,8 +1487,7 @@ msgstr "时间花费"
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads\n"
+"Lets the company customize which Pad installation should be used to link to new pads\n"
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
@@ -1579,9 +1508,7 @@ msgstr "拖期任务"
 msgid ""
 "Child task still open.\n"
 "Please cancel or complete child task first."
-msgstr ""
-"子任务仍然开启。\n"
-"请先取消或完成子任务。"
+msgstr "子任务仍然开启。\n请先取消或完成子任务。"
 
 #. module: project
 #: field:project.task.delegate,user_id:0
@@ -1650,20 +1577,16 @@ msgid "Progress (%)"
 msgstr "进度%"
 
 #. module: project
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,company_id:0
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,company_id:0
 msgid "Company"
 msgstr "公司"
 
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
-"This allows you to transfer the entries under tasks defined for Project "
-"Management to\n"
-"                the timesheet line entries for particular date and user, "
-"with the effect of creating,\n"
+"This allows you to transfer the entries under tasks defined for Project Management to\n"
+"                the timesheet line entries for particular date and user, with the effect of creating,\n"
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
@@ -1694,14 +1617,12 @@ msgid "Last Modification Date"
 msgstr ""
 
 #. module: project
-#: field:project.project,message_ids:0
-#: field:project.task,message_ids:0
+#: field:project.project,message_ids:0 field:project.task,message_ids:0
 msgid "Messages"
 msgstr "消息"
 
 #. module: project
-#: field:project.project,color:0
-#: field:project.task,color:0
+#: field:project.project,color:0 field:project.task,color:0
 msgid "Color Index"
 msgstr "颜色索引"
 
@@ -1710,20 +1631,16 @@ msgstr "颜色索引"
 #: model:ir.model,name:project.model_project_project
 #: model:ir.ui.menu,name:project.menu_project_dashboard
 #: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,project_id:0
+#: view:project.project:0 view:project.task:0 field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
 #: field:project.task.history.cumulative,project_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,project_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
 msgstr "项目"
 
 #. module: project
-#: selection:project.project,state:0
-#: selection:project.task,state:0
+#: selection:project.project,state:0 selection:project.task,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: model:project.task.type,name:project.project_tt_cancel
@@ -1739,23 +1656,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new task.\n"
 "              </p><p>\n"
-"                OpenERP's project management allows you to manage the "
-"pipeline\n"
+"                OpenERP's project management allows you to manage the pipeline\n"
 "                of tasks in order to get things done efficiently. You can\n"
 "                track progress, discuss on tasks, attach documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击创建新任务。\n"
-"              </p><p>\n"
-"OpenERP 系统的任务管理允许你为了更高效地完成工作而管理任务管道。你可以跟踪任务进度、与他人讨论任务、附加文档附件等。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建新任务。\n              </p><p>\nOpenERP 系统的任务管理允许你为了更高效地完成工作而管理任务管道。你可以跟踪任务进度、与他人讨论任务、附加文档附件等。\n              </p>\n            "
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "结束日期"
 
@@ -1775,8 +1684,7 @@ msgid "Task created"
 msgstr "任务已创建"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,no_of_days:0
+#: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
 msgid "# of Days"
 msgstr "天数"
 
@@ -1787,13 +1695,10 @@ msgid "Followers"
 msgstr "关注者"
 
 #. module: project
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
+#: selection:project.project,state:0 view:project.task:0
+#: selection:project.task,state:0 selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
+#: selection:project.task.type,state:0 view:report.project.task.user:0
 msgid "New"
 msgstr "新建"
 
@@ -1825,8 +1730,7 @@ msgid "Manage resources planning on gantt view"
 msgstr "管理甘特图资源规划"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Unassigned Tasks"
 msgstr "未指派任务"
 
@@ -1848,8 +1752,7 @@ msgid "My Task"
 msgstr "我的任务"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
 msgstr "我的项目"
@@ -1860,18 +1763,15 @@ msgid "Gives the sequence order when displaying a list of tasks."
 msgstr "指定显示任务列表的顺序号"
 
 #. module: project
-#: field:project.task,date_start:0
-#: field:report.project.task.user,date_start:0
+#: field:project.task,date_start:0 field:report.project.task.user,date_start:0
 msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: project
 #: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
-#: model:ir.ui.menu,name:project.menu_projects
-#: view:project.project:0
-#: field:project.task.type,project_ids:0
-#: view:res.company:0
+#: model:ir.ui.menu,name:project.menu_projects view:project.project:0
+#: field:project.task.type,project_ids:0 view:res.company:0
 #, python-format
 msgid "Projects"
 msgstr "项目列表"
@@ -1894,8 +1794,7 @@ msgid "Tasks Analysis"
 msgstr "任务分析"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Project Tasks"
 msgstr "项目任务列表"
 
@@ -1905,9 +1804,7 @@ msgstr "项目任务列表"
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.project:0
-#: view:project.task:0
-#: view:res.partner:0
+#: view:project.project:0 view:project.task:0 view:res.partner:0
 #: field:res.partner,task_ids:0
 msgid "Tasks"
 msgstr "任务"
@@ -1918,8 +1815,7 @@ msgid "December"
 msgstr "十二月"
 
 #. module: project
-#: view:project.config.settings:0
-#: view:project.task.delegate:0
+#: view:project.config.settings:0 view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "or"
 msgstr "或者"
@@ -1927,12 +1823,9 @@ msgstr "或者"
 #. module: project
 #: help:project.config.settings,module_project_mrp:0
 msgid ""
-"This feature automatically creates project tasks from service products in "
-"sale orders.\n"
-"                More precisely, tasks are created for procurement lines with "
-"product of type 'Service',\n"
-"                procurement method 'Make to Order', and supply method "
-"'Manufacture'.\n"
+"This feature automatically creates project tasks from service products in sale orders.\n"
+"                More precisely, tasks are created for procurement lines with product of type 'Service',\n"
+"                procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
 
@@ -1953,8 +1846,7 @@ msgid "Draft"
 msgstr "草稿"
 
 #. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
+#: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr "看板状态"
@@ -1975,8 +1867,7 @@ msgid "Project Time Unit"
 msgstr "项目时间单位"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Normal"
@@ -2049,8 +1940,7 @@ msgid "Projects in which I am a manager"
 msgstr "我是项目经理的项目"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
+#: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
@@ -2062,8 +1952,7 @@ msgid "Default for New Projects"
 msgstr "默认用于新项目"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,description:0
+#: view:project.task:0 field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "说明"
@@ -2093,12 +1982,9 @@ msgstr "二月"
 #. module: project
 #: help:project.config.settings,module_project_long_term:0
 msgid ""
-"A long term project management module that tracks planning, scheduling, and "
-"resource allocation.\n"
+"A long term project management module that tracks planning, scheduling, and resource allocation.\n"
 "                This installs the module project_long_term."
-msgstr ""
-"用于长期项目管理的模块，能够跟踪计划、排程和资源控制。\n"
-"                将会安装模块“project_long_term”。"
+msgstr "用于长期项目管理的模块，能够跟踪计划、排程和资源控制。\n                将会安装模块“project_long_term”。"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_closed
@@ -2130,27 +2016,21 @@ msgstr "已安排任务"
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
-msgstr ""
-"为项目中的问题/错误管理提供时间表支持。\n"
-"                将安装模块“project_issue_sheet”。"
+msgstr "为项目中的问题/错误管理提供时间表支持。\n                将安装模块“project_issue_sheet”。"
 
 #. module: project
-#: view:board.board:0
-#: field:project.project,task_count:0
+#: view:board.board:0 field:project.project,task_count:0
 msgid "Open Tasks"
 msgstr "未完成任务"
 
 #. module: project
-#: field:project.project,priority:0
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
-#: field:project.task.type,sequence:0
+#: field:project.project,priority:0 field:project.project,sequence:0
+#: field:project.task,sequence:0 field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "序列"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.work:0
+#: view:project.task:0 view:project.task.work:0
 msgid "Task Work"
 msgstr "任务工作"
 
@@ -2162,27 +2042,11 @@ msgid ""
 msgstr "你复核分派任务的工作成果需要的工时数"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,year:0
+#: view:report.project.task.user:0 field:report.project.task.user,year:0
 msgid "Year"
 msgstr "年"
 
 #. module: project
-#: field:project.project,type_ids:0
-#: view:project.task.type:0
+#: field:project.project,type_ids:0 view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "任务阶段"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告！"
-
-#, python-format
-#~ msgid "You must assign members on the project '%s' !"
-#~ msgstr "您必须为项目“%s”指定成员！"
-
-#~ msgid "Public"
-#~ msgstr "公开"
-
-#~ msgid "Followers Only"
-#~ msgstr "仅关注着"

@@ -1,21 +1,22 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-10-26 13:20+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-7/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:11+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -33,21 +34,15 @@ msgid ""
 "This is the time frame analysed by the scheduler when computing "
 "procurements. All procurements that are not between today and today+range "
 "are skipped for future computation."
-msgstr ""
-"Ovo je vremenski okvir analiziran od strane planera kada se izračunavaju "
-"naručivanja. Sva naručivanja koja nisu između danas i danas+raspon su "
-"preskočena za buduća izračunavanja."
+msgstr "Ovo je vremenski okvir analiziran od strane planera kada se izračunavaju naručivanja. Sva naručivanja koja nisu između danas i danas+raspon su preskočena za buduća izračunavanja."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
 msgid ""
-"Triggers an automatic procurement for all products that have a virtual stock "
-"under 0. You should probably not use this option, we suggest using a MTO "
+"Triggers an automatic procurement for all products that have a virtual stock"
+" under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
-msgstr ""
-"Aktivira automatsko naručivanje za sve proizvode koji imaju virtuelnu zalihu "
-"ispod 0. Vjerovatno nebi ste trebali koristiti ovu opciju, predlažemo Vam da "
-"koristite konfiguraciju \"Napravi na zalihu\" proizvoda."
+msgstr "Aktivira automatsko naručivanje za sve proizvode koji imaju virtuelnu zalihu ispod 0. Vjerovatno nebi ste trebali koristiti ovu opciju, predlažemo Vam da koristite konfiguraciju \"Napravi na zalihu\" proizvoda."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -63,18 +58,10 @@ msgstr "Naručivanja u pripremi proizvoda i lokacija ove tačke naručivanja."
 #: view:make.procurement:0
 msgid ""
 "Use this assistant to generate a procurement request for this\n"
-"                        product. According to the product configuration, "
-"this may\n"
-"                        trigger a draft purchase order, a manufacturing "
-"order or\n"
+"                        product. According to the product configuration, this may\n"
+"                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr ""
-"Koristite ovaj pomoćnik za generisanje zahtjeva naručivanja za\n"
-"                        ovaj proizvod. Ovisno o konfiguraciji proizvoda, "
-"moguće je\n"
-"                        kreirati nabavnu narudžbu u statusu 'U pripremi', "
-"nalog proizvodnje\n"
-"                        ili novi zadatak."
+msgstr "Koristite ovaj pomoćnik za generisanje zahtjeva naručivanja za\n                        ovaj proizvod. Ovisno o konfiguraciji proizvoda, moguće je\n                        kreirati nabavnu narudžbu u statusu 'U pripremi', nalog proizvodnje\n                        ili novi zadatak."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -85,15 +72,9 @@ msgstr "Eksterna bilješka ..."
 #: view:product.product:0
 msgid ""
 "If there are not enough quantities available, the delivery order\n"
-"                           will wait for new products. To fulfill the "
-"inventory, you should\n"
+"                           will wait for new products. To fulfill the inventory, you should\n"
 "                           create others rules like orderpoints."
-msgstr ""
-"Ako nema dovoljno zalihe, otpremnica će čekati\n"
-"                           nove proizvode. Kako bi popunili zalihu bilo bi "
-"dobro \n"
-"                           da kreirate pravila naručivanja kao što su tačke "
-"naručivanja."
+msgstr "Ako nema dovoljno zalihe, otpremnica će čekati\n                           nove proizvode. Kako bi popunili zalihu bilo bi dobro \n                           da kreirate pravila naručivanja kao što su tačke naručivanja."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -141,28 +122,10 @@ msgstr "Razlog"
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"              You can define your minimum stock rules, so that OpenERP will "
-"automatically create draft manufacturing orders or purchase quotations "
-"according to the stock level.Once the virtual stock of a product (= stock on "
-"hand minus all confirmed orders and reservations) is below the minimum "
-"quantity, OpenERP will generate a procurement request to increase the stock "
-"up to the maximum quantity.\n"
+"              You can define your minimum stock rules, so that OpenERP will automatically create draft manufacturing orders or purchase quotations according to the stock level.Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, OpenERP will generate a procurement request to increase the stock up to the maximum quantity.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"              Možete definisati pravila minimalnih zaliha, kako bi OpenERP "
-"automatski\n"
-"              kreirao naloge proizvodnje u pripremi ili zahtjev za "
-"predračunom prema količini \n"
-"              na zalihi. Kada jednom virtualna zaliha proizvoda (= dostupna "
-"zaliha minus svi \n"
-"              potvrđeni nalozi i rezervacije) padne ispod minimalne "
-"količine, OpenERP će\n"
-"              generisati zahtjev naručivanja kako bi se povećala zaliha na "
-"maksimalnu količinu. \n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n              Možete definisati pravila minimalnih zaliha, kako bi OpenERP automatski\n              kreirao naloge proizvodnje u pripremi ili zahtjev za predračunom prema količini \n              na zalihi. Kada jednom virtualna zaliha proizvoda (= dostupna zaliha minus svi \n              potvrđeni nalozi i rezervacije) padne ispod minimalne količine, OpenERP će\n              generisati zahtjev naručivanja kako bi se povećala zaliha na maksimalnu količinu. \n              </p>\n            "
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -245,9 +208,7 @@ msgstr "Neispravna akcija!"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sadrži sažetak konverzacije (broj poruka,..). Ovaj sažetak je u html formatu "
-"da bi mogao biti ubačen u kanban pogled."
+msgstr "Sadrži sažetak konverzacije (broj poruka,..). Ovaj sažetak je u html formatu da bi mogao biti ubačen u kanban pogled."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -263,32 +224,10 @@ msgstr "Automatska tačka naručivanja"
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
 msgid ""
 "<p>\n"
-"                Procurement Orders represent the need for a certain quantity "
-"of products, at a given time, in a given location. Sales Orders are one "
-"typical source of Procurement Orders (but these are distinct documents). "
-"Depending on the procurement parameters and the product configuration, the "
-"procurement engine will attempt to satisfy the need by reserving products "
-"from stock, ordering products from a supplier, or passing a manufacturing "
-"order, etc. A Procurement Exception occurs when the system cannot find a way "
-"to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message).\n"
+"                Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Nalozi naručivanja prestavljaju potrebu za određenom "
-"količinom proizvoda, za dato vrijeme, za datu lokaciju. Prodajne narudžbe su "
-"jedan tipičan izvor naloga naručivanja (ali ovo su različiti dokumenti). U "
-"zavisnosti o parametrima naručivanja i postavkama na proizvodu, sistem "
-"naručivanja će pokušati da zadovolji potrebe za rezervisane proizvode "
-"zalihe, naručivanjem proizvoda od dobavljača, ili prosljeđivanjem naloga "
-"proizvodnje, itd. Iznimka naručivanja  se pojavljuje kada sistem ne može da "
-"nađe način da ispuni naručivanje. Neke iznimke će se same riješite, dok "
-"druge zahtjevaju ručnu intervenciju (ove su identifikovane po specifičnoj "
-"poruci greške).\n"
-"                </p>\n"
-"            "
+msgstr "<p>\n                Nalozi naručivanja prestavljaju potrebu za određenom količinom proizvoda, za dato vrijeme, za datu lokaciju. Prodajne narudžbe su jedan tipičan izvor naloga naručivanja (ali ovo su različiti dokumenti). U zavisnosti o parametrima naručivanja i postavkama na proizvodu, sistem naručivanja će pokušati da zadovolji potrebe za rezervisane proizvode zalihe, naručivanjem proizvoda od dobavljača, ili prosljeđivanjem naloga proizvodnje, itd. Iznimka naručivanja  se pojavljuje kada sistem ne može da nađe način da ispuni naručivanje. Neke iznimke će se same riješite, dok druge zahtjevaju ručnu intervenciju (ove su identifikovane po specifičnoj poruci greške).\n                </p>\n            "
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -301,8 +240,7 @@ msgid "Retry"
 msgstr "Pokušaj ponovo"
 
 #. module: procurement
-#: view:procurement.order.compute:0
-#: view:procurement.orderpoint.compute:0
+#: view:procurement.order.compute:0 view:procurement.orderpoint.compute:0
 msgid "Parameters"
 msgstr "Parametri"
 
@@ -321,9 +259,7 @@ msgstr "Količina za zaokružiti"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by OpenERP."
-msgstr ""
-"Referenca dokumenta koji je kreirao ovo naručivanje.\n"
-"Ovo je automatski popunjeno od strane OpenERP-a."
+msgstr "Referenca dokumenta koji je kreirao ovo naručivanje.\nOvo je automatski popunjeno od strane OpenERP-a."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -362,8 +298,7 @@ msgid "Followers"
 msgstr "Pratioci"
 
 #. module: procurement
-#: field:procurement.order,location_id:0
-#: view:stock.warehouse.orderpoint:0
+#: field:procurement.order,location_id:0 view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
 msgstr "Lokacija"
@@ -374,8 +309,7 @@ msgid "Picking List"
 msgstr "Lista prikupljanja proizvoda"
 
 #. module: procurement
-#: field:make.procurement,warehouse_id:0
-#: view:stock.warehouse.orderpoint:0
+#: field:make.procurement,warehouse_id:0 view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
 msgstr "Skladište"
@@ -411,8 +345,7 @@ msgid "Group By"
 msgstr "Grupiši po"
 
 #. module: procurement
-#: field:make.procurement,qty:0
-#: field:procurement.order,product_qty:0
+#: field:make.procurement,qty:0 field:procurement.order,product_qty:0
 msgid "Quantity"
 msgstr "Količina"
 
@@ -423,8 +356,7 @@ msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Nema dovoljno zalihe i nije definirana tačka naručivanja."
 
 #. module: procurement
-#: field:make.procurement,uom_id:0
-#: view:procurement.order:0
+#: field:make.procurement,uom_id:0 view:procurement.order:0
 msgid "Unit of Measure"
 msgstr "Jedinica mjere"
 
@@ -441,45 +373,23 @@ msgid ""
 "                Click to create a procurement order. \n"
 "              </p><p>\n"
 "                A procurement order is used to record a need for a specific\n"
-"                product at a specific location.  Procurement orders are "
-"usually\n"
-"                created automatically from sales orders, pull logistic rules "
-"or\n"
+"                product at a specific location.  Procurement orders are usually\n"
+"                created automatically from sales orders, pull logistic rules or\n"
 "                minimum stock rules.\n"
 "              </p><p>\n"
 "                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
+"                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite da kreirate nalog naručivanja. \n"
-"              </p><p>\n"
-"                Nalog naručivanja se koristi da se registruje potreba za "
-"specifičnim\n"
-"                proizvodom na specifičnoj lokaciji.  Nalozi naručivanja su "
-"obično\n"
-"                kreirani automatski iz prodajnih narudžbi, logističkim "
-"pravilima povlačenja ili\n"
-"                pravilima minimalne zalihe.\n"
-"              </p><p>\n"
-"                Kada je nalog naručivanja potvrđen, automatski kreira "
-"potrebne operacije\n"
-"                da ispuni potrebe: predlog nabavne narudžbe, nalog "
-"proizvodnje, itd.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite da kreirate nalog naručivanja. \n              </p><p>\n                Nalog naručivanja se koristi da se registruje potreba za specifičnim\n                proizvodom na specifičnoj lokaciji.  Nalozi naručivanja su obično\n                kreirani automatski iz prodajnih narudžbi, logističkim pravilima povlačenja ili\n                pravilima minimalne zalihe.\n              </p><p>\n                Kada je nalog naručivanja potvrđen, automatski kreira potrebne operacije\n                da ispuni potrebe: predlog nabavne narudžbe, nalog proizvodnje, itd.\n              </p>\n            "
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
 msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
-msgstr ""
-"Ako ručno šifrirate naručivanje, vjerovatno želite da koristite metodu "
-"napravi na zalihu."
+msgstr "Ako ručno šifrirate naručivanje, vjerovatno želite da koristite metodu napravi na zalihu."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -491,9 +401,7 @@ msgstr "Automatska naručivanja"
 msgid ""
 "use the available\n"
 "                           inventory"
-msgstr ""
-"koristi dostupnu\n"
-"                           inventuru"
+msgstr "koristi dostupnu\n                           inventuru"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -562,31 +470,19 @@ msgstr "plus"
 #: help:procurement.order,state:0
 msgid ""
 "When a procurement is created the status is set to 'Draft'.\n"
-" If the procurement is confirmed, the status is set to 'Confirmed'.          "
-"  \n"
+" If the procurement is confirmed, the status is set to 'Confirmed'.            \n"
 "After confirming the status is set to 'Running'.\n"
-" If any exception arises in the order then the status is set to "
-"'Exception'.\n"
+" If any exception arises in the order then the status is set to 'Exception'.\n"
 " Once the exception is removed the status becomes 'Ready'.\n"
-" It is in 'Waiting'. status when the procurement is waiting for another one "
-"to finish."
-msgstr ""
-"Kada je naručivanje kreirano status je postavljen na 'U pripremi'.\n"
-"Ako je naručivanje potvrđeno, status je 'Potvrđeno'.            \n"
-"Nakon potvrđivanja status je 'U toku'.\n"
-"Ako se dogodi izuzetak status je 'Izuzetk'.\n"
-"Jednom kada se izuzetak ukloni status je 'Spremno'.\n"
-"Nalazi se u statusu 'Na čekanju' kada naručivanje čeka drugo naručivanje da "
-"završi."
+" It is in 'Waiting'. status when the procurement is waiting for another one to finish."
+msgstr "Kada je naručivanje kreirano status je postavljen na 'U pripremi'.\nAko je naručivanje potvrđeno, status je 'Potvrđeno'.            \nNakon potvrđivanja status je 'U toku'.\nAko se dogodi izuzetak status je 'Izuzetk'.\nJednom kada se izuzetak ukloni status je 'Spremno'.\nNalazi se u statusu 'Na čekanju' kada naručivanje čeka drugo naručivanje da završi."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr ""
-"Ako je polje aktivno postavljeno na netačno, omogućiće Vam da sakrijete "
-"tačku naručivanja bez da je uklonite."
+msgstr "Ako je polje aktivno postavljeno na netačno, omogućiće Vam da sakrijete tačku naručivanja bez da je uklonite."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -609,9 +505,7 @@ msgstr "JM proizvoda"
 msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
-msgstr ""
-"Morate da izaberete jedinicu mjere proizvoda u istoj kategoriji kao zadana "
-"jedinica mjere proizvoda"
+msgstr "Morate da izaberete jedinicu mjere proizvoda u istoj kategoriji kao zadana jedinica mjere proizvoda"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -623,9 +517,7 @@ msgstr "Stavke naručivanja"
 msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
-msgstr ""
-"jer je potrošni (kao rezultat ovoga, količine\n"
-"                           pri ruci mogu biti negativne)."
+msgstr "jer je potrošni (kao rezultat ovoga, količine\n                           pri ruci mogu biti negativne)."
 
 #. module: procurement
 #: field:procurement.order,note:0
@@ -635,12 +527,10 @@ msgstr "Zabilješka"
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_min_qty:0
 msgid ""
-"When the virtual stock goes below the Min Quantity specified for this field, "
-"OpenERP generates a procurement to bring the forecasted quantity to the Max "
-"Quantity."
-msgstr ""
-"Kada virtualne zalihe odu ispod minimalne količine specifirane za ovo polje, "
-"OpenERP će generisati naručivanje da vrati predviđenu količinu na maksimalnu."
+"When the virtual stock goes below the Min Quantity specified for this field,"
+" OpenERP generates a procurement to bring the forecasted quantity to the Max"
+" Quantity."
+msgstr "Kada virtualne zalihe odu ispod minimalne količine specifirane za ovo polje, OpenERP će generisati naručivanje da vrati predviđenu količinu na maksimalnu."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -660,8 +550,7 @@ msgid "This wizard will schedule procurements."
 msgstr "Ovaj čarobnak će zakazati naručivanja."
 
 #. module: procurement
-#: view:procurement.order:0
-#: field:procurement.order,state:0
+#: view:procurement.order:0 field:procurement.order,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -683,13 +572,9 @@ msgstr "Normal"
 #. module: procurement
 #: help:product.template,supply_method:0
 msgid ""
-"Manufacture: When procuring the product, a manufacturing order or a task "
-"will be generated, depending on the product type. \n"
+"Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
-msgstr ""
-"Proizvedi: kada naručujete proizvod, nalog proizvodnje ili zadatak će biti "
-"generisan, zavisno od tipa proizvoda.\n"
-"Kupi: kada naručujete proizvod, narudžba nabavke će se generisati."
+msgstr "Proizvedi: kada naručujete proizvod, nalog proizvodnje ili zadatak će biti generisan, zavisno od tipa proizvoda.\nKupi: kada naručujete proizvod, narudžba nabavke će se generisati."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -721,11 +606,9 @@ msgstr "Naruči proizvode"
 #: code:addons/procurement/procurement.py:330
 #, python-format
 msgid ""
-"Please check the quantity in procurement order(s) for the product \"%s\", it "
-"should not be 0 or less!"
-msgstr ""
-"Molimo vas da provjerite količinu na nalozima naručivanja za proizvod "
-"\"%s\", ne bi trebla biti 0 ili niža."
+"Please check the quantity in procurement order(s) for the product \"%s\", it"
+" should not be 0 or less!"
+msgstr "Molimo vas da provjerite količinu na nalozima naručivanja za proizvod \"%s\", ne bi trebla biti 0 ili niža."
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
@@ -742,9 +625,7 @@ msgstr "Izuzetak"
 msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
-msgstr ""
-"Kada prodajete ovaj proizvod, otpremnica će biti kreirana.\n"
-"                           OpenERP smatrati će da"
+msgstr "Kada prodajete ovaj proizvod, otpremnica će biti kreirana.\n                           OpenERP smatrati će da"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:125
@@ -766,14 +647,9 @@ msgstr "Množilac količine"
 #: view:product.product:0
 msgid ""
 "When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
+"                           to deliver the customer, as you set the procurement method as\n"
 "                           'Make to Stock'."
-msgstr ""
-"Kada prodate ovu uslugu, ništa se specijalno neće pokrenuti\n"
-"                           da isporučite kupcu, jer ste stavili metodu "
-"nabavke\n"
-"                           'Napravi na zalihu'."
+msgstr "Kada prodate ovu uslugu, ništa se specijalno neće pokrenuti\n                           da isporučite kupcu, jer ste stavili metodu nabavke\n                           'Napravi na zalihu'."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -818,13 +694,9 @@ msgstr "Logistika"
 #. module: procurement
 #: help:product.template,procure_method:0
 msgid ""
-"Make to Stock: When needed, the product is taken from the stock or we wait "
-"for replenishment. \n"
+"Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
-msgstr ""
-"Napravi na zalihu: kada je potrebno, proizvod je uzet sa zalihe ili čekamo "
-"dopunjavanje zalihe.\n"
-"Napravi na narudžbu: kada je potrebno, proizvod je kupljen ili proizveden."
+msgstr "Napravi na zalihu: kada je potrebno, proizvod je uzet sa zalihe ili čekamo dopunjavanje zalihe.\nNapravi na narudžbu: kada je potrebno, proizvod je kupljen ili proizveden."
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -833,8 +705,7 @@ msgstr "Sastav svojstava"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property_group
-#: field:mrp.property,group_id:0
-#: field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
 msgid "Property Group"
 msgstr "Grupa svojstava"
 
@@ -859,10 +730,8 @@ msgid "Done"
 msgstr "Gotovo"
 
 #. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
+#: view:make.procurement:0 view:procurement.order.compute:0
+#: view:procurement.order.compute.all:0 view:procurement.orderpoint.compute:0
 msgid "Cancel"
 msgstr "Otkaži"
 
@@ -870,7 +739,7 @@ msgstr "Otkaži"
 #: code:addons/procurement/procurement.py:329
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Nedovoljni Podaci!"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -902,9 +771,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, OpenERP generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr ""
-"Kada virtuelna zaliha padne ispod minimalne količine, OpenERP će generisati "
-"naručivanje da dovede predviđenu količinu na maksimalnu količinu."
+msgstr "Kada virtuelna zaliha padne ispod minimalne količine, OpenERP će generisati naručivanje da dovede predviđenu količinu na maksimalnu količinu."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -944,8 +811,7 @@ msgstr "Zakazani datum"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_product
-#: field:make.procurement,product_id:0
-#: view:procurement.order:0
+#: field:make.procurement,product_id:0 view:procurement.order:0
 #: field:procurement.order,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
@@ -957,8 +823,7 @@ msgid "Temporary"
 msgstr "Privremeno"
 
 #. module: procurement
-#: field:mrp.property,description:0
-#: field:mrp.property.group,description:0
+#: field:mrp.property,description:0 field:mrp.property.group,description:0
 #: field:procurement.order,name:0
 msgid "Description"
 msgstr "Opis"
@@ -1005,9 +870,7 @@ msgstr "Kada prodajete ovaj proizvod, OpenERP će"
 msgid ""
 "required quantities are always\n"
 "                           available"
-msgstr ""
-"tražene količine su uvijek\n"
-"                           dostupne"
+msgstr "tražene količine su uvijek\n                           dostupne"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -1015,8 +878,7 @@ msgid "Temporary Procurement Exceptions"
 msgstr "Privremeni izuzetci naručivanja"
 
 #. module: procurement
-#: field:mrp.property,name:0
-#: field:stock.warehouse.orderpoint,name:0
+#: field:mrp.property,name:0 field:stock.warehouse.orderpoint,name:0
 msgid "Name"
 msgstr "Naziv"
 
@@ -1054,9 +916,7 @@ msgstr "Šablon proizvoda"
 #: view:procurement.orderpoint.compute:0
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr ""
-"Čarobnjak provjerava sva pravila minimalne zalihe i generiše nalog "
-"naručivanja."
+msgstr "Čarobnjak provjerava sva pravila minimalne zalihe i generiše nalog naručivanja."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -1094,10 +954,8 @@ msgid "min"
 msgstr "min"
 
 #. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
+#: view:make.procurement:0 view:procurement.order.compute:0
+#: view:procurement.order.compute.all:0 view:procurement.orderpoint.compute:0
 msgid "or"
 msgstr "ili"
 
@@ -1117,15 +975,3 @@ msgstr "Zahtjev za naručivanjem"
 #, python-format
 msgid "Products reserved from stock."
 msgstr "Proizvodi rezervisani sa zalihe"
-
-#, python-format
-#~ msgid "Data Insufficient !"
-#~ msgstr "Nedovoljno podataka!"
-
-#, python-format
-#~ msgid "PROC %d: from stock - %3.2f %-5s - %s"
-#~ msgstr "Naručivanje %d: iz zalihe - %3.2f %-5s - %s"
-
-#, python-format
-#~ msgid "PROC %d: on order - %3.2f %-5s - %s"
-#~ msgstr "Naručivanje %d: na narudžbu - %3.2f %-5s - %s"

@@ -1,21 +1,22 @@
-# Swedish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_long_term
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Swedish (http://www.transifex.com/projects/p/odoo-7/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -23,8 +24,7 @@ msgid "force the phase to finish before this date"
 msgstr "Tvinga fasen att slutföras före detta datum"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "In Progress"
 msgstr "Pågående"
 
@@ -38,8 +38,7 @@ msgstr "Faser"
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
+#: view:project.phase:0 view:project.user.allocation:0
 msgid "Team Planning"
 msgstr ""
 
@@ -49,8 +48,7 @@ msgid "Assigned Users"
 msgstr "Ansluten användare"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,next_phase_ids:0
+#: view:project.phase:0 field:project.phase,next_phase_ids:0
 msgid "Next Phases"
 msgstr "Nästa fas"
 
@@ -67,13 +65,9 @@ msgstr "Projektets aktiviteter"
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
 msgid ""
-"To schedule phases of all or a specified project. It then open a gantt "
-"view.\n"
+"To schedule phases of all or a specified project. It then open a gantt view.\n"
 "               "
-msgstr ""
-"För att schemalägga faserna för alla valda projekt. Efteråt visas en "
-"ganttvy.\n"
-"               "
+msgstr "För att schemalägga faserna för alla valda projekt. Efteråt visas en ganttvy.\n               "
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
@@ -95,7 +89,7 @@ msgstr "Sekvens"
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Action"
-msgstr ""
+msgstr "Åtgärd"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -113,14 +107,12 @@ msgid "Draft"
 msgstr "Preliminär"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "C_ompute"
 msgstr "Beräkna"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "New"
 msgstr "Ny"
 
@@ -135,8 +127,7 @@ msgid "Resource Leaves"
 msgstr "Resursavgångar"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "Pending"
 msgstr "Vilande"
 
@@ -154,7 +145,7 @@ msgstr "I aktiva faser"
 #: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopia)"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
@@ -163,8 +154,7 @@ msgid "Please specify a project to schedule."
 msgstr "Vänlgen ange ett projekt att schemalägga."
 
 #. module: project_long_term
-#: view:project.phase:0
-#: view:project.user.allocation:0
+#: view:project.phase:0 view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Gruppera på..."
 
@@ -205,8 +195,7 @@ msgstr ""
 msgid ""
 "If the phase is created the status 'Draft'.\n"
 " If the phase is started, the status becomes 'In Progress'.\n"
-" If review is needed the phase is in 'Pending' status.                       "
-"           \n"
+" If review is needed the phase is in 'Pending' status.                                  \n"
 " If the phase is over, the status is set to 'Done'."
 msgstr ""
 
@@ -227,8 +216,7 @@ msgid "My Projects"
 msgstr "Mina projekt"
 
 #. module: project_long_term
-#: view:project.project:0
-#: view:project.user.allocation:0
+#: view:project.project:0 view:project.user.allocation:0
 msgid "Phase"
 msgstr "Fas"
 
@@ -263,8 +251,7 @@ msgid "Start Month"
 msgstr "Startmånad"
 
 #. module: project_long_term
-#: field:project.phase,date_end:0
-#: field:project.user.allocation,date_end:0
+#: field:project.phase,date_end:0 field:project.user.allocation,date_end:0
 msgid "End Date"
 msgstr "Slutdatum"
 
@@ -282,13 +269,7 @@ msgid ""
 "scheduling. Use the long term planning in order to planify your available "
 "users, convert your phases into a series of tasks when you start working on "
 "the project."
-msgstr ""
-"Ett projekt kan delas in i flera olika faser. Varje fas kan du definiera "
-"användares beläggning, beskriva olika aktiviteter och länka dina faser till "
-"andra faser, datumregler för automatisk schemaläggning. Använd "
-"långtidsplanering för detaljplanera dina användares beläggning, konvertera "
-"dina faser till en serie av aktiviteter när projektarbetet verkligen kommer "
-"igång."
+msgstr "Ett projekt kan delas in i flera olika faser. Varje fas kan du definiera användares beläggning, beskriva olika aktiviteter och länka dina faser till andra faser, datumregler för automatisk schemaläggning. Använd långtidsplanering för detaljplanera dina användares beläggning, konvertera dina faser till en serie av aktiviteter när projektarbetet verkligen kommer igång."
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -296,8 +277,7 @@ msgid "Compute a Single Project"
 msgstr "Beräkna ett enskilt projekt"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,previous_phase_ids:0
+#: view:project.phase:0 field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
 msgstr "Föregående fas"
 
@@ -319,9 +299,9 @@ msgstr ""
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
-" It's computed by the scheduler according to the start date and the duration."
-msgstr ""
-" Beräknas av schemaläggaren med hänsyn till startdatum och varaktighet."
+" It's computed by the scheduler according to the start date and the "
+"duration."
+msgstr " Beräknas av schemaläggaren med hänsyn till startdatum och varaktighet."
 
 #. module: project_long_term
 #: constraint:project.phase:0
@@ -329,26 +309,21 @@ msgid "Loops in phases not allowed"
 msgstr "Inte tillåtet med upprepningar i faser"
 
 #. module: project_long_term
-#: view:project.user.allocation:0
-#: field:project.user.allocation,user_id:0
+#: view:project.user.allocation:0 field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Användare"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
 #: field:project.compute.phases,project_id:0
-#: field:project.compute.tasks,project_id:0
-#: view:project.phase:0
-#: field:project.phase,project_id:0
-#: view:project.task:0
-#: view:project.user.allocation:0
-#: field:project.user.allocation,project_id:0
+#: field:project.compute.tasks,project_id:0 view:project.phase:0
+#: field:project.phase,project_id:0 view:project.task:0
+#: view:project.user.allocation:0 field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Projekt"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -359,9 +334,7 @@ msgstr "Projektanvändare"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
-#: view:project.phase:0
-#: view:project.task:0
-#: field:project.task,phase_id:0
+#: view:project.phase:0 view:project.task:0 field:project.task,phase_id:0
 #: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr "Projektfas"
@@ -392,8 +365,7 @@ msgid "Project Compute Phases"
 msgstr "Beräkna projektfaser"
 
 #. module: project_long_term
-#: field:project.phase,date_start:0
-#: field:project.user.allocation,date_start:0
+#: field:project.phase,date_start:0 field:project.user.allocation,date_start:0
 msgid "Start Date"
 msgstr "Startdatum"
 
@@ -403,10 +375,9 @@ msgid "Constraints"
 msgstr "Begränsningar"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,state:0
+#: view:project.phase:0 field:project.phase,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
@@ -416,7 +387,7 @@ msgstr "Ger ordningsföljden vid listning av faser."
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Tasks"
-msgstr ""
+msgstr "Uppgifter"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
@@ -432,19 +403,16 @@ msgstr "Fel!"
 #. module: project_long_term
 #: help:project.phase,date_start:0
 msgid ""
-"It's computed by the scheduler according the project date or the end date of "
-"the previous phase."
-msgstr ""
-"Beräknas av schemaläggaren i enlighet med projektdatum eller slutdatum från "
-"föregående fas."
+"It's computed by the scheduler according the project date or the end date of"
+" the previous phase."
+msgstr "Beräknas av schemaläggaren i enlighet med projektdatum eller slutdatum från föregående fas."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
-#: view:project.phase:0
-#: field:project.project,phase_ids:0
+#: view:project.phase:0 field:project.project,phase_ids:0
 msgid "Project Phases"
 msgstr "Projektfaser"
 
@@ -461,7 +429,7 @@ msgstr "Månad"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Objektkonto"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
@@ -481,8 +449,7 @@ msgid "Schedule Tasks"
 msgstr "Schemalägg aktiviteter"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
+#: view:project.phase:0 selection:project.phase,state:0
 msgid "Done"
 msgstr "Klar"
 
@@ -497,8 +464,7 @@ msgid "Force Assigned Users"
 msgstr "Nödvändiga projektdeltagare"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,duration:0
+#: view:project.phase:0 field:project.phase,duration:0
 msgid "Duration"
 msgstr "Varaktighet"
 
@@ -513,7 +479,6 @@ msgid "Name"
 msgstr "Namn"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
+#: view:project.compute.phases:0 view:project.compute.tasks:0
 msgid "or"
-msgstr ""
+msgstr "eller"

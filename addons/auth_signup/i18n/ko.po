@@ -1,24 +1,25 @@
-# Korean translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-09-02 08:44+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-03 06:59+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_signup
-#: view:res.users:auth_signup.res_users_form_view
+#: view:res.users:0
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
@@ -35,7 +36,9 @@ msgid "Allow external users to sign up"
 msgstr "외부 사용자의 가입을  허용"
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
+#, python-format
 msgid "Confirm Password"
 msgstr "암호 확인"
 
@@ -60,13 +63,16 @@ msgid "base.config.settings"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:295
+#: code:addons/auth_signup/res_users.py:266
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr "이메일을 보낼 수 없음: 사용자 이메일주소가 없음."
 
 #. module: auth_signup
-#: view:website:auth_signup.reset_password
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:31
+#, python-format
 msgid "Reset password"
 msgstr "암호 초기화"
 
@@ -96,19 +102,18 @@ msgstr ""
 #: model:email.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the OpenERP account linked to this "
-"email.</p>\n"
+"<p>A password reset was requested for the OpenERP account linked to this email.</p>\n"
 "\n"
-"<p>You may change your password by following <a "
-"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
 
 #. module: auth_signup
-#: view:res.users:auth_signup.res_users_form_view
+#: view:res.users:0
 msgid ""
-"An invitation email containing the following subscription link has been sent:"
+"An invitation email containing the following subscription link has been "
+"sent:"
 msgstr "다음 구독 링크를 포함한 초청 이메일을 보냈습니다:"
 
 #. module: auth_signup
@@ -147,17 +152,13 @@ msgid ""
 "                        ${object.name},\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        You have been invited to connect to "
-"\"${object.company_id.name}\" in order to get access to your documents in "
-"OpenERP.\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in OpenERP.\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        To accept the invitation, click on the following "
-"link:\n"
+"                        To accept the invitation, click on the following link:\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
 "                    </ul>\n"
 "                    <p>\n"
 "                        Thanks,\n"
@@ -188,7 +189,8 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:178
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "암호를 초기화하기 위한 로그인 정보를 포함한 이메일을 보냈습니다"
@@ -198,14 +200,14 @@ msgstr "암호를 초기화하기 위한 로그인 정보를 포함한 이메일
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:12
 #, python-format
 msgid "Username"
-msgstr ""
+msgstr "사용자명"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:8
 #, python-format
 msgid "Name"
-msgstr ""
+msgstr "명칭"
 
 #. module: auth_signup
 #. openerp-web
@@ -236,7 +238,7 @@ msgstr "사용자가 로그인 페이지에서 암호를 초기화할 수 있도
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
 #, python-format
 msgid "Log in"
-msgstr ""
+msgstr "로그인"
 
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
@@ -254,10 +256,11 @@ msgstr "가입 토큰이 올바릅니다"
 #: code:addons/auth_signup/static/src/js/auth_signup.js:174
 #, python-format
 msgid "Login"
-msgstr ""
+msgstr "로그인"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:109
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:98
 #, python-format
 msgid "Invalid signup token"
 msgstr "잘못된 가입 토큰"
@@ -275,7 +278,7 @@ msgstr ""
 #: code:addons/auth_signup/static/src/js/auth_signup.js:171
 #, python-format
 msgid "No database selected !"
-msgstr ""
+msgstr "데이터베이스가 선택되지 않음 !"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
@@ -288,8 +291,9 @@ msgid "${object.company_id.name} invitation to connect on OpenERP"
 msgstr ""
 
 #. module: auth_signup
-#: view:website:auth_signup.reset_password
-#: view:website:auth_signup.signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:30
+#, python-format
 msgid "Back to Login"
 msgstr "로그인 화면으로 돌아가기"
 
@@ -310,9 +314,3 @@ msgstr "가입 토큰"
 #, python-format
 msgid "Sign Up"
 msgstr ""
-
-#~ msgid "Reset Password"
-#~ msgstr "암호 초기화"
-
-#~ msgid "Sign up"
-#~ msgstr "가입"

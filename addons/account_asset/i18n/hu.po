@@ -1,21 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_asset
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-09-08 09:43+0000\n"
-"Last-Translator: Herczeg Péter <hp@erp-cloud.hu>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-7/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:57+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -24,8 +25,7 @@ msgstr "Tervezet vagy nyitott állapotú eszközök"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Lejárati dátum"
 
@@ -50,25 +50,19 @@ msgid "Gross Amount"
 msgstr "Bruttó összeg"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,asset_id:0
+#: view:account.asset.asset:0 field:account.asset.depreciation.line,asset_id:0
+#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
+#: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
 msgstr "Eszköz"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
-"Azt mutatja, hogy az eszköz értékcsökkenés első bevitelét a vásárlás "
-"dátumától számítja az első Január helyett"
+msgstr "Azt mutatja, hogy az eszköz értékcsökkenés első bevitelét a vásárlás dátumától számítja az első Január helyett"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -78,8 +72,7 @@ msgstr "Lineáris"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0
-#: view:asset.asset.report:0
+#: field:account.asset.category,company_id:0 view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
 msgstr "Vállalat"
@@ -90,8 +83,7 @@ msgid "Modify"
 msgstr "Módosítás"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
+#: selection:account.asset.asset,state:0 view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
 msgstr "Folyamatban lévő"
@@ -152,8 +144,7 @@ msgstr "Két értékcsökkenés közt eltelt idő, hónapokban"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_date:0
+#: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
 msgstr "Értékcsökkenés dátuma"
 
@@ -168,8 +159,7 @@ msgid "Posted Amount"
 msgstr "Lekönyvelt összeg"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.asset.report:0
+#: view:account.asset.asset:0 view:asset.asset.report:0
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_finance_assets
@@ -183,11 +173,8 @@ msgid "Depreciation Account"
 msgstr "Értékcsökkenés összege"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:account.asset.category:0
-#: view:account.asset.history:0
-#: view:asset.modify:0
-#: field:asset.modify,note:0
+#: view:account.asset.asset:0 view:account.asset.category:0
+#: view:account.asset.history:0 view:asset.modify:0 field:asset.modify,note:0
 msgid "Notes"
 msgstr "Megjegyzések"
 
@@ -203,8 +190,7 @@ msgid "Error!"
 msgstr "Hiba!"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,nbr:0
+#: view:asset.asset.report:0 field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "# értékcsökkenési sorok száma"
 
@@ -250,8 +236,7 @@ msgid "Period Length"
 msgstr "Időszak hossza"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
+#: selection:account.asset.asset,state:0 view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
 msgstr "Tervezet"
@@ -284,8 +269,7 @@ msgid "Analytic account"
 msgstr "Gyűjtőkód"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
+#: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Számítási módszer"
 
@@ -319,10 +303,8 @@ msgid "Salvage Value"
 msgstr "Maradvány érték"
 
 #. module: account_asset
-#: field:account.asset.asset,category_id:0
-#: view:account.asset.category:0
-#: field:account.invoice.line,asset_category_id:0
-#: view:asset.asset.report:0
+#: field:account.asset.asset,category_id:0 view:account.asset.category:0
+#: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
 msgid "Asset Category"
 msgstr "Eszköz kategória"
 
@@ -375,14 +357,12 @@ msgid "Time Method"
 msgstr "Idő módszer"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
 msgid "or"
 msgstr "vagy"
 
 #. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
+#: field:account.asset.asset,note:0 field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Jegyzet"
@@ -391,34 +371,18 @@ msgstr "Jegyzet"
 #: help:account.asset.history,method_time:0
 msgid ""
 "The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Az értékcsökkentés sorai dátumának és számainak számítási módszere.\n"
-"Értékcsökkentések száma: Rögzíti az értékcsökkentés sorai számát és kér "
-"értékcsökkentés közt eltelt időt.\n"
-"Befejezés dátuma: Válasszon 2 értékcsökkentés közti időt és azt a dátumot "
-"amit az értékcsökkentés már nem fog meghaladni."
+"Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Az értékcsökkentés sorai dátumának és számainak számítási módszere.\nÉrtékcsökkentések száma: Rögzíti az értékcsökkentés sorai számát és kér értékcsökkentés közt eltelt időt.\nBefejezés dátuma: Válasszon 2 értékcsökkentés közti időt és azt a dátumot amit az értékcsökkentés már nem fog meghaladni."
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
 #: help:account.asset.category,method_time:0
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Válassza az értékcsökkentés sorai dátumának és számainak számítási "
-"módszerét.\n"
-"  * Értékcsökkentések száma: Rögzíti az értékcsökkentés sorai számát és kér "
-"értékcsökkentés közt eltelt időt.\n"
-"  * Befejezés dátuma: Válasszon 2 értékcsökkentés közti időt és azt a "
-"dátumot amit az értékcsökkentés már nem fog meghaladni."
+"Choose the method to use to compute the dates and number of depreciation lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Válassza az értékcsökkentés sorai dátumának és számainak számítási módszerét.\n  * Értékcsökkentések száma: Rögzíti az értékcsökkentés sorai számát és kér értékcsökkentés közt eltelt időt.\n  * Befejezés dátuma: Válasszon 2 értékcsökkentés közti időt és azt a dátumot amit az értékcsökkentés már nem fog meghaladni."
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -434,21 +398,12 @@ msgstr "Lezárt"
 #: help:account.asset.asset,state:0
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-"Ha egy eszközt létrehozott, annak állapota 'Tervezet'.\n"
-"Miután az eszköz megerősített, annak állapota 'Futó' és a költségcsökkentés "
-"sorait el lehet küldeni a könyvelésre.\n"
-"Ha a költségcsökkentés végre lett hajtva akkor kézzel bezárhatja azt. Ha az "
-"értékcsökkentés utolsó sora is fel lett adva, akkor automatikusan ebbe az "
-"állapotba vált."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
+msgstr "Ha egy eszközt létrehozott, annak állapota 'Tervezet'.\nMiután az eszköz megerősített, annak állapota 'Futó' és a költségcsökkentés sorait el lehet küldeni a könyvelésre.\nHa a költségcsökkentés végre lett hajtva akkor kézzel bezárhatja azt. Ha az értékcsökkentés utolsó sora is fel lett adva, akkor automatikusan ebbe az állapotba vált."
 
 #. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
+#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
 msgid "Status"
 msgstr "Állapot"
 
@@ -489,8 +444,7 @@ msgid "Extended Filters..."
 msgstr "Kiterjesztett szűrők…"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.depreciation.confirmation.wizard:0
+#: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
 msgstr "Kiszámítás"
 
@@ -520,8 +474,7 @@ msgid "Depreciation Name"
 msgstr "Költségcsökkentés neve"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,history_ids:0
+#: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
 msgid "History"
 msgstr "Előzmény"
 
@@ -541,8 +494,7 @@ msgid "General"
 msgstr "Általános"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr "Arányos rész késleltetés"
 
@@ -557,14 +509,12 @@ msgid "Set to Close"
 msgstr "Lezártá nyilvánítás"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
 msgid "Cancel"
 msgstr "Mégsem"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Lezár"
 
@@ -579,8 +529,7 @@ msgid "Asset Durations to Modify"
 msgstr "Eszköz időtartamainak módosítása"
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_date:0
-#: view:asset.asset.report:0
+#: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
 msgstr "Vásárlás dátuma"
@@ -596,9 +545,7 @@ msgstr "Fokozatosság"
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr ""
-"Válassza ki azt az időszakot amelyben a futó eszközre vonatkozóan "
-"automatikusan feladja a költségcsökkentés sorait"
+msgstr "Válassza ki azt az időszakot amelyben a futó eszközre vonatkozóan automatikusan feladja a költségcsökkentés sorait"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -609,7 +556,7 @@ msgstr "Jelenlegi"
 #: code:addons/account_asset/account_asset.py:82
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
+msgstr "Nem törölheti a tárgyi eszközt, mely értékcsökkenési tételsorokkal rendelkezik."
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -657,23 +604,16 @@ msgid "Amount Already Depreciated"
 msgstr "A már költségcsökkentett összeg"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.asset,method:0 help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
-"Válassza ki a módszert a költségcsökkentési sorok számításához.\n"
-"  * Lineáris: Ennek alapján számolt: Teljes érték / Költségcsökkentések "
-"száma\n"
-"  * Fokozatos: Ennek alapján számolt: Maradvány érték * Költségcsökkentési "
-"tényező"
+msgstr "Válassza ki a módszert a költségcsökkentési sorok számításához.\n  * Lineáris: Ennek alapján számolt: Teljes érték / Költségcsökkentések száma\n  * Fokozatos: Ennek alapján számolt: Maradvány érték * Költségcsökkentési tényező"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,move_check:0
+#: view:asset.asset.report:0 field:asset.asset.report,move_check:0
 msgid "Posted"
 msgstr "Könyvelt"
 
@@ -681,21 +621,12 @@ msgstr "Könyvelt"
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview on all depreciation. "
-"The\n"
-"            tool search can also be used to personalise your Assets reports "
-"and\n"
+"            From this report, you can have an overview on all depreciation. The\n"
+"            tool search can also be used to personalise your Assets reports and\n"
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"            Ebből a jelentésből, ráláthat az összes költségcsökkentésre. A\n"
-"            keresés eszközt használhatja az eszköz jelentések egyénre "
-"szabásához és\n"
-"            így a jelentést igénye szerint alakíthatja ki;\n"
-"          </p>\n"
-"        "
+msgstr "<p>\n            Ebből a jelentésből, ráláthat az összes költségcsökkentésre. A\n            keresés eszközt használhatja az eszköz jelentések egyénre szabásához és\n            így a jelentést igénye szerint alakíthatja ki;\n          </p>\n        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -712,9 +643,7 @@ msgstr "Név"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
-"Jelölje be, ha ennek a kategóriának az eszközeit automatikusan szeretné "
-"nyugtázni, ha azokat a számla hozta létre."
+msgstr "Jelölje be, ha ennek a kategóriának az eszközeit automatikusan szeretné nyugtázni, ha azokat a számla hozta létre."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -727,15 +656,13 @@ msgid "Asset depreciation line"
 msgstr "Eszköz költségcsökkentési sor"
 
 #. module: account_asset
-#: view:account.asset.category:0
-#: field:asset.asset.report,asset_category_id:0
+#: view:account.asset.category:0 field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
 msgstr "Eszköz kategória"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_value:0
+#: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
 msgstr "Költségcsökkentési sorok száma"
 
@@ -748,7 +675,7 @@ msgstr "Létrehozott eszköz mozgások"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Add an internal note here..."
-msgstr ""
+msgstr "Ide jegyezhet fel belső jegyzetet..."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0

@@ -1,21 +1,22 @@
-# Latvian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Latvian <lv@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Latvian (http://www.transifex.com/projects/p/odoo-7/language/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:13+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -24,20 +25,15 @@ msgid ""
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
 "                In OpenERP, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to "
-"analyse\n"
+"                analytic account. So, you can track costs and revenues to analyse\n"
 "                your margins easily.\n"
 "              </p><p>\n"
-"                Costs will be created automatically when you register "
-"supplier\n"
+"                Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets.\n"
 "              </p><p>\n"
-"                Revenues will be created automatically when you create "
-"customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
@@ -64,18 +60,15 @@ msgstr "Grupēt pēc..."
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
 msgid ""
 "Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the "
-"analytic account. This feature allows to record at the same time the "
+"is an analytic account and the time spent on a project generate costs on the"
+" analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
-msgstr ""
-"Darbinieki var uzskaitīt patērēto laiku dažādos projektos. Projekts ir "
-"analītiskais konts, kurā tiek veikta patērētā laika un izmaksu uzskaite. Tas "
-"nodrošina apmeklējuma un patērēto stundu vienlaicīgu uzskaiti."
+msgstr "Darbinieki var uzskaitīt patērēto laiku dažādos projektos. Projekts ir analītiskais konts, kurā tiek veikta patērētā laika un izmaksu uzskaite. Tas nodrošina apmeklējuma un patērēto stundu vienlaicīgu uzskaiti."
 
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mērvienība"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
@@ -129,7 +122,7 @@ msgstr "Piektd."
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Darba uzskates tabeles aktivitātes"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -147,15 +140,14 @@ msgid "Work done in the last period"
 msgstr "Pēdējie veiktie Darbi"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
+#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
 msgid "Employees name"
 msgstr "Darbinieka Vārds"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Projekta/analītiskais konts"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
@@ -198,12 +190,12 @@ msgstr ""
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uzmanību!"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partneris"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -227,7 +219,7 @@ msgstr "Summa"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Analītiskais konts"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -235,10 +227,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record activities.\n"
 "              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
+"                You can register and track your workings hours by project every\n"
+"                day. Every time spent on a project will become a cost in the\n"
 "                analytic accounting/contract and can be re-invoiced to\n"
 "                customers if required.\n"
 "              </p>\n"
@@ -271,8 +261,7 @@ msgid "July"
 msgstr "Jūlijs"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
+#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
 msgstr "Sākuma Datums"
 
@@ -344,11 +333,10 @@ msgstr "Darba Apraksts"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "or"
-msgstr ""
+msgstr "vai"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
@@ -384,8 +372,7 @@ msgid "(Keep empty for current time)"
 msgstr "(Atstāt tukšu tekošajam laikam)"
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:0
+#: field:account.analytic.account,use_timesheets:0 view:hr.employee:0
 msgid "Timesheets"
 msgstr "Darba uzkaites Tabeles"
 
@@ -400,7 +387,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "Analītiskā Rinda"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -429,10 +416,9 @@ msgid "June"
 msgstr "Jūnijs"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
+#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Aktīvs statuss"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -479,8 +465,7 @@ msgid "Thu"
 msgstr "Ceturtd."
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
+#: view:hr.sign.in.project:0 view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
 msgstr "Reģistrēties/Iziet Projekta Ietvaros"
 
@@ -490,15 +475,14 @@ msgid "Print Employee Timesheet & Print My Timesheet"
 msgstr "Drukāt Darbinieka Tabeli un Drukāt personīgo Tabeli"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
+#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
 msgstr "Darbinieka ID"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Period"
-msgstr ""
+msgstr "Periods"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -507,8 +491,7 @@ msgstr "Vispārīgā informācija"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Cancel"
 msgstr "Atcelt"
@@ -539,10 +522,7 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr ""
-"Darbinieki var uzskaitīt patērēto laiku projektos, kuros tie ir darba grupā. "
-"Projekts ir analītiskais konts, kurā tiek veikta patērētā laika un izmaksu "
-"uzskaite. Tas nodrošina apmeklējuma un patērēto stundu vienlaicīgu uzskaiti."
+msgstr "Darbinieki var uzskaitīt patērēto laiku projektos, kuros tie ir darba grupā. Projekts ir analītiskais konts, kurā tiek veikta patērētā laika un izmaksu uzskaite. Tas nodrošina apmeklējuma un patērēto stundu vienlaicīgu uzskaiti."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -556,8 +536,7 @@ msgid "Timesheet Line"
 msgstr "Darba laika uzskaites Tabeles Ieraksts"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: field:hr.employee,product_id:0
+#: view:hr.analytic.timesheet:0 field:hr.employee,product_id:0
 msgid "Product"
 msgstr "Produkts"
 
@@ -640,7 +619,7 @@ msgstr "Aprīlis"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Lietotāja kļūda!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -656,7 +635,7 @@ msgstr "Gads"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Duration"
-msgstr ""
+msgstr "Ilgums"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -664,8 +643,7 @@ msgid "Accounting"
 msgstr "Grāmatvedība"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
+#: xsl:hr.analytical.timesheet:0 xsl:hr.analytical.timesheet_users:0
 msgid "Total"
 msgstr "Kopā"
 

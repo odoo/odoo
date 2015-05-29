@@ -1,20 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* stock_location
-#
+# * stock_location
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-7/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -45,7 +46,7 @@ msgstr ""
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr ""
+msgstr "Automatic No Step Added"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
@@ -102,12 +103,8 @@ msgstr "Stato Fattura"
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
-"This is used to define paths the product has to follow within the location "
-"tree.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
+"This is used to define paths the product has to follow within the location tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
 msgstr ""
 
 #. module: stock_location
@@ -159,14 +156,12 @@ msgstr "Azienda"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Movimento Magazzino"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
-"Se spuntato, quando questo movimento è eliminato, propaga l'eliminazione "
-"anche ai movimenti collegati"
+msgstr "Se spuntato, quando questo movimento è eliminato, propaga l'eliminazione anche ai movimenti collegati"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -249,10 +244,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"'Produrre per magazzino': Se richiesto, prelevare dal magazzino o attendere "
-"fino al riassortimento. 'Produrre su Ordine': Se richiesto, comprare o "
-"produrre alla richiesta di approvvigionamento."
+msgstr "'Produrre per magazzino': Se richiesto, prelevare dal magazzino o attendere fino al riassortimento. 'Produrre su Ordine': Se richiesto, comprare o produrre alla richiesta di approvvigionamento."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -323,8 +315,7 @@ msgid "Destination Location"
 msgstr "Ubicazione di Destinazione"
 
 #. module: stock_location
-#: field:stock.location.path,auto:0
-#: selection:stock.location.path,auto:0
+#: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
 msgid "Automatic Move"
 msgstr "Movimento Automatico"
 
@@ -332,7 +323,7 @@ msgstr "Movimento Automatico"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Ricezione Merci"
 
 #. module: stock_location
 #: view:product.product:0
@@ -355,8 +346,7 @@ msgstr "Metodo di approvvigionamento"
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
-"In funzione dell'azienda, scegliere dove volete ricevere o inviare prodotti"
+msgstr "In funzione dell'azienda, scegliere dove volete ricevere o inviare prodotti"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
@@ -377,7 +367,7 @@ msgstr "Localizzazione Percorsi"
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Registro"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -389,4 +379,4 @@ msgstr ""
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Fatturato"

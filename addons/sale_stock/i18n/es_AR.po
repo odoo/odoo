@@ -1,30 +1,29 @@
-# Spanish (Argentina) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2014-07-01 13:42+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Spanish (Argentina) <es_AR@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:53+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Argentina) (http://www.transifex.com/projects/p/odoo-7/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:24+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_AR\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
-"Para permitir a su comercial realizar facturas desde las Órdenes de Entrega "
-"usando el menú 'Entregas a Facturar'."
+msgstr "Para permitir a su comercial realizar facturas desde las Órdenes de Entrega usando el menú 'Entregas a Facturar'."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -61,11 +60,7 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"Ha seleccionado una cantidad de %d unidades.\n"
-"Pero no es compatible con el empaquetado seleccionado.\n"
-"Aquí tiene una proposición de cantidades acorde al empaquetado:\n"
-"EAN: %s Cantidad: %s Unidad: %s"
+msgstr "Ha seleccionado una cantidad de %d unidades.\nPero no es compatible con el empaquetado seleccionado.\nAquí tiene una proposición de cantidades acorde al empaquetado:\nEAN: %s Cantidad: %s Unidad: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
@@ -85,16 +80,14 @@ msgstr "Validar"
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Cancelar orden"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:210
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
-"Primero debe cancelar todas las órdenes de entrega adjuntadas a este pedido "
-"de venta."
+msgstr "Primero debe cancelar todas las órdenes de entrega adjuntadas a este pedido de venta."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -111,9 +104,7 @@ msgstr "Órden de Venta"
 msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
-msgstr ""
-"Para cada línea de pedido de venta, se crea una orden de abastecimiento para "
-"suministrar el producto vendido."
+msgstr "Para cada línea de pedido de venta, se crea una orden de abastecimiento para suministrar el producto vendido."
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -197,11 +188,7 @@ msgid ""
 "the same time as the procurement order. It represents the assignment of "
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
-msgstr ""
-"El Remito se crea tan pronto como se confirma el pedido de venta, a la vez "
-"que la orden de abastecimiento. Representa la asignación de los componentes "
-"del pedido de venta. Hay un remito por línea del pedido de venta que "
-"evoluciona con la disponibilidad de los componentes."
+msgstr "El Remito se crea tan pronto como se confirma el pedido de venta, a la vez que la orden de abastecimiento. Representa la asignación de los componentes del pedido de venta. Hay un remito por línea del pedido de venta que evoluciona con la disponibilidad de los componentes."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -255,17 +242,15 @@ msgstr "MRP de Proyectos"
 
 #. module: sale_stock
 #: view:sale.order:0
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"If the sale order was set to create the invoice 'On Delivery Order', then an "
-"invoice is automatically created based on what you delivered. If you rather "
-"want to create your invoice based on your sale order, you can set the sale "
+"If the sale order was set to create the invoice 'On Delivery Order', then an"
+" invoice is automatically created based on what you delivered. If you rather"
+" want to create your invoice based on your sale order, you can set the sale "
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
 msgstr ""
@@ -276,8 +261,7 @@ msgid "Procurement"
 msgstr "Abastecimiento"
 
 #. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
+#: view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Enviado"
@@ -322,16 +306,13 @@ msgstr ""
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Los Términos de Comercio Internacional son una serie de condiciones "
-"comerciales predefinidas usadas en las transacciones internacionales."
+msgstr "Los Términos de Comercio Internacional son una serie de condiciones comerciales predefinidas usadas en las transacciones internacionales."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
 msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
+"                You can define your own carrier and delivery grids for prices.\n"
 "                This installs the module delivery."
 msgstr ""
 
@@ -359,9 +340,7 @@ msgstr "Abastecimiento de material vendido"
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
-"Escoja 'Entregar cada producto cuando esté disponible' si permite envíos "
-"parciales."
+msgstr "Escoja 'Entregar cada producto cuando esté disponible' si permite envíos parciales."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:209
@@ -379,9 +358,7 @@ msgstr "Tiendas de Venta"
 msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
-msgstr ""
-"Indica que el pedido de venta ha sido entregado. Este campo se actualiza "
-"sólo después que el planificador(es) se ha ejecutado."
+msgstr "Indica que el pedido de venta ha sido entregado. Este campo se actualiza sólo después que el planificador(es) se ha ejecutado."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -392,8 +369,8 @@ msgstr "Propiedades"
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -403,10 +380,8 @@ msgstr "Propiedades del producto en las líneas del pedido"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
-"Puede generar facturas basadas en pedidos de venta o basadas en envíos."
+msgid "You can generate invoices based on sales orders or based on shippings."
+msgstr "Puede generar facturas basadas en pedidos de venta o basadas en envíos."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -422,11 +397,8 @@ msgstr "Compañías"
 #: help:sale.config.settings,task_work:0
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
+"                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways\n"
+"                and to automatically creates project tasks from procurement lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
 
@@ -435,18 +407,14 @@ msgstr ""
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
-"Permite especificar diversas direcciones de facturación y de entrega en los "
-"pedidos de venta."
+msgstr "Permite especificar diversas direcciones de facturación y de entrega en los pedidos de venta."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
 msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
-msgstr ""
-"Una Orden de abastecimiento para cada línea del pedido de venta y para cada "
-"uno de los componentes."
+msgstr "Una Orden de abastecimiento para cada línea del pedido de venta y para cada uno de los componentes."
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_assign0
@@ -464,9 +432,7 @@ msgstr "¡No hay suficiente stock! : "
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
-"Número de días entre la confirmación del pedido y la entrega de los "
-"productos al cliente"
+msgstr "Número de días entre la confirmación del pedido y la entrega de los productos al cliente"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -577,7 +543,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "Configuración de las ventas"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0
@@ -622,7 +588,7 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.order,picked_rate:0
 msgid "Picked"
-msgstr ""
+msgstr "Entregada"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -641,28 +607,3 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr ""
-
-#, python-format
-#~ msgid ""
-#~ "You cannot make an advance on a sales order                      that is "
-#~ "defined as 'Automatic Invoice after delivery'."
-#~ msgstr ""
-#~ "No puede hacer un avance en un pedido de venta que está definido como "
-#~ "'Facturación automática después de la entrega'."
-
-#, python-format
-#~ msgid "Error!"
-#~ msgstr "¡Error!"
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr ""
-#~ "Estos días por razones de seguridad se añaden a los que promete a los "
-#~ "clientes."
-
-#~ msgid ""
-#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
-#~ "pick' or 'Invoice on order after delivery'."
-#~ msgstr ""
-#~ "La factura se crea de forma automática si la política de facturación es "
-#~ "\"Facturar desde el remito\" o \"Facturar pedido después del envío\"."

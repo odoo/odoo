@@ -1,22 +1,22 @@
-# Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mrp_repair
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-16 06:49+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@zupy.com.br>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-7/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -40,8 +40,7 @@ msgid "Cancel Repair Order"
 msgstr "Cancelar Ordem de Reparo"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,to_invoice:0
-#: field:mrp.repair.line,to_invoice:0
+#: field:mrp.repair.fee,to_invoice:0 field:mrp.repair.line,to_invoice:0
 msgid "To Invoice"
 msgstr "Faturar"
 
@@ -72,8 +71,7 @@ msgid "No product defined on Fees!"
 msgstr "Nenhum produto definido no valor!"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,company_id:0
+#: view:mrp.repair:0 field:mrp.repair,company_id:0
 msgid "Company"
 msgstr "Empresa"
 
@@ -134,8 +132,7 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: mrp_repair
-#: field:mrp.repair,amount_tax:0
-#: field:mrp.repair.fee,tax_id:0
+#: field:mrp.repair,amount_tax:0 field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
 msgid "Taxes"
 msgstr "Impostos"
@@ -154,8 +151,7 @@ msgid "Net Total :"
 msgstr "Total Líquido"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-#: selection:mrp.repair.line,state:0
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
 
@@ -175,51 +171,25 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a reparation order. \n"
 "              </p><p>\n"
-"                In a repair order, you can detail the components you "
-"remove,\n"
-"                add or replace and record the time you spent on the "
-"different\n"
+"                In a repair order, you can detail the components you remove,\n"
+"                add or replace and record the time you spent on the different\n"
 "                operations.\n"
 "              </p><p>\n"
-"                The repair order uses the warranty date on the Serial Number "
-"in\n"
-"                order to know if whether the repair should be invoiced to "
-"the\n"
+"                The repair order uses the warranty date on the Serial Number in\n"
+"                order to know if whether the repair should be invoiced to the\n"
 "                customer or not.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Clique para criar uma ordem de reparos. \n"
-"              </p><p>\n"
-"                Em uma ordem de reparos, você pode detalhar os componentes "
-"que você remover,\n"
-"                adicionar, ou substituir e registrar o tempo gasto em "
-"diferentes operações.\n"
-"              </p><p>\n"
-"                A ordem de reparo usa a data da garantia no Número de Série "
-"para saber se\n"
-"                o reparo deve ser faturado ou não.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clique para criar uma ordem de reparos. \n              </p><p>\n                Em uma ordem de reparos, você pode detalhar os componentes que você remover,\n                adicionar, ou substituir e registrar o tempo gasto em diferentes operações.\n              </p><p>\n                A ordem de reparo usa a data da garantia no Número de Série para saber se\n                o reparo deve ser faturado ou não.\n              </p>\n            "
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
 msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in "
-"draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order "
-"in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.     "
-"                   \n"
+" * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n"
+"* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
+"* The 'Done' status is set automatically when repair order is completed.                        \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr ""
-" * A situação 'Provisório' é definida quando a ordem de reparo está em "
-"situação provisória.\n"
-"* A situação 'Confirmado' é quando a ordem de reparo for confirmada.\n"
-"* A situação 'Concluído' é definido quando a ordem de reparo está "
-"terminada.\n"
-"* A situação 'Cancelado' é quando o usuário cancela a ordem de reparo."
+msgstr " * A situação 'Provisório' é definida quando a ordem de reparo está em situação provisória.\n* A situação 'Confirmado' é quando a ordem de reparo for confirmada.\n* A situação 'Concluído' é definido quando a ordem de reparo está terminada.\n* A situação 'Cancelado' é quando o usuário cancela a ordem de reparo."
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
@@ -247,10 +217,7 @@ msgstr "Cotação / Ordem"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contém o resumo da conversação (número de mensagens, ...). Este resumo é "
-"gerado diretamente em formato HTML para que possa ser inserido nas visões "
-"kanban."
+msgstr "Contém o resumo da conversação (número de mensagens, ...). Este resumo é gerado diretamente em formato HTML para que possa ser inserido nas visões kanban."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -272,8 +239,7 @@ msgid "(update)"
 msgstr "(atualizar)"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,partner_id:0
+#: view:mrp.repair:0 field:mrp.repair,partner_id:0
 msgid "Partner"
 msgstr "Parceiro"
 
@@ -284,8 +250,7 @@ msgid "No account defined for partner \"%s\"."
 msgstr "Sem conta definida para o Parceiro \"%s\"."
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: selection:mrp.repair,state:0
+#: view:mrp.repair:0 selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -293,28 +258,13 @@ msgstr "Confirmado"
 #. module: mrp_repair
 #: help:mrp.repair,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.      "
-"       \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
-" * A situação 'Provisório' é usada quando o usuário está preparando uma "
-"ordem de reparo nova ou não confirmada.\n"
-"* A situação 'Confirmada' é usada quando um usuário confirmar a ordem de "
-"reparos.\n"
-"* A situação 'Pronto para o Reparo' é usada para iniciar o reparo, o usuário "
-"somente poderá reparar após a confirmação.\n"
-"* A situação 'A ser faturado' é usada para gerar a fatura antes ou depois do "
-"reparo concluído.\n"
-"* A situação 'Concluído' é usada quando a ordem de serviço estiver pronta.\n"
-"* A situação 'Cancelada' é usada quando o usuário cancelar a ordem de "
-"reparos."
+msgstr " * A situação 'Provisório' é usada quando o usuário está preparando uma ordem de reparo nova ou não confirmada.\n* A situação 'Confirmada' é usada quando um usuário confirmar a ordem de reparos.\n* A situação 'Pronto para o Reparo' é usada para iniciar o reparo, o usuário somente poderá reparar após a confirmação.\n* A situação 'A ser faturado' é usada para gerar a fatura antes ou depois do reparo concluído.\n* A situação 'Concluído' é usada quando a ordem de serviço estiver pronta.\n* A situação 'Cancelada' é usada quando o usuário cancelar a ordem de reparos."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -325,8 +275,7 @@ msgstr "Ordens de Reparo"
 #: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
-"O Número de série é obrigatório para a linha de operação com o produto '%s'"
+msgstr "O Número de série é obrigatório para a linha de operação com o produto '%s'"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -334,8 +283,7 @@ msgid "Repair Order N° :"
 msgstr "Ordem de Reparo N° :"
 
 #. module: mrp_repair
-#: field:mrp.repair,prodlot_id:0
-#: field:mrp.repair.line,prodlot_id:0
+#: field:mrp.repair,prodlot_id:0 field:mrp.repair.line,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
 msgstr "Número do Lote"
@@ -380,9 +328,7 @@ msgstr "Total :"
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr ""
-"Esta operação irá cancelar o processo de Reparo, mas não cancelar a fatura. "
-"Você quer continuar?"
+msgstr "Esta operação irá cancelar o processo de Reparo, mas não cancelar a fatura. Você quer continuar?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -395,9 +341,7 @@ msgid "Quotation Notes"
 msgstr "Observações da Cotação"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,state:0
-#: field:mrp.repair.line,state:0
+#: view:mrp.repair:0 field:mrp.repair,state:0 field:mrp.repair.line,state:0
 msgid "Status"
 msgstr "Situação"
 
@@ -412,8 +356,7 @@ msgid "(Add)"
 msgstr "(Adicionar)"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_line
-#: view:mrp.repair:0
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line view:mrp.repair:0
 msgid "Repair Line"
 msgstr "Linha do Reparo"
 
@@ -428,8 +371,7 @@ msgid "Invoice Method"
 msgstr "Método de Faturamento"
 
 #. module: mrp_repair
-#: field:mrp.repair,repaired:0
-#: selection:mrp.repair,state:0
+#: field:mrp.repair,repaired:0 selection:mrp.repair,state:0
 msgid "Repaired"
 msgstr "Reparado"
 
@@ -460,22 +402,18 @@ msgid "Yes"
 msgstr "Sim"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
+#: view:mrp.repair.cancel:0 view:mrp.repair.make_invoice:0
 msgid "or"
 msgstr "ou"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,invoiced:0
-#: field:mrp.repair.fee,invoiced:0
-#: field:mrp.repair.line,invoiced:0
+#: view:mrp.repair:0 field:mrp.repair,invoiced:0
+#: field:mrp.repair.fee,invoiced:0 field:mrp.repair.line,invoiced:0
 msgid "Invoiced"
 msgstr "Faturado"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,product_uom:0
-#: field:mrp.repair.line,product_uom:0
+#: field:mrp.repair.fee,product_uom:0 field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
 msgstr "Unidade de Medida do Produto"
 
@@ -505,8 +443,7 @@ msgid "Repair Reference"
 msgstr "Ref. Reparo"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair
-#: view:mrp.repair:0
+#: model:ir.model,name:mrp_repair.model_mrp_repair view:mrp.repair:0
 msgid "Repair Order"
 msgstr "Ordem de Reparo"
 
@@ -531,10 +468,7 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr ""
-"Selecionando 'Antes do reparo' ou 'Após o reparo', irá permitir-lhe gerar a "
-"fatura antes ou após o reparo é feito, respectivamente. 'Não faturar' "
-"significa que você não quer gerar fatura para esta ordem de reparos."
+msgstr "Selecionando 'Antes do reparo' ou 'Após o reparo', irá permitir-lhe gerar a fatura antes ou após o reparo é feito, respectivamente. 'Não faturar' significa que você não quer gerar fatura para esta ordem de reparos."
 
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
@@ -557,8 +491,7 @@ msgid "unknown"
 msgstr "Desconhecido"
 
 #. module: mrp_repair
-#: field:mrp.repair,product_id:0
-#: report:repair.order:0
+#: field:mrp.repair,product_id:0 report:repair.order:0
 msgid "Product to Repair"
 msgstr "Produto para Reparar"
 
@@ -632,10 +565,8 @@ msgid "Quotations"
 msgstr "Cotações"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_uom_qty:0
-#: field:mrp.repair.line,product_uom_qty:0
-#: report:repair.order:0
+#: view:mrp.repair:0 field:mrp.repair.fee,product_uom_qty:0
+#: field:mrp.repair.line,product_uom_qty:0 report:repair.order:0
 msgid "Quantity"
 msgstr "Quantidade"
 
@@ -661,8 +592,7 @@ msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,price_unit:0
-#: field:mrp.repair.line,price_unit:0
+#: field:mrp.repair.fee,price_unit:0 field:mrp.repair.line,price_unit:0
 #: report:repair.order:0
 msgid "Unit Price"
 msgstr "Preço Unitário"
@@ -683,8 +613,7 @@ msgid "Fees"
 msgstr "Impostos"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
+#: view:mrp.repair.cancel:0 view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -714,28 +643,20 @@ msgid ""
 "Check this box if you want to manage the delivery once the product is "
 "repaired and create a picking with selected product. Note that you can "
 "select the locations in the Info tab, if you have the extended view."
-msgstr ""
-"Marque esta caixa se você deseja gerenciar a entrega assim que o produto for "
-"reparado e criar uma separação com o produto selecionado. Note que você pode "
-"selecionar os locais na aba Info."
+msgstr "Marque esta caixa se você deseja gerenciar a entrega assim que o produto for reparado e criar uma separação com o produto selecionado. Note que você pode selecionar os locais na aba Info."
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
 msgid ""
 "The warranty expiration limit is computed as: last move date + warranty "
 "defined on selected product. If the current date is below the warranty "
-"expiration limit, each operation and fee you will add will be set as 'not to "
-"invoiced' by default. Note that you can change manually afterwards."
-msgstr ""
-"O Prazo de Garantia é calculado como: data de último movimento + garantia "
-"definida no produto selecionado. Se a data atual é inferior ao prazo de "
-"garantia, cada operação e valor que você adicionar será definido como \"não "
-"faturado\" por padrão. Note que você pode alterar isso depois manualmente."
+"expiration limit, each operation and fee you will add will be set as 'not to"
+" invoiced' by default. Note that you can change manually afterwards."
+msgstr "O Prazo de Garantia é calculado como: data de último movimento + garantia definida no produto selecionado. Se a data atual é inferior ao prazo de garantia, cada operação e valor que você adicionar será definido como \"não faturado\" por padrão. Note que você pode alterar isso depois manualmente."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
-#: view:mrp.repair:0
-#: view:mrp.repair.make_invoice:0
+#: view:mrp.repair:0 view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
 msgstr "Gerar Fatura"
 
@@ -745,8 +666,7 @@ msgid "Reair Orders"
 msgstr "Ordens de Reparo"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,name:0
-#: field:mrp.repair.line,name:0
+#: field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
 #: report:repair.order:0
 msgid "Description"
 msgstr "Descrição"
@@ -757,8 +677,7 @@ msgid "Operation Lines"
 msgstr "Linhas de Operação"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_id:0
+#: view:mrp.repair:0 field:mrp.repair.fee,product_id:0
 #: field:mrp.repair.line,product_id:0
 msgid "Product"
 msgstr "Produto"
@@ -810,8 +729,7 @@ msgid "Untaxed amount"
 msgstr "Valor sem impostos"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,repair_id:0
-#: field:mrp.repair.line,repair_id:0
+#: field:mrp.repair.fee,repair_id:0 field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
 msgstr "Ref. da Ordem de Reparos"
 
@@ -852,8 +770,7 @@ msgid "Source Location"
 msgstr "Local de Origem"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
-#: view:mrp.repair:0
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel view:mrp.repair:0
 msgid "Cancel Repair"
 msgstr "Cancelar Reparo"
 
@@ -871,13 +788,3 @@ msgstr "Total"
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
 msgstr "Pronto para Reparar"
-
-#, python-format
-#~ msgid "You have to select a Partner Invoice Address in the repair form !"
-#~ msgstr ""
-#~ "Você tem que escolher um endereço de faturamento para o parceiro no "
-#~ "formulário de reparo!"
-
-#, python-format
-#~ msgid "No partner !"
-#~ msgstr "Sem parceiro !"

@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-07 02:23+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:54+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -66,8 +67,7 @@ msgid "Time Tracking"
 msgstr "考勤跟踪"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "分组..."
 
@@ -87,11 +87,8 @@ msgid "Organize employees periodic evaluation"
 msgstr "组织员工定期评估"
 
 #. module: hr
-#: view:hr.department:0
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
+#: view:hr.department:0 view:hr.employee:0 field:hr.employee,department_id:0
+#: view:hr.job:0 field:hr.job,department_id:0
 #: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "部门"
@@ -129,9 +126,7 @@ msgid "Unread Messages"
 msgstr "未读信息"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "公司"
@@ -265,8 +260,7 @@ msgid "Child Categories"
 msgstr "子分类"
 
 #. module: hr
-#: field:hr.job,description:0
-#: model:ir.model,name:hr.model_hr_job
+#: field:hr.job,description:0 model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "职务描述"
 
@@ -281,8 +275,7 @@ msgid "Followers"
 msgstr "关注者"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "员工"
@@ -296,8 +289,8 @@ msgstr "其它信息"
 #: help:hr.employee,image_small:0
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr "小尺寸的员工照片。保留纵横比，自动缩放为64x64px。用在任何需要小图片的场合"
 
 #. module: hr
@@ -325,8 +318,8 @@ msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
-"This installs the module account_analytic_analysis, which will install sales "
-"management too."
+"This installs the module account_analytic_analysis, which will install sales"
+" management too."
 msgstr "为此要安装模块 account_analytic_analysis, 也将安装销售管理"
 
 #. module: hr
@@ -335,9 +328,7 @@ msgid "Human Resources Dashboard"
 msgstr "人力资源仪表盘"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "职务"
 
@@ -404,31 +395,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new job position.\n"
 "              </p><p>\n"
-"                Job Positions are used to define jobs and their "
-"requirements.\n"
-"                You can keep track of the number of employees you have per "
-"job\n"
-"                position and follow the evolution according to what you "
-"planned\n"
+"                Job Positions are used to define jobs and their requirements.\n"
+"                You can keep track of the number of employees you have per job\n"
+"                position and follow the evolution according to what you planned\n"
 "                for the future.\n"
 "              </p><p>\n"
-"                You can attach a survey to a job position. It will be used "
-"in\n"
-"                the recruitment process to evaluate the applicants for this "
-"job\n"
+"                You can attach a survey to a job position. It will be used in\n"
+"                the recruitment process to evaluate the applicants for this job\n"
 "                position.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击定义个一个新的工作岗位.\n"
-"              </p><p>\n"
-"               工作岗位用来定义工作和他们的要求。\n"
-"                你能跟踪跟踪每个工作岗位员工数，并且根据你未来的计划跟进变化。\n"
-"              </p><p>\n"
-"                你能附加一个调查表到工作岗位. 用在招聘流程中评估这个岗位的申请人.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击定义个一个新的工作岗位.\n              </p><p>\n               工作岗位用来定义工作和他们的要求。\n                你能跟踪跟踪每个工作岗位员工数，并且根据你未来的计划跟进变化。\n              </p><p>\n                你能附加一个调查表到工作岗位. 用在招聘流程中评估这个岗位的申请人.\n              </p>\n            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -440,9 +417,7 @@ msgstr "男性"
 msgid ""
 "$('.oe_employee_picture').load(function() { if($(this).width() > "
 "$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-"$('.oe_employee_picture').load(function() { if($(this).width() > "
-"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
+msgstr "$('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
@@ -536,9 +511,7 @@ msgid "Child Departments"
 msgstr "子部门"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.employee:0 view:hr.job:0 field:hr.job,state:0
 msgid "Status"
 msgstr "状态"
 
@@ -620,22 +593,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new employee.\n"
 "              </p><p>\n"
-"                With just a quick glance on the OpenERP employee screen, "
-"you\n"
-"                can easily find all the information you need for each "
-"person;\n"
+"                With just a quick glance on the OpenERP employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击 添加新的员工.\n"
-"              </p><p>\n"
-"                在OpenERP员工界面快速浏览一下，你\n"
-"                能很容易看到你需要的每人的信息：\n"
-"                包括 联系人数据、工作岗位、可用性等等.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击 添加新的员工.\n              </p><p>\n                在OpenERP员工界面快速浏览一下，你\n                能很容易看到你需要的每人的信息：\n                包括 联系人数据、工作岗位、可用性等等.\n              </p>\n            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -693,21 +656,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a department.\n"
 "              </p><p>\n"
-"                OpenERP's department structure is used to manage all "
-"documents\n"
+"                OpenERP's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击创建部门.\n"
-"              </p><p>\n"
-"                OpenERP 的部门结构 用来管理所有跟部门员工相关\n"
-"                的单据：费用、计工单、请假、假期和招聘等等。\n"
-" \n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建部门.\n              </p><p>\n                OpenERP 的部门结构 用来管理所有跟部门员工相关\n                的单据：费用、计工单、请假、假期和招聘等等。\n \n              </p>\n            "
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
@@ -727,20 +681,11 @@ msgid ""
 "                Click to define a new department.\n"
 "              </p><p>\n"
 "                Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
+"                related to employees by departments: expenses and timesheets,\n"
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击创建部门.\n"
-"              </p><p>\n"
-"                OpenERP 的部门结构 用来管理所有跟部门员工相关\n"
-"                的单据：费用、计工单、请假、假期和招聘等等。\n"
-" \n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建部门.\n              </p><p>\n                OpenERP 的部门结构 用来管理所有跟部门员工相关\n                的单据：费用、计工单、请假、假期和招聘等等。\n \n              </p>\n            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -855,8 +800,7 @@ msgid "Resource"
 msgstr "资源"
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee,name_related:0
+#: field:hr.department,complete_name:0 field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "名称"
@@ -867,8 +811,7 @@ msgid "Gender"
 msgstr "性别"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee.category,employee_ids:0
+#: view:hr.employee:0 field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -954,8 +897,7 @@ msgid ""
 "                    <b>Human Resources dashboard is empty.</b>\n"
 "                  </p><p>\n"
 "                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options.\n"
 "                  </p><p>\n"
 "                    You can filter and group data before inserting into the\n"
@@ -963,23 +905,10 @@ msgid ""
 "                  </p>\n"
 "              </div>\n"
 "            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>人力资源的仪表板是空的.</b>\n"
-"                  </p><p>\n"
-"                    要增加第一个报表到仪表板。\n"
-"                    进入任意菜单，切换为列表视图或者图形视图，\n"
-"                   然后在扩展搜索选项里点击“添加到仪表板”\n"
-"                           </p><p>\n"
-"                   在插入到仪表板之前，你能过滤和分组这些数据.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
+msgstr "<div class=\"oe_empty_custom_dashboard\">\n                  <p>\n                    <b>人力资源的仪表板是空的.</b>\n                  </p><p>\n                    要增加第一个报表到仪表板。\n                    进入任意菜单，切换为列表视图或者图形视图，\n                   然后在扩展搜索选项里点击“添加到仪表板”\n                           </p><p>\n                   在插入到仪表板之前，你能过滤和分组这些数据.\n                  </p>\n              </div>\n            "
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "师傅"
 
@@ -999,8 +928,7 @@ msgid "hr.config.settings"
 msgstr "hr.config.settings"
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "经理"
@@ -1023,7 +951,4 @@ msgstr "应用"
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Small-sized photo"
-msgstr ""
-
-#~ msgid "Smal-sized photo"
-#~ msgstr "小尺寸照片"
+msgstr "小尺寸照片"

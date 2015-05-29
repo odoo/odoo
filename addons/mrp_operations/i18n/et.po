@@ -1,27 +1,27 @@
-# Estonian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Estonian <et@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Estonian (http://www.transifex.com/projects/p/odoo-7/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:05+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 msgid "Work Orders"
 msgstr "Töökorraldused"
 
@@ -42,10 +42,9 @@ msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupeeri..."
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
@@ -55,12 +54,12 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mõõtühik"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "March"
-msgstr ""
+msgstr "Märts"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
@@ -68,8 +67,7 @@ msgid "Work Centers"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
 msgstr "Jätka"
@@ -87,7 +85,7 @@ msgstr "Tootmise operatsioon"
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Määra mustandiks"
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
@@ -111,15 +109,14 @@ msgid "Manufacturing order cannot be started in state \"%s\"!"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,day:0
+#: view:mrp.workorder:0 field:mrp.workorder,day:0
 msgid "Day"
-msgstr ""
+msgstr "Päev"
 
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Tühista korraldus"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_productionorder0
@@ -156,7 +153,7 @@ msgstr "Viga!"
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Tühistatud"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:477
@@ -173,7 +170,7 @@ msgstr "Operatsioonid"
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Laoseisu liikumine"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:481
@@ -191,7 +188,7 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "Ridade arv"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -210,13 +207,10 @@ msgstr ""
 #: help:mrp.production.workcenter.line,state:0
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
+"* When order is completely processed that time it is set in 'Finished' status."
 msgstr ""
 
 #. module: mrp_operations
@@ -265,15 +259,14 @@ msgid "Planned Date"
 msgstr "Planeeritud kuupäev"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,product_qty:0
+#: view:mrp.workorder:0 field:mrp.workorder,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "Toote kogus"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "July"
-msgstr ""
+msgstr "Juuli"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
@@ -282,8 +275,7 @@ msgstr "Operatsiooni nimi"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
-#: field:mrp.production.workcenter.line,state:0
-#: view:mrp.workorder:0
+#: field:mrp.production.workcenter.line,state:0 view:mrp.workorder:0
 #: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
@@ -319,8 +311,7 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
+"            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced.\n"
 "          </p>\n"
 "        "
@@ -344,18 +335,17 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "December"
-msgstr ""
+msgstr "Detsember"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,month:0
+#: view:mrp.workorder:0 field:mrp.workorder,month:0
 msgid "Month"
-msgstr ""
+msgstr "Kuu"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -415,8 +405,7 @@ msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
 msgstr "Alusta"
@@ -434,17 +423,15 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 msgid "Set Draft"
 msgstr "Sea mustand"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Lahtine"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:0
@@ -462,7 +449,7 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -482,13 +469,12 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "June"
-msgstr ""
+msgstr "Juuni"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_cycles:0
+#: view:mrp.workorder:0 field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
-msgstr ""
+msgstr "Kokku tsükkleid"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -506,30 +492,29 @@ msgid "Work Orders Planning"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: field:mrp.workorder,date:0
+#: view:mrp.production.workcenter.line:0 field:mrp.workorder,date:0
 msgid "Date"
-msgstr ""
+msgstr "Kuupäev"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "November"
-msgstr ""
+msgstr "Number"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
-msgstr ""
+msgstr "Otsing"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktoober"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "January"
-msgstr ""
+msgstr "Jaanuar"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -558,7 +543,7 @@ msgstr "Vabandust!"
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Current"
-msgstr ""
+msgstr "Praegune"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -588,8 +573,7 @@ msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
-#: view:mrp.workorder:0
-#: selection:mrp_operations.operation.code,start_stop:0
+#: view:mrp.workorder:0 selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
 msgstr "Tehtud"
 
@@ -626,10 +610,8 @@ msgid ""
 "            Click to start a new work order.\n"
 "          </p><p>\n"
 "            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
@@ -652,8 +634,7 @@ msgid "Delay"
 msgstr "Viivitus"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
@@ -665,8 +646,7 @@ msgid "Search Work Orders"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 #: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
@@ -679,17 +659,15 @@ msgid "Scheduled Date"
 msgstr "Planeeritud kuupäev"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,product:0
-#: view:mrp.workorder:0
+#: field:mrp.production.workcenter.line,product:0 view:mrp.workorder:0
 #: field:mrp.workorder,product_id:0
 msgid "Product"
 msgstr "Toode"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_hours:0
+#: view:mrp.workorder:0 field:mrp.workorder,total_hours:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Tunnid kokku"
 
 #. module: mrp_operations
 #: help:mrp.production,allow_reorder:0
@@ -701,11 +679,10 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
@@ -729,7 +706,7 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "February"
-msgstr ""
+msgstr "Veebruar"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
@@ -744,7 +721,7 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "April"
-msgstr ""
+msgstr "Aprill"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
@@ -759,13 +736,13 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Start Working"
-msgstr ""
+msgstr "Alusta tööd"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
 msgid ""
-"When the operation is finished, the operator updates the system by finishing "
-"the work order."
+"When the operation is finished, the operator updates the system by finishing"
+" the work order."
 msgstr ""
 
 #. module: mrp_operations
@@ -774,16 +751,11 @@ msgid "Details of the work order"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,year:0
+#: view:mrp.workorder:0 field:mrp.workorder,year:0
 msgid "Year"
-msgstr ""
+msgstr "Aasta"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "Kestvus"
-
-#, python-format
-#~ msgid "Operation is not started yet !"
-#~ msgstr "Operatsiooni pole veel alustatud !"

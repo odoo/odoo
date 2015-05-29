@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * product
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-08-11 15:46+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:14+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -94,7 +95,8 @@ msgstr "规则名称"
 #. module: product
 #: help:product.template,list_price:0
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
+"Base price to compute the customer price. Sometimes called the catalog "
+"price."
 msgstr "计算客户报价的基准价格。也叫目录价格"
 
 #. module: product
@@ -111,8 +113,7 @@ msgid ""
 msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: product
-#: code:addons/product/pricelist.py:198
-#: code:addons/product/product.py:208
+#: code:addons/product/pricelist.py:198 code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -160,11 +161,9 @@ msgstr "PC组装 SC349"
 #: help:product.product,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
-"and the reception of goods for this product and for the default supplier. It "
-"is used by the scheduler to order requests based on reordering delays."
-msgstr ""
-"产品供应在确认采购订单到接收产品之间的默认平均延迟. \n"
-"用于在调度订单请求时要考虑的重订货延迟."
+"and the reception of goods for this product and for the default supplier. It"
+" is used by the scheduler to order requests based on reordering delays."
+msgstr "产品供应在确认采购订单到接收产品之间的默认平均延迟. \n用于在调度订单请求时要考虑的重订货延迟."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
@@ -183,8 +182,7 @@ msgid "Sale Pricelist"
 msgstr "销售价格表"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,type:0
+#: view:product.template:0 field:product.template,type:0
 msgid "Product Type"
 msgstr "产品类型"
 
@@ -233,20 +231,11 @@ msgstr "错误！公司本位币的舍入系数不能定义得小于”科目“
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this "
-"Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock "
-"Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods leaving the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' "
-"type."
-msgstr ""
-"计划发出的产品数量。\n"
-"当与单个库位相关时，包括了在这个库位里的货物数量，以及任意的子库位。\n"
-"当与单个仓库相关时，包括存储在这个仓库的库位里的货物数量，以及任意的子库位。\n"
-"当与单个商店相关时，包括存储在这个商店所属仓库的库位里的货物数量，以及任意的子库位。\n"
-"否则，这是存储在任何“内部”类型库位的货物。"
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods leaving the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+msgstr "计划发出的产品数量。\n当与单个库位相关时，包括了在这个库位里的货物数量，以及任意的子库位。\n当与单个仓库相关时，包括存储在这个仓库的库位里的货物数量，以及任意的子库位。\n当与单个商店相关时，包括存储在这个商店所属仓库的库位里的货物数量，以及任意的子库位。\n否则，这是存储在任何“内部”类型库位的货物。"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_42_product_template
@@ -265,9 +254,7 @@ msgstr "主要供应商"
 #: model:ir.actions.act_window,name:product.product_ul_form_action
 #: model:ir.model,name:product.model_product_packaging
 #: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.packaging:0
-#: view:product.product:0
-#: view:product.ul:0
+#: view:product.packaging:0 view:product.product:0 view:product.ul:0
 msgid "Packaging"
 msgstr "包装"
 
@@ -278,8 +265,7 @@ msgid ""
 msgstr "如果不选中，允许你隐藏这个产品而无需删除。"
 
 #. module: product
-#: view:product.product:0
-#: field:product.template,categ_id:0
+#: view:product.product:0 field:product.template,categ_id:0
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "类别"
@@ -318,8 +304,7 @@ msgid "Pen drive, SP-2"
 msgstr "随身存储器, SP-2"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 #: field:product.template,state:0
 msgid "Status"
 msgstr "状态"
@@ -351,21 +336,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new packaging type.\n"
 "              </p><p>\n"
-"                The packaging type define the dimensions as well as the "
-"number\n"
-"                of products per package. This will ensure salesperson sell "
-"the\n"
+"                The packaging type define the dimensions as well as the number\n"
+"                of products per package. This will ensure salesperson sell the\n"
 "                right number of products according to the package selected.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击增加新的包装类型.\n"
-"              </p><p>\n"
-"                包装类型定义了外型尺寸以及每包的数量。 这将确保销售\n"
-"                人员根据选定的包装出售正确数量的产品。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击增加新的包装类型.\n              </p><p>\n                包装类型定义了外型尺寸以及每包的数量。 这将确保销售\n                人员根据选定的包装出售正确数量的产品。\n              </p>\n            "
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -389,8 +365,7 @@ msgid "Products Price Search"
 msgstr "产品的价格搜索"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,description_sale:0
+#: view:product.template:0 field:product.template,description_sale:0
 msgid "Sale Description"
 msgstr "销售说明"
 
@@ -410,8 +385,7 @@ msgid "The net weight in Kg."
 msgstr "净重使用公斤"
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
+#: field:pricelist.partnerinfo,min_quantity:0 field:product.supplierinfo,qty:0
 msgid "Quantity"
 msgstr "数量"
 
@@ -436,20 +410,11 @@ msgstr "重量"
 #: help:product.product,virtual_available:0
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in "
-"this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-"预测数量（计算公式是 在手数量-发货数量+收货数量）\n"
-"当与单个库位相关时，包括了在这个库位里的货物数量，以及任意的子库位。\n"
-"当与单个仓库相关时，包括存储在这个仓库的库位里的货物数量，以及任意的子库位。\n"
-"当与单个商店相关时，包括存储在这个商店所属仓库的库位里的货物数量，以及任意的子库位。\n"
-"否则，这是存储在任何“内部”类型库位的货物。"
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr "预测数量（计算公式是 在手数量-发货数量+收货数量）\n当与单个库位相关时，包括了在这个库位里的货物数量，以及任意的子库位。\n当与单个仓库相关时，包括存储在这个仓库的库位里的货物数量，以及任意的子库位。\n当与单个商店相关时，包括存储在这个商店所属仓库的库位里的货物数量，以及任意的子库位。\n否则，这是存储在任何“内部”类型库位的货物。"
 
 #. module: product
 #: field:product.packaging,height:0
@@ -469,12 +434,9 @@ msgstr "管理产品的属性"
 #. module: product
 #: help:product.uom,factor:0
 msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of "
-"Measure for this category:\n"
+"How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-"本计量单位和参考计量单位相比，大或者小的倍数。\n"
-"1*（参考单位=比率*（本单位）"
+msgstr "本计量单位和参考计量单位相比，大或者小的倍数。\n1*（参考单位=比率*（本单位）"
 
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
@@ -543,21 +505,11 @@ msgstr "天"
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods arriving to the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with "
-"'internal' type."
-msgstr ""
-"计划到达的产品数量\n"
-"\n"
-"当与单个库位相关时，包括了在这个库位里的货物数量，以及任意的子库位。\n"
-"当与单个仓库相关时，包括存储在这个仓库的库位里的货物数量，以及任意的子库位。\n"
-"当与单个商店相关时，包括存储在这个商店所属仓库的库位里的货物数量，以及任意的子库位。\n"
-"否则，这是存储在任何“内部”类型库位的货物。"
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+msgstr "计划到达的产品数量\n\n当与单个库位相关时，包括了在这个库位里的货物数量，以及任意的子库位。\n当与单个仓库相关时，包括存储在这个仓库的库位里的货物数量，以及任意的子库位。\n当与单个商店相关时，包括存储在这个商店所属仓库的库位里的货物数量，以及任意的子库位。\n否则，这是存储在任何“内部”类型库位的货物。"
 
 #. module: product
 #: constraint:product.template:0
@@ -722,20 +674,16 @@ msgid "HDD SH-1"
 msgstr "硬盘 SH-1"
 
 #. module: product
-#: field:product.supplierinfo,name:0
-#: field:product.template,seller_ids:0
+#: field:product.supplierinfo,name:0 field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "供应商"
 
 #. module: product
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year). \n"
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year). \n"
 "Average Price: The cost price is recomputed at each incoming shipment."
-msgstr ""
-"标准价格：这个成本价格是在会计区间结束时手动更新的 （通常是每年）\n"
-"平均价格：这个成本价是每一次入库时重新计算的"
+msgstr "标准价格：这个成本价格是在会计区间结束时手动更新的 （通常是每年）\n平均价格：这个成本价是每一次入库时重新计算的"
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -760,8 +708,7 @@ msgstr "EAN13 条码"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
 #: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:0
-#: report:product.pricelist:0
+#: view:product.price_list:0 report:product.pricelist:0
 #: field:product.pricelist.version,pricelist_id:0
 msgid "Price List"
 msgstr "价格表"
@@ -844,9 +791,7 @@ msgid "Print"
 msgstr "打印"
 
 #. module: product
-#: view:product.product:0
-#: field:product.ul,type:0
-#: field:product.uom,uom_type:0
+#: view:product.product:0 field:product.ul,type:0 field:product.uom,uom_type:0
 msgid "Type"
 msgstr "类型"
 
@@ -871,8 +816,7 @@ msgstr "关键字"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,pricelist_id:0
-#: view:product.supplierinfo:0
+#: field:product.product,pricelist_id:0 view:product.supplierinfo:0
 msgid "Pricelist"
 msgstr "价格表"
 
@@ -922,8 +866,7 @@ msgstr "供应商信息"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
-#: field:product.price.type,currency_id:0
-#: report:product.pricelist:0
+#: field:product.price.type,currency_id:0 report:product.pricelist:0
 #: field:product.pricelist,currency_id:0
 msgid "Currency"
 msgstr "货币"
@@ -939,9 +882,7 @@ msgstr "数据卡"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
-msgstr ""
-"从默认计量单位转换（UoM）到销售单位（UoS）的系数。\n"
-"UoS = UoM * 系数"
+msgstr "从默认计量单位转换（UoM）到销售单位（UoS）的系数。\nUoS = UoM * 系数"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -994,16 +935,12 @@ msgstr "产品供应商信息"
 #. module: product
 #: help:product.uom,factor_inv:0
 msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of "
-"Measure in this category:\n"
+"How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-"本计量单位大于参考计量单位 的倍数。\n"
-"1*（本单位）=比率*（参考单位）"
+msgstr "本计量单位大于参考计量单位 的倍数。\n1*（本单位）=比率*（参考单位）"
 
 #. module: product
-#: view:product.template:0
-#: field:product.template,description_purchase:0
+#: view:product.template:0 field:product.template,description_purchase:0
 msgid "Purchase Description"
 msgstr "采购说明"
 
@@ -1040,11 +977,7 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr ""
-"17”LCD 显示器\n"
-"AMD8核处理器\n"
-"512m 内存\n"
-"硬盘 SH-1"
+msgstr "17”LCD 显示器\nAMD8核处理器\n512m 内存\n硬盘 SH-1"
 
 #. module: product
 #: selection:product.template,type:0
@@ -1084,8 +1017,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new product.\n"
 "              </p><p>\n"
-"                You must define a product for everything you sell, whether "
-"it's\n"
+"                You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers.\n"
 "              </p><p>\n"
@@ -1094,15 +1026,7 @@ msgid ""
 "                procurement methods, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击定义一个新产品\n"
-"              </p><p>\n"
-"                你必须为销售的每一样都定义一个产品。可以是物理产品、消耗品、或者你提供给客户的服务。\n"
-"              </p><p>\n"
-"                产品表单包括下面的信息以简化销售处理：价格、报价事项，会计数据，供应方法等等。\n"
-"               </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击定义一个新产品\n              </p><p>\n                你必须为销售的每一样都定义一个产品。可以是物理产品、消耗品、或者你提供给客户的服务。\n              </p><p>\n                产品表单包括下面的信息以简化销售处理：价格、报价事项，会计数据，供应方法等等。\n               </p>\n            "
 
 #. module: product
 #: view:product.price_list:0
@@ -1118,14 +1042,13 @@ msgstr "高速打印、传真、扫描一体机"
 #. module: product
 #: help:product.supplierinfo,min_qty:0
 msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product Unit of Measure if not empty, in the default unit of measure of the "
-"product otherwise."
+"The minimal quantity to purchase to this supplier, expressed in the supplier"
+" Product Unit of Measure if not empty, in the default unit of measure of the"
+" product otherwise."
 msgstr "从供应商采购的最小数量，如果不是空的，就按明示的供应商单位。否则就是默认的计量单位。"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 msgid "Information"
 msgstr "信息"
 
@@ -1187,12 +1110,9 @@ msgid "Logistical Units"
 msgstr "逻辑单位"
 
 #. module: product
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
+#: field:product.category,complete_name:0 field:product.category,name:0
+#: field:product.pricelist.type,name:0 field:product.pricelist.version,name:0
+#: field:product.template,name:0 field:product.ul,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr "名称"
@@ -1229,8 +1149,7 @@ msgstr "成本"
 
 #. module: product
 #: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
+msgid "Gives the sequence order when displaying a list of product categories."
 msgstr "显示产品列表的顺序号"
 
 #. module: product
@@ -1239,8 +1158,7 @@ msgid "Dozen(s)"
 msgstr "打"
 
 #. module: product
-#: field:product.uom,factor:0
-#: field:product.uom,factor_inv:0
+#: field:product.uom,factor:0 field:product.uom,factor_inv:0
 msgid "Ratio"
 msgstr "比例"
 
@@ -1255,10 +1173,8 @@ msgid "Associated field in the product form."
 msgstr "产品的相关字段"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,uom_id:0
-#: field:product.uom,name:0
+#: view:product.product:0 view:product.template:0
+#: field:product.template,uom_id:0 field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr "计量单位"
 
@@ -1303,18 +1219,12 @@ msgstr "国际物品编码用于产品标识"
 #: model:ir.actions.act_window,help:product.product_category_action
 msgid ""
 "<p>\n"
-"                Here is a list of all your products classified by category. "
-"You\n"
-"                can click a category to get the list of all products linked "
-"to\n"
+"                Here is a list of all your products classified by category. You\n"
+"                can click a category to get the list of all products linked to\n"
 "                this category or to a child of this category.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                这是你所有产品根据类别进行的分类列表。你能单击分类 获得关联到这个类别极其子类的所有产品列表。\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                这是你所有产品根据类别进行的分类列表。你能单击分类 获得关联到这个类别极其子类的所有产品列表。\n              </p>\n            "
 
 #. module: product
 #: code:addons/product/product.py:361
@@ -1322,10 +1232,9 @@ msgstr ""
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
 "as of old Unit of Measure '%s'. If you need to change the unit of measure, "
-"you may deactivate this product from the 'Procurements' tab and create a new "
-"one."
-msgstr ""
-"新的计量单位'%s'的类别 '%s'必须跟老单位 '%s' 相同。如果你要改变计量单位，你要'需求'标签停用这个产品 ，并且创建一个新的。"
+"you may deactivate this product from the 'Procurements' tab and create a new"
+" one."
+msgstr "新的计量单位'%s'的类别 '%s'必须跟老单位 '%s' 相同。如果你要改变计量单位，你要'需求'标签停用这个产品 ，并且创建一个新的。"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1333,8 +1242,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
-#: model:ir.ui.menu,name:product.prod_config_main
-#: view:product.product:0
+#: model:ir.ui.menu,name:product.prod_config_main view:product.product:0
 msgid "Products"
 msgstr "产品"
 
@@ -1366,8 +1274,7 @@ msgid "Net Weight"
 msgstr "净重"
 
 #. module: product
-#: view:product.packaging:0
-#: view:product.product:0
+#: view:product.packaging:0 view:product.product:0
 msgid "Pallet Dimension"
 msgstr "垫板尺寸"
 
@@ -1421,8 +1328,7 @@ msgstr "碳粉匣"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
+#: model:ir.ui.menu,name:product.next_id_16 view:product.uom:0
 msgid "Units of Measure"
 msgstr "计量单位"
 
@@ -1459,14 +1365,13 @@ msgstr "价格表版本"
 #. module: product
 #: help:product.pricelist.item,sequence:0
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation "
-"gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation"
+" gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr "价格表检测的顺序。越小的序号将有越高的优先级进行条件匹配。"
 
 #. module: product
-#: view:product.product:0
-#: selection:product.template,type:0
+#: view:product.product:0 selection:product.template,type:0
 msgid "Consumable"
 msgstr "消耗品"
 
@@ -1498,8 +1403,7 @@ msgid "Processor AMD 8-Core"
 msgstr "AMD 8核处理器"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
+#: view:product.product:0 view:product.template:0
 msgid "Weights"
 msgstr "重量"
 
@@ -1511,8 +1415,8 @@ msgstr "报价单说明"
 #. module: product
 #: help:pricelist.partnerinfo,price:0
 msgid ""
-"This price will be considered as a price for the supplier Unit of Measure if "
-"any or the default Unit of Measure of the product otherwise"
+"This price will be considered as a price for the supplier Unit of Measure if"
+" any or the default Unit of Measure of the product otherwise"
 msgstr "这个价格是 按照供应商单位考虑的，其他情况是默认单位"
 
 #. module: product
@@ -1565,19 +1469,11 @@ msgid ""
 "              </p><p>\n"
 "                There can be more than one version of a pricelist, each of\n"
 "                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击 增加一个价格表版本.\n"
-"              </p><p>\n"
-"                这里能有多于一个价格表版本，每个必须在指定的区间里生效。\n"
-"                一些版本的示例： 主价格，2010，2011，夏季销售 等等.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击 增加一个价格表版本.\n              </p><p>\n                这里能有多于一个价格表版本，每个必须在指定的区间里生效。\n                一些版本的示例： 主价格，2010，2011，夏季销售 等等.\n              </p>\n            "
 
 #. module: product
 #: help:product.template,uom_po_id:0
@@ -1599,12 +1495,7 @@ msgid ""
 "6GB RAM\n"
 "Hi-Speed 234Q Processor\n"
 "QWERTY keyboard"
-msgstr ""
-"17寸显示器\n"
-"6GB 内存\n"
-"高速处理器 234Q \n"
-"\n"
-"QWERTY 键盘"
+msgstr "17寸显示器\n6GB 内存\n高速处理器 234Q \n\nQWERTY 键盘"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1642,10 +1533,8 @@ msgid "HDD on Demand"
 msgstr "HDD on Demand"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
+#: field:product.price.type,active:0 field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0 field:product.product,active:0
 #: field:product.uom,active:0
 msgid "Active"
 msgstr "可用"
@@ -1732,25 +1621,17 @@ msgid ""
 "              </p><p>\n"
 "                Units of measure belonging to the same category can be\n"
 "                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of "
-"measure:\n"
+"                <i>'Time'</i>, you will have the following units of measure:\n"
 "                Hours, Days.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击增加一个新的计量单位类别。\n"
-"              </p><p>\n"
-"                属于相同类别的计量单位能互相转换。例如，，在“时间”类别中，你有下列单位: 小时数、天数。\n"
-"\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击增加一个新的计量单位类别。\n              </p><p>\n                属于相同类别的计量单位能互相转换。例如，，在“时间”类别中，你有下列单位: 小时数、天数。\n\n              </p>\n            "
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
 msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
-"Measure if any or in the default Unit of Measure of the product otherrwise."
+"The minimal quantity to trigger this rule, expressed in the supplier Unit of"
+" Measure if any or in the default Unit of Measure of the product otherrwise."
 msgstr "最小数量触发这个规则，如果指明了就是供应商单位，否则就是产品的默认计量单位"
 
 #. module: product
@@ -1789,8 +1670,7 @@ msgstr "包装层"
 #: model:process.node,name:product.process_node_product0
 #: model:process.process,name:product.process_process_productprocess0
 #: field:product.packaging,product_id:0
-#: field:product.pricelist.item,product_id:0
-#: view:product.product:0
+#: field:product.pricelist.item,product_id:0 view:product.product:0
 #: field:product.supplierinfo,product_id:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
@@ -1930,10 +1810,8 @@ msgstr "产品价格表"
 #. module: product
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: view:product.product:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
+#: field:product.pricelist.version,company_id:0 view:product.product:0
+#: field:product.supplierinfo,company_id:0 field:product.template,company_id:0
 msgid "Company"
 msgstr "公司"
 
@@ -1996,8 +1874,7 @@ msgid "Components"
 msgstr "部件"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
+#: field:product.product,code:0 field:product.product,default_code:0
 msgid "Internal Reference"
 msgstr "内部单号"
 
@@ -2028,8 +1905,7 @@ msgid "Specify if the product can be selected in a sales order line."
 msgstr "如果产品能在销售单明细在被选择，则指定。"
 
 #. module: product
-#: view:product.product:0
-#: field:product.template,sale_ok:0
+#: view:product.product:0 field:product.template,sale_ok:0
 msgid "Can be Sold"
 msgstr "可销售"
 
@@ -2071,28 +1947,16 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new product.\n"
 "              </p><p>\n"
-"                You must define a product for everything you purchase, "
-"whether\n"
-"                it's a physical product, a consumable or services you buy "
-"to\n"
+"                You must define a product for everything you purchase, whether\n"
+"                it's a physical product, a consumable or services you buy to\n"
 "                subcontractants.\n"
 "              </p><p>\n"
-"                The product form contains detailed information to improve "
-"the\n"
-"                purchase process: prices, procurement logistics, accounting "
-"data,\n"
+"                The product form contains detailed information to improve the\n"
+"                purchase process: prices, procurement logistics, accounting data,\n"
 "                available suppliers, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\"> \n"
-"               单击定义一个新产品\n"
-"              </p><p>\n"
-"                你必须为采购的每一样都定义一个产品。可以是物理产品、消耗品、或者你从分包商购买的服务。\n"
-"              </p><p>\n"
-"                产品表单包括下面的信息以简化采购处理：价格、采购物流，会计数据，可用的供应商等等。\n"
-"               </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\"> \n               单击定义一个新产品\n              </p><p>\n                你必须为采购的每一样都定义一个产品。可以是物理产品、消耗品、或者你从分包商购买的服务。\n              </p><p>\n                产品表单包括下面的信息以简化采购处理：价格、采购物流，会计数据，可用的供应商等等。\n               </p>\n            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
@@ -2102,8 +1966,7 @@ msgstr "全功能图像编辑软件"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:0
-#: view:product.pricelist.version:0
+#: view:product.pricelist:0 view:product.pricelist.version:0
 msgid "Pricelist Version"
 msgstr "价格表版本"
 
@@ -2129,8 +1992,7 @@ msgid "Sale Conditions"
 msgstr "销售条件"
 
 #. module: product
-#: view:product.packaging:0
-#: view:product.product:0
+#: view:product.packaging:0 view:product.product:0
 msgid "Palletization"
 msgstr "垫垫板"
 
@@ -2187,29 +2049,18 @@ msgstr "指定固定金额来添加或减去(如果负)，用作折扣来计算�
 #: help:product.product,qty_available:0
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-"产品的当前数量\n"
-"当与单个库位相关时，包括了在这个库位里的货物数量，以及任意的子库位。\n"
-"当与单个仓库相关时，包括存储在这个仓库的库位里的货物数量，以及任意的子库位。\n"
-"当与单个商店相关时，包括存储在这个商店所属仓库的库位里的货物数量，以及任意的子库位。\n"
-"否则，这是存储在任何“内部”类型库位的货物。"
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr "产品的当前数量\n当与单个库位相关时，包括了在这个库位里的货物数量，以及任意的子库位。\n当与单个仓库相关时，包括存储在这个仓库的库位里的货物数量，以及任意的子库位。\n当与单个商店相关时，包括存储在这个商店所属仓库的库位里的货物数量，以及任意的子库位。\n否则，这是存储在任何“内部”类型库位的货物。"
 
 #. module: product
 #: help:product.template,type:0
 msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
-msgstr ""
-"消耗品：不会为该产品进行库存管理\n"
-"可库存产品：将为该产品进行库存管理"
+msgstr "消耗品：不会为该产品进行库存管理\n可库存产品：将为该产品进行库存管理"
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -2228,13 +2079,7 @@ msgid ""
 "                whether it's a physical product, a consumable or service.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\"> \n"
-"               单击定义一个新产品\n"
-"              </p><p>\n"
-"                你必须为买卖的的每一样都定义一个产品。可以是物理产品、消耗品、或者服务。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\"> \n               单击定义一个新产品\n              </p><p>\n                你必须为买卖的的每一样都定义一个产品。可以是物理产品、消耗品、或者服务。\n              </p>\n            "
 
 #. module: product
 #: view:product.product:0
@@ -2291,11 +2136,7 @@ msgid ""
 "Processor Core i5 2.70 Ghz\n"
 "2GB RAM\n"
 "HDD SH-1"
-msgstr ""
-"19“显示器\n"
-"2GB内存\n"
-"酷睿i5 2.7Ghz  处理器\n"
-"硬盘 SH-1"
+msgstr "19“显示器\n2GB内存\n酷睿i5 2.7Ghz  处理器\n硬盘 SH-1"
 
 #. module: product
 #: view:product.template:0
@@ -2324,8 +2165,7 @@ msgid "Gives the sequence order when displaying a list of packaging."
 msgstr "显示包装信息的顺序号"
 
 #. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
+#: selection:product.category,type:0 selection:product.template,state:0
 msgid "Normal"
 msgstr "常规"
 
@@ -2335,9 +2175,7 @@ msgstr "常规"
 msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
-msgstr ""
-"至少有一个价格表没有活动的版本！\n"
-"请创建或激活一个。"
+msgstr "至少有一个价格表没有活动的版本！\n请创建或激活一个。"
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -2364,34 +2202,17 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a pricelist.\n"
 "              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
-"                the purchase price. The default price list has only one "
-"rule; use\n"
-"                the cost price defined on the product form, so that you do "
-"not have to\n"
-"                worry about supplier pricelists if you have very simple "
-"needs.\n"
+"                A price list contains rules to be evaluated in order to compute\n"
+"                the purchase price. The default price list has only one rule; use\n"
+"                the cost price defined on the product form, so that you do not have to\n"
+"                worry about supplier pricelists if you have very simple needs.\n"
 "              </p><p>\n"
-"                But you can also import complex price lists form your "
-"supplier\n"
+"                But you can also import complex price lists form your supplier\n"
 "                that may depends on the quantities ordered or the current\n"
 "                promotions.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                创建一个价格表。\n"
-"              </p><p>\n"
-"                价格表包括了计算订单采购价格的规则。\n"
-"                默认的价格表有一个规则：使用产品表单里定义的成 \n"
-"                本价。如果你有非常简单的需求，这样你就不必担心\n"
-"                供应商的价目表，。\n"
-"              </p><p>\n"
-"                但是你也能从供应商那里导入复杂的价格表，可能依\n"
-"                赖于订购的数量，或者当前的促销活动。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                创建一个价格表。\n              </p><p>\n                价格表包括了计算订单采购价格的规则。\n                默认的价格表有一个规则：使用产品表单里定义的成 \n                本价。如果你有非常简单的需求，这样你就不必担心\n                供应商的价目表，。\n              </p><p>\n                但是你也能从供应商那里导入复杂的价格表，可能依\n                赖于订购的数量，或者当前的促销活动。\n              </p>\n            "
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2436,15 +2257,10 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr ""
-"17“显示器\n"
-"4GB内存\n"
-"标准1294P处理器\n"
-"QWERTY键盘"
+msgstr "17“显示器\n4GB内存\n标准1294P处理器\nQWERTY键盘"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
+#: field:product.category,sequence:0 field:product.packaging,sequence:0
 #: field:product.pricelist.item,sequence:0
 #: field:product.supplierinfo,sequence:0
 msgid "Sequence"
@@ -2477,9 +2293,7 @@ msgid ""
 "                Measure within the same category.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"单击以创建一个新的计量单位\n"
-"            "
+msgstr "单击以创建一个新的计量单位\n            "
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
@@ -2503,10 +2317,8 @@ msgid "Creation of the product"
 msgstr "产品创建"
 
 #. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: report:product.pricelist:0
-#: view:product.product:0
+#: field:pricelist.partnerinfo,name:0 field:product.packaging,name:0
+#: report:product.pricelist:0 view:product.product:0
 #: field:product.template,description:0
 msgid "Description"
 msgstr "说明"
@@ -2531,8 +2343,8 @@ msgstr "体积"
 #: help:product.product,image_small:0
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr "产品的小尺寸图片。保持纵横比，自动缩放为64x64px。用于任何需要小图片的场合"
 
 #. module: product
@@ -2580,35 +2392,21 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a pricelist.\n"
 "              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
+"                A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products.\n"
 "              </p><p>\n"
-"                Price lists may have several versions (2010, 2011, Promotion "
-"of\n"
-"                February 2010, etc.) and each version may have several "
-"rules.\n"
-"                (e.g. the customer price of a product category will be based "
-"on\n"
+"                Price lists may have several versions (2010, 2011, Promotion of\n"
+"                February 2010, etc.) and each version may have several rules.\n"
+"                (e.g. the customer price of a product category will be based on\n"
 "                the supplier price multiplied by 1.80).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击创建一个价格列表。\n"
-"              </p><p>\n"
-"                价格列表包括待评审的规则来计算产品价格。\n"
-"              </p><p>\n"
-"                价格列表可能有不同版本（2010, 2011, 2010年2月促销等等） ，每个版本可能有几个不同的规则。\n"
-"                （例如：给顾客的产品价格按照供应商价格的1.8倍提交。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个价格列表。\n              </p><p>\n                价格列表包括待评审的规则来计算产品价格。\n              </p><p>\n                价格列表可能有不同版本（2010, 2011, 2010年2月促销等等） ，每个版本可能有几个不同的规则。\n                （例如：给顾客的产品价格按照供应商价格的1.8倍提交。\n              </p>\n            "
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
 #: field:product.pricelist.item,product_tmpl_id:0
-#: field:product.product,product_tmpl_id:0
-#: view:product.template:0
+#: field:product.product,product_tmpl_id:0 view:product.template:0
 msgid "Product Template"
 msgstr "产品模板"
 
@@ -2661,9 +2459,7 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-"设定价格,因为它是一个多元价格, 四舍五入后打折或加入附加费. \n"
-"以价格9.99为例四舍五入为10附加费为-0.001."
+msgstr "设定价格,因为它是一个多元价格, 四舍五入后打折或加入附加费. \n以价格9.99为例四舍五入为10附加费为-0.001."
 
 #. module: product
 #: field:product.template,list_price:0
@@ -2709,7 +2505,3 @@ msgstr "这体积是m3"
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "价格折扣"
-
-#, python-format
-#~ msgid "Partner section of the product form"
-#~ msgstr "供应产品的业务伙伴"

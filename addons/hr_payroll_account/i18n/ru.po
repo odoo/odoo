@@ -1,56 +1,55 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:57+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_payroll_account
 #: field:hr.salary.rule,account_credit:0
 msgid "Credit Account"
-msgstr ""
+msgstr "Кредитный счет"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:105
 #, python-format
 msgid "Payslip of %s"
-msgstr ""
+msgstr "Расчетный листок %s"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:158
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr ""
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "В журнале расходов \"%s\" не правильно настроен кредитный счет!"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,move_id:0
 msgid "Accounting Entry"
-msgstr ""
+msgstr "Бухгалтерская проводка"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:174
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "В журнале расходов \"%s\" неправильно настроен дебетный счет!"
 
 #. module: hr_payroll_account
 #: field:hr.salary.rule,account_tax_id:0
 msgid "Tax Code"
-msgstr ""
+msgstr "Код налога"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,period_id:0
@@ -60,12 +59,12 @@ msgstr "Установить период"
 #. module: hr_payroll_account
 #: help:hr.payslip,period_id:0
 msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr ""
+msgstr "Держите пустым чтобы использовать период даты утверждения (расчетного листка)."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contract
 msgid "Contract"
-msgstr ""
+msgstr "Договор"
 
 #. module: hr_payroll_account
 #: field:hr.contract,analytic_account_id:0
@@ -76,24 +75,24 @@ msgstr "Счёт аналитики"
 #. module: hr_payroll_account
 #: field:hr.salary.rule,account_debit:0
 msgid "Debit Account"
-msgstr ""
+msgstr "Дебетный счет"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
 msgid "Payslip Batches"
-msgstr ""
+msgstr "Пакеты платежных ведомостей"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr ""
+msgstr "Сгенерировать платежные ведомости для всех выбранных сотрудников"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:158
 #: code:addons/hr_payroll_account/hr_payroll_account.py:174
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Ошибка конфигурации!"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
@@ -101,10 +100,9 @@ msgid "hr.salary.rule"
 msgstr ""
 
 #. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
+#: view:hr.contract:0 view:hr.salary.rule:0
 msgid "Accounting"
-msgstr ""
+msgstr "Учёт"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -116,11 +114,10 @@ msgstr "Расчетный листок"
 #: code:addons/hr_payroll_account/hr_payroll_account.py:176
 #, python-format
 msgid "Adjustment Entry"
-msgstr ""
+msgstr "Корректирующая проводка"
 
 #. module: hr_payroll_account
-#: field:hr.contract,journal_id:0
-#: field:hr.payslip,journal_id:0
+#: field:hr.contract,journal_id:0 field:hr.payslip,journal_id:0
 #: field:hr.payslip.run,journal_id:0
 msgid "Salary Journal"
-msgstr ""
+msgstr "Журнал заработных плат"

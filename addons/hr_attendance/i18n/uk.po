@@ -1,21 +1,22 @@
-# Ukrainian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Ukrainian <uk@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Ukrainian (http://www.transifex.com/projects/p/odoo-7/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:54+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -33,11 +34,10 @@ msgid "Last Sign"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.employee,state:0
+#: view:hr.attendance:0 field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
-msgstr ""
+msgstr "Відвідування"
 
 #. module: hr_attendance
 #. openerp-web
@@ -100,11 +100,10 @@ msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
+#: selection:hr.attendance,action:0 view:hr.employee:0
 #, python-format
 msgid "Sign Out"
-msgstr ""
+msgstr "Вихід"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
@@ -113,15 +112,13 @@ msgid "No records are found for your selection!"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Print"
-msgstr ""
+msgstr "Друк"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,employee_id:0
+#: view:hr.attendance:0 field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Співробітник"
@@ -129,7 +126,7 @@ msgstr "Співробітник"
 #. module: hr_attendance
 #: field:hr.attendance.month,month:0
 msgid "Month"
-msgstr ""
+msgstr "Місяць"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -138,17 +135,15 @@ msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
+#: selection:hr.attendance,action:0 view:hr.employee:0
 #, python-format
 msgid "Sign In"
-msgstr ""
+msgstr "Вхід"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
+#: field:hr.attendance.error,init_date:0 field:hr.attendance.week,init_date:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Початкова дата"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -171,7 +166,7 @@ msgstr ""
 #: code:addons/hr_attendance/hr_attendance.py:161
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Попередження"
 
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
@@ -240,7 +235,7 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.attendance,name:0
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #. module: hr_attendance
 #: field:hr.config.settings,group_hr_attendance:0
@@ -259,15 +254,14 @@ msgid "Attendance Error Report"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
+#: view:hr.attendance:0 field:hr.attendance,day:0
 msgid "Day"
-msgstr ""
+msgstr "День"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
 msgid "Present"
-msgstr ""
+msgstr "Присутній"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -288,7 +282,7 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0
 msgid "Year"
-msgstr ""
+msgstr "Рік"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -308,7 +302,7 @@ msgstr ""
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 msgid "Sign in"
-msgstr ""
+msgstr "Відмітка приходу"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -341,10 +335,9 @@ msgid "Attendance Errors"
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
+#: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
-msgstr ""
+msgstr "Дія"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -373,8 +366,7 @@ msgid "Max. Delay (Min)"
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
+#: field:hr.attendance.error,end_date:0 field:hr.attendance.week,end_date:0
 msgid "Ending Date"
 msgstr ""
 
@@ -414,7 +406,7 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action Type"
-msgstr ""
+msgstr "Тип дії"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -435,11 +427,10 @@ msgid "December"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Cancel"
-msgstr ""
+msgstr "Скасувати"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -448,13 +439,11 @@ msgstr ""
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
+msgid "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
+#: view:hr.attendance.error:0 view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "or"
 msgstr ""

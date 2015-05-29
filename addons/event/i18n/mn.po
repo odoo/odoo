@@ -1,25 +1,25 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * event
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-02-05 00:15+0000\n"
-"Last-Translator: gobi <Unknown>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-7/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
+#: view:event.event:0 view:report.event.registration:0
 msgid "My Events"
 msgstr "Миний үйл явдлууд"
 
@@ -39,8 +39,7 @@ msgid "Main Speaker"
 msgstr "Үндсэн илтгэгч"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 #: view:report.event.registration:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
@@ -56,10 +55,7 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
-"Үйл явдал бүрт хамгийн бага бүртгэлийн түвшинг тодорхойлж болно. Хэрэв "
-"хангалттай бүртгүүлэгчгүй бол үйл явдлыг батлах боломжгүй байна. (0-г тавьж "
-"энэ дүрмийг хэрэгсэхгүй болгоно)"
+msgstr "Үйл явдал бүрт хамгийн бага бүртгэлийн түвшинг тодорхойлж болно. Хэрэв хангалттай бүртгүүлэгчгүй бол үйл явдлыг батлах боломжгүй байна. (0-г тавьж энэ дүрмийг хэрэгсэхгүй болгоно)"
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -77,8 +73,7 @@ msgid "Concert of Bon Jovi"
 msgstr "Bon Jovi-н концерт"
 
 #. module: event
-#: view:event.registration:0
-#: selection:event.registration,state:0
+#: view:event.registration:0 selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
 msgstr "Оролцсон"
@@ -94,8 +89,7 @@ msgid "Send Email"
 msgstr "Эмэйл илгээх"
 
 #. module: event
-#: field:event.event,company_id:0
-#: field:event.registration,company_id:0
+#: field:event.event,company_id:0 field:event.registration,company_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,company_id:0
 msgid "Company"
@@ -169,8 +163,7 @@ msgstr "Үйл явдлын шинжилгээ"
 #. module: event
 #: help:event.type,default_registration_max:0
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
-"Үйл явдлыг сонгоход энэ нь энэхүү хамгийн их утгыг анхныхаараа сонгох болно."
+msgstr "Үйл явдлыг сонгоход энэ нь энэхүү хамгийн их утгыг анхныхаараа сонгох болно."
 
 #. module: event
 #: view:report.event.registration:0
@@ -179,24 +172,20 @@ msgid "Register"
 msgstr "Бүртгэх"
 
 #. module: event
-#: field:event.event,message_ids:0
-#: field:event.registration,message_ids:0
+#: field:event.event,message_ids:0 field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Зурвас"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,registration_ids:0
+#: view:event.event:0 field:event.event,registration_ids:0
 #: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration
-#: view:res.partner:0
+#: model:ir.ui.menu,name:event.menu_action_registration view:res.partner:0
 msgid "Registrations"
 msgstr "Бүртгэлүүд"
 
 #. module: event
-#: code:addons/event/event.py:89
-#: code:addons/event/event.py:100
+#: code:addons/event/event.py:89 code:addons/event/event.py:100
 #: code:addons/event/event.py:357
 #, python-format
 msgid "Error!"
@@ -208,14 +197,12 @@ msgid "Confirm Event"
 msgstr "Үйл ажиллагааг батлах"
 
 #. module: event
-#: view:board.board:0
-#: model:ir.actions.act_window,name:event.act_event_view
+#: view:board.board:0 model:ir.actions.act_window,name:event.act_event_view
 msgid "Next Events"
 msgstr "Дараагийн Үйл явдал"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
+#: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
@@ -232,8 +219,7 @@ msgid "Opera of Verdi"
 msgstr "Verdi-н дуурь"
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
+#: help:event.event,message_unread:0 help:event.registration,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Хэрэв тэмдэглэгдсэн бол шинэ зурвас нь анхаарал татахыг шаардана."
 
@@ -269,9 +255,7 @@ msgstr "Үйл явдал дуусах огноо"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
-"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
+msgstr "Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: event
 #: view:report.event.registration:0
@@ -279,21 +263,18 @@ msgid "Registrations in confirmed or done state"
 msgstr "Батлагдсан эсвэл хийгдсэн төлөвтэй бүртгэлүүд"
 
 #. module: event
-#: code:addons/event/event.py:106
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:106 code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Registration"
 msgstr "Бүртгэл"
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,partner_id:0
+#: view:event.registration:0 field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
 msgid "Partner"
 msgstr "Харилцагч"
@@ -301,9 +282,7 @@ msgstr "Харилцагч"
 #. module: event
 #: help:event.type,default_registration_min:0
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-"Энэ үйл явдлыг сонгоход энэ нь энэхүү хамгийн бага утгыг анхныхаараа сонгох "
-"болно"
+msgstr "Энэ үйл явдлыг сонгоход энэ нь энэхүү хамгийн бага утгыг анхныхаараа сонгох болно"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -311,19 +290,15 @@ msgid " Event Type "
 msgstr " Үйл ажиллагааны төрөл "
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,event_id:0
+#: view:event.registration:0 field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: view:report.event.registration:0
-#: field:report.event.registration,event_id:0
+#: view:report.event.registration:0 field:report.event.registration,event_id:0
 #: view:res.partner:0
 msgid "Event"
 msgstr "Үйл явдал"
 
 #. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
-#: view:event.registration:0
+#: view:event.event:0 selection:event.event,state:0 view:event.registration:0
 #: selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
@@ -336,8 +311,7 @@ msgid "Participant"
 msgstr "Оролцогч"
 
 #. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: view:event.registration:0 view:report.event.registration:0
 msgid "Confirm"
 msgstr "Батлах"
 
@@ -356,9 +330,7 @@ msgstr "Энэ үйл явдалтай бүртгэх"
 msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
-msgstr ""
-"Энэ үйл явдлыг сонгоход энэхүү баталгааны эмэйл утгыг анхныхаараа сонгох "
-"болно."
+msgstr "Энэ үйл явдлыг сонгоход энэхүү баталгааны эмэйл утгыг анхныхаараа сонгох болно."
 
 #. module: event
 #: view:event.event:0
@@ -377,16 +349,13 @@ msgid "Location"
 msgstr "Байрлал"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,message_unread:0
-#: view:event.registration:0
-#: field:event.registration,message_unread:0
+#: view:event.event:0 field:event.event,message_unread:0
+#: view:event.registration:0 field:event.registration,message_unread:0
 msgid "Unread Messages"
 msgstr "Уншаагүй Зурвасууд"
 
 #. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: view:event.registration:0 view:report.event.registration:0
 msgid "New"
 msgstr "Шинэ"
 
@@ -417,15 +386,12 @@ msgid "Creation Date"
 msgstr "Үүсгэсэн Огноо"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
+#: view:report.event.registration:0 field:report.event.registration,user_id:0
 msgid "Event Responsible"
 msgstr "Үйл явдлын хариуцагч"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
+#: view:event.event:0 view:event.registration:0 view:res.partner:0
 msgid "Cancel Registration"
 msgstr "Цуцласан бүртгэл"
 
@@ -502,8 +468,7 @@ msgid "Logs"
 msgstr "Логууд"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state_id:0
+#: view:event.event:0 field:event.event,state_id:0
 msgid "State"
 msgstr "Төлөв"
 
@@ -534,8 +499,7 @@ msgid "Registration Confirmation Email"
 msgstr "Бүртгэлийг Баталгаажуулах Эмэйл"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,month:0
+#: view:report.event.registration:0 field:report.event.registration,month:0
 msgid "Month"
 msgstr "Сар"
 
@@ -584,14 +548,10 @@ msgstr "Тасалбар Алга!"
 #: help:event.event,state:0
 msgid ""
 "If event is created, the status is 'Draft'.If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'.If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'.If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr ""
-"Үйл явдал үүсгэгдсэн дороо 'Ноорог' төлөвтэй байна. Хэрэв үйл явдлыг "
-"тодорхой өдөр батласан бол төлөв нь 'Батласан' болно. Харин үйл явдал "
-"дуусахаараа 'Хийгдсэн' төлөвтэй болно. Хэрэв үйл явдлыг цуцласан бол төлөв "
-"нь 'Цуцласан' төлөвтэй болно."
+msgstr "Үйл явдал үүсгэгдсэн дороо 'Ноорог' төлөвтэй байна. Хэрэв үйл явдлыг тодорхой өдөр батласан бол төлөв нь 'Батласан' болно. Харин үйл явдал дуусахаараа 'Хийгдсэн' төлөвтэй болно. Хэрэв үйл явдлыг цуцласан бол төлөв нь 'Цуцласан' төлөвтэй болно."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -599,24 +559,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "               Click to add a new event.\n"
 "             </p><p>\n"
-"               OpenERP helps you schedule and efficiently organize your "
-"events:\n"
-"               track subscriptions and participations, automate the "
-"confirmation emails,\n"
+"               OpenERP helps you schedule and efficiently organize your events:\n"
+"               track subscriptions and participations, automate the confirmation emails,\n"
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Шинэ үйл явдал нэмэхдээ дарна уу.\n"
-"             </p><p>\n"
-"               OpenERP нь үйл явдлыг товлож оновчтойгоор зохион байгуулахад "
-"тусалдаг: \n"
-"               оролцогчийг бүртгэнэ, захиалга бүртгэнэ, баталгаажуулах "
-"эмэйлийг \n"
-"               автоматжуулна, тасалбарыг зарна, гэх мэт.\n"
-"             </p>\n"
-"           "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Шинэ үйл явдал нэмэхдээ дарна уу.\n             </p><p>\n               OpenERP нь үйл явдлыг товлож оновчтойгоор зохион байгуулахад тусалдаг: \n               оролцогчийг бүртгэнэ, захиалга бүртгэнэ, баталгаажуулах эмэйлийг \n               автоматжуулна, тасалбарыг зарна, гэх мэт.\n             </p>\n           "
 
 #. module: event
 #: help:event.event,register_max:0
@@ -624,10 +572,7 @@ msgid ""
 "You can for each event define a maximum registration level. If you have too "
 "much registrations you are not able to confirm your event. (put 0 to ignore "
 "this rule )"
-msgstr ""
-"Үйл явдал бүрт хамгийн их бүртгүүлэгчийн түвшинг тодорхойлж болно. Хэрэв та "
-"хэт олон бүртгүүлэгчтэй болбол үйл явдлыг батлах боломжгүй болно. (0-г тавьж "
-"энэ дүрмийг хэрэгсэгүй болгоно)"
+msgstr "Үйл явдал бүрт хамгийн их бүртгүүлэгчийн түвшинг тодорхойлж болно. Хэрэв та хэт олон бүртгүүлэгчтэй болбол үйл явдлыг батлах боломжгүй болно. (0-г тавьж энэ дүрмийг хэрэгсэгүй болгоно)"
 
 #. module: event
 #: code:addons/event/event.py:106
@@ -642,19 +587,14 @@ msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
 "expected minimum/maximum. Please reconsider those limits before going "
 "further."
-msgstr ""
-"'%s' үйл явдлын баталгаажсан нийт бүртгэл нь таамагласан хамгийн "
-"бага/хамгийн их тоонд хүрсэнгүй. Цааш үргэлжлүүлэхээсээ өмнө эдгээрийг дахин "
-"бодолцож үзнэ үү."
+msgstr "'%s' үйл явдлын баталгаажсан нийт бүртгэл нь таамагласан хамгийн бага/хамгийн их тоонд хүрсэнгүй. Цааш үргэлжлүүлэхээсээ өмнө эдгээрийг дахин бодолцож үзнэ үү."
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
 msgid ""
 "If you set an email template, each participant will receive this email "
 "announcing the confirmation of the event."
-msgstr ""
-"Хэрэв эмэйл үлгэрийг тохируулбал оролцогч бүр үйл явдал баталгаажсан тухай "
-"эмэйл зарыг хүлээн авах болно."
+msgstr "Хэрэв эмэйл үлгэрийг тохируулбал оролцогч бүр үйл явдал баталгаажсан тухай эмэйл зарыг хүлээн авах болно."
 
 #. module: event
 #: view:board.board:0
@@ -678,22 +618,18 @@ msgid "Events which are in New state"
 msgstr "Шинэ төлөвтэй үйл явдлууд"
 
 #. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.action_event_view
+#: view:event.event:0 model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.actions.act_window,name:event.open_board_associations_manager
 #: model:ir.module.category,name:event.module_category_event_management
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_reporting_events
-#: view:res.partner:0
+#: model:ir.ui.menu,name:event.menu_reporting_events view:res.partner:0
 msgid "Events"
 msgstr "Үйл ажиллагаанууд"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
+#: view:event.event:0 field:event.event,state:0 view:event.registration:0
 #: field:event.registration,state:0
 msgid "Status"
 msgstr "Төлөв байдал"
@@ -714,8 +650,7 @@ msgid "zip"
 msgstr "шуудангийн код"
 
 #. module: event
-#: field:res.partner,event_ids:0
-#: field:res.partner,event_registration_ids:0
+#: field:res.partner,event_ids:0 field:res.partner,event_registration_ids:0
 msgid "unknown"
 msgstr "үл мэдэгдэх"
 
@@ -735,14 +670,10 @@ msgid ""
 "The email address of the organizer which is put in the 'Reply-To' of all "
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
-msgstr ""
-"Үйл явдал болон бүртгэлийн үед автомата илгээгдэх имэйлийн 'Хариулах' гэдэг "
-"дээр үйл явдал зохион байгуулагчийн хаяг тавигддаг. Түүнчлэн хэрэв эмэйл "
-"үүдийн хаяг байгаа бол түүнийгээ тавих бас боломжтой."
+msgstr "Үйл явдал болон бүртгэлийн үед автомата илгээгдэх имэйлийн 'Хариулах' гэдэг дээр үйл явдал зохион байгуулагчийн хаяг тавигддаг. Түүнчлэн хэрэв эмэйл үүдийн хаяг байгаа бол түүнийгээ тавих бас боломжтой."
 
 #. module: event
-#: help:event.event,message_ids:0
-#: help:event.registration,message_ids:0
+#: help:event.event,message_ids:0 help:event.registration,message_ids:0
 msgid "Messages and communication history"
 msgstr "Зурвас болон харилцсан түүх"
 
@@ -756,23 +687,11 @@ msgstr "Утас"
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from ${object.event_id.date_begin} to "
-"${object.event_id.date_end}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}.\n"
+"        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Сайн байна уу? ${object.name},</p>\n"
-"        <p>Таны бүртгүүлсэн ${object.event_id.name} үйл явдал баталгаажсан "
-"бөгөөд ${object.event_id.date_begin}-с \n"
-"           ${object.event_id.date_end} хооронд зохион байгуулагдана.\n"
-"        Нэмэлт мэдээллийн талаар манай үйл явдлыг зохион байгуулж байгаа "
-"албатай холбогдоно уу.</p>\n"
-"        <p>Таны оролцоонд баярлалаа!</p>\n"
-"        <p>Танд амжилт ерөөе.</p>"
+msgstr "\n        <p>Сайн байна уу? ${object.name},</p>\n        <p>Таны бүртгүүлсэн ${object.event_id.name} үйл явдал баталгаажсан бөгөөд ${object.event_id.date_begin}-с \n           ${object.event_id.date_end} хооронд зохион байгуулагдана.\n        Нэмэлт мэдээллийн талаар манай үйл явдлыг зохион байгуулж байгаа албатай холбогдоно уу.</p>\n        <p>Таны оролцоонд баярлалаа!</p>\n        <p>Танд амжилт ерөөе.</p>"
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -791,9 +710,7 @@ msgstr "Хэрэглэгч"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr ""
-"Анхааруулга: Энэ үйл явдал нь хамгийн бага хязгаартаа хүрээгүй байна. "
-"Батлахдаа та итгэлтэй байна уу?"
+msgstr "Анхааруулга: Энэ үйл явдал нь хамгийн бага хязгаартаа хүрээгүй байна. Батлахдаа та итгэлтэй байна уу?"
 
 #. module: event
 #: view:event.event:0
@@ -818,7 +735,7 @@ msgstr "Өргөтгөсөн Шүүлтүүр..."
 #. module: event
 #: field:report.event.registration,nbevent:0
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Бүртгэлийн тоо"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -836,9 +753,7 @@ msgid "Set To Draft"
 msgstr "Ноороглох"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
+#: view:event.event:0 view:event.registration:0 view:res.partner:0
 msgid "Confirm Registration"
 msgstr "Бүртгэлийг батлах"
 
@@ -848,9 +763,7 @@ msgstr "Бүртгэлийг батлах"
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
-"Та энэ үйл явдалд 'Оролцсон' гэснээр бүртгүүлсэн байна. Хэрэв энэ үйл явдлыг "
-"цуцлахыг хүсч байвал ноорог болгоно уу."
+msgstr "Та энэ үйл явдалд 'Оролцсон' гэснээр бүртгүүлсэн байна. Хэрэв энэ үйл явдлыг цуцлахыг хүсч байвал ноорог болгоно уу."
 
 #. module: event
 #: view:res.partner:0
@@ -881,15 +794,12 @@ msgstr "Үйл явдлын төрөлүүд"
 #. module: event
 #: help:event.event,email_registration_id:0
 msgid ""
-"This field contains the template of the mail that will be automatically sent "
-"each time a registration for this event is confirmed."
-msgstr ""
-"Энэ талбар нь энэ үйл явдлын бүртгэл баталгаажих бүрт илгээгдэх имэйлийн "
-"үлгэрийг агуулна."
+"This field contains the template of the mail that will be automatically sent"
+" each time a registration for this event is confirmed."
+msgstr "Энэ талбар нь энэ үйл явдлын бүртгэл баталгаажих бүрт илгээгдэх имэйлийн үлгэрийг агуулна."
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Attended the Event"
 msgstr "Үйл явдалд оролцсон"
 
@@ -947,8 +857,7 @@ msgid "Set To Unconfirmed"
 msgstr "Батаглгаажаагүй болгох"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,is_subscribed:0
+#: view:event.event:0 field:event.event,is_subscribed:0
 msgid "Subscribed"
 msgstr "Захиалсан"
 
@@ -958,8 +867,7 @@ msgid "Unsubscribe"
 msgstr "Захиалга цуцлах"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Responsible"
 msgstr "Хариуцагч"
 
@@ -970,8 +878,7 @@ msgstr "Бүртгэлийн холбогч"
 
 #. module: event
 #: view:report.event.registration:0
-#: field:report.event.registration,speaker_id:0
-#: field:res.partner,speaker:0
+#: field:report.event.registration,speaker_id:0 field:res.partner,speaker:0
 msgid "Speaker"
 msgstr "Илтгэгч"
 
@@ -1028,8 +935,7 @@ msgid "Maximum Registrations"
 msgstr "Хамгийн их бүртгэлүүд"
 
 #. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
+#: view:event.event:0 selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Батлагаажаагүй"
@@ -1050,15 +956,12 @@ msgid "Association Dashboard"
 msgstr "Холбооны Хянах Самбар"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,name:0
-#: field:event.registration,name:0
+#: view:event.event:0 field:event.event,name:0 field:event.registration,name:0
 msgid "Name"
 msgstr "Нэр"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,country_id:0
+#: view:event.event:0 field:event.event,country_id:0
 msgid "Country"
 msgstr "Улс"
 
@@ -1082,9 +985,7 @@ msgstr "4-р сар"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr ""
-"Энэ үйл явдлыг сонгоход энэхүү баталгаажуулах мэйл утгыг анхны утгаараа "
-"сонгоно"
+msgstr "Энэ үйл явдлыг сонгоход энэхүү баталгаажуулах мэйл утгыг анхны утгаараа сонгоно"
 
 #. module: event
 #: view:report.event.registration:0
@@ -1092,9 +993,7 @@ msgid "Events which are in confirm state"
 msgstr "Батлагдсан төлөвтэй үйл явдлууд"
 
 #. module: event
-#: view:event.event:0
-#: view:event.type:0
-#: field:event.type,name:0
+#: view:event.event:0 view:event.type:0 field:event.type,name:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_type:0
 msgid "Event Type"
@@ -1142,35 +1041,20 @@ msgstr "Одоогийн бүртгэл"
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
+"        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Сайн байна уу? ${object.name},</p>\n"
-"        <p> ${object.event_id.name} үйл явдалд таныг бүртгэснээ бид "
-"баталгаажуулж байна.\n"
-"        Үйл явдал баталгаажмагц та илүү хэрэгтэй мэдээллийг (тов, хөтөлбөр "
-"гэх мэт...) өгөх \n"
-"        эмэйлүүдийг хүлээн авах болно.</p>\n"
-"        <p>Оролцож байгаад баярлалаа!</p>\n"
-"        <p>Танд амжилт хүсье</p>"
+msgstr "\n        <p>Сайн байна уу? ${object.name},</p>\n        <p> ${object.event_id.name} үйл явдалд таныг бүртгэснээ бид баталгаажуулж байна.\n        Үйл явдал баталгаажмагц та илүү хэрэгтэй мэдээллийг (тов, хөтөлбөр гэх мэт...) өгөх \n        эмэйлүүдийг хүлээн авах болно.</p>\n        <p>Оролцож байгаад баярлалаа!</p>\n        <p>Танд амжилт хүсье</p>"
 
 #. module: event
 #: help:event.event,reply_to:0
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr ""
-"Үйл явдал болон бүртгэл баталгаажихад үйл явдлын зохион байгуулагчийн эмэйл "
-"хаяг нь энд 'Хариулах' гэсэн талбар гарахаар энд тавигдана. Хэрэв эмэйл "
-"үүдийг хэрэглэдэг бол тэр хаягаа мөн энд тавьж бас болно."
+msgstr "Үйл явдал болон бүртгэл баталгаажихад үйл явдлын зохион байгуулагчийн эмэйл хаяг нь энд 'Хариулах' гэсэн талбар гарахаар энд тавигдана. Хэрэв эмэйл үүдийг хэрэглэдэг бол тэр хаягаа мөн энд тавьж бас болно."
 
 #. module: event
 #: view:event.event:0
@@ -1196,8 +1080,7 @@ msgid "Event Confirmation"
 msgstr "Үйл явдлын баталгаажуулалт"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
+#: view:report.event.registration:0 field:report.event.registration,year:0
 msgid "Year"
 msgstr "Он"
 
@@ -1205,6 +1088,3 @@ msgstr "Он"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Илтгэгч баталгаажсан"
-
-#~ msgid "Number Of Events"
-#~ msgstr "Үйл ажиллагааны дугаар"

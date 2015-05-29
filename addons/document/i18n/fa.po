@@ -1,21 +1,22 @@
-# Persian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-12-25 10:47+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Persian <fa@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Persian (http://www.transifex.com/projects/p/odoo-7/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-12-26 06:21+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,13 +24,13 @@ msgid "Parent Directory"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:347
+#: code:addons/document/document.py:348
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_filter
+#: view:document.directory:0
 msgid "Search Document Directory"
 msgstr ""
 
@@ -43,22 +44,20 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 msgid "Group By..."
-msgstr ""
+msgstr "گروه بندی بر اساس ..."
 
 #. module: document
-#: view:ir.attachment:document.view_document_file_form
+#: view:ir.attachment:0
 msgid "Modification"
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_filter
+#: view:document.directory:0
 msgid "Resources"
-msgstr ""
+msgstr "منابع"
 
 #. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:document.view_document_user_form
-#: view:report.document.user:document.view_document_user_tree
+#: field:document.directory,file_ids:0 view:report.document.user:0
 msgid "Files"
 msgstr ""
 
@@ -70,16 +69,15 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "March"
-msgstr ""
+msgstr "مارچ"
 
 #. module: document
 #: field:document.directory.dctx,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "عبارت"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_filter
-#: field:document.directory,company_id:0
+#: view:document.directory:0 field:document.directory,company_id:0
 msgid "Company"
 msgstr "شرکت"
 
@@ -89,21 +87,20 @@ msgid "Directory Content"
 msgstr "محتوای پوشه"
 
 #. module: document
-#: view:ir.attachment:document.view_attach_filter_inherit0
+#: view:ir.attachment:0
 msgid "My Document(s)"
-msgstr ""
+msgstr "سندهای من"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
 msgid "Document Management"
-msgstr ""
+msgstr "اسناد"
 
 #. module: document
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
 msgstr ""
 
 #. module: document
@@ -112,20 +109,18 @@ msgid "The name of the field."
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #, python-format
 msgid "Directory name must be unique!"
 msgstr ""
 
 #. module: document
-#: view:ir.attachment:document.view_attach_filter_inherit0
+#: view:ir.attachment:0
 msgid "Filter on my documents"
 msgstr ""
 
 #. module: document
-#: view:ir.attachment:document.view_document_file_form
-#: field:ir.attachment,index_content:0
+#: view:ir.attachment:0 field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr ""
 
@@ -137,8 +132,7 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
-#: view:document.directory:document.view_document_directory_tree
+#: view:document.directory:0
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
@@ -162,7 +156,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,suffix:0
 msgid "Suffix"
-msgstr ""
+msgstr "پسوند"
 
 #. module: document
 #: field:report.document.user,change_date:0
@@ -170,15 +164,14 @@ msgid "Modified Date"
 msgstr ""
 
 #. module: document
-#: view:document.configuration:document.view_auto_config_form
+#: view:document.configuration:0
 msgid "Knowledge Application Configuration"
 msgstr ""
 
 #. module: document
-#: view:ir.attachment:document.view_attach_filter_inherit2
-#: field:ir.attachment,partner_id:0
+#: view:ir.attachment:0 field:ir.attachment,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "شریک تجاری"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.act_res_partner_document
@@ -192,17 +185,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
-#: code:addons/document/document.py:347
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
+#: code:addons/document/document.py:348
 #, python-format
 msgid "ValidateError"
 msgstr ""
@@ -210,12 +201,14 @@ msgstr ""
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
+#: model:ir.ui.menu,name:document.menu_document_doc
+#: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
-msgstr ""
+msgstr "اسناد"
 
 #. module: document
 #: field:document.directory,ressource_type_id:0
@@ -226,18 +219,18 @@ msgstr ""
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
 msgid "File Size"
-msgstr ""
+msgstr "حجم فایل"
 
 #. module: document
 #: field:document.directory.content.type,name:0
+#: field:ir.attachment,file_type:0
 msgid "Content Type"
 msgstr "نوع محتوا"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_filter
-#: field:document.directory,type:0
+#: view:document.directory:0 field:document.directory,type:0
 msgid "Type"
-msgstr ""
+msgstr "نوع"
 
 #. module: document
 #: sql_constraint:ir.attachment:0
@@ -245,8 +238,7 @@ msgid "The filename must be unique in a directory !"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:117
-#: code:addons/document/document.py:307
+#: code:addons/document/document.py:118 code:addons/document/document.py:308
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -280,20 +272,19 @@ msgid "Context fields"
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
-#: field:report.document.user,type:0
+#: view:document.directory:0 field:report.document.user,type:0
 msgid "Directory Type"
 msgstr "نوع پوشه"
 
 #. module: document
 #: field:document.directory.content,report_id:0
 msgid "Report"
-msgstr ""
+msgstr "گزارش"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "July"
-msgstr ""
+msgstr "جولای"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -306,62 +297,61 @@ msgid "Virtual Files"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:573
+#: code:addons/document/document.py:574
 #, python-format
 msgid "Error at doc write!"
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "Generated Files"
 msgstr ""
 
 #. module: document
-#: view:document.configuration:document.view_auto_config_form
+#: view:document.configuration:0
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
 msgstr ""
 
 #. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:document.view_attach_filter_inherit2
-#: field:ir.attachment,parent_id:0
+#: view:ir.attachment:0 field:ir.attachment,parent_id:0
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
 msgstr "پوشه"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "Security"
-msgstr ""
+msgstr "امنیت"
 
 #. module: document
-#: field:document.directory,write_uid:0
+#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr ""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
-#: view:report.document.user:document.view_files_by_user_graph
+#: view:report.document.user:0
 msgid "Files by User"
 msgstr ""
 
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "در"
 
 #. module: document
 #: field:document.directory,domain:0
 msgid "Domain"
-msgstr ""
+msgstr "دامنه"
 
 #. module: document
-#: field:document.directory,write_date:0
+#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "تاریخ تغییر"
 
@@ -371,14 +361,13 @@ msgid "Files details by Directory"
 msgstr ""
 
 #. module: document
-#: view:report.document.user:document.view_report_document_user_search
+#: view:report.document.user:0
 msgid "All users files"
 msgstr "تمام فایل های کاربران"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_size_month
-#: view:report.document.file:document.view_size_month
-#: view:report.document.file:document.view_size_month_tree
+#: view:report.document.file:0
 msgid "File Size by Month"
 msgstr ""
 
@@ -393,42 +382,39 @@ msgid "Static Directory"
 msgstr ""
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "ماه"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_filter
+#: view:document.directory:0
 msgid "Static"
 msgstr ""
 
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "ناشناخته"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_filter
-#: field:document.directory,user_id:0
-#: view:ir.attachment:document.view_attach_filter_inherit2
-#: field:ir.attachment,user_id:0
+#: view:document.directory:0 field:document.directory,user_id:0
+#: view:ir.attachment:0 field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
 msgid "Owner"
-msgstr ""
+msgstr "مالک‌"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "PDF Report"
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "Contents"
 msgstr "محتویات"
 
@@ -441,13 +427,12 @@ msgstr "تاریخ ایجاد"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
 
 #. module: document
-#: view:document.configuration:document.view_auto_config_form
+#: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
 msgstr ""
@@ -465,8 +450,8 @@ msgstr ""
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
 msgstr ""
 
 #. module: document
@@ -478,7 +463,7 @@ msgstr ""
 
 #. module: document
 #. openerp-web
-#: code:addons/document/static/src/js/document.js:7
+#: code:addons/document/static/src/js/document.js:6
 #, python-format
 msgid "Attachment(s)"
 msgstr "پیوست ها"
@@ -489,7 +474,7 @@ msgid "August"
 msgstr "آگوست"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "Dynamic context"
 msgstr ""
 
@@ -501,12 +486,12 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "June"
-msgstr ""
+msgstr "ژوئن"
 
 #. module: document
 #: field:document.directory,group_ids:0
 msgid "Groups"
-msgstr ""
+msgstr "گروه‌ها"
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -516,29 +501,29 @@ msgstr "فعال"
 #. module: document
 #: selection:report.document.user,month:0
 msgid "November"
-msgstr ""
+msgstr "نوامبر"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "Definition"
 msgstr "تعریف"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "October"
-msgstr ""
+msgstr "اکتبر"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "Seq."
 msgstr ""
 
@@ -550,10 +535,10 @@ msgstr "تمام فایل های کاربران"
 #. module: document
 #: selection:report.document.user,month:0
 msgid "January"
-msgstr ""
+msgstr "ژانویه"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_filter
+#: view:document.directory:0
 msgid "Document Directory"
 msgstr ""
 
@@ -563,7 +548,7 @@ msgid "The directory name must be unique !"
 msgstr ""
 
 #. module: document
-#: view:ir.attachment:document.view_document_file_tree
+#: view:ir.attachment:0
 msgid "Attachments"
 msgstr "پیوست‌ها"
 
@@ -583,20 +568,19 @@ msgstr ""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
-#: view:report.document.user:document.view_files_by_month_graph
-#: view:report.document.user:document.view_files_by_month_tree
+#: view:report.document.user:0
 msgid "Files by Month"
 msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "September"
-msgstr ""
+msgstr "سپتامبر"
 
 #. module: document
 #: field:document.directory.content,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "پیشوند"
 
 #. module: document
 #: field:document.directory,child_ids:0
@@ -606,12 +590,12 @@ msgstr "فرزندان"
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "شناسه منبع"
 
 #. module: document
 #: field:document.directory.dctx,field:0
 msgid "Field"
-msgstr ""
+msgstr "فیلد"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
@@ -624,7 +608,7 @@ msgid "Parent Model"
 msgstr ""
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
@@ -633,10 +617,10 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
-msgstr ""
+msgstr "می"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
 msgstr ""
 
@@ -646,7 +630,7 @@ msgid "ir.attachment"
 msgstr ""
 
 #. module: document
-#: view:report.document.user:document.view_report_document_user_search
+#: view:report.document.user:0
 msgid "Users File"
 msgstr ""
 
@@ -660,25 +644,25 @@ msgstr "پیکربندی پوشه"
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "February"
-msgstr ""
+msgstr "فوریه"
 
 #. module: document
 #: field:document.directory,name:0
 msgid "Name"
-msgstr ""
+msgstr "نام"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid "Fields"
-msgstr ""
+msgstr "فیلدها"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -686,8 +670,7 @@ msgid "April"
 msgstr "آوریل"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "تعداد فایل ها"
 
@@ -697,7 +680,7 @@ msgid "Directory Content Type"
 msgstr "نوع محتوای پوشه"
 
 #. module: document
-#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:0
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
@@ -705,7 +688,7 @@ msgstr ""
 
 #. module: document
 #. openerp-web
-#: code:addons/document/static/src/js/document.js:19
+#: code:addons/document/static/src/js/document.js:17
 #, python-format
 msgid "%s (%s)"
 msgstr ""
@@ -713,7 +696,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "دنباله"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -723,7 +706,7 @@ msgstr ""
 #. module: document
 #: field:report.document.user,datas_fname:0
 msgid "File Name"
-msgstr ""
+msgstr "نام فایل"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -731,9 +714,9 @@ msgid "Tree Structure"
 msgstr ""
 
 #. module: document
-#: view:document.configuration:document.view_auto_config_form
+#: view:document.configuration:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -744,7 +727,7 @@ msgstr "ساختار پوشه ها"
 #. module: document
 #: field:report.document.user,name:0
 msgid "Year"
-msgstr ""
+msgstr "سال"
 
 #. module: document
 #: model:ir.model,name:document.model_document_storage

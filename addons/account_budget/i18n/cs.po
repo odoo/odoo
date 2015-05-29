@@ -1,25 +1,25 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_budget
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-7/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:38+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "Select Dates Period"
@@ -33,7 +33,7 @@ msgstr "Odpovědný uživatel"
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Potvrzeno"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
@@ -59,7 +59,7 @@ msgstr ""
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "Tisknout"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -72,11 +72,10 @@ msgstr ""
 #: field:account.budget.crossvered.summary.report,date_to:0
 #: field:account.budget.report,date_to:0
 msgid "End of period"
-msgstr ""
+msgstr "Konec období"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-#: selection:crossovered.budget,state:0
+#: view:crossovered.budget:0 selection:crossovered.budget,state:0
 msgid "Draft"
 msgstr "Koncept"
 
@@ -90,12 +89,12 @@ msgstr "v"
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
 msgid "Print Budgets"
-msgstr ""
+msgstr "Tisknout rozpočty"
 
 #. module: account_budget
 #: report:account.budget:0
 msgid "Currency:"
-msgstr ""
+msgstr "Měna:"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
@@ -105,12 +104,12 @@ msgstr ""
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Ověřeno"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,percentage:0
 msgid "Percentage"
-msgstr ""
+msgstr "Procenta"
 
 #. module: account_budget
 #: field:crossovered.budget,state:0
@@ -121,7 +120,7 @@ msgstr "Status"
 #: field:crossovered.budget.lines,analytic_account_id:0
 #: model:ir.model,name:account_budget.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analytický účet"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -129,35 +128,29 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new budget.\n"
 "              </p><p>\n"
-"                A budget is a forecast of your company's income and/or "
-"expenses\n"
-"                expected for a period in the future. A budget is defined on "
-"some\n"
-"                financial accounts and/or analytic accounts (that may "
-"represent\n"
+"                A budget is a forecast of your company's income and/or expenses\n"
+"                expected for a period in the future. A budget is defined on some\n"
+"                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)\n"
 "              </p><p>\n"
 "                By keeping track of where your money goes, you may be less\n"
 "                likely to overspend, and more likely to meet your financial\n"
-"                goals. Forecast a budget by detailing the expected revenue "
-"per\n"
-"                analytic account and monitor its evolution based on the "
-"actuals\n"
+"                goals. Forecast a budget by detailing the expected revenue per\n"
+"                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Description"
 msgstr "Popis"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "Měna"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -169,7 +162,7 @@ msgstr "Celkem :"
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Společnost"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -179,44 +172,37 @@ msgstr "do"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Nastavit na návrh"
 
 #. module: account_budget
-#: view:account.budget.post:0
-#: view:crossovered.budget:0
+#: view:account.budget.post:0 view:crossovered.budget:0
 #: field:crossovered.budget.lines,planned_amount:0
 msgid "Planned Amount"
-msgstr ""
+msgstr "Plánovaná částka"
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Perc(%)"
-msgstr ""
+msgstr "Procent"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-#: selection:crossovered.budget,state:0
+#: view:crossovered.budget:0 selection:crossovered.budget,state:0
 msgid "Done"
 msgstr "Dokončeno"
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Practical Amt"
 msgstr ""
 
 #. module: account_budget
-#: view:account.analytic.account:0
-#: view:account.budget.post:0
-#: view:crossovered.budget:0
-#: field:crossovered.budget.lines,practical_amount:0
+#: view:account.analytic.account:0 view:account.budget.post:0
+#: view:crossovered.budget:0 field:crossovered.budget.lines,practical_amount:0
 msgid "Practical Amount"
 msgstr ""
 
 #. module: account_budget
-#: field:crossovered.budget,date_to:0
-#: field:crossovered.budget.lines,date_to:0
+#: field:crossovered.budget,date_to:0 field:crossovered.budget.lines,date_to:0
 msgid "End Date"
 msgstr "Koncové datum"
 
@@ -232,15 +218,14 @@ msgid "Theoritical Amount"
 msgstr ""
 
 #. module: account_budget
-#: field:account.budget.post,name:0
-#: field:crossovered.budget,name:0
+#: field:account.budget.post,name:0 field:crossovered.budget,name:0
 msgid "Name"
 msgstr "Jméno"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Linie rozpočtu"
 
 #. module: account_budget
 #: code:addons/account_budget/account_budget.py:120
@@ -249,14 +234,13 @@ msgid "The Budget '%s' has no accounts!"
 msgstr ""
 
 #. module: account_budget
-#: report:account.budget:0
-#: view:crossovered.budget:0
+#: report:account.budget:0 view:crossovered.budget:0
 #: field:crossovered.budget.lines,crossovered_budget_id:0
 #: report:crossovered.budget.report:0
 #: model:ir.actions.report.xml,name:account_budget.account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
 msgid "Budget"
-msgstr ""
+msgstr "Rozpočet"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -266,17 +250,15 @@ msgstr ""
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Duration"
-msgstr ""
+msgstr "Trvání"
 
 #. module: account_budget
-#: field:account.budget.post,code:0
-#: field:crossovered.budget,code:0
+#: field:account.budget.post,code:0 field:crossovered.budget,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kód"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
 msgstr ""
 
@@ -289,7 +271,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account_budget.next_id_31
 #: model:ir.ui.menu,name:account_budget.next_id_pos
 msgid "Budgets"
-msgstr ""
+msgstr "Rozpočet"
 
 #. module: account_budget
 #: view:account.budget.crossvered.summary.report:0
@@ -299,17 +281,17 @@ msgstr ""
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Potvrdit"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr ""
+msgstr "Ke schválení"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -324,16 +306,15 @@ msgstr ""
 #: field:account.budget.crossvered.summary.report,date_from:0
 #: field:account.budget.report,date_from:0
 msgid "Start of period"
-msgstr ""
+msgstr "Začátek období"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
-msgstr ""
+msgstr "Rozpočet"
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Theoretical Amt"
 msgstr ""
 
@@ -341,35 +322,32 @@ msgstr ""
 #: code:addons/account_budget/account_budget.py:120
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Chyba!"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "Print"
 msgstr "Tisk"
 
 #. module: account_budget
-#: view:account.budget.post:0
-#: view:crossovered.budget:0
+#: view:account.budget.post:0 view:crossovered.budget:0
 #: field:crossovered.budget.lines,theoritical_amount:0
 msgid "Theoretical Amount"
 msgstr ""
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "or"
-msgstr ""
+msgstr "nebo"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Cancel Budget"
-msgstr ""
+msgstr "Zrušit rozpočet"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -377,16 +355,14 @@ msgid "Budget :"
 msgstr ""
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "Plánovaná částka"
 
 #. module: account_budget
-#: view:account.budget.post:0
-#: field:account.budget.post,account_ids:0
+#: view:account.budget.post:0 field:account.budget.post,account_ids:0
 msgid "Accounts"
-msgstr ""
+msgstr "Účty"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -400,29 +376,27 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 msgid "Budget Lines"
-msgstr ""
+msgstr "Linie rozpočtu"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
+#: view:account.budget.analytic:0 view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
 #: field:crossovered.budget.lines,date_from:0
 msgid "Start Date"
-msgstr ""
+msgstr "Počáteční datum"
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
+#: report:account.budget:0 report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr ""
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Draft Budgets"
-msgstr ""
+msgstr "Koncepty rozpočtů"

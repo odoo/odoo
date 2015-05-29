@@ -1,21 +1,22 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-18 05:35+0000\n"
-"Last-Translator: Harri Luuppala <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -38,9 +39,7 @@ msgstr "Hae dokumenttihakemistosta"
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr ""
-"Kenttä jota käytetään resurssihakemistojen nimenä. Jos tyhjä, nimikenttää "
-"(name) käytetään."
+msgstr "Kenttä jota käytetään resurssihakemistojen nimenä. Jos tyhjä, nimikenttää (name) käytetään."
 
 #. module: document
 #: view:document.directory:0
@@ -58,8 +57,7 @@ msgid "Resources"
 msgstr "Resurssit"
 
 #. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:0
+#: field:document.directory,file_ids:0 view:report.document.user:0
 msgid "Files"
 msgstr "Tiedostot"
 
@@ -79,8 +77,7 @@ msgid "Expression"
 msgstr "Lauseke"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,company_id:0
+#: view:document.directory:0 field:document.directory,company_id:0
 msgid "Company"
 msgstr "Yritys"
 
@@ -103,12 +100,8 @@ msgstr "Dokumenttienhallinta"
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"Python määrittelyä käytetään tämän kentän arviointiin.\n"
-"Voit käyttää 'dir_id' nykyiselle hakmeistolle, 'res_id', 'res_model' "
-"viitteenä nykyiseen tietueeseen dynaamisissa hakemistoissa"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
+msgstr "Python määrittelyä käytetään tämän kentän arviointiin.\nVoit käyttää 'dir_id' nykyiselle hakmeistolle, 'res_id', 'res_model' viitteenä nykyiseen tietueeseen dynaamisissa hakemistoissa"
 
 #. module: document
 #: help:document.directory.dctx,field:0
@@ -116,8 +109,7 @@ msgid "The name of the field."
 msgstr "Kentän nimi"
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Kansionimen tulee olla ainutkertainen!"
@@ -128,8 +120,7 @@ msgid "Filter on my documents"
 msgstr "Suodata dokumenttejani"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
+#: view:ir.attachment:0 field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Indeksoitu sisältö"
 
@@ -138,9 +129,7 @@ msgstr "Indeksoitu sisältö"
 msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
-msgstr ""
-"jos tosi (true), kaikki liitteet jotka täsmäävät tämän resurssin kanssa "
-"etsitään, jos epätosi (false) vain ne joilla on tämä ylätasona."
+msgstr "jos tosi (true), kaikki liitteet jotka täsmäävät tämän resurssin kanssa etsitään, jos epätosi (false) vain ne joilla on tämä ylätasona."
 
 #. module: document
 #: view:document.directory:0
@@ -180,8 +169,7 @@ msgid "Knowledge Application Configuration"
 msgstr "Tiedonhallintaohjelmiston konfiguraatio"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,partner_id:0
+#: view:ir.attachment:0 field:ir.attachment,partner_id:0
 msgid "Partner"
 msgstr "Kumppani"
 
@@ -197,24 +185,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Klikkaa luodaksesi uuden dokumentin.\n"
-"          </p><p>\n"
-"            Dokumenttiarkisto mahdollistaa sinulle pääsyn kaikkiin "
-"liitteisiin,\n"
-"            kuten sähköpostit, projektodokumentit, laskut jne.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Klikkaa luodaksesi uuden dokumentin.\n          </p><p>\n            Dokumenttiarkisto mahdollistaa sinulle pääsyn kaikkiin liitteisiin,\n            kuten sähköpostit, projektodokumentit, laskut jne.\n          </p>\n        "
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #: code:addons/document/document.py:348
 #, python-format
 msgid "ValidateError"
@@ -250,8 +228,7 @@ msgid "Content Type"
 msgstr "Sisällön tyyppi"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,type:0
+#: view:document.directory:0 field:document.directory,type:0
 msgid "Type"
 msgstr "Tyyppi"
 
@@ -261,8 +238,7 @@ msgid "The filename must be unique in a directory !"
 msgstr "Hakemistossa olevan tiedostonimen pitää olla yksilöllinen!"
 
 #. module: document
-#: code:addons/document/document.py:118
-#: code:addons/document/document.py:308
+#: code:addons/document/document.py:118 code:addons/document/document.py:308
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
@@ -272,16 +248,13 @@ msgstr "%s (kopio)"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
-"Valitse objekti tässä ja resurssin jokaiselle tietuelle luodaan oma hakemisto"
+msgstr "Valitse objekti tässä ja resurssin jokaiselle tietuelle luodaan oma hakemisto"
 
 #. module: document
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Käytä toimialuetta, jos haluat käyttää automaattista suodatinta näkyville "
-"resursseille."
+msgstr "Käytä toimialuetta, jos haluat käyttää automaattista suodatinta näkyville resursseille."
 
 #. module: document
 #: constraint:document.directory:0
@@ -299,8 +272,7 @@ msgid "Context fields"
 msgstr "Kontekstikentät"
 
 #. module: document
-#: view:document.directory:0
-#: field:report.document.user,type:0
+#: view:document.directory:0 field:report.document.user,type:0
 msgid "Directory Type"
 msgstr "Hakemiston tyyppi"
 
@@ -338,18 +310,15 @@ msgstr "Luodut tiedostot"
 #. module: document
 #: view:document.configuration:0
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"Tämä ohjattu toiminto konfiguroi sinulle hakemistot automaattisesti kaikille "
-"asennetuille moduuleille."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
+msgstr "Tämä ohjattu toiminto konfiguroi sinulle hakemistot automaattisesti kaikille asennetuille moduuleille."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:0
-#: field:ir.attachment,parent_id:0
+#: view:ir.attachment:0 field:ir.attachment,parent_id:0
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
@@ -361,8 +330,7 @@ msgid "Security"
 msgstr "Turvallisuus"
 
 #. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Viimeksi muuttanut käyttäjä"
 
@@ -383,8 +351,7 @@ msgid "Domain"
 msgstr "Toimialue"
 
 #. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Muokkauspäivä"
 
@@ -415,16 +382,14 @@ msgid "Static Directory"
 msgstr "Kiinteä hakemisto"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "Kuukausi"
 
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
-"Määrittele kontekstin sanat kaikille alatason hakemistoille ja tiedostoille"
+msgstr "Määrittele kontekstin sanat kaikille alatason hakemistoille ja tiedostoille"
 
 #. module: document
 #: view:document.directory:0
@@ -437,10 +402,8 @@ msgid "unknown"
 msgstr "tuntematon"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,user_id:0
-#: view:ir.attachment:0
-#: field:ir.attachment,user_id:0
+#: view:document.directory:0 field:document.directory,user_id:0
+#: view:ir.attachment:0 field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "Omistaja"
@@ -464,13 +427,9 @@ msgstr "Luontipäivä"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
-"Valitse tämä kenttä jos haluat että tiedoston nimi siäsältää tietueen "
-"nimen.\n"
-"Jos asetettu, hakemiston on oltava resurssityyppinen."
+msgstr "Valitse tämä kenttä jos haluat että tiedoston nimi siäsältää tietueen nimen.\nJos asetettu, hakemiston on oltava resurssityyppinen."
 
 #. module: document
 #: view:document.configuration:0
@@ -491,20 +450,16 @@ msgstr "Mallin tunnus"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Valitse tämä jos haluat käyttää samaa puurakennetta kuin järjestelmän "
-"valitsemassa objektissa."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "Valitse tämä jos haluat käyttää samaa puurakennetta kuin järjestelmän valitsemassa objektissa."
 
 #. module: document
 #: help:document.directory,ressource_id:0
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
-"Yhdessä ylätason mallin kanssa, tämä ID yhdistää hakemiston tiettyyn "
-"tietueeseen ylätason mallissa"
+msgstr "Yhdessä ylätason mallin kanssa, tämä ID yhdistää hakemiston tiettyyn tietueeseen ylätason mallissa"
 
 #. module: document
 #. openerp-web
@@ -551,14 +506,11 @@ msgstr "Marraskuu"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
-"Jos lisäät objektin tänne, tämä hakemistopohja näkyy näiden objektien alla. "
-"Tällaiset hakemistot on \"liitetty\" tiettyyn malliin tai tietueeseen, kuten "
-"liitetiedostot. Älä syötä ylätason hakmistoa jos valitset ylätason mallin"
+msgstr "Jos lisäät objektin tänne, tämä hakemistopohja näkyy näiden objektien alla. Tällaiset hakemistot on \"liitetty\" tiettyyn malliin tai tietueeseen, kuten liitetiedostot. Älä syötä ylätason hakmistoa jos valitset ylätason mallin"
 
 #. module: document
 #: view:document.directory:0
@@ -660,9 +612,7 @@ msgstr "Ylätason malli"
 msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
-msgstr ""
-"Nämä ryhmät eivät kuitenkaan vaikuta alatason hakemistoihin, vaan niihin on "
-"määriteltävä omat ryhmät"
+msgstr "Nämä ryhmät eivät kuitenkaan vaikuta alatason hakemistoihin, vaan niihin on määriteltävä omat ryhmät"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -672,9 +622,7 @@ msgstr "Toukokuu"
 #. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
-"Jokaista tähän lisättyä kohdetta kohti, virtuaalitiedostoja muodostuu tähän "
-"hakemistoon."
+msgstr "Jokaista tähän lisättyä kohdetta kohti, virtuaalitiedostoja muodostuu tähän hakemistoon."
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
@@ -696,16 +644,10 @@ msgstr "Hakemiston määrittelyt"
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
-"Jokaisella hakemistolla voi olla joko tyyppi kiinteä (static) tai se voi "
-"olla linkitettynä toiseen resurssiin. Kiinteä hakemisto, kuten "
-"käyttöjärjestelmien yhteydssä, on klassinen hakemisto joka voi sisältää "
-"ryhmän tiedostoja. Hakemistot jotka on linkitetty järjestelmäresursseihin "
-"sisältävät automaattisesti alihakemistot jokaiselle ylätasolla määritellylle "
-"resurssityypille."
+msgstr "Jokaisella hakemistolla voi olla joko tyyppi kiinteä (static) tai se voi olla linkitettynä toiseen resurssiin. Kiinteä hakemisto, kuten käyttöjärjestelmien yhteydssä, on klassinen hakemisto joka voi sisältää ryhmän tiedostoja. Hakemistot jotka on linkitetty järjestelmäresursseihin sisältävät automaattisesti alihakemistot jokaiselle ylätasolla määritellylle resurssityypille."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -728,8 +670,7 @@ msgid "April"
 msgstr "Huhtikuu"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "Tiedostojen määrä"
 
@@ -743,8 +684,7 @@ msgstr "Hakemiston sisällön tyyppi"
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
-msgstr ""
-"Vain näiden ryhmien jäsenillä on pääsy thän hakemistoon ja sen tiedostoihin."
+msgstr "Vain näiden ryhmien jäsenillä on pääsy thän hakemistoon ja sen tiedostoihin."
 
 #. module: document
 #. openerp-web

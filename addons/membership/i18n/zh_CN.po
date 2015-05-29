@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * membership
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2014-03-20 04:52+0000\n"
-"Last-Translator: jack lee <liyupu@gmail.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-21 06:51+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -40,8 +41,7 @@ msgid "This will display waiting, invoiced and total pending columns"
 msgstr "将显示等待、已开票、应付总额三列"
 
 #. module: membership
-#: view:report.membership:0
-#: view:res.partner:0
+#: view:report.membership:0 view:res.partner:0
 msgid "Group By..."
 msgstr "分组..."
 
@@ -76,8 +76,7 @@ msgid "Invoice is be paid."
 msgstr "支付发票"
 
 #. module: membership
-#: field:membership.membership_line,company_id:0
-#: view:report.membership:0
+#: field:membership.membership_line,company_id:0 view:report.membership:0
 #: field:report.membership,company_id:0
 msgid "Company"
 msgstr "公司"
@@ -85,8 +84,7 @@ msgstr "公司"
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
-#: field:res.partner,free_member:0
-#: selection:res.partner,membership_state:0
+#: field:res.partner,free_member:0 selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr "免费会员"
 
@@ -107,8 +105,7 @@ msgid "Membership End Date"
 msgstr "会员结束日期"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,user_id:0
+#: view:report.membership:0 field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesperson"
 msgstr "销售员"
@@ -268,8 +265,7 @@ msgstr "# 正在等待"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
-#: model:ir.ui.menu,name:membership.menu_membership
-#: view:res.partner:0
+#: model:ir.ui.menu,name:membership.menu_membership view:res.partner:0
 msgid "Members"
 msgstr "会员"
 
@@ -301,8 +297,7 @@ msgid ""
 msgstr "你将作为哪个客户的附属会员。你的会员资格会随着主会员的状态变化。"
 
 #. module: membership
-#: view:product.product:0
-#: view:report.membership:0
+#: view:product.product:0 view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
 msgstr "会员产品"
@@ -379,8 +374,7 @@ msgid "Invoice Line"
 msgstr "发票明细"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,month:0
+#: view:report.membership:0 field:report.membership,month:0
 msgid "Month"
 msgstr "月份"
 
@@ -401,8 +395,7 @@ msgid "Buy Membership"
 msgstr "购买会员资格"
 
 #. module: membership
-#: field:report.membership,associate_member_id:0
-#: view:res.partner:0
+#: field:report.membership,associate_member_id:0 view:res.partner:0
 #: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr "附属会员"
@@ -515,12 +508,9 @@ msgstr "已开发票的会员"
 
 #. module: membership
 #: field:membership.invoice,product_id:0
-#: field:membership.membership_line,membership_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
+#: field:membership.membership_line,membership_id:0 view:product.product:0
+#: field:product.product,membership:0 view:report.membership:0
+#: view:res.partner:0 field:res.partner,member_lines:0
 msgid "Membership"
 msgstr "会籍"
 
@@ -537,8 +527,7 @@ msgid "Association Partner"
 msgstr "商会业务伙伴"
 
 #. module: membership
-#: field:report.membership,date_from:0
-#: view:res.partner:0
+#: field:report.membership,date_from:0 view:res.partner:0
 msgid "Start Date"
 msgstr "开始日期"
 
@@ -556,25 +545,13 @@ msgstr "10月"
 #: help:res.partner,membership_state:0
 msgid ""
 "It indicates the membership state.\n"
-"                    -Non Member: A partner who has not applied for any "
-"membership.\n"
-"                    -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                    -Old Member: A member whose membership date has "
-"expired.\n"
-"                    -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                    -Invoiced Member: A member whose invoice has been "
-"created.\n"
+"                    -Non Member: A partner who has not applied for any membership.\n"
+"                    -Cancelled Member: A member who has cancelled his membership.\n"
+"                    -Old Member: A member whose membership date has expired.\n"
+"                    -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been created.\n"
 "                    -Paying member: A member who has paid the membership fee."
-msgstr ""
-"该指示显示成员状态：\n"
-"                    -非成员：伙伴未申请任何成员。\n"
-"                    -失效成员：已经取消资格的成员。\n"
-"                    -过期成员：成员身份过期的成员。\n"
-"                    -待批准成员：已经申请成员资格并且将生成发票的成员。\n"
-"                    -待付费成员：已经生成付费申请的成员。\n"
-"                    -付费成员：已经付成员费的成员。"
+msgstr "该指示显示成员状态：\n                    -非成员：伙伴未申请任何成员。\n                    -失效成员：已经取消资格的成员。\n                    -过期成员：成员身份过期的成员。\n                    -待批准成员：已经申请成员资格并且将生成发票的成员。\n                    -待付费成员：已经生成付费申请的成员。\n                    -付费成员：已经付成员费的成员。"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -587,8 +564,7 @@ msgid "Membership Partners"
 msgstr "会员合作伙伴"
 
 #. module: membership
-#: field:membership.membership_line,member_price:0
-#: view:product.product:0
+#: field:membership.membership_line,member_price:0 view:product.product:0
 msgid "Membership Fee"
 msgstr "会费"
 
@@ -620,8 +596,7 @@ msgid "To"
 msgstr "到"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,membership_state:0
+#: view:report.membership:0 field:report.membership,membership_state:0
 msgid "Current Membership State"
 msgstr "当前会员状态"
 
@@ -629,26 +604,13 @@ msgstr "当前会员状态"
 #: help:membership.membership_line,state:0
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
-msgstr ""
-"该指示显示成员状态：\n"
-"                    -非成员：伙伴未申请任何成员。\n"
-"                    -失效成员：已经取消资格的成员。\n"
-"                    -过期成员：成员身份过期的成员。\n"
-"                    -待批准成员：已经申请成员资格并且将生成发票的成员。\n"
-"                    -待付费成员：已经生成付费申请的成员。\n"
-"                    -付费成员：已经付成员费的成员。"
+"                        -Non Member: A member who has not applied for any membership.\n"
+"                        -Cancelled Member: A member who has cancelled his membership.\n"
+"                        -Old Member: A member whose membership date has expired.\n"
+"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been created.\n"
+"                        -Paid Member: A member who has paid the membership amount."
+msgstr "该指示显示成员状态：\n                    -非成员：伙伴未申请任何成员。\n                    -失效成员：已经取消资格的成员。\n                    -过期成员：成员身份过期的成员。\n                    -待批准成员：已经申请成员资格并且将生成发票的成员。\n                    -待付费成员：已经生成付费申请的成员。\n                    -付费成员：已经付成员费的成员。"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -723,8 +685,7 @@ msgid "Membership Amount"
 msgstr "成员费用"
 
 #. module: membership
-#: field:report.membership,date_to:0
-#: view:res.partner:0
+#: field:report.membership,date_to:0 view:res.partner:0
 msgid "End Date"
 msgstr "结束日期"
 
@@ -792,8 +753,7 @@ msgid "Cancelled Member"
 msgstr "已取消的会员"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,year:0
+#: view:report.membership:0 field:report.membership,year:0
 msgid "Year"
 msgstr "年"
 

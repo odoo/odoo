@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * l10n_be_coda
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:16+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,description:l10n_be_coda.actcc_09_21
@@ -80,8 +81,8 @@ msgstr "親"
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_03_62
 msgid ""
-"cheques debited on account, but debit cancelled afterwards for lack of cover "
-"(double debit/contra-entry of transaction 01 or 05)"
+"cheques debited on account, but debit cancelled afterwards for lack of cover"
+" (double debit/contra-entry of transaction 01 or 05)"
 msgstr "振出済み小切手。しかし、カバー不足（二重振出 / 取引01または05の逆入力）の後にキャンセル済"
 
 #. module: l10n_be_coda
@@ -269,7 +270,7 @@ msgstr "優先度経費"
 #: code:addons/l10n_be_coda/wizard/account_coda_import.py:145
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.category,description:l10n_be_coda.actrca_045
@@ -491,9 +492,7 @@ msgstr "住民税"
 msgid ""
 "\n"
 "The File contains an invalid CODA Transaction Type : %s!"
-msgstr ""
-"\n"
-"ファイルに無効なCODA取引タイプが含まれています：%s"
+msgstr "\nファイルに無効なCODA取引タイプが含まれています：%s"
 
 #. module: l10n_be_coda
 #: view:account.coda:0
@@ -558,9 +557,7 @@ msgid ""
 "which the customer is debited or credited with one single amount. As a "
 "matter of principle, this type is also used when no detailed data is "
 "following (type 5)."
-msgstr ""
-"顧客により合計された金額；例えば、賃金支払や仕入先になされた支払の再グループファイル、または顧客が支払ったか預け入れした１回分の金額のための訂正の再グルー"
-"プファイル。原則としてこのタイプは、次に続く詳細データがない（タイプ5）時にも利用されます。"
+msgstr "顧客により合計された金額；例えば、賃金支払や仕入先になされた支払の再グループファイル、または顧客が支払ったか預け入れした１回分の金額のための訂正の再グループファイル。原則としてこのタイプは、次に続く詳細データがない（タイプ5）時にも利用されます。"
 
 #. module: l10n_be_coda
 #: view:coda.bank.statement.line:0
@@ -638,8 +635,7 @@ msgid "Transfer in your favour – initiated by the bank"
 msgstr "好意による転送 - 銀行により開始"
 
 #. module: l10n_be_coda
-#: view:account.coda:0
-#: field:account.coda,coda_data:0
+#: view:account.coda:0 field:account.coda,coda_data:0
 #: field:account.coda.import,coda_data:0
 msgid "CODA File"
 msgstr "CODAファイル"
@@ -685,8 +681,7 @@ msgid "Credit after Proton payments"
 msgstr "Proton支払後のクレジット"
 
 #. module: l10n_be_coda
-#: view:coda.bank.statement:0
-#: field:coda.bank.statement,period_id:0
+#: view:coda.bank.statement:0 field:coda.bank.statement,period_id:0
 msgid "Period"
 msgstr "期間"
 
@@ -755,10 +750,7 @@ msgid ""
 "\n"
 "\n"
 "Number of statements : "
-msgstr ""
-"\n"
-"\n"
-"取引明細書の数： "
+msgstr "\n\n取引明細書の数： "
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_01_05
@@ -788,8 +780,7 @@ msgid "Company issues paper in return for cash"
 msgstr "会社は現金と引き換えに用紙を発行します。"
 
 #. module: l10n_be_coda
-#: field:coda.bank.account,journal:0
-#: view:coda.bank.statement:0
+#: field:coda.bank.account,journal:0 view:coda.bank.statement:0
 #: field:coda.bank.statement,journal_id:0
 msgid "Journal"
 msgstr "仕訳帳"
@@ -827,8 +818,7 @@ msgid "Loading GSM cards"
 msgstr "GSMカードのロード"
 
 #. module: l10n_be_coda
-#: view:coda.bank.statement:0
-#: view:coda.bank.statement.line:0
+#: view:coda.bank.statement:0 view:coda.bank.statement.line:0
 #: field:coda.bank.statement.line,note:0
 msgid "Notes"
 msgstr "注記"
@@ -856,16 +846,7 @@ msgid ""
 "Bank Account: %s\n"
 "Account Holder Name: %s\n"
 "Date: %s, Starting Balance:  %.2f, Ending Balance: %.2f%s"
-msgstr ""
-"\n"
-"\n"
-"銀行仕訳帳：%s\n"
-"CODAバージョン：%s\n"
-"CODA順序番号：%s\n"
-"取引明細書用紙順序番号：%s\n"
-"銀行口座：%s\n"
-"口座名義：%s\n"
-"日付：%s、期首残高：%.2f、期末残高：%.2f%s"
+msgstr "\n\n銀行仕訳帳：%s\nCODAバージョン：%s\nCODA順序番号：%s\n取引明細書用紙順序番号：%s\n銀行口座：%s\n口座名義：%s\n日付：%s、期首残高：%.2f、期末残高：%.2f%s"
 
 #. module: l10n_be_coda
 #: code:addons/l10n_be_coda/wizard/account_coda_import.py:590
@@ -940,7 +921,7 @@ msgstr "金融機関が貸主である分割払い購入契約"
 #. module: l10n_be_coda
 #: view:account.coda.import:0
 msgid "or"
-msgstr ""
+msgstr "または"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,description:l10n_be_coda.actcc_03_66
@@ -1028,8 +1009,7 @@ msgstr "現金払い"
 #, python-format
 msgid ""
 "\n"
-"The CODA Statement %s Starting Balance (%.2f) does not correspond with the "
-"previous Closing Balance (%.2f) in journal %s."
+"The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s."
 msgstr ""
 
 #. module: l10n_be_coda
@@ -1113,8 +1093,7 @@ msgstr "延滞利息"
 #. module: l10n_be_coda
 #: help:coda.bank.account,coda_st_naming:0
 msgid ""
-"Define the rules to create the name of the Bank Statements generated by the "
-"CODA processing.\n"
+"Define the rules to create the name of the Bank Statements generated by the CODA processing.\n"
 "E.g. %(code)s%(y)s/%(paper)s\n"
 "\n"
 "Variables:\n"
@@ -1123,16 +1102,7 @@ msgid ""
 "Current Year without Century: %(y)s\n"
 "CODA sequence number: %(coda)s\n"
 "Paper Statement sequence number: %(paper)s"
-msgstr ""
-"CODA処理により生成される銀行取引明細書の名前を作成するためのルールを定義します。\n"
-"例えば、%(code)s%(y)s/%(paper)s\n"
-"\n"
-"変数：\n"
-"銀行仕訳帳コード：%(code)s\n"
-"4桁の西暦年：%(year)s\n"
-"2桁の西暦年：%(y)s\n"
-"CODA順序番号：%(coda)s\n"
-"取引明細書用紙順序番号：%(paper)s"
+msgstr "CODA処理により生成される銀行取引明細書の名前を作成するためのルールを定義します。\n例えば、%(code)s%(y)s/%(paper)s\n\n変数：\n銀行仕訳帳コード：%(code)s\n4桁の西暦年：%(year)s\n2桁の西暦年：%(y)s\nCODA順序番号：%(coda)s\n取引明細書用紙順序番号：%(paper)s"
 
 #. module: l10n_be_coda
 #: model:account.coda.comm.type,description:l10n_be_coda.acct_108
@@ -1237,9 +1207,7 @@ msgid ""
 "\n"
 "    Bank Statement '%s' line '%s':\n"
 "        There is no invoice matching the Structured Communication '%s'.\n"
-"        Please verify and adjust the invoice and perform the import again or "
-"otherwise change the corresponding entry manually in the generated Bank "
-"Statement."
+"        Please verify and adjust the invoice and perform the import again or otherwise change the corresponding entry manually in the generated Bank Statement."
 msgstr ""
 
 #. module: l10n_be_coda
@@ -1248,10 +1216,8 @@ msgid "Interest payment advice"
 msgstr "利払のアドバイス"
 
 #. module: l10n_be_coda
-#: field:account.coda.trans.code,type:0
-#: field:coda.bank.account,state:0
-#: field:coda.bank.statement,type:0
-#: field:coda.bank.statement.line,type:0
+#: field:account.coda.trans.code,type:0 field:coda.bank.account,state:0
+#: field:coda.bank.statement,type:0 field:coda.bank.statement.line,type:0
 msgid "Type"
 msgstr "タイプ"
 
@@ -1353,8 +1319,7 @@ msgstr "パートナ"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_80_37
-msgid ""
-"Fixed right, either one-off or periodical; for details, see \"categories\""
+msgid "Fixed right, either one-off or periodical; for details, see \"categories\""
 msgstr "右固定、１回限りまたは定期的の何れか；詳細については分類を参照して下さい。"
 
 #. module: l10n_be_coda
@@ -1388,10 +1353,8 @@ msgid "Payment by GSM"
 msgstr "GSMによる支払"
 
 #. module: l10n_be_coda
-#: view:coda.bank.account:0
-#: selection:coda.bank.account,state:0
-#: view:coda.bank.statement:0
-#: selection:coda.bank.statement,type:0
+#: view:coda.bank.account:0 selection:coda.bank.account,state:0
+#: view:coda.bank.statement:0 selection:coda.bank.statement,type:0
 msgid "Normal"
 msgstr "通常"
 
@@ -1406,8 +1369,7 @@ msgid "Separately charged costs and provisions"
 msgstr "費用と手当てを別個に請求"
 
 #. module: l10n_be_coda
-#: view:coda.bank.account:0
-#: field:coda.bank.account,currency:0
+#: view:coda.bank.account:0 field:coda.bank.account,currency:0
 #: field:coda.bank.statement,currency:0
 msgid "Currency"
 msgstr "通貨"
@@ -1514,9 +1476,7 @@ msgstr "料金と手数料"
 msgid ""
 "Free Communication:\n"
 " %s"
-msgstr ""
-"自由通信：\n"
-" %s"
+msgstr "自由通信：\n %s"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,description:l10n_be_coda.actcc_43_15
@@ -1593,8 +1553,7 @@ msgid "Regularisation charges"
 msgstr "規則化料"
 
 #. module: l10n_be_coda
-#: view:coda.bank.statement:0
-#: field:coda.bank.statement.line,statement_id:0
+#: view:coda.bank.statement:0 field:coda.bank.statement.line,statement_id:0
 #: model:ir.actions.act_window,name:l10n_be_coda.act_account_bank_statement_goto_coda_bank_statement
 #: model:ir.model,name:l10n_be_coda.model_coda_bank_statement
 msgid "CODA Bank Statement"
@@ -1654,7 +1613,7 @@ msgstr "転送手数料"
 #. module: l10n_be_coda
 #: view:account.coda.import:0
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. module: l10n_be_coda
 #: selection:coda.bank.statement.line,type:0
@@ -1760,12 +1719,9 @@ msgstr "預金からのクーポンの支払、あるいは店頭で配布され
 #. module: l10n_be_coda
 #: help:coda.bank.statement.line,globalisation_level:0
 msgid ""
-"The value which is mentioned (1 to 9), specifies the hierarchy level of the "
-"globalisation of which this record is the first.\n"
+"The value which is mentioned (1 to 9), specifies the hierarchy level of the globalisation of which this record is the first.\n"
 "The same code will be repeated at the end of the globalisation."
-msgstr ""
-"記載された値（1から9）はこのレコードが最初である国際化の階層レベルを指定します。\n"
-"同じコードは国際化の最後に繰り返されます。"
+msgstr "記載された値（1から9）はこのレコードが最初である国際化の階層レベルを指定します。\n同じコードは国際化の最後に繰り返されます。"
 
 #. module: l10n_be_coda
 #: field:coda.bank.account,description2:0
@@ -1795,14 +1751,12 @@ msgid "Sale of traveller’s cheque"
 msgstr "トラベラーズチェックの販売"
 
 #. module: l10n_be_coda
-#: field:coda.bank.account,name:0
-#: field:coda.bank.statement,name:0
+#: field:coda.bank.account,name:0 field:coda.bank.statement,name:0
 msgid "Name"
 msgstr "氏名"
 
 #. module: l10n_be_coda
-#: view:account.coda:0
-#: field:account.coda,coda_creation_date:0
+#: view:account.coda:0 field:account.coda,coda_creation_date:0
 msgid "CODA Creation Date"
 msgstr "CODA作成日"
 
@@ -1813,9 +1767,7 @@ msgstr "CODA作成日"
 msgid ""
 "\n"
 "Unknown Error : "
-msgstr ""
-"\n"
-"不明なエラー： "
+msgstr "\n不明なエラー： "
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.category,description:l10n_be_coda.actrca_035
@@ -1854,12 +1806,10 @@ msgstr "分割払い手数料"
 #: model:account.coda.trans.type,description:l10n_be_coda.actt_6
 msgid ""
 "Detail of 2. Simple amount without detailed data. Normally, data of this "
-"kind comes after type 2. The customer may ask for a separate file containing "
-"the detailed data. In that case, one will speak of a ‘separate application’. "
-"The records in a separate application keep type 6."
-msgstr ""
-"2の詳細。詳細なデータなしの単純な金額。通常はこの種のデータはタイプ2の後に来ます。顧客は詳細データを含む独立したファイルを求めるかも知れません。このケー"
-"スには独立したアプリケーションについて話されるでしょう。独立したアプリケーションのレコードはタイプ６を保持します。"
+"kind comes after type 2. The customer may ask for a separate file containing"
+" the detailed data. In that case, one will speak of a ‘separate "
+"application’. The records in a separate application keep type 6."
+msgstr "2の詳細。詳細なデータなしの単純な金額。通常はこの種のデータはタイプ2の後に来ます。顧客は詳細データを含む独立したファイルを求めるかも知れません。このケースには独立したアプリケーションについて話されるでしょう。独立したアプリケーションのレコードはタイプ６を保持します。"
 
 #. module: l10n_be_coda
 #: view:account.coda:0
@@ -1887,9 +1837,7 @@ msgstr "証書クレジット手数料"
 msgid ""
 "\n"
 "Number of errors : "
-msgstr ""
-"\n"
-"エラーの数： "
+msgstr "\nエラーの数： "
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,description:l10n_be_coda.actcc_80_22
@@ -1917,8 +1865,7 @@ msgid "Fixed loan advance - availability"
 msgstr "固定金利繰上 - 可用性"
 
 #. module: l10n_be_coda
-#: field:account.coda,name:0
-#: field:account.coda.import,coda_fname:0
+#: field:account.coda,name:0 field:account.coda.import,coda_fname:0
 msgid "CODA Filename"
 msgstr "CODAファイル名"
 
@@ -1951,14 +1898,13 @@ msgstr "コピーの配信"
 #. module: l10n_be_coda
 #: help:coda.bank.account,transfer_account:0
 msgid ""
-"Set here the default account that will be used for internal transfer between "
-"own bank accounts (e.g. transfer between current and deposit bank accounts)."
+"Set here the default account that will be used for internal transfer between"
+" own bank accounts (e.g. transfer between current and deposit bank "
+"accounts)."
 msgstr "ここでは自身の銀行口座の間で内部転送（例えば、現在の口座と預金銀行口座の間での転送）するために使うデフォルト口座を設定して下さい。"
 
 #. module: l10n_be_coda
-#: view:account.coda:0
-#: view:coda.bank.account:0
-#: view:coda.bank.statement:0
+#: view:account.coda:0 view:coda.bank.account:0 view:coda.bank.statement:0
 #: view:coda.bank.statement.line:0
 msgid "Group By..."
 msgstr "グループ化…"
@@ -1975,9 +1921,7 @@ msgstr "認識されない移動のためのデフォルト口座"
 msgid ""
 "\n"
 "System Error : "
-msgstr ""
-"\n"
-"システムエラー： "
+msgstr "\nシステムエラー： "
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,description:l10n_be_coda.actcc_01_60
@@ -2082,15 +2026,14 @@ msgstr "譲渡後の支払"
 #, python-format
 msgid ""
 "\n"
-"CODA File with Filename '%s' and Creation Date '%s' has already been "
-"imported."
+"CODA File with Filename '%s' and Creation Date '%s' has already been imported."
 msgstr ""
 
 #. module: l10n_be_coda
 #: code:addons/l10n_be_coda/l10n_be_coda.py:303
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "操作は無効です。"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,description:l10n_be_coda.actcc_07_14
@@ -2185,9 +2128,7 @@ msgid ""
 "originating CODA file in a human readable format. The Bank Statements "
 "associated with a CODA contain the subset of the CODA Bank Statement data "
 "that is required for the creation of the Accounting Entries."
-msgstr ""
-"CODA銀行取引明細書は人間が読むことのできる形式でその元のCODAファイルをエンコードした情報が含まれます。CODAと関係付けられた銀行取引明細書は会計"
-"エントリーの作成のために必要とされるCODA銀行取引明細データのサブセットを含んでいます。"
+msgstr "CODA銀行取引明細書は人間が読むことのできる形式でその元のCODAファイルをエンコードした情報が含まれます。CODAと関係付けられた銀行取引明細書は会計エントリーの作成のために必要とされるCODA銀行取引明細データのサブセットを含んでいます。"
 
 #. module: l10n_be_coda
 #: model:account.coda.comm.type,description:l10n_be_coda.acct_114
@@ -2203,7 +2144,7 @@ msgstr "銀行引受手形割引の決済"
 #: code:addons/l10n_be_coda/l10n_be_coda.py:114
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s（コピー）"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_04_02
@@ -2222,10 +2163,8 @@ msgid "Reversal"
 msgstr "取り消し"
 
 #. module: l10n_be_coda
-#: view:coda.bank.account:0
-#: selection:coda.bank.account,state:0
-#: view:coda.bank.statement:0
-#: selection:coda.bank.statement,type:0
+#: view:coda.bank.account:0 selection:coda.bank.account,state:0
+#: view:coda.bank.statement:0 selection:coda.bank.statement,type:0
 msgid "Info"
 msgstr "情報"
 
@@ -2280,10 +2219,9 @@ msgstr "自由通信"
 msgid ""
 "Amount as totalised by the bank; e.g. : the total amount of a series of "
 "credit transfers with a structured communication As a matter of principle, "
-"this type will also be used when no detailed data (type 6 or 7) is following."
-msgstr ""
-"銀行によって合計された金額；例えば：原則として構造化通信でクレジットの連続する合計金額が転送されます。これに続く詳細データ（タイプ6または7）がない時にこ"
-"のタイプは使われます。"
+"this type will also be used when no detailed data (type 6 or 7) is "
+"following."
+msgstr "銀行によって合計された金額；例えば：原則として構造化通信でクレジットの連続する合計金額が転送されます。これに続く詳細データ（タイプ6または7）がない時にこのタイプは使われます。"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.category,description:l10n_be_coda.actrca_033
@@ -2409,13 +2347,7 @@ msgid ""
 "Transaction Category: %s - %s\n"
 "Structured Communication Type: %s - %s\n"
 "Communication: %s"
-msgstr ""
-"取引タイプ：%s - %s\n"
-"取引ファミリ：%s - %s\n"
-"取引コード：%s - %s\n"
-"取引分類：%s - %s\n"
-"構造化通信タイプ：%s - %s\n"
-"通信：%s"
+msgstr "取引タイプ：%s - %s\n取引ファミリ：%s - %s\n取引コード：%s - %s\n取引分類：%s - %s\n構造化通信タイプ：%s - %s\n通信：%s"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.category,description:l10n_be_coda.actrca_208
@@ -2475,9 +2407,7 @@ msgstr "有価証券のサブスクリプション"
 #, python-format
 msgid ""
 "\n"
-"Please check if the 'Bank Account Number', 'Currency' and 'Account "
-"Description' fields of your configuration record match with '%s', '%s' and "
-"'%s'."
+"Please check if the 'Bank Account Number', 'Currency' and 'Account Description' fields of your configuration record match with '%s', '%s' and '%s'."
 msgstr ""
 
 #. module: l10n_be_coda
@@ -2580,8 +2510,7 @@ msgstr "支払手数料"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_07_01
-msgid ""
-"Bills of exchange, acquittances, promissory notes; debit of the drawee"
+msgid "Bills of exchange, acquittances, promissory notes; debit of the drawee"
 msgstr "為替手形、借金返済領収書、約束手形；手形名宛人の借方"
 
 #. module: l10n_be_coda
@@ -2647,8 +2576,8 @@ msgstr "小切手の最初のクレジット、バウチャー、昼食券、郵
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_07_05
 msgid ""
-"Bill claimed back at the drawer's request (bill claimed back before maturity "
-"date)"
+"Bill claimed back at the drawer's request (bill claimed back before maturity"
+" date)"
 msgstr "手形振出人の要求により返還請求された手形（満期日前に返還請求された手形）"
 
 #. module: l10n_be_coda
@@ -2664,9 +2593,7 @@ msgid ""
 "Amount paid to the issuer by the bank in charge of the placement (firm "
 "underwriting or not); also used for the payment in full of partly-paid "
 "shares, see transaction 05"
-msgstr ""
-"金額は配布の責任を持つ銀行（しっかりとした引受業務、あるいはそれ以外）によって発行者に支払われます；また、部分支払済株式の全ての支払のために使われます。取"
-"引05を参照して下さい。"
+msgstr "金額は配布の責任を持つ銀行（しっかりとした引受業務、あるいはそれ以外）によって発行者に支払われます；また、部分支払済株式の全ての支払のために使われます。取引05を参照して下さい。"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_03_15
@@ -2735,8 +2662,7 @@ msgid "Participation in and management of interest refund system"
 msgstr "利息返済システムのへの関与と管理"
 
 #. module: l10n_be_coda
-#: view:coda.bank.statement:0
-#: view:coda.bank.statement.line:0
+#: view:coda.bank.statement:0 view:coda.bank.statement.line:0
 msgid "Glob. Amount"
 msgstr "全体の金額"
 
@@ -2759,19 +2685,17 @@ msgstr "あなたが発行の巡回小切手"
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_11_09
 msgid ""
-"For professionals (stockbrokers) only, whoever the issuer may be (Belgian or "
-"foreigner)"
+"For professionals (stockbrokers) only, whoever the issuer may be (Belgian or"
+" foreigner)"
 msgstr "専門家（株式仲介人）のみ。発行人は誰でも良い（ベルギー人あるいは外国人）。"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_80_33
 msgid ""
 "Costs not specified otherwise, often with a manual communication (e.g. for "
-"collecting, ordering funds). VAT excluded = type 0 VAT included = type 3 (at "
-"least 3 articles)"
-msgstr ""
-"経費が指定されていません。さもなくば、しばしば手動通信（例えば、集金、資金の指示）と一緒です。VATを除外するのはタイプ0で、VATを含むのはタイプ3です"
-"（少なくとも3個）。"
+"collecting, ordering funds). VAT excluded = type 0 VAT included = type 3 (at"
+" least 3 articles)"
+msgstr "経費が指定されていません。さもなくば、しばしば手動通信（例えば、集金、資金の指示）と一緒です。VATを除外するのはタイプ0で、VATを含むのはタイプ3です（少なくとも3個）。"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.category,description:l10n_be_coda.actrca_023
@@ -2800,13 +2724,10 @@ msgstr "銀行取引の検索"
 msgid ""
 "\n"
 "Application Error : "
-msgstr ""
-"\n"
-"アプリケーションエラー： "
+msgstr "\nアプリケーションエラー： "
 
 #. module: l10n_be_coda
-#: help:coda.bank.account,description1:0
-#: help:coda.bank.account,description2:0
+#: help:coda.bank.account,description1:0 help:coda.bank.account,description2:0
 msgid ""
 "The Primary or Secondary Account Description should match the corresponding "
 "Account Description in the CODA file."
@@ -2882,11 +2803,7 @@ msgid ""
 "\n"
 "Configuration Error! \n"
 "The Bank Account Currency should match the Journal Currency !"
-msgstr ""
-"\n"
-"\n"
-"設定エラー。 \n"
-"銀行口座の通貨は仕訳帳の通貨と一致する必要があります。"
+msgstr "\n\n設定エラー。 \n銀行口座の通貨は仕訳帳の通貨と一致する必要があります。"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_80_35
@@ -2896,10 +2813,8 @@ msgid ""
 msgstr "支払うための税金金額を計算するために課される経費（例えば、Fiscomat）"
 
 #. module: l10n_be_coda
-#: view:account.coda:0
-#: field:account.coda,company_id:0
-#: field:coda.bank.account,company_id:0
-#: field:coda.bank.statement,company_id:0
+#: view:account.coda:0 field:account.coda,company_id:0
+#: field:coda.bank.account,company_id:0 field:coda.bank.statement,company_id:0
 #: field:coda.bank.statement.line,company_id:0
 msgid "Company"
 msgstr "会社"
@@ -3055,26 +2970,21 @@ msgid ""
 "For own account - the comment for the client is given in the communication; "
 "also for mixed payments (cash + cheques) - not to be communicated to the "
 "clients; for payments made by a third person: see family 01"
-msgstr ""
-"自身の口座 - 顧客のためのコメントは通信に記載されています；混合支払（現金＋小切手） - "
-"顧客に知らされていません；第三者による支払：ファミリ01を参照して下さい。"
+msgstr "自身の口座 - 顧客のためのコメントは通信に記載されています；混合支払（現金＋小切手） - 顧客に知らされていません；第三者による支払：ファミリ01を参照して下さい。"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_09_68
 msgid ""
-"In case of payment accepted under reserve of count; result of undercrediting "
-"- see also transaction 19"
+"In case of payment accepted under reserve of count; result of undercrediting"
+" - see also transaction 19"
 msgstr "計算上で承認された支払のケースに使用されます；結果的にクレジット未満 - 取引19も参照して下さい。"
 
 #. module: l10n_be_coda
 #: help:coda.bank.account,bank_id:0
 msgid ""
 "Bank Account Number.\n"
-"The CODA import function will find its CODA processing parameters on this "
-"number."
-msgstr ""
-"銀行口座番号。\n"
-"CODAのインポート機能はこの番号でCODA処理パラメータ見つけます。"
+"The CODA import function will find its CODA processing parameters on this number."
+msgstr "銀行口座番号。\nCODAのインポート機能はこの番号でCODA処理パラメータ見つけます。"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,description:l10n_be_coda.actcc_01_05
@@ -3088,8 +2998,7 @@ msgid ""
 "\n"
 "    Bank Statement '%s' line '%s':\n"
 "        No matching partner record found.\n"
-"        Please adjust the corresponding entry manually in the generated Bank "
-"Statement."
+"        Please adjust the corresponding entry manually in the generated Bank Statement."
 msgstr ""
 
 #. module: l10n_be_coda
@@ -3124,8 +3033,7 @@ msgid "The code must be unique !"
 msgstr "コードは固有であるべきです。"
 
 #. module: l10n_be_coda
-#: help:coda.bank.account,currency:0
-#: help:coda.bank.statement,currency:0
+#: help:coda.bank.account,currency:0 help:coda.bank.statement,currency:0
 msgid "The currency of the CODA Bank Statement"
 msgstr "CODA銀行取引明細書の通貨"
 
@@ -3195,11 +3103,8 @@ msgstr "あなたの半自動振替"
 msgid ""
 "\n"
 "    Bank Statement '%s' line '%s':\n"
-"        No partner record assigned: There are multiple partners with the "
-"same Bank Account Number '%s'.\n"
-"        Please correct the configuration and perform the import again or "
-"otherwise change the corresponding entry manually in the generated Bank "
-"Statement."
+"        No partner record assigned: There are multiple partners with the same Bank Account Number '%s'.\n"
+"        Please correct the configuration and perform the import again or otherwise change the corresponding entry manually in the generated Bank Statement."
 msgstr ""
 
 #. module: l10n_be_coda
@@ -3231,8 +3136,8 @@ msgstr "コメント"
 #. module: l10n_be_coda
 #: model:account.coda.trans.category,description:l10n_be_coda.actrca_203
 msgid ""
-"Confirmation fee | Additional confirmation fee | Commitment fee | Flat fee | "
-"Confirmation reservation commission | Additional reservation commission"
+"Confirmation fee | Additional confirmation fee | Commitment fee | Flat fee |"
+" Confirmation reservation commission | Additional reservation commission"
 msgstr "確認料 | 追加確認料 | 約定手数料 | 定額料 | 確認予約手数料 | 追加予約手数料"
 
 #. module: l10n_be_coda
@@ -3299,8 +3204,8 @@ msgstr "情報料"
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_01_03
 msgid ""
-"Credit transfer for which the order has been given once and which is carried "
-"out again at regular intervals without any change."
+"Credit transfer for which the order has been given once and which is carried"
+" out again at regular intervals without any change."
 msgstr "課金なしで、ひとたび依頼されたクレジット転送が規則的な周期で繰り返し実行されます。"
 
 #. module: l10n_be_coda
@@ -3373,14 +3278,12 @@ msgid "Lookup Partner"
 msgstr "パートナ検索"
 
 #. module: l10n_be_coda
-#: view:coda.bank.statement:0
-#: view:coda.bank.statement.line:0
+#: view:coda.bank.statement:0 view:coda.bank.statement.line:0
 msgid "Glob. Id"
 msgstr "国際化ID"
 
 #. module: l10n_be_coda
-#: view:coda.bank.statement:0
-#: view:coda.bank.statement.line:0
+#: view:coda.bank.statement:0 view:coda.bank.statement.line:0
 #: model:ir.actions.act_window,name:l10n_be_coda.action_coda_bank_statement_line
 #: model:ir.ui.menu,name:l10n_be_coda.coda_bank_statement_line
 msgid "CODA Statement Lines"
@@ -3404,13 +3307,10 @@ msgstr "銀行または顧客主導（社内）の同じ顧客のある口座か
 msgid ""
 "\n"
 "Error ! "
-msgstr ""
-"\n"
-"エラー "
+msgstr "\nエラー "
 
 #. module: l10n_be_coda
-#: view:account.coda:0
-#: field:account.coda,user_id:0
+#: view:account.coda:0 field:account.coda,user_id:0
 msgid "User"
 msgstr "ユーザ"
 
@@ -3494,15 +3394,7 @@ msgid ""
 "Transaction Category: %s - %s\n"
 "Structured Communication Type: %s - %s\n"
 "Communication: %s"
-msgstr ""
-"パートナ名：%s \n"
-"パートナ口座番号：%s\n"
-"取引タイプ：%s - %s\n"
-"取引ファイミリ：%s - %s\n"
-"取引コード：%s - %s\n"
-"取引分類：%s - %s\n"
-"構造化通信タイプ：%s - %s\n"
-"通信：%s"
+msgstr "パートナ名：%s \nパートナ口座番号：%s\n取引タイプ：%s - %s\n取引ファイミリ：%s - %s\n取引コード：%s - %s\n取引分類：%s - %s\n構造化通信タイプ：%s - %s\n通信：%s"
 
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,description:l10n_be_coda.actcc_04_04
@@ -3574,8 +3466,8 @@ msgstr "不渡りで戻った収集物のために送られた外国小切手"
 #. module: l10n_be_coda
 #: model:account.coda.trans.code,comment:l10n_be_coda.actcc_80_07
 msgid ""
-"- insurance costs of account holders against fatal accidents - passing-on of "
-"several insurance costs"
+"- insurance costs of account holders against fatal accidents - passing-on of"
+" several insurance costs"
 msgstr "- 致命的な事故に対する口座名義人の保険料 - 幾つかの保険経費の損害転嫁"
 
 #. module: l10n_be_coda
@@ -3630,8 +3522,7 @@ msgid ""
 "Detail of 1. Standard procedure is no detailing. However, the customer may "
 "ask for detailed data to be included into his file after the overall record "
 "(type 1)."
-msgstr ""
-"1の詳細。標準手順は詳細はありません。とはいえ、顧客は全体のレコード（タイプ1）の後にファイルの中に含まれる詳細データを求めるかもしれません。"
+msgstr "1の詳細。標準手順は詳細はありません。とはいえ、顧客は全体のレコード（タイプ1）の後にファイルの中に含まれる詳細データを求めるかもしれません。"
 
 #. module: l10n_be_coda
 #: field:account.coda.comm.type,description:0
@@ -3704,9 +3595,7 @@ msgid ""
 "\n"
 "    Bank Statement '%s' line '%s':\n"
 "        The bank account '%s' is not defined for the partner '%s'.\n"
-"        Please correct the configuration and perform the import again or "
-"otherwise change the corresponding entry manually in the generated Bank "
-"Statement."
+"        Please correct the configuration and perform the import again or otherwise change the corresponding entry manually in the generated Bank Statement."
 msgstr ""
 
 #. module: l10n_be_coda
@@ -3742,8 +3631,7 @@ msgid "Cancellation or correction"
 msgstr "キャンセルまたは訂正"
 
 #. module: l10n_be_coda
-#: view:coda.bank.account:0
-#: field:coda.bank.account,bank_id:0
+#: view:coda.bank.account:0 field:coda.bank.account,bank_id:0
 #: field:coda.bank.statement,coda_bank_account_id:0
 #: view:coda.bank.statement.line:0
 #: field:coda.bank.statement.line,coda_bank_account_id:0

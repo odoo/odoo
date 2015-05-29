@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-09-02 08:57+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 09:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-7/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-03 06:59+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -28,33 +29,28 @@ msgid "account.config.settings"
 msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:411
+#: code:addons/account_voucher/account_voucher.py:417
 #, python-format
 msgid "Write-Off"
 msgstr "Afschrijving"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Payment Ref"
 msgstr "Betalingskenmerk"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_form
-#: view:account.voucher:account_voucher.view_voucher_tree
+#: view:account.voucher:0
 msgid "Total Amount"
 msgstr "Totaalbedrag"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
+#: view:account.voucher:0
 msgid "Open Customer Journal Entries"
 msgstr "Open klantboekingen"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: view:sale.receipt.report:0
+#: view:account.voucher:0 view:sale.receipt.report:0
 msgid "Group By..."
 msgstr "Groepeer op.."
 
@@ -63,17 +59,15 @@ msgstr "Groepeer op.."
 msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
-msgstr ""
-"Berekend als het verschil tussen het bedrag genoemd op het betaalbewijs en "
-"de som van de toewijzingen op de regels."
+msgstr "Berekend als het verschil tussen het bedrag genoemd op het betaalbewijs en de som van de toewijzingen op de regels."
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 msgid "(Update)"
 msgstr "(bijwerken)"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
+#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.act_pay_bills
 msgid "Bill Payment"
 msgstr "Rekening betaling"
@@ -85,7 +79,7 @@ msgid "Import Entries"
 msgstr "Importeer boekingen"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 msgid "Voucher Entry"
 msgstr "Betaalbewijs ingeven"
 
@@ -100,22 +94,17 @@ msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
+#: view:account.voucher:0
 msgid "Pay Bill"
 msgstr "Betaal rekening"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_sale_receipt_form
+#: view:account.voucher:0
 msgid "Are you sure you want to cancel this receipt?"
 msgstr "Weet u zeker dat u deze bon wilt annuleren?"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_sale_receipt_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 msgid "Set to Draft"
 msgstr "Zet op concept"
 
@@ -125,8 +114,7 @@ msgid "Transaction reference number."
 msgstr "Transactie referentie nummer"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Allocation"
 msgstr "Toewijzing"
 
@@ -135,18 +123,15 @@ msgstr "Toewijzing"
 msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
-msgstr ""
-"Deze zin helpt u om te weten hoe u het betalingtarief moet opgeven door "
-"rechtstreekse de werking weer te geven."
+msgstr "Deze zin helpt u om te weten hoe u het betalingtarief moet opgeven door rechtstreekse de werking weer te geven."
 
 #. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
-#: field:sale.receipt.report,user_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,user_id:0
 msgid "Salesperson"
 msgstr "Verkoper"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.account_cash_statement_graph
+#: view:account.voucher:0
 msgid "Voucher Statistics"
 msgstr "Betaalbewijs analyses"
 
@@ -156,9 +141,7 @@ msgstr "Betaalbewijs analyses"
 msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
-msgstr ""
-"Het is niet mogelijk het dagboek te wijzigen, omdat u al afschriftregels "
-"heeft afgeletterd!"
+msgstr "Het is niet mogelijk het dagboek te wijzigen, omdat u al afschriftregels heeft afgeletterd!"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
@@ -166,10 +149,7 @@ msgid "Status changed"
 msgstr "Staus veranderd"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_sale_receipt_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Validate"
 msgstr "Bevestigen"
 
@@ -189,21 +169,10 @@ msgid ""
 "                supplier payment related to this purchase receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een aankoopbewijs te registreren. \n"
-"              </p><p>\n"
-"                Wanneer een inkoopbon is bevestigd, kunt u de \n"
-"                betaling aan uw leverancier vastleggen.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik om een aankoopbewijs te registreren. \n              </p><p>\n                Wanneer een inkoopbon is bevestigd, kunt u de \n                betaling aan uw leverancier vastleggen.\n              </p>\n            "
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
+#: view:account.voucher:0
 msgid "Search Vouchers"
 msgstr "Zoek betaalbewijzen"
 
@@ -213,8 +182,7 @@ msgid "Counterpart Account"
 msgstr "Tegenrekening"
 
 #. module: account_voucher
-#: field:account.voucher,account_id:0
-#: field:account.voucher.line,account_id:0
+#: field:account.voucher,account_id:0 field:account.voucher.line,account_id:0
 #: field:sale.receipt.report,account_id:0
 msgid "Account"
 msgstr "Rekening"
@@ -235,9 +203,8 @@ msgid "Full Reconcile"
 msgstr "Volledig afletteren"
 
 #. module: account_voucher
-#: field:account.voucher,date_due:0
-#: field:account.voucher.line,date_due:0
-#: field:sale.receipt.report,date_due:0
+#: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,date_due:0
 msgid "Due Date"
 msgstr "Vervaldatum"
 
@@ -263,8 +230,8 @@ msgid "Journal Item"
 msgstr "Boeking"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:552
-#: code:addons/account_voucher/account_voucher.py:1074
+#: code:addons/account_voucher/account_voucher.py:558
+#: code:addons/account_voucher/account_voucher.py:1085
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -275,36 +242,32 @@ msgid "Amount"
 msgstr "Bedrag"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
+#: view:account.voucher:0
 msgid "Payment Options"
 msgstr "Betaal opties"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "e.g. 003/10"
 msgstr "Bijv.. 003/10"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
+#: view:account.voucher:0
 msgid "Other Information"
 msgstr "Overige informatie"
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: selection:sale.receipt.report,state:0
+#: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1254
+#: code:addons/account_voucher/account_voucher.py:1261
 #, python-format
 msgid ""
-"You have to configure account base code and account tax code on the '%s' tax!"
-msgstr ""
-"De financiële rekening en fiscale rekening voor de '%s'belasting moet worden "
-"geconfigureerd!"
+"You have to configure account base code and account tax code on the '%s' "
+"tax!"
+msgstr "De financiële rekening en fiscale rekening voor de '%s'belasting moet worden geconfigureerd!"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -312,19 +275,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a sale receipt.\n"
 "              </p><p>\n"
-"                When the sale receipt is confirmed, you can record the "
-"customer\n"
+"                When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een betaalbewijs aan te maken.\n"
-"              </p><p>\n"
-"                Wanneer een betaalbewijs is bevestigd, kunt u de \n"
-"                betaling van uw klant vastleggen.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik om een betaalbewijs aan te maken.\n              </p><p>\n                Wanneer een betaalbewijs is bevestigd, kunt u de \n                betaling van uw klant vastleggen.\n              </p>\n            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -337,20 +292,17 @@ msgid "Bank Statement Line"
 msgstr "Bankafschriftregel"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,day:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,day:0
 msgid "Day"
 msgstr "Dag"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_sale_receipt_form
-#: field:account.voucher,tax_id:0
+#: view:account.voucher:0 field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Belasting"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:970
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -370,42 +322,26 @@ msgstr "Kostenplaats"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Total Allocation"
 msgstr "Totale toewijzing"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Payment Information"
 msgstr "Betalingsinformatie"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_sale_receipt_form
+#: view:account.voucher:0
 msgid "(update)"
 msgstr "(bijwerken)"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
-#: selection:sale.receipt.report,state:0
+#: view:account.voucher:0 selection:account.voucher,state:0
+#: view:sale.receipt.report:0 selection:sale.receipt.report,state:0
 msgid "Draft"
 msgstr "Concept"
 
@@ -415,27 +351,23 @@ msgid "Import Invoices"
 msgstr "Importeer facturen"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "e.g. Invoice SAJ/0042"
 msgstr "Bijv. Factuur VKB/0042"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1213
+#: code:addons/account_voucher/account_voucher.py:1220
 #, python-format
 msgid "Wrong voucher line"
 msgstr "Verkeerde regel van het betaalbewijs"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
 msgstr "Betaal later"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
-#: selection:account.voucher,type:0
+#: view:account.voucher:0 selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Receipt"
 msgstr "Betaalbewijs"
@@ -447,46 +379,31 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
-"U dient de 'wisselkoers winst rekening' in te stellen in de financiële "
-"instellingen, om automatisch de boekingen te kunnen maken tussen twee "
-"verschillende valuta's."
+msgstr "U dient de 'wisselkoers winst rekening' in te stellen in de financiële instellingen, om automatisch de boekingen te kunnen maken tussen twee verschillende valuta's."
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_sale_receipt_form
+#: view:account.voucher:0
 msgid "Sales Lines"
 msgstr "Verkoopregels"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 msgid "Cancel Voucher"
 msgstr "Betaalbewijs annuleren"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: field:account.voucher,period_id:0
+#: view:account.voucher:0 field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Periode"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: code:addons/account_voucher/account_voucher.py:223
+#: view:account.voucher:0 code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Leverancier"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
+#: view:account.voucher:0
 msgid "Supplier Voucher"
 msgstr "Betaalbewijs"
 
@@ -501,30 +418,27 @@ msgid "Debit"
 msgstr "Debet"
 
 #. module: account_voucher
-#: field:sale.receipt.report,nbr:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
 msgstr "# betaalbewijs regels"
 
 #. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
-#: field:sale.receipt.report,type:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,type:0
 msgid "Type"
 msgstr "Soort"
 
 #. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: view:sale.receipt.report:0
 msgid "Pro-forma Vouchers"
 msgstr "Pro-forma betaalbewijzen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:310
+#: code:addons/account_voucher/account_voucher.py:318
 #, python-format
 msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
-msgstr ""
-"Op de verwerkingsdatum, was de valutakoers\n"
-"%s = %s"
+msgstr "Op de verwerkingsdatum, was de valutakoers\n%s = %s"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -532,21 +446,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new supplier payment.\n"
 "              </p><p>\n"
-"                OpenERP helps you easily track payments you make and the "
-"remaining balances you need to pay your suppliers.\n"
+"                OpenERP helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik hier om een leveranciersbetaling aan te maken.\n"
-"              </p><p>\n"
-"                OpenERP helpt u bij het maken van betalingen aan uw "
-"leverancier.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik hier om een leveranciersbetaling aan te maken.\n              </p><p>\n                OpenERP helpt u bij het maken van betalingen aan uw leverancier.\n              </p>\n            "
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
+#: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
 msgstr "Open leveranciersboekingen"
 
@@ -567,13 +473,12 @@ msgid "Pay Invoice"
 msgstr "Betaling factuur"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
 msgstr "Weet u zeker dat u het afletteren van deze regel wilt afbreken?"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_sale_receipt_form
+#: view:account.voucher:0
 msgid "Sales Receipt"
 msgstr "Betaalbewijs"
 
@@ -583,7 +488,7 @@ msgid "Multi Currency Voucher"
 msgstr "Betaalbewijs met meerdere valuta"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
+#: view:account.voucher:0
 msgid "Bill Information"
 msgstr "Rekening informatie"
 
@@ -595,24 +500,11 @@ msgstr "juli"
 #. module: account_voucher
 #: help:account.voucher,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
+"* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
-" * De status 'Concept' wordt gebruikt wanneer een gebruiker een nieuwe en "
-"onbevestigde betaalbewijs ingeeft.\n"
-"* De status 'Pro-forma' wordt gebruikt het betaalbewijs in Pro-forma-status "
-"is. Het betaalbewijs heeft geen nummer.\n"
-"* De status 'Geboekt' wordt gebruikt wanneer de gebruiker het betaalbewijs "
-"aanmaakt, het nummer wordt gegenereerd en de betaalbewijs regel worden "
-"gemaakt in de boekhouding\n"
-"* De status 'Geannuleerd' wordt gebruikt wanneer de gebruiker het "
-"betaalbewijs annuleerd."
+msgstr " * De status 'Concept' wordt gebruikt wanneer een gebruiker een nieuwe en onbevestigde betaalbewijs ingeeft.\n* De status 'Pro-forma' wordt gebruikt het betaalbewijs in Pro-forma-status is. Het betaalbewijs heeft geen nummer.\n* De status 'Geboekt' wordt gebruikt wanneer de gebruiker het betaalbewijs aanmaakt, het nummer wordt gegenereerd en de betaalbewijs regel worden gemaakt in de boekhouding\n* De status 'Geannuleerd' wordt gebruikt wanneer de gebruiker het betaalbewijs annuleerd."
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -620,18 +512,17 @@ msgid "Difference Amount"
 msgstr "Verschil bedrag"
 
 #. module: account_voucher
-#: field:sale.receipt.report,due_delay:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
 msgstr "Gem. overschrijding"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 msgid "Are you sure you want to unreconcile this record?"
-msgstr ""
-"Weet u het zeker dat u van dit record de afletterring wilt annuleren?"
+msgstr "Weet u het zeker dat u van dit record de afletterring wilt annuleren?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1254
+#: code:addons/account_voucher/account_voucher.py:1261
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Geen financiële rekening en fiscale rekening gedefinieerd!"
@@ -642,7 +533,7 @@ msgid "Tax Amount"
 msgstr "Belastingbedrag"
 
 #. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: view:sale.receipt.report:0
 msgid "Validated Vouchers"
 msgstr "Bevestigde betaalbewijzen"
 
@@ -653,24 +544,12 @@ msgid ""
 "                Click to register a new payment. \n"
 "              </p><p>\n"
 "                Enter the customer and the payment method and then, either\n"
-"                create manually a payment record or OpenERP will propose to "
-"you\n"
-"                automatically the reconciliation of this payment with the "
-"open\n"
+"                create manually a payment record or OpenERP will propose to you\n"
+"                automatically the reconciliation of this payment with the open\n"
 "                invoices or sales receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een nieuwe betaling te registreren. \n"
-"              </p><p>\n"
-"                Geef de klant en de betaalwijze in en maak dan, of \n"
-"                handmatig een betaalregel aan of laat OpenERP voorstellen \n"
-"                om automatisch de betaling af te letteren tegen de "
-"openstaande\n"
-"                facturen of betaalbewijzen.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik om een nieuwe betaling te registreren. \n              </p><p>\n                Geef de klant en de betaalwijze in en maak dan, of \n                handmatig een betaalregel aan of laat OpenERP voorstellen \n                om automatisch de betaling af te letteren tegen de openstaande\n                facturen of betaalbewijzen.\n              </p>\n            "
 
 #. module: account_voucher
 #: field:account.config.settings,expense_currency_exchange_account_id:0
@@ -679,8 +558,7 @@ msgid "Loss Exchange Rate Account"
 msgstr "Wisselkoers verlies rekening"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Paid Amount"
 msgstr "Betaald bedrag"
 
@@ -690,15 +568,14 @@ msgid "Payment Difference"
 msgstr "Betaalverschil"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: field:account.voucher,audit:0
+#: view:account.voucher:0 field:account.voucher,audit:0
 msgid "To Review"
 msgstr "Na te kijken"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1125
-#: code:addons/account_voucher/account_voucher.py:1139
-#: code:addons/account_voucher/account_voucher.py:1290
+#: code:addons/account_voucher/account_voucher.py:1132
+#: code:addons/account_voucher/account_voucher.py:1146
+#: code:addons/account_voucher/account_voucher.py:1297
 #, python-format
 msgid "change"
 msgstr "wijziging"
@@ -710,13 +587,10 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
-"U dient de 'wisselkoers verlies rekening' in te stellen in de financiële "
-"instellingen, om automatisch de boekingen te kunnen maken tussen twee "
-"verschillende valuta's."
+msgstr "U dient de 'wisselkoers verlies rekening' in te stellen in de financiële instellingen, om automatisch de boekingen te kunnen maken tussen twee verschillende valuta's."
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
+#: view:account.voucher:0
 msgid "Expense Lines"
 msgstr "Declaratieregels"
 
@@ -725,12 +599,10 @@ msgstr "Declaratieregels"
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
-msgstr ""
-"Velden voor intern gebruik die alleen aangeven of een betaalbewijs meerdere "
-"valuta heeft"
+msgstr "Velden voor intern gebruik die alleen aangeven of een betaalbewijs meerdere valuta heeft"
 
 #. module: account_voucher
-#: view:account.invoice:account_voucher.view_invoice_customer
+#: view:account.invoice:0
 msgid "Register Payment"
 msgstr "Betaling registreren"
 
@@ -745,13 +617,12 @@ msgid "December"
 msgstr "december"
 
 #. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: view:sale.receipt.report:0
 msgid "Group by month of Invoice Date"
 msgstr "Groepeer op maand of factuurdatum"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,month:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,month:0
 msgid "Month"
 msgstr "Maand"
 
@@ -769,7 +640,7 @@ msgid "Payable and Receivables"
 msgstr "Debiteuren en crediteuren"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
+#: view:account.voucher:0
 msgid "Voucher Payment"
 msgstr "Betaalbewijs betaling"
 
@@ -779,10 +650,8 @@ msgid "Voucher Status"
 msgstr "Betaalbewijs status"
 
 #. module: account_voucher
-#: field:account.voucher,company_id:0
-#: field:account.voucher.line,company_id:0
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
-#: field:sale.receipt.report,company_id:0
+#: field:account.voucher,company_id:0 field:account.voucher.line,company_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,company_id:0
 msgid "Company"
 msgstr "Bedrijf"
 
@@ -797,45 +666,34 @@ msgid "Reconcile Payment Balance"
 msgstr "Afletteren betalingsbalans"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_sale_receipt_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Cancel Receipt"
 msgstr "Betaalbewijs annuleren"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1068
+#: code:addons/account_voucher/account_voucher.py:1079
 #, python-format
 msgid "Configuration Error !"
 msgstr "Configuratiefout !"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: view:account.voucher:0 view:sale.receipt.report:0
 msgid "Draft Vouchers"
 msgstr "Concept betaalbewijzen"
 
 #. module: account_voucher
-#: field:sale.receipt.report,price_total_tax:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
 msgstr "Totaal incl. belastingen"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
+#: view:account.voucher:0
 msgid "Purchase Voucher"
 msgstr "Aankoopbewijs"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: field:account.voucher,state:0
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: view:account.voucher:0 field:account.voucher,state:0
+#: view:sale.receipt.report:0
 msgid "Status"
 msgstr "Status"
 
@@ -845,8 +703,7 @@ msgid "Group by year of Invoice Date"
 msgstr "Groepeer op jaar of factuurdatum"
 
 #. module: account_voucher
-#: view:account.statement.from.invoice.lines:0
-#: view:account.voucher:0
+#: view:account.statement.from.invoice.lines:0 view:account.voucher:0
 msgid "or"
 msgstr "of"
 
@@ -856,7 +713,7 @@ msgid "August"
 msgstr "augustus"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_sale_receipt_form
+#: view:account.voucher:0
 msgid "Validate Payment"
 msgstr "Bevestig betaling"
 
@@ -865,9 +722,7 @@ msgstr "Bevestig betaling"
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr ""
-"Vink deze optie aan indien u onzeker bent over de boekingen   en of u wilt "
-"dat deze wordt aangemerkt als 'ter controle' door een boekhoudkundig expert."
+msgstr "Vink deze optie aan indien u onzeker bent over de boekingen   en of u wilt dat deze wordt aangemerkt als 'ter controle' door een boekhoudkundig expert."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -875,7 +730,7 @@ msgid "October"
 msgstr "oktober"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1069
+#: code:addons/account_voucher/account_voucher.py:1080
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Activeer de reeks van het geselecteerde dagboek!"
@@ -912,8 +767,7 @@ msgid "Write-Off Analytic Account"
 msgstr "Kostenplaats betaalverschil"
 
 #. module: account_voucher
-#: field:account.voucher,date:0
-#: field:account.voucher.line,date_original:0
+#: field:account.voucher,date:0 field:account.voucher.line,date_original:0
 #: field:sale.receipt.report,date:0
 msgid "Date"
 msgstr "Datum"
@@ -924,7 +778,7 @@ msgid "November"
 msgstr "november"
 
 #. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: view:sale.receipt.report:0
 msgid "Extended Filters..."
 msgstr "Uitgebreide filters..."
 
@@ -939,8 +793,7 @@ msgid "Amount reconciled"
 msgstr "Verrekend bedrag"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
 msgstr "Betaal direct"
 
@@ -955,7 +808,7 @@ msgid "Previous Payments ?"
 msgstr "Vorige betalingen?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1213
+#: code:addons/account_voucher/account_voucher.py:1220
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr "De factuur die u wilt betalen is niet meer geldig."
@@ -987,7 +840,7 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1075
+#: code:addons/account_voucher/account_voucher.py:1086
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Definieer een reeks voor dit dagboek."
@@ -1002,8 +855,7 @@ msgstr "Klantbetalingen"
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_graph
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
 msgstr "Betaalbewijs analyse"
 
@@ -1013,13 +865,12 @@ msgid "Group by Invoice Date"
 msgstr "Groepeer op factuurdatum"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 msgid "Post"
 msgstr "Post"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
 msgstr "Facturen en openstaande transacties"
 
@@ -1029,23 +880,22 @@ msgid "Helping Sentence"
 msgstr "Hulpzin"
 
 #. module: account_voucher
-#: field:sale.receipt.report,price_total:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
 msgstr "Totaal exclusief belastingen"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
+#: view:account.voucher:0
 msgid "Bill Date"
 msgstr "Rekening datum"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Unreconcile"
 msgstr "Maak afletteren ongedaan"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Boekhouding betaalbewijzen"
@@ -1076,20 +926,13 @@ msgid "September"
 msgstr "september"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_sale_receipt_form
+#: view:account.voucher:0
 msgid "Sales Information"
 msgstr "Verkoop informatie"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: field:account.voucher.line,voucher_id:0
-#: code:addons/account_voucher/account_voucher.py:193
+#: view:account.voucher:0 field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
-#, python-format
 msgid "Voucher"
 msgstr "Betaalbewijs"
 
@@ -1099,12 +942,12 @@ msgid "Invoice"
 msgstr "Factuur"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 msgid "Voucher Items"
 msgstr "Betaalbewijs regels"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
+#: view:account.statement.from.invoice.lines:0 view:account.voucher:0
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -1114,42 +957,34 @@ msgid "Open Invoicing Menu"
 msgstr "Open factureer menu"
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: selection:account.voucher,state:0 view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
 msgstr "Pro-forma"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_sale_receipt_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
-#: view:account.voucher:account_voucher.view_voucher_form
-#: field:account.voucher,move_ids:0
+#: view:account.voucher:0 field:account.voucher,move_ids:0
 msgid "Journal Items"
 msgstr "Boekingsregels"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:552
+#: code:addons/account_voucher/account_voucher.py:558
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr "Definieer standaard credit/debit rekeningen voor dit dagboek \"%s\"."
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Purchase"
 msgstr "Inkoop"
 
 #. module: account_voucher
-#: view:account.invoice:account_voucher.view_invoice_supplier
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
+#: view:account.invoice:0 view:account.voucher:0
 msgid "Pay"
 msgstr "Betaal"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
+#: view:account.voucher:0
 msgid "Currency Options"
 msgstr "Valuta opties"
 
@@ -1157,44 +992,25 @@ msgstr "Valuta opties"
 #: help:account.voucher,payment_option:0
 msgid ""
 "This field helps you to choose what you want to do with the eventual "
-"difference between the paid amount and the sum of allocated amounts. You can "
-"either choose to keep open this difference on the partner's account, or "
+"difference between the paid amount and the sum of allocated amounts. You can"
+" either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
-msgstr ""
-"Dit veld helpt u bij het kiezen van wat u wilt doen met de eventuele "
-"verschillen tussen de betaalde bedragen en de som van de toegewezen "
-"bedragen. U kan kiezen om dit verschil open te laten staan op de rekening "
-"van de relatie of dit af te letteren met de betaling(en)"
+msgstr "Dit veld helpt u bij het kiezen van wat u wilt doen met de eventuele verschillen tussen de betaalde bedragen en de som van de toegewezen bedragen. U kan kiezen om dit verschil open te laten staan op de rekening van de relatie of dit af te letteren met de betaling(en)"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview of the amount "
-"invoiced\n"
+"            From this report, you can have an overview of the amount invoiced\n"
 "            to your customer as well as payment delays. The tool search can\n"
 "            also be used to personalise your Invoices reports and so, match\n"
 "            this analysis to your needs.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"            Met behulp van dit rapport heeft u een overzicht van het "
-"gefactureerde bedrag\n"
-"            aan uw klant, alsmede de betalingscondities. Met de zoekfunctie "
-"kunt u\n"
-"            het rapport verder personaliseren om zo het aan te passen aan "
-"uw\n"
-"            wensen.\n"
-"          </p>\n"
-"        "
+msgstr "<p>\n            Met behulp van dit rapport heeft u een overzicht van het gefactureerde bedrag\n            aan uw klant, alsmede de betalingscondities. Met de zoekfunctie kunt u\n            het rapport verder personaliseren om zo het aan te passen aan uw\n            wensen.\n          </p>\n        "
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
+#: view:account.voucher:0
 msgid "Posted Vouchers"
 msgstr "Geboekte betaalbewijzen"
 
@@ -1204,10 +1020,7 @@ msgid "Exchange Rate"
 msgstr "Wisselkoers"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
+#: view:account.voucher:0
 msgid "Payment Method"
 msgstr "Betaalwijze"
 
@@ -1222,31 +1035,18 @@ msgid "May"
 msgstr "mei"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: field:account.voucher,journal_id:0
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
-#: field:sale.receipt.report,journal_id:0
+#: view:account.voucher:0 field:account.voucher,journal_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,journal_id:0
 msgid "Journal"
 msgstr "Dagboek"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_low_priority_payment_form
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
-#: view:account.voucher:account_voucher.view_sale_receipt_form
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_voucher_form
+#: view:account.voucher:0
 msgid "Internal Notes"
 msgstr "Interne notities"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
-#: field:account.voucher,line_cr_ids:0
+#: view:account.voucher:0 field:account.voucher,line_cr_ids:0
 msgid "Credits"
 msgstr "Credit regels"
 
@@ -1256,7 +1056,7 @@ msgid "Original Amount"
 msgstr "Oorspronkelijk bedrag"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_purchase_receipt_form
+#: view:account.voucher:0
 msgid "Purchase Receipt"
 msgstr "Aankoopbewijs"
 
@@ -1268,32 +1068,20 @@ msgid ""
 msgstr "Een speciale wisselkoers voor dit betaalbewijs."
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: field:account.voucher,pay_now:0
-#: selection:account.voucher,type:0
-#: field:sale.receipt.report,pay_now:0
+#: view:account.voucher:0 field:account.voucher,pay_now:0
+#: selection:account.voucher,type:0 field:sale.receipt.report,pay_now:0
 #: selection:sale.receipt.report,type:0
 msgid "Payment"
 msgstr "Betaling"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor
-#: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
-#: selection:sale.receipt.report,state:0
+#: view:account.voucher:0 selection:account.voucher,state:0
+#: view:sale.receipt.report:0 selection:sale.receipt.report,state:0
 msgid "Posted"
 msgstr "Geboekt"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_sale_receipt_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: view:account.voucher:account_voucher.view_vendor_receipt_form
-#: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
-#: view:account.voucher:account_voucher.view_voucher_filter_sale
+#: view:account.voucher:0
 msgid "Customer"
 msgstr "Klant"
 
@@ -1303,7 +1091,7 @@ msgid "February"
 msgstr "februari"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_vendor_payment_form
+#: view:account.voucher:0
 msgid "Supplier Invoices and Outstanding transactions"
 msgstr "Leveranciersfacturen en uitstaande transacties"
 
@@ -1313,14 +1101,13 @@ msgid "Ref #"
 msgstr "Ref #"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_tree
+#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
 msgstr "Betaalbewijs regels"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,year:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,year:0
 msgid "Year"
 msgstr "jaar"
 
@@ -1331,8 +1118,7 @@ msgid "Gain Exchange Rate Account"
 msgstr "Wisselkoers winst rekening"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Sale"
 msgstr "Verkoop"
 
@@ -1368,8 +1154,7 @@ msgid "Entries by Statement from Invoices"
 msgstr "Boekingen veroorzaakt door facturen"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_sale_receipt_form
-#: field:account.voucher,amount:0
+#: view:account.voucher:0 field:account.voucher,amount:0
 msgid "Total"
 msgstr "Totaal"
 
@@ -1383,17 +1168,13 @@ msgstr "Boeking"
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line."
-msgstr ""
-"Het bedrag van het betaalbewijs moet hetzelfde zijn als het bedrag op de "
-"afschriftregel."
+msgstr "Het bedrag van het betaalbewijs moet hetzelfde zijn als het bedrag op de afschriftregel."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:970
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
-"Het is niet mogelijk om betaalbewijzen te verwijderen welke al geopend of "
-"betaald zijn."
+msgstr "Het is niet mogelijk om betaalbewijzen te verwijderen welke al geopend of betaald zijn."
 
 #. module: account_voucher
 #: help:account.voucher,date:0
@@ -1411,14 +1192,13 @@ msgid "Keep Open"
 msgstr "Open houden"
 
 #. module: account_voucher
-#: field:account.voucher,line_ids:0
-#: view:account.voucher.line:account_voucher.view_voucher_line_form
+#: field:account.voucher,line_ids:0 view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
 msgstr "Betaalbewijs regels"
 
 #. module: account_voucher
-#: field:sale.receipt.report,delay_to_pay:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
 msgstr "Gem. vertraging om te betalen"
 
@@ -1433,10 +1213,8 @@ msgid "Sales Receipt Statistics"
 msgstr "Betaalbewijs analyses"
 
 #. module: account_voucher
-#: view:account.voucher:account_voucher.view_voucher_filter
-#: field:account.voucher,partner_id:0
-#: field:account.voucher.line,partner_id:0
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
+#: view:account.voucher:0 field:account.voucher,partner_id:0
+#: field:account.voucher.line,partner_id:0 view:sale.receipt.report:0
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
 msgstr "Relatie"
@@ -1456,27 +1234,7 @@ msgstr "Onvoldoende instellingen!"
 #. module: account_voucher
 #: help:account.voucher,active:0
 msgid ""
-"By default, reconciliation vouchers made on draft bank statements are set as "
-"inactive, which allow to hide the customer/supplier payment while the bank "
+"By default, reconciliation vouchers made on draft bank statements are set as"
+" inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
-msgstr ""
-"Standaard worden de concept afletteringen van bankafschriften ingesteld als "
-"inactief. Dit geeft de mogelijkheid om de klant / leverancier-betaling te "
-"verbergen zolang de bankafschrift niet is bevestigd."
-
-#, python-format
-#~ msgid "Unable to change journal !"
-#~ msgstr "Niet mogelijk om het dagboek te wijzigen!"
-
-#~ msgid "Status <b>changed</b>"
-#~ msgstr "Status <b>veranderd</b>"
-
-#~ msgid "Are you sure to unreconcile this record?"
-#~ msgstr ""
-#~ "Weet u zeker dat u van deze regel de aflettering ongedaan wilt maken?"
-
-#~ msgid "Sale Receipt"
-#~ msgstr "Betaalbewijs"
-
-#~ msgid "Sale voucher"
-#~ msgstr "Betaalbewijs"
+msgstr "Standaard worden de concept afletteringen van bankafschriften ingesteld als inactief. Dit geeft de mogelijkheid om de klant / leverancier-betaling te verbergen zolang de bankafschrift niet is bevestigd."

@@ -1,21 +1,22 @@
-# Persian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * resource
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2014-12-25 18:56+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Persian <fa@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Persian (http://www.transifex.com/projects/p/odoo-7/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-12-26 06:21+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -36,8 +37,7 @@ msgstr "نوع منبع"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
-#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
-#: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
+#: view:resource.calendar.leaves:0
 msgid "Leave Detail"
 msgstr ""
 
@@ -55,8 +55,7 @@ msgstr "روز هفته"
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Define working hours and time table that could be scheduled "
-"to your project members\n"
+"                Define working hours and time table that could be scheduled to your project members\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -67,10 +66,9 @@ msgid "Thursday"
 msgstr "پنجشنبه"
 
 #. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
+#: view:resource.calendar.leaves:0 view:resource.resource:0
 msgid "Group By..."
-msgstr ""
+msgstr "گروه بندی بر اساس ..."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -80,39 +78,38 @@ msgstr "یکشنبه"
 #. module: resource
 #: field:resource.resource,time_efficiency:0
 msgid "Efficiency Factor"
-msgstr ""
+msgstr "فاکتور بهره وری"
 
 #. module: resource
-#: view:resource.resource:resource.view_resource_resource_search
+#: view:resource.resource:0
 msgid "Search Resource"
-msgstr ""
+msgstr "جستجوی منبع"
 
 #. module: resource
-#: view:resource.resource:resource.view_resource_resource_search
+#: view:resource.resource:0
 msgid "Type"
 msgstr "نوع"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
-#: model:ir.ui.menu,name:resource.menu_resource_resource
-#: view:resource.resource:resource.resource_resource_tree
+#: view:resource.resource:0
 msgid "Resources"
-msgstr ""
+msgstr "منابع"
 
 #. module: resource
-#: code:addons/resource/resource.py:773
+#: code:addons/resource/resource.py:455
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/resource.py:685
+#: code:addons/resource/resource.py:373
 #, python-format
 msgid "%s (copy)"
 msgstr ""
 
 #. module: resource
-#: view:resource.calendar:resource.view_resource_calendar_search
+#: view:resource.calendar:0
 msgid "Search Working Time"
 msgstr ""
 
@@ -127,10 +124,8 @@ msgid "Resource Calendar"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar,company_id:0
-#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
-#: field:resource.calendar.leaves,company_id:0
-#: view:resource.resource:resource.view_resource_resource_search
+#: field:resource.calendar,company_id:0 view:resource.calendar.leaves:0
+#: field:resource.calendar.leaves,company_id:0 view:resource.resource:0
 #: field:resource.resource,company_id:0
 msgid "Company"
 msgstr "شرکت"
@@ -141,30 +136,27 @@ msgid "Friday"
 msgstr "جمعه"
 
 #. module: resource
-#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
+#: view:resource.calendar.attendance:0
 msgid "Hours"
 msgstr "ساعت"
 
 #. module: resource
-#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
-#: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
-#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: view:resource.calendar.leaves:0
 msgid "Reason"
 msgstr "علت"
 
 #. module: resource
-#: view:resource.resource:resource.view_resource_resource_search
-#: field:resource.resource,user_id:0
+#: view:resource.resource:0 field:resource.resource,user_id:0
 msgid "User"
 msgstr "کاربر"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Date"
-msgstr ""
+msgstr "تاریخ"
 
 #. module: resource
-#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
 msgstr ""
 
@@ -190,31 +182,21 @@ msgstr ""
 
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
-#: view:resource.calendar.leaves:resource.view_resource_calendar
-#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
-#: field:resource.calendar.leaves,resource_id:0
-#: view:resource.resource:resource.resource_resource_form
-#: view:resource.resource:resource.view_resource_resource_search
+#: view:resource.calendar.leaves:0
+#: field:resource.calendar.leaves,resource_id:0 view:resource.resource:0
 msgid "Resource"
 msgstr "منبع"
 
 #. module: resource
-#: field:resource.calendar,name:0
-#: field:resource.calendar.attendance,name:0
-#: field:resource.calendar.leaves,name:0
-#: field:resource.resource,name:0
+#: field:resource.calendar,name:0 field:resource.calendar.attendance,name:0
+#: field:resource.calendar.leaves,name:0 field:resource.resource,name:0
 msgid "Name"
 msgstr "نام"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: model:ir.ui.menu,name:resource.menu_resource_calendar
-#: view:resource.calendar:resource.resource_calendar_form
-#: view:resource.calendar:resource.view_resource_calendar_search
-#: view:resource.calendar:resource.view_resource_calendar_tree
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
-#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_tree
+#: view:resource.calendar:0 field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
 #: field:resource.calendar.leaves,calendar_id:0
 #: field:resource.resource,calendar_id:0
 msgid "Working Time"
@@ -226,8 +208,7 @@ msgid "Start and End time of working."
 msgstr ""
 
 #. module: resource
-#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
-#: view:resource.resource:resource.view_resource_resource_search
+#: view:resource.calendar.leaves:0 view:resource.resource:0
 msgid "Working Period"
 msgstr "دوره کاری"
 
@@ -308,8 +289,8 @@ msgstr "سه‌شنبه"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
 msgstr ""
 
 #. module: resource
@@ -327,7 +308,7 @@ msgid ""
 msgstr ""
 
 #. module: resource
-#: view:resource.resource:resource.view_resource_resource_search
+#: view:resource.resource:0
 msgid "Inactive"
 msgstr "غیرفعال"
 
@@ -338,7 +319,7 @@ msgid "(vacation)"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/resource.py:773
+#: code:addons/resource/resource.py:455
 #, python-format
 msgid "Configuration Error!"
 msgstr "خطا در پیکربندی!"
@@ -349,7 +330,7 @@ msgid "Human"
 msgstr "انسان"
 
 #. module: resource
-#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+#: view:resource.calendar.leaves:0
 msgid "Duration"
 msgstr "مدت"
 

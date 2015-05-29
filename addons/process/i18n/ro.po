@@ -1,25 +1,25 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * process
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-02-07 18:24+0000\n"
-"Last-Translator: ERPSystems.ro <Unknown>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-7/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: process
-#: model:ir.model,name:process.model_process_node
-#: view:process.node:0
+#: model:ir.model,name:process.model_process_node view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
 msgstr "Nod Proces"
@@ -29,9 +29,7 @@ msgstr "Nod Proces"
 msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
-msgstr ""
-"Daca campul activ este setat pe Fals, va va permite sa ascundeti procesul "
-"fara a-l sterge."
+msgstr "Daca campul activ este setat pe Fals, va va permite sa ascundeti procesul fara a-l sterge."
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -49,8 +47,7 @@ msgid "Buttons"
 msgstr "Butoane"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Group By..."
 msgstr "Grupati dupa..."
 
@@ -71,21 +68,18 @@ msgstr "Incepere flux"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.ui.menu,name:process.menu_process_node_form
-#: view:process.node:0
+#: model:ir.ui.menu,name:process.menu_process_node_form view:process.node:0
 #: view:process.process:0
 msgid "Process Nodes"
 msgstr "Noduri Proces"
 
 #. module: process
-#: view:process.process:0
-#: field:process.process,node_ids:0
+#: view:process.process:0 field:process.process,node_ids:0
 msgid "Nodes"
 msgstr "Noduri"
 
 #. module: process
-#: field:process.node,condition_ids:0
-#: view:process.process:0
+#: field:process.node,condition_ids:0 view:process.process:0
 msgid "Conditions"
 msgstr "Conditii"
 
@@ -115,10 +109,8 @@ msgid "Process Transitions Actions"
 msgstr "Actiuni Tranzitii Proces"
 
 #. module: process
-#: field:process.condition,model_id:0
-#: view:process.node:0
-#: field:process.node,model_id:0
-#: view:process.process:0
+#: field:process.condition,model_id:0 view:process.node:0
+#: field:process.node,model_id:0 view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
 msgstr "Obiect"
@@ -129,8 +121,7 @@ msgid "Source Node"
 msgstr "Nod sursa"
 
 #. module: process
-#: view:process.transition:0
-#: field:process.transition,transition_ids:0
+#: view:process.transition:0 field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr "Tranzitii Flux de lucru"
 
@@ -181,10 +172,8 @@ msgid "Transition"
 msgstr "Tranzitie"
 
 #. module: process
-#: field:process.condition,name:0
-#: field:process.node,name:0
-#: field:process.process,name:0
-#: field:process.transition,name:0
+#: field:process.condition,name:0 field:process.node,name:0
+#: field:process.process,name:0 field:process.transition,name:0
 #: field:process.transition.action,name:0
 msgid "Name"
 msgstr "Nume"
@@ -202,11 +191,8 @@ msgid "Related:"
 msgstr "Referitor la:"
 
 #. module: process
-#: view:process.node:0
-#: field:process.node,note:0
-#: view:process.process:0
-#: field:process.process,note:0
-#: view:process.transition:0
+#: view:process.node:0 field:process.node,note:0 view:process.process:0
+#: field:process.process,note:0 view:process.transition:0
 msgid "Notes"
 msgstr "Note"
 
@@ -267,8 +253,7 @@ msgid "Required Groups"
 msgstr "Grupuri obligatorii"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Incoming Transitions"
 msgstr "Tranzitii de intrare"
 
@@ -287,8 +272,7 @@ msgstr "Finalizare Tranzitii"
 #: code:addons/process/static/src/js/process.js:243
 #: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
-#: field:process.node,process_id:0
-#: view:process.process:0
+#: field:process.node,process_id:0 view:process.process:0
 #, python-format
 msgid "Process"
 msgstr "Proces"
@@ -299,8 +283,7 @@ msgid "Search ProcessNode"
 msgstr "Cautati Nod Proces"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Other Conditions"
 msgstr "Alte conditii"
 
@@ -315,8 +298,7 @@ msgid "Actions"
 msgstr "Actiuni"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Properties"
 msgstr "Proprietati"
 
@@ -344,8 +326,7 @@ msgid "Subflows:"
 msgstr "Subfluxuri:"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Outgoing Transitions"
 msgstr "Tranzitii de iesire"
 
@@ -357,14 +338,12 @@ msgid "Notes:"
 msgstr "Note:"
 
 #. module: process
-#: selection:process.node,kind:0
-#: field:process.node,subflow_id:0
+#: selection:process.node,kind:0 field:process.node,subflow_id:0
 msgid "Subflow"
 msgstr "Subflux"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: view:process.node:0 view:process.process:0
 msgid "Transitions"
 msgstr "Tranzitii"
 

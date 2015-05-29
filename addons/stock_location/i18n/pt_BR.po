@@ -1,27 +1,26 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* stock_location
-#
+# * stock_location
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-03-16 14:54+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@guaru.net>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2015-05-23 13:53+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-7/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
-msgstr ""
-"É usado para saber a qual empresa as separações e movimentos pertencem."
+msgstr "É usado para saber a qual empresa as separações e movimentos pertencem."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -58,9 +57,7 @@ msgstr "Local de Origem"
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr ""
-"Permitir que você cancele movimentos relacionados com o fluxo empurrado do "
-"produto"
+msgstr "Permitir que você cancele movimentos relacionados com o fluxo empurrado do produto"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
@@ -90,9 +87,7 @@ msgstr "Interno"
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
-msgstr ""
-"Aquisição Puxada proveniente da localização original %s, regra de puxamento "
-"%s, via Aquisição original %s (#%d)"
+msgstr "Aquisição Puxada proveniente da localização original %s, regra de puxamento %s, via Aquisição original %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -108,19 +103,9 @@ msgstr "Situação da Fatura"
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
-"This is used to define paths the product has to follow within the location "
-"tree.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
-msgstr ""
-"Isto é usado para definir o caminho que o produto tem que seguir dentro da  "
-"árvore de localização. \n"
-"O valor do 'Movimento Automático' criará um movimento após o atual que será "
-"validado automaticamente. Com a 'Operação  Manual', o movimento de estoque "
-"terá de ser validado por um operador. Com 'Automático Sem Passo Adicional', "
-"a localização é substituida no movimento original."
+"This is used to define paths the product has to follow within the location tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+msgstr "Isto é usado para definir o caminho que o produto tem que seguir dentro da  árvore de localização. \nO valor do 'Movimento Automático' criará um movimento após o atual que será validado automaticamente. Com a 'Operação  Manual', o movimento de estoque terá de ser validado por um operador. Com 'Automático Sem Passo Adicional', a localização é substituida no movimento original."
 
 #. module: stock_location
 #: view:product.product:0
@@ -176,9 +161,7 @@ msgstr "Movimentação do Estoque"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
-"Se marcado, quando este movimento é cancelado, cancela o movimento "
-"relacionado também"
+msgstr "Se marcado, quando este movimento é cancelado, cancela o movimento relacionado também"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -220,8 +203,7 @@ msgstr "Número de dias para fazer esta transição"
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
-msgstr ""
-"Este campo irá preencher a Origem da embalagem e o nome da movimentação"
+msgstr "Este campo irá preencher a Origem da embalagem e o nome da movimentação"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -237,9 +219,7 @@ msgstr "Nome"
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr ""
-"Estas regras determinam o caminho correto do produto na árvore de "
-"localização completa."
+msgstr "Estas regras determinam o caminho correto do produto na árvore de localização completa."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -264,10 +244,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"'Fazer para Estoque': Quando é necessário obter do estoque ou aguardar "
-"reposição. 'Fazer para Pedido': Quando é necessário adquirir ou produzir de "
-"acordo com a requisição."
+msgstr "'Fazer para Estoque': Quando é necessário obter do estoque ou aguardar reposição. 'Fazer para Pedido': Quando é necessário adquirir ou produzir de acordo com a requisição."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -301,9 +278,7 @@ msgstr "Atraso (dias)"
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
-msgstr ""
-"Separação Puxada vindo da localização original %s, regra de puxamento %s, "
-"via Aquisição original %s (#%d)"
+msgstr "Separação Puxada vindo da localização original %s, regra de puxamento %s, via Aquisição original %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -316,9 +291,7 @@ msgstr "Fluxo Empurrado"
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
-msgstr ""
-"Movimento para Aquisição Puxada vindo da localização original %s, regra de "
-"arrasto %s, via Aquisição original %s (#%d)"
+msgstr "Movimento para Aquisição Puxada vindo da localização original %s, regra de arrasto %s, via Aquisição original %s (#%d)"
 
 #. module: stock_location
 #: view:product.product:0
@@ -342,8 +315,7 @@ msgid "Destination Location"
 msgstr "Local de destino"
 
 #. module: stock_location
-#: field:stock.location.path,auto:0
-#: selection:stock.location.path,auto:0
+#: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
 msgid "Automatic Move"
 msgstr "Movimento Automático"
 
@@ -374,8 +346,7 @@ msgstr "Método de Aquisição"
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
-"Dependendo da empresa, escolha se você quer receber ou enviar produtos"
+msgstr "Dependendo da empresa, escolha se você quer receber ou enviar produtos"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order

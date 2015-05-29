@@ -1,21 +1,22 @@
-# Persian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * delivery
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-12-25 21:11+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Persian <fa@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Persian (http://www.transifex.com/projects/p/odoo-7/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-12-26 06:21+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -33,13 +34,12 @@ msgid " in Function of "
 msgstr ""
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.carrier:0
 msgid "Zip"
 msgstr "کد پستی"
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-#: view:delivery.grid:delivery.view_delivery_grid_form
+#: view:delivery.carrier:0 view:delivery.grid:0
 msgid "Destination"
 msgstr "مقصد"
 
@@ -54,27 +54,26 @@ msgid "Delivery Grid Line"
 msgstr ""
 
 #. module: delivery
-#: field:stock.move,weight_uom_id:0
-#: field:stock.picking,weight_uom_id:0
+#: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
+#: field:stock.picking.in,weight_uom_id:0
+#: field:stock.picking.out,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "واحد اندازه گیری"
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-#: view:delivery.grid:delivery.view_delivery_grid_form
-#: view:delivery.grid:delivery.view_delivery_grid_tree
+#: view:delivery.carrier:0 view:delivery.grid:0
 msgid "Delivery grids"
 msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.picking,volume:0
+#: field:stock.picking.in,volume:0 field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "حجم"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:75
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier!"
 msgstr ""
@@ -101,7 +100,7 @@ msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_picking_tree
+#: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
 msgstr ""
 
@@ -116,8 +115,7 @@ msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid:delivery.view_delivery_grid_form
-#: field:delivery.grid,country_ids:0
+#: view:delivery.grid:0 field:delivery.grid,country_ids:0
 msgid "Countries"
 msgstr "کشورها"
 
@@ -125,15 +123,12 @@ msgstr "کشورها"
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a delivery price list for a specific "
-"region.\n"
+"                Click to create a delivery price list for a specific region.\n"
 "              </p><p>\n"
 "                The delivery price list allows you to compute the cost and\n"
 "                sales price of the delivery according to the weight of the\n"
-"                products and other criteria. You can define several price "
-"lists\n"
-"                for each delivery method: per country or a zone in a "
-"specific\n"
+"                products and other criteria. You can define several price lists\n"
+"                for each delivery method: per country or a zone in a specific\n"
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
@@ -155,7 +150,7 @@ msgid "Amount"
 msgstr "مبلغ"
 
 #. module: delivery
-#: view:sale.order:delivery.view_order_withcarrier_form
+#: view:sale.order:0
 msgid "Add in Quote"
 msgstr ""
 
@@ -165,8 +160,7 @@ msgid "Fixed"
 msgstr "ثابت"
 
 #. module: delivery
-#: field:delivery.carrier,name:0
-#: field:res.partner,property_delivery_carrier:0
+#: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "روش تحویل"
@@ -184,23 +178,24 @@ msgstr ""
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.in,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr ""
 
 #. module: delivery
-#: field:stock.picking,weight_net:0
+#: field:stock.picking,weight_net:0 field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "وزن خالص"
 
 #. module: delivery
-#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
-#: view:delivery.grid.line:delivery.view_delivery_grid_line_tree
+#: view:delivery.grid.line:0
 msgid "Grid Lines"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-#: view:delivery.grid:delivery.view_delivery_grid_form
+#: view:delivery.carrier:0 view:delivery.grid:0
 msgid "Grid definition"
 msgstr ""
 
@@ -228,13 +223,13 @@ msgstr "سفارش فروش"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "سفارشات تحویل"
 
 #. module: delivery
-#: view:sale.order:delivery.view_order_withcarrier_form
+#: view:sale.order:0
 msgid ""
-"If you don't 'Add in Quote', the exact price will be computed when invoicing "
-"based on delivery order(s)."
+"If you don't 'Add in Quote', the exact price will be computed when invoicing"
+" based on delivery order(s)."
 msgstr ""
 
 #. module: delivery
@@ -299,7 +294,7 @@ msgid "To Zip"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:162
+#: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
 msgstr "قیمت پیش فرض"
@@ -312,7 +307,7 @@ msgstr "عادی قیمت"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "تاریخ سفارش"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -321,17 +316,17 @@ msgstr ""
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.in,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: view:stock.move:delivery.view_move_withweight_form
-#: field:stock.move,weight:0
-#: view:stock.picking:delivery.view_picking_withcarrier_out_form
-#: field:stock.picking,weight:0
-#: view:website:stock.report_picking
+#: selection:delivery.grid.line,variable_factor:0 report:sale.shipping:0
+#: view:stock.move:0 field:stock.move,weight:0 view:stock.picking:0
+#: field:stock.picking,weight:0 field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "وزن"
 
@@ -359,8 +354,7 @@ msgid "Lot"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.carrier,active:0
-#: field:delivery.grid,active:0
+#: field:delivery.carrier,active:0 field:delivery.grid,active:0
 msgid "Active"
 msgstr "فعال"
 
@@ -375,7 +369,7 @@ msgid "Delivery Product"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
+#: view:delivery.grid.line:0
 msgid "Condition"
 msgstr "شرط"
 
@@ -385,14 +379,13 @@ msgid "Cost Price"
 msgstr "قیمت هزینه"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:78
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in Draft State!"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
+#: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
 msgid "Variable"
 msgstr "متغیر"
 
@@ -407,16 +400,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new deliver method. \n"
 "              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
+"                Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method.\n"
 "              </p><p>\n"
-"                These methods allows to automaticaly compute the delivery "
-"price\n"
-"                according to your settings; on the sales order (based on "
-"the\n"
+"                These methods allows to automaticaly compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
@@ -428,8 +417,7 @@ msgid "Maximum Value"
 msgstr "حداکثر مقدار"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
+#: report:sale.shipping:0
 msgid "Quantity"
 msgstr "تعداد"
 
@@ -445,13 +433,13 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/sale.py:75
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No Grid Available!"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:151
+#: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
 msgstr ""
@@ -467,14 +455,15 @@ msgid "<="
 msgstr "<="
 
 #. module: delivery
-#: help:stock.picking,weight_uom_id:0
+#: help:stock.picking,weight_uom_id:0 help:stock.picking.in,weight_uom_id:0
+#: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
 msgstr "واحد اندازه گیری وزن"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "شرح"
 
 #. module: delivery
 #: help:delivery.carrier,active:0
@@ -490,8 +479,7 @@ msgid "Delivery Pricelist"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.carrier,price:0
-#: selection:delivery.grid.line,type:0
+#: field:delivery.carrier,price:0 selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "قیمت"
@@ -514,7 +502,7 @@ msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.carrier:0
 msgid "Pricing Information"
 msgstr "اطلاعات قیمت گذاری"
 
@@ -524,14 +512,12 @@ msgid "Advanced Pricing per Destination"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.carrier:delivery.view_delivery_carrier_form
-#: view:delivery.carrier:delivery.view_delivery_carrier_tree
-#: field:delivery.grid,carrier_id:0
-#: model:ir.model,name:delivery.model_delivery_carrier
-#: field:stock.picking,carrier_id:0
-#: view:website:stock.report_picking
+#: view:delivery.carrier:0 field:delivery.grid,carrier_id:0
+#: model:ir.model,name:delivery.model_delivery_carrier report:sale.shipping:0
+#: field:stock.picking,carrier_id:0 field:stock.picking.in,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
-msgstr ""
+msgstr "پیک"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -540,7 +526,7 @@ msgid "Delivery Methods"
 msgstr "روش های تحویل"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:78
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -552,9 +538,8 @@ msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
-#: field:delivery.grid.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "دنباله"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
@@ -567,8 +552,7 @@ msgid "Print Delivery Order"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid:delivery.view_delivery_grid_form
-#: field:delivery.grid,state_ids:0
+#: view:delivery.grid:0 field:delivery.grid,state_ids:0
 msgid "States"
 msgstr "وضعیت ها"
 

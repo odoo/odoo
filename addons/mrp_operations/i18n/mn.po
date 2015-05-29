@@ -1,27 +1,27 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-02-14 14:39+0000\n"
-"Last-Translator: gobi <Unknown>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-7/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 msgid "Work Orders"
 msgstr "Ажлын Захиалгууд"
 
@@ -42,8 +42,7 @@ msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
 
@@ -68,8 +67,7 @@ msgid "Work Centers"
 msgstr "Дамжлагууд"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
 msgstr "Үргэлжилүүлэх"
@@ -111,8 +109,7 @@ msgid "Manufacturing order cannot be started in state \"%s\"!"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,day:0
+#: view:mrp.workorder:0 field:mrp.workorder,day:0
 msgid "Day"
 msgstr "Өдөр"
 
@@ -186,8 +183,7 @@ msgstr "Цуцлах ажиллагаа алга."
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
-"Ажиллагааг дуусгахын тулд энэ нь Эхлэх эсвэл Үргэлжлэх төлөвт байх ёстой!"
+msgstr "Ажиллагааг дуусгахын тулд энэ нь Эхлэх эсвэл Үргэлжлэх төлөвт байх ёстой!"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -211,21 +207,11 @@ msgstr "Үйлдвэрлэлийн бодит огноо"
 #: help:mrp.production.workcenter.line,state:0
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
-msgstr ""
-"* Ажлын захиалга үүсгэгдсэн дараагаараа  'Ноорог' төлөвтэй байдаг.\n"
-"* Ажлын захиалгыг хэрэглэгч эхэлсэн горимд оруулахад 'Боловсруулагдаж буй' "
-"төлөвтэй болно.\n"
-"* Ажлыг захиалаг явагдаж байхад хэрэглэгж түүнийг зогсоох, өөрчлөлт хийхийг "
-"хүсвэл 'Шийд хүлээсэн' төлөвт оруулж болно.\n"
-"* Хэрэглэгч ажлын захиалгыг цуцласан бол 'Цуцласан' төлөвтэй болно.\n"
-"* Ажлын захиалга бүрэн дууссан тохиолдолд төлөв нь 'Дууссан' төлөвтэй болно."
+"* When order is completely processed that time it is set in 'Finished' status."
+msgstr "* Ажлын захиалга үүсгэгдсэн дараагаараа  'Ноорог' төлөвтэй байдаг.\n* Ажлын захиалгыг хэрэглэгч эхэлсэн горимд оруулахад 'Боловсруулагдаж буй' төлөвтэй болно.\n* Ажлыг захиалаг явагдаж байхад хэрэглэгж түүнийг зогсоох, өөрчлөлт хийхийг хүсвэл 'Шийд хүлээсэн' төлөвт оруулж болно.\n* Хэрэглэгч ажлын захиалгыг цуцласан бол 'Цуцласан' төлөвтэй болно.\n* Ажлын захиалга бүрэн дууссан тохиолдолд төлөв нь 'Дууссан' төлөвтэй болно."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -255,9 +241,7 @@ msgstr "Ажлын Захиалга"
 msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
-msgstr ""
-"Дамжлагын хэмжээнд 1 ажлын захиалга байна. Циклийн тоо эсвэл циклийн "
-"хугацааны мэдээлэл."
+msgstr "Дамжлагын хэмжээнд 1 ажлын захиалга байна. Циклийн тоо эсвэл циклийн хугацааны мэдээлэл."
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
@@ -275,8 +259,7 @@ msgid "Planned Date"
 msgstr "Төлөвлөсөн огноо"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,product_qty:0
+#: view:mrp.workorder:0 field:mrp.workorder,product_qty:0
 msgid "Product Qty"
 msgstr "Барааны тоо"
 
@@ -292,8 +275,7 @@ msgstr "Ажиллагааны Нэр"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
-#: field:mrp.production.workcenter.line,state:0
-#: view:mrp.workorder:0
+#: field:mrp.production.workcenter.line,state:0 view:mrp.workorder:0
 #: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
@@ -329,32 +311,16 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
+"            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Шинэ ажлын захиалга үүсгэхдээ дарна уу. \n"
-"          </p><p>\n"
-"            Ажлын захиалга гэдэг нь үйлдвэрлэлийн захиалга бүр дээр \n"
-"            хийгдэх ажиллагаануудын жагсаалт юм. Үйлдвэрлэлийн захиалгын\n"
-"            эхний ажилын захиалга дээр ажиллаж эхэлмэгц үйлдвэрлэлийн "
-"захиалга\n"
-"            автоматаар эхэлсэн төлөвтэй болдог. Үйлдвэрлэлийн захиалгын\n"
-"            сүүлийн ажиллагааг дуусгахад үйлдвэрлэлийн захиалга нь "
-"автоматаар\n"
-"            хийгдсэн төлөвтэй болж эцсийн бэлэн бүтээгдэхүүн "
-"үйлдвэрлэгддэг.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Шинэ ажлын захиалга үүсгэхдээ дарна уу. \n          </p><p>\n            Ажлын захиалга гэдэг нь үйлдвэрлэлийн захиалга бүр дээр \n            хийгдэх ажиллагаануудын жагсаалт юм. Үйлдвэрлэлийн захиалгын\n            эхний ажилын захиалга дээр ажиллаж эхэлмэгц үйлдвэрлэлийн захиалга\n            автоматаар эхэлсэн төлөвтэй болдог. Үйлдвэрлэлийн захиалгын\n            сүүлийн ажиллагааг дуусгахад үйлдвэрлэлийн захиалга нь автоматаар\n            хийгдсэн төлөвтэй болж эцсийн бэлэн бүтээгдэхүүн үйлдвэрлэгддэг.\n          </p>\n        "
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr ""
-"Энэ дамжлага дээрх ажиллагааны эхлэх болон зогсох огнооны ялгавар хугацаа"
+msgstr "Энэ дамжлага дээрх ажиллагааны эхлэх болон зогсох огнооны ялгавар хугацаа"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
@@ -377,8 +343,7 @@ msgid "December"
 msgstr "12-р сар"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,month:0
+#: view:mrp.workorder:0 field:mrp.workorder,month:0
 msgid "Month"
 msgstr "Сар"
 
@@ -431,19 +396,16 @@ msgstr "Хийгдэж буй"
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
-"Ажиллагааг түр зогсоохын тулд Эхлэх эсвэл Үргэлжлүүлэх төлөвт байх ёстой!"
+msgstr "Ажиллагааг түр зогсоохын тулд Эхлэх эсвэл Үргэлжлүүлэх төлөвт байх ёстой!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
-"Ажиллагааг үргэлжлүүлэхийн тулд энэ нь Түр зогсоох төлөвт байх ёстой!"
+msgstr "Ажиллагааг үргэлжлүүлэхийн тулд энэ нь Түр зогсоох төлөвт байх ёстой!"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
 msgstr "Эхлэх"
@@ -458,19 +420,15 @@ msgstr "Цагалбар Харагдац"
 msgid ""
 "When the operation needs to be cancelled, you can do it in the work order "
 "form."
-msgstr ""
-"Ажиллагааг цуцлах шаардлагатай бол ажлын захиалгын маягт дотор үүнийг хийж "
-"болно."
+msgstr "Ажиллагааг цуцлах шаардлагатай бол ажлын захиалгын маягт дотор үүнийг хийж болно."
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 msgid "Set Draft"
 msgstr "Ноороглох"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
 msgstr "Хүлээгдэж буй"
@@ -486,9 +444,7 @@ msgstr "Үйлдвэрлэлийн ажиллагааны код"
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr ""
-"Ажиллагаа хэдийнээ эхлэсэн байна! Та Түр зогсоох/Дуусгах/Цуцлах үйлдлүүдийг "
-"хийх боломжтой."
+msgstr "Ажиллагаа хэдийнээ эхлэсэн байна! Та Түр зогсоох/Дуусгах/Цуцлах үйлдлүүдийг хийх боломжтой."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -516,8 +472,7 @@ msgid "June"
 msgstr "6-р сар"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_cycles:0
+#: view:mrp.workorder:0 field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
 msgstr "Нийт циклүүд"
 
@@ -537,8 +492,7 @@ msgid "Work Orders Planning"
 msgstr "Ажлын Захиалгуудын Төлөвлөлт"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: field:mrp.workorder,date:0
+#: view:mrp.production.workcenter.line:0 field:mrp.workorder,date:0
 msgid "Date"
 msgstr "Огноо"
 
@@ -619,8 +573,7 @@ msgstr "Ажиллагаа Хийгдсэн"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
-#: view:mrp.workorder:0
-#: selection:mrp_operations.operation.code,start_stop:0
+#: view:mrp.workorder:0 selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
 msgstr "Хийгдсэн"
 
@@ -657,27 +610,13 @@ msgid ""
 "            Click to start a new work order.\n"
 "          </p><p>\n"
 "            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Шинэ ажлын захиалга эхлэхдээ дарна уу.\n"
-"          </p><p>\n"
-"            Барааг үйлдэрлэх эсвэл угсрахад түүхий эд материалыг \n"
-"            ашиглаад бэлэн бүтээгдэхүүний үйлдвэрлэлийг дуусгахад\n"
-"            үйлдвэрлэлийн ажиллагаануд шаардлагатай.\n"
-"            Үйлдвэрлэлийн ажиллагаа нь заримдаа Ажлын Захиалга гэж\n"
-"            хэлэгддэг. Төрөл бүрийн ажиллагаанууд нь үйлдвэрлэлийн өртөг \n"
-"            болон төлөвлөлтөнд ялгаатай нөлөөллийг үзүүлдэг. Энэ нь мөн\n"
-"            ажлын ачааллаас мөн хамаардаг.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Шинэ ажлын захиалга эхлэхдээ дарна уу.\n          </p><p>\n            Барааг үйлдэрлэх эсвэл угсрахад түүхий эд материалыг \n            ашиглаад бэлэн бүтээгдэхүүний үйлдвэрлэлийг дуусгахад\n            үйлдвэрлэлийн ажиллагаануд шаардлагатай.\n            Үйлдвэрлэлийн ажиллагаа нь заримдаа Ажлын Захиалга гэж\n            хэлэгддэг. Төрөл бүрийн ажиллагаанууд нь үйлдвэрлэлийн өртөг \n            болон төлөвлөлтөнд ялгаатай нөлөөллийг үзүүлдэг. Энэ нь мөн\n            ажлын ачааллаас мөн хамаардаг.\n          </p>\n        "
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
@@ -695,8 +634,7 @@ msgid "Delay"
 msgstr "Саатал"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
@@ -708,8 +646,7 @@ msgid "Search Work Orders"
 msgstr "Ажлын Захиалгуудыг Хайх"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
 #: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
@@ -722,15 +659,13 @@ msgid "Scheduled Date"
 msgstr "Товлогдсон огноо"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,product:0
-#: view:mrp.workorder:0
+#: field:mrp.production.workcenter.line,product:0 view:mrp.workorder:0
 #: field:mrp.workorder,product_id:0
 msgid "Product"
 msgstr "Бараа"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_hours:0
+#: view:mrp.workorder:0 field:mrp.workorder,total_hours:0
 msgid "Total Hours"
 msgstr "Нийт цаг"
 
@@ -739,9 +674,7 @@ msgstr "Нийт цаг"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr ""
-"Үйлдвэрлэлийн захиалгуудыг хооронд хамааруулалгүй буюу хамаатай захиалгуудад "
-"нөлүүлэлгүйгээр зөөхөөр бол үүнийг тэмдэглэнэ."
+msgstr "Үйлдвэрлэлийн захиалгуудыг хооронд хамааруулалгүй буюу хамаатай захиалгуудад нөлүүлэлгүйгээр зөөхөөр бол үүнийг тэмдэглэнэ."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -749,8 +682,7 @@ msgid "May"
 msgstr "5-р сар"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0 view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
@@ -809,11 +741,9 @@ msgstr "Ажиллаж эхлэх"
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
 msgid ""
-"When the operation is finished, the operator updates the system by finishing "
-"the work order."
-msgstr ""
-"Ажиллагаа дуусахад хэрэглэгч ажлын захиалгыг дуусгаж системд шинэчлэлийг "
-"оруулна."
+"When the operation is finished, the operator updates the system by finishing"
+" the work order."
+msgstr "Ажиллагаа дуусахад хэрэглэгч ажлын захиалгыг дуусгаж системд шинэчлэлийг оруулна."
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_workstartoperation0
@@ -821,8 +751,7 @@ msgid "Details of the work order"
 msgstr "Ажлын захиалгын дэлгэрэнгүй"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,year:0
+#: view:mrp.workorder:0 field:mrp.workorder,year:0
 msgid "Year"
 msgstr "Жил"
 
@@ -830,11 +759,3 @@ msgstr "Жил"
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "Үргэлжлэх хугацаа"
-
-#, python-format
-#~ msgid "Manufacturing order cannot start in state \"%s\"!"
-#~ msgstr "\"%s\" төлөвт байгаа үйлдвэрлэх захиалгыг эхлүүлж чадахгүй!"
-
-#, python-format
-#~ msgid "Operation is not started yet !"
-#~ msgstr "Ажиллагаа хараахан эхлээгүй байна !"

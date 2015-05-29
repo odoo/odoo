@@ -1,21 +1,22 @@
-# Lithuanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# Giedrius Slavinskas <giedrius@inovera.lt>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# Giedrius Slavinskas <giedrius@inovera.lt>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-04-30 16:29+0000\n"
-"Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
-"Language-Team: Lithuanian <lt@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Lithuanian (http://www.transifex.com/projects/p/odoo-7/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:23+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -241,17 +242,15 @@ msgstr ""
 
 #. module: sale_stock
 #: view:sale.order:0
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"If the sale order was set to create the invoice 'On Delivery Order', then an "
-"invoice is automatically created based on what you delivered. If you rather "
-"want to create your invoice based on your sale order, you can set the sale "
+"If the sale order was set to create the invoice 'On Delivery Order', then an"
+" invoice is automatically created based on what you delivered. If you rather"
+" want to create your invoice based on your sale order, you can set the sale "
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
 msgstr ""
@@ -262,8 +261,7 @@ msgid "Procurement"
 msgstr "Planinis užsakymas"
 
 #. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
+#: view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Pristatyta"
@@ -308,16 +306,13 @@ msgstr ""
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Tarptautinės prekybos (sutarčių) sąlygos, numatančios specifines prekių "
-"pristatymo sąlygas užsienio prekyboje."
+msgstr "Tarptautinės prekybos (sutarčių) sąlygos, numatančios specifines prekių pristatymo sąlygas užsienio prekyboje."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
 msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
+"                You can define your own carrier and delivery grids for prices.\n"
 "                This installs the module delivery."
 msgstr ""
 
@@ -345,9 +340,7 @@ msgstr ""
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
-"Pasirinkite \"Siųsti turimus produktus\", jeigu užsakymą bus galima "
-"pristatyti ir dalimis."
+msgstr "Pasirinkite \"Siųsti turimus produktus\", jeigu užsakymą bus galima pristatyti ir dalimis."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:209
@@ -365,9 +358,7 @@ msgstr "Pardavimų skyrius"
 msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
-msgstr ""
-"Tai parodo, kad pardavimų užsakymo produktai buvo išsiųsti. Šis laukas "
-"atnaujinamas tik tam tikrais periodais."
+msgstr "Tai parodo, kad pardavimų užsakymo produktai buvo išsiųsti. Šis laukas atnaujinamas tik tam tikrais periodais."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -378,8 +369,8 @@ msgstr "Savybės"
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -389,8 +380,7 @@ msgstr ""
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr ""
 
 #. module: sale_stock
@@ -407,11 +397,8 @@ msgstr "Įmonės"
 #: help:sale.config.settings,task_work:0
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
+"                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways\n"
+"                and to automatically creates project tasks from procurement lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
 
@@ -445,9 +432,7 @@ msgstr ""
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
-"Planuojamas dienų skaičius nuo užsakymo patvirtinimo iki siuntos pristatymo "
-"pirkėjui."
+msgstr "Planuojamas dienų skaičius nuo užsakymo patvirtinimo iki siuntos pristatymo pirkėjui."
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -533,7 +518,7 @@ msgstr ""
 #: code:addons/sale_stock/res_config.py:81
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Tiktais administratorius gali keisti nustatymus"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -558,7 +543,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0

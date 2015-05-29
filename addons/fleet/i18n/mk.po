@@ -1,23 +1,24 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-# Ivica <ivica@eskon.com.mk>, 2013.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * fleet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
+# Ivica <ivica@eskon.com.mk>, 2013
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2013-03-28 22:57+0000\n"
-"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
-"Language-Team: ESKON-INZENERING\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-7/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:52+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
 "Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -40,8 +41,7 @@ msgid "Unique number written on the vehicle motor (VIN/SN number)"
 msgstr "Број на шасија/мотор (VIN/SN number)"
 
 #. module: fleet
-#: selection:fleet.service.type,category:0
-#: view:fleet.vehicle.log.contract:0
+#: selection:fleet.service.type,category:0 view:fleet.vehicle.log.contract:0
 #: view:fleet.vehicle.log.services:0
 msgid "Service"
 msgstr "Сервис"
@@ -84,10 +84,8 @@ msgid "Resurface Rotors"
 msgstr "Репарација на ротор"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.model:0
-#: view:fleet.vehicle.odometer:0
+#: view:fleet.vehicle.cost:0 view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.model:0 view:fleet.vehicle.odometer:0
 msgid "Group By..."
 msgstr "Групирај по..."
 
@@ -210,21 +208,18 @@ msgid "Head Gasket(s) Replacement"
 msgstr "Замена на дихтонзи"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: selection:fleet.vehicle.cost,cost_type:0
+#: view:fleet.vehicle:0 selection:fleet.vehicle.cost,cost_type:0
 msgid "Services"
 msgstr "Сервиси"
 
 #. module: fleet
-#: help:fleet.vehicle,odometer:0
-#: help:fleet.vehicle.cost,odometer:0
+#: help:fleet.vehicle,odometer:0 help:fleet.vehicle.cost,odometer:0
 #: help:fleet.vehicle.cost,odometer_id:0
 msgid "Odometer measure of the vehicle at the moment of this log"
 msgstr "Состојба на одометар во моментот на овој запис"
 
 #. module: fleet
-#: view:fleet.vehicle.log.contract:0
-#: field:fleet.vehicle.log.contract,notes:0
+#: view:fleet.vehicle.log.contract:0 field:fleet.vehicle.log.contract,notes:0
 msgid "Terms and Conditions"
 msgstr "Одредби и услови"
 
@@ -254,8 +249,7 @@ msgstr "Двата"
 #: field:fleet.vehicle.log.fuel,cost_id:0
 #: field:fleet.vehicle.log.services,cost_id:0
 msgid "Automatically created field to link to parent fleet.vehicle.cost"
-msgstr ""
-"Автоматски креирано поле за да го поврзе со родител fleet.vehicle.cost"
+msgstr "Автоматски креирано поле за да го поврзе со родител fleet.vehicle.cost"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
@@ -280,15 +274,13 @@ msgstr "Пресметка на корист во натура"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,expiration_date:0
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after "
-"begin date)"
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
 msgstr "Датум кога истекува договорот (стандардно: 1 после почетниот датум)"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: field:fleet.vehicle.log.fuel,notes:0
-#: view:fleet.vehicle.log.services:0
-#: field:fleet.vehicle.log.services,notes:0
+#: view:fleet.vehicle.log.fuel:0 field:fleet.vehicle.log.fuel,notes:0
+#: view:fleet.vehicle.log.services:0 field:fleet.vehicle.log.services,notes:0
 msgid "Notes"
 msgstr "Белешки"
 
@@ -397,8 +389,7 @@ msgid "Transmission Used by the vehicle"
 msgstr "Тип на пренос во возилото"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:740
-#: view:fleet.vehicle.log.contract:0
+#: code:addons/fleet/fleet.py:740 view:fleet.vehicle.log.contract:0
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #, python-format
 msgid "Renew Contract"
@@ -441,26 +432,14 @@ msgid ""
 "                Click to create a new contract. \n"
 "              </p><p>\n"
 "                Manage all your contracts (leasing, insurances, etc.) with\n"
-"                their related services, costs. OpenERP will automatically "
-"warn\n"
+"                their related services, costs. OpenERP will automatically warn\n"
 "                you when some contracts have to be renewed.\n"
 "              </p><p>\n"
 "                Each contract (e.g.: leasing) may include several services\n"
 "                (reparation, insurances, periodic maintenance).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"Кликнете за да креирате нов договор.\n"
-"</p><p>\n"
-"                Управувајте со вашите договори (лизинг, осигурување, и сл.) "
-"со нивните \n"
-"              поврзани трошоци за сервиси и др. трошоци. OpenERP автоматски "
-"ќе ве предупреди кога некои договори ќе треба да бидат обновени.\n"
-"</p><p>\n"
-"              Секој договор (на пр..: лизинг) може да вклучува различни "
-"услуги                (поправки, сервиси, осигурување).\n"
-"</p>\n"
-"            "
+msgstr "Кликнете за да креирате нов договор.\n</p><p>\n                Управувајте со вашите договори (лизинг, осигурување, и сл.) со нивните \n              поврзани трошоци за сервиси и др. трошоци. OpenERP автоматски ќе ве предупреди кога некои договори ќе треба да бидат обновени.\n</p><p>\n              Секој договор (на пр..: лизинг) може да вклучува различни услуги                (поправки, сервиси, осигурување).\n</p>\n            "
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -496,9 +475,7 @@ msgstr "Евиденија за потрошено гориво"
 msgid ""
 "$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
 "$(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-"$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
-"$(this).addClass('oe_employee_picture_wide') } });"
+msgstr "$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: fleet
 #: view:board.board:0
@@ -516,17 +493,7 @@ msgid ""
 "                contracts (fixed or recurring) and fuel logs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Кликнете за да креирате нов трошок.\n"
-"              </p><p>\n"
-"             OpenERP го олеснува управувањето со трошоците за различните "
-"возила. \n"
-"              Трошоците се генерираат автоматски од сервисите,\n"
-"              договорите (фиксни или повторувачки) и дневникот за "
-"потрошувачка на гориво.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Кликнете за да креирате нов трошок.\n              </p><p>\n             OpenERP го олеснува управувањето со трошоците за различните возила. \n              Трошоците се генерираат автоматски од сервисите,\n              договорите (фиксни или повторувачки) и дневникот за потрошувачка на гориво.\n</p>\n            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -617,7 +584,7 @@ msgstr "Возач на оваа возило"
 #. module: fleet
 #: view:fleet.vehicle.odometer:0
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "Одометри на возила"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_refueling
@@ -634,9 +601,7 @@ msgstr "Замена на гума"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Содржи резиме на конверзација (број на пораки,..). Ова резиме е во html "
-"формат за да може да биде вметнат во kanban поглед."
+msgstr "Содржи резиме на конверзација (број на пораки,..). Ова резиме е во html формат за да може да биде вметнат во kanban поглед."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_5
@@ -705,33 +670,21 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a vehicule status.\n"
 "              </p><p>\n"
-"                You can customize available status to track the evolution "
-"of\n"
+"                You can customize available status to track the evolution of\n"
 "                each vehicule. Example: Active, Being Repaired, Sold.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Кликнете за креирање на статус на возилото.\n"
-"</p><p>\n"
-"Можете да ги прилагодите статусите на возилата со што би можело да се прати "
-"развојот на состојбата на секое возило \n"
-"(пр.: Активно, на поправка, продадено) \n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nКликнете за креирање на статус на возилото.\n</p><p>\nМожете да ги прилагодите статусите на возилата со што би можело да се прати развојот на состојбата на секое возило \n(пр.: Активно, на поправка, продадено) \n</p>\n            "
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: field:fleet.vehicle,log_fuel:0
+#: view:fleet.vehicle:0 field:fleet.vehicle,log_fuel:0
 #: view:fleet.vehicle.log.fuel:0
 msgid "Fuel Logs"
 msgstr "Запис за потрошувачка на гориво"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:409
-#: code:addons/fleet/fleet.py:413
-#: code:addons/fleet/fleet.py:417
-#: code:addons/fleet/fleet.py:420
+#: code:addons/fleet/fleet.py:409 code:addons/fleet/fleet.py:413
+#: code:addons/fleet/fleet.py:417 code:addons/fleet/fleet.py:420
 #, python-format
 msgid "None"
 msgstr "Ништо"
@@ -779,11 +732,7 @@ msgid ""
 "                Click to create a new brand.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Кликнете за креирање на нова марка\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nКликнете за креирање на нова марка\n</p>\n            "
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,start_date:0
@@ -816,8 +765,7 @@ msgid "Date when the cost has been executed"
 msgstr "Датум кога е направен трошокот"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: view:fleet.vehicle.model:0
+#: view:fleet.vehicle.cost:0 view:fleet.vehicle.model:0
 msgid "Vehicles costs"
 msgstr "Трошоци на возило"
 
@@ -841,9 +789,7 @@ msgstr "Замена на термостат за греење"
 msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
-msgstr ""
-"Креирајте нов договор автоматски со истите информации освен за датумот кој "
-"ќе започне на крајот од тековниот договор"
+msgstr "Креирајте нов договор автоматски со истите информации освен за датумот кој ќе започне на крајот од тековниот договор"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -861,14 +807,12 @@ msgid "Other Maintenance"
 msgstr "Останато одржување"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,parent_id:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,parent_id:0
 msgid "Parent"
 msgstr "Родител"
 
 #. module: fleet
-#: field:fleet.vehicle,state_id:0
-#: view:fleet.vehicle.state:0
+#: field:fleet.vehicle,state_id:0 view:fleet.vehicle.state:0
 msgid "State"
 msgstr "Состојба"
 
@@ -888,21 +832,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new fuel log. \n"
 "              </p><p>\n"
-"                Here you can add refuelling entries for all vehicles.  You "
-"can\n"
+"                Here you can add refuelling entries for all vehicles.  You can\n"
 "                also filter logs of a particular vehicle using the search\n"
 "                field.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете за креирање на нов дневник за гориво. \n"
-"              </p><p>\n"
-"                Тука може да ги додадете записите за точење на гориво за "
-"сите возила.\n"
-"Може да ги филтрирате дневниците за одделно возило со користење на полето "
-"пребарај.</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за креирање на нов дневник за гориво. \n              </p><p>\n                Тука може да ги додадете записите за точење на гориво за сите возила.\nМоже да ги филтрирате дневниците за одделно возило со користење на полето пребарај.</p>\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_11
@@ -967,10 +902,8 @@ msgid "Horsepower"
 msgstr "Коњски снаги"
 
 #. module: fleet
-#: field:fleet.vehicle,image:0
-#: field:fleet.vehicle,image_medium:0
-#: field:fleet.vehicle,image_small:0
-#: field:fleet.vehicle.model,image:0
+#: field:fleet.vehicle,image:0 field:fleet.vehicle,image_medium:0
+#: field:fleet.vehicle,image_small:0 field:fleet.vehicle.model,image:0
 #: field:fleet.vehicle.model,image_medium:0
 #: field:fleet.vehicle.model,image_small:0
 #: field:fleet.vehicle.model.brand,image:0
@@ -983,8 +916,7 @@ msgid "Horsepower Taxation"
 msgstr "Даног на снагата на возилото"
 
 #. module: fleet
-#: field:fleet.vehicle,log_services:0
-#: view:fleet.vehicle.log.services:0
+#: field:fleet.vehicle,log_services:0 view:fleet.vehicle.log.services:0
 msgid "Services Logs"
 msgstr "Евиденција на сервиси"
 
@@ -1013,9 +945,7 @@ msgstr "Трошци на гориво по месец"
 msgid ""
 "This field holds the image used as logo for the brand, limited to "
 "1024x1024px."
-msgstr ""
-"Оваа поле може да содржи слика како лого за брендот. Лимитирано на "
-"1024x1024px."
+msgstr "Оваа поле може да содржи слика како лого за брендот. Лимитирано на 1024x1024px."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1028,8 +958,7 @@ msgid "All vehicles"
 msgstr "Сите возила"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.log.services:0
+#: view:fleet.vehicle.log.fuel:0 view:fleet.vehicle.log.services:0
 msgid "Additional Details"
 msgstr "Додатни детали"
 
@@ -1125,8 +1054,7 @@ msgid "Tags"
 msgstr "Ознаки"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: field:fleet.vehicle,log_contracts:0
+#: view:fleet.vehicle:0 field:fleet.vehicle,log_contracts:0
 msgid "Contracts"
 msgstr "Договори"
 
@@ -1136,8 +1064,7 @@ msgid "Brake Pad(s) Replacement"
 msgstr "Замена на плочки за кочница"
 
 #. module: fleet
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.log.services:0
+#: view:fleet.vehicle.log.fuel:0 view:fleet.vehicle.log.services:0
 msgid "Odometer Details"
 msgstr "Детали за одометарот"
 
@@ -1150,11 +1077,9 @@ msgstr "Возач"
 #: help:fleet.vehicle.model.brand,image_small:0
 msgid ""
 "Small-sized photo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Мала фотографија за брендот. Таа автоматски се намалува како 64x64px слика, "
-"со зачуван сооднос. Искористет го ова поле таму каде што се бара мала слика."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Мала фотографија за брендот. Таа автоматски се намалува како 64x64px слика, со зачуван сооднос. Искористет го ова поле таму каде што се бара мала слика."
 
 #. module: fleet
 #: view:board.board:0
@@ -1169,7 +1094,7 @@ msgstr "Кочница"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
-msgstr ""
+msgstr "Омниум"
 
 #. module: fleet
 #: view:fleet.vehicle.log.services:0
@@ -1214,8 +1139,7 @@ msgid ""
 "              </p>\n"
 "              <p>\n"
 "                Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle "
-"using\n"
+"                You can also show odometer value for a particular vehicle using\n"
 "                the search field.\n"
 "              </p>\n"
 "            "
@@ -1237,18 +1161,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new model.\n"
 "              </p><p>\n"
-"                You can define several models (e.g. A3, A4) for each brand "
-"(Audi).\n"
+"                You can define several models (e.g. A3, A4) for each brand (Audi).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете за да креирате нов модел.\n"
-"              </p><p>\n"
-"                Можете да дефинирате неколку модели (e.g. A3, A4) за секоја "
-"марка (Ауди).\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за да креирате нов модел.\n              </p><p>\n                Можете да дефинирате неколку модели (e.g. A3, A4) за секоја марка (Ауди).\n              </p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -1256,31 +1172,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new vehicle. \n"
 "              </p><p>\n"
-"                You will be able to manage your fleet by keeping track of "
-"the\n"
-"                contracts, services, fixed and recurring costs, odometers "
-"and\n"
+"                You will be able to manage your fleet by keeping track of the\n"
+"                contracts, services, fixed and recurring costs, odometers and\n"
 "                fuel logs associated to each vehicle.\n"
 "            </p><p>\n"
 "                OpenERP will warn you when services or contract have to be\n"
 "                renewed.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете за да креирате ново возило. \n"
-"              </p><p>\n"
-"                Ќе можете да управувате со вашиот возен парк преку следење "
-"на \n"
-"                договорите, сервисите, фиксните и повторувачките трошоци, "
-"одометрите и\n"
-"                логовите за гориво поврзани со секое возило.\n"
-"            </p><p>\n"
-"                OpenERP ќе ве предупреди кога сервисте или договорот ќе "
-"треба да\n"
-"                бидат обновени.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за да креирате ново возило. \n              </p><p>\n                Ќе можете да управувате со вашиот возен парк преку следење на \n                договорите, сервисите, фиксните и повторувачките трошоци, одометрите и\n                логовите за гориво поврзани со секое возило.\n            </p><p>\n                OpenERP ќе ве предупреди кога сервисте или договорот ќе треба да\n                бидат обновени.\n              </p>\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
@@ -1305,8 +1205,7 @@ msgid ""
 "                    <b>Fleet dashboard is empty.</b>\n"
 "                  </p><p>\n"
 "                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
 "                    Dashboard'</i> in the extended search options.\n"
 "                  </p><p>\n"
 "                    You can filter and group data before inserting into the\n"
@@ -1314,25 +1213,7 @@ msgid ""
 "                  </p>\n"
 "              </div>\n"
 "            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Контролната табла за возниот парк е празна.</b>\n"
-"                  </p><p>\n"
-"                    За да го додадете вашиот прв извештај во оваа контролна "
-"табла, \n"
-"                    одете до било кое мени, префрлете се на приказ листа или "
-"графикон и кликнете <i>'Додади на\n"
-"                    Контролана табла'</i> во опциите за проширени "
-"пребарувања.\n"
-"                  </p><p>\n"
-"                    Можете да ги филтрирате и групирате податоците бред да "
-"ги внесете во\n"
-"                    контролната табла со користење на опциите за "
-"пребарување.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
+msgstr "<div class=\"oe_empty_custom_dashboard\">\n                  <p>\n                    <b>Контролната табла за возниот парк е празна.</b>\n                  </p><p>\n                    За да го додадете вашиот прв извештај во оваа контролна табла, \n                    одете до било кое мени, префрлете се на приказ листа или графикон и кликнете <i>'Додади на\n                    Контролана табла'</i> во опциите за проширени пребарувања.\n                  </p><p>\n                    Можете да ги филтрирате и групирате податоците бред да ги внесете во\n                    контролната табла со користење на опциите за пребарување.\n                  </p>\n              </div>\n            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
@@ -1368,8 +1249,7 @@ msgid "Battery Replacement"
 msgstr "Замена на акумулатор"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,date:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,date:0
 #: field:fleet.vehicle.odometer,date:0
 msgid "Date"
 msgstr "Датум"
@@ -1391,10 +1271,7 @@ msgstr "Милји"
 msgid ""
 "Costs paid at regular intervals, depending on the cost frequency. If the "
 "cost frequency is set to unique, the cost will be logged at the start date"
-msgstr ""
-"Трошоци кои се плаќаат во редовни интервали, во зависност од зачестеноста на "
-"трошоците. Доколку зачестеноста на трошоците е подесена на уникатно, "
-"трошокот ќе биде најавен на почетниот датум"
+msgstr "Трошоци кои се плаќаат во редовни интервали, во зависност од зачестеноста на трошоците. Доколку зачестеноста на трошоците е подесена на уникатно, трошокот ќе биде најавен на почетниот датум"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_17
@@ -1412,27 +1289,14 @@ msgstr "Модел на возилото"
 msgid ""
 "<p>\n"
 "          OpenERP helps you managing the costs for your different vehicles\n"
-"          Costs are generally created from services and contract and appears "
-"here.\n"
+"          Costs are generally created from services and contract and appears here.\n"
 "        </p>\n"
 "        <p>\n"
-"          Thanks to the different filters, OpenERP can only print the "
-"effective\n"
+"          Thanks to the different filters, OpenERP can only print the effective\n"
 "          costs, sort them by type and by vehicle.\n"
 "        </p>\n"
 "      "
-msgstr ""
-"<p>\n"
-"          OpenERP ви помага да ги менаџирате трошоците за различните возила\n"
-"          Трошоците се креираат од сервисите и договорот и се појавуваат "
-"овде.\n"
-"        </p>\n"
-"        <p>\n"
-"          Благодарение на различните филтри, OpenERP може да ги печати само "
-"\n"
-"          ефективните трошоци, сортирајќи ги по тип и возило.\n"
-"        </p>\n"
-"      "
+msgstr "<p>\n          OpenERP ви помага да ги менаџирате трошоците за различните возила\n          Трошоците се креираат од сервисите и договорот и се појавуваат овде.\n        </p>\n        <p>\n          Благодарение на различните филтри, OpenERP може да ги печати само \n          ефективните трошоци, сортирајќи ги по тип и возило.\n        </p>\n      "
 
 #. module: fleet
 #: field:fleet.vehicle,car_value:0
@@ -1480,8 +1344,7 @@ msgid "Tax roll"
 msgstr ""
 
 #. module: fleet
-#: view:fleet.vehicle.model:0
-#: field:fleet.vehicle.model,vendors:0
+#: view:fleet.vehicle.model:0 field:fleet.vehicle.model,vendors:0
 msgid "Vendors"
 msgstr "Добавувачи"
 
@@ -1496,10 +1359,7 @@ msgid ""
 "Medium-sized logo of the brand. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr ""
-"Лого со средна големина на марката. Тоа автоматски се намалува како "
-"128х128px слика, со зачуван сооднос. Искористете го ова поле во приказите на "
-"формуларот или во некои kanban прикази."
+msgstr "Лого со средна големина на марката. Тоа автоматски се намалува како 128х128px слика, со зачуван сооднос. Искористете го ова поле во приказите на формуларот или во некои kanban прикази."
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1507,15 +1367,14 @@ msgid "Weekly"
 msgstr "Неделно"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: view:fleet.vehicle.odometer:0
+#: view:fleet.vehicle:0 view:fleet.vehicle.odometer:0
 msgid "Odometer Logs"
 msgstr "Дневник за одометар"
 
 #. module: fleet
 #: field:fleet.vehicle,acquisition_date:0
 msgid "Acquisition Date"
-msgstr ""
+msgstr "Датум на стекнување"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
@@ -1574,8 +1433,7 @@ msgid "Indicative Cost"
 msgstr "Индикативни трошоци"
 
 #. module: fleet
-#: field:fleet.vehicle.model,brand_id:0
-#: view:fleet.vehicle.model.brand:0
+#: field:fleet.vehicle.model,brand_id:0 view:fleet.vehicle.model.brand:0
 msgid "Model Brand"
 msgstr "Марка на возилото"
 
@@ -1755,31 +1613,25 @@ msgid "Vehicle %s has been added to the fleet!"
 msgstr "Возилото %s е додадено на возниот парк!"
 
 #. module: fleet
-#: view:fleet.vehicle.log.contract:0
-#: view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.log.contract:0 view:fleet.vehicle.log.fuel:0
 #: view:fleet.vehicle.log.services:0
 msgid "Price"
 msgstr "Цена"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,odometer:0
-#: field:fleet.vehicle.odometer,value:0
+#: field:fleet.vehicle.cost,odometer:0 field:fleet.vehicle.odometer,value:0
 msgid "Odometer Value"
 msgstr "Вредност на одометар"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,vehicle_id:0
-#: view:fleet.vehicle.log.fuel:0
-#: view:fleet.vehicle.odometer:0
-#: field:fleet.vehicle.odometer,vehicle_id:0
+#: view:fleet.vehicle:0 view:fleet.vehicle.cost:0
+#: field:fleet.vehicle.cost,vehicle_id:0 view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.odometer:0 field:fleet.vehicle.odometer,vehicle_id:0
 msgid "Vehicle"
 msgstr "Возило"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,cost_ids:0
-#: view:fleet.vehicle.log.contract:0
+#: field:fleet.vehicle.cost,cost_ids:0 view:fleet.vehicle.log.contract:0
 #: view:fleet.vehicle.log.services:0
 msgid "Included Services"
 msgstr "Вклучени услуги"
@@ -1788,18 +1640,10 @@ msgstr "Вклучени услуги"
 #: model:ir.actions.act_window,help:fleet.action_fleet_vehicle_kanban
 msgid ""
 "<p>\n"
-"          Here are displayed vehicles for which one or more contracts need "
-"to be renewed. If you see this message, then there is no contracts to "
-"renew.\n"
+"          Here are displayed vehicles for which one or more contracts need to be renewed. If you see this message, then there is no contracts to renew.\n"
 "        </p>\n"
 "      "
-msgstr ""
-"<p>\n"
-"          Овде се прикажани возилата за кои еден или помеќе договори треба "
-"да бидат обновени. Доколку ја гледате оваа порака, тогаш нема договори за "
-"обновување.\n"
-"        </p>\n"
-"      "
+msgstr "<p>\n          Овде се прикажани возилата за кои еден или помеќе договори треба да бидат обновени. Доколку ја гледате оваа порака, тогаш нема договори за обновување.\n        </p>\n      "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -1820,8 +1664,7 @@ msgstr "Одометар на возилата"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,notes:0
 msgid "Write here all supplementary informations relative to this contract"
-msgstr ""
-"Запишете ги овде сите дополнителни информации поврзани со овој договор"
+msgstr "Запишете ги овде сите дополнителни информации поврзани со овој договор"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -1845,14 +1688,10 @@ msgid "Contract Reference"
 msgstr "Референца на договор"
 
 #. module: fleet
-#: field:fleet.service.type,name:0
-#: field:fleet.vehicle,name:0
-#: field:fleet.vehicle.cost,name:0
-#: field:fleet.vehicle.log.contract,name:0
-#: field:fleet.vehicle.model,name:0
-#: field:fleet.vehicle.odometer,name:0
-#: field:fleet.vehicle.state,name:0
-#: field:fleet.vehicle.tag,name:0
+#: field:fleet.service.type,name:0 field:fleet.vehicle,name:0
+#: field:fleet.vehicle.cost,name:0 field:fleet.vehicle.log.contract,name:0
+#: field:fleet.vehicle.model,name:0 field:fleet.vehicle.odometer,name:0
+#: field:fleet.vehicle.state,name:0 field:fleet.vehicle.tag,name:0
 msgid "Name"
 msgstr "Име"
 
@@ -1887,14 +1726,7 @@ msgid ""
 "                repair, fixed maintenance, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете за да креирате нов запис за сервис. \n"
-"              </p><p>\n"
-"                OpenERP ви помага да ги следите сите сервиси направено на "
-"вашето возило. Серсите можат да бидат од повеќе типови: повремени поправки, "
-"фиксно одржување и.т.н.              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за да креирате нов запис за сервис. \n              </p><p>\n                OpenERP ви помага да ги следите сите сервиси направено на вашето возило. Серсите можат да бидат од повеќе типови: повремени поправки, фиксно одржување и.т.н.              </p>\n            "
 
 #. module: fleet
 #: field:fleet.vehicle,co2:0
@@ -1922,8 +1754,7 @@ msgid "Contracts Costs by Month"
 msgstr "Трошоци на договори по месец"
 
 #. module: fleet
-#: field:fleet.vehicle,model_id:0
-#: view:fleet.vehicle.model:0
+#: field:fleet.vehicle,model_id:0 view:fleet.vehicle.model:0
 msgid "Model"
 msgstr "Модел"
 
@@ -1979,18 +1810,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new type of service.\n"
 "              </p><p>\n"
-"                Each service can used in contracts, as a standalone service "
-"or both.\n"
+"                Each service can used in contracts, as a standalone service or both.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете за да креирате нов тип на сервис.\n"
-"              </p><p>\n"
-"                Секој тип може да биде употребен во договорите, како "
-"самостоен или заедно.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за да креирате нов тип на сервис.\n              </p><p>\n                Секој тип може да биде употребен во договорите, како самостоен или заедно.\n              </p>\n            "
 
 #. module: fleet
 #: view:board.board:0
@@ -2029,8 +1852,7 @@ msgid "Starter Replacement"
 msgstr "Замена на стартер"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,year:0
+#: view:fleet.vehicle.cost:0 field:fleet.vehicle.cost,year:0
 msgid "Year"
 msgstr "Година"
 
@@ -2056,10 +1878,8 @@ msgstr "Вкупно"
 
 #. module: fleet
 #: help:fleet.service.type,category:0
-msgid ""
-"Choose wheter the service refer to contracts, vehicle services or both"
-msgstr ""
-"Избери дали сервисот е поврзан со договор, сервис на возилото или двата"
+msgid "Choose wheter the service refer to contracts, vehicle services or both"
+msgstr "Избери дали сервисот е поврзан со договор, сервис на возилото или двата"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_type:0
@@ -2070,21 +1890,3 @@ msgstr "За интерна употреба"
 #: help:fleet.vehicle.state,sequence:0
 msgid "Used to order the note stages"
 msgstr "Се користи за да се подредат етапите на белешката"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                Here you can add various odometer entries for all vehicles.\n"
-#~ "                You can also show odometer value for a particular vehicle "
-#~ "using\n"
-#~ "                the search field.\n"
-#~ "              </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "                Овде може да додадете различни внесови за одометарот за сите "
-#~ "возила.\n"
-#~ "                Исто така можете да ја прикажете вредноста на одометарот за "
-#~ "поединечно возило користејќи го\n"
-#~ "                полето пребарај.\n"
-#~ "              </p>\n"
-#~ "            "

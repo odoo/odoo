@@ -1,21 +1,22 @@
-# Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Norwegian Bokmål (http://www.transifex.com/projects/p/odoo-7/language/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:13+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -24,20 +25,15 @@ msgid ""
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
 "                In OpenERP, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to "
-"analyse\n"
+"                analytic account. So, you can track costs and revenues to analyse\n"
 "                your margins easily.\n"
 "              </p><p>\n"
-"                Costs will be created automatically when you register "
-"supplier\n"
+"                Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets.\n"
 "              </p><p>\n"
-"                Revenues will be created automatically when you create "
-"customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
@@ -64,18 +60,15 @@ msgstr "Grupper etter..."
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
 msgid ""
 "Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the "
-"analytic account. This feature allows to record at the same time the "
+"is an analytic account and the time spent on a project generate costs on the"
+" analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
-msgstr ""
-"Hver enkelt medarbeider kan føre og spore egne time forbrukt pr. prosjekt. "
-"Et prosjekt er en analytisk konto og tid brukt på prosjektet kostnadsføres "
-"på denne."
+msgstr "Hver enkelt medarbeider kan føre og spore egne time forbrukt pr. prosjekt. Et prosjekt er en analytisk konto og tid brukt på prosjektet kostnadsføres på denne."
 
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Måleenhet."
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
@@ -147,8 +140,7 @@ msgid "Work done in the last period"
 msgstr "Arbeid utført i forrige periode"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
+#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
 msgid "Employees name"
 msgstr "Ansattnavn"
 
@@ -198,7 +190,7 @@ msgstr ""
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Advarsel!"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -222,7 +214,7 @@ msgstr "Søn"
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
 msgid "Sum"
-msgstr ""
+msgstr "Sum"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -235,10 +227,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record activities.\n"
 "              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
+"                You can register and track your workings hours by project every\n"
+"                day. Every time spent on a project will become a cost in the\n"
 "                analytic accounting/contract and can be re-invoiced to\n"
 "                customers if required.\n"
 "              </p>\n"
@@ -271,8 +261,7 @@ msgid "July"
 msgstr "Juli"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
+#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
 msgstr "Startdato"
 
@@ -344,11 +333,10 @@ msgstr "Arbeidsbeskrivelse"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "or"
-msgstr ""
+msgstr "Eller."
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
@@ -384,8 +372,7 @@ msgid "(Keep empty for current time)"
 msgstr "(Hold tom for gjeldende tid)"
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:0
+#: field:account.analytic.account,use_timesheets:0 view:hr.employee:0
 msgid "Timesheets"
 msgstr "Timelister"
 
@@ -395,10 +382,7 @@ msgid ""
 "You should create an analytic account structure depending on your needs to "
 "analyse costs and revenues. In OpenERP, analytic accounts are also used to "
 "track customer contracts."
-msgstr ""
-"Du bør lage en analytisk kontostruktur avhengig av dine behov for å "
-"analysere kostnader og inntekter. I OpenERP er analytiske kontoer også "
-"brukes til å spore kundekontrakter."
+msgstr "Du bør lage en analytisk kontostruktur avhengig av dine behov for å analysere kostnader og inntekter. I OpenERP er analytiske kontoer også brukes til å spore kundekontrakter."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
@@ -432,8 +416,7 @@ msgid "June"
 msgstr "Juni"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
+#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
 msgid "Current Status"
 msgstr ""
 
@@ -482,27 +465,24 @@ msgid "Thu"
 msgstr "Tor"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
+#: view:hr.sign.in.project:0 view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
 msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr ""
-"Skriv ut Ansattes Timeregistrering og skrive ut Min Timeregistrering."
+msgstr "Skriv ut Ansattes Timeregistrering og skrive ut Min Timeregistrering."
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
+#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
 msgstr "Ansatt-ID"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -511,8 +491,7 @@ msgstr "Generell informasjon"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
+#: view:hr.analytical.timesheet.users:0 view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Cancel"
 msgstr "Avbryt"
@@ -543,11 +522,7 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr ""
-"Ansatte kan koden sin tid brukt på de ulike prosjektene de er tildelt på. Et "
-"prosjekt er et analytisk konto og tid brukt på et prosjekt genererer "
-"kostnader på det analytiske konto. Denne funksjonen gjør det mulig å spille "
-"inn på samme tid om fremmøtet og timeliste."
+msgstr "Ansatte kan koden sin tid brukt på de ulike prosjektene de er tildelt på. Et prosjekt er et analytisk konto og tid brukt på et prosjekt genererer kostnader på det analytiske konto. Denne funksjonen gjør det mulig å spille inn på samme tid om fremmøtet og timeliste."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -561,8 +536,7 @@ msgid "Timesheet Line"
 msgstr "Timelistelinje"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: field:hr.employee,product_id:0
+#: view:hr.analytic.timesheet:0 field:hr.employee,product_id:0
 msgid "Product"
 msgstr "Produkt"
 
@@ -645,7 +619,7 @@ msgstr "April"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Bruker feil!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -661,7 +635,7 @@ msgstr "År"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Duration"
-msgstr ""
+msgstr "Varighet"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -669,10 +643,9 @@ msgid "Accounting"
 msgstr "Regnskap"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
+#: xsl:hr.analytical.timesheet:0 xsl:hr.analytical.timesheet_users:0
 msgid "Total"
-msgstr ""
+msgstr "Totalt"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0

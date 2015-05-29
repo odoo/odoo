@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-07-30 16:48+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 09:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-7/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -38,9 +39,7 @@ msgstr "Zoek document map"
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr ""
-"Veld om te gebruiken als naam bij resource mappen. Indien leeg, dan wordt "
-"\"naam\" gebruikt."
+msgstr "Veld om te gebruiken als naam bij resource mappen. Indien leeg, dan wordt \"naam\" gebruikt."
 
 #. module: document
 #: view:document.directory:0
@@ -58,8 +57,7 @@ msgid "Resources"
 msgstr "Resources"
 
 #. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:0
+#: field:document.directory,file_ids:0 view:report.document.user:0
 msgid "Files"
 msgstr "Bestanden"
 
@@ -79,8 +77,7 @@ msgid "Expression"
 msgstr "Expressie"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,company_id:0
+#: view:document.directory:0 field:document.directory,company_id:0
 msgid "Company"
 msgstr "Bedrijf"
 
@@ -103,12 +100,8 @@ msgstr "Documentbeheer"
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"Een python expressie voor het evalueren van het veld.\n"
-"U kunt 'dir_id' gebruiken voor huidige map, 'res_id', 'res_model' als een "
-"referentie naar het huidige record, in dynamische mappen"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
+msgstr "Een python expressie voor het evalueren van het veld.\nU kunt 'dir_id' gebruiken voor huidige map, 'res_id', 'res_model' als een referentie naar het huidige record, in dynamische mappen"
 
 #. module: document
 #: help:document.directory.dctx,field:0
@@ -116,8 +109,7 @@ msgid "The name of the field."
 msgstr "De naam van het veld"
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Mapnaam moet uniek zijn"
@@ -128,8 +120,7 @@ msgid "Filter on my documents"
 msgstr "Filter op mijn documenten"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
+#: view:ir.attachment:0 field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Geïndexeerde inhoud"
 
@@ -138,9 +129,7 @@ msgstr "Geïndexeerde inhoud"
 msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
-msgstr ""
-"Als waar, worden alle bijlagen die overeenkomen met deze resource "
-"gelokaliseerd. Als onwaar, alleen diegenen die dit als bovenliggende hebben."
+msgstr "Als waar, worden alle bijlagen die overeenkomen met deze resource gelokaliseerd. Als onwaar, alleen diegenen die dit als bovenliggende hebben."
 
 #. module: document
 #: view:document.directory:0
@@ -180,8 +169,7 @@ msgid "Knowledge Application Configuration"
 msgstr "Kennis applicatie configuratie"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,partner_id:0
+#: view:ir.attachment:0 field:ir.attachment,partner_id:0
 msgid "Partner"
 msgstr "Relatie"
 
@@ -197,23 +185,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Klik hier om een document aan te maken.\n"
-"          </p><p>\n"
-"            De documentopslag geeft u toegang tot al uw bijlagen, zoals\n"
-"            e-mails, project documenten, facturen, etc.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Klik hier om een document aan te maken.\n          </p><p>\n            De documentopslag geeft u toegang tot al uw bijlagen, zoals\n            e-mails, project documenten, facturen, etc.\n          </p>\n        "
 
 #. module: document
-#: code:addons/document/document.py:338
-#: code:addons/document/document.py:343
+#: code:addons/document/document.py:338 code:addons/document/document.py:343
 #: code:addons/document/document.py:348
 #, python-format
 msgid "ValidateError"
@@ -249,8 +228,7 @@ msgid "Content Type"
 msgstr "Soort inhoud"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,type:0
+#: view:document.directory:0 field:document.directory,type:0
 msgid "Type"
 msgstr "Soort"
 
@@ -260,8 +238,7 @@ msgid "The filename must be unique in a directory !"
 msgstr "De bestandsnaam moet uniek zijn per bedrijf!"
 
 #. module: document
-#: code:addons/document/document.py:118
-#: code:addons/document/document.py:308
+#: code:addons/document/document.py:118 code:addons/document/document.py:308
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -271,16 +248,13 @@ msgstr "%s (kopie)"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
-"Selecteer hier een object en krijg een map per record van die resource"
+msgstr "Selecteer hier een object en krijg een map per record van die resource"
 
 #. module: document
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Gebruik een domein bij het plaatsen van een automatisch filter op zichtbare "
-"bronnen."
+msgstr "Gebruik een domein bij het plaatsen van een automatisch filter op zichtbare bronnen."
 
 #. module: document
 #: constraint:document.directory:0
@@ -298,8 +272,7 @@ msgid "Context fields"
 msgstr "Context velden"
 
 #. module: document
-#: view:document.directory:0
-#: field:report.document.user,type:0
+#: view:document.directory:0 field:report.document.user,type:0
 msgid "Directory Type"
 msgstr "Soort map"
 
@@ -337,18 +310,15 @@ msgstr "Gegenereerde bestanden"
 #. module: document
 #: view:document.configuration:0
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"Bij het uitvoeren van deze wizard, zal het automatisch de mappen "
-"configureren op basis van de geïnstalleerde modules."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
+msgstr "Bij het uitvoeren van deze wizard, zal het automatisch de mappen configureren op basis van de geïnstalleerde modules."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:0
-#: field:ir.attachment,parent_id:0
+#: view:ir.attachment:0 field:ir.attachment,parent_id:0
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
@@ -360,8 +330,7 @@ msgid "Security"
 msgstr "Beveiliging"
 
 #. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Laatste wijziging door gebruiker"
 
@@ -382,8 +351,7 @@ msgid "Domain"
 msgstr "Domein"
 
 #. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Wijzigingsdatum"
 
@@ -414,16 +382,14 @@ msgid "Static Directory"
 msgstr "Statische map"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "Maand"
 
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
-"Definieer woorden in de context, voor alle dochtermappen en bestanden"
+msgstr "Definieer woorden in de context, voor alle dochtermappen en bestanden"
 
 #. module: document
 #: view:document.directory:0
@@ -436,10 +402,8 @@ msgid "unknown"
 msgstr "onbekend"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,user_id:0
-#: view:ir.attachment:0
-#: field:ir.attachment,user_id:0
+#: view:document.directory:0 field:document.directory,user_id:0
+#: view:ir.attachment:0 field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "Eigenaar"
@@ -463,13 +427,9 @@ msgstr "Aanmaakdatum"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
-"Vink dit veld aan als u wilt dat de naam van het bestand de recordnaam "
-"bevat.\n"
-"In dat geval moet de map een resource zijn."
+msgstr "Vink dit veld aan als u wilt dat de naam van het bestand de recordnaam bevat.\nIn dat geval moet de map een resource zijn."
 
 #. module: document
 #: view:document.configuration:0
@@ -490,20 +450,16 @@ msgstr "Model ID"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Vink aan als u dezelfde boomstructuur wil gebruiken als het geselecteerde "
-"object in het systeem."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "Vink aan als u dezelfde boomstructuur wil gebruiken als het geselecteerde object in het systeem."
 
 #. module: document
 #: help:document.directory,ressource_id:0
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
-"Samen met het bovenliggende model koppelt deze ID de map aan een specifiek "
-"record of bovenliggend model."
+msgstr "Samen met het bovenliggende model koppelt deze ID de map aan een specifiek record of bovenliggend model."
 
 #. module: document
 #. openerp-web
@@ -550,15 +506,11 @@ msgstr "November"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
-"Als u hier een object invult, verschijnt deze mapsjabloon onder al deze "
-"objecten. Zulke mappen zijn \"gekoppeld\" aan het specifieke model of "
-"record, net zoals bijlagen. Vul geen bovenliggende map in als u een "
-"bovenliggend model selecteert."
+msgstr "Als u hier een object invult, verschijnt deze mapsjabloon onder al deze objecten. Zulke mappen zijn \"gekoppeld\" aan het specifieke model of record, net zoals bijlagen. Vul geen bovenliggende map in als u een bovenliggend model selecteert."
 
 #. module: document
 #: view:document.directory:0
@@ -612,12 +564,7 @@ msgid ""
 "documents. The virtual folder of a document can be used to manage the files "
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
-msgstr ""
-"OpenERP's Document Management System ondersteunt het mappen van virtuele "
-"mappen met documenten. De virtuele map van een document kan worden gebruikt "
-"om de bestanden die bij het document behoren te beheren, of om af te drukken "
-"en te downloaden. Deze tool maakt automatisch mappen op basis van "
-"geïnstalleerde modules."
+msgstr "OpenERP's Document Management System ondersteunt het mappen van virtuele mappen met documenten. De virtuele map van een document kan worden gebruikt om de bestanden die bij het document behoren te beheren, of om af te drukken en te downloaden. Deze tool maakt automatisch mappen op basis van geïnstalleerde modules."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
@@ -665,9 +612,7 @@ msgstr "Bovenliggend model"
 msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
-msgstr ""
-"Deze groepen gelden echter NIET voor onderliggende mappen, die hun eigen "
-"groepen moeten definiëren."
+msgstr "Deze groepen gelden echter NIET voor onderliggende mappen, die hun eigen groepen moeten definiëren."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -677,8 +622,7 @@ msgstr "Mei"
 #. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
-"Voor elke hier gemaakte invoer verschijnen virtuele bestanden in deze map."
+msgstr "Voor elke hier gemaakte invoer verschijnen virtuele bestanden in deze map."
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
@@ -700,15 +644,10 @@ msgstr "Mappen configuratie"
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
-"Elke map kan of het soort statisch zijn of worden gekoppeld aan een andere "
-"resource. Een statische map is, zoals bij het operating systeem, de "
-"klassieke map die een set bestanden kan bevatten. De mappen die zijn "
-"gekoppeld aan een resource bevatten automatisch submappen voor alle resource "
-"soorten die in de bovenliggende map zijn gedefinieerd."
+msgstr "Elke map kan of het soort statisch zijn of worden gekoppeld aan een andere resource. Een statische map is, zoals bij het operating systeem, de klassieke map die een set bestanden kan bevatten. De mappen die zijn gekoppeld aan een resource bevatten automatisch submappen voor alle resource soorten die in de bovenliggende map zijn gedefinieerd."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -731,8 +670,7 @@ msgid "April"
 msgstr "April"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "# bestanden"
 
@@ -746,8 +684,7 @@ msgstr "Soort inhoud map"
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
-msgstr ""
-"Alleen leden van deze groepen hebben toegang tot deze map en haar bestanden."
+msgstr "Alleen leden van deze groepen hebben toegang tot deze map en haar bestanden."
 
 #. module: document
 #. openerp-web

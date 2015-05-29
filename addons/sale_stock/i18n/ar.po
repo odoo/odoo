@@ -1,21 +1,22 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:11+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:23+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -79,7 +80,7 @@ msgstr "تحقق"
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "إلغاء اﻻمر"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:210
@@ -129,7 +130,7 @@ msgstr "نقل مخزون"
 #: code:addons/sale_stock/sale_stock.py:164
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "إجراء خاطئ"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
@@ -146,7 +147,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:634
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "خطأ في الإعدادات!"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
@@ -172,7 +173,7 @@ msgstr "أمر المبيعات"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "أوامر التوصيل"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -187,10 +188,7 @@ msgid ""
 "the same time as the procurement order. It represents the assignment of "
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
-msgstr ""
-"يتم إنشاء نموذج للقائمة المختارة حالما يتم تأكيد ترتيب المبيعات، في نفس "
-"الوقت من اجل الشراء. لأنها تمثل أجزاء مهمة من امر المبيعات. هناك قائمة "
-"اختيار 1 من قبل خط ترتيب المبيعات التي تتطور مع توافر قطع الغيار."
+msgstr "يتم إنشاء نموذج للقائمة المختارة حالما يتم تأكيد ترتيب المبيعات، في نفس الوقت من اجل الشراء. لأنها تمثل أجزاء مهمة من امر المبيعات. هناك قائمة اختيار 1 من قبل خط ترتيب المبيعات التي تتطور مع توافر قطع الغيار."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -235,7 +233,7 @@ msgstr "نقل المخزون"
 #. module: sale_stock
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "الخيارات الإفتراضية"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
@@ -244,17 +242,15 @@ msgstr ""
 
 #. module: sale_stock
 #: view:sale.order:0
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"If the sale order was set to create the invoice 'On Delivery Order', then an "
-"invoice is automatically created based on what you delivered. If you rather "
-"want to create your invoice based on your sale order, you can set the sale "
+"If the sale order was set to create the invoice 'On Delivery Order', then an"
+" invoice is automatically created based on what you delivered. If you rather"
+" want to create your invoice based on your sale order, you can set the sale "
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
 msgstr ""
@@ -265,8 +261,7 @@ msgid "Procurement"
 msgstr "التحصيل"
 
 #. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
+#: view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "تمّ الشحن"
@@ -295,7 +290,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "days"
-msgstr ""
+msgstr "أيام"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_saleprocurement0
@@ -304,10 +299,7 @@ msgid ""
 "confirmed or as the invoice is paid. It drives the purchasing and the "
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
-msgstr ""
-"يتم تلقائيا إنشاء نظام الشراء في أقرب وقت لتأكيد ترتيب المبيعات أو كما يتم "
-"دفع الفاتورة. انه يقود عمليات الشراء وإنتاج المنتجات المتعلقة بالقواعد "
-"والمعايير لترتيب المبيعات. "
+msgstr "يتم تلقائيا إنشاء نظام الشراء في أقرب وقت لتأكيد ترتيب المبيعات أو كما يتم دفع الفاتورة. انه يقود عمليات الشراء وإنتاج المنتجات المتعلقة بالقواعد والمعايير لترتيب المبيعات. "
 
 #. module: sale_stock
 #: help:sale.order,incoterm:0
@@ -320,8 +312,7 @@ msgstr ""
 #: help:sale.config.settings,module_delivery:0
 msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
+"                You can define your own carrier and delivery grids for prices.\n"
 "                This installs the module delivery."
 msgstr ""
 
@@ -367,8 +358,7 @@ msgstr "متجر المبيعات"
 msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
-msgstr ""
-"تمّ تسليم أمر المبيعات. لا يتمّ تحديث هذا الحقل إلا بعد تشغيل المجدوِل."
+msgstr "تمّ تسليم أمر المبيعات. لا يتمّ تحديث هذا الحقل إلا بعد تشغيل المجدوِل."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -379,8 +369,8 @@ msgstr "الخصائص"
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -390,8 +380,7 @@ msgstr ""
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr "يمكنك إنشاء الفواتير بناءً على أوامر المبيعات أو بناءً على الشحنات."
 
 #. module: sale_stock
@@ -408,11 +397,8 @@ msgstr "الشركات"
 #: help:sale.config.settings,task_work:0
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
+"                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways\n"
+"                and to automatically creates project tasks from procurement lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
 
@@ -587,9 +573,7 @@ msgstr "تجاهل الخلل"
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"تريد بيع %.2f %s ولكن لديك %.2f %s فقط!\n"
-"المخزون الحقيقي: %.2f %s. (دون حجز)"
+msgstr "تريد بيع %.2f %s ولكن لديك %.2f %s فقط!\nالمخزون الحقيقي: %.2f %s. (دون حجز)"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -622,17 +606,4 @@ msgid ""
 "Depending on the configuration of the location Output, the move between the "
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
-msgstr ""
-"بالاعتماد على تكوين مكان الصادر, تم عمل الانتقال بين المنطقة المصدرة والعميل "
-"عن طريق امر التسليم تلقائيًا او يدويًا."
-
-#~ msgid ""
-#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
-#~ "pick' or 'Invoice on order after delivery'."
-#~ msgstr ""
-#~ "يتم عمل الفاتورة تلقائيًا اذا كانت سياسة الشحن ‘فاتورة بالاختيار‘ او ‘فاتورة "
-#~ "بعد تسليم البضاعة‘."
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr "الأيام المضافة لأسباب أمنية"
+msgstr "بالاعتماد على تكوين مكان الصادر, تم عمل الانتقال بين المنطقة المصدرة والعميل عن طريق امر التسليم تلقائيًا او يدويًا."

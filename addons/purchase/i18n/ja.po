@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * purchase
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-03-31 07:02+0000\n"
-"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-7/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:18+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -35,13 +36,10 @@ msgstr "分類別月間発注"
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to purchase a given product or a given supplier.\n"
+"Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
-msgstr ""
-"特定の製品や特定の顧客から購入したい場合、製品に関する通知を設定してトリガすることができます。\n"
-"例として、製品：この製品は廃止されましたので5つ以上の購入はご遠慮ください。仕入先：速達便でお願いします。"
+msgstr "特定の製品や特定の顧客から購入したい場合、製品に関する通知を設定してトリガすることができます。\n例として、製品：この製品は廃止されましたので5つ以上の購入はご遠慮ください。仕入先：速達便でお願いします。"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -61,8 +59,7 @@ msgid ""
 msgstr "価格リストはこの発注オーダーのために使用される通貨をセットします。また、選択した製品 / 数量の仕入先価格を計算します。"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,day:0
+#: view:purchase.report:0 field:purchase.report,day:0
 msgid "Day"
 msgstr "日"
 
@@ -109,7 +106,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1087
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "設定エラー"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:598
@@ -140,12 +137,10 @@ msgid ""
 "Margin of error for supplier lead times. When the systemgenerates Purchase "
 "Orders for procuring products,they will be scheduled that many days earlier "
 "to cope with unexpected supplier delays."
-msgstr ""
-"仕入先リードタイムの許容誤差。製品を調達するための発注書をシステムが生成すると、仕入先の予想外の遅延に対処するため何日も前にスケジュールされます。"
+msgstr "仕入先リードタイムの許容誤差。製品を調達するための発注書をシステムが生成すると、仕入先の予想外の遅延に対処するため何日も前にスケジュールされます。"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_average:0
+#: view:purchase.report:0 field:purchase.report,price_average:0
 msgid "Average Price"
 msgstr "平均価格"
 
@@ -160,16 +155,13 @@ msgid "Merge Purchase orders"
 msgstr "発注を集約"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_total:0
+#: view:purchase.report:0 field:purchase.report,price_total:0
 msgid "Total Price"
 msgstr "合計価格"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,minimum_planned_date:0
-#: report:purchase.quotation:0
-#: field:purchase.report,expected_date:0
+#: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
+#: report:purchase.quotation:0 field:purchase.report,expected_date:0
 msgid "Expected Date"
 msgstr "予定日"
 
@@ -189,8 +181,7 @@ msgid "Alerts by products or supplier"
 msgstr "製品や仕入先ごとに警告"
 
 #. module: purchase
-#: field:purchase.order,name:0
-#: view:purchase.order.line:0
+#: field:purchase.order,name:0 view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
 msgstr "発注参照"
@@ -240,25 +231,21 @@ msgid "Total Untaxed amount"
 msgstr "税抜合計"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,category_id:0
+#: view:purchase.report:0 field:purchase.report,category_id:0
 msgid "Category"
 msgstr "分類"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
 msgid ""
-"A purchase order generates a supplier invoice, as soon as it is confirmed by "
-"the buyer. Depending on the Invoicing control of the purchase order, the "
+"A purchase order generates a supplier invoice, as soon as it is confirmed by"
+" the buyer. Depending on the Invoicing control of the purchase order, the "
 "invoice is based on received or on ordered quantities."
-msgstr ""
-"発注オーダーは購入者により確認されるとすぐに仕入先請求書を生成します。発注オーダーの請求書制御に応じて、請求書は受領基準あるいは注文数量基準となります。"
+msgstr "発注オーダーは購入者により確認されるとすぐに仕入先請求書を生成します。発注オーダーの請求書制御に応じて、請求書は受領基準あるいは注文数量基準となります。"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,state:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,state:0
+#: view:purchase.order:0 field:purchase.order,state:0
+#: view:purchase.order.line:0 field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
 msgstr "ステータス"
@@ -271,7 +258,7 @@ msgstr "8月"
 #. module: purchase
 #: view:product.product:0
 msgid "to"
-msgstr ""
+msgstr "～"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -330,8 +317,7 @@ msgstr "入庫製品を追跡するために集荷リストが作成されます
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
-#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
-#: view:purchase.order:0
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq view:purchase.order:0
 #: view:purchase.report:0
 msgid "Quotations"
 msgstr "見積"
@@ -342,8 +328,7 @@ msgid "Do you want to generate the supplier invoices?"
 msgstr "仕入先請求書を作成しますか？"
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0
-#: view:purchase.report:0
+#: field:purchase.order.line,product_qty:0 view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
 msgstr "数量"
@@ -377,10 +362,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click here to record a supplier invoice.\n"
 "                </p><p>\n"
-"                    Supplier invoices can be pre-generated based on "
-"purchase\n"
-"                    orders or receptions. This allows you to control "
-"invoices\n"
+"                    Supplier invoices can be pre-generated based on purchase\n"
+"                    orders or receptions. This allows you to control invoices\n"
 "                    you receive from your supplier according to the draft\n"
 "                    document in OpenERP.\n"
 "                </p>\n"
@@ -388,8 +371,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
 msgstr "発注オーダーの検索"
 
@@ -399,8 +381,7 @@ msgid "Date Req."
 msgstr "日付要求"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Purchase Order Lines"
 msgstr "発注明細"
 
@@ -415,22 +396,13 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
 msgid ""
 "<p>\n"
-"                Here you can track all the lines of purchase orders where "
-"the\n"
-"                invoicing is \"Based on Purchase Order Lines\", and for "
-"which you\n"
-"                have not received a supplier invoice yet. You can generate "
-"a\n"
+"                Here you can track all the lines of purchase orders where the\n"
+"                invoicing is \"Based on Purchase Order Lines\", and for which you\n"
+"                have not received a supplier invoice yet. You can generate a\n"
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                "
-"請求書が「発注明細ベース」で、まだ仕入先から請求書を受け取っていない場合、発注書のすべての明細を追跡することができます。このリストの明細に基づいて仕入先請"
-"求書の草案を生成することができます。\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                請求書が「発注明細ベース」で、まだ仕入先から請求書を受け取っていない場合、発注書のすべての明細を追跡することができます。このリストの明細に基づいて仕入先請求書の草案を生成することができます。\n              </p>\n            "
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -440,7 +412,7 @@ msgstr "予定日"
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "通貨"
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -448,8 +420,7 @@ msgid "Journal"
 msgstr "仕訳帳"
 
 #. module: purchase
-#: view:board.board:0
-#: model:ir.actions.act_window,name:purchase.purchase_draft
+#: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
 msgstr "見積依頼"
 
@@ -464,8 +435,7 @@ msgid "Purchase orders that include lines not invoiced."
 msgstr "未請求明細を含む発注"
 
 #. module: purchase
-#: view:product.product:0
-#: field:product.template,purchase_ok:0
+#: view:product.product:0 field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "購買可能"
 
@@ -482,18 +452,16 @@ msgstr "見積依頼 "
 #. module: purchase
 #: help:purchase.order,partner_ref:0
 msgid ""
-"Reference of the sales order or quotation sent by your supplier. It's mainly "
-"used to do the matching when you receive the products as this reference is "
+"Reference of the sales order or quotation sent by your supplier. It's mainly"
+" used to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
-msgstr ""
-"仕入先から送られる受注や見積りの参照です。通常、この参照は仕入先から送られる配送伝票に書かれているため、主に製品を受け取る際の照合に使用します。"
+msgstr "仕入先から送られる受注や見積りの参照です。通常、この参照は仕入先から送られる配送伝票に書かれているため、主に製品を受け取る際の照合に使用します。"
 
 #. module: purchase
-#: view:purchase.config.settings:0
-#: view:purchase.order.group:0
+#: view:purchase.config.settings:0 view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "or"
-msgstr ""
+msgstr "または"
 
 #. module: purchase
 #: field:res.company,po_lead:0
@@ -506,8 +474,7 @@ msgid ""
 "The invoice is created automatically if the Invoice control of the purchase "
 "order is 'On order'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
-msgstr ""
-"発注オーダーの請求書制御がオーダー時である場合は、請求書は自動的に作成されます。請求書は会計士により、手動で生成することもできます（請求書制御を手動）。"
+msgstr "発注オーダーの請求書制御がオーダー時である場合は、請求書は自動的に作成されます。請求書は会計士により、手動で生成することもできます（請求書制御を手動）。"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -517,7 +484,7 @@ msgstr "見積依頼承認"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "適用"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -552,10 +519,8 @@ msgid "Not Invoiced"
 msgstr "請求外"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,partner_id:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 field:purchase.order,partner_id:0
+#: view:purchase.order.line:0 view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
 msgstr "仕入先"
@@ -607,14 +572,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that will be converted into a "
-"purchase order. \n"
+"                Click to create a quotation that will be converted into a purchase order. \n"
 "              </p><p>\n"
 "                Use this menu to search within your purchase orders by\n"
-"                references, supplier, products, etc. For each purchase "
-"order,\n"
-"                you can track the related discussion with the supplier, "
-"control\n"
+"                references, supplier, products, etc. For each purchase order,\n"
+"                you can track the related discussion with the supplier, control\n"
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
@@ -633,8 +595,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,nbr:0
+#: view:purchase.report:0 field:purchase.report,nbr:0
 msgid "# of Lines"
 msgstr "行数"
 
@@ -654,8 +615,7 @@ msgid "It indicates that a picking has been done"
 msgstr "それは集荷は行われたことを示しています。"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:590
-#: code:addons/purchase/purchase.py:597
+#: code:addons/purchase/purchase.py:590 code:addons/purchase/purchase.py:597
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "この発注はキャンセルできません。"
@@ -668,8 +628,8 @@ msgstr "請求書制御"
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
 msgid ""
-"Reception Analysis allows you to easily check and analyse your company order "
-"receptions and the performance of your supplier's deliveries."
+"Reception Analysis allows you to easily check and analyse your company order"
+" receptions and the performance of your supplier's deliveries."
 msgstr "受領分析はチェックの簡易化のため、会社のオーダー受領と仕入先の配達の実績の分析を行うことができます。"
 
 #. module: purchase
@@ -707,8 +667,7 @@ msgid "Total :"
 msgstr "合計："
 
 #. module: purchase
-#: field:purchase.order,pricelist_id:0
-#: field:purchase.report,pricelist_id:0
+#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "価格リスト"
 
@@ -718,13 +677,12 @@ msgid "Draft PO"
 msgstr "ドラフトPO"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1001
-#: code:addons/purchase/purchase.py:1016
+#: code:addons/purchase/purchase.py:1001 code:addons/purchase/purchase.py:1016
 #: code:addons/purchase/purchase.py:1020
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -738,10 +696,8 @@ msgid "Send by Email"
 msgstr "Eメールで送信"
 
 #. module: purchase
-#: report:purchase.order:0
-#: view:purchase.order:0
-#: field:purchase.order,date_order:0
-#: field:purchase.order.line,date_order:0
+#: report:purchase.order:0 view:purchase.order:0
+#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
 msgstr "発注日"
@@ -875,14 +831,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_config
-#: view:res.partner:0
+#: model:ir.ui.menu,name:purchase.menu_purchase_config view:res.partner:0
 msgid "Purchases"
 msgstr "発注"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay:0
+#: view:purchase.report:0 field:purchase.report,delay:0
 msgid "Days to Validate"
 msgstr "検証日数"
 
@@ -892,16 +846,14 @@ msgid "Supplier Features"
 msgstr "仕入先の特徴"
 
 #. module: purchase
-#: report:purchase.order:0
-#: report:purchase.quotation:0
+#: report:purchase.order:0 report:purchase.quotation:0
 msgid "Qty"
 msgstr "数量"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
-#: view:purchase.config.settings:0
-#: view:purchase.order.group:0
+#: view:purchase.config.settings:0 view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
 msgstr "キャンセル"
@@ -928,14 +880,12 @@ msgid "Order of Month"
 msgstr "月順"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,price_unit:0
+#: report:purchase.order:0 field:purchase.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "単価"
 
 #. module: purchase
-#: field:purchase.order,date_approve:0
-#: field:purchase.report,date_approve:0
+#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
 msgstr "承認日"
 
@@ -971,11 +921,8 @@ msgstr "この製品のための仕入先がないケースでは、買い手は
 #: help:purchase.config.settings,group_purchase_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of Supplier.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this "
-"product, etc."
-msgstr ""
-"仕入先のカテゴリ別のルールに基づいて異なる価格を管理できます。\n"
-"例：小売業者に対して10%や5 EURの奨励など。"
+"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+msgstr "仕入先のカテゴリ別のルールに基づいて異なる価格を管理できます。\n例：小売業者に対して10%や5 EURの奨励など。"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
@@ -991,11 +938,10 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "メッセージと通信履歴"
 
 #. module: purchase
-#: field:purchase.order,warehouse_id:0
-#: field:stock.picking.in,warehouse_id:0
+#: field:purchase.order,warehouse_id:0 field:stock.picking.in,warehouse_id:0
 msgid "Destination Warehouse"
 msgstr "入荷倉庫"
 
@@ -1003,8 +949,8 @@ msgstr "入荷倉庫"
 #: code:addons/purchase/purchase.py:1001
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure."
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure."
 msgstr ""
 
 #. module: purchase
@@ -1045,9 +991,7 @@ msgid "Date on which this document has been created"
 msgstr "このドキュメントが作成された日付"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
 msgid "Group By..."
 msgstr "グループ化…"
 
@@ -1062,15 +1006,14 @@ msgid "Purchase Orders Statistics"
 msgstr "発注統計"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,message_unread:0
+#: view:purchase.order:0 field:purchase.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未読メッセージ"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "単位カテゴリ"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1095,8 +1038,7 @@ msgid "Manage purchase requisitions"
 msgstr "購買依頼を管理"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order,amount_tax:0
+#: report:purchase.order:0 field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "税"
@@ -1119,21 +1061,18 @@ msgid "Stock Move"
 msgstr "在庫移動"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:259
-#: code:addons/purchase/purchase.py:909
+#: code:addons/purchase/purchase.py:259 code:addons/purchase/purchase.py:909
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "操作は無効です。"
 
 #. module: purchase
-#: field:purchase.order,validator:0
-#: view:purchase.report:0
+#: field:purchase.order,validator:0 view:purchase.report:0
 msgid "Validated by"
 msgstr "検証者"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_standard:0
+#: view:purchase.report:0 field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr "製品の価値"
 
@@ -1151,7 +1090,7 @@ msgstr "見積依頼"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Source"
-msgstr ""
+msgstr "ソース"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
@@ -1185,8 +1124,7 @@ msgid ""
 "The invoice is created automatically if the Invoice control of the purchase "
 "order is 'On picking'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
-msgstr ""
-"発注オーダーの請求書制御が集荷時の時には、請求書は自動的に作成されます。請求書は会計士によって、手動で作成することもできます（請求書制御を手動にする）。"
+msgstr "発注オーダーの請求書制御が集荷時の時には、請求書は自動的に作成されます。請求書は会計士によって、手動で作成することもできます（請求書制御を手動にする）。"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1207,8 +1145,7 @@ msgstr "出庫製品"
 #: view:product.product:0
 msgid ""
 "to buy the required quantities to the supplier.\n"
-"                        The delivery order will be ready after having "
-"received the\n"
+"                        The delivery order will be ready after having received the\n"
 "                        products."
 msgstr "をトリガします。配送オーダーは製品を受け取った後に準備完了となります。"
 
@@ -1232,22 +1169,12 @@ msgid ""
 "                Click to create a new incoming shipment.\n"
 "              </p><p> \n"
 "                Here you can track all the product receptions of purchase\n"
-"                orders where the invoicing is \"Based on Incoming "
-"Shipments\",\n"
+"                orders where the invoicing is \"Based on Incoming Shipments\",\n"
 "                and for which you have not received a supplier invoice yet.\n"
-"                You can generate a supplier invoice based on those "
-"receptions.\n"
+"                You can generate a supplier invoice based on those receptions.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                クリックして新しい入荷を作成します。\n"
-"              </p><p> \n"
-"                "
-"請求書が「入荷ベース」で、まだ仕入先から請求書を受け取っていない場合、発注書のすべての製品の受領を追跡することができます。この受領に基づいて仕入先請求書を"
-"生成することができます。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                クリックして新しい入荷を作成します。\n              </p><p> \n                請求書が「入荷ベース」で、まだ仕入先から請求書を受け取っていない場合、発注書のすべての製品の受領を追跡することができます。この受領に基づいて仕入先請求書を生成することができます。\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1255,8 +1182,7 @@ msgid "Procurement"
 msgstr "調達"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
 msgstr "出荷例外"
 
@@ -1276,8 +1202,7 @@ msgid "Receive Products"
 msgstr "製品入荷"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,month:0
+#: view:purchase.report:0 field:purchase.report,month:0
 msgid "Month"
 msgstr "月"
 
@@ -1293,10 +1218,8 @@ msgid "purchase.config.settings"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,company_id:0
-#: field:purchase.order.line,company_id:0
-#: view:purchase.report:0
-#: field:purchase.report,company_id:0
+#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
+#: view:purchase.report:0 field:purchase.report,company_id:0
 msgid "Company"
 msgstr "会社"
 
@@ -1319,8 +1242,7 @@ msgid ""
 "              </p><p>\n"
 "                There can be more than one version of a pricelist, each of\n"
 "                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
 "                etc.\n"
 "              </p>\n"
 "            "
@@ -1414,14 +1336,12 @@ msgstr "発注オーダーの承認日"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
-#: view:purchase.order:0
-#: selection:purchase.report,state:0
+#: view:purchase.order:0 selection:purchase.report,state:0
 msgid "Approved"
 msgstr "承認済"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
 msgstr "完了"
@@ -1449,27 +1369,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a request for quotation.\n"
 "              </p><p>\n"
-"                The quotation contains the history of the "
-"discussion/negociation\n"
+"                The quotation contains the history of the discussion/negociation\n"
 "                you had with your supplier. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order.\n"
 "              </p><p>\n"
-"                Most propositions of purchase orders are created "
-"automatically\n"
+"                Most propositions of purchase orders are created automatically\n"
 "                by OpenERP based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                見積依頼の作成はこちらをクリック。\n"
-"              </p><p>\n"
-"                見積依頼は仕入先との調整や交渉の経緯を含むドキュメントです。\n"
-"                見積依頼は「確認」により発注に 変換されます。\n"
-"              </p><p>\n"
-"                見積依頼は発注提案の位置付けで、需給状況に応じてOpenERPより\n"
-"                自動生成することが可能です。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                見積依頼の作成はこちらをクリック。\n              </p><p>\n                見積依頼は仕入先との調整や交渉の経緯を含むドキュメントです。\n                見積依頼は「確認」により発注に 変換されます。\n              </p><p>\n                見積依頼は発注提案の位置付けで、需給状況に応じてOpenERPより\n                自動生成することが可能です。\n              </p>\n            "
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
@@ -1480,9 +1388,7 @@ msgstr "仕入先は発注承認します。"
 #: code:addons/purchase/wizard/purchase_order_group.py:80
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
-#: view:purchase.order:0
-#: view:purchase.report:0
-#: view:res.partner:0
+#: view:purchase.order:0 view:purchase.report:0 view:res.partner:0
 #, python-format
 msgid "Purchase Orders"
 msgstr "発注"
@@ -1509,8 +1415,7 @@ msgid "Purchase"
 msgstr "発注"
 
 #. module: purchase
-#: field:purchase.order,create_uid:0
-#: view:purchase.report:0
+#: field:purchase.order,create_uid:0 view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
 msgstr "担当"
@@ -1535,10 +1440,8 @@ msgid "Supplier Invoices"
 msgstr "仕入先請求書"
 
 #. module: purchase
-#: field:purchase.order,product_id:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,product_id:0
-#: view:purchase.report:0
+#: field:purchase.order,product_id:0 view:purchase.order.line:0
+#: field:purchase.order.line,product_id:0 view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
 msgstr "製品"
@@ -1562,14 +1465,10 @@ msgstr "カテゴリ別製品"
 #. module: purchase
 #: help:purchase.order.line,state:0
 msgid ""
-" * The 'Draft' status is set automatically when purchase order in draft "
-"status.                                        \n"
-"* The 'Confirmed' status is set automatically as confirm when purchase order "
-"in confirm status.                                        \n"
-"* The 'Done' status is set automatically when purchase order is set as done. "
-"                                       \n"
-"* The 'Cancelled' status is set automatically when user cancel purchase "
-"order."
+" * The 'Draft' status is set automatically when purchase order in draft status.                                        \n"
+"* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
+"* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
+"* The 'Cancelled' status is set automatically when user cancel purchase order."
 msgstr ""
 
 #. module: purchase
@@ -1616,16 +1515,12 @@ msgstr "合計"
 #: help:account.config.settings,module_purchase_analytic_plans:0
 #: help:purchase.config.settings,module_purchase_analytic_plans:0
 msgid ""
-"Allows the user to maintain several analysis plans. These let you split "
-"lines on a purchase order between several accounts and analytic plans.\n"
+"Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
 "                This installs the module purchase_analytic_plans."
-msgstr ""
-"複数の分析計画を維持できます。これらは複数の口座間の注文明細の分割と分析の計画をします。\n"
-"                purchase_analytic_plansモジュールがインストールされます。"
+msgstr "複数の分析計画を維持できます。これらは複数の口座間の注文明細の分割と分析の計画をします。\n                purchase_analytic_plansモジュールがインストールされます。"
 
 #. module: purchase
-#: field:purchase.order,location_id:0
-#: view:purchase.report:0
+#: field:purchase.order,location_id:0 view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
 msgstr "配送先"
@@ -1650,20 +1545,16 @@ msgstr ""
 #: model:email.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -1672,8 +1563,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
 "       % endif\n"
 "       % if object.validator:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -1682,16 +1572,11 @@ msgid ""
 "    <p>Thank you!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -1703,22 +1588,17 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -1728,8 +1608,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "請求書の例外"
 
@@ -1769,31 +1648,26 @@ msgstr "受領分析"
 #. module: purchase
 #: field:purchase.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "メッセージ"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:process.node,name:purchase.process_node_purchaseorder0
-#: field:procurement.order,purchase_id:0
-#: view:purchase.config.settings:0
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
+#: field:procurement.order,purchase_id:0 view:purchase.config.settings:0
+#: view:purchase.order:0 selection:purchase.order,state:0
 #: field:res.partner,purchase_order_ids:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
-#: field:stock.picking,purchase_id:0
-#: field:stock.picking.in,purchase_id:0
+#: field:stock.picking,purchase_id:0 field:stock.picking.in,purchase_id:0
 msgid "Purchase Order"
 msgstr "発注"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:319
-#: code:addons/purchase/purchase.py:455
-#: code:addons/purchase/purchase.py:473
-#: code:addons/purchase/purchase.py:535
+#: code:addons/purchase/purchase.py:319 code:addons/purchase/purchase.py:455
+#: code:addons/purchase/purchase.py:473 code:addons/purchase/purchase.py:535
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "エラー！"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1809,14 +1683,10 @@ msgid ""
 "the order to change the status to 'Approved'. When the purchase order is "
 "paid and received, the status becomes 'Done'. If a cancel action occurs in "
 "the invoice or in the reception of goods, the status becomes in exception."
-msgstr ""
-"発注書または見積り要求の状態。見積りは「ドラフト」状態の発注書です。注文はユーザーによって確認されなければならず、ステータスは「確認済」に変化します。ステ"
-"ータスを「承認済」に変えるため、仕入先は注文を確認しなければなりません。発注の受領と支払いが済むと、ステータスは「完了」になります。請求や商品の受領でキャ"
-"ンセル動作が発生すると、ステータスは例外になります。"
+msgstr "発注書または見積り要求の状態。見積りは「ドラフト」状態の発注書です。注文はユーザーによって確認されなければならず、ステータスは「確認済」に変化します。ステータスを「承認済」に変えるため、仕入先は注文を確認しなければなりません。発注の受領と支払いが済むと、ステータスは「完了」になります。請求や商品の受領でキャンセル動作が発生すると、ステータスは例外になります。"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "キャンセル済"
@@ -1848,8 +1718,7 @@ msgstr "正価"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
-#: view:purchase.order.line:0
-#: field:stock.move,purchase_line_id:0
+#: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "発注明細"
 
@@ -1872,28 +1741,23 @@ msgstr "仕入先参照"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
 msgid ""
-"A Pick list generates a supplier invoice. Depending on the Invoicing control "
-"of the purchase order, the invoice is based on received or on ordered "
+"A Pick list generates a supplier invoice. Depending on the Invoicing control"
+" of the purchase order, the invoice is based on received or on ordered "
 "quantities."
 msgstr "集荷リストは仕入先請求書を生成します。発注オーダーの請求書制御に応じて、請求書は受領基準あるいは注文数量基準となります。"
 
 #. module: purchase
 #: field:purchase.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "フォロワー"
 
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_requisition:0
 msgid ""
-"Purchase Requisitions are used when you want to request quotations from "
-"several suppliers for a given set of products.\n"
-"            You can configure per product if you directly do a Request for "
-"Quotation\n"
-"            to one supplier or if you want a purchase requisition to "
-"negotiate with several suppliers."
-msgstr ""
-"購買依頼は複数の調達先から製品セットの見積書を要求する場合に使用します。\n"
-"            ひとつの調達先に直接に見積要求する場合や複数の調達先と交渉するため購買依頼する場合、製品ごとに設定できます。"
+"Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.\n"
+"            You can configure per product if you directly do a Request for Quotation\n"
+"            to one supplier or if you want a purchase requisition to negotiate with several suppliers."
+msgstr "購買依頼は複数の調達先から製品セットの見積書を要求する場合に使用します。\n            ひとつの調達先に直接に見積要求する場合や複数の調達先と交渉するため購買依頼する場合、製品ごとに設定できます。"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -1906,8 +1770,7 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
-msgstr ""
-"発注分析はチェックの簡易化と会社の発注履歴と実績の分析が可能です、このメニューから交渉の実績や仕入先の配信実績などを追跡することができます。"
+msgstr "発注分析はチェックの簡易化と会社の発注履歴と実績の分析が可能です、このメニューから交渉の実績や仕入先の配信実績などを追跡することができます。"
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
@@ -1943,12 +1806,9 @@ msgstr "設定"
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_double_validation:0
 msgid ""
-"Provide a double validation mechanism for purchases exceeding minimum "
-"amount.\n"
+"Provide a double validation mechanism for purchases exceeding minimum amount.\n"
 "                This installs the module purchase_double_validation."
-msgstr ""
-"最小量を超える購入のため二重の検証メカニズムを提供します。\n"
-"                purchase_double_validationモジュールがインストールされます。"
+msgstr "最小量を超える購入のため二重の検証メカニズムを提供します。\n                purchase_double_validationモジュールがインストールされます。"
 
 #. module: purchase
 #: code:addons/purchase/edi/purchase_order.py:132
@@ -1959,17 +1819,15 @@ msgstr "EDIの価格リスト（%s）"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "参照単位"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.report,validator:0
+#: report:purchase.order:0 field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "検証者"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay_pass:0
+#: view:purchase.report:0 field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
 msgstr "配達日数"
 
@@ -1979,8 +1837,7 @@ msgid "April"
 msgstr "4月"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,invoice_ids:0
+#: view:purchase.order:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
 msgstr "請求書"
 
@@ -2020,8 +1877,7 @@ msgid "The total amount"
 msgstr "合計金額"
 
 #. module: purchase
-#: field:purchase.order,invoiced_rate:0
-#: field:purchase.order.line,invoiced:0
+#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "請求済"
 
@@ -2074,15 +1930,10 @@ msgstr "1月"
 #. module: purchase
 #: help:purchase.order,invoice_method:0
 msgid ""
-"Based on Purchase Order lines: place individual lines in 'Invoice Control > "
-"Based on P.O. lines' from where you can selectively create an invoice.\n"
+"Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
-"Bases on incoming shipments: let you create an invoice when receptions are "
-"validated."
-msgstr ""
-"発注明細基準：請求書を作成して「請求書管理 > 発注明細基準」で個々の明細を配置します。\n"
-"請求書生成基準：請求書の草案を作成して、後で検証できます。\n"
-"入荷基準：受領が検証できたときに請求書を作成します。"
+"Bases on incoming shipments: let you create an invoice when receptions are validated."
+msgstr "発注明細基準：請求書を作成して「請求書管理 > 発注明細基準」で個々の明細を配置します。\n請求書生成基準：請求書の草案を作成して、後で検証できます。\n入荷基準：受領が検証できたときに請求書を作成します。"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
@@ -2121,8 +1972,7 @@ msgid "No default supplier defined for this product"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,warehouse_id:0
+#: view:purchase.report:0 field:purchase.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "倉庫"
 
@@ -2135,8 +1985,7 @@ msgid ""
 msgstr "選択した仕入先の最小数量は %s %s に設定されています。それ未満の発注はできません。"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,name:0
+#: report:purchase.order:0 field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
 msgstr "説明"
@@ -2181,7 +2030,7 @@ msgstr "合計金額"
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "製品テンプレート"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -2194,25 +2043,14 @@ msgid ""
 " * Purchase Orders are have same stock location, same pricelist \n"
 " \n"
 " Lines will only be merged if: \n"
-" * Order lines are exactly the same except for the product,quantity and unit "
-"\n"
+" * Order lines are exactly the same except for the product,quantity and unit \n"
 " "
-msgstr ""
-" 次の点にご注意ください。 \n"
-" \n"
-" オーダの結合条件は次の通り： \n"
-" ・ 発注ステータスがドラフト\n"
-" ・ 発注の仕入先が同じ\n"
-" ・ 発注の在庫ロケーションおよび価格リストが同じ\n"
-" \n"
-" 明細の結合条件は次の通り：\n"
-" ・ 明細製品の数量と単位以外が同じ \n"
-" "
+msgstr " 次の点にご注意ください。 \n \n オーダの結合条件は次の通り： \n ・ 発注ステータスがドラフト\n ・ 発注の仕入先が同じ\n ・ 発注の在庫ロケーションおよび価格リストが同じ\n \n 明細の結合条件は次の通り：\n ・ 明細製品の数量と単位以外が同じ \n "
 
 #. module: purchase
 #: field:purchase.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "要約"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
@@ -2236,8 +2074,7 @@ msgid "Purchase orders which are in draft state"
 msgstr "ドラフト状態の発注"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,name:0
+#: view:purchase.report:0 field:purchase.report,name:0
 msgid "Year"
 msgstr "年"
 
@@ -2250,13 +2087,10 @@ msgstr "発注明細基準"
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    This supplier has no purchase order. Click to create a "
-"new RfQ.\n"
+"                    This supplier has no purchase order. Click to create a new RfQ.\n"
 "                </p><p>\n"
-"                    The request for quotation is the first step of the "
-"purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to "
-"control the reception\n"
+"                    The request for quotation is the first step of the purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to control the reception\n"
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
@@ -2266,12 +2100,3 @@ msgstr ""
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "オーダー"
-
-#~ msgid "This is the leads/security time for each purchase order."
-#~ msgstr "これは各発注オーダーのためのリード / 保証時間です。"
-
-#~ msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-#~ msgstr "${object.company_id.name} オーダー(Ref ${object.name or 'n/a' })"
-
-#~ msgid "It indicates that an invoice has been paid"
-#~ msgstr "これは請求書は既に支払われたことを意味しています。"

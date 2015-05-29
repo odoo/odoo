@@ -1,21 +1,22 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * mrp
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-06-20 14:18+0000\n"
-"Last-Translator: Jan Grmela <Unknown>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-7/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:03+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -28,15 +29,7 @@ msgid ""
 "                    * Repair quotation report\n"
 "                    * Notes for the technician and for the final customer.\n"
 "                This installs the module mrp_repair."
-msgstr ""
-"Umožňuje správu všech oprav výrobků.\n"
-"                    * Přidání/odebrání výrobků v opravě\n"
-"                    * Dopad na zásoby\n"
-"                    * Fakturace (výrobky a/nebo služby)\n"
-"                    * Koncept záruky\n"
-"                    * Zprávu o nabídce opravy\n"
-"                    * Poznámky pro technika a konečného zákazníka.\n"
-"                Bude nainstalován modul mrp_repair."
+msgstr "Umožňuje správu všech oprav výrobků.\n                    * Přidání/odebrání výrobků v opravě\n                    * Dopad na zásoby\n                    * Fakturace (výrobky a/nebo služby)\n                    * Koncept záruky\n                    * Zprávu o nabídce opravy\n                    * Poznámky pro technika a konečného zákazníka.\n                Bude nainstalován modul mrp_repair."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -70,9 +63,7 @@ msgstr "Počet cyklů"
 msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
-msgstr ""
-"Pravidlo 'Pravidlo minimálních zásob' umožňuje systému vytvořit objednávky "
-"zásob jakmile je dosažena minimální úroveň zásob."
+msgstr "Pravidlo 'Pravidlo minimálních zásob' umožňuje systému vytvořit objednávky zásob jakmile je dosažena minimální úroveň zásob."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
@@ -107,8 +98,7 @@ msgid "For stockable products and consumables"
 msgstr "Pro skladovatelní a spotřební výrobky"
 
 #. module: mrp
-#: help:mrp.bom,message_unread:0
-#: help:mrp.production,message_unread:0
+#: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
@@ -118,9 +108,7 @@ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr ""
-"Počet iterací, které musí výrobní středisko provést v určitém úkonu "
-"výrobního postupu."
+msgstr "Počet iterací, které musí výrobní středisko provést v určitém úkonu výrobního postupu."
 
 #. module: mrp
 #: view:product.product:0
@@ -128,9 +116,7 @@ msgid "False"
 msgstr "Nepravda"
 
 #. module: mrp
-#: view:mrp.bom:0
-#: field:mrp.bom,code:0
-#: field:mrp.production,name:0
+#: view:mrp.bom:0 field:mrp.bom,code:0 field:mrp.production,name:0
 msgid "Reference"
 msgstr "Odkaz"
 
@@ -145,15 +131,12 @@ msgid "Manufacturing Orders which are currently in production."
 msgstr "Výrobní příkazy, které jsou momentálně zpracovávány."
 
 #. module: mrp
-#: help:mrp.bom,message_summary:0
-#: help:mrp.production,message_summary:0
+#: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
 #: help:mrp.production.workcenter.line,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Udržuje souhrn klábosení (počet zpráv, ...). Tento souhrn je přímo ve "
-"formátu HTML aby jej bylo možné vložit do pohledů kanban."
+msgstr "Udržuje souhrn klábosení (počet zpráv, ...). Tento souhrn je přímo ve formátu HTML aby jej bylo možné vložit do pohledů kanban."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -186,8 +169,7 @@ msgstr "Cena za hodinu"
 msgid ""
 "In case the Supply method of the product is Produce, the system creates a "
 "production order."
-msgstr ""
-"V případě Dodávací metody výrobku je Vyrobit, systém vytvoří výrobní příkaz."
+msgstr "V případě Dodávací metody výrobku je Vyrobit, systém vytvoří výrobní příkaz."
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -255,29 +237,15 @@ msgid ""
 "                Click to create a routing.\n"
 "              </p><p>\n"
 "                Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers "
-"in\n"
+"                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro vytvoření pracovního postupu.\n"
-"              </p><p>\n"
-"                Pracovní postupy vám umožňují vytvořit a spravovat úkony "
-"výroby,\n"
-"                které mají být následovány ve vašich výrobních střediscích "
-"pro\n"
-"                vytvoření výrobku. Jsou spojeny s kusovníky, které definují "
-"surové\n"
-"                materiály.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření pracovního postupu.\n              </p><p>\n                Pracovní postupy vám umožňují vytvořit a spravovat úkony výroby,\n                které mají být následovány ve vašich výrobních střediscích pro\n                vytvoření výrobku. Jsou spojeny s kusovníky, které definují surové\n                materiály.\n              </p>\n            "
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,move_created_ids2:0
+#: view:mrp.production:0 field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
 msgstr "Dokončená výroba"
 
@@ -301,19 +269,14 @@ msgstr "Vyrobit několik výrobků z jednoho výrobního příkazu"
 msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
-msgstr ""
-"Výběr vhodného kusovníku závisí na vlastnostech určených v  potvrzení "
-"objednávky a v kusovníku."
+msgstr "Výběr vhodného kusovníku závisí na vlastnostech určených v  potvrzení objednávky a v kusovníku."
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
-msgstr ""
-"Při zpracování tohoto potvrzení objednávky bude dodávka\n"
-"                                obsahovat suroviny místo dokončené výroby."
+"                                will contain the raw materials, instead of the finished product."
+msgstr "Při zpracování tohoto potvrzení objednávky bude dodávka\n                                obsahovat suroviny místo dokončené výroby."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -336,8 +299,7 @@ msgid "Sets / Phantom"
 msgstr "Sestavy / Fiktivní"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,state:0
+#: view:mrp.production:0 field:mrp.production,state:0
 msgid "Status"
 msgstr "Stav"
 
@@ -380,26 +342,12 @@ msgid ""
 "                A manufacuring order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro vytvoření výrobního příkazu. \n"
-"              </p><p>\n"
-"                Výrobní příkaz založený na kusovníku spotřebuje surový\n"
-"                materiál a vytvoří finální výrobek.\n"
-"              </p><p>\n"
-"                Výrobní příkazy jsou obvykle vytvářeny automaticky v "
-"závislosti\n"
-"                na požadavcích zákazníků nebo automatických pravidlech jako\n"
-"                je pravidlo minimálních zásob.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření výrobního příkazu. \n              </p><p>\n                Výrobní příkaz založený na kusovníku spotřebuje surový\n                materiál a vytvoří finální výrobek.\n              </p><p>\n                Výrobní příkazy jsou obvykle vytvářeny automaticky v závislosti\n                na požadavcích zákazníků nebo automatických pravidlech jako\n                je pravidlo minimálních zásob.\n              </p>\n            "
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -407,11 +355,8 @@ msgid "Reference must be unique per Company!"
 msgstr "Odkaz musí být jedinečný na společnost"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: report:bom.structure:0
-#: view:mrp.bom:0
-#: field:mrp.product_price,number:0
-#: view:mrp.production:0
+#: code:addons/mrp/report/price.py:141 report:bom.structure:0 view:mrp.bom:0
+#: field:mrp.product_price,number:0 view:mrp.production:0
 #: report:mrp.production.order:0
 #, python-format
 msgid "Quantity"
@@ -422,9 +367,7 @@ msgstr "Množství"
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
-msgstr ""
-"Vyplňte tento výrobek abyste mohli snadno sledovat své výrobní náklady v "
-"analytickém účetnictví."
+msgstr "Vyplňte tento výrobek abyste mohli snadno sledovat své výrobní náklady v analytickém účetnictví."
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
@@ -441,9 +384,7 @@ msgstr "Potvrdit výrobu"
 msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
-msgstr ""
-"Systém vytvoří příkaz (výroba nebo objednávka) v závislosti na množství "
-"prodeje a parametrech výrobků."
+msgstr "Systém vytvoří příkaz (výroba nebo objednávka) v závislosti na množství prodeje a parametrech výrobků."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -453,8 +394,7 @@ msgid ""
 msgstr "Používá se u služeb bez dopadu na systém, například při tréninku."
 
 #. module: mrp
-#: field:mrp.bom,product_qty:0
-#: field:mrp.production,product_qty:0
+#: field:mrp.bom,product_qty:0 field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Quantity"
 msgstr "Množství výrobků"
@@ -464,9 +404,7 @@ msgstr "Množství výrobků"
 msgid ""
 "This is the Internal Picking List that brings the finished product to the "
 "production plan"
-msgstr ""
-"Toto je vnitřní výběrový seznam který zavádí dokončenou výrobu do výrobního "
-"plánu"
+msgstr "Toto je vnitřní výběrový seznam který zavádí dokončenou výrobu do výrobního plánu"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
@@ -477,25 +415,12 @@ msgstr "Pracovní čas"
 #: help:mrp.production,state:0
 msgid ""
 "When the production order is created the status is set to 'Draft'.\n"
-"                If the order is confirmed the status is set to 'Waiting "
-"Goods'.\n"
-"                If any exceptions are there, the status is set to 'Picking "
-"Exception'.\n"
-"                If the stock is available then the status is set to 'Ready "
-"to Produce'.\n"
-"                When the production gets started then the status is set to "
-"'In Production'.\n"
+"                If the order is confirmed the status is set to 'Waiting Goods'.\n"
+"                If any exceptions are there, the status is set to 'Picking Exception'.\n"
+"                If the stock is available then the status is set to 'Ready to Produce'.\n"
+"                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
-msgstr ""
-"Jakmile je vytvořen výrobní příkaz, je jeho stav nastaven na 'Koncept'.\n"
-"                Když příkaz potvrdíte, nastaví se stav na 'Čeká se na "
-"zboží'.\n"
-"                Pokud nastanou nějaké výjimky, je stav nastaven na 'Výjimka "
-"vyzvednutí'.\n"
-"                Když jsou dostupné zásoby, je stav nastaven na 'Připraven k "
-"výrobě'.\n"
-"                Jakmile výroba začne, je stav nastaven na 'Ve výrobě'.\n"
-"                Když je výroba dokončena, je stav nastaven na 'Hotovo'."
+msgstr "Jakmile je vytvořen výrobní příkaz, je jeho stav nastaven na 'Koncept'.\n                Když příkaz potvrdíte, nastaví se stav na 'Čeká se na zboží'.\n                Pokud nastanou nějaké výjimky, je stav nastaven na 'Výjimka vyzvednutí'.\n                Když jsou dostupné zásoby, je stav nastaven na 'Připraven k výrobě'.\n                Jakmile výroba začne, je stav nastaven na 'Ve výrobě'.\n                Když je výroba dokončena, je stav nastaven na 'Hotovo'."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
@@ -508,36 +433,19 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new property.\n"
 "              </p><p>\n"
-"                The Properties in OpenERP are used to select the right bill "
-"of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
+"                The Properties in OpenERP are used to select the right bill of\n"
+"                materials for manufacturing a product when you have different\n"
 "                ways of building the same product.  You can assign several\n"
 "                properties to each bill of materials.  When a salesperson\n"
-"                creates a sales order, they can relate it to several "
-"properties\n"
-"                and OpenERP will automatically select the BoM to use "
-"according\n"
+"                creates a sales order, they can relate it to several properties\n"
+"                and OpenERP will automatically select the BoM to use according\n"
 "                the needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro vytvoření nové vlastnosti.\n"
-"              </p><p>\n"
-"                Vlastnosti v OpenERP jsou používány ke zvolení správného\n"
-"                kusovníku pro vyvoření výrobku když existuje několik cest\n"
-"                k vytvoření stejného výrobku. Ke každému kusovníku můžete\n"
-"                přiřadit několik vlastností. Když obchodník vytvoří\n"
-"                potvrzení objednávky, může jej spojit s různými vlastnostmi\n"
-"                a OpenERP automaticky zvolí kusovník podle těchto "
-"vlastností.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření nové vlastnosti.\n              </p><p>\n                Vlastnosti v OpenERP jsou používány ke zvolení správného\n                kusovníku pro vyvoření výrobku když existuje několik cest\n                k vytvoření stejného výrobku. Ke každému kusovníku můžete\n                přiřadit několik vlastností. Když obchodník vytvoří\n                potvrzení objednávky, může jej spojit s různými vlastnostmi\n                a OpenERP automaticky zvolí kusovník podle těchto vlastností.\n              </p>\n            "
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,date_planned:0
+#: view:mrp.production:0 field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
 msgid "Scheduled Date"
 msgstr "Plánované datum"
@@ -549,8 +457,7 @@ msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Výrobní příkaz <em>%s</em> vytvořen."
 
 #. module: mrp
-#: view:mrp.bom:0
-#: report:mrp.production.order:0
+#: view:mrp.bom:0 report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Kusovník"
 
@@ -560,10 +467,7 @@ msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr ""
-"Ponechte prázdné pokud vyrábíte v místě, kde je dokončená výroba potřeba. "
-"Zadejte umístění pokud vyrábíte na pevném místě. Může jít o umístění "
-"partnera pokud pro vás vyrábí subdodavatel."
+msgstr "Ponechte prázdné pokud vyrábíte v místě, kde je dokončená výroba potřeba. Zadejte umístění pokud vyrábíte na pevném místě. Může jít o umístění partnera pokud pro vás vyrábí subdodavatel."
 
 #. module: mrp
 #: view:board.board:0
@@ -602,10 +506,8 @@ msgid "Request for Quotation."
 msgstr "Požadavek na cenovou nabídku"
 
 #. module: mrp
-#: view:change.production.qty:0
-#: view:mrp.config.settings:0
-#: view:mrp.product.produce:0
-#: view:mrp.product_price:0
+#: view:change.production.qty:0 view:mrp.config.settings:0
+#: view:mrp.product.produce:0 view:mrp.product_price:0
 #: view:mrp.workcenter.load:0
 msgid "or"
 msgstr "nebo"
@@ -615,13 +517,10 @@ msgstr "nebo"
 msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
-msgstr ""
-"Kusovník je propojený s pracovním postupem, tedy postupem výrobních "
-"středisek."
+msgstr "Kusovník je propojený s pracovním postupem, tedy postupem výrobních středisek."
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,move_created_ids:0
+#: view:mrp.production:0 field:mrp.production,move_created_ids:0
 msgid "Products to Produce"
 msgstr "Výrobky k vyrobení"
 
@@ -631,8 +530,7 @@ msgid "Apply"
 msgstr "Použít"
 
 #. module: mrp
-#: view:mrp.routing:0
-#: field:mrp.routing,location_id:0
+#: view:mrp.routing:0 field:mrp.routing,location_id:0
 msgid "Production Location"
 msgstr "Umístění výroby"
 
@@ -675,26 +573,12 @@ msgstr "K výrobě"
 #. module: mrp
 #: help:mrp.config.settings,module_stock_no_autopicking:0
 msgid ""
-"This module allows an intermediate picking process to provide raw materials "
-"to production orders.\n"
-"                For example to manage production made by your suppliers (sub-"
-"contracting).\n"
-"                To achieve this, set the assembled product which is sub-"
-"contracted to \"No Auto-Picking\"\n"
-"                and put the location of the supplier in the routing of the "
-"assembly operation.\n"
+"This module allows an intermediate picking process to provide raw materials to production orders.\n"
+"                For example to manage production made by your suppliers (sub-contracting).\n"
+"                To achieve this, set the assembled product which is sub-contracted to \"No Auto-Picking\"\n"
+"                and put the location of the supplier in the routing of the assembly operation.\n"
 "                This installs the module stock_no_autopicking."
-msgstr ""
-"Tento modul zavádí proces mezičlánku vyzvednutí k poskytnutí surového "
-"materiálu příkazům výroby.\n"
-"                Tento proces je vhodný například pro správu výroby "
-"subdodavatelů.\n"
-"                Pro dosažení tohoto nastavení nastavte u sestaveného "
-"výrobku, který vyrábí váš subdodavatel,\n"
-"                vlastnost na 'Žádné automatické vyzvednutí'. a nastavte "
-"umístění dodavatele do výrobního\n"
-"                postupu sestavovacího úkonu.\n"
-"                Bude nainstalován modul stock_no_autopicking."
+msgstr "Tento modul zavádí proces mezičlánku vyzvednutí k poskytnutí surového materiálu příkazům výroby.\n                Tento proces je vhodný například pro správu výroby subdodavatelů.\n                Pro dosažení tohoto nastavení nastavte u sestaveného výrobku, který vyrábí váš subdodavatel,\n                vlastnost na 'Žádné automatické vyzvednutí'. a nastavte umístění dodavatele do výrobního\n                postupu sestavovacího úkonu.\n                Bude nainstalován modul stock_no_autopicking."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -716,9 +600,7 @@ msgstr "Čas před výrobou"
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
-msgstr ""
-"Pokud je pole nastaveno na Nepravda, tak umožní skrýt směrování bez jeho "
-"odebrání."
+msgstr "Pokud je pole nastaveno na Nepravda, tak umožní skrýt směrování bez jeho odebrání."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -726,8 +608,7 @@ msgid "Material Routing"
 msgstr "Pracovní postup materiálu"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,move_lines2:0
+#: view:mrp.production:0 field:mrp.production,move_lines2:0
 #: report:mrp.production.order:0
 msgid "Consumed Products"
 msgstr "Spotřebované výrobky"
@@ -757,8 +638,7 @@ msgid "Stock Move"
 msgstr "Přesun zásob"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_planning
-#: view:mrp.config.settings:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_planning view:mrp.config.settings:0
 msgid "Planning"
 msgstr "Plánování"
 
@@ -774,11 +654,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
-msgstr ""
-"Seznam úkonů (seznam výrobních středisek) pro vyrobení výrobku. Výrobní "
-"postup je použit zejména pro výpočet nákladů výrobních středisek při úkonech "
-"a pro plánování budoucího vytížení výrobních středisek na základě plánování "
-"výroby."
+msgstr "Seznam úkonů (seznam výrobních středisek) pro vyrobení výrobku. Výrobní postup je použit zejména pro výpočet nákladů výrobních středisek při úkonech a pro plánování budoucího vytížení výrobních středisek na základě plánování výroby."
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
@@ -791,22 +667,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a component to a bill of material.\n"
 "              </p><p>\n"
-"                Bills of materials components are components and by-"
-"products\n"
+"                Bills of materials components are components and by-products\n"
 "                used to create master bills of materials.  Use this menu to\n"
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro přidání komponenty do kusovníku.\n"
-"              </p><p>\n"
-"                Komponenty kusovníku jsou komponenty a polotovary\n"
-"                použité k vytvoření hlavního kusovníku. Použijte toto menu\n"
-"                k vyhledání konkrétního kusovníku, ve kterém je komponenta "
-"použita.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro přidání komponenty do kusovníku.\n              </p><p>\n                Komponenty kusovníku jsou komponenty a polotovary\n                použité k vytvoření hlavního kusovníku. Použijte toto menu\n                k vyhledání konkrétního kusovníku, ve kterém je komponenta použita.\n              </p>\n            "
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -832,23 +698,15 @@ msgid ""
 "                    * Manufacturer Product Code\n"
 "                    * Product Attributes.\n"
 "                This installs the module product_manufacturer."
-msgstr ""
-"Toto vám umožní definovat následující pole výrobku:\n"
-"                    * Výrobce\n"
-"                    * Název výrobku od výrobce\n"
-"                    * Kód výrobku od výrobce\n"
-"                    * Atributy výrobku.\n"
-"                Bude nainstalován modul product_manufacturer."
+msgstr "Toto vám umožní definovat následující pole výrobku:\n                    * Výrobce\n                    * Název výrobku od výrobce\n                    * Kód výrobku od výrobce\n                    * Atributy výrobku.\n                Bude nainstalován modul product_manufacturer."
 
 #. module: mrp
-#: view:mrp.product_price:0
-#: view:mrp.workcenter.load:0
+#: view:mrp.product_price:0 view:mrp.workcenter.load:0
 msgid "Print"
 msgstr "Tisk"
 
 #. module: mrp
-#: view:mrp.bom:0
-#: view:mrp.workcenter:0
+#: view:mrp.bom:0 view:mrp.workcenter:0
 msgid "Type"
 msgstr "Typ"
 
@@ -860,22 +718,11 @@ msgid ""
 "              </p><p>\n"
 "                Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as "
-"capacity\n"
+"                considered as units for task assignation as well as capacity\n"
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro přidání výrobního střediska.\n"
-"              </p><p>\n"
-"                Výrobní střediska vám umožňují vytvářen a spravovat výrobní\n"
-"                jednotky. Skládají se z pracovníků a/nebo strojů, které "
-"jsou\n"
-"                považovány za jednotky pro účel přiřazení úkolů či\n"
-"                předpovědi kapacity a plánování.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro přidání výrobního střediska.\n              </p><p>\n                Výrobní střediska vám umožňují vytvářen a spravovat výrobní\n                jednotky. Skládají se z pracovníků a/nebo strojů, které jsou\n                považovány za jednotky pro účel přiřazení úkolů či\n                předpovědi kapacity a plánování.\n              </p>\n            "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
@@ -892,8 +739,7 @@ msgstr "Za měsíc"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
-"Měrná jednotka (Měrná jednotka) je jednotka míry použitá pro řízení inventáře"
+msgstr "Měrná jednotka (Měrná jednotka) je jednotka míry použitá pro řízení inventáře"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -906,8 +752,7 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr "Činitel 0.9 znamená ztrátu 10% výrobního procesu."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:779
-#: code:addons/mrp/mrp.py:807
+#: code:addons/mrp/mrp.py:779 code:addons/mrp/mrp.py:807
 #, python-format
 msgid "Warning!"
 msgstr "Varování!"
@@ -934,9 +779,7 @@ msgstr "Pravidlo zásobování"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
-"Vyplňte pouze pokud chcete automatické analytické účetnictví výrobních "
-"příkazů."
+msgstr "Vyplňte pouze pokud chcete automatické analytické účetnictví výrobních příkazů."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -959,10 +802,7 @@ msgid ""
 "Depending on the chosen method to 'supply' the service, the procurement "
 "order creates a RFQ for a subcontracting purchase order or waits until the "
 "service is done (= the delivery of the products)."
-msgstr ""
-"Podle zvolené metody pro 'zásobení' služby, objednávka zásob vytvoří "
-"požadavek na nabídku pro objednávku od subdodavatele nebo počká než bude "
-"služba dokončena (= do dodání výrobků)."
+msgstr "Podle zvolené metody pro 'zásobení' služby, objednávka zásob vytvoří požadavek na nabídku pro objednávku od subdodavatele nebo počká než bude služba dokončena (= do dodání výrobků)."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -983,10 +823,8 @@ msgid ""
 msgstr "Měrná jednotka výrobku je jiné kategorie než ve formuláři výrobku."
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production
-#: view:mrp.config.settings:0
-#: view:mrp.production:0
-#: field:mrp.production.workcenter.line,production_id:0
+#: model:ir.model,name:mrp.model_mrp_production view:mrp.config.settings:0
+#: view:mrp.production:0 field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr "Výrobní příkaz"
@@ -1000,16 +838,11 @@ msgstr "Dodání surového materiálu"
 #: sql_constraint:mrp.bom:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra "
-"products on BoMs !"
-msgstr ""
-"Všechna množství výrobků musí být větší než 0.\n"
-"Nainstalujte modul mrp_byproduct pokud chcete spravovat dodatečné výrobky v "
-"kusovnících!"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
+msgstr "Všechna množství výrobků musí být větší než 0.\nNainstalujte modul mrp_byproduct pokud chcete spravovat dodatečné výrobky v kusovnících!"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,cycle_total:0
+#: view:mrp.production:0 field:mrp.production,cycle_total:0
 msgid "Total Cycles"
 msgstr "Celkem cyklů"
 
@@ -1026,8 +859,7 @@ msgid "Is a Follower"
 msgstr "Sleduje"
 
 #. module: mrp
-#: view:mrp.bom:0
-#: view:mrp.production:0
+#: view:mrp.bom:0 view:mrp.production:0
 msgid "Date"
 msgstr "Datum"
 
@@ -1040,28 +872,12 @@ msgid ""
 "                A manufacuring order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro vytvoření výrobního příkazu. \n"
-"              </p><p>\n"
-"                Výrobní příkaz, založený na kusovníku, využije surový "
-"materiál\n"
-"                a vytvoří hotové výrobky.\n"
-"              </p><p>\n"
-"                Výrobní příkazy jsou obvykle navrhovány automaticky na "
-"základě \n"
-"                požadavků zákazníka nebo automatických pravidel jako je "
-"pravidlo\n"
-"                minimálních skladových zásob.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření výrobního příkazu. \n              </p><p>\n                Výrobní příkaz, založený na kusovníku, využije surový materiál\n                a vytvoří hotové výrobky.\n              </p><p>\n                Výrobní příkazy jsou obvykle navrhovány automaticky na základě \n                požadavků zákazníka nebo automatických pravidel jako je pravidlo\n                minimálních skladových zásob.\n              </p>\n            "
 
 #. module: mrp
 #: field:mrp.bom,type:0
@@ -1071,8 +887,7 @@ msgstr "Druh kusovníku"
 #. module: mrp
 #: code:addons/mrp/procurement.py:52
 #, python-format
-msgid ""
-"Procurement '%s' has an exception: 'No BoM defined for this product !'"
+msgid "Procurement '%s' has an exception: 'No BoM defined for this product !'"
 msgstr "Výjimka zásobování '%s': 'Výrobek nemá definován žádný kusovník!'"
 
 #. module: mrp
@@ -1096,8 +911,7 @@ msgstr "Společnosti"
 msgid ""
 "You must first cancel related internal picking attached to this "
 "manufacturing order."
-msgstr ""
-"Musíte nejdříve zrušit vnitřní vyzvednutí spojené s tímto výrobním příkazem."
+msgstr "Musíte nejdříve zrušit vnitřní vyzvednutí spojené s tímto výrobním příkazem."
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
@@ -1106,8 +920,7 @@ msgid "Minimum Stock"
 msgstr "Minimální zásoby"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:162
-#: code:addons/mrp/report/price.py:213
+#: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr "Celková cena %s %s"
@@ -1151,16 +964,13 @@ msgid "Manufacturing Plan."
 msgstr "Výrobní plán"
 
 #. module: mrp
-#: view:mrp.routing:0
-#: view:mrp.workcenter:0
+#: view:mrp.routing:0 view:mrp.workcenter:0
 msgid "Inactive"
 msgstr "Neaktivní"
 
 #. module: mrp
-#: view:change.production.qty:0
-#: view:mrp.config.settings:0
-#: view:mrp.product.produce:0
-#: view:mrp.product_price:0
+#: view:change.production.qty:0 view:mrp.config.settings:0
+#: view:mrp.product.produce:0 view:mrp.product_price:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "Zrušit"
@@ -1170,9 +980,7 @@ msgstr "Zrušit"
 msgid ""
 "If the service has a 'Buy' supply method, this creates a RFQ, a "
 "subcontracting demand for instance."
-msgstr ""
-"Pokud má služba metodu dodávky 'Koupit', bude vytvořen požadavek na cenovou "
-"nabídku, například tedy požadavek na subdodávku."
+msgstr "Pokud má služba metodu dodávky 'Koupit', bude vytvořen požadavek na cenovou nabídku, například tedy požadavek na subdodávku."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1193,8 +1001,7 @@ msgstr "Název kusovníku"
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
-#: view:mrp.production:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action view:mrp.production:0
 msgid "Manufacturing Orders"
 msgstr "Výrobní příkazy"
 
@@ -1214,12 +1021,9 @@ msgid "Product UoS Quantity"
 msgstr "Množství prodejních jednotek výrobku"
 
 #. module: mrp
-#: field:mrp.bom,name:0
-#: report:mrp.production.order:0
-#: field:mrp.production.product.line,name:0
-#: view:mrp.property:0
-#: field:mrp.routing,name:0
-#: field:mrp.routing.workcenter,name:0
+#: field:mrp.bom,name:0 report:mrp.production.order:0
+#: field:mrp.production.product.line,name:0 view:mrp.property:0
+#: field:mrp.routing,name:0 field:mrp.routing.workcenter,name:0
 msgid "Name"
 msgstr "Jméno"
 
@@ -1234,8 +1038,7 @@ msgid "Mode"
 msgstr "Režim"
 
 #. module: mrp
-#: help:mrp.bom,message_ids:0
-#: help:mrp.production,message_ids:0
+#: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
 msgstr "Zprávy a historie komunikace"
@@ -1249,17 +1052,10 @@ msgstr "Měrná jednotka množství"
 #: help:mrp.config.settings,module_mrp_jit:0
 msgid ""
 "This allows Just In Time computation of procurement orders.\n"
-"                All procurement orders will be processed immediately, which "
-"could in some\n"
+"                All procurement orders will be processed immediately, which could in some\n"
 "                cases entail a small performance impact.\n"
 "                This installs the module mrp_jit."
-msgstr ""
-"Tímto bude umožněn výpočet objednávek zásob podle okamžité potřeby (Just In "
-"Time).\n"
-"                Všechny objednávky zásob budou zpracovány okamžitě, což s "
-"sebou může v některých\n"
-"                případech nést malý výkonnostní dopad.\n"
-"                Bude nainstalován modul mrp_jit."
+msgstr "Tímto bude umožněn výpočet objednávek zásob podle okamžité potřeby (Just In Time).\n                Všechny objednávky zásob budou zpracovány okamžitě, což s sebou může v některých\n                případech nést malý výkonnostní dopad.\n                Bude nainstalován modul mrp_jit."
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -1271,9 +1067,7 @@ msgstr "Určete cenu pracovní hodiny výrobního střediska."
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr ""
-"Počet úkonů, které může výrobní středisko provádět souběžně. Pokud výrobní "
-"středisko zastupuje tým 5 pracovníků, kapacita na cyklus je 5."
+msgstr "Počet úkonů, které může výrobní středisko provádět souběžně. Pokud výrobní středisko zastupuje tým 5 pracovníků, kapacita na cyklus je 5."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1291,10 +1085,7 @@ msgid "Manufacturing Orders Waiting Products"
 msgstr "Čekající výrobky výrobních příkazů"
 
 #. module: mrp
-#: view:mrp.bom:0
-#: view:mrp.production:0
-#: view:mrp.property:0
-#: view:mrp.routing:0
+#: view:mrp.bom:0 view:mrp.production:0 view:mrp.property:0 view:mrp.routing:0
 #: view:mrp.workcenter:0
 msgid "Group By..."
 msgstr "Seskupit podle..."
@@ -1335,11 +1126,9 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
-"Time in hours for this Work Center to achieve the operation of the specified "
-"routing."
-msgstr ""
-"Počet pracovních hodin výrobního střediska pro provedení úkonu výrobního "
-"postupu."
+"Time in hours for this Work Center to achieve the operation of the specified"
+" routing."
+msgstr "Počet pracovních hodin výrobního střediska pro provedení úkonu výrobního postupu."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1358,8 +1147,7 @@ msgid "Per week"
 msgstr "Za týden"
 
 #. module: mrp
-#: field:mrp.bom,message_unread:0
-#: field:mrp.production,message_unread:0
+#: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
 #: field:mrp.production.workcenter.line,message_unread:0
 msgid "Unread Messages"
 msgstr "Nepřečtené zprávy"
@@ -1369,9 +1157,7 @@ msgstr "Nepřečtené zprávy"
 msgid ""
 "The system waits for the products to be available in the stock. These "
 "products are typically procured manually or through a minimum stock rule."
-msgstr ""
-"Systém čeká na výrobky než budou dostupné na skladě. Tyto výrobky jsou "
-"typicky obstarávány ručně nebo přes pravidlo minimálních zásob."
+msgstr "Systém čeká na výrobky než budou dostupné na skladě. Tyto výrobky jsou typicky obstarávány ručně nebo přes pravidlo minimálních zásob."
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1389,8 +1175,7 @@ msgid "Manufacturing Orders which are ready to start production."
 msgstr "Výrobní příkazy připravené na započetí výroby."
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom
-#: view:mrp.bom:0
+#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:0
 #: field:mrp.production,bom_id:0
 #: model:process.node,name:mrp.process_node_billofmaterial0
 msgid "Bill of Material"
@@ -1404,8 +1189,7 @@ msgstr "Vybrat jednotku času"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_supply_method_produce
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
-#: model:ir.ui.menu,name:mrp.menu_mrp_product_form
-#: view:mrp.config.settings:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_product_form view:mrp.config.settings:0
 msgid "Products"
 msgstr "Výrobky"
 
@@ -1423,12 +1207,9 @@ msgstr "Umístění kde systém naskladní hotové výrobky."
 #: help:mrp.routing.workcenter,routing_id:0
 msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
-"Routing is indicated then,the third tab of a production order (Work Centers) "
-"will be automatically pre-completed."
-msgstr ""
-"Pracovní postup zobrazuje všechna využitá výrobní střediska, délku využití "
-"a/nebo cykly. Pokud je indikován pracovní postup, třetí záložka pořadí "
-"výroby (výrobní střediska) se automaticky doplní."
+"Routing is indicated then,the third tab of a production order (Work Centers)"
+" will be automatically pre-completed."
+msgstr "Pracovní postup zobrazuje všechna využitá výrobní střediska, délku využití a/nebo cykly. Pokud je indikován pracovní postup, třetí záložka pořadí výroby (výrobní střediska) se automaticky doplní."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:519
@@ -1442,10 +1223,7 @@ msgid ""
 "The Minimum Stock Rule is an automatic procurement rule based on a mini and "
 "maxi quantity. It's available in the Inventory management menu and "
 "configured by product."
-msgstr ""
-"Pravidlo Minimálních zásob je automatické zásobovací pravidlo založené na "
-"minimálním a maximálním množství. Je dostupné ve správě inventáře a "
-"nastavuje ho výrobek."
+msgstr "Pravidlo Minimálních zásob je automatické zásobovací pravidlo založené na minimálním a maximálním množství. Je dostupné ve správě inventáře a nastavuje ho výrobek."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:189
@@ -1474,9 +1252,7 @@ msgstr "Naváděcí seznam"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
-"Kusovník vám umožňuje nadefinovat seznam potřebných surovin pro vytvoření "
-"výrobku."
+msgstr "Kusovník vám umožňuje nadefinovat seznam potřebných surovin pro vytvoření výrobku."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:379
@@ -1517,9 +1293,7 @@ msgstr "Objednané množství nesmí být záporné nebo nulové!"
 msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
 "purchase order."
-msgstr ""
-"Pokud je metoda dodávky tohoto výrobku Koupit, systém vytvoří novou "
-"objednávku."
+msgstr "Pokud je metoda dodávky tohoto výrobku Koupit, systém vytvoří novou objednávku."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1569,8 +1343,7 @@ msgid "Hour Account"
 msgstr "Hodinový účet"
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0
-#: field:mrp.production,product_uom:0
+#: field:mrp.bom,product_uom:0 field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product Unit of Measure"
 msgstr "Měrná jednotka výrobku"
@@ -1591,25 +1364,17 @@ msgid "Pending"
 msgstr "Čekající"
 
 #. module: mrp
-#: field:mrp.bom,active:0
-#: field:mrp.routing,active:0
+#: field:mrp.bom,active:0 field:mrp.routing,active:0
 msgid "Active"
 msgstr "Aktivní"
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_routings:0
 msgid ""
-"Routings allow you to create and manage the manufacturing operations that "
-"should be followed\n"
-"                within your work centers in order to produce a product. They "
-"are attached to bills of materials\n"
+"Routings allow you to create and manage the manufacturing operations that should be followed\n"
+"                within your work centers in order to produce a product. They are attached to bills of materials\n"
 "                that will define the required raw materials."
-msgstr ""
-"Pracovní postupy vám umožňují vytvořit a spravovat výrobní úkony které mají "
-"výrobní střediska\n"
-"                následovat pro vytvoření výrobku. Jsou připojeny ke "
-"kusovníkům, které určují\n"
-"                požadované suroviny."
+msgstr "Pracovní postupy vám umožňují vytvořit a spravovat výrobní úkony které mají výrobní střediska\n                následovat pro vytvoření výrobku. Jsou připojeny ke kusovníkům, které určují\n                požadované suroviny."
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1618,10 +1383,8 @@ msgstr "Vytížení výrobních středisek"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
-#: view:mrp.bom:0
-#: field:mrp.bom,property_ids:0
-#: view:mrp.property:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_action view:mrp.bom:0
+#: field:mrp.bom,property_ids:0 view:mrp.property:0
 #: field:procurement.order,property_ids:0
 msgid "Properties"
 msgstr "Vlastnosti"
@@ -1684,8 +1447,7 @@ msgid "When you sell this product, OpenERP will trigger"
 msgstr "Když prodáte tento výrobek, OpenERP spustí"
 
 #. module: mrp
-#: field:mrp.production,origin:0
-#: report:mrp.production.order:0
+#: field:mrp.production,origin:0 report:mrp.production.order:0
 msgid "Source Document"
 msgstr "Zdrojový dokument"
 
@@ -1707,8 +1469,7 @@ msgstr "Výrobní příkazy pro spuštění"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: field:mrp.production.workcenter.line,workcenter_id:0
-#: field:mrp.routing.workcenter,workcenter_id:0
-#: view:mrp.workcenter:0
+#: field:mrp.routing.workcenter,workcenter_id:0 view:mrp.workcenter:0
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
 msgstr "Výrobní středisko"
@@ -1719,41 +1480,18 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a group of properties.\n"
 "              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
-"                bill of materials and sales orders. Properties allows "
-"OpenERP\n"
-"                to automatically select the right bill of materials "
-"according\n"
+"                Define specific property groups that can be assigned to your\n"
+"                bill of materials and sales orders. Properties allows OpenERP\n"
+"                to automatically select the right bill of materials according\n"
 "                to properties selected in the sales order by salesperson.\n"
 "              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sales order, OpenERP "
-"will\n"
+"                For instance, in the property group \"Warranty\", you an have\n"
+"                two properties: 1 year warranty, 3 years warranty. Depending\n"
+"                on the propoerties selected in the sales order, OpenERP will\n"
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro vytvoření skupiny vlastností.\n"
-"              </p><p>\n"
-"                Nadefinujte skupiny vlastností, které mohou být přiřazeny\n"
-"                ke kusovníku a potvrzení objednávky.\n"
-"                Vlastnosti umožňují OpenERP automaticky zvolit správný\n"
-"                kusovník v závislosti na vlastnostech zvolených obchodníkem\n"
-"                v potvrzení objednávky.\n"
-"              </p><p>\n"
-"                Například ve skupině vlastností \"Záruka\" máte dvě "
-"vlastnosti:\n"
-"                jednoletou záruku a tříletou záruku. V závislosti na "
-"vlastnostech\n"
-"                zvolených v potvrzení objednávky naplánuje OpenERP výrobu\n"
-"                za použití shodujících se kusovníků.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření skupiny vlastností.\n              </p><p>\n                Nadefinujte skupiny vlastností, které mohou být přiřazeny\n                ke kusovníku a potvrzení objednávky.\n                Vlastnosti umožňují OpenERP automaticky zvolit správný\n                kusovník v závislosti na vlastnostech zvolených obchodníkem\n                v potvrzení objednávky.\n              </p><p>\n                Například ve skupině vlastností \"Záruka\" máte dvě vlastnosti:\n                jednoletou záruku a tříletou záruku. V závislosti na vlastnostech\n                zvolených v potvrzení objednávky naplánuje OpenERP výrobu\n                za použití shodujících se kusovníků.\n              </p>\n            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1761,19 +1499,15 @@ msgid "Capacity per Cycle"
 msgstr "Kapacita na cykl"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_product_product
-#: view:mrp.bom:0
-#: field:mrp.bom,product_id:0
-#: view:mrp.production:0
-#: field:mrp.production,product_id:0
-#: report:mrp.production.order:0
+#: model:ir.model,name:mrp.model_product_product view:mrp.bom:0
+#: field:mrp.bom,product_id:0 view:mrp.production:0
+#: field:mrp.production,product_id:0 report:mrp.production.order:0
 #: field:mrp.production.product.line,product_id:0
 msgid "Product"
 msgstr "Výrobek"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,hour_total:0
+#: view:mrp.production:0 field:mrp.production,hour_total:0
 msgid "Total Hours"
 msgstr "Celkem hodin"
 
@@ -1788,8 +1522,7 @@ msgid "Print Cost Structure of Product."
 msgstr "Tisknout strukturu ceny výrobku"
 
 #. module: mrp
-#: field:mrp.bom,product_uos:0
-#: field:mrp.production.product.line,product_uos:0
+#: field:mrp.bom,product_uos:0 field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
 msgstr "PJ výrobku"
 
@@ -1800,8 +1533,7 @@ msgstr "Spotřebované výrobky"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
-#: view:mrp.product.produce:0
-#: view:mrp.production:0
+#: view:mrp.product.produce:0 view:mrp.production:0
 msgid "Produce"
 msgstr "Vyrobit"
 
@@ -1817,9 +1549,7 @@ msgstr "Vytvořit objednávku"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr ""
-"Popis výrobního střediska. Uveďte zde, jak vypadá cyklus tohoto výrobního "
-"střediska."
+msgstr "Popis výrobního střediska. Uveďte zde, jak vypadá cyklus tohoto výrobního střediska."
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
@@ -1832,12 +1562,9 @@ msgid "Resource"
 msgstr "Zdroj"
 
 #. module: mrp
-#: help:mrp.bom,date_start:0
-#: help:mrp.bom,date_stop:0
+#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
-msgstr ""
-"Platnost tohoto kusovníku nebo komponenty. Nechte prázdné pokud je vždy "
-"platný."
+msgstr "Platnost tohoto kusovníku nebo komponenty. Nechte prázdné pokud je vždy platný."
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
@@ -1856,11 +1583,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr ""
-"Seznam úkonů (seznam výrobních středisek) pro vyrobení konečného výrobku. "
-"Pracovní postup je použit zejména pro výpočet pracovních nákladů "
-"jednotlivých úkonů a pro plánování budoucí vytížení výrobních středisek na "
-"základě plánování výroby."
+msgstr "Seznam úkonů (seznam výrobních středisek) pro vyrobení konečného výrobku. Pracovní postup je použit zejména pro výpočet pracovních nákladů jednotlivých úkonů a pro plánování budoucí vytížení výrobních středisek na základě plánování výroby."
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -1888,8 +1611,7 @@ msgid "Source Location"
 msgstr "Zdrojové umístění"
 
 #. module: mrp
-#: view:mrp.production:0
-#: view:mrp.production.product.line:0
+#: view:mrp.production:0 view:mrp.production.product.line:0
 msgid "Scheduled Products"
 msgstr "Plánované výrobky"
 
@@ -1901,19 +1623,12 @@ msgstr "Manažer"
 #. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
-"'Consume only' mode will only consume the products with the quantity "
-"selected.\n"
-"'Consume & Produce' mode will consume as well as produce the products with "
-"the quantity selected and it will finish the production order when total "
-"ordered quantities are produced."
-msgstr ""
-"Režim 'Jen využít' využije jen výrobky udaného objemu.\n"
-"Režim 'Využít & vyrobit' využije a vyrobí výrobky udaného objemu a dokončí "
-"výrobní příkaz jakmile bude dosaženo celkového objednaného objemu."
+"'Consume only' mode will only consume the products with the quantity selected.\n"
+"'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
+msgstr "Režim 'Jen využít' využije jen výrobky udaného objemu.\nRežim 'Využít & vyrobit' využije a vyrobí výrobky udaného objemu a dokončí výrobní příkaz jakmile bude dosaženo celkového objednaného objemu."
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
+#: view:mrp.production:0 report:mrp.production.order:0
 msgid "Work Orders"
 msgstr "Pracovní příkazy"
 
@@ -1941,13 +1656,9 @@ msgstr "(Aktualizovat)"
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid ""
-"This allows to add state, date_start,date_stop in production order operation "
-"lines (in the \"Work Centers\" tab).\n"
+"This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "                This installs the module mrp_operations."
-msgstr ""
-"Tímto povolíte pole state, date_start,date_stop v řádcích výrobních příkazů "
-"(na záložce \"Výrobní střediska\").\n"
-"               Bude nainstalován modul mrp_operations."
+msgstr "Tímto povolíte pole state, date_start,date_stop v řádcích výrobních příkazů (na záložce \"Výrobní střediska\").\n               Bude nainstalován modul mrp_operations."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:779
@@ -1955,9 +1666,7 @@ msgstr ""
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
 "But you can only consume up to total %s quantities."
-msgstr ""
-"Chcete využít celkem %s jednotek \"%s\".\n"
-"Můžete však využít jen %s jednotek."
+msgstr "Chcete využít celkem %s jednotek \"%s\".\nMůžete však využít jen %s jednotek."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
@@ -1965,15 +1674,11 @@ msgid ""
 "The Bill of Material is the product's decomposition. The components (that "
 "are products themselves) can also have their own Bill of Material (multi-"
 "level)."
-msgstr ""
-"Kusovník je rozložení výrobku. Komponenty (které jsou samy výrobky) mohou "
-"mít též svůj kusovník (víceúrovňový)."
+msgstr "Kusovník je rozložení výrobku. Komponenty (které jsou samy výrobky) mohou mít též svůj kusovník (víceúrovňový)."
 
 #. module: mrp
-#: field:mrp.bom,company_id:0
-#: field:mrp.production,company_id:0
-#: field:mrp.routing,company_id:0
-#: field:mrp.routing.workcenter,company_id:0
+#: field:mrp.bom,company_id:0 field:mrp.production,company_id:0
+#: field:mrp.routing,company_id:0 field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:0
 msgid "Company"
 msgstr "Společnost"
@@ -2007,8 +1712,7 @@ msgid "Automatic procurement rule"
 msgstr "Pravidlo automatického zásobování"
 
 #. module: mrp
-#: field:mrp.bom,message_ids:0
-#: field:mrp.production,message_ids:0
+#: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
 #: field:mrp.production.workcenter.line,message_ids:0
 msgid "Messages"
 msgstr "Zprávy"
@@ -2027,9 +1731,7 @@ msgid "Error!"
 msgstr "Chyba!"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: view:mrp.bom:0
-#: view:product.product:0
+#: code:addons/mrp/report/price.py:141 view:mrp.bom:0 view:product.product:0
 #, python-format
 msgid "Components"
 msgstr "Součásti"
@@ -2084,7 +1786,7 @@ msgstr "Pohyb výrobku"
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Operation"
-msgstr ""
+msgstr "Úkon"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2092,9 +1794,7 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receptions of products and delivery "
 "orders."
-msgstr ""
-"Týdení změna hodnoty zásob vám umožňuje sledovat změnu hodnoty zásob v "
-"návaznosti na aktivitu výroby, příjem výrobku a dodání objednávek."
+msgstr "Týdení změna hodnoty zásob vám umožňuje sledovat změnu hodnoty zásob v návaznosti na aktivitu výroby, příjem výrobku a dodání objednávek."
 
 #. module: mrp
 #: view:mrp.product.produce:0
@@ -2118,9 +1818,7 @@ msgstr "Sledující"
 msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
-msgstr ""
-"Pokud je aktivní pole nastaveno na nepravdu, umožní vám skrýt kusovník bez "
-"jeho odebrání."
+msgstr "Pokud je aktivní pole nastaveno na nepravdu, umožní vám skrýt kusovník bez jeho odebrání."
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
@@ -2174,8 +1872,7 @@ msgstr "Celkem množ."
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
-#: field:mrp.routing.workcenter,hour_nbr:0
-#: field:report.workcenter.load,hour:0
+#: field:mrp.routing.workcenter,hour_nbr:0 field:report.workcenter.load,hour:0
 msgid "Number of Hours"
 msgstr "Počet hodin"
 
@@ -2205,32 +1902,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a bill of material. \n"
 "              </p><p>\n"
-"                Bills of Materials allow you to define the list of required "
-"raw\n"
-"                materials used to make a finished product; through a "
-"manufacturing\n"
+"                Bills of Materials allow you to define the list of required raw\n"
+"                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products.\n"
 "              </p><p>\n"
-"                OpenERP uses these BoMs to automatically propose "
-"manufacturing\n"
+"                OpenERP uses these BoMs to automatically propose manufacturing\n"
 "                orders according to procurement needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro vytvoření kusovníku. \n"
-"              </p><p>\n"
-"                Kusovník vám umožňuje definovat seznam surových materiálů "
-"pro vytvoření\n"
-"                konečného výrobku prostřednictvím objednávek výroby nebo "
-"sestavy\n"
-"                výrobků.\n"
-"              </p><p>\n"
-"                Tyto kusovníky jsou OpenERP automaticky využívány pro "
-"doporučení\n"
-"                objednávek výroby na základě zásobovacích požadavků.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření kusovníku. \n              </p><p>\n                Kusovník vám umožňuje definovat seznam surových materiálů pro vytvoření\n                konečného výrobku prostřednictvím objednávek výroby nebo sestavy\n                výrobků.\n              </p><p>\n                Tyto kusovníky jsou OpenERP automaticky využívány pro doporučení\n                objednávek výroby na základě zásobovacích požadavků.\n              </p>\n            "
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2254,11 +1934,7 @@ msgid ""
 "                Without this module: A + B + C -> D.\n"
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
-msgstr ""
-"Polotovary můžete nastavit v kusovníku.\n"
-"                Bez tohoto modulu: A + B + C -> D.\n"
-"                S tímto modulem: A + B + C -> D + E.\n"
-"                Bude nainstalován modul module mrp_byproduct."
+msgstr "Polotovary můžete nastavit v kusovníku.\n                Bez tohoto modulu: A + B + C -> D.\n                S tímto modulem: A + B + C -> D + E.\n                Bude nainstalován modul module mrp_byproduct."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -2266,8 +1942,7 @@ msgid "BoM"
 msgstr "Kusovník"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_report_mrp_inout
-#: view:report.mrp.inout:0
+#: model:ir.model,name:mrp.model_report_mrp_inout view:report.mrp.inout:0
 msgid "Stock value variation"
 msgstr "Změna hodnoty zásob"
 
@@ -2284,8 +1959,7 @@ msgid "Cost Price per Unit of Measure"
 msgstr "Cena za měrnou jednotku"
 
 #. module: mrp
-#: field:report.mrp.inout,date:0
-#: view:report.workcenter.load:0
+#: field:report.mrp.inout,date:0 view:report.workcenter.load:0
 #: field:report.workcenter.load,name:0
 msgid "Week"
 msgstr "Týden"
@@ -2338,9 +2012,7 @@ msgstr "Odk. kusov."
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
 "But you can only produce up to total %s quantities."
-msgstr ""
-"Celkem vyrobíte %s jednotek \"%s\".\n"
-"Můžete však vyrobit jen %s jednotek."
+msgstr "Celkem vyrobíte %s jednotek \"%s\".\nMůžete však vyrobit jen %s jednotek."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
@@ -2365,10 +2037,8 @@ msgstr "Vyberte množství"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.actions.act_window,name:mrp.product_open_bom
-#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
-#: view:mrp.bom:0
-#: view:product.product:0
-#: field:product.product,bom_ids:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action view:mrp.bom:0
+#: view:product.product:0 field:product.product,bom_ids:0
 msgid "Bill of Materials"
 msgstr "Kusovník"
 
@@ -2382,12 +2052,8 @@ msgstr "Nepodařilo se najít kusovník tohoto výrobku"
 #: view:product.product:0
 msgid ""
 "using the bill of materials assigned to this product.\n"
-"                        The delivery order will be ready once the production "
-"is done."
-msgstr ""
-"při použití kusovníku přiřazeného k tomuto výrobku.\n"
-"                        Objednávka dodání bude hotova jakmile bude výrobek "
-"vyroben."
+"                        The delivery order will be ready once the production is done."
+msgstr "při použití kusovníku přiřazeného k tomuto výrobku.\n                        Objednávka dodání bude hotova jakmile bude výrobek vyroben."
 
 #. module: mrp
 #: field:mrp.config.settings,module_stock_no_autopicking:0
@@ -2405,8 +2071,7 @@ msgid "Productions"
 msgstr "Výroby"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_stock_move_split
-#: view:mrp.production:0
+#: model:ir.model,name:mrp.model_stock_move_split view:mrp.production:0
 msgid "Split in Serial Numbers"
 msgstr "Rozdělit podle seriových čísel"
 
@@ -2415,13 +2080,10 @@ msgstr "Rozdělit podle seriových čísel"
 msgid ""
 "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
 "promotion of stock."
-msgstr ""
-"PM výrobku (Prodejní jednotka) je jednotka měrnosti pro fakturaci a podporu "
-"zásob."
+msgstr "PM výrobku (Prodejní jednotka) je jednotka měrnosti pro fakturaci a podporu zásob."
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:stock.move,production_id:0
+#: view:mrp.production:0 field:stock.move,production_id:0
 msgid "Production"
 msgstr "Výroba"
 
@@ -2453,8 +2115,7 @@ msgid "Change Product Qty"
 msgstr "Změnit množ. výrobků"
 
 #. module: mrp
-#: field:mrp.routing,note:0
-#: field:mrp.routing.workcenter,note:0
+#: field:mrp.routing,note:0 field:mrp.routing.workcenter,note:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "Popis"
@@ -2488,15 +2149,10 @@ msgstr "Výroba"
 msgid ""
 "If a by-product is used in several products, it can be useful to create its "
 "own BoM. Though if you don't want separated production orders for this by-"
-"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
-"product, it will be sold and shipped as a set of components, instead of "
+"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root"
+" product, it will be sold and shipped as a set of components, instead of "
 "being produced."
-msgstr ""
-"Pokud je polotovar použit v několika výrobcích, je vhodné vytvořit mu "
-"vlastní kusovník. Pokud nechcete pro tento polotovar vytvářet další výrobní "
-"příkazy, zvolte Sestava / Fiktivní jako druh kusovníku. Pokud je použit "
-"fiktivní kusovník pro kořenový výrobek, bude tento prodán a dodán jako "
-"sestava komponent místo toho aby byl vyroben."
+msgstr "Pokud je polotovar použit v několika výrobcích, je vhodné vytvořit mu vlastní kusovník. Pokud nechcete pro tento polotovar vytvářet další výrobní příkazy, zvolte Sestava / Fiktivní jako druh kusovníku. Pokud je použit fiktivní kusovník pro kořenový výrobek, bude tento prodán a dodán jako sestava komponent místo toho aby byl vyroben."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -2509,9 +2165,7 @@ msgstr "Nastavit výrobu"
 msgid ""
 "a manufacturing\n"
 "                        order"
-msgstr ""
-"objednávka\n"
-"                        výroby"
+msgstr "objednávka\n                        výroby"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
@@ -2520,12 +2174,9 @@ msgid "Property Groups"
 msgstr "Skupiny vlastností"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_routing
-#: view:mrp.bom:0
-#: field:mrp.bom,routing_id:0
-#: view:mrp.production:0
-#: field:mrp.production,routing_id:0
-#: view:mrp.routing:0
+#: model:ir.model,name:mrp.model_mrp_routing view:mrp.bom:0
+#: field:mrp.bom,routing_id:0 view:mrp.production:0
+#: field:mrp.production,routing_id:0 view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
 msgstr "Pracovní postup"
@@ -2535,9 +2186,7 @@ msgstr "Pracovní postup"
 msgid ""
 "Depending on the chosen method to supply the stockable products, the "
 "procurement order creates a RFQ, a production order, ... "
-msgstr ""
-"Na základě zvolené metody dodání výrobků na sklad, objednávka zásob vytvoří "
-"požadavek na cenovou nabídku, výrobní příkaz, ... "
+msgstr "Na základě zvolené metody dodání výrobků na sklad, objednávka zásob vytvoří požadavek na cenovou nabídku, výrobní příkaz, ... "
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -2545,8 +2194,7 @@ msgid "Time in hours for the cleaning."
 msgstr "Čas v hodinách pro uklízení."
 
 #. module: mrp
-#: field:mrp.bom,message_summary:0
-#: field:mrp.production,message_summary:0
+#: field:mrp.bom,message_summary:0 field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
 msgstr "Souhrn"
@@ -2561,9 +2209,7 @@ msgstr "Automatické vyžádání cenových nabídek"
 msgid ""
 "If the service has a 'Produce' supply method, this creates a task in the "
 "project management module of OpenERP."
-msgstr ""
-"Pokud má služba metodu dodání 'Vyrobit', vytvoří se v modulu řízení projektů "
-"OpenERP nový úkol."
+msgstr "Pokud má služba metodu dodání 'Vyrobit', vytvoří se v modulu řízení projektů OpenERP nový úkol."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_productionprocureproducts0
@@ -2571,19 +2217,14 @@ msgid ""
 "In order to supply raw material (to be purchased or produced), the "
 "production order creates as much procurement orders as components listed in "
 "the BOM, through a run of the schedulers (MRP)."
-msgstr ""
-"Pro dodání surovin (pro výrobu nebo nákup), výrobní příkaz vytvoří tolik "
-"objednávek zásob, kolik je jich v kusovníku prostřednictvím běhu plánovačů "
-"(MRP)."
+msgstr "Pro dodání surovin (pro výrobu nebo nákup), výrobní příkaz vytvoří tolik objednávek zásob, kolik je jich v kusovníku prostřednictvím běhu plánovačů (MRP)."
 
 #. module: mrp
 #: help:mrp.product_price,number:0
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
-msgstr ""
-"Zadejte množství výrobků k výrobě nebo nákupu. Výkaz struktury ceny bude "
-"zobrazen na základě množství."
+msgstr "Zadejte množství výrobků k výrobě nebo nákupu. Výkaz struktury ceny bude zobrazen na základě množství."
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2591,8 +2232,7 @@ msgid "On Stock"
 msgstr "Na skladě"
 
 #. module: mrp
-#: field:mrp.bom,sequence:0
-#: report:mrp.production.order:0
+#: field:mrp.bom,sequence:0 report:mrp.production.order:0
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0
 msgid "Sequence"
@@ -2614,14 +2254,7 @@ msgid "mrp.config.settings"
 msgstr "mrp.config.settings"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,move_lines:0
+#: view:mrp.production:0 field:mrp.production,move_lines:0
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "Výrobků ke spotřebě"
-
-#~ msgid "Allow several bill of materials per products using properties"
-#~ msgstr "Umožnit více kusovníků k výrobku za pomocí vlastností"
-
-#~ msgid "Allow detailed planning of work order"
-#~ msgstr "Umožní podrobné plánování pracovního příkazu"

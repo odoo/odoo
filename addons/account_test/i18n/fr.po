@@ -1,78 +1,47 @@
-# French translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_test
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-01-11 07:30+0000\n"
-"Last-Translator: Philippe Latouche - Savoir-faire Linux <Unknown>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 10:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/projects/p/odoo-7/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-12 05:48+0000\n"
-"X-Generator: Launchpad (build 16890)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
+"Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr ""
-"Le code devrait définir une variable nommée 'result' avec pour valeur le "
-"résultat de votre test, et de type liste ou\n"
-"dictionnaire. Si 'result' est une liste vide, alors le test fut réussi. "
-"Autrement il essaiera\n"
-"de traduire et d'imprimer le contenu de 'result'.\n"
-"\n"
-"Si le 'result' de votre test est un dictionnaire, vous pouvez définir une "
-"variable nommée 'column_order' pour indiquer\n"
-"dans quel ordre vous voulez imprimer le contenu de 'result'.\n"
-"\n"
-"En cas de besoin, vous pouvez aussi utiliser les variables suivantes dans "
-"votre code:\n"
-"    * cr: curseur de base de données\n"
-"    * uid: ID de l'utilisateur actuel\n"
-"\n"
-"Dans tous les cas, le code doit être des déclarations python correctes avec "
-"une indentation correcte (si besoin).\n"
-"\n"
-"Exemple: \n"
-"    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    result = cr.dictfetchall()"
+msgstr "Le code devrait définir une variable nommée 'result' avec pour valeur le résultat de votre test, et de type liste ou\ndictionnaire. Si 'result' est une liste vide, alors le test fut réussi. Autrement il essaiera\nde traduire et d'imprimer le contenu de 'result'.\n\nSi le 'result' de votre test est un dictionnaire, vous pouvez définir une variable nommée 'column_order' pour indiquer\ndans quel ordre vous voulez imprimer le contenu de 'result'.\n\nEn cas de besoin, vous pouvez aussi utiliser les variables suivantes dans votre code:\n    * cr: curseur de base de données\n    * uid: ID de l'utilisateur actuel\n\nDans tous les cas, le code doit être des déclarations python correctes avec une indentation correcte (si besoin).\n\nExemple: \n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
@@ -82,14 +51,13 @@ msgstr "Test 2: Ouverture d'un exercice"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
 msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
-msgid ""
-"Check if movement lines are balanced and have the same date and period"
+msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
 
 #. module: account_test
@@ -132,7 +100,7 @@ msgstr "Description du test"
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
@@ -160,7 +128,7 @@ msgstr "Le test a été effectué avec succès."
 #. module: account_test
 #: field:accounting.assert.test,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
@@ -186,11 +154,9 @@ msgstr "Source python"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
-msgstr ""
-"Vérifie sur le relevé bancaire que le solde de fermeture = solde d'ouverture "
-"+ somme des lignes de transaction"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
+msgstr "Vérifie sur le relevé bancaire que le solde de fermeture = solde d'ouverture + somme des lignes de transaction"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
@@ -210,7 +176,7 @@ msgstr ""
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Expression"
-msgstr ""
+msgstr "Expression"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
@@ -225,21 +191,19 @@ msgstr ""
 #. module: account_test
 #: field:accounting.assert.test,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Séquence"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
 msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
-msgstr ""
-"Vérifier si le solde du dernier exercice comptable ouvert correspond au "
-"solde de l'exercice précédent"
+msgstr "Vérifier si le solde du dernier exercice comptable ouvert correspond au solde de l'exercice précédent"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Python Code"
-msgstr ""
+msgstr "Code Python"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -248,11 +212,7 @@ msgid ""
 "                Click to create Accounting Test.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_no_content_create\">\n"
-"                Cliquer pour créer un test (Comptabilité).\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_no_content_create\">\n                Cliquer pour créer un test (Comptabilité).\n              </p>\n            "
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01

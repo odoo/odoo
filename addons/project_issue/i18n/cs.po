@@ -1,21 +1,21 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-03-31 16:53+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-7/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 07:17+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -35,10 +35,9 @@ msgid "Avg. Delay to Open"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Seskupit podle..."
 
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
@@ -53,7 +52,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,date_open:0
 msgid "Opened"
-msgstr ""
+msgstr "Otevřené"
 
 #. module: project_issue
 #: field:project.issue.report,opening_date:0
@@ -63,25 +62,23 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Březen"
 
 #. module: project_issue
 #: field:project.issue,progress:0
 msgid "Progress (%)"
-msgstr ""
+msgstr "Průběh (%)"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,message_unread:0
+#: view:project.issue:0 field:project.issue,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nepřečtené zprávy"
 
 #. module: project_issue
-#: field:project.issue,company_id:0
-#: view:project.issue.report:0
+#: field:project.issue,company_id:0 view:project.issue.report:0
 #: field:project.issue.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Společnost"
 
 #. module: project_issue
 #: field:project.issue,email_cc:0
@@ -94,14 +91,13 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
@@ -111,7 +107,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,day_open:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Dnů do otevření"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:493
@@ -130,7 +126,7 @@ msgstr ""
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Highest"
-msgstr ""
+msgstr "Nejvyšší"
 
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
@@ -138,10 +134,9 @@ msgid "Difference in days between last action and current date"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,day:0
+#: view:project.issue.report:0 field:project.issue.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Den"
 
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
@@ -149,11 +144,10 @@ msgid "Days since creation date"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,task_id:0
-#: view:project.issue.report:0
+#: field:project.issue,task_id:0 view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
-msgstr ""
+msgstr "Úkol"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -163,7 +157,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Zprávy"
 
 #. module: project_issue
 #: field:project.issue,inactivity_days:0
@@ -172,12 +166,10 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0
-#: field:project.issue,project_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,project_id:0
+#: view:project.issue:0 field:project.issue,project_id:0
+#: view:project.issue.report:0 field:project.issue.report,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -185,8 +177,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to report a new issue.\n"
 "          </p><p>\n"
-"            The OpenERP issues tacker allows you to efficiantly manage "
-"things\n"
+"            The OpenERP issues tacker allows you to efficiantly manage things\n"
 "            like internal requests, software development bugs, customer\n"
 "            complaints, project troubles, material breakdowns, etc.\n"
 "          </p>\n"
@@ -194,10 +185,9 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: selection:project.issue.report,state:0
+#: selection:project.issue,state:0 selection:project.issue.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: project_issue
 #: field:project.issue,description:0
@@ -217,7 +207,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Index barvy"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
@@ -227,14 +217,14 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analytický účet"
 
 #. module: project_issue
 #: help:project.issue,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Udržuje souhrn klábosení (počet zpráv, ...). Tento souhrn je přímo ve formátu HTML aby jej bylo možné vložit do pohledů kanban."
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -246,23 +236,23 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Další informace"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:493
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varování!"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Edit..."
-msgstr ""
+msgstr "Upravit..."
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Responsible"
-msgstr ""
+msgstr "Odpovědný"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
@@ -273,12 +263,12 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Statistics"
-msgstr ""
+msgstr "Statistiky"
 
 #. module: project_issue
 #: field:project.issue,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "Stav kanban"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:378
@@ -287,32 +277,27 @@ msgid "Project issue <b>converted</b> to task."
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,priority:0
-#: view:project.issue.report:0
-#: field:project.issue.report,priority:0
+#: view:project.issue:0 field:project.issue,priority:0
+#: view:project.issue.report:0 field:project.issue.report,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Priorita"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,version_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,version_id:0
+#: view:project.issue:0 field:project.issue,version_id:0
+#: view:project.issue.report:0 field:project.issue.report,version_id:0
 msgid "Version"
-msgstr ""
+msgstr "Verze"
 
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Sledující"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "New"
-msgstr ""
+msgstr "Nové"
 
 #. module: project_issue
 #: view:project.project:0
@@ -322,25 +307,24 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,email_from:0
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0
-#: field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
 msgid "Channel"
-msgstr ""
+msgstr "Kanál"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Lowest"
-msgstr ""
+msgstr "Nejnižší"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:400
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -348,11 +332,10 @@ msgid "Unassigned Issues"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,create_date:0
-#: view:project.issue.report:0
+#: field:project.issue,create_date:0 view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Datum vytvoření"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_version_action
@@ -376,16 +359,15 @@ msgid "Create issues from an incoming email account "
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
-msgstr ""
+msgstr "Dokončeno"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Červenec"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -397,12 +379,10 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,stage_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,stage_id:0
+#: view:project.issue:0 field:project.issue,stage_id:0
+#: view:project.issue.report:0 field:project.issue.report,stage_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Fáze"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
@@ -415,7 +395,7 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:532
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Bez předmětu"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -423,23 +403,21 @@ msgid "My Project Issues"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,partner_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,partner_id:0
+#: view:project.issue:0 field:project.issue,partner_id:0
+#: view:project.issue.report:0 field:project.issue.report,partner_id:0
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Delete"
-msgstr ""
+msgstr "?!?Smazat"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:383
 #, python-format
 msgid "Tasks"
-msgstr ""
+msgstr "Úkoly"
 
 #. module: project_issue
 #: field:project.issue.report,nbr:0
@@ -449,17 +427,17 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Září"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Prosinec"
 
 #. module: project_issue
 #: field:project.issue,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Štítky"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -479,7 +457,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,write_date:0
 msgid "Update Date"
-msgstr ""
+msgstr "Datum aktualizace"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -494,18 +472,17 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,date_action_next:0
 msgid "Next Action"
-msgstr ""
+msgstr "Další akce"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Blokovaný"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "uživatelský e-mail"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -523,24 +500,23 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
+msgstr "Tyto emailové adresy budou přidány do pole CC všech příchozích a odchozích emailů pro tento záznam před odesláním. Oddělte více emailových adres pomocí čárky"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Koncept"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Low"
-msgstr ""
+msgstr "Nízká"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0
-#: selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Uzavřeno"
 
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
@@ -548,18 +524,16 @@ msgid "Avg. Delay to Close"
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0
-#: view:project.issue.report:0
+#: selection:project.issue,state:0 view:project.issue.report:0
 #: selection:project.issue.report,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Čekající"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,state:0
+#: view:project.issue:0 field:project.issue,state:0
 #: field:project.issue.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -569,14 +543,13 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Srpen"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-#: selection:project.issue,priority:0
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "Normální"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -586,12 +559,12 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Červen"
 
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Zprávy a historie komunikace"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -601,33 +574,32 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Dnů k uzavření"
 
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Sleduje"
 
 #. module: project_issue
 #: help:project.issue,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,active:0
-#: field:project.issue.version,active:0
+#: field:project.issue,active:0 field:project.issue.version,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Listopad"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:513
@@ -638,12 +610,12 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "Search"
-msgstr ""
+msgstr "Hledat"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Creation Month"
-msgstr ""
+msgstr "Měsíc vytvoření"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -653,7 +625,7 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Leden"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -663,29 +635,28 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Tito lidé obdrží email."
 
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Shrnutí"
 
 #. module: project_issue
 #: field:project.issue,date:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: project_issue
-#: field:project.issue,user_id:0
-#: view:project.issue.report:0
+#: field:project.issue,user_id:0 view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
-msgstr ""
+msgstr "Vykonává"
 
 #. module: project_issue
 #: view:project.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Nastavit"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_closed
@@ -700,7 +671,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue.version:0
 msgid "Issue Version"
-msgstr ""
+msgstr "Verze problému"
 
 #. module: project_issue
 #: field:project.issue.version,name:0
@@ -710,7 +681,7 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Open"
-msgstr ""
+msgstr "Otevřít"
 
 #. module: project_issue
 #: field:account.analytic.account,use_issues:0
@@ -718,22 +689,19 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: view:project.issue:0
-#: view:project.project:0
+#: view:project.issue:0 view:project.project:0
 msgid "Issues"
-msgstr ""
+msgstr "Úkoly"
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,state:0
+#: view:project.issue:0 selection:project.issue,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Probíhá"
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 msgid "To Do"
-msgstr ""
+msgstr "Provést"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
@@ -744,7 +712,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Přidat interní poznámku..."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -762,33 +730,28 @@ msgid "Unclosed Issues"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: selection:project.issue,kanban_state:0
+#: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Připraveno na další fázi"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Říjen"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,section_id:0
+#: view:project.issue.report:0 field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-#: view:project.issue.report:0
+#: view:project.issue:0 view:project.issue.report:0
 #: field:project.issue.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Měsíc"
 
 #. module: project_issue
-#: view:project.issue:0
-#: field:project.issue,name:0
-#: view:project.project:0
+#: view:project.issue:0 field:project.issue,name:0 view:project.project:0
 msgid "Issue"
 msgstr ""
 
@@ -805,17 +768,17 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: project_issue
 #: field:project.issue,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Obchodní tým"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Květen"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
@@ -829,8 +792,7 @@ msgid "Issue Closed"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,email:0
+#: view:project.issue.report:0 field:project.issue.report,email:0
 msgid "# Emails"
 msgstr ""
 
@@ -844,18 +806,18 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:511
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Zákazník"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Únor"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Fáze změněna"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -873,8 +835,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new version.\n"
 "              </p><p>\n"
-"                Define here the different versions of your products on "
-"which\n"
+"                Define here the different versions of your products on which\n"
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
@@ -900,7 +861,7 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Duben"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -920,7 +881,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
@@ -945,34 +906,33 @@ msgstr ""
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Změna fáze"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "High"
-msgstr ""
+msgstr "Vysoká"
 
 #. module: project_issue
 #: field:project.issue,date_deadline:0
 msgid "Deadline"
-msgstr ""
+msgstr "Končný termín"
 
 #. module: project_issue
 #: field:project.issue,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "Poslední akce"
 
 #. module: project_issue
-#: view:project.issue.report:0
-#: field:project.issue.report,name:0
+#: view:project.issue.report:0 field:project.issue.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Rok"
 
 #. module: project_issue
 #: field:project.issue,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Trvání"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_started

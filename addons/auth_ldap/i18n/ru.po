@@ -1,38 +1,38 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * auth_ldap
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:01+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: auth_ldap
 #: field:res.company.ldap,user:0
 msgid "Template User"
-msgstr ""
+msgstr "Шаблон пользователя"
 
 #. module: auth_ldap
 #: help:res.company.ldap,ldap_tls:0
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
-"option requires a server with STARTTLS enabled, otherwise all authentication "
-"attempts will fail."
-msgstr ""
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr "Запросить поддержку TLS/SSL шифрования при подключении к LDAP серверу. Для подключения требуется LDAP сервер с поддержкой параметра STARTTLS, в противном случае все попытки проверки подлинности потерпят неудачу."
 
 #. module: auth_ldap
-#: view:res.company:0
-#: view:res.company.ldap:0
+#: view:res.company:0 view:res.company.ldap:0
 msgid "LDAP Configuration"
 msgstr "Конфигурация LDAP"
 
@@ -61,7 +61,7 @@ msgstr "Порт сервера LDAP"
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
-msgstr ""
+msgstr "Автоматически создавать локальную учетную запись для новых пользователей прошедших проверку подлинности LDAP"
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_base:0
@@ -71,7 +71,7 @@ msgstr "LDAP base"
 #. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "User Information"
-msgstr ""
+msgstr "Сведения о пользователе"
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_password:0
@@ -86,7 +86,7 @@ msgstr "Организации"
 #. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "Process Parameter"
-msgstr ""
+msgstr "Параметры подключения"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
@@ -96,12 +96,12 @@ msgstr "res.company.ldap"
 #. module: auth_ldap
 #: help:res.company.ldap,user:0
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "Шаблон локального пользователя для создания новых учетных записей"
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_tls:0
 msgid "Use TLS"
-msgstr ""
+msgstr "Использовать TLS"
 
 #. module: auth_ldap
 #: field:res.company.ldap,sequence:0
@@ -111,21 +111,20 @@ msgstr "Последовательность"
 #. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "Login Information"
-msgstr ""
+msgstr "Информация входа"
 
 #. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "Server Information"
-msgstr ""
+msgstr "Сведения о сервере"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "Настройте параметры поключения к LDAP серверу"
 
 #. module: auth_ldap
-#: view:res.company:0
-#: field:res.company,ldaps:0
+#: view:res.company:0 field:res.company,ldaps:0
 msgid "LDAP Parameters"
 msgstr "Параметры LDAP"
 
@@ -134,19 +133,19 @@ msgstr "Параметры LDAP"
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
-msgstr ""
+msgstr "Пароль пользователя LDAP, который будет использован при запросах в LDAP каталог."
 
 #. module: auth_ldap
 #: help:res.company.ldap,ldap_binddn:0
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
-msgstr ""
+msgstr "Учетная запись пользователя LDAP, которая будет использована при запросах в LDAP каталог. Оставьте пустым для анонимного подключения."
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_filter:0

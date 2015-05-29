@@ -1,21 +1,22 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-05-07 19:49+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-7/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:39+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -49,8 +50,7 @@ msgid "Open Customer Journal Entries"
 msgstr "Otvori dnevničke zapise kupaca"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: view:sale.receipt.report:0
+#: view:account.voucher:0 view:sale.receipt.report:0
 msgid "Group By..."
 msgstr "Grupiši po..."
 
@@ -59,9 +59,7 @@ msgstr "Grupiši po..."
 msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
-msgstr ""
-"Izračunato kao razlika između iznosa iskazanog na računu i sume stavki "
-"računa."
+msgstr "Izračunato kao razlika između iznosa iskazanog na računu i sume stavki računa."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -125,13 +123,10 @@ msgstr "Raspodjela"
 msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
-msgstr ""
-"Ovo vam pomaže da znate kako specificirati termin plaćanja tako što vam daje "
-"opis efekta koji ima"
+msgstr "Ovo vam pomaže da znate kako specificirati termin plaćanja tako što vam daje opis efekta koji ima"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,user_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,user_id:0
 msgid "Salesperson"
 msgstr "Prodavač(ica)"
 
@@ -174,14 +169,7 @@ msgid ""
 "                supplier payment related to this purchase receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje novog računa nabavke. \n"
-"              </p><p>\n"
-"                Nakon potvrđivanja računa nabavke, moguće je evidentirati\n"
-"                uplate dobavljaču povezane sa tim računom nabavke.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za kreiranje novog računa nabavke. \n              </p><p>\n                Nakon potvrđivanja računa nabavke, moguće je evidentirati\n                uplate dobavljaču povezane sa tim računom nabavke.\n              </p>\n            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -194,8 +182,7 @@ msgid "Counterpart Account"
 msgstr "Protukonto"
 
 #. module: account_voucher
-#: field:account.voucher,account_id:0
-#: field:account.voucher.line,account_id:0
+#: field:account.voucher,account_id:0 field:account.voucher.line,account_id:0
 #: field:sale.receipt.report,account_id:0
 msgid "Account"
 msgstr "Konto"
@@ -216,10 +203,8 @@ msgid "Full Reconcile"
 msgstr "Kompletno zatvaranje"
 
 #. module: account_voucher
-#: field:account.voucher,date_due:0
-#: field:account.voucher.line,date_due:0
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,date_due:0
+#: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,date_due:0
 msgid "Due Date"
 msgstr "Datum dospijeća"
 
@@ -272,8 +257,7 @@ msgid "Other Information"
 msgstr "Ostali podaci"
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: selection:sale.receipt.report,state:0
+#: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
 msgid "Cancelled"
 msgstr "Otkazano"
 
@@ -281,7 +265,8 @@ msgstr "Otkazano"
 #: code:addons/account_voucher/account_voucher.py:1261
 #, python-format
 msgid ""
-"You have to configure account base code and account tax code on the '%s' tax!"
+"You have to configure account base code and account tax code on the '%s' "
+"tax!"
 msgstr "Morate podesiti konto  osnovice i konto poreza na '%s' porezu!"
 
 #. module: account_voucher
@@ -290,20 +275,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a sale receipt.\n"
 "              </p><p>\n"
-"                When the sale receipt is confirmed, you can record the "
-"customer\n"
+"                When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje novog računa prodaje.\n"
-"              </p><p>\n"
-"               Nakon kreiranje računa prodaje, moguće je evidentirati uplate "
-"kupaca\n"
-"               povezane sa ovim računom.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za kreiranje novog računa prodaje.\n              </p><p>\n               Nakon kreiranje računa prodaje, moguće je evidentirati uplate kupaca\n               povezane sa ovim računom.\n              </p>\n            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -316,14 +292,12 @@ msgid "Bank Statement Line"
 msgstr "Stavka izvoda banke"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,day:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,day:0
 msgid "Day"
 msgstr "Dan"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,tax_id:0
+#: view:account.voucher:0 field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Porez"
 
@@ -348,9 +322,7 @@ msgstr "Analitičko konto"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sadrži sažetak konverzacije (broj poruka..). Ovaj sažetak je u html formatu "
-"da bi mogao biti ubačen u kanban pogled."
+msgstr "Sadrži sažetak konverzacije (broj poruka..). Ovaj sažetak je u html formatu da bi mogao biti ubačen u kanban pogled."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -368,10 +340,8 @@ msgid "(update)"
 msgstr "(osvježi)"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:0
-#: selection:sale.receipt.report,state:0
+#: view:account.voucher:0 selection:account.voucher,state:0
+#: view:sale.receipt.report:0 selection:sale.receipt.report,state:0
 msgid "Draft"
 msgstr "U pripremi"
 
@@ -392,14 +362,12 @@ msgid "Wrong voucher line"
 msgstr "Kriva stavka računa"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
 msgstr "Plati kasnije ili grupna sredstva"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: selection:account.voucher,type:0
+#: view:account.voucher:0 selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Receipt"
 msgstr "Račun"
@@ -411,9 +379,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
-"Trebali bi ste podesiti 'Konto pozitivne kursne razlike' u postavkama "
-"računovodstva, za automatsko knjiženje kursnih razlika."
+msgstr "Trebali bi ste podesiti 'Konto pozitivne kursne razlike' u postavkama računovodstva, za automatsko knjiženje kursnih razlika."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -426,14 +392,12 @@ msgid "Cancel Voucher"
 msgstr "Otkaži račun"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,period_id:0
+#: view:account.voucher:0 field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Period"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:231
+#: view:account.voucher:0 code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Dobavljač"
@@ -454,14 +418,12 @@ msgid "Debit"
 msgstr "Duguje"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,nbr:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
 msgstr "# linija računa"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,type:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,type:0
 msgid "Type"
 msgstr "Tip"
 
@@ -476,9 +438,7 @@ msgstr "Proforma računi"
 msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
-msgstr ""
-"Na dan operacije, kurs je bio\n"
-"%s = %s"
+msgstr "Na dan operacije, kurs je bio\n%s = %s"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -486,18 +446,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new supplier payment.\n"
 "              </p><p>\n"
-"                OpenERP helps you easily track payments you make and the "
-"remaining balances you need to pay your suppliers.\n"
+"                OpenERP helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje nove uplate dobavljaču.\n"
-"              </p><p>\n"
-"                OpenERP Vam pomaže da jednostavno pratite plaćanja kao i\n"
-"                preostala salda i dugovanja prema dobavljačima.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite za kreiranje nove uplate dobavljaču.\n              </p><p>\n                OpenERP Vam pomaže da jednostavno pratite plaćanja kao i\n                preostala salda i dugovanja prema dobavljačima.\n              </p>\n            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -548,22 +500,11 @@ msgstr "Jul"
 #. module: account_voucher
 #: help:account.voucher,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
+"* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
-" * 'U pripremi' je status koji se koristi kada korisnik unosi novi "
-"nepotvrđeni račun.                         \n"
-"* 'Pro-forma' je status koji se koristi kada je račun u Pro-forma "
-"statusu,dakle računu nije dodijeljen broj.                         \n"
-"* 'Potvrđen' je status koji se koristi kada je račun kreiran, dodijeljen mu "
-"je broj te je proveden u računovodstvu.                 \n"
-"* 'Otkazan' je status koji se koristi kada je račun otkazan."
+msgstr " * 'U pripremi' je status koji se koristi kada korisnik unosi novi nepotvrđeni račun.                         \n* 'Pro-forma' je status koji se koristi kada je račun u Pro-forma statusu,dakle računu nije dodijeljen broj.                         \n* 'Potvrđen' je status koji se koristi kada je račun kreiran, dodijeljen mu je broj te je proveden u računovodstvu.                 \n* 'Otkazan' je status koji se koristi kada je račun otkazan."
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -571,8 +512,7 @@ msgid "Difference Amount"
 msgstr "Iznos razlike"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,due_delay:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
 msgstr "Pros. prekoračenje valute"
 
@@ -604,22 +544,12 @@ msgid ""
 "                Click to register a new payment. \n"
 "              </p><p>\n"
 "                Enter the customer and the payment method and then, either\n"
-"                create manually a payment record or OpenERP will propose to "
-"you\n"
-"                automatically the reconciliation of this payment with the "
-"open\n"
+"                create manually a payment record or OpenERP will propose to you\n"
+"                automatically the reconciliation of this payment with the open\n"
 "                invoices or sales receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Pritisnite za evidentiranje nove uplate. \n"
-"              </p><p>\n"
-"                Unesite kupca i način plaćanja a zatim unesite ručno ili će\n"
-"                OpenERP predložiti automatski zatvaranje stavaka sa\n"
-"                otvorenom fakturom ili računom.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Pritisnite za evidentiranje nove uplate. \n              </p><p>\n                Unesite kupca i način plaćanja a zatim unesite ručno ili će\n                OpenERP predložiti automatski zatvaranje stavaka sa\n                otvorenom fakturom ili računom.\n              </p>\n            "
 
 #. module: account_voucher
 #: field:account.config.settings,expense_currency_exchange_account_id:0
@@ -638,8 +568,7 @@ msgid "Payment Difference"
 msgstr "Razlika plaćanja"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,audit:0
+#: view:account.voucher:0 field:account.voucher,audit:0
 msgid "To Review"
 msgstr "Za provjeru"
 
@@ -658,9 +587,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
-"Kako bi automatski knjižili stavke dnevnika vezane za ralike kursa, trebate "
-"konfigurisati 'konto negativnih kursnih razlika' u postavkama računovodstva."
+msgstr "Kako bi automatski knjižili stavke dnevnika vezane za ralike kursa, trebate konfigurisati 'konto negativnih kursnih razlika' u postavkama računovodstva."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -672,9 +599,7 @@ msgstr "Stavke troškova"
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
-msgstr ""
-"Polja sa internom svrhom koja samo razgraničava dali je račun više-valutni "
-"ili ne."
+msgstr "Polja sa internom svrhom koja samo razgraničava dali je račun više-valutni ili ne."
 
 #. module: account_voucher
 #: view:account.invoice:0
@@ -697,8 +622,7 @@ msgid "Group by month of Invoice Date"
 msgstr "Grupiši po mjesecima datuma fakturisanja"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,month:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,month:0
 msgid "Month"
 msgstr "Mjesec"
 
@@ -726,10 +650,8 @@ msgid "Voucher Status"
 msgstr "Status računa"
 
 #. module: account_voucher
-#: field:account.voucher,company_id:0
-#: field:account.voucher.line,company_id:0
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,company_id:0
+#: field:account.voucher,company_id:0 field:account.voucher.line,company_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,company_id:0
 msgid "Company"
 msgstr "Kompanija"
 
@@ -755,14 +677,12 @@ msgid "Configuration Error !"
 msgstr "Greška konfiguracije !"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: view:sale.receipt.report:0
+#: view:account.voucher:0 view:sale.receipt.report:0
 msgid "Draft Vouchers"
 msgstr "Računi u pripremi"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,price_total_tax:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
 msgstr "Ukupno s porezom"
 
@@ -772,8 +692,7 @@ msgid "Purchase Voucher"
 msgstr "Račun nabavke"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,state:0
+#: view:account.voucher:0 field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "Status"
 msgstr "Status"
@@ -784,8 +703,7 @@ msgid "Group by year of Invoice Date"
 msgstr "Grupiraj po godini izdavanja računa"
 
 #. module: account_voucher
-#: view:account.statement.from.invoice.lines:0
-#: view:account.voucher:0
+#: view:account.statement.from.invoice.lines:0 view:account.voucher:0
 msgid "or"
 msgstr "ili"
 
@@ -804,9 +722,7 @@ msgstr "Ovjeri plaćanje"
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr ""
-"Označite \"za provjeru\" kada niste sigurni da li je knjiženje ispravno i "
-"kada je potrebno ekspertno mišljenje."
+msgstr "Označite \"za provjeru\" kada niste sigurni da li je knjiženje ispravno i kada je potrebno ekspertno mišljenje."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -851,8 +767,7 @@ msgid "Write-Off Analytic Account"
 msgstr "Analitički konto otpisa iznosa"
 
 #. module: account_voucher
-#: field:account.voucher,date:0
-#: field:account.voucher.line,date_original:0
+#: field:account.voucher,date:0 field:account.voucher.line,date_original:0
 #: field:sale.receipt.report,date:0
 msgid "Date"
 msgstr "Datum"
@@ -878,8 +793,7 @@ msgid "Amount reconciled"
 msgstr "Zatvoreni iznos"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
 msgstr "Plati direktno"
 
@@ -966,8 +880,7 @@ msgid "Helping Sentence"
 msgstr "Rečenica pomoći"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,price_total:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
 msgstr "Ukup. bez poreza"
 
@@ -1018,8 +931,7 @@ msgid "Sales Information"
 msgstr "Informacije o prodaji"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher.line,voucher_id:0
+#: view:account.voucher:0 field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
 msgid "Voucher"
 msgstr "Račun"
@@ -1035,8 +947,7 @@ msgid "Voucher Items"
 msgstr "Stavke računa"
 
 #. module: account_voucher
-#: view:account.statement.from.invoice.lines:0
-#: view:account.voucher:0
+#: view:account.statement.from.invoice.lines:0 view:account.voucher:0
 msgid "Cancel"
 msgstr "Otkaži"
 
@@ -1046,15 +957,13 @@ msgid "Open Invoicing Menu"
 msgstr "Otvori meni fakturisanja"
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:0
+#: selection:account.voucher,state:0 view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
 msgstr "Pro-forma"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,move_ids:0
+#: view:account.voucher:0 field:account.voucher,move_ids:0
 msgid "Journal Items"
 msgstr "Stavke dnevnika"
 
@@ -1065,14 +974,12 @@ msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr "Milimo definišite zadana potražna/dugovna konta na dnevniku \"%s\"."
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Purchase"
 msgstr "Nabavka"
 
 #. module: account_voucher
-#: view:account.invoice:0
-#: view:account.voucher:0
+#: view:account.invoice:0 view:account.voucher:0
 msgid "Pay"
 msgstr "Plati"
 
@@ -1085,36 +992,22 @@ msgstr "Opcije valute"
 #: help:account.voucher,payment_option:0
 msgid ""
 "This field helps you to choose what you want to do with the eventual "
-"difference between the paid amount and the sum of allocated amounts. You can "
-"either choose to keep open this difference on the partner's account, or "
+"difference between the paid amount and the sum of allocated amounts. You can"
+" either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
-msgstr ""
-"Ovo polje Vam pomaže da odaberete šta želite uraditi sa razlikom između "
-"plaćenog iznosa i sume alociranih iznosa. Možete izabrati da sačuvate ovu "
-"razliku na kontu partnera, ili zatvoriti ga sa uplatom."
+msgstr "Ovo polje Vam pomaže da odaberete šta želite uraditi sa razlikom između plaćenog iznosa i sume alociranih iznosa. Možete izabrati da sačuvate ovu razliku na kontu partnera, ili zatvoriti ga sa uplatom."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview of the amount "
-"invoiced\n"
+"            From this report, you can have an overview of the amount invoiced\n"
 "            to your customer as well as payment delays. The tool search can\n"
 "            also be used to personalise your Invoices reports and so, match\n"
 "            this analysis to your needs.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"            Iz ovog izvještaja možete imati pregled fakturisanog iznosa "
-"vašim\n"
-"            kupcima kao i kašnjenja u plaćanju. Alat pretrage se također "
-"može\n"
-"            koristiti za personalizaciju izvještaja fakturisanja, kako bi "
-"odgovarali\n"
-"            vašim potrebama analize.\n"
-"          </p>\n"
-"        "
+msgstr "<p>\n            Iz ovog izvještaja možete imati pregled fakturisanog iznosa vašim\n            kupcima kao i kašnjenja u plaćanju. Alat pretrage se također može\n            koristiti za personalizaciju izvještaja fakturisanja, kako bi odgovarali\n            vašim potrebama analize.\n          </p>\n        "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1142,10 +1035,8 @@ msgid "May"
 msgstr "Maj"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,journal_id:0
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,journal_id:0
+#: view:account.voucher:0 field:account.voucher,journal_id:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,journal_id:0
 msgid "Journal"
 msgstr "Dnevnik"
 
@@ -1155,8 +1046,7 @@ msgid "Internal Notes"
 msgstr "Interne zabilješke"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,line_cr_ids:0
+#: view:account.voucher:0 field:account.voucher,line_cr_ids:0
 msgid "Credits"
 msgstr "Potraživanja"
 
@@ -1178,19 +1068,15 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,pay_now:0
-#: selection:account.voucher,type:0
-#: field:sale.receipt.report,pay_now:0
+#: view:account.voucher:0 field:account.voucher,pay_now:0
+#: selection:account.voucher,type:0 field:sale.receipt.report,pay_now:0
 #: selection:sale.receipt.report,type:0
 msgid "Payment"
 msgstr "Plaćanje"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: selection:account.voucher,state:0
-#: view:sale.receipt.report:0
-#: selection:sale.receipt.report,state:0
+#: view:account.voucher:0 selection:account.voucher,state:0
+#: view:sale.receipt.report:0 selection:sale.receipt.report,state:0
 msgid "Posted"
 msgstr "Knjiženo"
 
@@ -1221,8 +1107,7 @@ msgid "Voucher Entries"
 msgstr "Stavke računa"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,year:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,year:0
 msgid "Year"
 msgstr "Godina"
 
@@ -1233,8 +1118,7 @@ msgid "Gain Exchange Rate Account"
 msgstr "Konto pozitivne kursne razlike"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Sale"
 msgstr "Prodaja"
 
@@ -1270,8 +1154,7 @@ msgid "Entries by Statement from Invoices"
 msgstr "Stavke po izvodu iz računa"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,amount:0
+#: view:account.voucher:0 field:account.voucher,amount:0
 msgid "Total"
 msgstr "Ukupno"
 
@@ -1309,15 +1192,13 @@ msgid "Keep Open"
 msgstr "Drži otvoreno"
 
 #. module: account_voucher
-#: field:account.voucher,line_ids:0
-#: view:account.voucher.line:0
+#: field:account.voucher,line_ids:0 view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
 msgstr "Stavke računa"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-#: field:sale.receipt.report,delay_to_pay:0
+#: view:sale.receipt.report:0 field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
 msgstr "Pros. kašnjenje plaćanja"
 
@@ -1332,10 +1213,8 @@ msgid "Sales Receipt Statistics"
 msgstr "Statistika prodajnih računa"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,partner_id:0
-#: field:account.voucher.line,partner_id:0
-#: view:sale.receipt.report:0
+#: view:account.voucher:0 field:account.voucher,partner_id:0
+#: field:account.voucher.line,partner_id:0 view:sale.receipt.report:0
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
 msgstr "Partner"
@@ -1355,14 +1234,7 @@ msgstr "Nedostatna konfiguracija!"
 #. module: account_voucher
 #: help:account.voucher,active:0
 msgid ""
-"By default, reconciliation vouchers made on draft bank statements are set as "
-"inactive, which allow to hide the customer/supplier payment while the bank "
+"By default, reconciliation vouchers made on draft bank statements are set as"
+" inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
-msgstr ""
-"Po zadanom, zatvaranje računa na izvodima banke u pripremii su postavljeni "
-"kao neaktivni, što omogućava skrivanje uplata kupca/dobavljaču dok izvod iz "
-"banke ne bude potvrđen."
-
-#, python-format
-#~ msgid "Unable to change journal !"
-#~ msgstr "Nije moguće promijenti dnevnik !"
+msgstr "Po zadanom, zatvaranje računa na izvodima banke u pripremii su postavljeni kao neaktivni, što omogućava skrivanje uplata kupca/dobavljaču dok izvod iz banke ne bude potvrđen."

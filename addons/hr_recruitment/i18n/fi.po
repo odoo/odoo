@@ -1,21 +1,22 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2014-12-13 15:42+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-12-14 06:11+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -25,13 +26,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
-#: field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "vaatimukset"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Application Summary"
 msgstr ""
 
@@ -41,16 +41,16 @@ msgid "Start Interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Matkapuhelin:"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,fold:0
 msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
-msgstr ""
+msgstr "Tämä vaihe ei ole näkyvä, esim. tila tai kanban näytöllä, jos vaiheella ei ole näytettäviä tietoja."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
@@ -60,24 +60,23 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ryhmittely.."
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.applicant:0
 msgid "Filter and view on next actions and date"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-#: field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0 field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
 msgid "Department"
-msgstr ""
+msgstr "Osasto"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date_action:0
 msgid "Next Action Date"
-msgstr ""
+msgstr "Seuraava toimenpidepäivä"
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_expected_extra:0
@@ -85,12 +84,12 @@ msgid "Expected Salary Extra"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: view:hr.recruitment.report:0
 msgid "Jobs"
-msgstr ""
+msgstr "Työt"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Extra advantages..."
 msgstr ""
 
@@ -100,21 +99,18 @@ msgid "Pending Jobs"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_unread:0
-#: view:hr.job:hr_recruitment.view_job_filter_recruitment
+#: view:hr.applicant:0 field:hr.applicant,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lukemattomat viestit"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Yritys"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.source:hr_recruitment.hr_recruitment_source_form
-#: view:hr.recruitment.source:hr_recruitment.hr_recruitment_source_tree
+#: view:hr.recruitment.source:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 msgid "Sources of Applicants"
@@ -127,10 +123,9 @@ msgid "You must define Applied Job for this applicant."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.applicant:0
 msgid "Job"
-msgstr ""
+msgstr "Tehtävä"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.partner.create,close:0
@@ -144,28 +139,18 @@ msgid ""
 "                Click to add a new job applicant.\n"
 "              </p><p>\n"
 "                OpenERP helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, "
-"etc.\n"
+"                process and follow up all operations: meetings, interviews, etc.\n"
 "              </p><p>\n"
-"                If you setup the email gateway, applicants and their "
-"attached\n"
+"                If you setup the email gateway, applicants and their attached\n"
 "                CV are created automatically when an email is sent to\n"
-"                jobs@yourcompany.com. If you install the document "
-"management\n"
-"                modules, all resumes are indexed automatically, so that you "
-"can\n"
+"                jobs@yourcompany.com. If you install the document management\n"
+"                modules, all resumes are indexed automatically, so that you can\n"
 "                easily search through their content.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
-#: field:hr.job,application_count:0
-#: field:hr.job,application_ids:0
-#: field:hr.job,document_ids:0
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applications"
@@ -174,7 +159,7 @@ msgstr "Hakemukset"
 #. module: hr_recruitment
 #: field:hr.applicant,day_open:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Päiviä avaamiseen"
 
 #. module: hr_recruitment
 #: field:hr.applicant,emp_id:0
@@ -187,13 +172,12 @@ msgid "Create applicants from an incoming email account"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Päivä"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
 msgid "Create Contact"
 msgstr ""
@@ -201,7 +185,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Refuse"
-msgstr ""
+msgstr "Hylkää"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -211,15 +195,15 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,partner_mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "Matkapuhelin"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Viestit"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.applicant:0
 msgid "Next Actions"
 msgstr ""
 
@@ -228,7 +212,7 @@ msgstr ""
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Virhe!"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -236,8 +220,7 @@ msgid "Doctoral Degree"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0
-#: field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr ""
 
@@ -251,18 +234,17 @@ msgstr ""
 #. module: hr_recruitment
 #: help:hr.applicant,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: hr_recruitment
 #: field:hr.applicant,color:0
-#: field:hr.job,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Väri-indeksi"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
 msgid "Meetings"
-msgstr ""
+msgstr "Kokoukset"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -297,13 +279,13 @@ msgstr "Rekrytointi"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:507
+#: code:addons/hr_recruitment/hr_recruitment.py:427
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varoitus!"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop:0
@@ -311,9 +293,9 @@ msgid "Salary Proposed"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,partner_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Kumppani"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -321,13 +303,13 @@ msgid "Avg Proposed Salary"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,availability:0
+#: view:hr.applicant:0 field:hr.applicant,availability:0
 #: field:hr.recruitment.report,available:0
 msgid "Availability"
-msgstr ""
+msgstr "Saatavuus"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0
+#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr ""
 
@@ -337,7 +319,7 @@ msgid "Source of Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: view:hr.recruitment.partner.create:0
 msgid "Convert To Partner"
 msgstr ""
 
@@ -347,7 +329,7 @@ msgid "Recruitments Statistics"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Print interview report"
 msgstr ""
 
@@ -359,23 +341,22 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Työnkuva"
 
 #. module: hr_recruitment
-#: field:hr.applicant,source_id:0
+#: view:hr.applicant:0 field:hr.applicant,source_id:0
 msgid "Source"
-msgstr ""
+msgstr "Lähde"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Vuosi"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_monster
@@ -384,14 +365,13 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
-#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
 msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
 msgid "Email"
-msgstr ""
+msgstr "Sähköposti"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -399,8 +379,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to add a new stage in the recruitment process.\n"
 "          </p><p>\n"
-"            Define here your stages of the recruitment process, for "
-"example:\n"
+"            Define here your stages of the recruitment process, for example:\n"
 "            qualification call, first interview, second interview, refused,\n"
 "            hired.\n"
 "          </p>\n"
@@ -410,12 +389,12 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Available"
-msgstr ""
+msgstr "Saatavilla"
 
 #. module: hr_recruitment
 #: field:hr.applicant,title_action:0
 msgid "Next Action"
-msgstr ""
+msgstr "Seuraava toimenpide"
 
 #. module: hr_recruitment
 #: help:hr.job,alias_id:0
@@ -433,24 +412,25 @@ msgstr ""
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Elokuu"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,create_date:0
+#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.recruitment.report:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Luontipäivämäärä"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_hired_employee
+#: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
 msgstr "Luo työntekijä"
 
 #. module: hr_recruitment
-#: field:hr.applicant,priority:0
+#: view:hr.applicant:0 field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
-msgstr ""
+msgstr "Arvostelu"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -458,19 +438,16 @@ msgid "Initial Qualification"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.job:hr_recruitment.hr_job_survey
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: view:hr.applicant:0
 msgid "Print Interview"
 msgstr "Tulosta haastattelu"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-#: field:hr.recruitment.report,stage_id:0
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+#: view:hr.applicant:0 field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.recruitment.stage:0
 msgid "Stage"
-msgstr ""
+msgstr "Vaihe"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -483,33 +460,30 @@ msgid "Recruitment / Applicants Stages"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0
+#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "July"
-msgstr ""
+msgstr "heinäkuu"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
+msgstr "Seuraajien Sähköpostit"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:93
-#: view:hr.applicant:hr_recruitment.crm_case_tree_view_job
-#: view:hr.applicant:hr_recruitment.hr_applicant_calendar_view
-#, python-format
+#: view:hr.applicant:0
 msgid "Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:391
+#: code:addons/hr_recruitment/hr_recruitment.py:368
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Ei aihetta"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp:0
@@ -527,11 +501,11 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:377
+#: code:addons/hr_recruitment/hr_recruitment.py:354
 #: field:hr.applicant,partner_id:0
 #, python-format
 msgid "Contact"
-msgstr ""
+msgstr "Yhteystieto"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_expected_extra:0
@@ -542,19 +516,19 @@ msgstr ""
 #: help:hr.applicant,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
-msgstr ""
+"If the case is in progress the status is set to 'Open'."
+"                      When the case is over, the status is set to 'Done'."
+"                      If the case needs to be reviewed then the status is"
+"                       set to 'Pending'."
+msgstr "Asetettu tila on \"Ehdotus\", kun asia on luotu. Kun asian käsitelly alkaa, sen tila on \"Avoin\". Kun asia on ratkaistu, niin tilaksi muuttuu \"Valmis\". Jos asiaa pitää katselmoida, niin tila on \"Odottava\"."
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Maaliskuu"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_tree
+#: view:hr.recruitment.stage:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
 msgid "Stages"
@@ -566,15 +540,14 @@ msgid "Draft recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
-#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: view:hr.applicant:0
 msgid "Delete"
 msgstr "Poista"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "In progress"
-msgstr ""
+msgstr "Kesken"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -587,29 +560,29 @@ msgid "Applicant hired"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Jobs - Recruitment Form"
 msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,probability:0
 msgid "Probability"
-msgstr ""
+msgstr "Todennäköisyys"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Huhtikuu"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Syyskuu"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Joulukuu"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
@@ -620,7 +593,7 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Tunnisteet"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
@@ -628,18 +601,17 @@ msgid "Category of applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "e.g. Call for interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Kuukausi"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Answer related job question"
 msgstr ""
 
@@ -651,24 +623,22 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
 msgid "Update Date"
-msgstr ""
+msgstr "Päivityksen päiväys"
 
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "Yes"
-msgstr ""
+msgstr "Kyllä"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,name:0
+#: view:hr.applicant:0 field:hr.applicant,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Aihe"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-#: view:hr.recruitment.partner.create:0
+#: view:hired.employee:0 view:hr.recruitment.partner.create:0
 msgid "or"
-msgstr ""
+msgstr "tai"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
@@ -678,7 +648,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "Ajoita tapaaminen"
 
 #. module: hr_recruitment
 #: field:hr.applicant,partner_name:0
@@ -694,12 +664,12 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "Käyttäjän sähköposti"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date_open:0
 msgid "Opened"
-msgstr ""
+msgstr "Avattu"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -709,7 +679,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "No"
-msgstr ""
+msgstr "Ei"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_expected:0
@@ -727,7 +697,7 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
+msgstr "Nämä sähköpostiosoitteet lisätään cc (kopio viestistä) kenttään tähän tietueeseen liittyvien sähköpostien osalta. Erota useammat osoitteet pilkulla."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -735,20 +705,19 @@ msgid "Degrees"
 msgstr "Tutkintotasot"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0
-#: field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
 msgid "Closed"
-msgstr ""
+msgstr "Suljettu"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+#: view:hr.recruitment.stage:0
 msgid "Stage Definition"
 msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_close:0
 msgid "Avg. Delay to Close"
-msgstr ""
+msgstr "Keskimääräinen viive sulkemiseen"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed:0
@@ -756,23 +725,20 @@ msgid "Salary Proposed by the Organisation"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
 #: selection:hr.recruitment.stage,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Odottaa"
 
 #. module: hr_recruitment
-#: field:hr.applicant,state:0
-#: field:hr.recruitment.report,state:0
+#: field:hr.applicant,state:0 field:hr.recruitment.report,state:0
 #: field:hr.recruitment.stage,state:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Schedule interview with this applicant"
 msgstr "Ajoita haastattelu kyseisen hakijan kanssa"
 
@@ -783,11 +749,8 @@ msgid "Applicant <b>created</b>"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_form
-#: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_tree
+#: view:hr.applicant:0 field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -796,27 +759,27 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,partner_phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Puhelin"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Kesäkuu"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Päivää sulkemiseen"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "on seuraaja"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Käyttäjä"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -827,11 +790,10 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiivinen"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,nbr:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,nbr:0
 msgid "# of Applications"
 msgstr ""
 
@@ -841,25 +803,24 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to add a new stage in the recruitment process.\n"
 "          </p><p>\n"
-"            Don't forget to specify the department if your recruitment "
-"process\n"
+"            Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position.\n"
 "          </p>\n"
 "        "
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,response_id:0
+#: field:hr.applicant,response:0
 msgid "Response"
 msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Lokakuu"
 
 #. module: hr_recruitment
-#: field:hr.config.settings,module_document:0
+#: field:hr.config.settings,module_document_ftp:0
 msgid "Allow the automatic indexation of resumes"
 msgstr ""
 
@@ -871,7 +832,7 @@ msgstr ""
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Tammikuu"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
@@ -885,7 +846,7 @@ msgid "Review Recruitment Stages"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Contact:"
 msgstr ""
 
@@ -895,15 +856,14 @@ msgid "Search Jobs"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0
-#: field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
 msgid "Date"
-msgstr ""
+msgstr "Päiväys"
 
 #. module: hr_recruitment
 #: field:hr.applicant,survey:0
 msgid "Survey"
-msgstr ""
+msgstr "Kysely"
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -911,14 +871,14 @@ msgid "Would you like to create an employee ?"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Degree:"
 msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Laajennetut suodattimet..."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_form_installer
@@ -931,7 +891,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguroi"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
@@ -949,38 +909,36 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:379
+#: code:addons/hr_recruitment/hr_recruitment.py:356
 #, python-format
 msgid "Contact Email"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: view:hired.employee:0 view:hr.recruitment.partner.create:0
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: view:hr.recruitment.partner.create:0
 msgid "Are you sure you want to create a contact based on this job request ?"
 msgstr ""
 
 #. module: hr_recruitment
 #: help:hr.config.settings,fetchmail_applicants:0
 msgid ""
-"Allow applicants to send their job application to an email address "
-"(jobs@mycompany.com),\n"
+"Allow applicants to send their job application to an email address (jobs@mycompany.com),\n"
 "                and create automatically application documents in the system."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
 #: selection:hr.recruitment.stage,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Käsittelyssä"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.applicant:0
 msgid "Subject / Applicant"
 msgstr ""
 
@@ -990,20 +948,18 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr ""
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_stage_changed
+#: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
 msgid "Stage changed"
-msgstr ""
+msgstr "Vaihe muutettu"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
-#: field:hr.applicant,user_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.recruitment.report:0
 msgid "Responsible"
-msgstr ""
+msgstr "Vastuullinen"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_graph
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: view:hr.recruitment.report:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_all
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_report_all
 msgid "Recruitment Analysis"
@@ -1020,7 +976,7 @@ msgid "LinkedIn"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
 msgid "New Applicant"
 msgstr ""
 
@@ -1030,18 +986,20 @@ msgid "Stage of Recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_graph_view_job
+#: view:hr.applicant:0
 msgid "Cases By Stage and Estimates"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
-msgstr ""
+msgstr "Uusi"
 
 #. module: hr_recruitment
-#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "Haastattelu"
 
@@ -1051,24 +1009,24 @@ msgid "Source Name"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Päivä(t)"
 
 #. module: hr_recruitment
 #: field:hr.applicant,description:0
 msgid "Description"
-msgstr ""
+msgstr "Kuvaus"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_stage_changed
+#: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
 msgid "Stage Changed"
-msgstr ""
+msgstr "Vaihe muutettu"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Toukokuu"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
@@ -1089,19 +1047,18 @@ msgstr ""
 #: help:hr.config.settings,module_document_ftp:0
 msgid ""
 "Manage your CV's and motivation letter related to all applicants.\n"
-"                This installs the module document_ftp. This will install the "
-"knowledge management  module in order to allow you to search using specific "
-"keywords through  the content of all documents (PDF, .DOCx...)"
+"                This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
 msgstr ""
 
 #. module: hr_recruitment
+#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
-msgstr ""
+msgstr "Hylätty"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
 #: selection:hr.recruitment.stage,state:0
 msgid "Hired"
@@ -1110,10 +1067,10 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,reference:0
 msgid "Referred By"
-msgstr ""
+msgstr "Viitannut"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Departement:"
 msgstr ""
 
@@ -1141,7 +1098,7 @@ msgstr ""
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Helmikuu"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1150,16 +1107,15 @@ msgid "Not Good"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant_category,name:0
-#: field:hr.recruitment.degree,name:0
+#: field:hr.applicant_category,name:0 field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Marraskuu"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp_avg:0
@@ -1179,15 +1135,15 @@ msgstr ""
 #. module: hr_recruitment
 #: help:hr.applicant,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Nämä henkilöt vastaanottavat sähköpostin."
 
 #. module: hr_recruitment
 #: field:hr.job,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Nimimerkki"
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Feedback of interviews..."
 msgstr ""
 
@@ -1197,19 +1153,19 @@ msgid "Pending recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:0
 msgid "Contract"
 msgstr "Työsopimus"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Yhteenveto"
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
@@ -1230,7 +1186,7 @@ msgstr ""
 #: field:hr.recruitment.degree,sequence:0
 #: field:hr.recruitment.stage,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestysluku"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
@@ -1245,7 +1201,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,state:0
@@ -1264,12 +1220,12 @@ msgstr ""
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr ""
+msgstr "Päivien määrä projektitapahtuman sulkemiseen"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,state:0
 msgid "Open"
-msgstr ""
+msgstr "Avoin"
 
 #. module: hr_recruitment
 #: view:board.board:0
@@ -1277,6 +1233,6 @@ msgid "Applications to be Processed"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.applicant:0
 msgid "Schedule Interview"
 msgstr "Ajoita haastattelu"

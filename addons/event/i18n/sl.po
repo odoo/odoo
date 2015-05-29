@@ -1,25 +1,25 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * event
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2013-11-20 22:43+0000\n"
-"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-7/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-14 06:52+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
+#: view:event.event:0 view:report.event.registration:0
 msgid "My Events"
 msgstr "Moji Dogotki"
 
@@ -39,8 +39,7 @@ msgid "Main Speaker"
 msgstr "Glavni govornik"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 #: view:report.event.registration:0
 msgid "Group By..."
 msgstr "Združeno po..."
@@ -56,10 +55,7 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
-"Lahko določite minimalno število udedležencev. Če ne dosežete dovolj "
-"registracij, dogodka ne morete potrditi. (za ignoriranje tega pravila "
-"vpišite 0)"
+msgstr "Lahko določite minimalno število udedležencev. Če ne dosežete dovolj registracij, dogodka ne morete potrditi. (za ignoriranje tega pravila vpišite 0)"
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -77,8 +73,7 @@ msgid "Concert of Bon Jovi"
 msgstr "Koncert Bon Jovi-ja"
 
 #. module: event
-#: view:event.registration:0
-#: selection:event.registration,state:0
+#: view:event.registration:0 selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
 msgstr "Udeleženec"
@@ -94,8 +89,7 @@ msgid "Send Email"
 msgstr "Pošlji e-sporočilo"
 
 #. module: event
-#: field:event.event,company_id:0
-#: field:event.registration,company_id:0
+#: field:event.event,company_id:0 field:event.registration,company_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,company_id:0
 msgid "Company"
@@ -178,24 +172,20 @@ msgid "Register"
 msgstr "Prijava"
 
 #. module: event
-#: field:event.event,message_ids:0
-#: field:event.registration,message_ids:0
+#: field:event.event,message_ids:0 field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Sporočila"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,registration_ids:0
+#: view:event.event:0 field:event.event,registration_ids:0
 #: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration
-#: view:res.partner:0
+#: model:ir.ui.menu,name:event.menu_action_registration view:res.partner:0
 msgid "Registrations"
 msgstr "Registracije"
 
 #. module: event
-#: code:addons/event/event.py:89
-#: code:addons/event/event.py:100
+#: code:addons/event/event.py:89 code:addons/event/event.py:100
 #: code:addons/event/event.py:357
 #, python-format
 msgid "Error!"
@@ -207,14 +197,12 @@ msgid "Confirm Event"
 msgstr "Potrdi dogodek"
 
 #. module: event
-#: view:board.board:0
-#: model:ir.actions.act_window,name:event.act_event_view
+#: view:board.board:0 model:ir.actions.act_window,name:event.act_event_view
 msgid "Next Events"
 msgstr "Prihodnji dogodki"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
+#: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
@@ -231,8 +219,7 @@ msgid "Opera of Verdi"
 msgstr "Verdijeva opera"
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
+#: help:event.event,message_unread:0 help:event.registration,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Če je izbrano, zahtevajo nova sporočila vašo pozornost."
 
@@ -276,21 +263,18 @@ msgid "Registrations in confirmed or done state"
 msgstr "Prijava v statusu \"Potrjeno\" ali \"Zaključeno\""
 
 #. module: event
-#: code:addons/event/event.py:106
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:106 code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr "Opozorilo!"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Registration"
 msgstr "Registracija"
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,partner_id:0
+#: view:event.registration:0 field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
 msgid "Partner"
 msgstr "Partner"
@@ -306,19 +290,15 @@ msgid " Event Type "
 msgstr " Tip dogodka "
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,event_id:0
+#: view:event.registration:0 field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: view:report.event.registration:0
-#: field:report.event.registration,event_id:0
+#: view:report.event.registration:0 field:report.event.registration,event_id:0
 #: view:res.partner:0
 msgid "Event"
 msgstr "Dogodek"
 
 #. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
-#: view:event.registration:0
+#: view:event.event:0 selection:event.event,state:0 view:event.registration:0
 #: selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
@@ -331,8 +311,7 @@ msgid "Participant"
 msgstr "Udeleženec"
 
 #. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: view:event.registration:0 view:report.event.registration:0
 msgid "Confirm"
 msgstr "Potrditev"
 
@@ -370,16 +349,13 @@ msgid "Location"
 msgstr "Lokacija"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,message_unread:0
-#: view:event.registration:0
-#: field:event.registration,message_unread:0
+#: view:event.event:0 field:event.event,message_unread:0
+#: view:event.registration:0 field:event.registration,message_unread:0
 msgid "Unread Messages"
 msgstr "Neprebrana sporočila"
 
 #. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: view:event.registration:0 view:report.event.registration:0
 msgid "New"
 msgstr "Novo"
 
@@ -410,15 +386,12 @@ msgid "Creation Date"
 msgstr "Ustvarjeno dne"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
+#: view:report.event.registration:0 field:report.event.registration,user_id:0
 msgid "Event Responsible"
 msgstr "Odgovoren za dogodek"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
+#: view:event.event:0 view:event.registration:0 view:res.partner:0
 msgid "Cancel Registration"
 msgstr "Prekliči registracijo"
 
@@ -495,8 +468,7 @@ msgid "Logs"
 msgstr "Dnevniki"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state_id:0
+#: view:event.event:0 field:event.event,state_id:0
 msgid "State"
 msgstr "Regija"
 
@@ -527,8 +499,7 @@ msgid "Registration Confirmation Email"
 msgstr "Potrditveni e-mail prijave"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,month:0
+#: view:report.event.registration:0 field:report.event.registration,month:0
 msgid "Month"
 msgstr "Mesec"
 
@@ -577,13 +548,10 @@ msgstr "Vstopnice niso na voljo!"
 #: help:event.event,state:0
 msgid ""
 "If event is created, the status is 'Draft'.If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'.If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'.If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr ""
-"Če je dogodek kreiran, je v statusu 'Osnutek'. Če je potrjen za določene "
-"datume, je status 'Potrjen'. Če je dogodek že mimo, je status nastavljen na "
-"'Zaključen'. Če je dogodek preklican, ima status 'Preklican'."
+msgstr "Če je dogodek kreiran, je v statusu 'Osnutek'. Če je potrjen za določene datume, je status 'Potrjen'. Če je dogodek že mimo, je status nastavljen na 'Zaključen'. Če je dogodek preklican, ima status 'Preklican'."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -591,24 +559,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "               Click to add a new event.\n"
 "             </p><p>\n"
-"               OpenERP helps you schedule and efficiently organize your "
-"events:\n"
-"               track subscriptions and participations, automate the "
-"confirmation emails,\n"
+"               OpenERP helps you schedule and efficiently organize your events:\n"
+"               track subscriptions and participations, automate the confirmation emails,\n"
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Kliknite, da dodate nov dogodek.\n"
-"             </p><p>\n"
-"               OpenERP vam pomaga načrtovati in učinkovito organizirati vaše "
-"dogodke:\n"
-"               sledenje prijav in udeležb, avtomatizacija potrditvenih e-"
-"mailov,\n"
-"               prodaja vstopnic, itd.\n"
-"             </p>\n"
-"           "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Kliknite, da dodate nov dogodek.\n             </p><p>\n               OpenERP vam pomaga načrtovati in učinkovito organizirati vaše dogodke:\n               sledenje prijav in udeležb, avtomatizacija potrditvenih e-mailov,\n               prodaja vstopnic, itd.\n             </p>\n           "
 
 #. module: event
 #: help:event.event,register_max:0
@@ -616,10 +572,7 @@ msgid ""
 "You can for each event define a maximum registration level. If you have too "
 "much registrations you are not able to confirm your event. (put 0 to ignore "
 "this rule )"
-msgstr ""
-"Za vsak dogodek lahko določite maksimalno število prijav. Če imate preveč "
-"prijav, ne morete potrditi vašega dogodka. (vpišite 0, da ignorirate to "
-"pravilo)"
+msgstr "Za vsak dogodek lahko določite maksimalno število prijav. Če imate preveč prijav, ne morete potrditi vašega dogodka. (vpišite 0, da ignorirate to pravilo)"
 
 #. module: event
 #: code:addons/event/event.py:106
@@ -634,19 +587,14 @@ msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
 "expected minimum/maximum. Please reconsider those limits before going "
 "further."
-msgstr ""
-"Skupno število potrjenih registracij za ta dogodek '%s' ne ustreza "
-"pričakovanemu minimumu/maksimumu. Prosim, preverite te omejitve, preden "
-"nadaljujete."
+msgstr "Skupno število potrjenih registracij za ta dogodek '%s' ne ustreza pričakovanemu minimumu/maksimumu. Prosim, preverite te omejitve, preden nadaljujete."
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
 msgid ""
 "If you set an email template, each participant will receive this email "
 "announcing the confirmation of the event."
-msgstr ""
-"Če nastavite predlogo e-pošte, bo vsak udeleženec prejel ta e-mail kot "
-"potrditev dogodka."
+msgstr "Če nastavite predlogo e-pošte, bo vsak udeleženec prejel ta e-mail kot potrditev dogodka."
 
 #. module: event
 #: view:board.board:0
@@ -670,22 +618,18 @@ msgid "Events which are in New state"
 msgstr "Dogodki, ki so v statusu 'Nov'"
 
 #. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.action_event_view
+#: view:event.event:0 model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.actions.act_window,name:event.open_board_associations_manager
 #: model:ir.module.category,name:event.module_category_event_management
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_reporting_events
-#: view:res.partner:0
+#: model:ir.ui.menu,name:event.menu_reporting_events view:res.partner:0
 msgid "Events"
 msgstr "Dogodki"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
+#: view:event.event:0 field:event.event,state:0 view:event.registration:0
 #: field:event.registration,state:0
 msgid "Status"
 msgstr "Stanje"
@@ -706,8 +650,7 @@ msgid "zip"
 msgstr "poštna številka"
 
 #. module: event
-#: field:res.partner,event_ids:0
-#: field:res.partner,event_registration_ids:0
+#: field:res.partner,event_ids:0 field:res.partner,event_registration_ids:0
 msgid "unknown"
 msgstr "neznano"
 
@@ -727,14 +670,10 @@ msgid ""
 "The email address of the organizer which is put in the 'Reply-To' of all "
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
-msgstr ""
-"Elektronski naslov organizatorja, ki je dodan v 'Reply-to' tega e-sporočila, "
-"ki se avtomatsko pošlje ob potrditvi prijave. Lahko vpišete tudi vaš e-"
-"naslov."
+msgstr "Elektronski naslov organizatorja, ki je dodan v 'Reply-to' tega e-sporočila, ki se avtomatsko pošlje ob potrditvi prijave. Lahko vpišete tudi vaš e-naslov."
 
 #. module: event
-#: help:event.event,message_ids:0
-#: help:event.registration,message_ids:0
+#: help:event.event,message_ids:0 help:event.registration,message_ids:0
 msgid "Messages and communication history"
 msgstr "Sporočila in zgodovina sporočil"
 
@@ -748,23 +687,11 @@ msgstr "Telefon"
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from ${object.event_id.date_begin} to "
-"${object.event_id.date_end}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}.\n"
+"        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Hello ${object.name},</p>\n"
-"        <p>Dogodek ${object.event_id.name} za katerega ste se prijavili, je "
-"potrjen in bo izveden od ${object.event_id.date_begin} do "
-"${object.event_id.date_end}.\n"
-"        Za dodatne informacije kontaktirajte naš organizacijski "
-"oddelek.</p>\n"
-"        <p>Hvala za vašo udeležbo!</p>\n"
-"        <p>Lep pozdrav</p>"
+msgstr "\n        <p>Hello ${object.name},</p>\n        <p>Dogodek ${object.event_id.name} za katerega ste se prijavili, je potrjen in bo izveden od ${object.event_id.date_begin} do ${object.event_id.date_end}.\n        Za dodatne informacije kontaktirajte naš organizacijski oddelek.</p>\n        <p>Hvala za vašo udeležbo!</p>\n        <p>Lep pozdrav</p>"
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -783,9 +710,7 @@ msgstr "Uporabnik"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr ""
-"Opozorilo: ta dogodek ima premalo prijav. Ali ste prepričani, da ga želite "
-"potrditi?"
+msgstr "Opozorilo: ta dogodek ima premalo prijav. Ali ste prepričani, da ga želite potrditi?"
 
 #. module: event
 #: view:event.event:0
@@ -810,7 +735,7 @@ msgstr "Razširjeni filtri..."
 #. module: event
 #: field:report.event.registration,nbevent:0
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Število prijav"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -828,9 +753,7 @@ msgid "Set To Draft"
 msgstr "nastavi na 'Osnutek'"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
+#: view:event.event:0 view:event.registration:0 view:res.partner:0
 msgid "Confirm Registration"
 msgstr "Potrdi registracijo"
 
@@ -840,9 +763,7 @@ msgstr "Potrdi registracijo"
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
-"Za ta dogodek ste že nastavili prijavo na 'Udeležen'. Prosim, nastavite "
-"ponovno na 'Osnutek', če želite preklicati ta dogodek."
+msgstr "Za ta dogodek ste že nastavili prijavo na 'Udeležen'. Prosim, nastavite ponovno na 'Osnutek', če želite preklicati ta dogodek."
 
 #. module: event
 #: view:res.partner:0
@@ -873,15 +794,12 @@ msgstr "Tipi dogodkov"
 #. module: event
 #: help:event.event,email_registration_id:0
 msgid ""
-"This field contains the template of the mail that will be automatically sent "
-"each time a registration for this event is confirmed."
-msgstr ""
-"To polje vsebuje predlogo e-sporočila, ki bo poslano avtomatično vsakič, ko "
-"je potrjena prijava na ta dogodek."
+"This field contains the template of the mail that will be automatically sent"
+" each time a registration for this event is confirmed."
+msgstr "To polje vsebuje predlogo e-sporočila, ki bo poslano avtomatično vsakič, ko je potrjena prijava na ta dogodek."
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Attended the Event"
 msgstr "Prisostvoval dogodku"
 
@@ -894,8 +812,7 @@ msgstr "Napaka! Končni datum ne more biti pred začetnim datumom."
 #: code:addons/event/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr ""
-"Počakati morate na začetni dan dogodka, da lahko izvedete to aktivnost."
+msgstr "Počakati morate na začetni dan dogodka, da lahko izvedete to aktivnost."
 
 #. module: event
 #: field:event.event,user_id:0
@@ -940,8 +857,7 @@ msgid "Set To Unconfirmed"
 msgstr "Nastavi na 'Nepotrjen'"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,is_subscribed:0
+#: view:event.event:0 field:event.event,is_subscribed:0
 msgid "Subscribed"
 msgstr "Naročen"
 
@@ -951,8 +867,7 @@ msgid "Unsubscribe"
 msgstr "Odjavi se"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: view:event.event:0 view:event.registration:0
 msgid "Responsible"
 msgstr "Odgovoren"
 
@@ -963,8 +878,7 @@ msgstr "Prijavni kontakt"
 
 #. module: event
 #: view:report.event.registration:0
-#: field:report.event.registration,speaker_id:0
-#: field:res.partner,speaker:0
+#: field:report.event.registration,speaker_id:0 field:res.partner,speaker:0
 msgid "Speaker"
 msgstr "Govornik"
 
@@ -1021,8 +935,7 @@ msgid "Maximum Registrations"
 msgstr "Najvceč registracij"
 
 #. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
+#: view:event.event:0 selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Nepotrjeno"
@@ -1043,15 +956,12 @@ msgid "Association Dashboard"
 msgstr "Nadzorna plošča združenja"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,name:0
-#: field:event.registration,name:0
+#: view:event.event:0 field:event.event,name:0 field:event.registration,name:0
 msgid "Name"
 msgstr "Ime"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,country_id:0
+#: view:event.event:0 field:event.event,country_id:0
 msgid "Country"
 msgstr "Država"
 
@@ -1083,9 +993,7 @@ msgid "Events which are in confirm state"
 msgstr "Dogodki v statusu 'Potrdi'"
 
 #. module: event
-#: view:event.event:0
-#: view:event.type:0
-#: field:event.type,name:0
+#: view:event.event:0 view:event.type:0 field:event.type,name:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_type:0
 msgid "Event Type"
@@ -1133,35 +1041,20 @@ msgstr "Trenutne prijave"
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
+"        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Pozdravljeni ${object.name},</p>\n"
-"        <p>Potrjujemo prejem vaše prijave na dogodek "
-"${object.event_id.name}.\n"
-"        Avtomatično boste prejeli e-sporočilo s podrobnejšimi podatki "
-"(urnik, dnevni red...) takoj, ko bo dogodek potrjen.</p>\n"
-"        <p>Hvala za vašo udeležbo!</p>\n"
-"        <p>Lep pozdrav</p>"
+msgstr "\n        <p>Pozdravljeni ${object.name},</p>\n        <p>Potrjujemo prejem vaše prijave na dogodek ${object.event_id.name}.\n        Avtomatično boste prejeli e-sporočilo s podrobnejšimi podatki (urnik, dnevni red...) takoj, ko bo dogodek potrjen.</p>\n        <p>Hvala za vašo udeležbo!</p>\n        <p>Lep pozdrav</p>"
 
 #. module: event
 #: help:event.event,reply_to:0
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr ""
-"E-naslov organizatorja dogodka vpišite sem, kar bo povzročilo, da bo ta "
-"naslov v povratnih (reply-to) e-sporočilih, ki se generirajo avtomatično za "
-"ta dogodek ob potrditvi prijave. Lahko vpišete tudi svoj elektronski naslov, "
-"če želite."
+msgstr "E-naslov organizatorja dogodka vpišite sem, kar bo povzročilo, da bo ta naslov v povratnih (reply-to) e-sporočilih, ki se generirajo avtomatično za ta dogodek ob potrditvi prijave. Lahko vpišete tudi svoj elektronski naslov, če želite."
 
 #. module: event
 #: view:event.event:0
@@ -1187,8 +1080,7 @@ msgid "Event Confirmation"
 msgstr "Potrditev dogodka"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
+#: view:report.event.registration:0 field:report.event.registration,year:0
 msgid "Year"
 msgstr "Leto"
 
@@ -1196,6 +1088,3 @@ msgstr "Leto"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Govornik potrjen"
-
-#~ msgid "Number Of Events"
-#~ msgstr "Število dogodkov"

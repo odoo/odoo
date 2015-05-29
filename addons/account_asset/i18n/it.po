@@ -1,21 +1,22 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * account_asset
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-03-06 12:29+0000\n"
-"Last-Translator: Davide Corio @ LS <davide.corio@lsweb.it>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-7/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-07 07:23+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -24,8 +25,7 @@ msgstr "Immobili in stato bozza e aperto"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Data finale"
 
@@ -50,25 +50,19 @@ msgid "Gross Amount"
 msgstr "Valore Iniziale"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,asset_id:0
+#: view:account.asset.asset:0 field:account.asset.depreciation.line,asset_id:0
+#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
+#: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
 msgstr "Immobilizzazione"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
-"Indica che il primo ammortamento di questo immobile sarà calcolato dalla "
-"data di acquisto invece che dal primo Gennaio."
+msgstr "Indica che il primo ammortamento di questo immobile sarà calcolato dalla data di acquisto invece che dal primo Gennaio."
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -78,8 +72,7 @@ msgstr "Costante"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0
-#: view:asset.asset.report:0
+#: field:account.asset.category,company_id:0 view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
 msgstr "Azienda"
@@ -90,8 +83,7 @@ msgid "Modify"
 msgstr "Modifica"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
+#: selection:account.asset.asset,state:0 view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
 msgstr "In esecuzione"
@@ -152,8 +144,7 @@ msgstr "Il periodo tra due ammortamenti, in mesi"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_date:0
+#: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
 msgstr "Data Ammortamento"
 
@@ -168,8 +159,7 @@ msgid "Posted Amount"
 msgstr "Importo Contabilizzato"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.asset.report:0
+#: view:account.asset.asset:0 view:asset.asset.report:0
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_finance_assets
@@ -183,11 +173,8 @@ msgid "Depreciation Account"
 msgstr "F.do Ammortamento"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:account.asset.category:0
-#: view:account.asset.history:0
-#: view:asset.modify:0
-#: field:asset.modify,note:0
+#: view:account.asset.asset:0 view:account.asset.category:0
+#: view:account.asset.history:0 view:asset.modify:0 field:asset.modify,note:0
 msgid "Notes"
 msgstr "Note"
 
@@ -203,8 +190,7 @@ msgid "Error!"
 msgstr "Errore!"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,nbr:0
+#: view:asset.asset.report:0 field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "# di Righe Ammortamento"
 
@@ -250,8 +236,7 @@ msgid "Period Length"
 msgstr "Durata del Periodo"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
+#: selection:account.asset.asset,state:0 view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
 msgstr "Bozza"
@@ -271,8 +256,7 @@ msgstr "Modifica Durata"
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
-"Il numero di ammortamenti necessari per ammortizzare l'immobilizzazione"
+msgstr "Il numero di ammortamenti necessari per ammortizzare l'immobilizzazione"
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -285,8 +269,7 @@ msgid "Analytic account"
 msgstr "Conto analitico"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
+#: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Metodo di calcolo"
 
@@ -295,9 +278,7 @@ msgstr "Metodo di calcolo"
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr ""
-"Prorata temporis può essere applicato solo per il metodo temporale \"numero "
-"di ammortamenti\"."
+msgstr "Prorata temporis può essere applicato solo per il metodo temporale \"numero di ammortamenti\"."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
@@ -322,10 +303,8 @@ msgid "Salvage Value"
 msgstr "Valore di Realizzo"
 
 #. module: account_asset
-#: field:account.asset.asset,category_id:0
-#: view:account.asset.category:0
-#: field:account.invoice.line,asset_category_id:0
-#: view:asset.asset.report:0
+#: field:account.asset.asset,category_id:0 view:account.asset.category:0
+#: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
 msgid "Asset Category"
 msgstr "Categoria Immobilizzazione"
 
@@ -378,14 +357,12 @@ msgid "Time Method"
 msgstr "Metodo Temporale"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
 msgid "or"
 msgstr "o"
 
 #. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
+#: field:account.asset.asset,note:0 field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Nota"
@@ -394,35 +371,18 @@ msgstr "Nota"
 #: help:account.asset.history,method_time:0
 msgid ""
 "The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Il metodo da usare per calcolare le date e il numero delle righe di "
-"ammortamento.\n"
-"Numero di Ammortamenti: Indicare il numero delle righe di ammortamento e il "
-"periodo da 2 ammortamenti.\n"
-"Data Finale: Scegliere il periodo tra 2 ammortamenti e la data che gli "
-"ammortamenti non dovranno superare."
+"Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Il metodo da usare per calcolare le date e il numero delle righe di ammortamento.\nNumero di Ammortamenti: Indicare il numero delle righe di ammortamento e il periodo da 2 ammortamenti.\nData Finale: Scegliere il periodo tra 2 ammortamenti e la data che gli ammortamenti non dovranno superare."
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
 #: help:account.asset.category,method_time:0
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Selezionare il metodo da usare per calcolare le date e il numero degli "
-"ammortamenti.\n"
-"  *Numero degli Ammortamenti: Inserire il numero delle righe di ammortamento "
-"e il periodo tra 2 ammortamenti.\n"
-"  *Data Finale: Selezionare il periodo tra 2 ammortamenti e la data che gli "
-"ammortamenti non dovranno superare."
+"Choose the method to use to compute the dates and number of depreciation lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Selezionare il metodo da usare per calcolare le date e il numero degli ammortamenti.\n  *Numero degli Ammortamenti: Inserire il numero delle righe di ammortamento e il periodo tra 2 ammortamenti.\n  *Data Finale: Selezionare il periodo tra 2 ammortamenti e la data che gli ammortamenti non dovranno superare."
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -438,21 +398,12 @@ msgstr "Chiuso"
 #: help:account.asset.asset,state:0
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-"Quando un'immobilizzazione è creata, lo stato è 'Bozza'.\n"
-"Se l'immobilizzazione è confermata, lo stato diventa 'Attivo' e le righe di "
-"ammortamento possono essere pubblicate in contabilità.\n"
-"E' possibile chiudere manualmente un'immobilizzazione quando l'ammortamento "
-"è completato. Se l'ultima riga di ammortamento è pubblicata, "
-"l'immobilizzazione automaticamente va in quello stato."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
+msgstr "Quando un'immobilizzazione è creata, lo stato è 'Bozza'.\nSe l'immobilizzazione è confermata, lo stato diventa 'Attivo' e le righe di ammortamento possono essere pubblicate in contabilità.\nE' possibile chiudere manualmente un'immobilizzazione quando l'ammortamento è completato. Se l'ultima riga di ammortamento è pubblicata, l'immobilizzazione automaticamente va in quello stato."
 
 #. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
+#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
 msgid "Status"
 msgstr "Stato"
 
@@ -493,8 +444,7 @@ msgid "Extended Filters..."
 msgstr "Filtri Estesi..."
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.depreciation.confirmation.wizard:0
+#: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
 msgstr "Calcola"
 
@@ -524,8 +474,7 @@ msgid "Depreciation Name"
 msgstr "Nome Ammortamento"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,history_ids:0
+#: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
 msgid "History"
 msgstr "Storico"
 
@@ -545,8 +494,7 @@ msgid "General"
 msgstr "Generale"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr "Prorata Temporis"
 
@@ -561,14 +509,12 @@ msgid "Set to Close"
 msgstr "Imposta a Chiuso"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
 msgid "Cancel"
 msgstr "Annulla"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Chiudi"
 
@@ -583,8 +529,7 @@ msgid "Asset Durations to Modify"
 msgstr "Durate Immobilizzazione da Modificare"
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_date:0
-#: view:asset.asset.report:0
+#: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
 msgstr "Data di Acquisto"
@@ -600,9 +545,7 @@ msgstr "Regressivo"
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr ""
-"Selezionare il periodo per il quale saranno create automaticamente le righe "
-"d'ammortamento delle immobilizzazioni attive."
+msgstr "Selezionare il periodo per il quale saranno create automaticamente le righe d'ammortamento delle immobilizzazioni attive."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -613,9 +556,7 @@ msgstr "Attivi"
 #: code:addons/account_asset/account_asset.py:82
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
-"Non puoi eliminare un'immobilizzazione che contiene linee di deprezzamento "
-"confermate."
+msgstr "Non puoi eliminare un'immobilizzazione che contiene linee di deprezzamento confermate."
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -663,23 +604,16 @@ msgid "Amount Already Depreciated"
 msgstr "Importo Già Ammortizzato"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.asset,method:0 help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
-"Scegliere il metodo da usare per calcolare la somma delle righe di "
-"ammortamento.\n"
-"  *Lineare: Calcolato sulla base di: Valore Iniziale / Numero di "
-"Ammortamenti\n"
-"  *Regressivo: Calcolato sulla base di: Valore Residuo * Tasso Regressivo"
+msgstr "Scegliere il metodo da usare per calcolare la somma delle righe di ammortamento.\n  *Lineare: Calcolato sulla base di: Valore Iniziale / Numero di Ammortamenti\n  *Regressivo: Calcolato sulla base di: Valore Residuo * Tasso Regressivo"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,move_check:0
+#: view:asset.asset.report:0 field:asset.asset.report,move_check:0
 msgid "Posted"
 msgstr "Pubblicato"
 
@@ -687,22 +621,12 @@ msgstr "Pubblicato"
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview on all depreciation. "
-"The\n"
-"            tool search can also be used to personalise your Assets reports "
-"and\n"
+"            From this report, you can have an overview on all depreciation. The\n"
+"            tool search can also be used to personalise your Assets reports and\n"
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"            Da questo report, è possibile avere una panoramica di tutti gli "
-"ammortamenti. Lo\n"
-"            strumento ricerca può anche essere usato per personalizzare i "
-"report delle Immo-\n"
-"            bilizzazioni, così da soddisfare le proprie necessità;\n"
-"          </p>\n"
-"        "
+msgstr "<p>\n            Da questo report, è possibile avere una panoramica di tutti gli ammortamenti. Lo\n            strumento ricerca può anche essere usato per personalizzare i report delle Immo-\n            bilizzazioni, così da soddisfare le proprie necessità;\n          </p>\n        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -719,9 +643,7 @@ msgstr "Nome"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
-"Selezionare per confermare automaticamento le immobilizzazioni di questa "
-"categoria quando create dalle fatture."
+msgstr "Selezionare per confermare automaticamento le immobilizzazioni di questa categoria quando create dalle fatture."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -734,15 +656,13 @@ msgid "Asset depreciation line"
 msgstr "Riga ammortamento immobilizzazione"
 
 #. module: account_asset
-#: view:account.asset.category:0
-#: field:asset.asset.report,asset_category_id:0
+#: view:account.asset.category:0 field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
 msgstr "Categoria immobilizzazione"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_value:0
+#: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
 msgstr "Importo delle Righe d'Ammortamento"
 

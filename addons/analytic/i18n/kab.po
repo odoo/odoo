@@ -1,26 +1,27 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-03-13 09:47+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-7/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-14 05:28+0000\n"
-"X-Generator: Launchpad (build 17389)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "Comptes fils"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -28,7 +29,7 @@ msgid "In Progress"
 msgstr "Anazzal"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:238
+#: code:addons/analytic/analytic.py:229
 #, python-format
 msgid "Contract: "
 msgstr "Agatu: "
@@ -44,7 +45,7 @@ msgid "Template"
 msgstr "Taneɣruft"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid "End Date"
 msgstr "Azemz n tagara"
 
@@ -59,16 +60,13 @@ msgid "Debit"
 msgstr "Aktum"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
 msgstr ""
 
@@ -90,17 +88,14 @@ msgstr "Asmasi"
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Imagazen"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
 msgstr ""
 
 #. module: analytic
@@ -121,7 +116,7 @@ msgstr "Amaynut"
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Project Manager"
-msgstr ""
+msgstr "Amasay n usenfaṛ"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -129,7 +124,7 @@ msgid "Status"
 msgstr "Addad"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:278
+#: code:addons/analytic/analytic.py:271
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Anɣel )"
@@ -146,7 +141,7 @@ msgid "Description"
 msgstr "Aglam"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:272
+#: code:addons/analytic/analytic.py:262
 #, python-format
 msgid "Quick account creation disallowed."
 msgstr ""
@@ -168,7 +163,7 @@ msgid "Company"
 msgstr "Takebbwanit"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid "Renewal"
 msgstr ""
 
@@ -177,14 +172,12 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa  deg umasal HTML "
-"iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
+msgstr "Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa  deg umasal HTML iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -196,12 +189,12 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "D amagaz"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Aseqdac"
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
@@ -219,7 +212,7 @@ msgid "Contract Finished"
 msgstr "Agatu immed"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid "Terms and Conditions"
 msgstr "Tiwtilin timatutin"
 
@@ -261,7 +254,7 @@ msgid "You cannot create analytic line on view account."
 msgstr "Ur tezmireḍ ara ad sileleḍ izrig usliḍ ɣef umiḍan timeẓri"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid "Contract Information"
 msgstr "Talɣut n ugatu"
 
@@ -294,14 +287,10 @@ msgstr "Agatu illi"
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
 msgstr ""
 
 #. module: analytic
@@ -317,7 +306,7 @@ msgstr "Timeẓri tusliṭ"
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Balance"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -327,7 +316,7 @@ msgstr "Isem anguz"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "To Renew"
-msgstr ""
+msgstr "I wusmuynet"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -362,8 +351,7 @@ msgid "Amount"
 msgstr "Azal"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-#: selection:account.analytic.account,type:0
+#: view:account.analytic.account:0 selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
@@ -380,7 +368,7 @@ msgid "Contract opened"
 msgstr "Agatu illi"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:272
+#: code:addons/analytic/analytic.py:262
 #, python-format
 msgid "Warning"
 msgstr "ɣuṛ-ek"
