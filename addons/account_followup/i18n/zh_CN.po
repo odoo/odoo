@@ -1,38 +1,35 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_followup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-14 07:37+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-15 05:33+0000\n"
-"X-Generator: Launchpad (build 17493)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "\n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
+"    Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take\n"
 "appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to\n"
 "contact our accounting department.  \n"
 "\n"
 "    </p>\n"
@@ -52,54 +49,21 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"\n"
-"    <p>亲爱的 ${object.name},</p>\n"
-"    <p>\n"
-"\n"
-"    希望这封邮件是一个的误会,贵公司有一些款项看来依然未支付,请在8天内及时支付这些货款.\n"
-"    如果上述款项已经被支付,请您忽略这封邮件.并联系我们的会计部门.\n"
-"\n"
-"    </p>\n"
-"<br/>\n"
-"诚挚的问候,\n"
-"<br/>\n"
-"   <br/>\n"
-"${user.name}\n"
-"\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>亲爱的 ${object.name},</p>\n    <p>\n\n    希望这封邮件是一个的误会,贵公司有一些款项看来依然未支付,请在8天内及时支付这些货款.\n    如果上述款项已经被支付,请您忽略这封邮件.并联系我们的会计部门.\n\n    </p>\n<br/>\n诚挚的问候,\n<br/>\n   <br/>\n${user.name}\n\n<br/>\n<br/>\n\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
 "    Despite several reminders, your account is still not settled.\n"
-"Unless full payment is made in next 8 days, legal action for the recovery of "
-"the debt will be taken without\n"
+"Unless full payment is made in next 8 days, legal action for the recovery of the debt will be taken without\n"
 "further notice.\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "</p>\n"
 "<br/>\n"
 "Best Regards,\n"
@@ -116,50 +80,19 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>亲爱旳 ${object.name},</p>\n"
-"    <p>\n"
-"    经过多次提醒，您的余款我们至今仍未收到。\n"
-"如果贵公司不在8天内付清所有的货款，那么我们将直接通过法律途径来解决，\n"
-"我相信我们没有必要用这样的方式，下面列出的是应付款的明细。\n"
-"如果对此有任何疑问，您可以随时联系我们的会计部门。\n"
-"</p>\n"
-"<br/>\n"
-"致以诚挚的问候,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>亲爱旳 ${object.name},</p>\n    <p>\n    经过多次提醒，您的余款我们至今仍未收到。\n如果贵公司不在8天内付清所有的货款，那么我们将直接通过法律途径来解决，\n我相信我们没有必要用这样的方式，下面列出的是应付款的明细。\n如果对此有任何疑问，您可以随时联系我们的会计部门。\n</p>\n<br/>\n致以诚挚的问候,\n<br/>\n<br/>\n${user.name}\n<br/>\n<br/>\n\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
+"    Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take\n"
 "appropriate measures in order to carry out this payment in the next 8 days.\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to\n"
 "contact our accounting department.\n"
 "    </p>\n"
 "<br/>\n"
@@ -175,53 +108,21 @@ msgid ""
 "<br/>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>亲爱的 ${object.name},</p>\n"
-"    <p>\n"
-"    除非我们这里发生了差错, 看来您的尾款依然未支付. 请您\n"
-"在后面8天里采取适当的措施来落实这个款项.\n"
-"如果您的款项在邮件发出之后已经落实了, 请忽略这个信息. \n"
-"您可以随时联系我们的会计部门.\n"
-"    </p>\n"
-"<br/>\n"
-"致以诚挚的问候,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"<br/>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>亲爱的 ${object.name},</p>\n    <p>\n    除非我们这里发生了差错, 看来您的尾款依然未支付. 请您\n在后面8天里采取适当的措施来落实这个款项.\n如果您的款项在邮件发出之后已经落实了, 请忽略这个信息. \n您可以随时联系我们的会计部门.\n    </p>\n<br/>\n致以诚挚的问候,\n<br/>\n<br/>\n${user.name}\n<br/>\n<br/>\n\n${object.get_followup_table_html() | safe}\n\n<br/>\n</div>\n            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "   <p>\n"
-"    We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account\n"
-"which means that we will no longer be able to supply your company with "
-"(goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting\n"
+"    We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account\n"
+"which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting\n"
 "department. so that we can resolve the matter quickly.\n"
 "Details of due payments is printed below.\n"
 " </p>\n"
@@ -242,38 +143,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>亲爱的 ${object.name},</p>\n"
-"   <p>\n"
-"    我们失望的发现：尽管我们发送了提醒，\n"
-"    您在我们这的账户依然超支了。\n"
-"    重要的是：请立即付款， 不然我们会停止您的账户\n"
-"    这意味着您将不再得到我们的服务和支持。\n"
-"    请您采取必要的措施在8天内支付这些应付款。\n"
-"     如果有任何我们还没意识到的发票问题，不要犹豫请立即联系我们的会计部门。\n"
-"     我们会迅速解决这个问题。\n"
-"     应付款的细节会打印在下面。\n"
-" </p>\n"
-"<br/>\n"
-"致以诚挚的问候，\n"
-"    \n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"    \n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -283,29 +152,14 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
 msgstr ""
-"\n"
-"亲爱的 %(partner_name),\n"
-"\n"
-"经过多次提醒, 您的账户问题依然未解决.\n"
-"\n"
-"除非您在接下来的8天内付清所有款项,不然我们会对此采取进一步的法律行动。\n"
-"\n"
-"我相信这个举动不是必须的，应付款清单会打印在下面。\n"
-"\n"
-"关于此信件如果有任何问题,不要犹豫请立即联系我们的会计部门。\n"
-"\n"
-"致以诚挚的问候,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -316,31 +170,15 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
 "            "
-msgstr ""
-"\n"
-"亲爱的 %(partner_name)s,\n"
-"\n"
-"经过多次提醒，您的余款我们至今仍未收到。\n"
-"\n"
-"如果贵公司不在8天内付清所有的货款，那么我们将直接通过法律途径来解决，\n"
-"\n"
-"我相信我们没有必要用这样的方式，下面列出的是应付款的明细。\n"
-"\n"
-"如果对此有任何疑问，您可以随时联系我们的会计部门。\n"
-"\n"
-"诚挚的问候，\n"
-"            "
+msgstr "\n亲爱的 %(partner_name)s,\n\n经过多次提醒，您的余款我们至今仍未收到。\n\n如果贵公司不在8天内付清所有的货款，那么我们将直接通过法律途径来解决，\n\n我相信我们没有必要用这样的方式，下面列出的是应付款的明细。\n\n如果对此有任何疑问，您可以随时联系我们的会计部门。\n\n诚挚的问候，\n            "
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -348,25 +186,12 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"Exception made if there was a mistake of ours, it seems that the following "
-"amount stays unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days.\n"
+"Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to contact our accounting department.  "
-"\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
 msgstr ""
-"\n"
-"亲爱的 %(partner_name),\n"
-"\n"
-"如果这不是一个误会的话,看来您的应付款依然没有支付。\n"
-"请在8天内采取有效的措施来完成付款。\n"
-"\n"
-"如果您已经在收到邮件前付款，请忽略这个信息。请不要犹豫联系我们的会计部门。\n"
-"\n"
-"致以诚挚的问候,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -374,37 +199,17 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
+"We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
 "\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account which means that we will no longer "
-"be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting department, so that we can resolve the "
-"matter quickly.\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department, so that we can resolve the matter quickly.\n"
 "\n"
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
 msgstr ""
-"\n"
-"亲爱的 %(partner_name),\n"
-"\n"
-"我们失望的发现尽管我们发了提醒给您,不过您的应付款依然超过了额度。\n"
-"\n"
-"请立即付款, 不然我们会考虑停止与您的账目往来,这意味着贵公司将不再得到我们的良好的技术支持。\n"
-"\n"
-"在接下来的8天里，请采取适当的措施来落实这次付款。\n"
-"\n"
-"如果是因为我们未注意到的发票问题影响支付, 请毫不犹豫的联系我们的会计部门, 我们会快速解决这个问题。\n"
-"\n"
-"下面是超期超额的应付款。\n"
-"\n"
-"致以诚挚的问候，\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:174
@@ -416,25 +221,25 @@ msgstr " 发出邮件"
 #: code:addons/account_followup/wizard/account_followup_print.py:176
 #, python-format
 msgid " email(s) should have been sent, but "
-msgstr " 邮件可能被发送 "
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:176
 #, python-format
 msgid " had unknown email address(es)"
-msgstr " 包含有未知email地址"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:177
 #, python-format
 msgid " letter(s) in report"
-msgstr " 报告信件"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:177
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr " 已指定手动操作:"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -453,7 +258,7 @@ msgstr "${user.company_id.name} 支付提醒"
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(company_name)s"
-msgstr "%(公司名称)s"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
@@ -463,7 +268,7 @@ msgstr "%(日期）"
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(partner_name)s"
-msgstr "%(partner_name)"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
@@ -474,7 +279,7 @@ msgstr "%(用户签名)s"
 #: code:addons/account_followup/wizard/account_followup_print.py:234
 #, python-format
 msgid "%s partners have no credits and as such the action is cleared"
-msgstr "%s 合作伙伴没有欠款已经结请"
+msgstr ""
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -482,8 +287,6 @@ msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
 msgstr ""
-", 最后一次催款\n"
-"                            是由:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
@@ -511,21 +314,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define follow-up levels and their related actions.\n"
 "              </p><p>\n"
-"                For each step, specify the actions to be taken and delay in "
-"days. It is\n"
-"                possible to use print and e-mail templates to send specific "
-"messages to\n"
+"                For each step, specify the actions to be taken and delay in days. It is\n"
+"                possible to use print and e-mail templates to send specific messages to\n"
 "                the customer.\n"
 "              </p>\n"
 "          "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击定义后续跟进等级以及相关行动。\n"
-"              </p><p>\n"
-"                每一步, 指定行动何时开始已经推迟多久。\n"
-"                可能会使用打印和电子邮件模版来发送这些信息给客户。\n"
-"              </p>\n"
-"          "
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -535,7 +329,7 @@ msgstr "催款"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Account Move line"
-msgstr "会计凭证行"
+msgstr ""
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -550,7 +344,7 @@ msgstr "要做的事情"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
-msgstr "要采取的行动,例如:打个电话, 检查是否支付, ..."
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
@@ -592,8 +386,7 @@ msgid "Assign a Responsible"
 msgstr "指定负责人员"
 
 #. module: account_followup
-#: field:account.move.line,result:0
-#: field:account_followup.stat,balance:0
+#: field:account.move.line,result:0 field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
 msgid "Balance"
 msgstr "余额"
@@ -608,12 +401,8 @@ msgstr "余额> 0"
 msgid ""
 "Below is the history of the transactions of this\n"
 "                            customer. You can check \"No Follow-up\" in\n"
-"                            order to exclude it from the next follow-up "
-"actions."
+"                            order to exclude it from the next follow-up actions."
 msgstr ""
-"下面是历史翻译记录\n"
-"                            客户. 您可以检查 \"无跟进催款人\" \n"
-"                            来达到在下一个跟进动作排除."
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -629,7 +418,7 @@ msgstr "取消"
 #: help:account_followup.print,test_print:0
 msgid ""
 "Check if you want to print follow-ups without changing follow-up level."
-msgstr "检查您想打印的跟进同时不改变跟进等级"
+msgstr ""
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -678,7 +467,7 @@ msgstr "贷方"
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_tree
 msgid "Customer Followup"
-msgstr "客户跟进"
+msgstr ""
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
@@ -698,7 +487,7 @@ msgstr "日期:"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr "后续行动等级中的天数必须是不同的"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -733,7 +522,7 @@ msgstr "文档：客户帐户对帐单"
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
 msgid "Download Letters"
-msgstr "下载信件"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:259
@@ -795,12 +584,12 @@ msgstr "后续跟进"
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr "后续动作"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr "催款分析"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_followup_form
@@ -830,7 +619,7 @@ msgstr "催款等级"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr "催款等级"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.action_report_followup
@@ -868,7 +657,7 @@ msgstr "催款步骤"
 #: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid "Follow-up letter of "
-msgstr "后续行动信件 "
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_graph
@@ -884,7 +673,7 @@ msgstr "已发送催款"
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Follow-ups To Do"
-msgstr "要做的后续行动"
+msgstr ""
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
@@ -907,12 +696,11 @@ msgstr "分组按"
 msgid ""
 "He said the problem was temporary and promised to pay 50% before 15th of "
 "May, balance before 1st of July."
-msgstr "他说问题只是暂时的，并承诺在5月15日之前支付50%，并在6月的第一周之前付清。"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup,id:0
-#: field:account_followup.followup.line,id:0
-#: field:account_followup.print,id:0
+#: field:account_followup.followup.line,id:0 field:account_followup.print,id:0
 #: field:account_followup.sending.results,id:0
 #: field:account_followup.stat,id:0
 #: field:account_followup.stat.by.partner,id:0
@@ -925,7 +713,7 @@ msgstr "标识"
 msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default email template"
-msgstr "如果未指定最近的跟进等级，它会从默认的电子邮件模版发送"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -985,22 +773,22 @@ msgstr "最新的催款日期"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr "最新的后续行动等级"
+msgstr ""
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr "不采取法律行动的最新的后续行动等级"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Latest Follow-up Month"
-msgstr "最新的后续行动月"
+msgstr ""
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
 msgid "Latest date that the follow-up level of the partner was changed"
-msgstr "最近日期的合作伙伴后续行动等级改变了"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
@@ -1021,7 +809,7 @@ msgstr "Li."
 #: code:addons/account_followup/account_followup.py:261
 #, python-format
 msgid "Lit."
-msgstr "文献"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -1053,12 +841,12 @@ msgstr "最高催款等级"
 #: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
 #: model:ir.ui.menu,name:account_followup.menu_sale_followup
 msgid "My Follow-Ups"
-msgstr "我的后续行动"
+msgstr ""
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "My Follow-ups"
-msgstr "我的后续行动"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -1129,23 +917,23 @@ msgstr "业务伙伴列表"
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Partners with Overdue Credits"
-msgstr "超额度的合作伙伴"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Payment Follow-up"
-msgstr "应收款跟进"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
-msgstr "催款后续行动"
+msgstr ""
 
 #. module: account_followup
 #: help:res.partner,payment_note:0
 msgid "Payment Note"
-msgstr "催款注解"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -1165,7 +953,7 @@ msgstr "打印逾期支付"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Print overdue payments report independent of follow-up line"
-msgstr "打印每项催款的逾期付款报表"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -1176,7 +964,7 @@ msgstr "已打印消息"
 #: code:addons/account_followup/account_followup.py:314
 #, python-format
 msgid "Printed overdue payments report"
-msgstr "打印超期应收款报表"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
@@ -1232,13 +1020,13 @@ msgstr "发送催款"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Letters and Emails"
-msgstr "发送催款信函和电子邮件"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:241
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr "发信以及电子邮件：活动摘要"
+msgstr ""
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -1249,18 +1037,18 @@ msgstr "过期邮件发送"
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr "发送信函"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,send_email:0
 msgid "Send an Email"
-msgstr "发送电子邮件"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid "Send emails and generate letters"
-msgstr "发送电子邮件并生成信函"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
@@ -1280,7 +1068,7 @@ msgstr "概要"
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
 msgid "Summary of actions"
-msgstr "行动总结"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.print,test_print:0
@@ -1296,9 +1084,9 @@ msgstr "这"
 #: code:addons/account_followup/report/account_followup_print.py:82
 #, python-format
 msgid ""
-"The followup plan defined for the current company does not have any followup "
-"action."
-msgstr "跟进行动计划定义给未指定任何跟进行动的公司。"
+"The followup plan defined for the current company does not have any followup"
+" action."
+msgstr ""
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
@@ -1310,7 +1098,7 @@ msgstr "最大跟踪级别"
 msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
-msgstr "没有进入诉讼的最高级别的催款（跟进）等级"
+msgstr ""
 
 #. module: account_followup
 #: help:account_followup.followup.line,delay:0
@@ -1318,7 +1106,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr "依据欠款的天数，决定是否发出提醒。在实际操做时，要确认发出的是一个有礼貌的警告，不然会产生负面作用。"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -1326,13 +1114,13 @@ msgstr "依据欠款的天数，决定是否发出提醒。在实际操做时，
 msgid ""
 "The partner does not have any accounting entries to print in the overdue "
 "report for the current company."
-msgstr "业务伙伴在当前公司逾期报表里没有任何会计分录"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:319
 #, python-format
 msgid "There is no followup plan defined for the current company."
-msgstr "此公司并未定义跟进计划。"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -1343,16 +1131,12 @@ msgstr "本会计年度"
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid ""
 "This action will send follow-up emails, print the letters and\n"
-"                        set the manual actions per customer, according to "
-"the follow-up levels defined."
+"                        set the manual actions per customer, according to the follow-up levels defined."
 msgstr ""
-"这个动作将发送催款电子邮件，或打印信件给客户。 \n"
-"                        根据预定义的催款跟进等级，对每个客户设置手工动作。"
 
 #. module: account_followup
 #: help:account_followup.print,date:0
-msgid ""
-"This field allow you to select a forecast date to plan your follow-ups"
+msgid "This field allow you to select a forecast date to plan your follow-ups"
 msgstr "这字段允许你选择一个预定计划日期去催款"
 
 #. module: account_followup
@@ -1369,7 +1153,7 @@ msgid ""
 "current date when the partner gets a follow-up level that requires a manual "
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
-msgstr "当需要人工催款时。当业务伙伴被设成需要人工催款等级时日期会被设成当天。可以设定看他是否履行他的承偌。."
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_followup_form
@@ -1377,20 +1161,12 @@ msgid ""
 "To remind customers of paying their invoices, you can\n"
 "                        define different actions depending on how severely\n"
 "                        overdue the customer is. These actions are bundled\n"
-"                        into follow-up levels that are triggered when the "
-"due\n"
+"                        into follow-up levels that are triggered when the due\n"
 "                        date of an invoice has passed a certain\n"
-"                        number of days. If there are other overdue invoices "
-"for the \n"
+"                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
 msgstr ""
-"提醒客户支付他们的发票,\n"
-"                        您可以根客户据逾期的严重程度定义不同的操作。\n"
-"                         到期发票超期一定天数后，\n"
-"                         就会触发由绑定的催款等级定义的动作。\n"
-"                        如果同一客户有多张逾期发票,\n"
-"                        将按逾期天数最多的发票被执行相应动作。"
 
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
@@ -1410,7 +1186,7 @@ msgstr "合计:"
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr "当进行时，会打印一封信"
+msgstr ""
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
@@ -1422,36 +1198,29 @@ msgstr "处理时，将发出一个email"
 msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
-msgstr "当进行时，会将此客户设为手动操作。 "
+msgstr ""
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
 msgid "Worst Due Date"
-msgstr "最差的到期日"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ""
 "Write here the introduction in the letter,\n"
-"                            according to the level of the follow-up. You "
-"can\n"
+"                            according to the level of the follow-up. You can\n"
 "                            use the following keywords in the text. Don't\n"
-"                            forget to translate in all languages you "
-"installed\n"
+"                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
 msgstr ""
-"这里写下介绍,\n"
-"                            根据催款的等级，您可以  \n"
-"                            使用下列关键字，不要\n"
-"                            忘记使用右上方的图标\n"
-"                            翻译成各种语言 ."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:291
 #, python-format
 msgid ""
 "You became responsible to do the next action for the payment follow-up of"
-msgstr "为了催款您需要负责采取下面的措施"
+msgstr ""
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -1468,7 +1237,7 @@ msgstr "天过期，做下列动作："
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "e.g. Call the customer, check if it's paid, ..."
-msgstr "例如，打电话给客户，确认是否付款,..."
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print

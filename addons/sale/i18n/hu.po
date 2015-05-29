@@ -1,45 +1,37 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-02-18 15:18+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-19 05:42+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
-
-#. module: sale
-#: view:sale.order:sale.view_sales_order_filter
-#: view:sale.report:sale.view_order_product_search
-msgid "Order Month"
-msgstr "Megrendelés hónapja"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -48,27 +40,20 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
 "       % endif\n"
 "       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "    <p>\n"
 "        You can view your quotation online:\n"
 "    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
-"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
-"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
-"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
-"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View "
-"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -77,16 +62,11 @@ msgid ""
 "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -98,128 +78,27 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Itt található${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} ettől ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Megrendelés szám: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Megrendelés összege: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Megrendelés dátuma: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Megrendelés hivatkozása: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Ön hivatkozása: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Ön kapcsolata: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"    <p>\n"
-"        Megtekintheti az árajánlatát online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
-"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
-"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
-"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
-"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View "
-"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>Lehetősége van közvetlenül Paypal fizetéssel kiegyenlíteni:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>További felmerült kérdésekben, állunk szíves rendelkezésükre.</p>\n"
-"    <p>Köszönjük, hogy a ${object.company_id.name or 'us'} -t "
-"választotta!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hello ${object.partner_id.name},</p>\n    \n    <p>Itt található${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} ettől ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Megrendelés szám: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Megrendelés összege: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Megrendelés dátuma: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Megrendelés hivatkozása: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Ön hivatkozása: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Ön kapcsolata: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        Megtekintheti az árajánlatát online:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>Lehetősége van közvetlenül Paypal fizetéssel kiegyenlíteni:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>További felmerült kérdésekben, állunk szíves rendelkezésükre.</p>\n    <p>Köszönjük, hogy a ${object.company_id.name or 'us'} -t választotta!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
-#: field:product.product,sales_count:0
-#: field:product.template,sales_count:0
+#: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
 msgstr "# Értékesítések"
 
@@ -243,18 +122,14 @@ msgstr "# megrendelésszámból"
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -264,116 +139,55 @@ msgstr "(frissítés)"
 #. module: sale
 #: help:sale.order.line,state:0
 msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.    "
-"                 \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.   "
-"                  \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.        "
-"             \n"
+"* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
-"* A 'Terv' állapot beállított, ha az idevonatkozó megrendelés tervezet "
-"állapotú.                     \n"
-"* A 'Megerősített' állapot beállított, ha az idevonatkozó megrendelés "
-"megerősített.                    \n"
-"* A 'Kifogás' állapot beállított, ha az idevonatkozó megrendelés kifogásolt. "
-"                   \n"
-"* A 'Elvégzett' állapot beállított, ha az idevonatkozó megrendelés sor "
-"kiválogatott.                     \n"
-"* A 'Visszavon' állapot beállított, ha az idevonatkozó megrendelést egy "
-"felhasználó visszavonta."
+msgstr "* A 'Terv' állapot beállított, ha az idevonatkozó megrendelés tervezet állapotú.                     \n* A 'Megerősített' állapot beállított, ha az idevonatkozó megrendelés megerősített.                    \n* A 'Kifogás' állapot beállított, ha az idevonatkozó megrendelés kifogásolt.                    \n* A 'Elvégzett' állapot beállított, ha az idevonatkozó megrendelés sor kiválogatott.                     \n* A 'Visszavon' állapot beállított, ha az idevonatkozó megrendelést egy felhasználó visszavonta."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a quotation that can be converted into a "
-"sales\n"
+"                    Click to create a quotation that can be converted into a sales\n"
 "                    order.\n"
 "                </p><p>\n"
-"                    Odoo will help you efficiently handle the complete sales "
-"flow:\n"
-"                    quotation, sales order, delivery, invoicing and "
-"payment.\n"
+"                    Odoo will help you efficiently handle the complete sales flow:\n"
+"                    quotation, sales order, delivery, invoicing and payment.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Kattintson árajánlat létrehozásához, melyet később "
-"vásárlói megrendeléssé\n"
-"                    alakíthat.\n"
-"                </p><p>\n"
-"                    Odoo rendszer segítséget nyújt a teljes értékesítési "
-"folyamat hatékonnyá tételében:\n"
-"                    árajánlat, vásárlói megrendelés, szállítás, számlázás és "
-"fizetés.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kattintson árajánlat létrehozásához, melyet később vásárlói megrendeléssé\n                    alakíthat.\n                </p><p>\n                    Odoo rendszer segítséget nyújt a teljes értékesítési folyamat hatékonnyá tételében:\n                    árajánlat, vásárlói megrendelés, szállítás, számlázás és fizetés.\n                </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation or sales order for this "
-"customer.\n"
+"                Click to create a quotation or sales order for this customer.\n"
 "              </p><p>\n"
-"                Odoo will help you efficiently handle the complete sale "
-"flow:\n"
+"                Odoo will help you efficiently handle the complete sale flow:\n"
 "                quotation, sales order, delivery, invoicing and\n"
 "                payment.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customer to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customer to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson a vásárlóhoz tartozó árajánlat vagy vásárlási "
-"megrendelés létrehozásához.\n"
-"              </p><p>\n"
-"                Odoo rendszer segítséget nyújt a teljes értékesítési "
-"folyamat hatékony kezeléséhez:\n"
-"                árajánlat, vásárlói megrendelés, szállítás, számlázás és\n"
-"                fizetés.\n"
-"              </p><p>\n"
-"                A szociális tulajdonság segít az egyes megrendelések "
-"kommunikációjának\n"
-"                szervezésében, és elérhetővé teszi a vásárlók részére a "
-"vásárlói megrendeléseik\n"
-"                alakulását.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson a vásárlóhoz tartozó árajánlat vagy vásárlási megrendelés létrehozásához.\n              </p><p>\n                Odoo rendszer segítséget nyújt a teljes értékesítési folyamat hatékony kezeléséhez:\n                árajánlat, vásárlói megrendelés, szállítás, számlázás és\n                fizetés.\n              </p><p>\n                A szociális tulajdonság segít az egyes megrendelések kommunikációjának\n                szervezésében, és elérhetővé teszi a vásárlók részére a vásárlói megrendeléseik\n                alakulását.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
-"                Odoo will help you efficiently handle the complete sales "
-"flow:\n"
+"                Odoo will help you efficiently handle the complete sales flow:\n"
 "                quotation, sales order, delivery, invoicing and payment.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson egy árajánlat létrehozásához, melyet vásárlói "
-"megrendeléssé\n"
-"                alakíthat.\n"
-"              </p><p>\n"
-"                Odoo rendszer segítséget nyújt a teljes értékesítési "
-"folyamat hatékony kezeléséhez:\n"
-"                árajánlat, vásárlói megrendelés, szállítás, számlázás és "
-"fizetés.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson egy árajánlat létrehozásához, melyet vásárlói megrendeléssé\n                alakíthat.\n              </p><p>\n                Odoo rendszer segítséget nyújt a teljes értékesítési folyamat hatékony kezeléséhez:\n                árajánlat, vásárlói megrendelés, szállítás, számlázás és fizetés.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -382,62 +196,28 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a quotation, the first step of a new sale.\n"
 "              </p><p>\n"
-"                Odoo will help you handle efficiently the complete sale "
-"flow:\n"
+"                Odoo will help you handle efficiently the complete sale flow:\n"
 "                from the quotation to the sales order, the\n"
 "                delivery, the invoicing and the payment collection.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customers to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customers to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson egy árajánlat létrehozásához, az első lépés egy "
-"új értékesítéshez.\n"
-"              </p><p>\n"
-"                Odoo rendszer segítséget nyújt a teljes értékesítési "
-"folyamat hatékony kezeléséhez:\n"
-"                az árajánlattól a vásárlói megrendelésig, a \n"
-"                szállítás, a számlázás és a fizetés fogadása.\n"
-"              </p><p>\n"
-"                A szociális tulajdonság segít az egyes megrendelések "
-"kommunikációjának\n"
-"                szervezésében, és elérhetővé teszi a vásárlók részére a "
-"vásárlói megrendeléseik\n"
-"                alakulását.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson egy árajánlat létrehozásához, az első lépés egy új értékesítéshez.\n              </p><p>\n                Odoo rendszer segítséget nyújt a teljes értékesítési folyamat hatékony kezeléséhez:\n                az árajánlattól a vásárlói megrendelésig, a \n                szállítás, a számlázás és a fizetés fogadása.\n              </p><p>\n                A szociális tulajdonság segít az egyes megrendelések kommunikációjának\n                szervezésében, és elérhetővé teszi a vásárlók részére a vásárlói megrendeléseik\n                alakulását.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
 msgid ""
 "<p>\n"
-"                Here is a list of each sales order line to be invoiced. You "
-"can\n"
-"                invoice sales orders partially, by lines of sales order. You "
-"do\n"
-"                not need this list if you invoice from the delivery orders "
-"or\n"
+"                Here is a list of each sales order line to be invoiced. You can\n"
+"                invoice sales orders partially, by lines of sales order. You do\n"
+"                not need this list if you invoice from the delivery orders or\n"
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Ez itt a lista a már kiszámlázott vevői megrendelési "
-"tételekről. Tud\n"
-"                számlázni megrendelési részt, a megrendelés tételeivel. "
-"Nincs\n"
-"                szüksége erre a listára, ha kiszállítási Kiszolgáltatási "
-"jegyből/\n"
-"                Szállító levélből számláz vagy a teljes értékesítést "
-"egyszerre\n"
-"                számlázza.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Ez itt a lista a már kiszámlázott vevői megrendelési tételekről. Tud\n                számlázni megrendelési részt, a megrendelés tételeivel. Nincs\n                szüksége erre a listára, ha kiszállítási Kiszolgáltatási jegyből/\n                Szállító levélből számláz vagy a teljes értékesítést egyszerre\n                számlázza.\n              </p>\n            "
 
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
@@ -487,22 +267,14 @@ msgstr "Ennyi előleg %s %s"
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr ""
-"A 'Mutasd a számlázandó tételeket' kattintás után, válasszon ki számlázandó "
-"tételeket és hozza létre a számlát a 'Tovább' legördülő menüből."
+msgstr "A 'Mutasd a számlázandó tételeket' kattintás után, válasszon ki számlázandó tételeket és hozza létre a számlát a 'Tovább' legördülő menüből."
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid ""
-"All items in these order lines will be invoiced. You can also invoice a "
-"percentage of the sales order\n"
-"                    or a fixed price (for advances) directly from the sales "
-"order form if you prefer."
-msgstr ""
-"Ezen a vásárlói megrendelésen minden tétel sor számlázva lesz. Lehetősége "
-"van a megrendelés egy bizonyos százalékának számlázására\n"
-"                    vagy fix ár (az előlegekre), ha kívánja direkt a "
-"megrendelés űrlapról."
+"All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
+"                    or a fixed price (for advances) directly from the sales order form if you prefer."
+msgstr "Ezen a vásárlói megrendelésen minden tétel sor számlázva lesz. Lehetősége van a megrendelés egy bizonyos százalékának számlázására\n                    vagy fix ár (az előlegekre), ha kívánja direkt a megrendelés űrlapról."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -537,16 +309,10 @@ msgstr "Engedélyezi a vevői megrendelés tételeire az árengedmény beállít
 #. module: sale
 #: help:sale.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to sell a given product or a given customer.\n"
+"Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
-"Engedélyezze a termékekre vonatkozó figyelmeztetések beállítását és "
-"kapcsolja, ha egy felhasználó el akarja adni azt az árut vagy egy megadott "
-"vásárlóhoz.\n"
-"Például: Termék: ez a termék elavult, ne vásároljon többet 5 -nél.\n"
-"Beszállító: ne felejtsen el expressz szállítás után érdeklődni."
+msgstr "Engedélyezze a termékekre vonatkozó figyelmeztetések beállítását és kapcsolja, ha egy felhasználó el akarja adni azt az árut vagy egy megadott vásárlóhoz.\nPéldául: Termék: ez a termék elavult, ne vásároljon többet 5 -nél.\nBeszállító: ne felejtsen el expressz szállítás után érdeklődni."
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
@@ -556,99 +322,62 @@ msgstr "Engedélyezi másmilyen mértékegység használatát"
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
 msgid ""
-"Allows to define your customer contracts conditions: invoicing method (fixed "
-"price, on timesheet, advance invoice), the exact pricing (650€/day for a "
-"developer), the duration (one year support contract).\n"
-"You will be able to follow the progress of the contract and invoice "
-"automatically.\n"
+"Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
+"You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr ""
-"Lehetővé teszi a vásárló vásárlási feltételeinek meghatározását: számlázási "
-"mód (fix ár, az időbeosztásokon, haladó számlázás), a pontos árazás "
-"(650€/nap egy fejlesztőért), az időtartam (egy éves támogatási szerződés).\n"
-"Lehetősége lesz a szerződés és az automatikus számlázási folyamat nyomon "
-"követésére.\n"
-"-Ez a account_analytic_analysis modult telepíti."
+msgstr "Lehetővé teszi a vásárló vásárlási feltételeinek meghatározását: számlázási mód (fix ár, az időbeosztásokon, haladó számlázás), a pontos árazás (650€/nap egy fejlesztőért), az időtartam (egy éves támogatási szerződés).\nLehetősége lesz a szerződés és az automatikus számlázási folyamat nyomon követésére.\n-Ez a account_analytic_analysis modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-"Lehetővé teszi különböző ár szervezését a vevő kategóriák szabályai "
-"alapján.\n"
-"Például: 10% a kiskereskedőknek, 5 EUR promóció erre a termékre, stb."
+msgstr "Lehetővé teszi különböző ár szervezését a vevő kategóriák szabályai alapján.\nPéldául: 10% a kiskereskedőknek, 5 EUR promóció erre a termékre, stb."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
 msgid ""
-"Allows you to Make Quotation, Sale Order using different Order policy and "
-"Manage Related Stock.\n"
+"Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "-This installs the module sale_stock."
-msgstr ""
-"Engedélyezi, hogy létrehozzon árajánlatot, vásárlói megrendelést más "
-"megrendelési szabályokkal és kezelhesse az ide vonatkozó raktárkészletet.\n"
-"-Ez a sale_stock modult telepíti."
+msgstr "Engedélyezi, hogy létrehozzon árajánlatot, vásárlói megrendelést más megrendelési szabályokkal és kezelhesse az ide vonatkozó raktárkészletet.\n-Ez a sale_stock modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
-"Lehetővé teszi a megrendelés egyes soraihoz árengedmény alkalmazását."
+msgstr "Lehetővé teszi a megrendelés egyes soraihoz árengedmény alkalmazását."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
 msgid ""
-"Allows you to categorize your sales and deliveries (picking lists) between "
-"different journals, and perform batch operations on journals.\n"
+"Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
-msgstr ""
-"Lehetővé teszi az értékesítései és kiszállításai kategorizálását "
-"(kiválogatási listák) különböző naplók közt, és kötegelt műveletek "
-"elvégzését a naplókon.\n"
-"-Ez a sale_journal modult telepíti."
+msgstr "Lehetővé teszi az értékesítései és kiszállításai kategorizálását (kiválogatási listák) különböző naplók közt, és kötegelt műveletek elvégzését a naplókon.\n-Ez a sale_journal modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
 msgid ""
-"Allows you to define what is the default function of a specific user on a "
-"given account.\n"
-"This is mostly used when a user encodes his timesheet. The values are "
-"retrieved and the fields are auto-filled. But the possibility to change "
-"these values is still available.\n"
+"Allows you to define what is the default function of a specific user on a given account.\n"
+"This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.\n"
 "-This installs the module analytic_user_function."
-msgstr ""
-"Lehetővé teszi annak meghatározását, hogy egy megadott főkönyvi számlára egy "
-"meghatározott felhasználónak mi az alapértelmezett feladata.\n"
-"Ezt legtöbbször akkor használja, ha egy felhasználó felviszi az "
-"időbeosztását. Az értékeket helyreállítja és a mezőket automatikusan "
-"kitölti. Ezeknek az értékeknek a megváltoztatása még ezután is lehetésges.\n"
-"-Ez a analytic_user_function modult telepíti."
+msgstr "Lehetővé teszi annak meghatározását, hogy egy megadott főkönyvi számlára egy meghatározott felhasználónak mi az alapértelmezett feladata.\nEzt legtöbbször akkor használja, ha egy felhasználó felviszi az időbeosztását. Az értékeket helyreállítja és a mezőket automatikusan kitölti. Ezeknek az értékeknek a megváltoztatása még ezután is lehetésges.\n-Ez a analytic_user_function modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
-"Lehetővé teszi a termékek különböző mértékegységeinek kiválasztását és "
-"karbantartását."
+msgstr "Lehetővé teszi a termékek különböző mértékegységeinek kiválasztását és karbantartását."
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
-"Lehetővé teszi az analitikus/elemző könyvelés gyűjtőkód meghatározását a "
-"vevői megrendeléseken."
+msgstr "Lehetővé teszi az analitikus/elemző könyvelés gyűjtőkód meghatározását a vevői megrendeléseken."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
-"Lehetővé teszi különböző szállítási és számlázási cím meghatározását a "
-"vásárlói megrendelésekhez."
+msgstr "Lehetővé teszi különböző szállítási és számlázási cím meghatározását a vásárlói megrendelésekhez."
 
 #. module: sale
 #: field:sale.report,analytic_account_id:0
@@ -676,9 +405,7 @@ msgstr "Szállítás előtt"
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
-msgstr ""
-"Mielőtt választana egy terméket,\n"
-" válasszon egy vevőt az értékesítési űrlapon."
+msgstr "Mielőtt választana egy terméket,\n válasszon egy vevőt az értékesítési űrlapon."
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -718,8 +445,7 @@ msgid "Cancel Quotation"
 msgstr "Árajánlat visszavonása"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
+#: selection:sale.order,state:0 selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
 msgstr "Érvénytelenített"
@@ -734,9 +460,7 @@ msgstr "Nem lehet megszakítani ezt a megrendelést!"
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
-"Nem törölhető az a megrendelési téetelsor amelyik ebben az állapotban van "
-"'%s'."
+msgstr "Nem törölhető az a megrendelési téetelsor amelyik ebben az állapotban van '%s'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1140
@@ -744,9 +468,7 @@ msgstr ""
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
-"Nem található ehhez a termékhez és mennyiséghez hasonló árlista tétel.\n"
-"Változtassa meg vagy a terméket, a mennyiséget vagy az árlistát."
+msgstr "Nem található ehhez a termékhez és mennyiséghez hasonló árlista tétel.\nVáltoztassa meg vagy a terméket, a mennyiséget vagy az árlistát."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -757,16 +479,12 @@ msgstr "Termékkaterógia"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
-"Jelölje be a négyzetet az ugyanazon vevőhöz tartozó számlák "
-"csoportosításához."
+msgstr "Jelölje be a négyzetet az ugyanazon vevőhöz tartozó számlák csoportosításához."
 
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
-"Jelölje be ezt a négyzetet ahhoz, hogy kezelhesse ennek az értékesítési "
-"csoportnak az árajánlatait."
+msgstr "Jelölje be ezt a négyzetet ahhoz, hogy kezelhesse ennek az értékesítési csoportnak az árajánlatait."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -794,8 +512,7 @@ msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: sale
-#: field:sale.order,company_id:0
-#: field:sale.order.line,company_id:0
+#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,company_id:0
 msgid "Company"
@@ -827,8 +544,7 @@ msgstr "Megerősítve"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
-"Megerősített vásárlói megrendelési tételek, melyeket még nem szállítottak ki"
+msgstr "Megerősített vásárlói megrendelési tételek, melyeket még nem szállítottak ki"
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -853,8 +569,7 @@ msgstr "Számla létrehozása & megtekintése"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
-#: view:sale.order:sale.view_order_form
-#: field:sale.order,order_policy:0
+#: view:sale.order:sale.view_order_form field:sale.order,order_policy:0
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Create Invoice"
 msgstr "Számla készítése"
@@ -878,8 +593,7 @@ msgstr "Számlák létrehozása"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_uid:0
-#: field:sale.make.invoice,create_uid:0
-#: field:sale.order,create_uid:0
+#: field:sale.make.invoice,create_uid:0 field:sale.order,create_uid:0
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
@@ -887,8 +601,7 @@ msgstr "Készítette"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
-#: field:sale.make.invoice,create_date:0
-#: field:sale.order.line,create_date:0
+#: field:sale.make.invoice,create_date:0 field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
 msgstr "Létrehozás dátuma"
@@ -904,8 +617,7 @@ msgid "Currency"
 msgstr "Pénznem"
 
 #. module: sale
-#: view:sale.order:sale.view_sales_order_filter
-#: field:sale.order,partner_id:0
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 #: view:sale.report:sale.view_order_product_search
 msgid "Customer"
@@ -977,9 +689,7 @@ msgstr "Alapértelmezett árajánlatokhoz tartozó követelmények és feltétel
 msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
-msgstr ""
-"Határozzon meg egy számlázási célt az értékesítési csoport beállításoknál, "
-"hogy láthassa az időintervallum eredményét és a teljes előrejelzést."
+msgstr "Határozzon meg egy számlázási célt az értékesítési csoport beállításoknál, hogy láthassa az időintervallum eredményét és a teljes előrejelzést."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -997,8 +707,7 @@ msgid "Delivery address for current sales order."
 msgstr "Szállítási cím a jelenlegi vásárlói megrendeléshez."
 
 #. module: sale
-#: field:sale.order.line,name:0
-#: view:website:sale.report_saleorder_document
+#: field:sale.order.line,name:0 view:website:sale.report_saleorder_document
 msgid "Description"
 msgstr "Leírás"
 
@@ -1028,12 +737,10 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "Biztosan létre akarja hozni a számlá(ka)t?"
 
 #. module: sale
-#: view:sale.order:sale.view_sales_order_filter
-#: selection:sale.order,state:0
+#: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
 #: view:sale.order.line:sale.view_order_line_form2
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
-#: selection:sale.order.line,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order.line,state:0 selection:sale.report,state:0
 msgid "Done"
 msgstr "Kész"
 
@@ -1069,12 +776,9 @@ msgid "Enable Invoicing Sales order lines"
 msgstr "Vásárlói megrendelés sorai számlázásának engedélyezése"
 
 #. module: sale
-#: code:addons/sale/sale.py:154
-#: code:addons/sale/sale.py:390
-#: code:addons/sale/sale.py:522
-#: code:addons/sale/sale.py:605
-#: code:addons/sale/sale.py:934
-#: code:addons/sale/sale.py:951
+#: code:addons/sale/sale.py:154 code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:522 code:addons/sale/sale.py:605
+#: code:addons/sale/sale.py:934 code:addons/sale/sale.py:951
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
@@ -1098,8 +802,7 @@ msgstr "Hamis"
 #: code:addons/sale/sale.py:589
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
-"Először vonja vissza a vevői megrendeléshez kötött összes számla mellékletet."
+msgstr "Először vonja vissza a vevői megrendeléshez kötött összes számla mellékletet."
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
@@ -1119,15 +822,9 @@ msgstr "Követők"
 #. module: sale
 #: help:sale.config.settings,timesheet:0
 msgid ""
-"For modifying account analytic view to show important data to project "
-"manager of services companies.You can also view the report of account "
-"analytic summary user-wise as well as month wise.\n"
+"For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
-msgstr ""
-"A főkönyvi számla nézet módosításához, hogy fontos adatokat lásson a "
-"szolgáltató vállalatok projekt igazgatója. Láthatja még a számla elemzés "
-"összegző jelentést felhasználói osztásban vagy havi lebontásban.\n"
-"-Ez a account_analytic_analysis modult telepíti."
+msgstr "A főkönyvi számla nézet módosításához, hogy fontos adatokat lásson a szolgáltató vállalatok projekt igazgatója. Láthatja még a számla elemzés összegző jelentést felhasználói osztásban vagy havi lebontásban.\n-Ez a account_analytic_analysis modult telepíti."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1137,16 +834,10 @@ msgstr "Előrejelzés"
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
 msgid ""
-"Forecast of the invoice revenue for the current month. This is the amount "
-"the sales \n"
-"team should invoice this month. It is used to compute the progression ratio "
-"\n"
+"Forecast of the invoice revenue for the current month. This is the amount the sales \n"
+"team should invoice this month. It is used to compute the progression ratio \n"
 " of the current and forecast revenue on the kanban view."
-msgstr ""
-"A számla pénzügyi előrejelzése a jelenlegi hónapra vonatkozólag. Ezt az "
-"összeget kell az értékesítési csapatnak ebben a hónapban kiszámláznia. Ezt "
-"általában a folyamat arányszám kiszámításához használja a jelenlegi és az "
-"előrejelzett bevételekre a kanban nézethez."
+msgstr "A számla pénzügyi előrejelzése a jelenlegi hónapra vonatkozólag. Ezt az összeget kell az értékesítési csapatnak ebben a hónapban kiszámláznia. Ezt általában a folyamat arányszám kiszámításához használja a jelenlegi és az előrejelzett bevételekre a kanban nézethez."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1154,10 +845,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
-"Ebből a kimutatásból, áttekintheti az ehhez a partnerhez tartozó számlázott "
-"összegeket. A kereső eszközzel egyénivé teheti a Számla kimutatásait és így, "
-"az a kívánsága szerinti lesz."
+msgstr "Ebből a kimutatásból, áttekintheti az ehhez a partnerhez tartozó számlázott összegeket. A kereső eszközzel egyénivé teheti a Számla kimutatásait és így, az a kívánsága szerinti lesz."
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -1167,26 +855,15 @@ msgstr "Számla létrehozása a vevői megrendelési téetelsorokra"
 #. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr ""
-"A vásárlói megrendelés sorrendet adja ha a megrendelési sorok listáját jelzi "
-"ki."
+msgstr "A vásárlói megrendelés sorrendet adja ha a megrendelési sorok listáját jelzi ki."
 
 #. module: sale
 #: help:sale.order,state:0
 msgid ""
 "Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs     "
-"          in the invoice validation (Invoice Exception) or in the picking "
-"list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed           "
-"    but waiting for the scheduler to run on the order date."
-msgstr ""
-"Az árajánlatkérés vagy a vásárlói megrendelés állapotát adja.              \n"
-"A kizárás állapot automatikusan beállított egy visszavonás művelet "
-"elvégzésekkor               egy számla érvényesítésekor (Számla kizárás) "
-"vagy a kiválogatási lista műveletekben (Szállítási kizárás).\n"
-"A 'Ütemezésre várakozás' állapot lesz beállítva, ha a számla megerősített    "
-"                        de vár egy, a megrendelés dátumán futó ütemezésre."
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
+msgstr "Az árajánlatkérés vagy a vásárlói megrendelés állapotát adja.              \nA kizárás állapot automatikusan beállított egy visszavonás művelet elvégzésekkor               egy számla érvényesítésekor (Számla kizárás) vagy a kiválogatási lista műveletekben (Szállítási kizárás).\nA 'Ütemezésre várakozás' állapot lesz beállítva, ha a számla megerősített                            de vár egy, a megrendelés dátumán futó ütemezésre."
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1206,9 +883,7 @@ msgstr "Számlák csoportosítása"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
-"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
+msgstr "A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: sale
 #: code:addons/sale/res_config.py:100
@@ -1217,12 +892,9 @@ msgid "Hour"
 msgstr "Óra"
 
 #. module: sale
-#: field:sale.advance.payment.inv,id:0
-#: field:sale.make.invoice,id:0
-#: field:sale.order,id:0
-#: field:sale.order.line,id:0
-#: field:sale.order.line.make.invoice,id:0
-#: field:sale.report,id:0
+#: field:sale.advance.payment.inv,id:0 field:sale.make.invoice,id:0
+#: field:sale.order,id:0 field:sale.order.line,id:0
+#: field:sale.order.line.make.invoice,id:0 field:sale.report,id:0
 msgid "ID"
 msgstr "Azonosító ID"
 
@@ -1237,9 +909,7 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
-msgstr ""
-"Ha ennek a megrendelésnek az árlistáját megváltoztatja (esetleg a "
-"pénznemet), a meglévő megrendelés tételei nem lesznek frissítve."
+msgstr "Ha ennek a megrendelésnek az árlistáját megváltoztatja (esetleg a pénznemet), a meglévő megrendelés tételei nem lesznek frissítve."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1254,11 +924,8 @@ msgstr "Folyamatban"
 #. module: sale
 #: code:addons/sale/sale.py:274
 #, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
-"Ahhoz, hogy törölhessen egy jóváhagyott vásárlói megrendelést, először "
-"vissza kell vonnia azt!"
+msgid "In order to delete a confirmed sales order, you must cancel it before!"
+msgstr "Ahhoz, hogy törölhessen egy jóváhagyott vásárlói megrendelést, először vissza kell vonnia azt!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:105
@@ -1267,8 +934,7 @@ msgid "Incorrect Data"
 msgstr "Hibás adat"
 
 #. module: sale
-#: code:addons/sale/sale.py:274
-#: code:addons/sale/sale.py:990
+#: code:addons/sale/sale.py:274 code:addons/sale/sale.py:990
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Invalid Action!"
@@ -1293,8 +959,7 @@ msgid "Invoice Date"
 msgstr "Számla kelte"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Invoice Exception"
 msgstr "Számlázási kivétel"
 
@@ -1342,15 +1007,10 @@ msgstr "Számlázási és szállítási cím:"
 #: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
+"Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
-msgstr ""
-"Nem készíthet számlát ehhez a vásárlói megrendelés tételhez, az alábbi okok "
-"egyike miatt:\n"
-"1. A vevői megrendelés tételének állapota: \"Tervezet\" vagy \"Mégsem\".\n"
-"2. A vevői megrendelési tétel már kiszámlázásra került."
+msgstr "Nem készíthet számlát ehhez a vásárlói megrendelés tételhez, az alábbi okok egyike miatt:\n1. A vevői megrendelés tételének állapota: \"Tervezet\" vagy \"Mégsem\".\n2. A vevői megrendelési tétel már kiszámlázásra került."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:102
@@ -1371,8 +1031,7 @@ msgstr "Számlázza ki a teljes vásárlói megrendelést"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
-#: field:sale.order,invoice_exists:0
-#: field:sale.order.line,invoiced:0
+#: field:sale.order,invoice_exists:0 field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Számlázott"
 
@@ -1425,8 +1084,7 @@ msgstr "Utolsó üzenet időpontja"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
-#: field:sale.make.invoice,write_uid:0
-#: field:sale.order,write_uid:0
+#: field:sale.make.invoice,write_uid:0 field:sale.order,write_uid:0
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
@@ -1434,8 +1092,7 @@ msgstr "Utoljára frissítette"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
-#: field:sale.make.invoice,write_date:0
-#: field:sale.order,write_date:0
+#: field:sale.make.invoice,write_date:0 field:sale.order,write_date:0
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
@@ -1505,9 +1162,7 @@ msgstr "Nem található érvényes árlista sor ! :"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
-"A megrendelése visszaigazolásának és a termék megrendelőhöz való "
-"kiszállítása közti napok száma."
+msgstr "A megrendelése visszaigazolásának és a termék megrendelőhöz való kiszállítása közti napok száma."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1527,19 +1182,10 @@ msgstr "Készleten"
 #. module: sale
 #: help:sale.order,order_policy:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. "
-"\n"
-"On delivery order: A draft invoice can be created from the delivery order "
-"when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be "
-"paid before the products can be delivered."
-msgstr ""
-"Igényléskori: Egy terv/előleg számla hozható létre a vevői megrendelésből, "
-"ha szükséges. \n"
-"A kézbesítési bizonylatkor: Egy terv/előleg számla hozható létre a "
-"kézbesítési bizonylatra, ha az árut szállításba adták. \n"
-"Szállítás előtt: Egy terv/előleg számla hozható létre a vevői megrendelésből "
-"és ki kell egyenlíteni mielőtt az árut kiszállítanák."
+"On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr "Igényléskori: Egy terv/előleg számla hozható létre a vevői megrendelésből, ha szükséges. \nA kézbesítési bizonylatkor: Egy terv/előleg számla hozható létre a kézbesítési bizonylatra, ha az árut szállításba adták. \nSzállítás előtt: Egy terv/előleg számla hozható létre a vevői megrendelésből és ki kell egyenlíteni mielőtt az árut kiszállítanák."
 
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
@@ -1558,8 +1204,7 @@ msgid "Order"
 msgstr "Megrendelés"
 
 #. module: sale
-#: view:sale.order:sale.view_order_form
-#: field:sale.order,order_line:0
+#: view:sale.order:sale.view_order_form field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Megrendelési tételek"
 
@@ -1567,6 +1212,12 @@ msgstr "Megrendelési tételek"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 msgid "Order Lines to Invoice"
 msgstr "Megrendelési sorok a számlához"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
+msgid "Order Month"
+msgstr "Megrendelés hónapja"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
@@ -1579,8 +1230,7 @@ msgid "Order N°"
 msgstr "Megrendelés száma"
 
 #. module: sale
-#: field:sale.order,name:0
-#: field:sale.order.line,order_id:0
+#: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Rendeléshivatkozás"
 
@@ -1615,8 +1265,7 @@ msgid "Paid"
 msgstr "Fizetve"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
-#: field:sale.report,partner_id:0
+#: model:ir.model,name:sale.model_res_partner field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "Partner"
 
@@ -1644,15 +1293,13 @@ msgstr "Százalék"
 #: code:addons/sale/sale.py:935
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
-"Kérem határozzon meg bevételi számlát ehhez a termékhez: \"%s\" (id:%d)."
+msgstr "Kérem határozzon meg bevételi számlát ehhez a termékhez: \"%s\" (id:%d)."
 
 #. module: sale
 #: code:addons/sale/sale.py:391
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr ""
-"Kérem határozzon meg értékesítési naplót ehhez a vállalthoz: \"%s\" (id:%d)."
+msgstr "Kérem határozzon meg értékesítési naplót ehhez a vállalthoz: \"%s\" (id:%d)."
 
 #. module: sale
 #: field:sale.config.settings,timesheet:0
@@ -1670,8 +1317,7 @@ msgid "Price Reduce"
 msgstr "Ár csökkentés"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.report,pricelist_id:0
+#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "Árlista"
 
@@ -1711,8 +1357,7 @@ msgstr "Beszerzések"
 #: field:sale.order,product_id:0
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
-#: field:sale.order.line,product_id:0
-#: field:sale.report,product_id:0
+#: field:sale.order.line,product_id:0 field:sale.report,product_id:0
 msgid "Product"
 msgstr "Termék"
 
@@ -1760,8 +1405,7 @@ msgstr "Mennyiség (EE)"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
-#: view:sale.order:sale.view_quotation_tree
-#: selection:sale.report,state:0
+#: view:sale.order:sale.view_quotation_tree selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Árajánlat"
 
@@ -1855,9 +1499,7 @@ msgstr "Számla újrakészítése"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
-"A dokumentum hivatkozása, amely létrehozta ezt a vásárlói megrendelési "
-"igényt."
+msgstr "A dokumentum hivatkozása, amely létrehozta ezt a vásárlói megrendelési igényt."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -1930,13 +1572,11 @@ msgid "Sales Make Invoice"
 msgstr "Számla generálása értékesítésből"
 
 #. module: sale
-#: code:addons/sale/sale.py:284
-#: model:ir.model,name:sale.model_sale_order
+#: code:addons/sale/sale.py:284 model:ir.model,name:sale.model_sale_order
 #: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:sale.view_order_form
-#: view:sale.order:sale.view_sales_order_filter
-#: selection:sale.order,state:0
+#: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
 msgstr "Vevői megrendelés"
@@ -1968,17 +1608,14 @@ msgstr "Megrendelési tételek készen állnak számlázásra"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
-"Megrendelés sorok melyek összefüggenek az én vásárlói megrendeléseimmel"
+msgstr "Megrendelés sorok melyek összefüggenek az én vásárlói megrendeléseimmel"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid ""
-"Sales Order Lines that are confirmed, done or in exception state and haven't "
-"yet been invoiced"
-msgstr ""
-"Vásárlói megrendelési tételek, melyek megerősítettek, elvégzettek vagy "
-"kifogásolt állapotúak és még nincs számlázva"
+"Sales Order Lines that are confirmed, done or in exception state and haven't"
+" yet been invoiced"
+msgstr "Vásárlói megrendelési tételek, melyek megerősítettek, elvégzettek vagy kifogásolt állapotúak és még nincs számlázva"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2027,8 +1664,7 @@ msgstr "Vevői megrendelési statisztikák"
 #: field:account.invoice,section_id:0
 #: view:account.invoice.report:sale.view_account_invoice_report_search_inherit
 #: field:account.invoice.report,section_id:0
-#: view:sale.order:sale.view_sales_order_filter
-#: field:sale.order,section_id:0
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,section_id:0
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
@@ -2050,12 +1686,10 @@ msgid "Sales order lines done"
 msgstr "Vevői megrendelési tételek elvégezve"
 
 #. module: sale
-#: view:sale.order:sale.view_sales_order_filter
-#: field:sale.order,user_id:0
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,user_id:0
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: field:sale.order.line,salesman_id:0
-#: view:sale.report:sale.view_order_product_search
-#: field:sale.report,user_id:0
+#: view:sale.report:sale.view_order_product_search field:sale.report,user_id:0
 msgid "Salesperson"
 msgstr "Értékesítő"
 
@@ -2079,12 +1713,8 @@ msgstr "Számlázatlan tételek keresése"
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
-"                You may have to create it and set it as a default value on "
-"this field."
-msgstr ""
-"Kiválasztja az úgynevezett 'Fejlesztő termék' szolgáltatás típusú terméket.\n"
-"                Létre kell hoznia és mint a mezőhöz tartozó alapértelmezett "
-"értéket beállítania."
+"                You may have to create it and set it as a default value on this field."
+msgstr "Kiválasztja az úgynevezett 'Fejlesztő termék' szolgáltatás típusú terméket.\n                Létre kell hoznia és mint a mezőhöz tartozó alapértelmezett értéket beállítania."
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -2092,10 +1722,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr ""
-"Válassza ki, hogy akarja számlázni ezt a megrendelést. Ez\n"
-"                        létre fogja hozni a számla tervet amit módosíthat a\n"
-"                        jóváhagyás előtt."
+msgstr "Válassza ki, hogy akarja számlázni ezt a megrendelést. Ez\n                        létre fogja hozni a számla tervet amit módosíthat a\n                        jóváhagyás előtt."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -2113,8 +1740,7 @@ msgid "Shipped"
 msgstr "Kiszállított"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Shipping Exception"
 msgstr "Szállítási hiba"
 
@@ -2160,17 +1786,12 @@ msgstr "Összegzés"
 #. module: sale
 #: help:crm.case.section,invoiced_target:0
 msgid ""
-"Target of invoice revenue for the current month. This is the amount the "
-"sales \n"
+"Target of invoice revenue for the current month. This is the amount the sales \n"
 "team estimates to be able to invoice this month."
-msgstr ""
-"A jelenlegi hónap számla jövedelem célja. Ez az értékesítési csapatok "
-"előrejelzett összege\n"
-"amit ki tudnak számlázni ebben a hónapban."
+msgstr "A jelenlegi hónap számla jövedelem célja. Ez az értékesítési csapatok előrejelzett összege\namit ki tudnak számlázni ebben a hónapban."
 
 #. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 #: view:website:sale.report_saleorder_document
 msgid "Taxes"
 msgstr "Adók"
@@ -2227,9 +1848,7 @@ msgstr "Az előleg mennyiség értékének pozitívnak kell lennie"
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
-msgstr ""
-"Nincs költségvetési hely meghatározva vagy bevételi számla kategória "
-"meghatározva az alapértelmezett termék kategória tulajdonságokban."
+msgstr "Nincs költségvetési hely meghatározva vagy bevételi számla kategória meghatározva az alapértelmezett termék kategória tulajdonságokban."
 
 #. module: sale
 #: code:addons/sale/sale.py:154
@@ -2247,8 +1866,7 @@ msgstr "Nincs bevételi számla meghatározva a globális tulajdonságokhoz"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:100
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
-msgstr ""
-"Nincs bevételi számla meghatározva ehhez a termékhez: \"%s\" (id:%d)."
+msgstr "Nincs bevételi számla meghatározva ehhez a termékhez: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -2259,14 +1877,9 @@ msgstr "Tárgyév"
 #: help:sale.config.settings,module_sale_margin:0
 msgid ""
 "This adds the 'Margin' on sales order.\n"
-"This gives the profitability by calculating the difference between the Unit "
-"Price and Cost Price.\n"
+"This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n"
 "-This installs the module sale_margin."
-msgstr ""
-"Ez 'Határérték' ad a vásárlói megrendeléhez.\n"
-"Jövedelmezőséget ad, amit az egységár és a bekerülési ár különbségéből "
-"számít ki.\n"
-"-Ez a sale_margin modult telepíti."
+msgstr "Ez 'Határérték' ad a vásárlói megrendeléhez.\nJövedelmezőséget ad, amit az egységár és a bekerülési ár különbségéből számít ki.\n-Ez a sale_margin modult telepíti."
 
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
@@ -2284,26 +1897,17 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr ""
-"Ez egy olyan számlalista, amely ehhez a vevői megrendeléshez jött létre. "
-"Ugyanaz a vevői megrendelés több alkalommal is számlázásra kerülhetett "
-"(például tételek alapján)."
+msgstr "Ez egy olyan számlalista, amely ehhez a vevői megrendeléshez jött létre. Ugyanaz a vevői megrendelés több alkalommal is számlázásra kerülhetett (például tételek alapján)."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr ""
-"Ez a jelentés elemzést készít az árajánlatairól és a vásárlói "
-"megrendelésekről. Az elemzés kimutatja az értékesítés bevételeit, és "
-"szétosztja különböző kritériumok alapján (értékesítő, partner, termék stb.). "
-"Használja ezt a jelentést, ha elemzést szeretne készíteni a még ki nem "
-"számlázott értékesítéseiről. Ha a forgalmát szeretné elemezni, akkor "
-"használja a számla elemző jelentést a könyvelési modulban."
+msgstr "Ez a jelentés elemzést készít az árajánlatairól és a vásárlói megrendelésekről. Az elemzés kimutatja az értékesítés bevételeit, és szétosztja különböző kritériumok alapján (értékesítő, partner, termék stb.). Használja ezt a jelentést, ha elemzést szeretne készíteni a még ki nem számlázott értékesítéseiről. Ha a forgalmát szeretné elemezni, akkor használja a számla elemző jelentést a könyvelési modulban."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -2313,13 +1917,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
-"Ez a kimutatás elemzést hajt végre az árajánlatain. Az elemzés megvizsgálja "
-"az értékesítések hozamait és sorba rendezi különböző feltétel csoportok "
-"alapján (értékesítő személy, partner, termék, stb.) Használja ezt a "
-"kimutatást olyan értékesítéseken, melyek még nem lettek kiszámlázva. Ha "
-"kimutatást szeretne készíteni a forgalmáról, akkor a számla kimutatást kell "
-"használnia a számlázási alkalmazásban."
+msgstr "Ez a kimutatás elemzést hajt végre az árajánlatain. Az elemzés megvizsgálja az értékesítések hozamait és sorba rendezi különböző feltétel csoportok alapján (értékesítő személy, partner, termék, stb.) Használja ezt a kimutatást olyan értékesítéseken, melyek még nem lettek kiszámlázva. Ha kimutatást szeretne készíteni a forgalmáról, akkor a számla kimutatást kell használnia a számlázási alkalmazásban."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2329,13 +1927,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
-"Ez a kimutatás elemzést hajt végre az értékesítésein. Az elemzés "
-"megvizsgálja az értékesítések hozamait és sorba rendezi különböző feltétel "
-"csoportok alapján (értékesítő személy, partner, termék, stb.) Használja ezt "
-"a kimutatást olyan értékesítéseken, melyek még nem lettek kiszámlázva. Ha "
-"kimutatást szeretne készíteni a forgalmáról, akkor a számla kimutatást kell "
-"használnia a számlázási alkalmazásban."
+msgstr "Ez a kimutatás elemzést hajt végre az értékesítésein. Az elemzés megvizsgálja az értékesítések hozamait és sorba rendezi különböző feltétel csoportok alapján (értékesítő személy, partner, termék, stb.) Használja ezt a kimutatást olyan értékesítéseken, melyek még nem lettek kiszámlázva. Ha kimutatást szeretne készíteni a forgalmáról, akkor a számla kimutatást kell használnia a számlázási alkalmazásban."
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2351,11 +1943,9 @@ msgstr "Számlázandó"
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
 msgid ""
-"To allow your salesman to make invoices for sales order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-"Lehetővé teszi az értékesítők részére a megrendelések tételire történő "
-"számlázást a 'Számlázandó tételek' menü használatával."
+"To allow your salesman to make invoices for sales order lines using the menu"
+" 'Lines to Invoice'."
+msgstr "Lehetővé teszi az értékesítők részére a megrendelések tételire történő számlázást a 'Számlázandó tételek' menü használatával."
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -2383,8 +1973,7 @@ msgstr "Összesen áfa nélkül"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
-"Kiszállítási Kiszolgáltatási jegy automatikus létrehozása a megrendelésekből"
+msgstr "Kiszállítási Kiszolgáltatási jegy automatikus létrehozás elindítása a vásárlói megrendelésekből"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2434,28 +2023,16 @@ msgid ""
 "Use Invoice the whole sale order to create the final invoice.\n"
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
-"                Use Some Order Lines to invoice a selection of the sales "
-"order lines."
-msgstr ""
-"Használja a teljes vásárlási megrendelést a végszámla elkészítéséhez.\n"
-"                Használjon százalékot a végösszeg egy bizonyos százalékának "
-"kiszámlázásához.\n"
-"                Használjon fix árat egy meghatározott összeg előre "
-"számlázásához (díjbekéső).\n"
-"                Használjon egy pár megrendelési sort a kiválasztott vásárlói "
-"megrendelés tételsorainak kiszámlázásához."
+"                Use Some Order Lines to invoice a selection of the sales order lines."
+msgstr "Használja a teljes vásárlási megrendelést a végszámla elkészítéséhez.\n                Használjon százalékot a végösszeg egy bizonyos százalékának kiszámlázásához.\n                Használjon fix árat egy meghatározott összeg előre számlázásához (díjbekéső).\n                Használjon egy pár megrendelési sort a kiválasztott vásárlói megrendelés tételsorainak kiszámlázásához."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid ""
 "Use contract to be able to manage your services with\n"
-"                        multiple invoicing as part of the same contract "
-"with\n"
+"                        multiple invoicing as part of the same contract with\n"
 "                        your customer."
-msgstr ""
-"Használja a szerződést, hogy  a többes számlázással tudja szervezni a\n"
-"                        szolgáltatásait, ugyanannak a vevőnek a szerződése \n"
-"                        részeként."
+msgstr "Használja a szerződést, hogy  a többes számlázással tudja szervezni a\n                        szolgáltatásait, ugyanannak a vevőnek a szerződése \n                        részeként."
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
@@ -2483,8 +2060,7 @@ msgid "View Invoice"
 msgstr "Számla megtekintése"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Ütemezésre vár"
 
@@ -2525,9 +2101,7 @@ msgstr "Mit szeretne számlázni?"
 #: code:addons/sale/sale.py:990
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
-"Nem tud olyan vevői megrendelési tételt visszavonni amelyik már számlázva "
-"volt."
+msgstr "Nem tud olyan vevői megrendelési tételt visszavonni amelyik már számlázva volt."
 
 #. module: sale
 #: code:addons/sale/sale.py:605
@@ -2554,9 +2128,7 @@ msgstr "Nem csoportosíthat különböző devizákon értékesítést egy partne
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr ""
-"Választania kell egy árlistát vagy egy vevőt az értékesítési űrlapon !\n"
-"Kérem egyik kiválasztását mielőtt terméket választana."
+msgstr "Választania kell egy árlistát vagy egy vevőt az értékesítési űrlapon !\nKérem egyik kiválasztását mielőtt terméket választana."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:55
@@ -2580,12 +2152,3 @@ msgstr "vagy"
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
 msgstr "sale.group_delivery_invoice_address"
-
-#~ msgid "Shipping address :"
-#~ msgstr "Szállítási cím:"
-
-#~ msgid "Order Date"
-#~ msgstr "Megrendelés dátuma"
-
-#~ msgid "Reference Unit of Measure"
-#~ msgstr "Referencia mértékegység"

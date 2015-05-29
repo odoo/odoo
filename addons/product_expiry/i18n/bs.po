@@ -1,21 +1,22 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_expiry
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"PO-Revision-Date: 2015-05-21 16:49+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-8/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:09+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
@@ -81,7 +82,7 @@ msgstr "Vrijeme uklanjanja proizvoda"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Prijedlog proizvoda"
 
 #. module: product_expiry
 #: field:product.template,use_time:0
@@ -94,8 +95,7 @@ msgid "Quants"
 msgstr ""
 
 #. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-#: field:stock.quant,removal_date:0
+#: field:stock.production.lot,removal_date:0 field:stock.quant,removal_date:0
 msgid "Removal Date"
 msgstr "Datum uklanjanja"
 
@@ -104,68 +104,53 @@ msgstr "Datum uklanjanja"
 msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
-msgstr ""
-"Ovo je datum kada bi trebalo obavjestiti alarmom o robi sa ovim serijskim "
-"brojem."
+msgstr "Ovo je datum kada bi trebalo obavjestiti alarmom o robi sa ovim serijskim brojem."
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr ""
-"Ovo je datum kada roba sa ovim serijskim brojem može postati opasna i ne "
-"smije biti konzumirana."
+msgstr "Ovo je datum kada roba sa ovim serijskim brojem može postati opasna i ne smije biti konzumirana."
 
 #. module: product_expiry
 #: help:stock.production.lot,removal_date:0
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
-msgstr ""
-"Ovo je datum kada roba sa ovim serijskim brojem bi trebala biti uklonjena sa "
-"zalihe."
+msgstr "Ovo je datum kada roba sa ovim serijskim brojem bi trebala biti uklonjena sa zalihe."
 
 #. module: product_expiry
 #: help:stock.production.lot,use_date:0
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
-msgstr ""
-"Ovo je datum kada roba sa ovim serijskim brojem počinje da propada, ali još "
-"nije opasna."
+msgstr "Ovo je datum kada roba sa ovim serijskim brojem počinje da propada, ali još nije opasna."
 
 #. module: product_expiry
 #: help:product.template,alert_time:0
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
-"Kada je novi serijski broj izdan, ovo je broj dana prije obavjesti alarma."
+msgstr "Kada je novi serijski broj izdan, ovo je broj dana prije obavjesti alarma."
 
 #. module: product_expiry
 #: help:product.template,life_time:0
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
-"Kada je novi serijski broj izdan, ovo je broj dana prije nego roba postane "
-"opasna i ne smije se konzumirati."
+msgstr "Kada je novi serijski broj izdan, ovo je broj dana prije nego roba postane opasna i ne smije se konzumirati."
 
 #. module: product_expiry
 #: help:product.template,removal_time:0
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
-"Kada je novi serijski broj izdan, ovo je broj dana prije nego bi roba "
-"trebala biti uklonjena sa zalihe."
+msgstr "Kada je novi serijski broj izdan, ovo je broj dana prije nego bi roba trebala biti uklonjena sa zalihe."
 
 #. module: product_expiry
 #: help:product.template,use_time:0
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Kada je novi serijski broj izdan, ovo je broj dana prije nego će roba početi "
-"da propada, a da još nije opasno."
+msgstr "Kada je novi serijski broj izdan, ovo je broj dana prije nego će roba početi da propada, a da još nije opasno."

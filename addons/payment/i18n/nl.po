@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-09-01 12:19+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 14:04+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:00+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
 #: help:account.config.settings,module_payment_adyen:0
@@ -93,8 +94,7 @@ msgid "Country"
 msgstr "Land"
 
 #. module: payment
-#: field:payment.acquirer,create_uid:0
-#: field:payment.transaction,create_uid:0
+#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
 msgid "Created by"
 msgstr "Aangemaakt door"
 
@@ -152,15 +152,12 @@ msgstr "Toeslagen"
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
-"Toeslagbedrag; ingesteld door het systeem omdat dit afhangt van de verwerver."
+msgstr "Toeslagbedrag; ingesteld door het systeem omdat dit afhangt van de verwerver."
 
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
-"Veld gebruikt om errors en/of validatieberichten voor informatie in op te "
-"slaan."
+msgstr "Veld gebruikt om errors en/of validatieberichten voor informatie in op te slaan."
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
@@ -197,14 +194,10 @@ msgstr "Groeperen op"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
 
 #. module: payment
-#: field:payment.acquirer,id:0
-#: field:payment.transaction,id:0
+#: field:payment.acquirer,id:0 field:payment.transaction,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -229,14 +222,12 @@ msgid "Last Message Date"
 msgstr "Laatste bericht datum"
 
 #. module: payment
-#: field:payment.acquirer,write_uid:0
-#: field:payment.transaction,write_uid:0
+#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
 msgid "Last Updated by"
 msgstr "Laatst aangepast door"
 
 #. module: payment
-#: field:payment.acquirer,write_date:0
-#: field:payment.transaction,write_date:0
+#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
 msgid "Last Updated on"
 msgstr "Laatst aangepast op"
 
@@ -271,8 +262,7 @@ msgid "Manual"
 msgstr "Handmatig"
 
 #. module: payment
-#: field:payment.acquirer,pre_msg:0
-#: field:payment.transaction,state_message:0
+#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
 msgid "Message"
 msgstr "Bericht"
 
@@ -284,9 +274,7 @@ msgstr "Bericht dat wordt weergegeven nadat het betalingsproces is voltooid."
 #. module: payment
 #: help:payment.acquirer,pre_msg:0
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
-"Bericht dat wordt weergegeven om uitleg te geven en te helpen bij het "
-"betalingsproces."
+msgstr "Bericht dat wordt weergegeven om uitleg te geven en te helpen bij het betalingsproces."
 
 #. module: payment
 #: field:payment.transaction,message_ids:0
@@ -413,11 +401,8 @@ msgstr "Server naar server"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
-msgid ""
-"Static payments are payments like transfer, that require manual steps."
-msgstr ""
-"Statische betalingen zijn betalingen, zoals overschrijvingen, welke "
-"handmatige actie vragen."
+msgid "Static payments are payments like transfer, that require manual steps."
+msgstr "Statische betalingen zijn betalingen, zoals overschrijvingen, welke handmatige actie vragen."
 
 #. module: payment
 #: field:payment.transaction,state:0
@@ -448,12 +433,8 @@ msgstr "De referentie van de betalingstransactie moet uniek zijn!"
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                    It is be rendered with qWeb with the "
-"following evaluation context:"
-msgstr ""
-"Dit sjabloon genereert de verwerver knop met alle benodigde waardes.\n"
-"                                    Het wordt aangemaakt met qWeb en met de "
-"volgende evaluatie context:"
+"                                    It is be rendered with qWeb with the following evaluation context:"
+msgstr "Dit sjabloon genereert de verwerver knop met alle benodigde waardes.\n                                    Het wordt aangemaakt met qWeb en met de volgende evaluatie context:"
 
 #. module: payment
 #: field:payment.transaction,type:0
@@ -530,9 +511,7 @@ msgstr "relatie: de koper relatie, browse record. Niet altijd ingesteld"
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
-"partner_values: specifieke waardes over de koper, bijvoorbeeld afkomend van "
-"een pakbon"
+msgstr "partner_values: specifieke waardes over de koper, bijvoorbeeld afkomend van een pakbon"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form

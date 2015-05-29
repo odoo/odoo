@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-09-24 10:16+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 12:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:46+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
@@ -44,11 +45,7 @@ msgid ""
 "                Click to create a new expense category. \n"
 "             </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het aanmaken van een kosten categorie. \n"
-"             </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik voor het aanmaken van een kosten categorie. \n             </p>\n            "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
@@ -57,23 +54,12 @@ msgid ""
 "                Click to register new expenses. \n"
 "              </p><p>\n"
 "                Odoo will ensure the whole process is followed; the expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
+"                sheet is validated by manager(s), the employee is reimbursed\n"
 "                from his expenses, some expenses must be re-invoiced to the\n"
 "                customers.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het registreren van declaraties\n"
-"              </p><p>\n"
-"                Odoo zal ervoor zorgen het hele proces wordt gevolgd, de "
-"declaratie\n"
-"                wordt goedgekeurd door de manager(s), en wordt aan de "
-"werknemer vergoed.\n"
-"                Sommige kosten worden doorberekend aan de klanten.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik voor het registreren van declaraties\n              </p><p>\n                Odoo zal ervoor zorgen het hele proces wordt gevolgd, de declaratie\n                wordt goedgekeurd door de manager(s), en wordt aan de werknemer vergoed.\n                Sommige kosten worden doorberekend aan de klanten.\n              </p>\n            "
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -177,14 +163,12 @@ msgid "Create Month"
 msgstr "Aanmaak maand"
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_uid:0
-#: field:hr.expense.line,create_uid:0
+#: field:hr.expense.expense,create_uid:0 field:hr.expense.line,create_uid:0
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_date:0
-#: field:hr.expense.line,create_date:0
+#: field:hr.expense.expense,create_date:0 field:hr.expense.line,create_date:0
 msgid "Created on"
 msgstr "Aangemaakt op"
 
@@ -201,8 +185,7 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date:0
-#: field:hr.expense.line,date_value:0
+#: field:hr.expense.expense,date:0 field:hr.expense.line,date_value:0
 #: view:website:hr_expense.report_expense
 msgid "Date"
 msgstr "Datum"
@@ -217,18 +200,14 @@ msgstr "Datum "
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
-msgstr ""
-"Datum acceptatie declaratieformulier. Die wordt gevuld als de Accepteren "
-"knop wordt ingedrukt."
+msgstr "Datum acceptatie declaratieformulier. Die wordt gevuld als de Accepteren knop wordt ingedrukt."
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
 msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
 "Confirm is pressed."
-msgstr ""
-"Datum bevestiging declaratieformulier. Die wordt gevuld als de Bevestigen "
-"knop wordt gedrukt."
+msgstr "Datum bevestiging declaratieformulier. Die wordt gevuld als de Bevestigen knop wordt gedrukt."
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_last_post:0
@@ -248,12 +227,7 @@ msgid ""
 "rate, set a cost and a unit of measure on the product. If you reimburse "
 "based on real costs, set the cost at 0.00. The user will set the real price "
 "when recording his expense sheet."
-msgstr ""
-"Definieer een product voor elk toegestaan declaratietype (autokosten, hotel, "
-"restaurant, etc). Als de werknemers een forfaitaire vergoeding krijgen, stel "
-"dan een kostprijs en een producteenheid in. Als de werkelijke kosten vergoed "
-"worden, stel dan een kostprijs van 0.00 in. De werknemer stelt de werkelijke "
-"prijs in bij het invullen van de declaratiestaat."
+msgstr "Definieer een product voor elk toegestaan declaratietype (autokosten, hotel, restaurant, etc). Als de werknemers een forfaitaire vergoeding krijgen, stel dan een kostprijs en een producteenheid in. Als de werkelijke kosten vergoed worden, stel dan een kostprijs van 0.00 in. De werknemer stelt de werkelijke prijs in bij het invullen van de declaratiestaat."
 
 #. module: hr_expense
 #: field:hr.expense.report,delay_confirm:0
@@ -275,8 +249,7 @@ msgstr "Afdeling"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
-#: field:hr.expense.expense,name:0
-#: field:hr.expense.line,description:0
+#: field:hr.expense.expense,name:0 field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Omschrijving"
 
@@ -438,8 +411,7 @@ msgid "Followers"
 msgstr "Volgers"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "Dagboek forceren"
 
@@ -456,8 +428,7 @@ msgstr "Genereren financiële boekingen"
 #. module: hr_expense
 #: help:hr.expense.line,sequence:0
 msgid "Gives the sequence order when displaying a list of expense lines."
-msgstr ""
-"Geeft de volgorde aan waarin de lijst van declaratieregels wordt afgebeeld."
+msgstr "Geeft de volgorde aan waarin de lijst van declaratieregels wordt afgebeeld."
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -480,10 +451,7 @@ msgstr "Declaraties"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.hotel_rent_product_template
@@ -491,8 +459,7 @@ msgid "Hotel Accommodation"
 msgstr "Hotel accommodatie"
 
 #. module: hr_expense
-#: field:hr.expense.expense,id:0
-#: field:hr.expense.line,id:0
+#: field:hr.expense.expense,id:0 field:hr.expense.line,id:0
 #: field:hr.expense.report,id:0
 msgid "ID"
 msgstr "ID"
@@ -518,14 +485,12 @@ msgid "Last Message Date"
 msgstr "Laatste bericht datum"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_uid:0
-#: field:hr.expense.line,write_uid:0
+#: field:hr.expense.expense,write_uid:0 field:hr.expense.line,write_uid:0
 msgid "Last Updated by"
 msgstr "Laatst aangepast door"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_date:0
-#: field:hr.expense.line,write_date:0
+#: field:hr.expense.expense,write_date:0 field:hr.expense.line,write_date:0
 msgid "Last Updated on"
 msgstr "Laatst aangepast op"
 
@@ -571,9 +536,7 @@ msgstr "Nieuwe declaratie"
 msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
-msgstr ""
-"Geen kosten dagboek gevonden. Zorg ervoor dat er een dagboek is aangemaakt "
-"van het type \"Inkoop\"."
+msgstr "Geen kosten dagboek gevonden. Zorg ervoor dat er een dagboek is aangemaakt van het type \"Inkoop\"."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:344
@@ -581,9 +544,7 @@ msgstr ""
 msgid ""
 "No purchase account found for the product %s (or for his category), please "
 "configure one."
-msgstr ""
-"Geen inkooprekening gevonden voor het product %s (of voor de categorie van "
-"het product). Maak er een aan."
+msgstr "Geen inkooprekening gevonden voor het product %s (of voor de categorie van het product). Maak er een aan."
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -611,9 +572,7 @@ msgstr "Betaald"
 msgid ""
 "Please configure Default Expense account for Product purchase: "
 "`property_account_expense_categ`."
-msgstr ""
-"Configureer de standaard kostenrekening voor inkoopproduct: "
-"`property_account_expense_categ`"
+msgstr "Configureer de standaard kostenrekening voor inkoopproduct: `property_account_expense_categ`"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -683,11 +642,9 @@ msgstr "Uw declaratieproducten inzien"
 #: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
-msgstr ""
-"De geselecteerde maateenheid behoort niet tot dezelfde categorie als de "
-"maateenheid van het product."
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
+msgstr "De geselecteerde maateenheid behoort niet tot dezelfde categorie als de maateenheid van het product."
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -731,9 +688,7 @@ msgstr "Voor de werknemer moet een huisadres zijn ingesteld."
 #: code:addons/hr_expense/hr_expense.py:232
 #, python-format
 msgid "The employee must have a payable account set on his home address."
-msgstr ""
-"De werknemer dient een debiteuren rekening te hebben ingesteld op zijn "
-"huisadres."
+msgstr "De werknemer dient een debiteuren rekening te hebben ingesteld op zijn huisadres."
 
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
@@ -743,8 +698,7 @@ msgstr "Het gebruikte dagboek als de declaratie wordt doorberekend."
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr ""
-"Dit document moet een datum hebben en ondertekend worden voor terugbetaling."
+msgstr "Dit document moet een datum hebben en ondertekend worden voor terugbetaling."
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -760,8 +714,7 @@ msgstr "Te betalen"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 #: view:hr.expense.line:hr_expense.view_expenses_line_tree
-#: field:hr.expense.line,total_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,total_amount:0 view:website:hr_expense.report_expense
 msgid "Total"
 msgstr "Totaal"
 
@@ -777,8 +730,7 @@ msgid "Total Price"
 msgstr "Totaalprijs"
 
 #. module: hr_expense
-#: field:hr.expense.line,unit_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,unit_amount:0 view:website:hr_expense.report_expense
 msgid "Unit Price"
 msgstr "Prijs"
 
@@ -809,8 +761,7 @@ msgid "Validation By"
 msgstr "Goedgekeurd door"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "Controledatum"
 
@@ -866,18 +817,10 @@ msgstr "Website communicatie geschiedenis"
 #: help:hr.expense.expense,state:0
 msgid ""
 "When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
+" It is confirmed by the user and request is sent to admin, the status is 'Waiting Confirmation'.            \n"
 "If the admin accepts it, the status is 'Accepted'.\n"
-" If the accounting entries are made for the expense request, the status is "
-"'Waiting Payment'."
-msgstr ""
-"Nadat de declaratie is gemaakt staat de status op 'Concept'.\n"
-" Als het is bevestigd door de gebruiker en gestuurd naar de beheerder, gaat "
-"de status naar 'Wacht of bevestiging'.            \n"
-"Als de beheerder het accepteert, gaat de status naar 'Geaccepteerd'.\n"
-" Als de boekingen zijn aangemaakt voor de declaratie, de status is 'Wacht op "
-"betaling'."
+" If the accounting entries are made for the expense request, the status is 'Waiting Payment'."
+msgstr "Nadat de declaratie is gemaakt staat de status op 'Concept'.\n Als het is bevestigd door de gebruiker en gestuurd naar de beheerder, gaat de status naar 'Wacht of bevestiging'.            \nAls de beheerder het accepteert, gaat de status naar 'Geaccepteerd'.\n Als de boekingen zijn aangemaakt voor de declaratie, de status is 'Wacht op betaling'."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:116

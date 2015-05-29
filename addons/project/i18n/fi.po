@@ -1,21 +1,22 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-10-21 10:33+0000\n"
-"Last-Translator: Miku Laitinen <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-19 05:42+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project
 #: field:res.partner,task_count:0
@@ -34,8 +35,7 @@ msgid "# of Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:360
-#: code:addons/project/project.py:380
+#: code:addons/project/project.py:360 code:addons/project/project.py:380
 #: code:addons/project/project.py:703
 #, python-format
 msgid "%s (copy)"
@@ -56,20 +56,7 @@ msgid ""
 "                  projects or invite customers to share your activities.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  Klikkaa aloittaaksesi uuden projektin.\n"
-"                </p><p>\n"
-"                  Projekteilla voit organisoida itsesi tai organisaatiosi "
-"työntekoa. Voit suunnitella tehtäviä, käsitellä ongelmatapauksia ja seurata "
-"ajankäyttöä. Voit luoda sisäisiä projekteja (esim. tutkimus & tuotekehitys, "
-"myyntiprosessien parantaminen), yksityisiä projekteja (henkilökohtainen "
-"tehtävälista) tai asiakasprojekteja.\n"
-"                </p><p>\n"
-"                  Organisaatiosi sisäisten projektien lisäksi voit kutsua "
-"asiakkaitasi projektien osapuoliksi.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                  Klikkaa aloittaaksesi uuden projektin.\n                </p><p>\n                  Projekteilla voit organisoida itsesi tai organisaatiosi työntekoa. Voit suunnitella tehtäviä, käsitellä ongelmatapauksia ja seurata ajankäyttöä. Voit luoda sisäisiä projekteja (esim. tutkimus & tuotekehitys, myyntiprosessien parantaminen), yksityisiä projekteja (henkilökohtainen tehtävälista) tai asiakasprojekteja.\n                </p><p>\n                  Organisaatiosi sisäisten projektien lisäksi voit kutsua asiakkaitasi projektien osapuoliksi.\n                </p>\n            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_category_action
@@ -87,8 +74,7 @@ msgid ""
 "                Click to add a stage in the task pipeline.\n"
 "              </p><p>\n"
 "                Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or "
-"issue.\n"
+"                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue.\n"
 "              </p>\n"
@@ -100,12 +86,9 @@ msgstr ""
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p>\n"
-"                    Odoo's project management allows you to manage the "
-"pipeline\n"
-"                    of tasks in order to get things done efficiently. You "
-"can\n"
-"                    track progress, discuss on tasks, attach documents, "
-"etc.\n"
+"                    Odoo's project management allows you to manage the pipeline\n"
+"                    of tasks in order to get things done efficiently. You can\n"
+"                    track progress, discuss on tasks, attach documents, etc.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -116,14 +99,8 @@ msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
-msgstr ""
-"Tehtävän kanban-tila ilmaisee erikostilanteiden vaikutuksia siihen:\n"
-" * Normaali on vaiheen oletustila\n"
-" * Estetty ilmaisee, että jokin estää tehtävän edistymisen\n"
-" * Valmis seuraavaan vaiheeseen ilmaisee, että tehtävä voidaan siirtää "
-"eteenpäin seuraavaan vaiheeseen"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
+msgstr "Tehtävän kanban-tila ilmaisee erikostilanteiden vaikutuksia siihen:\n * Normaali on vaiheen oletustila\n * Estetty ilmaisee, että jokin estää tehtävän edistymisen\n * Valmis seuraavaan vaiheeseen ilmaisee, että tehtävä voidaan siirtää eteenpäin seuraavaan vaiheeseen"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -153,7 +130,7 @@ msgstr "Ylläpito"
 #. module: project
 #: field:project.project,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Nimimerkki"
 
 #. module: project
 #: field:project.project,alias_model:0
@@ -198,7 +175,7 @@ msgstr ""
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 msgid "Apply"
-msgstr ""
+msgstr "Käytä"
 
 #. module: project
 #: field:project.task.delegate,user_id:0
@@ -208,7 +185,7 @@ msgstr "Määritä tehtävä käyttäjälle"
 #. module: project
 #: field:report.project.task.user,date_start:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "Määrittelypäivä"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -238,7 +215,7 @@ msgstr "Annettu tehtäväksi"
 #: code:addons/project/project.py:212
 #, python-format
 msgid "Attachments"
-msgstr ""
+msgstr "Liitteet"
 
 #. module: project
 #: field:report.project.task.user,hours_delay:0
@@ -307,9 +284,7 @@ msgstr "Projektin tehtävien, asioiden, jne. ryhmittely."
 msgid ""
 "Child task still open.\n"
 "Please cancel or complete child task first."
-msgstr ""
-"Alatason tehtävä yhä avoin.\n"
-"Ole hyvä ja peruuta tai merkitse valmiiksi se ensin."
+msgstr "Alatason tehtävä yhä avoin.\nOle hyvä ja peruuta tai merkitse valmiiksi se ensin."
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -322,8 +297,7 @@ msgid "Closed"
 msgstr "Suljettu"
 
 #. module: project
-#: field:project.project,color:0
-#: field:project.task,color:0
+#: field:project.project,color:0 field:project.task,color:0
 msgid "Color Index"
 msgstr "Väri-indeksi"
 
@@ -339,8 +313,7 @@ msgstr "Yritykset"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,company_id:0
 msgid "Company"
@@ -351,9 +324,7 @@ msgstr "Yritys"
 msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
-msgstr ""
-"Laskettu erotuksena projektipäällikön suunniteltujen tuntien ja tehtäviin "
-"kuluneiden todellisten tuntien mukaan."
+msgstr "Laskettu erotuksena projektipäällikön suunniteltujen tuntien ja tehtäviin kuluneiden todellisten tuntien mukaan."
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -396,23 +367,20 @@ msgstr "Luontipäivä"
 #. module: project
 #: field:project.category,create_uid:0
 #: field:project.config.settings,create_uid:0
-#: field:project.project,create_uid:0
-#: field:project.task,create_uid:0
+#: field:project.project,create_uid:0 field:project.task,create_uid:0
 #: field:project.task.delegate,create_uid:0
-#: field:project.task.type,create_uid:0
-#: field:project.task.work,create_uid:0
+#: field:project.task.type,create_uid:0 field:project.task.work,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Luonut"
 
 #. module: project
 #: field:project.category,create_date:0
 #: field:project.config.settings,create_date:0
 #: field:project.project,create_date:0
 #: field:project.task.delegate,create_date:0
-#: field:project.task.type,create_date:0
-#: field:project.task.work,create_date:0
+#: field:project.task.type,create_date:0 field:project.task.work,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Luotu"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -428,15 +396,13 @@ msgid "Cumulative Flow"
 msgstr "Kumulatiivinen virtaus"
 
 #. module: project
-#: view:project.project:project.edit_project
-#: field:project.task,partner_id:0
+#: view:project.project:project.edit_project field:project.task,partner_id:0
 msgid "Customer"
 msgstr "Asiakas"
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "Päivämäärä"
 
@@ -517,11 +483,10 @@ msgstr ""
 #: view:project.project:project.view_project_kanban
 #: view:project.task:project.view_task_kanban
 msgid "Delete"
-msgstr ""
+msgstr "Poista"
 
 #. module: project
-#: view:project.task:project.view_task_form2
-#: field:project.task,description:0
+#: view:project.task:project.view_task_form2 field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "Kuvaus"
@@ -556,7 +521,7 @@ msgstr "Tehnyt"
 #. module: project
 #: view:project.task:project.view_task_kanban
 msgid "Edit..."
-msgstr ""
+msgstr "Muokkaa..."
 
 #. module: project
 #: field:report.project.task.user,hours_effective:0
@@ -576,8 +541,7 @@ msgid "End Date"
 msgstr "Loppupvm"
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "Lopetuspäivämäärä"
 
@@ -601,9 +565,7 @@ msgstr "Virhe: projektin alkupäivän tulee olla ennen loppupäivää."
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
-msgstr ""
-"Sinulle arvioitu aika, jonka käytät työntekijän, jolle delegoit tehtävän, "
-"tekemän työn arvioimiseen."
+msgstr "Sinulle arvioitu aika, jonka käytät työntekijän, jolle delegoit tehtävän, tekemän työn arvioimiseen."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -615,9 +577,7 @@ msgstr "Suorittavan käyttäjän arvio tehtävän jäljelläolevasta ajasta."
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr ""
-"Arvioitu aika tehtävän suorittamiseen, tämän asettaa yleensä "
-"projektipäällikkö kun tehtävä on luonnostilassa."
+msgstr "Arvioitu aika tehtävän suorittamiseen, tämän asettaa yleensä projektipäällikkö kun tehtävä on luonnostilassa."
 
 #. module: project
 #: model:project.category,name:project.project_category_03
@@ -655,7 +615,7 @@ msgstr ""
 #: field:project.project,message_follower_ids:0
 #: field:project.task,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -688,7 +648,7 @@ msgstr "Antaa järjestyksen näytettäessä tehtäväluetteloa."
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Group By"
-msgstr ""
+msgstr "Ryhmittele"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -699,7 +659,7 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "Korkea"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -708,12 +668,11 @@ msgid "History of Tasks"
 msgstr "Tehtävähistoria"
 
 #. module: project
-#: help:project.project,message_summary:0
-#: help:project.task,message_summary:0
+#: help:project.project,message_summary:0 help:project.task,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: project
 #: help:project.project,privacy_visibility:0
@@ -726,21 +685,9 @@ msgid ""
 "   if portal is activated, portal users see the tasks or issues followed by\n"
 "   them or by someone of their company\n"
 "- Employees Only: employees see all tasks or issues\n"
-"- Followers Only: employees see only the followed tasks or issues; if "
-"portal\n"
+"- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
-msgstr ""
-"Määritä tähän projektiin liittyvien tehtävien ja tapausten näkyvyys:\n"
-"- Julkinen projekti: kaikki näkevät kaiken. Jos portaali on käytössä, "
-"portaalikäyttäjät näkevät kaikki tehtävät ja tapaukset. Jos anonyymi "
-"portaali on käytössä, vierailijat näkevät kaikki tehtävät ja tapaukset.\n"
-"- Asiakasprojekti (vain jos portaali on käytössä): työntekijät näkevät "
-"kaiken. Jos portaali on käytössä, portaalikäyttäjät näkevät itsensä tai "
-"samassa yrityksessä työskentelevien seuraamat tehtävät ja tapaukset.\n"
-"- Sisäinen projekti: kaikki työntekijät näkevät tehtävät ja tapaukset\n"
-"- Yksityinen projekti: vain nimetyt työntekijät näkevät tehtävät ja "
-"tapaukset. Jos portaali on käytössä, nimetyt portaalikäyttäjät voivat nähdä "
-"tehtävät ja tapaukset."
+msgstr "Määritä tähän projektiin liittyvien tehtävien ja tapausten näkyvyys:\n- Julkinen projekti: kaikki näkevät kaiken. Jos portaali on käytössä, portaalikäyttäjät näkevät kaikki tehtävät ja tapaukset. Jos anonyymi portaali on käytössä, vierailijat näkevät kaikki tehtävät ja tapaukset.\n- Asiakasprojekti (vain jos portaali on käytössä): työntekijät näkevät kaiken. Jos portaali on käytössä, portaalikäyttäjät näkevät itsensä tai samassa yrityksessä työskentelevien seuraamat tehtävät ja tapaukset.\n- Sisäinen projekti: kaikki työntekijät näkevät tehtävät ja tapaukset\n- Yksityinen projekti: vain nimetyt työntekijät näkevät tehtävät ja tapaukset. Jos portaali on käytössä, nimetyt portaalikäyttäjät voivat nähdä tehtävät ja tapaukset."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -753,64 +700,49 @@ msgid "Hours to Validate"
 msgstr "Tarkistettavat tunnit"
 
 #. module: project
-#: field:project.category,id:0
-#: field:project.config.settings,id:0
-#: field:project.project,id:0
-#: field:project.task,id:0
-#: field:project.task.delegate,id:0
-#: field:project.task.history,id:0
-#: field:project.task.history.cumulative,id:0
-#: field:project.task.type,id:0
-#: field:project.task.work,id:0
-#: field:report.project.task.user,id:0
+#: field:project.category,id:0 field:project.config.settings,id:0
+#: field:project.project,id:0 field:project.task,id:0
+#: field:project.task.delegate,id:0 field:project.task.history,id:0
+#: field:project.task.history.cumulative,id:0 field:project.task.type,id:0
+#: field:project.task.work,id:0 field:report.project.task.user,id:0
 msgid "ID"
 msgstr "TUNNISTE (ID)"
 
 #. module: project
-#: help:project.project,message_unread:0
-#: help:project.task,message_unread:0
+#: help:project.project,message_unread:0 help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid ""
-"If checked, this contract will be available in the project menu and you will "
-"be able to manage tasks or track issues"
-msgstr ""
-"Jos valittu, niin sopimus on saatavila projektivalikossa ja voit hallita "
-"tehtäviä ja seurata asioita."
+"If checked, this contract will be available in the project menu and you will"
+" be able to manage tasks or track issues"
+msgstr "Jos valittu, niin sopimus on saatavila projektivalikossa ja voit hallita tehtäviä ja seurata asioita."
 
 #. module: project
 #: help:project.project,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
-msgstr ""
-"Jos aktiivisen kentän tilaksi asetetaan epätosi (false), se mahdollistaa "
-"projektin piilottamisen poistamatta sitä."
+msgstr "Jos aktiivisen kentän tilaksi asetetaan epätosi (false), se mahdollistaa projektin piilottamisen poistamatta sitä."
 
 #. module: project
 #: help:project.task,progress:0
 msgid ""
 "If the task has a progress of 99.99% you should close the task if it's "
 "finished or reevaluate the time"
-msgstr ""
-"Jos tehtävän valmistumisaste on 99.99%, sinun pitää sulkea tehtävä, mikäli "
-"se on valmis tai uudelleenarvioida aika."
+msgstr "Jos tehtävän valmistumisaste on 99.99%, sinun pitää sulkea tehtävä, mikäli se on valmis tai uudelleenarvioida aika."
 
 #. module: project
 #: help:project.task.type,case_default:0
 msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
-msgstr ""
-"Valitsemalla tämän kentän tätä vaihetta ehdotetaan automaattisesti kaikille "
-"uusille projekteille. Vaihetta ei aseteta jo olemassa oleville projekteille."
+msgstr "Valitsemalla tämän kentän tätä vaihetta ehdotetaan automaattisesti kaikille uusille projekteille. Vaihetta ei aseteta jo olemassa oleville projekteille."
 
 #. module: project
-#: selection:project.project,state:0
-#: selection:project.task,kanban_state:0
+#: selection:project.project,state:0 selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Käynnissä"
@@ -843,7 +775,7 @@ msgstr ""
 #: code:addons/project/project.py:171
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Virheellinen toiminto!"
 
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
@@ -854,16 +786,15 @@ msgstr ""
 #: field:project.project,message_is_follower:0
 #: field:project.task,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "on seuraaja"
 
 #. module: project
 #: view:project.category:project.project_category_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "Tapauksen versio"
 
 #. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
+#: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr "Kanban tila"
@@ -892,38 +823,32 @@ msgstr ""
 
 #. module: project
 #: field:project.category,write_uid:0
-#: field:project.config.settings,write_uid:0
-#: field:project.project,write_uid:0
-#: field:project.task,write_uid:0
-#: field:project.task.delegate,write_uid:0
-#: field:project.task.type,write_uid:0
-#: field:project.task.work,write_uid:0
+#: field:project.config.settings,write_uid:0 field:project.project,write_uid:0
+#: field:project.task,write_uid:0 field:project.task.delegate,write_uid:0
+#: field:project.task.type,write_uid:0 field:project.task.work,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: project
 #: field:project.category,write_date:0
 #: field:project.config.settings,write_date:0
-#: field:project.project,write_date:0
-#: field:project.task.delegate,write_date:0
-#: field:project.task.type,write_date:0
-#: field:project.task.work,write_date:0
+#: field:project.project,write_date:0 field:project.task.delegate,write_date:0
+#: field:project.task.type,write_date:0 field:project.task.work,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads (for example: http://etherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
 
 #. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
 
@@ -960,21 +885,19 @@ msgid "Merge"
 msgstr "Yhdistä"
 
 #. module: project
-#: field:project.project,message_ids:0
-#: field:project.task,message_ids:0
+#: field:project.project,message_ids:0 field:project.task,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Viestit"
 
 #. module: project
-#: help:project.project,message_ids:0
-#: help:project.task,message_ids:0
+#: help:project.project,message_ids:0 help:project.task,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Sekalaiset"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1000,7 +923,7 @@ msgstr "Omat tehtävät"
 #. module: project
 #: field:project.category,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: project
 #: selection:project.project,state:0
@@ -1032,9 +955,7 @@ msgstr "Uuden tehtävän kuvaus"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
-msgstr ""
-"Oman tehtäväsi tila. Odottava avataan uudelleen automaattisesti kun "
-"delegoitu tehtävä on suljettu"
+msgstr "Oman tehtäväsi tila. Odottava avataan uudelleen automaattisesti kun delegoitu tehtävä on suljettu"
 
 #. module: project
 #: help:project.task.delegate,name:0
@@ -1107,8 +1028,7 @@ msgid "Parent"
 msgstr "Edeltävä"
 
 #. module: project
-#: view:project.task:project.view_task_form2
-#: field:project.task,parent_ids:0
+#: view:project.task:project.view_task_form2 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "Edeltävät tehtävät"
 
@@ -1120,8 +1040,7 @@ msgstr "Kumppani"
 #. module: project
 #: view:project.project:project.edit_project
 #: view:project.project:project.view_project_project_filter
-#: selection:project.project,state:0
-#: selection:project.task.delegate,state:0
+#: selection:project.project,state:0 selection:project.task.delegate,state:0
 msgid "Pending"
 msgstr "Odottava"
 
@@ -1155,8 +1074,7 @@ msgid "Please delete the project linked with this account first."
 msgstr "Ole hyvä ja poista tähän tunnukseen linkitetty projekti ensin."
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "Prioriteetti"
 
@@ -1183,8 +1101,7 @@ msgstr "Edistyminen"
 #: view:project.project:project.edit_project
 #: view:project.task:project.view_task_form2
 #: view:project.task:project.view_task_search_form
-#: field:project.task,project_id:0
-#: field:project.task.delegate,project_id:0
+#: field:project.task,project_id:0 field:project.task.delegate,project_id:0
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,project_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -1260,9 +1177,7 @@ msgstr "Projektitehtävä"
 msgid ""
 "Project's members are users who can have an access to the tasks related to "
 "this project."
-msgstr ""
-"Projektin jäsenet ovat käyttäjiä, joilla on pääsy tähän projektiin "
-"liittyviin tehtäviin."
+msgstr "Projektin jäsenet ovat käyttäjiä, joilla on pääsy tähän projektiin liittyviin tehtäviin."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -1275,8 +1190,7 @@ msgstr "Projektin tehtävät"
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:project.view_project
 #: view:project.project:project.view_project_project_gantt
-#: field:project.task.type,project_ids:0
-#: view:res.company:project.task_company
+#: field:project.task.type,project_ids:0 view:res.company:project.task_company
 #, python-format
 msgid "Projects"
 msgstr "Projektit"
@@ -1371,8 +1285,7 @@ msgid "Search Project"
 msgstr "Hae projekti"
 
 #. module: project
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
+#: field:project.project,sequence:0 field:project.task,sequence:0
 #: field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "Järjestysluku"
@@ -1395,8 +1308,7 @@ msgstr "Käytetyt tunnit"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
-#: field:project.task,stage_id:0
-#: field:project.task.history,type_id:0
+#: field:project.task,stage_id:0 field:project.task.history,type_id:0
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,type_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -1407,7 +1319,7 @@ msgstr "Vaihe"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Vaihe muutettu"
 
 #. module: project
 #: field:project.task.type,name:0
@@ -1417,7 +1329,7 @@ msgstr "Vaiheen nimi"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Vaihe muutettu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -1451,37 +1363,32 @@ msgstr "Tila"
 msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Projektin ja sen aliprojektien kaikkien tehtävien suunniteltujen tuntien "
-"yhteismäärä."
+msgstr "Projektin ja sen aliprojektien kaikkien tehtävien suunniteltujen tuntien yhteismäärä."
 
 #. module: project
 #: help:project.project,effective_hours:0
 msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Tehtäviin käytetty kokonaistuntimäärä tässä projektissa ja sen "
-"aliprojekteissa."
+msgstr "Tehtäviin käytetty kokonaistuntimäärä tässä projektissa ja sen aliprojekteissa."
 
 #. module: project
 #: help:project.project,total_hours:0
 msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Kokonaistuntimäärä: kaikki tehtävät tästä projektista ja sen aliprojekteista."
+msgstr "Kokonaistuntimäärä: kaikki tehtävät tästä projektista ja sen aliprojekteista."
 
 #. module: project
 #: field:project.project,message_summary:0
 #: field:project.task,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Yhteenveto"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 msgid "Support"
-msgstr ""
+msgstr "Tuki"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_category_action
@@ -1567,8 +1474,7 @@ msgid "Task Stages"
 msgstr "Tehtävän vaiheet"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Tehtävän yhteenveto"
 
@@ -1671,19 +1577,14 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
-"This allows you to transfer the entries under tasks defined for Project "
-"Management to the timesheet line entries for particular date and user, with "
-"the effect of creating, editing and deleting either ways.\n"
+"This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
 msgstr ""
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
 msgid ""
-"This feature automatically creates project tasks from service products in "
-"sale orders. More precisely, tasks are created for procurement lines with "
-"product of type 'Service', procurement method 'Make to Order', and supply "
-"method 'Manufacture'.\n"
+"This feature automatically creates project tasks from service products in sale orders. More precisely, tasks are created for procurement lines with product of type 'Service', procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "-This installs the module sale_service."
 msgstr ""
 
@@ -1693,11 +1594,7 @@ msgid ""
 "This field is computed automatically and have the same behavior than the "
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
-msgstr ""
-"Tämän kentän arvo lasketaan automaattisesti, ja se käyttäytyy samalla tavoin "
-"kuin arvoltaan 'aktiivinen' boolean-kenttä: jos tehtävä on yhdistetty ei-"
-"aktiiviseen tai malliprojektiin, sitä ei näytetä, paitsi erikseen "
-"pyydettäessä."
+msgstr "Tämän kentän arvo lasketaan automaattisesti, ja se käyttäytyy samalla tavoin kuin arvoltaan 'aktiivinen' boolean-kenttä: jos tehtävä on yhdistetty ei-aktiiviseen tai malliprojektiin, sitä ei näytetä, paitsi erikseen pyydettäessä."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -1705,11 +1602,7 @@ msgid ""
 "This report allows you to analyse the performance of your projects and "
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
-msgstr ""
-"Tämän raportin avulla voit analysoida projektien ja käyttäjien tehokkuutta. "
-"Voit analysoida tehtävien määriä, käytettyjen tuntien määriä verrattuna "
-"suunniteltuihin tunteihin, tehtävän avaamiseen tai päättämiseen käytettyjen "
-"päivien keskiarvoa jne."
+msgstr "Tämän raportin avulla voit analysoida projektien ja käyttäjien tehokkuutta. Voit analysoida tehtävien määriä, käytettyjen tuntien määriä verrattuna suunniteltuihin tunteihin, tehtävän avaamiseen tai päättämiseen käytettyjen päivien keskiarvoa jne."
 
 #. module: project
 #: help:project.task.type,fold:0
@@ -1727,8 +1620,7 @@ msgstr "Tämä muuttaa projekteilla ja tehtävillä käytettävää mittayksikk�
 #: help:res.company,project_time_mode_id:0
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
 msgstr ""
 
 #. module: project
@@ -1737,8 +1629,7 @@ msgid "Time Estimation on Tasks"
 msgstr "Tehtävien aika-arvio"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Kulutettu aika"
 
@@ -1762,7 +1653,7 @@ msgstr ""
 #. module: project
 #: field:project.task,total_hours:0
 msgid "Total"
-msgstr ""
+msgstr "Yhteensä"
 
 #. module: project
 #: field:report.project.task.user,total_hours:0
@@ -1779,9 +1670,7 @@ msgstr "Kokonaisaika"
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr ""
-"Jäljellä oleva aika yhteensä, voidaan uudelleenarvioida säännöllisesti "
-"tehtävän suorittajan toimesta."
+msgstr "Jäljellä oleva aika yhteensä, voidaan uudelleenarvioida säännöllisesti tehtävän suorittajan toimesta."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1792,7 +1681,7 @@ msgstr ""
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Unassigned"
-msgstr ""
+msgstr "Ei ole annettu tehtäväksi"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1800,15 +1689,14 @@ msgid "Unassigned Tasks"
 msgstr "Määrittämättömät tehtävät"
 
 #. module: project
-#: field:project.project,message_unread:0
-#: field:project.task,message_unread:0
+#: field:project.project,message_unread:0 field:project.task,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lukemattomia viestejä"
 
 #. module: project
 #: model:project.category,name:project.project_category_04
 msgid "Usability"
-msgstr ""
+msgstr "Käytettävyys"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1852,12 +1740,11 @@ msgid "Validation Task Title"
 msgstr "Arviointitehtävän otsikko"
 
 #. module: project
-#: code:addons/project/project.py:435
-#: code:addons/project/project.py:921
+#: code:addons/project/project.py:435 code:addons/project/project.py:921
 #: code:addons/project/project.py:1228
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varoitus!"
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -1894,7 +1781,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
+"project's tasks and then delete the project or simply deactivate the "
+"project."
 msgstr ""
 
 #. module: project
@@ -1916,13 +1804,13 @@ msgstr "_Delegoi"
 #. module: project
 #: view:project.task:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "or"
-msgstr ""
+msgstr "tai"
 
 #. module: project
 #: code:addons/project/project.py:878
@@ -1934,10 +1822,4 @@ msgstr ""
 #: field:account.analytic.account,company_uom_id:0
 #: field:project.project,task_ids:0
 msgid "unknown"
-msgstr ""
-
-#~ msgid "# of tasks"
-#~ msgstr "tehtävien määrä"
-
-#~ msgid "Users"
-#~ msgstr "Käyttäjät"
+msgstr "tuntematon"

@@ -1,22 +1,22 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_journal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-11 01:04+0000\n"
-"Last-Translator: Mustafa Rawi <Unknown>\n"
-"Language-Team: Cubex Solutions <info@cubex.solutions>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-12 05:36+0000\n"
-"X-Generator: Launchpad (build 17487)\n"
-"Language: ar_EG\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
@@ -26,35 +26,34 @@ msgstr "نشط"
 #. module: sale_journal
 #: field:sale_journal.invoice.type,create_uid:0
 msgid "Created by"
-msgstr "أنشئ بواسطة"
+msgstr "أُنشئ بواسطة"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,create_date:0
 msgid "Created on"
-msgstr "أنشئ في"
+msgstr "إنشاؤه في"
 
 #. module: sale_journal
 #: help:sale.order,invoice_type_id:0
 msgid "Generate invoice based on the selected option."
-msgstr "إنشاء الفواتير من الاختيارات المحددة"
+msgstr ""
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
-msgstr "مجمعة"
+msgstr "مجمع"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,id:0
 msgid "ID"
-msgstr "المعرف"
+msgstr "المعرّف"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
-msgstr ""
-"إذا أزلت تحديد الحقل \"نشط\"، سيمكنك إخفاء نوع الفاتورة دون حذفها من أودو."
+msgstr "اذا كان وضع الحقل النشط غلط, سيسمح لك بإخفاء نوع الفاتورة بدون إزالتها."
 
 #. module: sale_journal
 #: view:sale.order:sale_journal.view_sales_order_search
@@ -72,33 +71,30 @@ msgstr "نوع الفاتورة"
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr "أنواع الفاتورة"
+msgstr "انواع الفاتورة"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
 msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
-"can create a specific invoicing journal to group your invoicing according to "
-"your customer's needs: daily, each Wednesday, monthly, etc."
-msgstr ""
-"أنواع الفواتير تستخدم مع الشركاء، أوامر البيع وأوامر التسليم. يمكنك إنشاء "
-"يومية فواتير معينة لتجميع الفواتير وفقاً لاحتياجات العميل: يومية، أسبوعية، "
-"شهرية، إلخ."
+"can create a specific invoicing journal to group your invoicing according to"
+" your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr "وتستخدم أنواع الفاتورة للشركاء، أوامر البيع وأوامر التسليم. يمكنك إنشاء يومية للفواتير المحددة لتجميع الفواتير الخاصة بك وفقا لاحتياجات العملاء الخاص بك: يوميا، كل يوم أربعاء، شهرية، الخ."
 
 #. module: sale_journal
 #: view:res.partner:sale_journal.view_partner_property_form
 msgid "Invoicing"
-msgstr "إصدار الفواتير"
+msgstr "الفواتير"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr "نوع إصدار الفواتير"
+msgstr "نوع الفاتورة"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
-msgstr "طريقة الإصدار"
+msgstr "طريقة انشاء الفاتورة"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,write_uid:0
@@ -108,12 +104,12 @@ msgstr "آخر تحديث بواسطة"
 #. module: sale_journal
 #: field:sale_journal.invoice.type,write_date:0
 msgid "Last Updated on"
-msgstr "آخر تحديث في"
+msgstr "آخر تحديث فى"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
-msgstr "غير مُجمعة"
+msgstr "غير مجمعه"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -123,17 +119,17 @@ msgstr "ملاحظة"
 #. module: sale_journal
 #: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
 msgid "Notes"
-msgstr "الملاحظات"
+msgstr "ملاحظات"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr "الشريك"
+msgstr "شريك"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr "قائمة الاستلام"
+msgstr "قائمة الالتقاط"
 
 #. module: sale_journal
 #: view:res.partner:sale_journal.view_partner_property_form
@@ -143,15 +139,16 @@ msgstr "المبيعات و المشتريات"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr "أمر البيع"
+msgstr "أمر المبيعات"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_move
 msgid "Stock Move"
-msgstr "حركة المخزون"
+msgstr "حركة مخزن"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr "نوع إصدار الفواتير هذا سيتم استخدامه بشكل افتراضي مع العميل الحالي."
+"This invoicing type will be used, by default, to invoice the current "
+"partner."
+msgstr ""

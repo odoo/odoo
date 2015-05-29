@@ -1071,7 +1071,7 @@ class pos_order(osv.osv):
             order_account = order.partner_id and \
                             order.partner_id.property_account_receivable and \
                             order.partner_id.property_account_receivable.id or \
-                            account_def and account_def.id or current_company.account_receivable.id
+                            account_def and account_def.id
 
             if move_id is None:
                 # Create an entry for the sale

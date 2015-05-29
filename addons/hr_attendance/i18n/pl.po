@@ -1,37 +1,33 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-20 12:49+0000\n"
-"Last-Translator: Tobiasz Rozum (OpenGLOBE.pl) <tobiasz.rozum@openglobe.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 12:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:45+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Ujemne opóźnienie oznacza, że pracownik pracował więcej niż "
-"zarejestrowano."
+msgid "(*) A negative delay means that the employee worked more than encoded."
+msgstr "(*) Ujemne opóźnienie oznacza, że pracownik pracował więcej niż zarejestrowano."
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Dodatnie opóźnienie oznacza, że pracownik pracował mniej niż "
-"zarejestrowano."
+msgstr "(*) Dodatnie opóźnienie oznacza, że pracownik pracował mniej niż zarejestrowano."
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -39,8 +35,7 @@ msgid "Absent"
 msgstr "Nieobecny(a)"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
+#: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
 msgstr "Akcja"
 
@@ -131,15 +126,13 @@ msgid "Click to Sign In at %s."
 msgstr "Kliknij, aby wejść o %s."
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_uid:0
-#: field:hr.attendance,create_uid:0
+#: field:hr.action.reason,create_uid:0 field:hr.attendance,create_uid:0
 #: field:hr.attendance.error,create_uid:0
 msgid "Created by"
 msgstr "Utworzono przez"
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_date:0
-#: field:hr.attendance,create_date:0
+#: field:hr.action.reason,create_date:0 field:hr.attendance,create_date:0
 #: field:hr.attendance.error,create_date:0
 msgid "Created on"
 msgstr "Data utworzenia"
@@ -209,8 +202,7 @@ msgid "Hr Attendance Search"
 msgstr "Szukaj obecności"
 
 #. module: hr_attendance
-#: field:hr.action.reason,id:0
-#: field:hr.attendance,id:0
+#: field:hr.action.reason,id:0 field:hr.attendance,id:0
 #: field:hr.attendance.error,id:0
 #: field:report.hr_attendance.report_attendanceerrors,id:0
 msgid "ID"
@@ -222,15 +214,13 @@ msgid "Last Sign"
 msgstr "Ostatnie wejście"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_uid:0
-#: field:hr.attendance,write_uid:0
+#: field:hr.action.reason,write_uid:0 field:hr.attendance,write_uid:0
 #: field:hr.attendance.error,write_uid:0
 msgid "Last Updated by"
 msgstr "Ostatnio modyfikowano przez"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_date:0
-#: field:hr.attendance,write_date:0
+#: field:hr.action.reason,write_date:0 field:hr.attendance,write_date:0
 #: field:hr.attendance.error,write_date:0
 msgid "Last Updated on"
 msgstr "Data ostatniej modyfikacji"
@@ -352,10 +342,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr ""
-"Funkcja rejestracji czasu pracy zarządza obecnością pracowników przy użyciu "
-"akcji Wejścia/Wyjścia. Możesz powiązać tę funkcjonalność z urządzeniem do "
-"rejestracji czasu pracy przy pomocy funkcjonalności Odoo."
+msgstr "Funkcja rejestracji czasu pracy zarządza obecnością pracowników przy użyciu akcji Wejścia/Wyjścia. Możesz powiązać tę funkcjonalność z urządzeniem do rejestracji czasu pracy przy pomocy funkcjonalności Odoo."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -394,11 +381,9 @@ msgstr "Godziny pracy"
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
-"Próbujesz %s z datą poprzedzającą inne wydarzenie.\n"
-"Skontaktuj się z menedżerem kadr w celu poprawy obecności."
+msgstr "Próbujesz %s z datą poprzedzającą inne wydarzenie.\nSkontaktuj się z menedżerem kadr w celu poprawy obecności."
 
 #. module: hr_attendance
 #: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
 msgid "or"
-msgstr ""
+msgstr "lub"

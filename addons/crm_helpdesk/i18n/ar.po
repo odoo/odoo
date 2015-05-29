@@ -1,22 +1,23 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_helpdesk
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# hoxhe aits <hoxhe0@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-11 04:52+0000\n"
-"Last-Translator: Mustafa Rawi <Unknown>\n"
-"Language-Team: Cubex Solutions <info@cubex.solutions>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-12 05:36+0000\n"
-"X-Generator: Launchpad (build 17487)\n"
-"Language: ar_EG\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,email:0
@@ -26,7 +27,7 @@ msgstr "عدد الرسائل"
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,nbr:0
 msgid "# of Requests"
-msgstr "عدد الطلبات"
+msgstr "# بشأن الطلبات"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
@@ -37,29 +38,12 @@ msgid ""
 "                Helpdesk and Support allow you to track your interventions.\n"
 "              </p><p>\n"
 "                Use the Odoo Issues system to manage your support\n"
-"                activities. Issues can be connected to the email gateway: "
-"new\n"
-"                emails may create issues, each of them automatically gets "
-"the\n"
+"                activities. Issues can be connected to the email gateway: new\n"
+"                emails may create issues, each of them automatically gets the\n"
 "                history of the conversation with the customer.\n"
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                انقر لإنشاء طلب دعم جديد.\n"
-"              </p><p>\n"
-"                المساعدة والدعم الفني يسمح لك بتتبع التدخل والإجراءات "
-"المتخذة.\n"
-"              </p><p>\n"
-"                استخدم نظام البلاغات والمشكلات في أودو لإدارة أنشطة الدعم "
-"الفني. يمكن\n"
-"                ربط بوابة البريد الإلكتروني بالمشكلات: سيتم إنشاء مشكلة لكل "
-"رسالة بريد\n"
-"                واردة لعنوان بريد معين، وستتمكن من الاحتفاظ بسجل كامل "
-"للمحادثات في تلك\n"
-"                المشكلة أو البلاغ بوجود خطأ ما.\n"
-"              </p>\n"
-"            "
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,active:0
@@ -69,16 +53,15 @@ msgstr "نشط"
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "All pending Helpdesk Request"
-msgstr "كافة الطلبات قيد المعالجة"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Assigned to Me or My Sales Team(s)"
-msgstr "مكلف أنا أو فريقي بها"
+msgstr ""
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
+#: selection:crm.helpdesk,state:0 selection:crm.helpdesk.report,state:0
 msgid "Cancelled"
 msgstr "ملغي"
 
@@ -93,16 +76,14 @@ msgid "Categorization"
 msgstr "التصنيف"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,categ_id:0
-#: field:crm.helpdesk.report,categ_id:0
+#: field:crm.helpdesk,categ_id:0 field:crm.helpdesk.report,categ_id:0
 msgid "Category"
-msgstr "الفئة"
+msgstr "فئة"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,channel_id:0
-#: field:crm.helpdesk.report,channel_id:0
+#: field:crm.helpdesk,channel_id:0 field:crm.helpdesk.report,channel_id:0
 msgid "Channel"
-msgstr "القناة"
+msgstr "قناة"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
@@ -111,8 +92,7 @@ msgid "Close Date"
 msgstr "تاريخ الإغلاق"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,date_closed:0
-#: selection:crm.helpdesk,state:0
+#: field:crm.helpdesk,date_closed:0 selection:crm.helpdesk,state:0
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: selection:crm.helpdesk.report,state:0
 msgid "Closed"
@@ -126,50 +106,47 @@ msgstr "التواصل"
 #. module: crm_helpdesk
 #: help:crm.helpdesk,channel_id:0
 msgid "Communication channel."
-msgstr "قناة التواصل."
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,company_id:0
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: field:crm.helpdesk.report,company_id:0
 msgid "Company"
-msgstr "المؤسسة"
+msgstr "شركة"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
 msgid ""
 "Create and manage helpdesk categories to better manage and classify your "
 "support requests."
-msgstr ""
-"قم بإنشاء وإدارة فئات المساعدة لتستطيع إدارة وتصنيف طلبات الدعم الفني."
+msgstr "انشأ وادير تصنيفات مكتب المساعدة لإدارة افضل و صنف طلباتك المؤيدة."
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,create_uid:0
 msgid "Created by"
-msgstr "أنشئ بواسطة"
+msgstr "أُنشئ بواسطة"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,create_date:0
-#: field:crm.helpdesk.report,create_date:0
+#: field:crm.helpdesk,create_date:0 field:crm.helpdesk.report,create_date:0
 msgid "Creation Date"
 msgstr "تاريخ الإنشاء"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
-#: field:crm.helpdesk,date:0
-#: field:crm.helpdesk.report,date:0
+#: field:crm.helpdesk,date:0 field:crm.helpdesk.report,date:0
 msgid "Date"
-msgstr "التاريخ"
+msgstr "تاريخ"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "تاريخ آخر رسالة في هذا السجل."
+msgstr "تاريخ آخر رسالة نُشرت لهذا البند"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Dates"
-msgstr "التواريخ"
+msgstr "تواريخ"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
@@ -186,12 +163,12 @@ msgstr "تأخير الإغلاق"
 #. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
 msgid "Description"
-msgstr "الوصف"
+msgstr "وصف"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,email_from:0
 msgid "Destination email for email gateway"
-msgstr "البريد الهدف لبوابة البريد الإلكتروني"
+msgstr ""
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,state:0
@@ -201,12 +178,12 @@ msgstr "مسودة"
 #. module: crm_helpdesk
 #: field:crm.helpdesk,duration:0
 msgid "Duration"
-msgstr "المدة"
+msgstr "المُدة"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,email_from:0
 msgid "Email"
-msgstr "البريد الإلكتروني"
+msgstr "بريد إلكتروني"
 
 #. module: crm_helpdesk
 #: code:addons/crm_helpdesk/crm_helpdesk.py:117
@@ -222,12 +199,12 @@ msgstr "تصعيد"
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Estimates"
-msgstr "التقديرات"
+msgstr "تقديرات"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Extended Filters..."
-msgstr "الفلاتر المتقدمة..."
+msgstr "مرشحات مفصلة..."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
@@ -256,33 +233,30 @@ msgid ""
 "Have a general overview of all support requests by sorting them with "
 "specific criteria such as the processing time, number of requests answered, "
 "emails sent and costs."
-msgstr ""
-"تجد هنا نظرة عامة على كافة طلبات الدعم الفني، ويمكنك ترتيبهم وفرزهم بشروط "
-"مختلفة مثل وقت المعالجة، عدد الطلبات المُجابة، البريد المرسل، التكاليف "
-"وغيرها."
+msgstr "لديك لمحة عامة عن جميع طلبات الدعم عن طريق فرزها مع معايير محددة مثل وقت المعالجة، وعدد من طلبات الرد، إرسال رسائل البريد الإلكتروني والتكاليف."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_graph
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
 msgid "Helpdesk"
-msgstr "الدعم الفني"
+msgstr "مكتب المساعدة"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_report_crm_helpdesks_tree
 msgid "Helpdesk Analysis"
-msgstr "تحليل الدعم الفني"
+msgstr "تحليل مكتب المساعدة"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.crm_helpdesk_categ_action
 msgid "Helpdesk Categories"
-msgstr "فئات الدعم الفني"
+msgstr "فئات مكتب الدعم"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.crm_case_helpdesk_act111
 msgid "Helpdesk Requests"
-msgstr "طلبات الدعم الفني"
+msgstr "طلبات مكتب المساعدة"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
@@ -292,22 +266,22 @@ msgstr "مكتب الدعم الفني"
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
 msgid "Helpdesk Support Tree"
-msgstr "شجرة الدعم الفني"
+msgstr "تؤيد مكتب المساعدة للهيكل"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_helpdesk_calendar_view
 msgid "Helpdesk Supports"
-msgstr "إجابات الدعم الفني"
+msgstr "مكتب الدعم الفني"
 
 #. module: crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
 msgid "Helpdesk and Support"
-msgstr "المساعدة والدعم الفني"
+msgstr "مكتب المساعدة و الدعم الفني"
 
 #. module: crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk_report
 msgid "Helpdesk report after Sales Services"
-msgstr "تقرير الدعم الفني كخدمة ما بعد البيع"
+msgstr "تقرير مكتب المساعدة بعد خدمات المبيعات"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
@@ -315,43 +289,38 @@ msgid ""
 "Helpdesk requests that are assigned to me or to one of the sale teams I "
 "manage"
 msgstr ""
-"طلبات الدعم والمساعدة المكلف بها أنا أو أحد فرق المبيعات التي أديرها."
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk,priority:0
-#: selection:crm.helpdesk.report,priority:0
+#: selection:crm.helpdesk,priority:0 selection:crm.helpdesk.report,priority:0
 msgid "High"
-msgstr "عالي"
+msgstr "مرتفع"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,priority:0
 msgid "Highest"
-msgstr "الأعلى"
+msgstr "أعلى"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"يحتفظ بسجل المحادثات والتواصل (مثل عدد الرسائل،...). هذا الملخص بصيغة HTML "
-"لتتمكن من إدراجه في واجهات Kanban."
+msgstr "يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل إدراجها في عروض كانبان."
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,id:0
-#: field:crm.helpdesk.report,id:0
+#: field:crm.helpdesk,id:0 field:crm.helpdesk.report,id:0
 msgid "ID"
-msgstr "المعرف"
+msgstr "معرّف"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "إذا حددت هذا الاختيار، ستتطلب الرسائل الجديدة انتباهك."
+msgstr "عند التفعيل، يجب الانتباه الى الرسائل الجديدة"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk,state:0
 msgid "In Progress"
-msgstr "قيد المعالجة"
+msgstr "قيد التقدم"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,message_is_follower:0
@@ -374,25 +343,24 @@ msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk,priority:0
-#: selection:crm.helpdesk.report,priority:0
+#: selection:crm.helpdesk,priority:0 selection:crm.helpdesk.report,priority:0
 msgid "Low"
 msgstr "منخفض"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,priority:0
 msgid "Lowest"
-msgstr "الأدنى"
+msgstr "أدنى"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,message_ids:0
 msgid "Messages"
-msgstr "الرسائل"
+msgstr "رسائل"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,message_ids:0
 msgid "Messages and communication history"
-msgstr "سجل الرسائل والتواصل"
+msgstr "الرسائل و سجل التواصل"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
@@ -402,22 +370,22 @@ msgstr "متفرقات"
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Month"
-msgstr "الشهر"
+msgstr "شهر"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Month of helpdesk requests"
-msgstr "شهر طلبات الدعم الفني"
+msgstr "تاريخ طلبات الدعم الفني"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "My Case(s)"
-msgstr "حالاتي"
+msgstr "حالتي"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "My Company"
-msgstr "مؤسستي"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
@@ -439,7 +407,7 @@ msgstr "جديد"
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "New Helpdesk Request"
-msgstr "طلب دعم جديد"
+msgstr "طلب دعم فني جديد"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,date_action_next:0
@@ -450,35 +418,34 @@ msgstr "الإجراء التالي"
 #: code:addons/crm_helpdesk/crm_helpdesk.py:134
 #, python-format
 msgid "No Subject"
-msgstr "بلا موضوع"
+msgstr "بدون موضوع"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk,priority:0
-#: selection:crm.helpdesk.report,priority:0
+#: selection:crm.helpdesk,priority:0 selection:crm.helpdesk.report,priority:0
 msgid "Normal"
 msgstr "عادي"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Notes"
-msgstr "الملاحظات"
+msgstr "ملاحظات"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: selection:crm.helpdesk.report,state:0
 msgid "Open"
-msgstr "مفتوح"
+msgstr "فتح"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Open Helpdesk Request"
-msgstr "فتح طلب الدعم"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_expected:0
 msgid "Overpassed Deadline"
-msgstr "تجاوز الموعد النهائي"
+msgstr "تخطي الموعد النهائي"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
@@ -487,20 +454,18 @@ msgstr "تجاوز الموعد النهائي"
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: field:crm.helpdesk.report,partner_id:0
 msgid "Partner"
-msgstr "الشريك"
+msgstr "شريك"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
+#: selection:crm.helpdesk,state:0 selection:crm.helpdesk.report,state:0
 msgid "Pending"
-msgstr "قيد الانتظار"
+msgstr "معلّق"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,planned_cost:0
-#: field:crm.helpdesk.report,planned_cost:0
+#: field:crm.helpdesk,planned_cost:0 field:crm.helpdesk.report,planned_cost:0
 msgid "Planned Costs"
-msgstr "التكاليف المتوقعة"
+msgstr "تكاليف متوقعة"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,planned_revenue:0
@@ -513,55 +478,55 @@ msgstr "الأرباح المتوقعة"
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: field:crm.helpdesk.report,priority:0
 msgid "Priority"
-msgstr "الأولوية"
+msgstr "أولوية"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,probability:0
 msgid "Probability (%)"
-msgstr "الاحتمالية (%)"
+msgstr "الإحتمال (%)"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Query"
-msgstr "الاستعلام"
+msgstr "إستعلام"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,ref:0
 msgid "Reference"
-msgstr "المرجع"
+msgstr "مرجع"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,ref2:0
 msgid "Reference 2"
-msgstr "المرجع 2"
+msgstr "مرجع ٢"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "References"
-msgstr "المراجع"
+msgstr "مراجع"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Request Date by Month"
-msgstr "تاريخ الطلب بالشهر"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Request Month"
-msgstr "شهر الطلب"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 #: field:crm.helpdesk,user_id:0
 msgid "Responsible"
-msgstr "المسئول"
+msgstr "مسؤول"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Responsible User"
-msgstr "المستخدم المسئول"
+msgstr "المستخدم المسؤول"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,section_id:0
@@ -569,8 +534,6 @@ msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
 msgstr ""
-"فريق المبيعات المسئول. قم بتعريف المستخدم المسئول وحساب بريده الإلكتروني "
-"للتكامل مع بوابة البريد الإلكتروني في أودو."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
@@ -597,7 +560,7 @@ msgstr "بحث الدعم الفني"
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,section_id:0
 msgid "Section"
-msgstr "القسم"
+msgstr "قسم"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
@@ -610,23 +573,16 @@ msgstr "الحالة"
 #. module: crm_helpdesk
 #: field:crm.helpdesk,message_summary:0
 msgid "Summary"
-msgstr "الملخص"
+msgstr "ملخّص"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,state:0
 msgid ""
-"The status is set to 'Draft', when a case is created.                        "
-"          \n"
-"If the case is in progress the status is set to 'Open'.                      "
-"            \n"
-"When the case is over, the status is set to 'Done'.                          "
-"        \n"
+"The status is set to 'Draft', when a case is created.                                  \n"
+"If the case is in progress the status is set to 'Open'.                                  \n"
+"When the case is over, the status is set to 'Done'.                                  \n"
 "If the case needs to be reviewed then the status is set to 'Pending'."
 msgstr ""
-"تكون الحالة مسودة عند إنشاء الطلب أو الحالة.\n"
-"إذا بدأ العمل على الطلب، تصبح الحالة مفتوح.\n"
-"عندما يتم إنهاء العمل على الطلب، تصبح حالته منتهي.\n"
-"إذا كانت الحالة تتطلب مراجعة، تضبط حالتها إلى قيد المعالجة."
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,email_cc:0
@@ -634,9 +590,7 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
-"سيتم إضافة هذه العناوين إلى حقل نسخة كربونية CC في كافة المراسلات الصادرة "
-"والواردة في هذا السجل. افصل بين عناوين البريد الإلكتروني باستخدام الفاصلة."
+msgstr "سيتم اضافة عناوين البريد الالكتروني الى حقل CC لكل الايميلات الواردة والصادرة لهذا التسجيل قبل ان يرسل. افصل بين عناوين البريد الالكتروني المتعددة بفاصلة"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,message_unread:0
@@ -651,22 +605,22 @@ msgstr "تاريخ التحديث"
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,user_id:0
 msgid "User"
-msgstr "المستخدم"
+msgstr "مستخدِم"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,email_cc:0
 msgid "Watchers Emails"
-msgstr "مراقبو البريد"
+msgstr "مراقبو رسائل البريد الالكتروني"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,website_message_ids:0
 msgid "Website Messages"
-msgstr "رسائل الموقع"
+msgstr ""
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,website_message_ids:0
 msgid "Website communication history"
-msgstr "سجل التواصل على الموقع"
+msgstr ""
 
 #. module: crm_helpdesk
 #: code:addons/crm_helpdesk/crm_helpdesk.py:117
@@ -674,10 +628,4 @@ msgstr "سجل التواصل على الموقع"
 msgid ""
 "You can not escalate, you are already at the top level regarding your sales-"
 "team category."
-msgstr "لا يمكنك التصعيد! أنت بالفعل في أعلى مستوى في فئات فرق المبيعات."
-
-#~ msgid "# of Cases"
-#~ msgstr "الحالات"
-
-#~ msgid "My company"
-#~ msgstr "شركتي"
+msgstr ""
