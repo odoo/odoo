@@ -12,7 +12,7 @@
 
 
         <record model="ir.actions.server" id="action_account_send_checks">
-            <field name="name">Send Checks</field>
+            <field name="name">Print Checks</field>
             <field name="model_id" ref="account.model_account_payment"/>
             <field name="code">
                 if context.get('active_model') == 'account.payment' and context.get('active_ids'):
@@ -22,7 +22,7 @@
 
         <record model="ir.values" id="account_send_checks">
             <field name="model_id" ref="account.model_account_payment" />
-            <field name="name">Send Checks</field>
+            <field name="name">Print Checks</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.server,' +str(ref('action_account_send_checks'))" />
             <field name="key">action</field>
