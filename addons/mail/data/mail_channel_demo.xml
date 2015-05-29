@@ -3,118 +3,107 @@
     <data noupdate="1">
 
         <!-- Discussion groups, done in 2 steps to remove creator from followers -->
-        <record model="mail.channel" id="channel_best_sales_practices">
+        <record model="mail.channel" id="channel_1">
             <field name="name">Best Sales Practices</field>
             <field name="description">Discussion about best sales practices and deals.</field>
         </record>
-        <record model="mail.channel" id="channel_best_sales_practices">
+        <record model="mail.channel" id="channel_1">
             <field name="message_follower_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
         </record>
-        <record model="mail.channel" id="channel_board">
+        <record model="mail.channel" id="channel_2">
             <field name="name">Board meetings</field>
             <field name="description">Board meetings, budgets, strategic plans</field>
         </record>
-        <record model="mail.channel" id="channel_board">
+        <record model="mail.channel" id="channel_2">
             <field name="message_follower_ids" eval="[(6, 0, [])]"/>
         </record>
-        <record model="mail.channel" id="channel_rd">
+        <record model="mail.channel" id="channel_3">
             <field name="name">R&amp;D</field>
             <field name="description">Research and development discussion group</field>
         </record>
-        <record model="mail.channel" id="channel_hr_policies">
-            <field name="name">HR Policies</field>
-            <field name="description">Company cars, holidays and other advantages</field>
-        </record>
-        <record model="mail.channel" id="channel_rd">
+        <record model="mail.channel" id="channel_3">
             <field name="message_follower_ids" eval="[(6, 0, [])]"/>
-        </record>
-        <record model="mail.channel" id="channel_support">
-            <field name="name">Support</field>
-            <field name="description">Support team</field>
         </record>
 
         <!-- Best sales practices messages -->
-        <record id="msg_group_1_1" model="mail.message">
+        <record id="mail_message_channel_1_1" model="mail.message">
             <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_best_sales_practices"/>
+            <field name="res_id" ref="mail.channel_1"/>
             <field name="body"><![CDATA[<p>Selling a training session and selling the products after the training session is more efficient than directly selling a pack with the training session and the products.</p>]]></field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_group_1_2" model="mail.message">
+        <record id="mail_message_channel_1_2" model="mail.message">
             <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_best_sales_practices"/>
+            <field name="res_id" ref="mail.channel_1"/>
             <field name="body"><![CDATA[<p>I noted I can not manage efficiently my pipeline when I have more than 50 opportunities in the qualification stage.</p><p>Any advice on this? How do you organize your activities with more than 50 opportunities?</p>]]></field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_group_1_3" model="mail.message">
+        <record id="mail_message_channel_1_2_1" model="mail.message">
             <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_best_sales_practices"/>
+            <field name="res_id" ref="mail.channel_1"/>
             <field name="body"><![CDATA[<p>When I have too much opportunities in the pipe, I start communicating with prospects more by email than phonecalls.</p><p>I send an email to create a sense of emergency, like <i>"can I call you this week about our quote?"</i> and I call only those that answer this email.</p><p>You can use the email template feature of Odoo to automate email composition.</p>]]></field>
             <field name="message_type">comment</field>
-            <field name="parent_id" ref="msg_group_1_2"/>
+            <field name="parent_id" ref="mail_message_channel_1_2"/>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_group_1_4" model="mail.message">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_best_sales_practices"/>
-            <field name="body"><![CDATA[<p>When you sell a tablet PC, don't forget to propose a docking station with it. I offer 20% on the docking stating (not the tablet) and I have a 70% success rate with this combo.</p>]]></field>
-            <field name="message_type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo'), ref('base.user_root')])]"/>
-            <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
 
         <!-- Pushed to all employees -->
-        <record id="msg_empl_1" model="mail.message">
+        <record id="mail_message_channel_whole_1" model="mail.message">
             <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_hr_policies"/>
-            <field name="body"><![CDATA[<p>Your monthly meal vouchers arrived. You can get them at the HR's office.</p>]]></field>
+            <field name="res_id" ref="mail.channel_all_employees"/>
+            <field name="body"><![CDATA[
+<p>
+    Great news!<br/>
+    Our company has received the Deloitte Fast 50 award.  We are the fastest
+    growing company of the country, with a growth of 1549% over the past 5
+    years. You can get more information <a href="http://www.openerp.com/node/1244/2012/10">on our blog</a>.
+</p>
+]]></field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="mail_message_channel_whole_2" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="mail.channel_all_employees"/>
+            <field name="body"><![CDATA[<p>Your monthly meal vouchers arrived. You can get them at the HR's office.</p>
+<p>This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_empl_1_1" model="mail.message">
+        <record id="mail_message_channel_whole_2_1" model="mail.message">
             <field name="model">mail.channel</field>
-            <field name="res_id" ref="channel_hr_policies"/>
-            <field name="body"><![CDATA[<p>Oh, I had forgotten. This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
-            <field name="parent_id" ref="msg_empl_1"/>
-            <field name="message_type">comment</field>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=57)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
-        <record id="msg_empl_1_2" model="mail.message">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="channel_hr_policies"/>
+            <field name="res_id" ref="channel_all_employees"/>
             <field name="body"><![CDATA[<p>Thanks! Could you please remind me where is Christine's office, if I may ask? I'm new here!</p>]]></field>
-            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="parent_id" ref="mail_message_channel_whole_2"/>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=34)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_empl_1_3" model="mail.message">
+        <record id="mail_message_channel_whole_2_2" model="mail.message">
             <field name="model">mail.channel</field>
-            <field name="res_id" ref="channel_hr_policies"/>
+            <field name="res_id" ref="channel_all_employees"/>
             <field name="body"><![CDATA[<p>Building B3, second floor on the right :-).</p>]]></field>
-            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="parent_id" ref="mail_message_channel_whole_2"/>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <!-- Board messages -->
-        <record id="msg_board_1" model="mail.message">
+        <record id="mail_message_channel_2_1" model="mail.message">
             <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_board"/>
+            <field name="res_id" ref="mail.channel_2"/>
             <field name="body"><![CDATA[
 <p>
     Dear Board Members,
@@ -167,28 +156,10 @@
 </p>
 ]]></field>
             <field name="message_type">comment</field>
-            <field name="parent_id" ref="msg_group_1_2"/>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
-
-        <!-- Whole Company messages -->
-        <record id="msg_whole_1_1" model="mail.message">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_all_employees"/>
-            <field name="body"><![CDATA[
-<p>
-    Great news!<br/>
-    Our company has received the Deloitte Fast 50 award.  We are the fastest
-    growing company of the country, with a growth of 1549% over the past 5
-    years. You can get more information <a href="http://www.openerp.com/node/1244/2012/10">on our blog</a>.
-</p>
-]]></field>
-            <field name="message_type">comment</field>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
     </data>
