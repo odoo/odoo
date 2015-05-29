@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-19 06:48+0000\n"
+"PO-Revision-Date: 2015-05-20 07:33+0000\n"
 "Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-20 05:31+0000\n"
-"X-Generator: Launchpad (build 17508)\n"
+"X-Launchpad-Export-Date: 2015-05-22 05:11+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:365
@@ -127,7 +127,7 @@ msgstr "逗号分隔的收件人地址（可以在这里使用占位符）"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Content"
-msgstr ""
+msgstr "内容"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
@@ -138,13 +138,13 @@ msgstr ""
 #: field:email.template,create_uid:0
 #: field:email_template.preview,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建者"
 
 #. module: email_template
 #: field:email.template,create_date:0
 #: field:email_template.preview,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建于"
 
 #. module: email_template
 #: field:email.template,null_value:0
@@ -186,17 +186,17 @@ msgstr "显示一个关联单据的选项 ，用该模版打开撰写向导"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Dynamic Placeholder Generator"
-msgstr ""
+msgstr "动态占位符生成器"
 
 #. module: email_template
 #: view:ir.actions.server:email_template.view_server_action_form_template
 msgid "Email"
-msgstr ""
+msgstr "电子邮箱"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Email Configuration"
-msgstr ""
+msgstr "邮箱配置"
 
 #. module: email_template
 #: view:email_template.preview:email_template.email_template_preview_form
@@ -338,6 +338,8 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
 msgstr ""
+"在发送邮件时可选择的语言代码（ISO "
+"代码）。如果没有设置，会使用英文版。一般用占位符来确定合适的语言，例如：${object.partner_id.lang}。"
 
 #. module: email_template
 #: help:email.template,null_value:0
@@ -354,7 +356,7 @@ msgstr "发送邮件服务器"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Override author's email"
-msgstr ""
+msgstr "覆盖作者的电子邮件"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_res_partner
@@ -365,7 +367,7 @@ msgstr "业务伙伴"
 #: view:res.partner:email_template.res_partner_opt_out_search
 msgid ""
 "Partners that did not ask not to be included in mass mailing campaigns"
-msgstr ""
+msgstr "合作伙伴未被请求包含在群发邮件活动中"
 
 #. module: email_template
 #: help:email.template,auto_delete:0
@@ -387,7 +389,7 @@ msgstr "在设置活动细节前先设置基础模块。"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Preferred reply address"
-msgstr ""
+msgstr "优先回复地址"
 
 #. module: email_template
 #: help:email.template,reply_to:0
@@ -408,7 +410,7 @@ msgstr "的预览"
 #. module: email_template
 #: field:email_template.preview,partner_ids:0
 msgid "Recipients"
-msgstr ""
+msgstr "收件人"
 
 #. module: email_template
 #: field:email.template,model:0
@@ -419,7 +421,7 @@ msgstr "相关单据模型"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Remove"
-msgstr ""
+msgstr "删除"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
@@ -488,7 +490,7 @@ msgstr "发送邮件（ %s）"
 msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
-msgstr ""
+msgstr "发件人地址（占位符会被在这里使用），如果不设置，作者的邮箱别名或邮箱地址就会被作为默认值。"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:551
@@ -496,7 +498,7 @@ msgstr ""
 msgid ""
 "Sender email is missing or empty after template rendering. Specify one to "
 "deliver your message"
-msgstr ""
+msgstr "在应用模板后，发送者的邮件丢失或为空，请指定一个模板来发送你的信息"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -581,7 +583,7 @@ msgid ""
 "The values displayed hereunder are informative. When sending the email, the "
 "values\n"
 "                                will be taken from the email template."
-msgstr ""
+msgstr "值显示在下面，当发送一个邮件时，将取值于邮件模板。"
 
 #. module: email_template
 #: field:email.template,email_to:0
@@ -613,7 +615,7 @@ msgstr "警告"
 #: code:addons/email_template/email_template.py:551
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告！"
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -643,9 +645,9 @@ msgstr "你可以对这个模版附加文件，可以附加到所有基于此模
 #: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
 "Your template does not defined any email_from. Please update your template."
-msgstr ""
+msgstr "您的模板没有定义任何邮件表单，请更新您的模板"
 
 #. module: email_template
 #: view:email_template.preview:email_template.email_template_preview_form
 msgid "record:"
-msgstr ""
+msgstr "记录："

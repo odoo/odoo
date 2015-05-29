@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-19 07:57+0000\n"
+"PO-Revision-Date: 2015-05-22 02:43+0000\n"
 "Last-Translator: Mouz_Wy <www.905039976@qq.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-20 05:31+0000\n"
-"X-Generator: Launchpad (build 17508)\n"
+"X-Launchpad-Export-Date: 2015-05-23 05:28+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #. module: crm
 #: field:crm.lead,meeting_count:0
@@ -226,6 +226,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            单击来新建来电记录。\n"
+"          </p><p>\n"
+"            Odoo 支持快速记录来电\n"
+"            并跟踪 与某个客户的沟通历史，用来提醒其他\n"
+"            团队成员。\n"
+"          </p><p>\n"
+"            为了对这个来电继续跟进, 你可以安排\n"
+"            一次 回电、会面或者新建一个商机。\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
@@ -242,6 +253,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"           单击来创建一个通话计划。 \n"
+"          </p><p>\n"
+"            Odoo能为你安排通话计划\n"
+"            为你的团队并跟踪去电情况。\n"
+"          </p><p>  \n"
+"            你可以用导入功能批量添加要\n"
+"            跟进的潜在客户。\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -259,6 +280,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Odoo 帮助你记录销售渠道信息\n"
+"                    跟踪潜在销售机会并能更好地预测将来的收入。\n"
+"                </p><p>\n"
+"                    你能够根据商机来安排会见与电话联系\n"
+"                    将商机转换为报价,，添加相关\n"
+"                    文件，文档，跟踪所有的讨论，以及更多。\n"
+"                </p>\n"
+"            "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
@@ -278,6 +308,17 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    在创建商机或客户之前，如果你需要一个\n"
+"                    验证合格的步骤， 你就可以使用线索。它可以是你收到的名片，\n"
+"                    在你的网站填写联系方式表格，或你导入的未验证文件\n"
+"                    意愿，等等。\n"
+"                </p><p>\n"
+"                    Once qualified, the lead can be converted into a "
+"business\n"
+"                    opportunity and/or a new customer in your address book.\n"
+"                </p>\n"
+"            "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
@@ -293,6 +334,15 @@ msgid ""
 "            </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"                Odoo 帮助你记录销售渠道信息 跟踪\n"
+"                潜在销售机会，并能更好地预测将来的收入。\n"
+"            </p><p>\n"
+"                你能够根据商机来安排会见与电话联系\n"
+"                将商机转换为报价, 添加相关\n"
+"               文件， 文档，跟踪所有的讨论，以及更多。\n"
+"            </p>\n"
+"        "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
@@ -311,6 +361,16 @@ msgid ""
 "            </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"                在创建商机或客户之前，如果你需要一个\n"
+"                验证合格的步骤， 你就可以使用线索。它可以是你收到的名片，\n"
+"                在你的网站填写联系方式表格，或你导入的未验证\n"
+"                的文件意愿，等等。\n"
+"            </p><p>\n"
+"                一旦合格，这个线索能转换成商机\n"
+"                并在你的通讯录中添加一个新客户。\n"
+"            </p>\n"
+"        "
 
 #. module: crm
 #: model:email.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -416,6 +476,8 @@ msgid ""
 "Allows you to track your customers/suppliers claims and grievances.\n"
 "-This installs the module crm_claim."
 msgstr ""
+"可以让你跟踪你的客户/供应商索赔和不满。\n"
+" -这将安装 crm_claim模块"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner.mass,deduplicate:0
@@ -706,7 +768,7 @@ msgstr "已关闭"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr ""
+msgstr "关闭不能转化为机遇的线索"
 
 #. module: crm
 #: field:crm.lead,color:0
@@ -791,7 +853,7 @@ msgstr "转换选项"
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
 msgid "Convert To"
-msgstr ""
+msgstr "转换到"
 
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
@@ -871,7 +933,7 @@ msgstr "创建新客户"
 #: field:crm.tracking.medium,create_uid:0
 #: field:crm.tracking.source,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,create_date:0
@@ -890,7 +952,7 @@ msgstr ""
 #: field:crm.tracking.medium,create_date:0
 #: field:crm.tracking.source,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建在"
 
 #. module: crm
 #: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
@@ -965,7 +1027,7 @@ msgstr "日期"
 #: help:crm.lead,message_last_post:0
 #: help:crm.phonecall,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "发布在记录上的最近信息的日期。"
 
 #. module: crm
 #: field:crm.lead,day_open:0
@@ -1105,7 +1167,7 @@ msgstr "电子邮件"
 #. module: crm
 #: view:crm.case.section:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr ""
+msgstr "电子邮件别名"
 
 #. module: crm
 #: help:crm.lead,email_from:0
@@ -1141,7 +1203,7 @@ msgstr "预计商机落单日期."
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Event"
-msgstr ""
+msgstr "事件"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
@@ -1357,7 +1419,7 @@ msgstr "ID"
 #. module: crm
 #: field:base.partner.merge.line,aggr_ids:0
 msgid "Ids"
-msgstr ""
+msgstr "Ids"
 
 #. module: crm
 #: help:crm.lead,message_unread:0
@@ -1632,7 +1694,7 @@ msgstr "线索/商机"
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,line_ids:0
 msgid "Lines"
-msgstr ""
+msgstr "明细"
 
 #. module: crm
 #: help:crm.case.stage,section_ids:0
@@ -1914,7 +1976,7 @@ msgstr "通话月份"
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr ""
+msgstr "我的线索"
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_opportunities_filter
@@ -1965,7 +2027,7 @@ msgstr "新建"
 #: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
 msgid "New Mail"
-msgstr ""
+msgstr "新邮件"
 
 #. module: crm
 #: model:crm.tracking.source,name:crm.crm_source_newsletter
@@ -2202,7 +2264,7 @@ msgstr "可选表达式"
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Options"
-msgstr ""
+msgstr "转换选项"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor8
@@ -2229,7 +2291,7 @@ msgstr "超越截止日期"
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,group_by_parent_id:0
 msgid "Parent Company"
-msgstr ""
+msgstr "业务伙伴公司"
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
@@ -2284,7 +2346,7 @@ msgstr "合作伙伴已<b>创建</b>"
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Partners"
-msgstr ""
+msgstr "合作伙伴"
 
 #. module: crm
 #: field:crm.lead,payment_mode:0
@@ -2511,6 +2573,8 @@ msgid ""
 "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
 "object.partner_id.name or object.contact_name}"
 msgstr ""
+"关于线索的提醒 : ${object.id} 来自 ${object.partner_id != False and "
+"object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
@@ -2617,7 +2681,7 @@ msgstr "销售员"
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
 msgid "Schedule"
-msgstr ""
+msgstr "进度表"
 
 #. module: crm
 #: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
@@ -2691,7 +2755,7 @@ msgstr "搜索电话呼叫"
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Search duplicates based on duplicated data in"
-msgstr ""
+msgstr "基于重复数据的重复搜索项"
 
 #. module: crm
 #: model:crm.tracking.source,name:crm.crm_source_search_engine
@@ -2751,11 +2815,15 @@ msgid ""
 "                            all these fields in common. (not one of the "
 "fields)."
 msgstr ""
+"选择用于搜索的字段\n"
+"                            相同记录的。 如果选择多个字段，\n"
+"                            Odoo会建议你合并\n"
+"                            这些字段都相同的记录。（而不是只有一个字段相同的记录）。"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Selection"
-msgstr ""
+msgstr "评选"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_kanban_view_leads
@@ -2822,12 +2890,12 @@ msgstr "软件"
 #: model:ir.model,name:crm.model_crm_tracking_source
 #: model:ir.ui.menu,name:crm.menu_crm_tracking_source
 msgid "Source"
-msgstr ""
+msgstr "来源"
 
 #. module: crm
 #: field:crm.tracking.source,name:0
 msgid "Source Name"
-msgstr ""
+msgstr "源名称"
 
 #. module: crm
 #: view:crm.case.stage:crm.crm_case_stage_form
@@ -2932,12 +3000,12 @@ msgstr "摘要"
 #: view:crm.lead:crm.view_crm_case_leads_filter
 #: view:crm.lead:crm.view_crm_case_opportunities_filter
 msgid "Tag"
-msgstr ""
+msgstr "标签"
 
 #. module: crm
 #: field:crm.lead,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "分类"
 
 #. module: crm
 #: help:crm.case.section,alias_id:0
@@ -2952,7 +3020,7 @@ msgid ""
 "The first contact you get with a potential customer is a lead you qualify "
 "before converting it into a real business opportunity. Check this box to "
 "manage leads in this sales team."
-msgstr ""
+msgstr "第一次接触潜在客户是一个将它转换为真正的商业机会的线索。选中这个框，管理销售团队的线索。"
 
 #. module: crm
 #: help:crm.lead,partner_name:0
@@ -2989,6 +3057,10 @@ msgid ""
 "                                contacts from this list to avoid merging "
 "them."
 msgstr ""
+"选定的联系人将被合并在一起。所有 \n"
+"                                文件连接到将要联系的人\n"
+"                                重定向到合并的联系人。您可以删除 \n"
+"                                从这个列表中的联系人，以避免合并它们。"
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -2997,6 +3069,9 @@ msgid ""
 "When the call is over, the status is set to Held.\n"
 "If the callis not applicable anymore, the status can be set to Cancelled."
 msgstr ""
+"当一个实例被创建时，其状态被设置为已确认。\n"
+"当电话结束后，状态被设置为保持。\n"
+"如果电话不适用了，状态可以设置为取消。"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
@@ -3036,7 +3111,7 @@ msgstr "此域用于区分用于线索的阶段和用于商机的阶段，或者
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
 "Ex: Fall_Drive, Christmas_Special"
-msgstr ""
+msgstr "这个名称用于帮助你跟踪不同的活动主题，如：秋季_促销，圣诞节_特价"
 
 #. module: crm
 #: help:crm.lead,medium_id:0
@@ -3044,7 +3119,7 @@ msgstr ""
 #: help:crm.opportunity.report,medium_id:0
 #: help:crm.tracking.mixin,medium_id:0
 msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "这是发货的方法。例如：邮寄卡、电子邮件或广告条"
 
 #. module: crm
 #: help:crm.lead,source_id:0
@@ -3054,7 +3129,7 @@ msgstr ""
 msgid ""
 "This is the source of the link Ex: Search Engine, another domain, or name of "
 "email list"
-msgstr ""
+msgstr "这个是链接的源文件，如：搜索引擎，其它域，或电子邮件列表的名称。"
 
 #. module: crm
 #: help:crm.case.stage,probability:0
@@ -3092,6 +3167,9 @@ msgid ""
 "Create a specific stage or edit an existing one by editing columns of your "
 "opportunity pipe."
 msgstr ""
+"缓解您销售渠道和所有组合赢得了机会，一个销售阶段配置如下：\n"
+" 概率 = 0 % and 选择 “自动更改概率”。\n"
+"创建一个特定的阶段或编辑一个现有商机列。"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:417
@@ -3103,6 +3181,9 @@ msgid ""
 "Create a specific stage or edit an existing one by editing columns of your "
 "opportunity pipe."
 msgstr ""
+"缓解您销售渠道和所有组合赢得了机会，一个销售阶段配置如下： \n"
+"概率 = 100 % and 选择 “自动更改概率”。\n"
+"创建一个特定的阶段或编辑一个现有商机列。"
 
 #. module: crm
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
@@ -3204,7 +3285,7 @@ msgstr "用户登录"
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,group_by_vat:0
 msgid "VAT"
-msgstr ""
+msgstr "增值税"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_value:0
@@ -3216,14 +3297,14 @@ msgstr "值"
 #: selection:crm.lead.report,priority:0
 #: selection:crm.opportunity.report,priority:0
 msgid "Very High"
-msgstr ""
+msgstr "很高"
 
 #. module: crm
 #: selection:crm.lead,priority:0
 #: selection:crm.lead.report,priority:0
 #: selection:crm.opportunity.report,priority:0
 msgid "Very Low"
-msgstr ""
+msgstr "很低"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:396
@@ -3267,12 +3348,14 @@ msgid ""
 "You are already at the top level of your sales-team category.\n"
 "Therefore you cannot escalate furthermore."
 msgstr ""
+"您已在您的销售团队类别的最高级别.。\n"
+"因此您不能再升级。"
 
 #. module: crm
 #: code:addons/crm/base_partner_merge.py:446
 #, python-format
 msgid "You have to specify a filter for your selection"
-msgstr ""
+msgstr "您必须指定一个你选择的过滤器"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_leads
@@ -3299,18 +3382,18 @@ msgstr "例如：关于提案的呼叫"
 #: code:addons/crm/crm_lead.py:971
 #, python-format
 msgid "lead"
-msgstr ""
+msgstr "线索"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:91
 #, python-format
 msgid "leads"
-msgstr ""
+msgstr "线索"
 
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
 msgid "min(s)"
-msgstr ""
+msgstr "分钟(秒)"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_kanban_view_leads
@@ -3321,7 +3404,7 @@ msgstr "oe_kanban_text_red"
 #: code:addons/crm/crm_lead.py:969
 #, python-format
 msgid "opportunity"
-msgstr ""
+msgstr "商机"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
