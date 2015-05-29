@@ -64,7 +64,7 @@ class TestMailFeatures(TestMail):
 
     def test_inbox_redirection_basic(self):
         """ Inbox redirection: no params, Inbox """
-        inbox_act_id = self.ref('mail.action_mail_inbox_feeds')
+        inbox_act_id = self.ref('mail.mail_message_action_inbox')
         action = self.env['mail.thread'].with_context({'params': {}}).sudo(self.user_employee).message_redirect_action()
         self.assertEqual(
             action.get('type'), 'ir.actions.act_window',
@@ -109,7 +109,7 @@ class TestMailFeatures(TestMail):
     def test_inbox_redirection_message_inbox(self):
         """ Inbox redirection: message without read access: Inbox """
         message = self.group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id], message_type='comment', subtype='mail.mt_comment')
-        inbox_act_id = self.ref('mail.action_mail_inbox_feeds')
+        inbox_act_id = self.ref('mail.mail_message_action_inbox')
         action = self.env['mail.thread'].with_context({
             'params': {'message_id': message.id}
         }).sudo(self.user_public).message_redirect_action()
@@ -125,7 +125,7 @@ class TestMailFeatures(TestMail):
     @mute_logger('openerp.models')
     def test_inbox_redirection_document_inbox(self):
         """ Inbox redirection: document without read access: Inbox """
-        inbox_act_id = self.ref('mail.action_mail_inbox_feeds')
+        inbox_act_id = self.ref('mail.mail_message_action_inbox')
         action = self.env['mail.thread'].with_context({
             'params': {'model': 'mail.channel', 'res_id': self.group_pigs.id}
         }).sudo(self.user_public).message_redirect_action()

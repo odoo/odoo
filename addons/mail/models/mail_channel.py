@@ -64,7 +64,7 @@ class MailGroup(models.Model):
     @api.model
     def create(self, vals):
         # get parent menu
-        menu_parent = self.env.ref('mail.mail_group_root')
+        menu_parent = self.env.ref('mail.mail_channel_menu_root')
 
         # Create menu id
         menu = self.env['ir.ui.menu'].sudo().create({'name': vals['name'], 'parent_id': menu_parent.id})
@@ -77,7 +77,7 @@ class MailGroup(models.Model):
         group.alias_id.write({"alias_force_thread_id": group.id, 'alias_parent_thread_id': group.id})
 
         # Create action window for this group and link the menu to it
-        inbox_ref = self.env.ref('mail.action_mail_group_feeds')
+        inbox_ref = self.env.ref('mail.mail_channel_action_timeline')
         search_ref = self.env.ref('mail.view_message_search')
         act_domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id)]
         act_context = {'default_model': 'mail.channel',

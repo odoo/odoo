@@ -45,7 +45,7 @@
         <record id="action_client_messaging_menu" model="ir.actions.client">
             <field name="name">Open Messaging Menu</field>
             <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('mail.mail_feeds_main')}"/>
+            <field name="params" eval="{'menu_id': ref('mail.mail_thread_menu_root')}"/>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_messaging_menu"/>

@@ -86,7 +86,7 @@ class test_portal(TestMail):
     @mute_logger('openerp.addons.mail.models.mail_mail', 'openerp.models')
     def test_inbox_redirection_portal(self):
         group_pigs = self.group_pigs
-        port_act_id = self.ref('portal.action_mail_inbox_feeds_portal')
+        port_act_id = self.ref('portal.mail_message_action_inbox_portal')
         # Data: post a message on pigs
         msg = group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id, self.user_portal.partner_id.id], type='comment', subtype='mail.mt_comment')
         # Chell has no read access to pigs -> should redirect to Portal Inbox

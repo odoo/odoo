@@ -497,7 +497,7 @@ class MailThread(models.AbstractModel):
         """ When redirecting towards the Inbox, choose which action xml_id has
             to be fetched. This method is meant to be inherited, at least in portal
             because portal users have a different Inbox action than classic users. """
-        return 'mail.action_mail_inbox_feeds'
+        return 'mail.mail_message_action_inbox'
 
     @api.model
     def message_redirect_action(self):

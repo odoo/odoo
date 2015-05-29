@@ -11,7 +11,7 @@
 
         <menuitem name="Messaging" id="portal_messages" parent="portal_menu" sequence="10" groups="base.group_portal"/>
 
-        <record model="ir.actions.act_window" id="action_mail_inbox_feeds_portal">
+        <record model="ir.actions.act_window" id="mail_message_action_inbox_portal">
             <field name="name">Inbox</field>
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
@@ -33,7 +33,7 @@
         </record>
 
         <menuitem name="Inbox" id="portal_inbox" parent="portal_messages"
-            action="action_mail_inbox_feeds_portal" sequence="10" groups="base.group_portal"/>
+            action="mail_message_action_inbox_portal" sequence="10" groups="base.group_portal"/>
 
         <!--
             Create menu items that we'll leave empty for now - they'll be

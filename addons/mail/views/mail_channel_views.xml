@@ -2,15 +2,16 @@
 <openerp>
     <data>
         <!-- this record will be dynamically adapted to each new menu created -->
-        <record model="ir.actions.act_window" id="action_mail_group_feeds">
+        <record id="mail_channel_action_timeline" model="ir.actions.act_window">
             <field name="name">Discussion Group</field>
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">timeline</field>
         </record>
 
-        <!-- Group Kanban View  !-->
-        <record model="ir.ui.view" id="view_group_kanban">
+        <!-- mail.channel -->
+
+        <record id="mail_channel_view_kanban" model="ir.ui.view">
             <field name="name">mail.channel.kanban</field>
             <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
@@ -57,8 +58,7 @@
             </field>
         </record>
 
-        <!-- Group Form View !-->
-        <record  model="ir.ui.view" id="view_group_form">
+        <record id="mail_channel_view_form" model="ir.ui.view">
             <field name="name">mail.channel.form</field>
             <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
@@ -114,8 +114,7 @@
             </field>
         </record>
 
-        <!-- Group List View !-->
-        <record  model="ir.ui.view" id="view_group_tree">
+        <record id="mail_channel_view_tree" model="ir.ui.view">
             <field name="name">mail.channel.tree</field>
             <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
@@ -126,8 +125,7 @@
             </field>
         </record>
 
-        <!-- Group Search View !-->
-        <record  model="ir.ui.view" id="view_group_search">
+        <record id="mail_channel_view_search" model="ir.ui.view">
             <field name="name">mail.channel.search</field>
             <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
@@ -138,17 +136,22 @@
             </field>
         </record>
 
-        <!-- group record !-->
-        <record id="action_view_groups" model="ir.actions.act_window">
+        <record id="mail_channel_action_view" model="ir.actions.act_window">
             <field name="name">Join a group</field>
             <field name="res_model">mail.channel</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="search_view_id" ref="view_group_search"/>
+            <field name="search_view_id" ref="mail_channel_view_search"/>
         </record>
 
         <!-- left-side menu: Groups !-->
-        <menuitem id="mail_group_root" parent="mail_feeds_main" sequence="2" name="Channel"/>
-        <menuitem id="mail_allgroups" parent="mail_group_root" sequence="100" action="action_view_groups"/>
+        <menuitem id="mail_channel_menu_root" parent="mail_thread_menu_root" sequence="2" name="Channels"/>
+        <menuitem id="mail_channel_menu_all" parent="mail_channel_menu_root" sequence="100" action="mail_channel_action_view"/>
+
+        <!-- settings !-->
+        <menuitem id="mail_channel_menu_settings" parent="base.menu_email" sequence="90"
+            name="Channels" action="mail_channel_action_view"
+            groups="base.group_no_one"/>
+
     </data>
 </openerp>

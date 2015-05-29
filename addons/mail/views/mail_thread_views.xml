@@ -2,15 +2,11 @@
 <openerp>
 <data>
     
-    <menuitem 
-      id="mail.mail_feeds_main"
-      name="Chat"
-      icon="fa-envelope"
-      groups="base.group_user"
-      sequence="1"
-      web_icon="mail,static/description/icon.png"/>
+    <menuitem id="mail.mail_thread_menu_root" name="Chat"
+              icon="fa-envelope" web_icon="mail,static/description/icon.png"
+              groups="base.group_user" sequence="1"/>
 
-    <record model="ir.actions.act_window" id="action_mail_inbox_feeds">
+    <record id="mail_message_action_inbox" model="ir.actions.act_window">
         <field name="name">Inbox</field>
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
@@ -30,8 +26,8 @@
         ]</field>
     </record>
 
-    <menuitem id="mail.mail_inbox" name="Inbox" action="action_mail_inbox_feeds"
-              parent="mail.mail_feeds_main" groups="base.group_user" sequence="1"/>
+    <menuitem id="mail.mail_inbox" name="Inbox" action="mail_message_action_inbox"
+              parent="mail.mail_thread_menu_root" groups="base.group_user" sequence="1"/>
     
     <record id="action_mail_redirect" model="ir.actions.server">
         <field name="name">Mail Redirection (Document / Inbox)</field>
