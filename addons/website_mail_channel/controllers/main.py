@@ -16,7 +16,7 @@ class MailGroup(http.Controller):
     def _get_archives(self, group_id):
         MailMessage = request.registry['mail.message']
         groups = MailMessage.read_group(
-            request.cr, request.uid, [('model', '=', 'mail.group'), ('res_id', '=', group_id)], ['subject', 'date'],
+            request.cr, request.uid, [('model', '=', 'mail.channel'), ('res_id', '=', group_id)], ['subject', 'date'],
             groupby="date", orderby="date desc", context=request.context)
         for group in groups:
             begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
@@ -28,7 +28,7 @@ class MailGroup(http.Controller):
     @http.route("/groups", type='http', auth="public", website=True)
     def view(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        group_obj = request.registry.get('mail.group')
+        group_obj = request.registry.get('mail.channel')
         mail_message_obj = request.registry.get('mail.message')
         group_ids = group_obj.search(cr, uid, [('alias_id', '!=', False), ('alias_id.alias_name', '!=', False)], context=context)
         groups = group_obj.browse(cr, uid, group_ids, context)
@@ -37,7 +37,7 @@ class MailGroup(http.Controller):
         month_date = datetime.datetime.today() - relativedelta.relativedelta(months=1)
         result = mail_message_obj.read_group(
             cr, SUPERUSER_ID,
-            [('model', '=', 'mail.group'), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
+            [('model', '=', 'mail.channel'), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
             [], ['res_id'],
             context=context)
         result = dict([(x['res_id'], x['res_id_count']) for x in result])
@@ -47,13 +47,13 @@ class MailGroup(http.Controller):
             group_data[group.id] = {'monthly_message_nbr': result.get(group.id, 0)}
 
         values = {'groups': groups, 'group_data': group_data}
-        return request.website.render('website_mail_channel.mail_groups', values)
+        return request.website.render('website_mail_channel.mail_channels', values)
 
     @http.route(["/groups/subscription/"], type='json', auth="user")
     def subscription(self, group_id=0, action=False, **post):
         """ TDE FIXME: seems dead code """
         cr, uid, context = request.cr, request.uid, request.context
-        group_obj = request.registry.get('mail.group')
+        group_obj = request.registry.get('mail.channel')
         if action:
             group_obj.message_subscribe_users(cr, uid, [group_id], context=context)
         else:
@@ -61,14 +61,14 @@ class MailGroup(http.Controller):
         return []
 
     @http.route([
-        "/groups/<model('mail.group'):group>",
-        "/groups/<model('mail.group'):group>/page/<int:page>"
+        "/groups/<model('mail.channel'):group>",
+        "/groups/<model('mail.channel'):group>/page/<int:page>"
     ], type='http', auth="public", website=True)
     def thread_headers(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         thread_obj = request.registry.get('mail.message')
 
-        domain = [('model', '=', 'mail.group'), ('res_id', '=', group.id)]
+        domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id)]
         if mode == 'thread':
             domain += [('parent_id', '=', False)]
         if date_begin and date_end:
@@ -97,15 +97,15 @@ class MailGroup(http.Controller):
         return request.website.render('website_mail_channel.group_messages', values)
 
     @http.route([
-        '''/groups/<model('mail.group'):group>/<model('mail.message', "[('model','=','mail.group'), ('res_id','=',group[0])]"):message>''',
+        '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
     ], type='http', auth="public", website=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Message = request.registry['mail.message']
         if mode == 'thread':
-            base_domain = [('model', '=', 'mail.group'), ('res_id', '=', group.id), ('parent_id', '=', message.parent_id and message.parent_id.id or False)]
+            base_domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id), ('parent_id', '=', message.parent_id and message.parent_id.id or False)]
         else:
-            base_domain = [('model', '=', 'mail.group'), ('res_id', '=', group.id)]
+            base_domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id)]
         next_message = None
         next_message_ids = Message.search(cr, uid, base_domain + [('date', '<', message.date)], order="date DESC", limit=1, context=context)
         if next_message_ids:
@@ -128,7 +128,7 @@ class MailGroup(http.Controller):
         return request.website.render('website_mail_channel.group_message', values)
 
     @http.route(
-        '''/groups/<model('mail.group'):group>/<model('mail.message', "[('model','=','mail.group'), ('res_id','=',group[0])]"):message>/get_replies''',
+        '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>/get_replies''',
         type='json', auth="public", methods=['POST'], website=True)
     def render_messages(self, group, message, **post):
         last_displayed_id = post.get('last_displayed_id')
@@ -148,7 +148,7 @@ class MailGroup(http.Controller):
         }
         return request.registry['ir.ui.view'].render(request.cr, request.uid, 'website_mail_channel.messages_short', values, engine='ir.qweb', context=request.context)
 
-    @http.route("/groups/<model('mail.group'):group>/get_alias_info", type='json', auth='public', website=True)
+    @http.route("/groups/<model('mail.channel'):group>/get_alias_info", type='json', auth='public', website=True)
     def get_alias_info(self, group, **post):
         return {
             'alias_name': group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain and '%s@%s' % (group.alias_id.alias_name, group.alias_id.alias_domain) or False

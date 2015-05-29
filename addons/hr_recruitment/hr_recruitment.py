@@ -501,13 +501,13 @@ class hr_applicant(osv.Model):
     def _broadcast_welcome(self, cr, uid, employee_id, context=None):
         """ Broadcast the welcome message to all users in the employee company. """
         IrModelData = self.pool['ir.model.data']
-        group_all_employees = IrModelData.xmlid_to_object(cr, uid, 'mail.group_all_employees', context=context)
+        group_all_employees = IrModelData.xmlid_to_object(cr, uid, 'mail.channel_all_employees', context=context)
         template_new_employee = IrModelData.xmlid_to_object(cr, uid, 'hr_recruitment.hr_welcome_new_employee', context=context)
         if template_new_employee:
             MailTemplate = self.pool['mail.template']
             body_html = MailTemplate.render_template(cr, uid, template_new_employee.body_html, 'hr.employee', employee_id, context=context)
             subject = MailTemplate.render_template(cr, uid, template_new_employee.subject, 'hr.employee', employee_id, context=context)
-            self.pool['mail.group'].message_post(cr, uid, [group_all_employees.id],
+            self.pool['mail.channel'].message_post(cr, uid, [group_all_employees.id],
                 body=body_html, subject=subject,
                 subtype='mail.mt_comment', context=context)
         return True

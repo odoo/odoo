@@ -48,7 +48,7 @@ class TestMailFeatures(TestMail):
 
     def test_mail_notification_url_user_document(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        mail = self.env['mail.mail'].create({'state': 'exception', 'model': 'mail.group', 'res_id': self.group_pigs.id})
+        mail = self.env['mail.mail'].create({'state': 'exception', 'model': 'mail.channel', 'res_id': self.group_pigs.id})
         url = mail._get_partner_access_link(self.user_employee.partner_id)
         self.assertIn(base_url, url)
         self.assertIn('db=%s' % self.env.cr.dbname, url,
@@ -57,7 +57,7 @@ class TestMailFeatures(TestMail):
                       'notification email: link should contain the redirect action')
         self.assertIn('login=%s' % self.user_employee.login, url,
                       'notification email: link should contain the user login')
-        self.assertIn('model=mail.group', url,
+        self.assertIn('model=mail.channel', url,
                       'notification email: link should contain the model when having not notification email on a record')
         self.assertIn('res_id=%s' % self.group_pigs.id, url,
                       'notification email: link should contain the res_id when having not notification email on a record')
@@ -78,7 +78,7 @@ class TestMailFeatures(TestMail):
     def test_inbox_redirection_document(self):
         """ Inbox redirection: document + read access: Doc """
         action = self.env['mail.thread'].with_context({
-            'params': {'model': 'mail.group', 'res_id': self.group_pigs.id}
+            'params': {'model': 'mail.channel', 'res_id': self.group_pigs.id}
         }).sudo(self.user_employee).message_redirect_action()
         self.assertEqual(
             action.get('type'), 'ir.actions.act_window',
@@ -127,7 +127,7 @@ class TestMailFeatures(TestMail):
         """ Inbox redirection: document without read access: Inbox """
         inbox_act_id = self.ref('mail.action_mail_inbox_feeds')
         action = self.env['mail.thread'].with_context({
-            'params': {'model': 'mail.group', 'res_id': self.group_pigs.id}
+            'params': {'model': 'mail.channel', 'res_id': self.group_pigs.id}
         }).sudo(self.user_public).message_redirect_action()
         self.assertEqual(
             action.get('type'), 'ir.actions.act_window',
@@ -239,8 +239,8 @@ class TestMessagePost(TestMail):
         self.assertEqual(msg.partner_ids, self.partner_1 | self.partner_2)
         self.assertEqual(msg.notified_partner_ids, self.partner_1 | self.partner_2 | self.user_employee_2.partner_id)
         # attachments
-        self.assertEqual(set(msg.attachment_ids.mapped('res_model')), set(['mail.group']),
-                         'message_post: all atttachments should be linked to the mail.group model')
+        self.assertEqual(set(msg.attachment_ids.mapped('res_model')), set(['mail.channel']),
+                         'message_post: all atttachments should be linked to the mail.channel model')
         self.assertEqual(set(msg.attachment_ids.mapped('res_id')), set([self.group_pigs.id]),
                          'message_post: all atttachments should be linked to the pigs group')
         self.assertEqual(set([x.decode('base64') for x in msg.attachment_ids.mapped('datas')]),
@@ -292,7 +292,7 @@ class TestMessagePost(TestMail):
         self.assertEqual(msg.parent_id.id, parent_msg.id)
         self.assertEqual(msg.notified_partner_ids, self.partner_1)
         self.assertEqual(parent_msg.notified_partner_ids, self.partner_1)
-        self.assertTrue(all('openerp-%d-mail.group' % self.group_pigs.id in m['references'] for m in self._mails))
+        self.assertTrue(all('openerp-%d-mail.channel' % self.group_pigs.id in m['references'] for m in self._mails))
         new_msg = self.group_pigs.sudo(self.user_employee).message_post(
             body=_body, subject=_subject,
             message_type='comment', subtype='mt_comment', parent_id=msg.id)
@@ -304,14 +304,14 @@ class TestMessagePost(TestMail):
     def test_message_compose(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
-            'default_model': 'mail.group',
+            'default_model': 'mail.channel',
             'default_res_id': self.group_pigs.id,
         }).sudo(self.user_employee).create({
             'body': '<p>Test Body</p>',
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
         self.assertEqual(composer.composition_mode,  'comment')
-        self.assertEqual(composer.model, 'mail.group')
+        self.assertEqual(composer.model, 'mail.channel')
         self.assertEqual(composer.subject, 'Re: %s' % self.group_pigs.name)
         self.assertEqual(composer.record_name, self.group_pigs.name)
 
@@ -324,7 +324,7 @@ class TestMessagePost(TestMail):
             'default_parent_id': message.id
         }).sudo(self.user_employee).create({})
 
-        self.assertEqual(composer.model, 'mail.group')
+        self.assertEqual(composer.model, 'mail.channel')
         self.assertEqual(composer.res_id, self.group_pigs.id)
         self.assertEqual(composer.parent_id, message)
         self.assertEqual(composer.subject, 'Re: %s' % self.group_pigs.name)
@@ -335,7 +335,7 @@ class TestMessagePost(TestMail):
     def test_message_compose_mass_mail(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
-            'default_model': 'mail.group',
+            'default_model': 'mail.channel',
             'default_res_id': False,
             'active_ids': [self.group_pigs.id, self.group_public.id]
         }).sudo(self.user_employee).create({
@@ -379,7 +379,7 @@ class TestMessagePost(TestMail):
         # self.assertIn(message2.id, messages.ids, 'compose wizard: Bird did not receive its mass mailing message')
 
         # check followers ?
-        # Test: mail.group followers: author not added as follower in mass mail mode
+        # Test: mail.channel followers: author not added as follower in mass mail mode
         # self.assertEqual(set(group_pigs.message_follower_ids.ids), set([self.partner_admin_id, p_b.id, p_c.id, p_d.id]),
         #                 'compose wizard: mail_post_autofollow and mail_create_nosubscribe context keys not correctly taken into account')
         # self.assertEqual(set(group_bird.message_follower_ids.ids), set([self.partner_admin_id]),
@@ -389,7 +389,7 @@ class TestMessagePost(TestMail):
     def test_message_compose_mass_mail_active_domain(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
-            'default_model': 'mail.group',
+            'default_model': 'mail.channel',
             'active_ids': [self.group_pigs.id],
             'active_domain': [('name', 'in', ['%s' % self.group_pigs.name, '%s' % self.group_public.name])],
         }).sudo(self.user_employee).create({

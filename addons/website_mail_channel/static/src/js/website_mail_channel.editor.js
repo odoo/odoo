@@ -18,11 +18,11 @@ snippet_editor.options.subscribe = snippet_editor.Option.extend({
             window_title: _t("Add a Subscribe Button"),
             select: _t("Discussion List"),
             init: function (field) {
-                return new Model('mail.group')
+                return new Model('mail.channel')
                         .call('name_search', ['', [['public','=','public']]], { context: website.get_context() });
             },
-        }).then(function (mail_group_id) {
-            self.$target.attr("data-id", mail_group_id);
+        }).then(function (mail_channel_id) {
+            self.$target.attr("data-id", mail_channel_id);
         });
     },
     drop_and_build_snippet: function() {

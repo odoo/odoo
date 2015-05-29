@@ -8,16 +8,16 @@ class TestMailFollowers(TestMail):
     def setUp(self):
         super(TestMailFollowers, self).setUp()
         Subtype = self.env['mail.message.subtype']
-        self.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.group'})
+        self.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.channel'})
         self.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'crm.lead'})
         self.mt_al_def = Subtype.create({'name': 'mt_al_def', 'default': True, 'res_model': False})
-        self.mt_mg_nodef = Subtype.create({'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.group'})
+        self.mt_mg_nodef = Subtype.create({'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.channel'})
         self.mt_al_nodef = Subtype.create({'name': 'mt_al_nodef', 'default': False, 'res_model': False})
-        self.default_group_subtypes = Subtype.search([('default', '=', True), '|', ('res_model', '=', 'mail.group'), ('res_model', '=', False)])
+        self.default_group_subtypes = Subtype.search([('default', '=', True), '|', ('res_model', '=', 'mail.channel'), ('res_model', '=', False)])
 
     def test_message_follower_ids_commands(self):
         # Create some dummy data on other groups to ensure they are not altered
-        group_dummy = self.env['mail.group'].with_context({'mail_create_nolog': True}).create({'name': 'Dummy group'})
+        group_dummy = self.env['mail.channel'].with_context({'mail_create_nolog': True}).create({'name': 'Dummy group'})
         self.env['mail.followers'].create({'res_model': 'mail.thread', 'res_id': group_dummy.id, 'partner_id': self.partner_1.id})
 
         # Add 2 followers through the (4, ID) command
@@ -51,7 +51,7 @@ class TestMailFollowers(TestMail):
         self.group_pigs.message_subscribe_users(user_ids=[self.user_employee.id])
         self.assertEqual(self.group_pigs.message_follower_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
-            ('res_model', '=', 'mail.group'),
+            ('res_model', '=', 'mail.channel'),
             ('res_id', '=', self.group_pigs.id),
             ('partner_id', '=', self.user_employee.partner_id.id)])
         self.assertEqual(len(follower), 1)
@@ -61,7 +61,7 @@ class TestMailFollowers(TestMail):
         self.group_pigs.sudo(self.user_employee).message_subscribe_users(subtype_ids=[self.mt_mg_nodef.id])
         self.assertEqual(self.group_pigs.message_follower_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
-            ('res_model', '=', 'mail.group'),
+            ('res_model', '=', 'mail.channel'),
             ('res_id', '=', self.group_pigs.id),
             ('partner_id', '=', self.user_employee.partner_id.id)])
         self.assertEqual(len(follower), 1)
@@ -71,7 +71,7 @@ class TestMailFollowers(TestMail):
         self.group_pigs.sudo(self.user_employee).message_subscribe_users(subtype_ids=[self.mt_mg_nodef.id])
         self.assertEqual(self.group_pigs.message_follower_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
-            ('res_model', '=', 'mail.group'),
+            ('res_model', '=', 'mail.channel'),
             ('res_id', '=', self.group_pigs.id),
             ('partner_id', '=', self.user_employee.partner_id.id)])
         self.assertEqual(len(follower), 1)
@@ -80,7 +80,7 @@ class TestMailFollowers(TestMail):
         self.group_pigs.sudo(self.user_employee).message_subscribe_users(subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(self.group_pigs.message_follower_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
-            ('res_model', '=', 'mail.group'),
+            ('res_model', '=', 'mail.channel'),
             ('res_id', '=', self.group_pigs.id),
             ('partner_id', '=', self.user_employee.partner_id.id)])
         self.assertEqual(len(follower), 1)

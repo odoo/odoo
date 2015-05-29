@@ -93,7 +93,7 @@ class publisher_warranty_contract(AbstractModel):
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             IMD = self.pool['ir.model.data']
             user = self.pool['res.users'].browse(cr, SUPERUSER_ID, SUPERUSER_ID)
-            poster = IMD.xmlid_to_object(cr, SUPERUSER_ID, 'mail.group_all_employees', context=context)
+            poster = IMD.xmlid_to_object(cr, SUPERUSER_ID, 'mail.channel_all_employees', context=context)
             if not (poster and poster.exists()):
                 if not user.exists():
                     return True

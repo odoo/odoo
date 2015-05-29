@@ -11,8 +11,8 @@
 
         <!-- Group Kanban View  !-->
         <record model="ir.ui.view" id="view_group_kanban">
-            <field name="name">mail.group.kanban</field>
-            <field name="model">mail.group</field>
+            <field name="name">mail.channel.kanban</field>
+            <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
@@ -32,7 +32,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="{record.message_is_follower.raw_value} oe_group_vignette oe_semantic_html_override">
                                 <div class="oe_group_image">
-                                    <a type="open"><img t-att-src="kanban_image('mail.group', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
+                                    <a type="open"><img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="open"><field name="name"/></a></h4>
@@ -59,12 +59,12 @@
 
         <!-- Group Form View !-->
         <record  model="ir.ui.view" id="view_group_form">
-            <field name="name">mail.group.form</field>
-            <field name="model">mail.group</field>
+            <field name="name">mail.channel.form</field>
+            <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Group Form">
-                    <sheet class="openerp_mail_group_sheet">
+                    <sheet class="openerp_mail_channel_sheet">
                         <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_small"}'/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
@@ -116,8 +116,8 @@
 
         <!-- Group List View !-->
         <record  model="ir.ui.view" id="view_group_tree">
-            <field name="name">mail.group.tree</field>
-            <field name="model">mail.group</field>
+            <field name="name">mail.channel.tree</field>
+            <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Groups">
@@ -128,8 +128,8 @@
 
         <!-- Group Search View !-->
         <record  model="ir.ui.view" id="view_group_search">
-            <field name="name">mail.group.search</field>
-            <field name="model">mail.group</field>
+            <field name="name">mail.channel.search</field>
+            <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <search string="Search Groups">
@@ -141,7 +141,7 @@
         <!-- group record !-->
         <record id="action_view_groups" model="ir.actions.act_window">
             <field name="name">Join a group</field>
-            <field name="res_model">mail.group</field>
+            <field name="res_model">mail.channel</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_group_search"/>

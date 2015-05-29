@@ -77,14 +77,14 @@ class TestTracking(TestMail):
             elif 'group_public_id' in init_values and not record.group_public_id:
                 return 'mail.mt_group_public_unset'
             return False
-        self.registry('mail.group')._patch_method('_track_subtype', _track_subtype)
+        self.registry('mail.channel')._patch_method('_track_subtype', _track_subtype)
 
         visibility = {
             'public': 'onchange',
             'name': 'always',
             'group_public_id': 'onchange'
         }
-        cls = type(self.env['mail.group'])
+        cls = type(self.env['mail.channel'])
         for key in visibility:
             self.assertFalse(hasattr(getattr(cls, key), 'track_visibility'))
             getattr(cls, key).track_visibility = visibility[key]

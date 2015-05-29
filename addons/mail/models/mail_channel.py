@@ -5,10 +5,10 @@ from openerp.exceptions import UserError
 
 
 class MailGroup(models.Model):
-    """ A mail_group is a collection of users sharing messages in a discussion
+    """ A mail.channel is a collection of users sharing messages in a discussion
         group. The group mechanics are based on the followers. """
     _description = 'Discussion group'
-    _name = 'mail.group'
+    _name = 'mail.channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
     _inherit = ['mail.thread']
@@ -30,8 +30,8 @@ class MailGroup(models.Model):
     group_public_id = fields.Many2one('res.groups', string='Authorized Group',
                                       default=lambda self: self.env.ref('base.group_user'))
     group_ids = fields.Many2many(
-        'res.groups', rel='mail_group_res_group_rel',
-        id1='mail_group_id', id2='groups_id', string='Auto Subscription',
+        'res.groups', rel='mail_channel_res_group_rel',
+        id1='mail_channel_id', id2='groups_id', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
@@ -79,8 +79,8 @@ class MailGroup(models.Model):
         # Create action window for this group and link the menu to it
         inbox_ref = self.env.ref('mail.action_mail_group_feeds')
         search_ref = self.env.ref('mail.view_message_search')
-        act_domain = [('model', '=', 'mail.group'), ('res_id', '=', group.id)]
-        act_context = {'default_model': 'mail.group',
+        act_domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id)]
+        act_context = {'default_model': 'mail.channel',
                        'default_res_id': group.id,
                        'options': {'view_mailbox': False,
                                    'view_inbox': True,
@@ -97,7 +97,7 @@ class MailGroup(models.Model):
                                                     'res_model': act_res_model,
                                                     'search_view_id': act_search_view_id,
                                                     'name': vals['name']})
-        menu.write({'action': 'ir.actions.act_window,%d' % new_action.id, 'mail_group_id': group.id})
+        menu.write({'action': 'ir.actions.act_window,%d' % new_action.id, 'mail_channel_id': group.id})
 
         if vals.get('group_ids'):
             group._subscribe_users()
@@ -108,15 +108,15 @@ class MailGroup(models.Model):
         aliases = self.mapped('alias_id')
         menus = self.mapped('menu_id')
 
-        # Delete mail_group
+        # Delete mail.channel
         try:
-            all_emp_group = self.env.ref('mail.group_all_employees')
+            all_emp_group = self.env.ref('mail.channel_all_employees')
         except ValueError:
             all_emp_group = None
         if all_emp_group and all_emp_group in self:
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
         res = super(MailGroup, self).unlink()
-        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
+        # Cascade-delete mail aliases as well, as they should not exist without the mail.channel.
         aliases.sudo().unlink()
         # Cascade-delete menu entries as well
         menus.sudo().unlink()
@@ -148,9 +148,9 @@ class MailGroup(models.Model):
     _generate_header_description = _get_header
 
     def _subscribe_users(self):
-        for mail_group in self:
-            partner_ids = mail_group.mapped('group_ids').mapped('users').mapped('partner_id')
-            mail_group.message_subscribe(partner_ids.ids)
+        for mail_channel in self:
+            partner_ids = mail_channel.mapped('group_ids').mapped('users').mapped('partner_id')
+            mail_channel.message_subscribe(partner_ids.ids)
 
     @api.multi
     def action_follow(self):

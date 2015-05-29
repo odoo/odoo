@@ -15,16 +15,16 @@ class MailMail(osv.Model):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         mail = self.browse(cr, uid, ids[0], context=context)
 
-        if mail.model == 'mail.group' and mail.res_id:
+        if mail.model == 'mail.channel' and mail.res_id:
             # no super() call on purpose, no private links that could be quoted!
-            group = self.pool['mail.group'].browse(cr, uid, mail.res_id, context=context)
+            channel = self.pool['mail.channel'].browse(cr, uid, mail.res_id, context=context)
             base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
             vals = {
                 'maillist': _('Mailing-List'),
                 'post_to': _('Post to'),
                 'unsub': _('Unsubscribe'),
-                'mailto': 'mailto:%s@%s' % (group.alias_name, group.alias_domain),
-                'group_url': '%s/groups/%s' % (base_url, slug(group)),
+                'mailto': 'mailto:%s@%s' % (channel.alias_name, channel.alias_domain),
+                'group_url': '%s/groups/%s' % (base_url, slug(channel)),
                 'unsub_url': '%s/groups?unsubscribe' % (base_url,),
             }
             footer = """_______________________________________________

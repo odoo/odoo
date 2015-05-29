@@ -15,7 +15,7 @@ class TestMail(common.SavepointCase):
     def format_and_process(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
                            extra='', email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>',
                            cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
-                           model=None, target_model='mail.group', target_field='name'):
+                           model=None, target_model='mail.channel', target_field='name'):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
         self.env['mail.thread'].message_process(model, mail)
@@ -115,7 +115,7 @@ class TestMail(common.SavepointCase):
             'notify_email': 'always'})
 
         # Create test groups without followers and messages by default
-        TestMailGroup = cls.env['mail.group'].with_context({
+        TestMailGroup = cls.env['mail.channel'].with_context({
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True
         })
@@ -148,17 +148,17 @@ class TestMail(common.SavepointCase):
             'group_public_id': user_group_portal.id}
         ).with_context({'mail_create_nosubscribe': False})
 
-        # groups@.. will cause the creation of new mail groups
-        cls.mail_group_model = cls.env['ir.model'].search([('model', '=', 'mail.group')], limit=1)
+        # groups@.. will cause the creation of new mail channels
+        cls.mail_channel_model = cls.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1)
         cls.alias = cls.env['mail.alias'].create({
             'alias_name': 'groups',
             'alias_user_id': False,
-            'alias_model_id': cls.mail_group_model.id,
+            'alias_model_id': cls.mail_channel_model.id,
             'alias_contact': 'everyone'})
 
         # Set a first message on public group to test update and hierarchy
         cls.fake_email = cls.env['mail.message'].create({
-            'model': 'mail.group',
+            'model': 'mail.channel',
             'res_id': cls.group_public.id,
             'subject': 'Public Discussion',
             'message_type': 'email',

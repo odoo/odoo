@@ -14,7 +14,7 @@ class test_portal(TestMail):
         # Do: Chell creates a mail.compose.message record on Pigs, because he uses the wizard
         compose = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
-            'default_model': 'mail.group',
+            'default_model': 'mail.channel',
             'default_res_id': self.group_portal.id
         }).sudo(self.user_portal).create({
             'subject': 'Subject',
@@ -41,7 +41,7 @@ class test_portal(TestMail):
         # Do: create a mail_wizard_invite, validate it
         self._init_mock_build_email()
         mail_invite = self.env['mail.wizard.invite'].with_context({
-            'default_res_model': 'mail.group',
+            'default_res_model': 'mail.channel',
             'default_res_id': group_pigs.id}).create({
             'partner_ids': [(4, partner_carine.id)], 'send_mail': True})
         mail_invite.add_followers()

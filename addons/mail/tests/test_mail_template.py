@@ -30,7 +30,7 @@ class TestMailTemplate(TestMail):
         self.email_2 = 'test2@example.com'
         self.email_3 = self.partner_1.email
         self.email_template = self.env['mail.template'].create({
-            'model_id': self.env['ir.model'].search([('model', '=', 'mail.group')], limit=1).id,
+            'model_id': self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1).id,
             'name': 'Pigs Template',
             'subject': '${object.name}',
             'body_html': '${object.description}',
@@ -43,13 +43,13 @@ class TestMailTemplate(TestMail):
     def test_composer_template_onchange(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
-            'default_model': 'mail.group',
+            'default_model': 'mail.channel',
             'default_res_id': self.group_pigs.id,
             'default_use_template': False,
             'default_template_id': False
         }).create({'subject': 'Forget me subject', 'body': 'Dummy body'})
 
-        values = composer.onchange_template_id(self.email_template.id, 'comment', 'mail.group', self.group_pigs.id)['value']
+        values = composer.onchange_template_id(self.email_template.id, 'comment', 'mail.channel', self.group_pigs.id)['value']
         recipients = self.env['res.partner'].browse(values['partner_ids'])
         attachments = self.env['ir.attachment'].browse(values['attachment_ids'])
         test_recipients = self.env['res.partner'].search([('email', 'in', ['test1@example.com', 'test2@example.com'])]) | self.partner_1 | self.partner_2 | self.user_employee.partner_id
@@ -66,7 +66,7 @@ class TestMailTemplate(TestMail):
     def test_composer_template_send(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
-            'default_model': 'mail.group',
+            'default_model': 'mail.channel',
             'default_res_id': self.group_pigs.id,
             'default_use_template': False,
             'default_template_id': self.email_template.id,
@@ -78,7 +78,7 @@ class TestMailTemplate(TestMail):
         self.assertEqual(message.body, '<p>%s</p>' % self.group_pigs.description)
         self.assertEqual(message.partner_ids, test_recipients)
         self.assertEqual(message.notified_partner_ids, test_recipients)
-        self.assertEqual(set(message.attachment_ids.mapped('res_model')), set(['mail.group']))
+        self.assertEqual(set(message.attachment_ids.mapped('res_model')), set(['mail.channel']))
         self.assertEqual(set(message.attachment_ids.mapped('res_id')), set([self.group_pigs.id]))
         # self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
         #     'mail.message attachment name / data incorrect')
@@ -88,12 +88,12 @@ class TestMailTemplate(TestMail):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
             'default_notify': True,
-            'default_model': 'mail.group',
+            'default_model': 'mail.channel',
             'default_res_id': self.group_pigs.id,
             'default_template_id': self.email_template.id,
             'active_ids': [self.group_pigs.id, self.group_public.id]
         }).create({})
-        values = composer.onchange_template_id(self.email_template.id, 'mass_mail', 'mail.group', self.group_pigs.id)['value']
+        values = composer.onchange_template_id(self.email_template.id, 'mass_mail', 'mail.channel', self.group_pigs.id)['value']
         composer.write(values)
         composer.send_mail()
 
@@ -117,15 +117,15 @@ class TestMailTemplate(TestMail):
     def test_message_compose_template_save(self):
         self.env['mail.compose.message'].with_context(
             {'default_composition_mode': 'comment',
-            'default_model': 'mail.group',
+            'default_model': 'mail.channel',
             'default_res_id': self.group_pigs.id,
             'active_ids': [self.group_pigs.id, self.group_public.id]
         }).create({
             'subject': 'Forget me subject',
             'body': '<p>Dummy body</p>'
-        }).with_context({'default_model': 'mail.group'}).save_as_template()
+        }).with_context({'default_model': 'mail.channel'}).save_as_template()
         # Test: email_template subject, body_html, model
-        last_template = self.env['mail.template'].search([('model', '=', 'mail.group'), ('subject', '=', 'Forget me subject')], limit=1)
+        last_template = self.env['mail.template'].search([('model', '=', 'mail.channel'), ('subject', '=', 'Forget me subject')], limit=1)
         self.assertEqual(last_template.body_html, '<p>Dummy body</p>', 'email_template incorrect body_html')
 
     def test_add_context_action(self):

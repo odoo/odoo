@@ -159,9 +159,9 @@ class Notification(models.Model):
 
         # compute email body (signature, company data)
         body_html = message.body
-        # add user signature except for mail groups, where users are usually adding their own signatures already
+        # add user signature except for mail.channels, where users are usually adding their own signatures already
         user_id = message.author_id and message.author_id.user_ids and message.author_id.user_ids[0] and message.author_id.user_ids[0].id or None
-        signature_company = self.get_signature_footer(user_id, res_model=message.model, res_id=message.res_id, user_signature=(user_signature and message.model != 'mail.group'))
+        signature_company = self.get_signature_footer(user_id, res_model=message.model, res_id=message.res_id, user_signature=(user_signature and message.model != 'mail.channel'))
         if signature_company:
             body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 

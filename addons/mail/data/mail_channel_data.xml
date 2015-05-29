@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
 
-        <record model="mail.group" id="group_all_employees">
+        <record model="mail.channel" id="channel_all_employees">
             <field name="name">Whole Company</field>
             <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="description">General announces for all employees.</field>
@@ -10,8 +10,8 @@
 
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification" context="{'mail_notify_noemail': True}">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="mail.channel_all_employees"/>
             <field name="message_type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Welcome to Odoo!</field>

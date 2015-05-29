@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import osv
-from openerp import tools
-from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.addons.website.models.website import slug
 
 
 class MailGroup(osv.Model):
-    _inherit = 'mail.group'
+    _inherit = 'mail.channel'
 
     def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
         res = super(MailGroup, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)

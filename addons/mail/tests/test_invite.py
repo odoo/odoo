@@ -9,7 +9,7 @@ class TestInvite(TestMail):
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_invite_email(self):
         mail_invite = self.env['mail.wizard.invite'].with_context({
-            'default_res_model': 'mail.group',
+            'default_res_model': 'mail.channel',
             'default_res_id': self.group_pigs.id
         }).sudo(self.user_employee.id).create({
             'partner_ids': [(4, self.user_portal.partner_id.id), (4, self.user_employee_2.partner_id.id)],

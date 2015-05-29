@@ -16,7 +16,7 @@ class TestMailMessage(TestMail):
             'datas_fname': 'doc.txt'})
         self.message = self.env['mail.message'].create({
             'body': 'My Body',
-            'model': 'mail.group',
+            'model': 'mail.channel',
             'res_id': self.group_private.id,
             'attachment_ids': [(4, self.attachment.id)],
         })
@@ -65,10 +65,10 @@ class TestMailMessage(TestMail):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.group',
+            'model': 'mail.channel',
             'res_id': self.group_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.group' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
@@ -78,10 +78,10 @@ class TestMailMessage(TestMail):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.group',
+            'model': 'mail.channel',
             'res_id': self.group_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.group' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self._company_name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
 
@@ -92,21 +92,21 @@ class TestMailMessage(TestMail):
         self.env['ir.config_parameter'].set_param('mail.catchall.alias', alias_catchall)
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.group',
+            'model': 'mail.channel',
             'res_id': self.group_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.group' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self._company_name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.group',
+            'model': 'mail.channel',
             'res_id': self.group_pigs.id,
             'no_auto_thread': True,
         })
         self.assertIn('reply_to', msg.message_id)
-        self.assertNotIn('mail.group', msg.message_id)
+        self.assertNotIn('mail.channel', msg.message_id)
         self.assertNotIn('-%d-' % self.group_pigs.id, msg.message_id)
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
@@ -119,18 +119,18 @@ class TestMailMessage(TestMail):
             'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
         msg3 = self.env['mail.message'].create({
             'subject': '_Test', 'body': 'A Pigs', 'subtype_id': False,
-            'model': 'mail.group', 'res_id': self.group_pigs.id})
+            'model': 'mail.channel', 'res_id': self.group_pigs.id})
         msg4 = self.env['mail.message'].create({
             'subject': '_Test', 'body': 'A+P Pigs', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.group', 'res_id': self.group_pigs.id,
+            'model': 'mail.channel', 'res_id': self.group_pigs.id,
             'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
         msg5 = self.env['mail.message'].create({
             'subject': '_Test', 'body': 'A+E Pigs', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.group', 'res_id': self.group_pigs.id,
+            'model': 'mail.channel', 'res_id': self.group_pigs.id,
             'partner_ids': [(6, 0, [self.user_employee.partner_id.id])]})
         msg6 = self.env['mail.message'].create({
             'subject': '_Test', 'body': 'A Birds', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.group', 'res_id': self.group_private.id})
+            'model': 'mail.channel', 'res_id': self.group_private.id})
         msg7 = self.env['mail.message'].sudo(self.user_employee).create({
             'subject': '_Test', 'body': 'B', 'subtype_id': self.ref('mail.mt_comment')})
         msg8 = self.env['mail.message'].sudo(self.user_employee).create({
@@ -190,7 +190,7 @@ class TestMailMessage(TestMail):
         self.message.sudo(self.user_employee).read()
 
     def test_mail_message_access_read_doc(self):
-        self.message.write({'model': 'mail.group', 'res_id': self.group_public.id})
+        self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id})
         # Test: Bert reads the message, ok because linked to a doc he is allowed to read
         self.message.sudo(self.user_employee).read()
 
@@ -198,34 +198,34 @@ class TestMailMessage(TestMail):
     def test_mail_message_access_create_crash_public(self):
         # Do: Bert creates a message on Pigs -> ko, no creation rights
         with self.assertRaises(AccessError):
-            self.env['mail.message'].sudo(self.user_public).create({'model': 'mail.group', 'res_id': self.group_pigs.id, 'body': 'Test'})
+            self.env['mail.message'].sudo(self.user_public).create({'model': 'mail.channel', 'res_id': self.group_pigs.id, 'body': 'Test'})
 
         # Do: Bert create a message on Jobs -> ko, no creation rights
         with self.assertRaises(AccessError):
-            self.env['mail.message'].sudo(self.user_public).create({'model': 'mail.group', 'res_id': self.group_public.id, 'body': 'Test'})
+            self.env['mail.message'].sudo(self.user_public).create({'model': 'mail.channel', 'res_id': self.group_public.id, 'body': 'Test'})
 
     @mute_logger('openerp.models')
     def test_mail_message_access_create_crash(self):
         # Do: Bert create a private message -> ko, no creation rights
         with self.assertRaises(except_orm):
-            self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.group', 'res_id': self.group_private.id, 'body': 'Test'})
+            self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
 
     @mute_logger('openerp.models')
     def test_mail_message_access_create_doc(self):
         # TODO Change the except_orm to Warning
         Message = self.env['mail.message'].sudo(self.user_employee)
         # Do: Raoul creates a message on Jobs -> ok, write access to the related document
-        Message.create({'model': 'mail.group', 'res_id': self.group_public.id, 'body': 'Test'})
+        Message.create({'model': 'mail.channel', 'res_id': self.group_public.id, 'body': 'Test'})
         # Do: Raoul creates a message on Priv -> ko, no write access to the related document
         with self.assertRaises(except_orm):
-            Message.create({'model': 'mail.group', 'res_id': self.group_private.id, 'body': 'Test'})
+            Message.create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
 
     def test_mail_message_access_create_private(self):
         self.env['mail.message'].sudo(self.user_employee).create({'body': 'Test'})
 
     def test_mail_message_access_create_reply(self):
         self.env['mail.notification'].create({'message_id': self.message.id, 'partner_id': self.user_employee.partner_id.id})
-        self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.group', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
+        self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
     def test_message_set_star(self):
         msg = self.group_pigs.message_post(body='My Body', subject='1')

@@ -26,7 +26,7 @@ class TestMailGroup(TestMail):
 
         # Create group: ko, no access rights
         with self.assertRaises(AccessError):
-            self.env['mail.group'].sudo(self.user_public).create({'name': 'Test'})
+            self.env['mail.channel'].sudo(self.user_public).create({'name': 'Test'})
 
         # Update group: ko, no access rights
         with self.assertRaises(AccessError):
@@ -43,7 +43,7 @@ class TestMailGroup(TestMail):
         self.group_pigs.sudo(self.user_employee).read()
 
         # Employee can create a group
-        self.env['mail.group'].sudo(self.user_employee).create({'name': 'Test'})
+        self.env['mail.channel'].sudo(self.user_employee).create({'name': 'Test'})
 
         # Employee update employee-based group: ok
         self.group_pigs.sudo(self.user_employee).write({'name': 'modified'})
