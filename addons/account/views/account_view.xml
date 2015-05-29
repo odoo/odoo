@@ -20,7 +20,7 @@
                                     <field name="user_type" widget="selection"/>
                                     <field name="tax_ids" widget="many2many_tags"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                 </group>
                                 <group>
                                     <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}"/>
@@ -105,8 +105,8 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -254,10 +254,10 @@
                                 <field name="type"/>
                             </group>
                             <group>
-                                <field name="default_debit_account_id" domain="[('deprecated', '=', False)]"/>
-                                <field name="default_credit_account_id" domain="[('deprecated', '=', False)]"/>
-                                <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" attrs="{'invisible': [('default_debit_account_id', '=', False), ('type', 'in', ['bank', 'cash'])]}"/>
+                                <field name="default_credit_account_id" domain="[('deprecated', '=', False)]" attrs="{'invisible': [('default_credit_account_id', '=', False), ('type', 'in', ['bank', 'cash'])]}"/>
+                                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
                         </group>
                         <notebook>
@@ -496,7 +496,7 @@
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="company_currency_id" invisible="1"/>
                                     <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="bank_account_id" groups="base.group_no_one" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
                                         domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
                                 </tree>
@@ -1233,7 +1233,7 @@
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency" groups="base.group_multi_currency"/>
                                     <field name="company_currency_id" invisible="1"/>
-                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     <field name="reconciled"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
@@ -1412,7 +1412,7 @@
                         <field name="code"/>
                         <newline/>
                         <field name="user_type" widget="selection"/>
-                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                         <field name="tag_ids" domain="[('applicability', '!=', 'taxes')]" widget="many2many_tags" context="{'default_applicability': 'accounts'}"/>
                         <field name="reconcile"/>
                         <field name="chart_template_id"/>

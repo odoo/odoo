@@ -189,7 +189,7 @@ class res_partner_bank(osv.osv):
                 except Exception:
                     raise UserError(_("Bank account name formating error") + ': ' + _("Check the format_layout field set on the Bank Account Type."))
             if data.get('currency_id'):
-                currency_name = self.pool.get('res.currency').browse(cr, uid, data['currency_id'], context=context).name
+                currency_name = self.pool.get('res.currency').browse(cr, uid, data['currency_id'][0], context=context).name
                 name += ' (' + currency_name + ')'
             res.append((data.get('id', False), name))
         return res
