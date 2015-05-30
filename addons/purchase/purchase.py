@@ -1029,7 +1029,7 @@ class purchase_order_line(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
-            if line.state not in ['draft', 'cancel']:
+            if line.order_id.state in ['approved', 'done'] and line.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
@@ -1545,7 +1545,7 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
+        for order in purchase_order_obj.browse(cr, user_id, po_ids, context=context):
             purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
             invoiced = []
             shipped = True
@@ -1558,8 +1558,8 @@ class account_invoice(osv.Model):
                 if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
                     invoiced.append(po_line.id)
             if invoiced and shipped:
-                self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
-            workflow.trg_write(uid, 'purchase.order', order.id, cr)
+                self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})
+            workflow.trg_write(user_id, 'purchase.order', order.id, cr)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

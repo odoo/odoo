@@ -86,7 +86,7 @@ class procurement_order(osv.osv):
         else:
             properties = [x.id for x in procurement.property_ids]
             bom_id = bom_obj._bom_find(cr, uid, product_id=procurement.product_id.id,
-                                       properties=properties, context=context)
+                                       properties=properties, context=dict(context, company_id=procurement.company_id.id))
             bom = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom.routing_id.id
         return {

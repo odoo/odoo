@@ -6,16 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-15 11:24+0000\n"
-"Last-Translator: yosra yasser <y.yasser@diamondvision.me>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-05-11 01:04+0000\n"
+"Last-Translator: Mustafa Rawi <Unknown>\n"
+"Language-Team: Cubex Solutions <info@cubex.solutions>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-16 05:54+0000\n"
-"X-Generator: Launchpad (build 17428)\n"
+"X-Launchpad-Export-Date: 2015-05-12 05:36+0000\n"
+"X-Generator: Launchpad (build 17487)\n"
+"Language: ar_EG\n"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -115,27 +116,122 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>مرحباً ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>إليك ${object.state in ('draft', 'sent') and 'quotation' or 'order "
+"confirmation'} من ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>أرقام الإشارة</strong><br />\n"
+"       &nbsp;&nbsp;رقم إشارة الأمر: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;إجمالي مبلغ الأمر: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;تاريخ الأمر: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;إشارة الأمر ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;رقم الإشارة الخاص بك: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;مسئول حسابك: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"    <p>\n"
+"        يمكنك مراجعة عرض السعر على الرابط:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
+"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
+"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
+"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">مشاهدة "
+"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>يمكنك أيضاً السداد مباشرة عبر PayPal من هنا:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>إذا كان لدى سيادتكم أي استفسارات، فنرجو ألا تترددوا في الاتصال "
+"بنا.</p>\n"
+"    <p>شكراً لاختياركم ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                الهاتف: &nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                موقع ويب: &nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: field:product.product,sales_count:0
 #: field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "عدد المبيعات"
 
 #. module: sale
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr "عدد السطور"
+msgstr "عدد البنود"
 
 #. module: sale
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr "# للكمية"
+msgstr "# من الكمية"
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr "عدد طلبات البيع"
+msgstr "عدد أوامر البيع"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
@@ -143,6 +239,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -150,6 +248,8 @@ msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -191,6 +291,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    انقر لإنشاء عرض سعر يمكنك تحويله إلى أمر بيع.\n"
+"                </p><p>\n"
+"                    سيساعدك أودو على إدارة عمليات المبيعات بفاعلية كبيرة:\n"
+"                    عروض السعر، أوامر البيع، أوامر التسليم، إصدار الفواتير "
+"والسداد\n"
+"                </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -212,6 +320,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                انقر لإنشاء عرض سعر أو أمر بيع لهذا العميل.\n"
+"              </p><p>\n"
+"                يساعدك أودو على إدارة عملية البيع بكفاءة عالية:\n"
+"                عروض السعر، أوامر البيع، التسليم، إصدار الفواتير والتحصيل.\n"
+"              </p><p>\n"
+"                تساعدك المميزات الاجتماعية على تنظيم مناقشاتك على كل أمر "
+"بيع\n"
+"                وتسمح لعمليك بمتابعة تقدم حالة أوامر المبيعات لديك.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
@@ -227,6 +346,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                انقر لإنشاء عرض سعر يمكنك تحويله إلى أمر بيع\n"
+"              </p><p>\n"
+"                يساعدك أودو على إدارة عمليات المبيعات لديك بكفاءة عالية:\n"
+"                عروض السعر، أوامر البيع، التسليم، الفواتير والتحصيل.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -248,6 +374,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                انقر لإنشاء عرض سعر، كخطوة أولى في عملية بيع جديدة.\n"
+"              </p><p>\n"
+"                يساعدك أودو على إدارة مبيعاتك بكفاءة وسهولة:\n"
+"                من عروض السعر إلى بنود أمر البيع، أوامر التسليم، إصدار "
+"الفواتير\n"
+"                وتحصيل المدفوعات والمستحقات.\n"
+"              </p><p>\n"
+"                تساعدك الخصائص الاجتماعية في أودو على تنظيم مناقشاتك "
+"ومفاوضاتك\n"
+"                على كل أمر بيع، وتسمح لعملائك بمراقبة تطور كل أمر بيع "
+"يخصهم.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -284,23 +424,23 @@ msgstr "عناوين فى أوامر البيع"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr "الدفع المقدم"
+msgstr "العربون"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr "مبلغ الدفع المقدم"
+msgstr "مبلغ العربون"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:207
 #, python-format
 msgid "Advance Invoice"
-msgstr "فاتورة الدفع المقدم"
+msgstr "فاتورة العربون"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr "منتج الدفع المقدم"
+msgstr "منتج العربون"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
@@ -343,7 +483,7 @@ msgstr "حصة الشريك"
 #. module: sale
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "السماح باستخدام عناوين مختلفة للشحن وللمراسلات "
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -358,7 +498,7 @@ msgstr "تسمح بتكوين تنبيهات من قبل العملاء أو ا�
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
 msgid "Allow online quotations and templates"
-msgstr ""
+msgstr "السماح بعروض السعر واستخدام قوالبها على الموقع"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -373,11 +513,15 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"السماح بإنشاء تنبيهات على المنتجات وعرض هذه التنبيهات عندما يرغب المستخدم في "
+"بيع المنتج أو البيع لعميل ما.\n"
+"مثال: المنتج: توقفنا عن بيع هذا المنتج، أو لا تشتري أكثر من 5 قطع.\n"
+"المورد: لا تنسى أن تطلب الشحن السريع من هذا المورد."
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measure"
-msgstr ""
+msgstr "السماح باستخدام عدة وحدات قياس"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -389,6 +533,11 @@ msgid ""
 "automatically.\n"
 "-It installs the account_analytic_analysis module."
 msgstr ""
+"السماح بتحديد شروط عقود العملاء: طريقة إصدار الفواتير (مبلغ ثابت، من سجلات "
+"الأنشطة، فاتورة مقدماً)، التسعير(150 جنيه/اليوم للتدريب)، المدة (دعم فني "
+"لسنة).\n"
+"سيمكنك متابعة التقدم في العقود وإصدار الفواتير آلياً.\n"
+"- سيقوم هذا بتثبيت الموديول account_analytic_analysis."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -406,11 +555,14 @@ msgid ""
 "Manage Related Stock.\n"
 "-This installs the module sale_stock."
 msgstr ""
+"السماح بإعداد عروض السعر وأوامر البيع باستخدام سياسات مختلفة وإدارة المخزون "
+"المقترن بهم.\n"
+"- سيقوم هذا بتثبيت الموديول sale_stock."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr "تسمح بإضافة خصم على سطور اوامر المبيعات"
+msgstr "يسمح لك بإضافة خصم على بند أمر البيع"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -419,6 +571,9 @@ msgid ""
 "different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
 msgstr ""
+"السماح بتصنيف المبيعات وأوامر التسليم والاستلام بين عدة دفاتر يومية، وإجراء "
+"عمليات بالجملة على الدفاتر.\n"
+"- سيقوم هذا بتثبيت الموديول sale_journal."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -430,12 +585,17 @@ msgid ""
 "these values is still available.\n"
 "-This installs the module analytic_user_function."
 msgstr ""
+"يسمح لك بتعريف الوظيفة الافتراضية لمستخدم ما على الحساب.\n"
+"يستخدم هذا غالباً عندما يقوم المستخدم بتسجيل أنشطته اليومية. سيتم استخدام "
+"تلك القيم وسيتم تعبئة الحقول آلياً بهذه البيانات. سيبقى في  إمكانك تغيير تلك "
+"القيم يدوياً.\n"
+"- سيقوم هذا بتثبيت الموديول analytic_user_function."
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr "يسمح لك باختيار والحفاظ على وحدات قياس متعددة للمنتجات"
+msgstr "يسمح لك باستخدام عدة وحدات قياس للمنتجات."
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
@@ -448,11 +608,12 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"السماح بتحديد عناوين مختلفة للشحن وللمراسلات (لإرسال الفواتير) في أمر البيع."
 
 #. module: sale
 #: field:sale.report,analytic_account_id:0
 msgid "Analytic Account"
-msgstr "تحليل الحساب"
+msgstr "الحساب التحليلي"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -467,7 +628,7 @@ msgstr "الحسابات التحليلية للمبيعات"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr "قبل التوصيل"
+msgstr "قبل التسليم"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
@@ -482,17 +643,17 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "حسب المنتج"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "حسب موظف المبيعات"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "حسب فريق المبيعات"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -527,7 +688,7 @@ msgstr "ملغي"
 #: code:addons/sale/sale.py:588
 #, python-format
 msgid "Cannot cancel this sales order!"
-msgstr "لا يمكن الغاء طلب البيع!"
+msgstr "لا يمكن إلغاء أمر البيع!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -554,37 +715,37 @@ msgstr "فئة المنتج"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr "اختر لتجميع الفواتير حسب العميل"
+msgstr "حدد هذا الاختيار لتجميع الفواتير حسب العميل"
 
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "حدد هذا الاختيار لإدارة عروض السعر في فريق المبيعات هذا."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "انقر للفتح تحليلات المبيعات"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of invoices."
-msgstr ""
+msgstr "انقر لعرض تفاصيل تحليل الفواتير."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis."
-msgstr ""
+msgstr "انقر لعرض تفاصيل التحليل."
 
 #. module: sale
 #: field:sale.report,delay:0
 msgid "Commitment Delay"
-msgstr "تأخير في الالتزام"
+msgstr "التأخير في الالتزام"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr "الشركات"
+msgstr "المؤسسات"
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -592,7 +753,7 @@ msgstr "الشركات"
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,company_id:0
 msgid "Company"
-msgstr "الشركة"
+msgstr "المؤسسة"
 
 #. module: sale
 #: code:addons/sale/sale.py:1148
@@ -635,7 +796,7 @@ msgstr "ميزات العقد"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contracts Management"
-msgstr "ادارة العقود"
+msgstr "إدارة العقود"
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
@@ -675,7 +836,7 @@ msgstr "إنشاء الفواتير"
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أنشئ بواسطة"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
@@ -683,7 +844,7 @@ msgstr ""
 #: field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "أنشئ في"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -693,7 +854,7 @@ msgstr "تاريخ الإنشاء"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "العملة"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -717,32 +878,32 @@ msgstr "التاريخ"
 #. module: sale
 #: field:sale.report,date_confirm:0
 msgid "Date Confirm"
-msgstr "تأكيد التاريخ"
+msgstr "تاريخ التأكيد"
 
 #. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
-msgstr "ترتيب التواريخ"
+msgstr "تاريخ الأمر"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "تاريخ الأمر:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاريخ آخر رسالة على هذا السجل."
 
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr "تاريخ تأكيد أمر المبيعات"
+msgstr "التاريخ الذي تم تأكيد الأمر فيه."
 
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr "تاريخ إنشاء أمر المبيعات"
+msgstr "التاريخ الذي تم فيه إنشاء الأمر."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -752,17 +913,17 @@ msgstr "الخيارات الإفتراضية"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "الشروط والأحكام والافتراضية"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "الشروط والأحكام الافتراضية..."
 
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr ""
+msgstr "الشروط والأحكام الافتراضية لعروض السعر."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -770,16 +931,18 @@ msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
 msgstr ""
+"قم بتعريف هدف Target للفواتير في إعدادات فريق المبيعات لمتابعة الإنجاز "
+"وتوقعات المبيعات بسهولة."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "عنوان التسليم"
 
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr "الوقت اللازم للتسليم"
+msgstr "الزمن الاستباقي للتسليم"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
@@ -795,7 +958,7 @@ msgstr "الوصف"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Disc.(%)"
-msgstr "نسبة الخصم (%)"
+msgstr "الخصم (%)"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -815,7 +978,7 @@ msgstr "عرض الهوامش فى أوامر البيع"
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "هل تريد فعلاً  إنشاء الفاتورة/الفواتبر؟"
+msgstr "هل ترغب حقاً في إنشاء الفواتير؟"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -825,23 +988,23 @@ msgstr "هل تريد فعلاً  إنشاء الفاتورة/الفواتبر؟
 #: selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Done"
-msgstr "تمّ"
+msgstr "منتهي"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Draft"
-msgstr "مسودّة"
+msgstr "مسودة"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr "عرض سعر 'مسودة'"
+msgstr "مسودة عرض سعر"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "قائمة أسعار EDI (%s)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_email_templates
@@ -851,7 +1014,7 @@ msgstr "قوالب البريد الإلكتروني"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "معالج إنشاء البريد"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
@@ -867,22 +1030,22 @@ msgstr "تفعيل فواتير خطوط أوامر البيع"
 #: code:addons/sale/sale.py:951
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "خطأ!"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr "استثناء"
+msgstr "معلقة"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "فلاتر متقدمة"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "False"
-msgstr ""
+msgstr "False"
 
 #. module: sale
 #: code:addons/sale/sale.py:589
@@ -903,7 +1066,7 @@ msgstr "سعر ثابت (إيداع)"
 #. module: sale
 #: field:sale.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "المتابعون"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
@@ -913,11 +1076,15 @@ msgid ""
 "analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
 msgstr ""
+"يقوم بتغيير واجهة الحسابات التحليلية لعرض بيانات هامة لمديري المشروعات "
+"الخدمية. يمكنك أيضاً استعراض التقرير للحساب التحليلي من حيث المستخدم ومن حيث "
+"الشهر.\n"
+"- سيقوم هذا بتثبيت الموديول account_analytic_analysis"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "التوقعات"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -928,6 +1095,9 @@ msgid ""
 "\n"
 " of the current and forecast revenue on the kanban view."
 msgstr ""
+"توقعات الأرباح من المبيعات للشهر الجاري. هذا هو مبلغ المبيعات الذي يتوجب\n"
+"على موظفي المبيعات إصدار فواتير به لهذا الشهر. يستخدم هذا في حساب معدل\n"
+"التقدم للأرباح الحالية والمتوقعة في الواجهة التفاعلية Kanban."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -936,6 +1106,9 @@ msgid ""
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"من هذا التقرير، يمكنك إلقاء نظرة عامة على المبالغ التي صدرت بها فواتير "
+"لعميلك. يمكنك استخدام شريط البحث بالأعلى لاستخراج بيانات تناسب احتياجاتك عن "
+"الفواتير، ومطابقة هذا التحليل لما تريد معرفته."
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -969,7 +1142,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr ""
+msgstr "تجميع حسب"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -982,6 +1155,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"يحتفظ بملخص المحادثات (عدد الرسائل،...). هذا الملخص معروض بصيغة HTML لتتمكن "
+"من إدراجه في واجهات Kanban."
 
 #. module: sale
 #: code:addons/sale/res_config.py:100
@@ -997,12 +1172,12 @@ msgstr "ساعة"
 #: field:sale.order.line.make.invoice,id:0
 #: field:sale.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرف"
 
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "عند التفعيل، يجب الانتباه الى الرسائل الجديدة"
+msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك."
 
 #. module: sale
 #: code:addons/sale/sale.py:305
@@ -1017,7 +1192,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Ignore Exception"
-msgstr "تجاهل الخلل"
+msgstr "تجاهل التعليق"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1029,13 +1204,13 @@ msgstr "قيد التقدم"
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgstr "لتتمكن من حذف أمر بيع مؤكد، يتوجب عليك إلغاؤه أولاً!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:105
 #, python-format
 msgid "Incorrect Data"
-msgstr "معلومات خاطئة"
+msgstr "بيانات خاطئة"
 
 #. module: sale
 #: code:addons/sale/sale.py:274
@@ -1043,7 +1218,7 @@ msgstr "معلومات خاطئة"
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "إجراء غير صالح!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:127
@@ -1067,17 +1242,17 @@ msgstr "تاريخ الفاتورة"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
-msgstr "خلل في الفاتورة"
+msgstr "فاتورة معلقة"
 
 #. module: sale
 #: field:crm.case.section,invoiced_forecast:0
 msgid "Invoice Forecast"
-msgstr ""
+msgstr "توقعات الفواتير"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr "سطور الفواتير"
+msgstr "بنود الفاتورة"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1092,7 +1267,7 @@ msgstr "فاتورة أمر بيع"
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "هدف الفواتير"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -1102,12 +1277,12 @@ msgstr "عنوان الفاتورة لأمر البيع الحالي"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "عنوان الفاتورة:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "عنوان الفاتورة والشحن:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1118,21 +1293,21 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
-"لا يمكن إنشاء فاتورة لسطر أمر المبيعات هذا لأحد السببين التاليين:\n"
-"1. سطر أمر المبيعات في حالة \"مسودة\" أو \"إلغاء\"!\n"
-"2. سطر أمر المبيعات مفوتر!"
+"لا يمكن إنشاء فاتورة لبند أمر البيع الحالي لأحد الأسباب التالية:\n"
+"1- حالة أمر البيع إما \"مسودة\" أو \"ملغي\"!\n"
+"2- تم إصدار فاتورة لأمر البيع سابقاً."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:102
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "تم إنشاء الفاتورة"
 
 #. module: sale
 #: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "تم سداد الفاتورة"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1144,7 +1319,7 @@ msgstr "فاتورة أوامر البيع بأكملها"
 #: field:sale.order,invoice_exists:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr "مفوتر"
+msgstr "صدرت فاتورته"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
@@ -1161,17 +1336,17 @@ msgstr "الفواتير"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "تحليل الفواتير"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "إحصائيات الفواتير"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Invoicing Process"
-msgstr "عملية الفوترة"
+msgstr "إصدار الفواتير"
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -1181,7 +1356,7 @@ msgstr "متابع"
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr "يشير إلى أنه تمّ تسديد الفاتورة."
+msgstr "يشير إلى حالة سداد الفاتورة."
 
 #. module: sale
 #: help:sale.order,invoice_exists:0
@@ -1191,7 +1366,7 @@ msgstr "فإنه يشير إلى أن أمر البيع لديه فاتورة و
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "تاريخ آخر رسالة"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1200,7 +1375,7 @@ msgstr ""
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1209,12 +1384,12 @@ msgstr ""
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث في"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 msgid "Make Invoices"
-msgstr "أصدر الفواتير"
+msgstr "إصدار الفواتير"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1224,7 +1399,7 @@ msgstr "قيد التنفيذ يدوياً"
 #. module: sale
 #: field:sale.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "الرسائل"
 
 #. module: sale
 #: help:sale.order,message_ids:0
@@ -1250,13 +1425,13 @@ msgstr "نسخة جديدة من عرض السعر"
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "رسالة جديدة"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "لم تحدد عميلاً!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1132
@@ -1275,7 +1450,7 @@ msgstr "أي خط للائحة أسعار صالحة موجود!"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "عدد الأيام بين تأكيد الأمر وشحن المنتجات إلى العميل."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1316,19 +1491,19 @@ msgstr "موظف واحد يمكن أن يكون له أدوار مختلفة ل
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "فتح قائمة المبيعات"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Order"
-msgstr "أمر"
+msgstr "الأمر"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 #: field:sale.order,order_line:0
 msgid "Order Lines"
-msgstr "سطور الأوامر"
+msgstr "بنود الأمر"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -1339,7 +1514,7 @@ msgstr "خطوط الأوامر للفاتورة"
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "شهر الأمر"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
@@ -1349,28 +1524,28 @@ msgstr "رقم الطلب"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Order N°"
-msgstr "ترتيب بالعدد"
+msgstr "رقم الأمر"
 
 #. module: sale
 #: field:sale.order,name:0
 #: field:sale.order.line,order_id:0
 msgid "Order Reference"
-msgstr "مرجع الأمر"
+msgstr "رقم إشارة الأمر"
 
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr "مرجع الطلب يجب أن يكون فريدا لكل شركة على حدا!"
+msgstr "رقم إشارة الأمر يجب أن يكون فريداً لكل مؤسسة!"
 
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "حالة الأمر"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Order reference"
-msgstr "مرجع الطلب"
+msgstr "رقم إشارة الأمر"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1391,22 +1566,22 @@ msgstr "مدفوع"
 #: model:ir.model,name:sale.model_res_partner
 #: field:sale.report,partner_id:0
 msgid "Partner"
-msgstr "شريك"
+msgstr "الشريك"
 
 #. module: sale
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
-msgstr "أجل السداد"
+msgstr "شروط السداد"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "شروط السداد:"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "رابط PayPal"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1438,7 +1613,7 @@ msgstr "السعر"
 #. module: sale
 #: field:sale.order.line,price_reduce:0
 msgid "Price Reduce"
-msgstr ""
+msgstr "تخفيض السعر"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0
@@ -1465,17 +1640,17 @@ msgstr "طباعة"
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
 msgid "Procurement"
-msgstr "التحصيل"
+msgstr "المشتريات الدورية"
 
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "مجموعات المشتريات الدورية"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
 msgid "Procurements"
-msgstr ""
+msgstr "المشتريات الدورية"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -1495,7 +1670,7 @@ msgstr "ميزات المنتج"
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "قالب المنتج"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1505,7 +1680,7 @@ msgstr "وحدة البيع للمنتج"
 #. module: sale
 #: field:sale.config.settings,module_project:0
 msgid "Project"
-msgstr ""
+msgstr "المشروع"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1515,7 +1690,7 @@ msgstr "الخصائص على الخطوط"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_tree
 msgid "Qty"
-msgstr "الكمية"
+msgstr "كمية"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -1539,7 +1714,7 @@ msgstr "التسعيرة"
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "التسعيرة / الأمر"
+msgstr "عرض السعر / الأمر"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1559,7 +1734,7 @@ msgstr "رقم عرض السعر"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "إرسال عرض السعر"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1611,12 +1786,12 @@ msgstr "معدل إنشاء عروض الأسعار بالمدة"
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
 msgid "Rate of sent invoices per duration"
-msgstr ""
+msgstr "معدل الفواتير المرسلة حسب المدة"
 
 #. module: sale
 #: field:crm.case.section,monthly_confirmed:0
 msgid "Rate of validate sales orders per duration"
-msgstr ""
+msgstr "معدل اعتماد أوامر البيع حسب المدة"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1626,17 +1801,17 @@ msgstr "إعادة إنشاء الفاتورة"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr "مرجع المستند الذي أصدر طلب أمر المبيعات هذا"
+msgstr "رقم إشارة المستند الذي نتج أمر البيع هذا عنه."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Reference/Description"
-msgstr ""
+msgstr "رقم الإشارة/الوصف"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of confirmed sales orders per month."
-msgstr ""
+msgstr "أرباح أوامر البيع المؤكدة بالشهر."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1646,17 +1821,17 @@ msgstr "العائد من عروض الأسعار بالشهر"
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of sent invoices per month."
-msgstr ""
+msgstr "أرباح الفواتير المرسلة بالشهر"
 
 #. module: sale
 #: field:procurement.order,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "بند أمر البيع"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr "ينشأ خط طلب البيع الفاتورة"
+msgstr "Sale OrderLine Make_invoice"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1677,7 +1852,7 @@ msgstr "المبيعات"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "فاتورة الدفع المقدم للمبيعات"
+msgstr "فاتورة العربون"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -1691,12 +1866,12 @@ msgstr "تحليل المبيعات"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "قناة المبيعات"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr "تُنشأ المبيعات الفاتورة"
+msgstr "إنشاء فواتير المبيعات"
 
 #. module: sale
 #: code:addons/sale/sale.py:284
@@ -1708,7 +1883,7 @@ msgstr "تُنشأ المبيعات الفاتورة"
 #: selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
-msgstr "أمر المبيعات"
+msgstr "أمر البيع"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -1719,7 +1894,7 @@ msgstr "تأكيد أمر البيع"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "سطر أمر المبيعات"
+msgstr "بند أمر البيع"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -1727,7 +1902,7 @@ msgstr "سطر أمر المبيعات"
 #: view:sale.order.line:sale.view_order_line_form2
 #: view:sale.order.line:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "سطور أوامر المبيعات"
+msgstr "بنود أمر البيع"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1756,17 +1931,17 @@ msgstr "خطوط أوامر المبيعات التي هي في الحالة \"�
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Sales Order done"
-msgstr "تم طلب البيع"
+msgstr "تم أمر البيع"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_in_progress
 msgid "Sales Order in Progress"
-msgstr "أمر المبيعات قيد التنفيذ"
+msgstr "أمر البيع قيد المعالجة"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Sales Order ready to be invoiced"
-msgstr "طلبات البيع الجاهزة للفوترة"
+msgstr "أمر البيع جاهز لإصدار الفاتورة"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1782,7 +1957,7 @@ msgstr "أوامر البيع التى لم يتم التصديق عليها ب�
 #: view:sale.order:sale.view_sale_order_calendar
 #: view:sale.order:sale.view_sale_order_graph
 msgid "Sales Orders"
-msgstr "أوامر المبيعات"
+msgstr "أوامر البيع"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -1800,17 +1975,17 @@ msgstr "إحصائيات أوامر البيع"
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "فريق المبيعات"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "فرق المبيعات"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
 msgid "Sales in Exception"
-msgstr "المبيعات ذات الخلل"
+msgstr "المبيعات المعلقة"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1830,18 +2005,18 @@ msgstr "موظف مبيعات"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "مسئول المبيعات:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr "ابحث في أمر المبيعات"
+msgstr "بحث أوامر البيع"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Search Uninvoiced Lines"
-msgstr "ابحث السطور غير المفوترة"
+msgstr "بحث البنود بلا فاتورة"
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -1867,12 +2042,12 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Send by Email"
-msgstr "إرسال كرسالة بالبريد الالكتروني"
+msgstr "إرسال بالبريد الإلكتروتي"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "المسلسل"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1883,12 +2058,12 @@ msgstr "تمّ الشحن"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Shipping Exception"
-msgstr "خلل شحن"
+msgstr "الشحن المعلق"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "عنوان الشحن:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1903,7 +2078,7 @@ msgstr "بعض خطوط الأوامر"
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr "مستند المصدر"
+msgstr "المستند المصدر"
 
 #. module: sale
 #: field:sale.order,state:0
@@ -1917,12 +2092,12 @@ msgstr "الحالة"
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr "المجموع"
+msgstr "الإجمالي الفرعي"
 
 #. module: sale
 #: field:sale.order,message_summary:0
 msgid "Summary"
-msgstr "ملخص"
+msgstr "الملخص"
 
 #. module: sale
 #: help:crm.case.section,invoiced_target:0
@@ -1931,6 +2106,8 @@ msgid ""
 "sales \n"
 "team estimates to be able to invoice this month."
 msgstr ""
+"هدف Target مبالغ الفواتير للشهر الجاري. هذا هو المبلغ\n"
+"التقديري الذي قد يحققه فريق المبيعات للشهر الجاري."
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -1942,17 +2119,17 @@ msgstr "الضرائب"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "الشروط والأحكام"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "الشروط والأحكام..."
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
 msgid "The amount to be invoiced in advance."
-msgstr "المبلغ المفوتر مقدماً"
+msgstr "المبلغ لإصدار فاتورة العربون"
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
@@ -1962,7 +2139,7 @@ msgstr "المبلغ دون ضرائب"
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr "الحساب التحليلي المتعلق بأمر بيع"
+msgstr "الحساب التحليلي المقترن بأمر بيع"
 
 #. module: sale
 #: field:sale.config.settings,time_unit:0
@@ -1983,7 +2160,7 @@ msgstr "المبلغ الإجمالي"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:106
 #, python-format
 msgid "The value of Advance Amount must be positive."
-msgstr "قيمة الدفعة المقدمة يجب ان تكون موجبة"
+msgstr "يجب أن يكون مبلغ العربون قيمة موجبة."
 
 #. module: sale
 #: code:addons/sale/sale.py:952
@@ -1999,7 +2176,7 @@ msgstr ""
 #: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr ""
+msgstr "لا توجد مؤسسة افتراضية في إعدادات هذا المستخدم."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
@@ -2011,12 +2188,12 @@ msgstr "لا يوجد حساب للدخل يعرف بأنه الملكية ال�
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:100
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "لا يوجد حساب دخل في إعدادات هذا المنتج: \"%s\" (المعرف: %d)."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "This Year"
-msgstr ""
+msgstr "هذه السنة"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_margin:0
@@ -2026,11 +2203,14 @@ msgid ""
 "Price and Cost Price.\n"
 "-This installs the module sale_margin."
 msgstr ""
+"سيضيف \"هامش الربح\" في أمر البيع.\n"
+"يسمح لك هذا بحساب الربح من خلال الفرق بين سعر البيع وسعر التكلفة.\n"
+"- سيقوم هذا بتثبيت الموديول sale_margin."
 
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr ""
+msgstr "سيضيف هذا عروض السعر على الموقع"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
@@ -2044,8 +2224,8 @@ msgid ""
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
 msgstr ""
-"هذه قائمة بالفواتير التي تمّ إنشاؤها لأمر المبيعات هذا. يمكن أن يكون هناك "
-"أكثر من فاتورة لأمر مبيعات واحد (حسب السطر مثلاً)."
+"هذه قائمة بالفواتير التي تم إنشاؤها لأمر البيع هذا. ربما تم إصدار عدة فواتير "
+"لأمر البيع (فاتورة لكل بند مثلاً)."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2056,11 +2236,11 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"سيقوم النظام تلقائيابتحليل اسعارك واوامر المبيعات. يتحقق التحليل من عوائد "
-"المبيعات الخاصة بك ويصنفها بمعايير المجموعة المختلفة (ندوب مبيعات، شريك، "
-"والمنتج، الخ.) استخدم هذا التقرير للقيام بتحليل المبيعات التي ليس لديها "
-"فواتير بعد.إذا كنت ترغب في تحليل دوران الخاص بك، يجب عليك استخدام تقرير "
-"تحليل الفاتورة في تطبيق المحاسبة."
+"يقوم هذا التقرير بتحليل عروض السعر وأوامر البيع. يتفحص التحليل الأرباح من "
+"أوامر المبيعات ويرتبها في مجموعات مختلفة (حسب مسئول المبيعات، الشريك، "
+"المنتج، إلخ). استخدم هذا التقرير في إجراء تحليلات على المبيعات التي لم يصدر "
+"بها فواتير بعد. إذا كنت ترغب في حساب معدل دوران رأس المال، يتوجب عليك "
+"استخدام تقرير تحليل الفواتير في الحسابات."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -2071,6 +2251,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"يقوم هذا التقرير بإجراء تحليل على عروض السعر. يتفحص التحليل أرباح المبيعات "
+"ويرتبها حسب عدة شروط (حسب موظف المبيعات، الشريك، المنتج، إلخ). استخدم هذا "
+"التقرير لإجراء تحليلات على المبيعات التي لم يصدر لها فواتير بعد. إذا كنت "
+"ترغب في تحليل معدل دوران رأس المالي، فيمكنك استخدام تحليل الفواتير في "
+"الحسابات."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2081,17 +2266,22 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"هذا التقرير يجري تحليلاً على أوامر البيع. يتفحص التحليل أرباح المبيعات "
+"ويرتبها حسب شروط مختلفة (موظف المبيعات، الشريك، المنتج، إلخ). استخدم هذا "
+"التقرير لإجراء تحليلات على المبيعات التي لم يصدر لها فواتير بعد. إذا كنت "
+"ترغب في تحليل معدل الدوران، فاستخدم التقرير التحليلي في الحسابات على "
+"الفواتير."
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "To Do"
-msgstr "في انتظار التنفيذ"
+msgstr "للمتابعة"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "To Invoice"
-msgstr "في انتظار الفوترة"
+msgstr "في انتظار الفاتورة"
 
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
@@ -2107,7 +2297,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_order_line_tree
 #: view:website:sale.report_saleorder_document
 msgid "Total"
-msgstr "المجموع"
+msgstr "الإجمالي"
 
 #. module: sale
 #: field:sale.report,price_total:0
@@ -2118,12 +2308,12 @@ msgstr "السعر الإجمالي"
 #: view:sale.order:sale.view_order_tree
 #: view:sale.order:sale.view_quotation_tree
 msgid "Total Tax Included"
-msgstr "المجموع مع الضرائب"
+msgstr "الإجمالي بالضرائب"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "الإجمالي دون ضرائب"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
@@ -2133,12 +2323,12 @@ msgstr "إطلاق أوامر التسليم تلقائياً من أوامر ا
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Uninvoiced"
-msgstr "غير مفوتر"
+msgstr "بلا فاتورة"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr "السطور المستلمة غير المفوترة"
+msgstr "البنود المستلمة وبلا فاتورة"
 
 #. module: sale
 #: field:sale.order.line,price_unit:0
@@ -2181,6 +2371,10 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sales "
 "order lines."
 msgstr ""
+"استخدم فاتورة لكامل أمر البيع لإنشاء فاتورة نهائية.\n"
+"استخدم نسبة لإصدار فاتورة بنسبة من إجمالي مبلغ أمر البيع.\n"
+"استخدم سعر ثابت لإصدار فاتورة بمبلغ ثابت/عربون يتم سداده مقدماً.\n"
+"استخدم بعض بنود أمر البيع لإصدار فاتورة بقيمة بعض البنود في أمر البيع."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -2212,7 +2406,7 @@ msgstr "استخدم قوائم الأسعار لتغير السعر على حس
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "VAT:"
-msgstr ""
+msgstr "ضريبة القيمة المضافة:"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -2241,12 +2435,12 @@ msgstr "تحذير!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "رسائل موقع ويب"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "سجل التواصل على الموقع"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2302,7 +2496,7 @@ msgstr "يجب عليك ألا تقوم بفوترة أمر البيع التا�
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "رقم إشارتك"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv

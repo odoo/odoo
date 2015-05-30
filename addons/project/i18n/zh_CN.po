@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2015-05-26 13:31+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-19 05:42+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
+"X-Launchpad-Export-Date: 2015-05-27 05:37+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #. module: project
 #: field:res.partner,task_count:0
 msgid "# Tasks"
-msgstr ""
+msgstr "# 任务"
 
 #. module: project
 #: field:report.project.task.user,no_of_days:0
@@ -31,7 +31,7 @@ msgstr "天数"
 #: field:project.task.history.cumulative,nbr_tasks:0
 #: field:report.project.task.user,nbr:0
 msgid "# of Tasks"
-msgstr ""
+msgstr "# 从任务"
 
 #. module: project
 #: code:addons/project/project.py:360
@@ -75,6 +75,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建一个新的标签。\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -90,6 +94,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击为任务路线创建新阶段。\n"
+"              </p><p>\n"
+"                定义的阶段会使用于项目中\n"
+"                创建的任务，直到任务或者问题关闭。\n"
+"                您会使用这些阶段来跟踪\n"
+"                任务或者问题的进度。\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -105,6 +118,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Odoo 的项目管理允许您管理任务路线 \n"
+"                   从而更有效率. 您可以追踪\n"
+"                    进展，讨论任务，增加文档附件等。\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -126,7 +145,7 @@ msgstr ""
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "接收电子邮件从"
 
 #. module: project
 #: field:project.project,active:0
@@ -136,12 +155,12 @@ msgstr "有效"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Add a Description..."
-msgstr ""
+msgstr "添加描述。。。"
 
 #. module: project
 #: view:project.task.type:project.task_type_edit
 msgid "Add a description..."
-msgstr ""
+msgstr "添加描述…"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -206,13 +225,13 @@ msgstr "指派到"
 #. module: project
 #: field:report.project.task.user,date_start:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "分配日期"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "分配月份"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -255,12 +274,12 @@ msgstr "受阻"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "按负责人"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
 msgid "By Reviewer"
-msgstr ""
+msgstr "按审核人"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
@@ -286,7 +305,7 @@ msgstr "取消"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Cancel Project"
-msgstr ""
+msgstr "取消项目"
 
 #. module: project
 #: selection:project.project,state:0
@@ -398,7 +417,7 @@ msgstr "创建日期"
 #: field:project.task.type,create_uid:0
 #: field:project.task.work,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: project
 #: field:project.category,create_date:0
@@ -408,7 +427,7 @@ msgstr ""
 #: field:project.task.type,create_date:0
 #: field:project.task.work,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建于"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -440,12 +459,12 @@ msgstr "日期"
 #: help:project.project,message_last_post:0
 #: help:project.task,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "记录中最新信息的日期。"
 
 #. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "分配的天数"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
@@ -562,7 +581,7 @@ msgstr "有效时间"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "电子邮件别名"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -619,7 +638,7 @@ msgstr "实验"
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "扩展过滤器"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -634,7 +653,7 @@ msgstr "功能要求"
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded in Kanban View"
-msgstr ""
+msgstr "在看板视图中折叠"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -657,7 +676,7 @@ msgstr "GTD"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Gantt View"
-msgstr ""
+msgstr "甘特视图"
 
 #. module: project
 #: field:project.config.settings,module_sale_service:0
@@ -680,7 +699,7 @@ msgstr "指定显示任务列表的顺序号"
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Group By"
-msgstr ""
+msgstr "分组按"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -691,7 +710,7 @@ msgstr "帮助台和技术支持"
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "高"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -722,6 +741,16 @@ msgid ""
 "portal\n"
 "   is activated, portal users see the followed tasks or issues."
 msgstr ""
+"把握项目中任务或问题的可见度：\n"
+"- 公众: 所有人能看到所有的；如果门户被激活， 门户用户\n"
+"   可以看到所有的任务和问题；如果匿名用户开启，访客\n"
+"   可以看到所有的任务和问题\n"
+"- 门户(仅用于门户已安装)：员工可见所有的；\n"
+"   如果门户被激活，门户用户可以看到他们或他们公司\n"
+"   关注的任务或问题\n"
+"- 仅员工: 员工可见所有的任务或问题\n"
+"- 仅关注者: 员工只能看到关注的任务或问题；如果门户\n"
+"   被激活，门户用户可以看到关注的任务或问题。"
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -791,7 +820,7 @@ msgstr "进行中"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "收到电子邮件后创建"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -810,7 +839,7 @@ msgstr "与此项目相关的内部电子邮件。传入的电子邮件会自动
 #: code:addons/project/project.py:201
 #, python-format
 msgid "Internal project: all employees can access"
-msgstr ""
+msgstr "内部项目：所有员工可用"
 
 #. module: project
 #: code:addons/project/project.py:171
@@ -832,7 +861,7 @@ msgstr "是一个关注者"
 #. module: project
 #: view:project.category:project.project_category_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "问题版本"
 
 #. module: project
 #: field:project.task,kanban_state:0
@@ -844,24 +873,24 @@ msgstr "看板状态"
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "最新消息"
 
 #. module: project
 #: field:project.project,message_last_post:0
 #: field:project.task,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最新消息日期"
 
 #. module: project
 #: field:project.task,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "最新更新日期"
 
 #. module: project
 #: field:project.task,date_last_stage_update:0
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "最新阶段更新"
 
 #. module: project
 #: field:project.category,write_uid:0
@@ -872,7 +901,7 @@ msgstr ""
 #: field:project.task.type,write_uid:0
 #: field:project.task.work,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最近更新人"
 
 #. module: project
 #: field:project.category,write_date:0
@@ -882,7 +911,7 @@ msgstr ""
 #: field:project.task.type,write_date:0
 #: field:project.task.work,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最近更新于"
 
 #. module: project
 #: help:project.config.settings,module_pad:0
@@ -891,6 +920,8 @@ msgid ""
 "new pads (for example: http://etherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
+"让公司自定义Pad(一种多人协作平台）的安装会链接到新的pads（多人协作平台）(例如： http://etherpad.com/)。 \n"
+"-会安装pad模块."
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -987,7 +1018,7 @@ msgstr "新建"
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
 msgid "New Mail"
-msgstr ""
+msgstr "新邮件"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1140,7 +1171,7 @@ msgstr "隐私/能见度"
 #: code:addons/project/project.py:202
 #, python-format
 msgid "Private project: followers Only"
-msgstr ""
+msgstr "私有项目：仅关注者"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -1197,7 +1228,7 @@ msgstr "项目设置"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Project Stages"
-msgstr ""
+msgstr "项目阶段"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -1256,6 +1287,8 @@ msgid ""
 "Provides management of issues/bugs in projects.\n"
 "-This installs the module project_issue."
 msgstr ""
+"提供项目的问题/错误管理。\n"
+"-会安装project_issue模块。"
 
 #. module: project
 #: help:project.config.settings,module_project_issue_sheet:0
@@ -1263,12 +1296,14 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
+"为项目中的问题/错误管理提供计工单支持。\n"
+"-会安装模块 project_issue_sheet。"
 
 #. module: project
 #: code:addons/project/project.py:200
 #, python-format
 msgid "Public project"
-msgstr ""
+msgstr "公众项目"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1332,7 +1367,7 @@ msgstr "负责人"
 #: field:project.task,reviewer_id:0
 #: field:report.project.task.user,reviewer_id:0
 msgid "Reviewer"
-msgstr ""
+msgstr "审阅人"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1478,7 +1513,7 @@ msgstr "任务活动"
 #: model:mail.message.subtype,name:project.mt_project_task_assigned
 #: model:mail.message.subtype,name:project.mt_task_assigned
 msgid "Task Assigned"
-msgstr ""
+msgstr "分配任务"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -1505,13 +1540,13 @@ msgstr "任务委派"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "任务通道"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
-msgstr ""
+msgstr "任务已为下一阶段准备好了"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -1556,7 +1591,7 @@ msgstr "任务已创建"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Task summary..."
-msgstr ""
+msgstr "任务摘要..."
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1640,6 +1675,8 @@ msgid ""
 "the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
 msgstr ""
+"允许您将项目管理任务下的条目自动生成到计工单中，包括指定时间及用户，在项目-任务下创建、编辑或删除的条目都会被自动生成到计工单中。 \n"
+"-这会安装project_timesheet模块"
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
@@ -1650,6 +1687,8 @@ msgid ""
 "method 'Manufacture'.\n"
 "-This installs the module sale_service."
 msgstr ""
+"此功能会自动创建在销售订单中服务类型产品的项目任务。更确切地说：当产品类型为“服务”、补货方式为“按订单”、供应方法为“生产”的产品创建任务。 \n"
+"-这将安装模块sale_service。"
 
 #. module: project
 #: help:project.task,active:0
@@ -1672,7 +1711,7 @@ msgstr "这个报表用于分析你项目和成员的效率。可以分析任务
 msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
-msgstr ""
+msgstr "当在该阶段没有可显示的记录时，此阶段在看板视图中会被折叠。"
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1748,7 +1787,7 @@ msgstr "追踪问题和错误"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Unassigned"
-msgstr ""
+msgstr "未分配"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1769,7 +1808,7 @@ msgstr "可用性"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Use Tasks"
-msgstr ""
+msgstr "使用任务"
 
 #. module: project
 #: field:project.config.settings,module_pad:0
@@ -1833,7 +1872,7 @@ msgstr "工作时间"
 #. module: project
 #: field:project.task,progress:0
 msgid "Working Time Progress (%)"
-msgstr ""
+msgstr "工时进度 (%)"
 
 #. module: project
 #: field:project.config.settings,time_unit:0
@@ -1843,7 +1882,7 @@ msgstr "工作时间单位"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "工作量"
 
 #. module: project
 #: code:addons/project/project.py:172
@@ -1857,7 +1896,7 @@ msgstr "您不能删除一个项目，其中包含任务。您可以删除所有
 #: code:addons/project/project.py:435
 #, python-format
 msgid "You must assign members on the project '%s'!"
-msgstr ""
+msgstr "您必须指定项目'%s'的成员！"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -1884,7 +1923,7 @@ msgstr "或者"
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "任务"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0
