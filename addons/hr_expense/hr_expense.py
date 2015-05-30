@@ -120,10 +120,10 @@ class hr_expense_expense(osv.osv):
         return super(hr_expense_expense, self).unlink(cr, uid, ids, context)
 
     def onchange_currency_id(self, cr, uid, ids, currency_id=False, company_id=False, context=None):
-        res =  {'value': {'journal_id': False}}
+        res =  {}
         journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase'), ('currency','=',currency_id), ('company_id', '=', company_id)], context=context)
         if journal_ids:
-            res['value']['journal_id'] = journal_ids[0]
+            res =  {'value': {'journal_id': journal_ids[0]}}
         return res
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
@@ -224,6 +224,24 @@ class hr_expense_expense(osv.osv):
             total -= i['price']
             total_currency -= i['amount_currency'] or i['price']
         return total, total_currency, account_move_lines
+
+    def action_expense_cancel(self, cr, uid, ids, context=None):
+        ## We will first check the the move is not reconciled
+        for expense in self.browse(cr, uid, ids, context=context):
+            if expense.account_move_id:
+                for move_line in expense.account_move_id.line_id:
+                    if move_line.reconcile_id or move_line.reconcile_partial_id:
+                         raise osv.except_osv(
+                                 _('Error!'),
+                                 _('Please unreconcile payment accounting entries before cancelling this expense'))
+                ### Then we unlink the move line
+                self.pool.get('account.move').unlink(cr, uid, [expense.account_move_id.id], context=context)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_delete(uid, 'hr.expense.expense', expense.id, cr)
+            wf_service.trg_create(uid, 'hr.expense.expense', expense.id, cr)
+            wf_service.trg_validate(uid, 'hr.expense.expense', expense.id, 'draft', cr)
+
+        return True
 
 
     def action_receipt_create(self, cr, uid, ids, context=None):

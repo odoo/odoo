@@ -549,7 +549,7 @@ class project_issue(base_stage, osv.osv):
         
         res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
         
-        if thread_id:
+        if thread_id and subtype:
             self.write(cr, uid, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)    
         
         return res   

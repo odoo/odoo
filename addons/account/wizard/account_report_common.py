@@ -34,7 +34,7 @@ class account_common_report(osv.osv_memory):
         res = {}
         if chart_account_id:
             company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
-            now = time.strftime('%Y-%m-%d')
+            now = fields.date.context_today(self, cr, uid, context=context),
             domain = [('company_id', '=', company_id), ('date_start', '<', now), ('date_stop', '>', now)]
             fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, domain, limit=1)
             res['value'] = {'company_id': company_id, 'fiscalyear_id': fiscalyears and fiscalyears[0] or False}
@@ -124,7 +124,7 @@ class account_common_report(osv.osv_memory):
     def _get_fiscalyear(self, cr, uid, context=None):
         if context is None:
             context = {}
-        now = time.strftime('%Y-%m-%d')
+        now = fields.date.context_today(self, cr, uid, context=context)
         company_id = False
         ids = context.get('active_ids', [])
         if ids and context.get('active_model') == 'account.account':
@@ -136,7 +136,11 @@ class account_common_report(osv.osv_memory):
         return fiscalyears and fiscalyears[0] or False
 
     def _get_all_journal(self, cr, uid, context=None):
-        return self.pool.get('account.journal').search(cr, uid ,[])
+        # The 'active_test' context is used, because reports must
+        # return entries created on inactive journals.
+        return self.pool['account.journal'].search(
+            cr, uid, [], context=dict(context or {}, active_test=False)
+        )
 
     _defaults = {
             'fiscalyear_id': _get_fiscalyear,
@@ -174,7 +178,17 @@ class account_common_report(osv.osv_memory):
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'], context=context)[0]
+        data['form'] = self.read(
+            cr, uid, ids,
+            [
+                'date_from', 'date_to', 'fiscalyear_id', 'period_from',
+                'period_to', 'filter', 'chart_account_id', 'target_move'
+            ], context=context)[0]
+        # The 'active_test' context is used, because reports must
+        # return entries created on inactive journals.
+        data['form']['journal_ids'] = self.read(
+            cr, uid, ids, ['journal_ids'], context=dict(context or {}, active_test=False)
+        )[0]['journal_ids']
         for field in ['fiscalyear_id', 'chart_account_id', 'period_from', 'period_to']:
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]

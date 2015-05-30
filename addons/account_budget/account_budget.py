@@ -114,14 +114,30 @@ class crossovered_budget_lines(osv.osv):
         result = 0.0
         if context is None: 
             context = {}
+        account_obj = self.pool.get('account.account')
         for line in self.browse(cr, uid, ids, context=context):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
                 raise osv.except_osv(_('Error!'),_("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
+            acc_ids = account_obj._get_children_and_consol(cr, uid, acc_ids, context=context)
             date_to = line.date_to
             date_from = line.date_from
             if line.analytic_account_id.id:
-                cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id=%s AND (date "
+                cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id in "
+                       """(with recursive account_analytic_account_hierarchy(id)
+                        as 
+                            (
+                                select id from account_analytic_account 
+                                    where id=%s
+                                union all
+                                select account_analytic_account.id from 
+                                    account_analytic_account 
+                                    join account_analytic_account_hierarchy
+                                    on account_analytic_account.parent_id=
+                                        account_analytic_account_hierarchy.id
+                            )"""
+                       "select id from account_analytic_account_hierarchy) "
+                       "AND (date "
                        "between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd')) AND "
                        "general_account_id=ANY(%s)", (line.analytic_account_id.id, date_from, date_to,acc_ids,))
                 result = cr.fetchone()[0]
