@@ -10,11 +10,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='data_file']" position="after">
                     <field name="hide_journal_field" invisible="1"/>
-                    <label for="journal_id"/>
-                    <field name="journal_id"
-                        domain="[('type', '=', 'bank')]"
-                        attrs="{'invisible': [('hide_journal_field', '=', True)]}"
-                        context="{'default_type':'bank'}"/>
+                    <group attrs="{'invisible': [('hide_journal_field', '=', True)]}">
+                        <field name="journal_id" domain="[('type', '=', 'bank')]" context="{'default_type':'bank'}"/>
+                    </group>
                 </xpath>
             </field>
         </record>
