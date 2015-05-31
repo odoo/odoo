@@ -19,7 +19,7 @@ class account_bank_statement_import_journal_creation(models.TransientModel):
         currency_id = wiz.currency_id.id
         account_number = wiz.account_number
 
-        bank_account_id = self.env._context.get('bank_account_id')
+        bank_account_id = self.env.context.get('bank_account_id')
         if bank_account_id:
             vals = {'currency_id': currency_id, 'acc_name': account_number, 'account_type': 'bank'}
             vals_journal = journal_obj._prepare_bank_journal(company, vals)
@@ -38,5 +38,5 @@ class account_bank_statement_import_journal_creation(models.TransientModel):
             self.env['res.partner.bank'].create(res_partner_bank_vals)
 
         # Finish the statement import
-        statement_import_transient = import_wiz_obj.browse(self.env._context['statement_import_transient_id'])
+        statement_import_transient = import_wiz_obj.browse(self.env.context['statement_import_transient_id'])
         return statement_import_transient.import_file()

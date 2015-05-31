@@ -22,28 +22,23 @@
 import time
 import re
 
-from openerp.osv import osv
-from openerp.tools.translate import _
-from openerp import tools
+from openerp import models, tools, _
 from openerp.exceptions import UserError
 
-import logging
+class AccountBankStatementImport(models.TransientModel):
+    _inherit = 'account.bank.statement.import'
 
-_logger = logging.getLogger(__name__)
-
-class account_bank_statement_import(osv.TransientModel):
-    _inherit = "account.bank.statement.import"
-
-    def _check_coda(self, cr, uid, data_file, context=None):
+    def _check_coda(self, data_file):
         # Matches the first 24 characters of a CODA file, as defined by the febelfin specifications
         return re.match('0{5}\d{9}05[ D] +', data_file) != None
 
-    def _parse_file(self, cr, uid, data_file, context=None):
-        if not self._check_coda(cr, uid, data_file, context=context):
-            return super(account_bank_statement_import, self)._parse_file(cr, uid, data_file, context=context)
+    def _parse_file(self, data_file):
+        if not self._check_coda(data_file):
+            return super(AccountBankStatementImport, self)._parse_file(data_file)
 
-        if context is None:
-            context = {}
+        def rmspaces(s):
+            return " ".join(s.split())
+
         recordlist = unicode(data_file, 'windows-1252', 'strict').split('\n')
         statements = []
         globalisation_comm = {}
@@ -251,5 +246,3 @@ class account_bank_statement_import(osv.TransientModel):
         currency_code = statement['currency']
         acc_number = statements[0] and statements[0]['acc_number'] or False
         return currency_code, acc_number, ret_statements
-def rmspaces(s):
-    return " ".join(s.split())

@@ -11,19 +11,18 @@ class AccountBankStatementImport(models.TransientModel):
     _inherit = "account.bank.statement.import"
 
     def _get_hide_journal_field(self):
-        return self._context and 'journal_id' in self._context or False
+        return self.env.context and 'journal_id' in self.env.context or False
 
     journal_id = fields.Many2one('account.journal', string='Journal', help='Accounting journal related to the bank statement you\'re importing. It has be be manually chosen for statement formats which doesn\'t allow automatic journal detection (QIF for example).')
     hide_journal_field = fields.Boolean(string='Hide the journal field in the view', default=_get_hide_journal_field)
 
-    def _get_journal(self, currency_id, bank_account_id, account_number):
+    def _find_additional_data(self, *args):
         """ As .QIF format does not allow us to detect the journal, we need to let the user choose it.
-            We set it in context before to call super so it's the same as calling the widget from a journal """
-        if self._context.get('active_id'):
-            record = self.browse(self._context.get('active_id'))
-            if record.journal_id:
-                return super(AccountBankStatementImport, self).with_context(journal_id=record.journal_id.id)._get_journal(currency_id, bank_account_id, account_number)
-        return super(AccountBankStatementImport, self)._get_journal(currency_id, bank_account_id, account_number)
+            We set it in context in the same way it's done when calling the import action from a journal.
+        """
+        if self.journal_id:
+            self.env.context = dict(self.env.context, journal_id=self.journal_id.id)
+        return super(AccountBankStatementImport, self)._find_additional_data(*args)
 
     def _check_qif(self, data_file):
         return data_file.strip().startswith('!Type:')
