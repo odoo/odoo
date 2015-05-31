@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import re
-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
@@ -115,51 +113,8 @@ class res_partner_bank(osv.osv):
                 value = address.get(field, value)
         return value
 
-    # Courtesy of lmignon (acsone)
-
-    def _sanitize_account_number(self, acc_number):
-        if acc_number:
-            return re.sub(r'\W+', '', acc_number).upper()
-        return False
-
-    def _get_sanitized_account_number(
-            self, cr, uid, ids, field_name, arg, context):
-        """Compute sanitized version off account number.
-
-        This is needed for reliable search and uniqueness test."""
-        res = {}
-        for this_obj in self.browse(cr, uid, ids, context = context):
-            res[this_obj.id] = (
-                self._sanitize_account_number(this_obj.acc_number))
-        return res
-
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
-               context=None, count=False):
-        pos = 0
-        while pos < len(args):
-            if args[pos][0] == 'acc_number':
-                op = args[pos][1]
-                value = args[pos][2]
-                if hasattr(value, '__iter__'):
-                    value = [self._sanitize_account_number(i) for i in value]
-                else:
-                    value = self._sanitize_account_number(value)
-                if 'like' in op:
-                    value = '%' + value + '%'
-                args[pos] = ('sanitized_acc_number', op, value)
-            pos += 1
-        return super(res_partner_bank, self).search(
-            cr, user, args, offset=0, limit=None, order=None, context=None,
-            count=False)
-
     _columns = {
         'acc_number': fields.char('Account Number', required=True),
-        'sanitized_acc_number': fields.function(
-            _get_sanitized_account_number,
-            string='Sanitized Account Number',
-            type='char', size=64, readonly=True,
-            store=True,
-        ),
         'bank': fields.many2one('res.bank', 'Bank'),
         'bank_bic': fields.char('Bank Identifier Code'),
         'bank_name': fields.char('Bank Name'),
@@ -180,10 +135,6 @@ class res_partner_bank(osv.osv):
         'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders."),
         'currency_id': fields.many2one('res.currency', string='Currency', help="Currency of the bank account and its related journal."),
     }
-    _sql_constraints = [
-        ('unique_number', 'unique(sanitized_acc_number)',
-        'Account Number must be unique'),
-    ]
 
     _defaults = {
         'owner_name': lambda obj, cursor, user, context: obj._default_value(
