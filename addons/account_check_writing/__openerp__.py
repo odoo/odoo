@@ -16,6 +16,7 @@ The check settings are located in the accounting journals configuration page.
     'depends' : ['account_accountant'],
     'data': [
         'data/check_writing.xml',
+        'views/account_journal_dashboard_view.xml',
         'views/account_journal_view.xml',
         'views/account_payment_view.xml',
     ],
