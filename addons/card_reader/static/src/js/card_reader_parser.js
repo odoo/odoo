@@ -367,14 +367,14 @@ PaymentScreenWidget.include({
                                 }, 1000);
                             } else {
                                 def.resolve({
-                                    message: "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + " (Mercury down?)",
+                                    message: "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + " (Mercury down?)<br/>" + response.message,
                                     auto_close: false
                                 });
                             }
 
                         } else { // not recoverable
                             def.resolve({
-                                message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error],
+                                message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error] + "<br/>" + response.message,
                                 auto_close: false
                             });
                         }
@@ -485,7 +485,8 @@ PaymentScreenWidget.include({
                         });
                     } else {
                         def.resolve({
-                            message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error],
+                            message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error]
+                                + "<br/>" + response.message,
                         });
                     }
                 }
