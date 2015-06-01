@@ -68,12 +68,16 @@ except (OSError, IOError):
 else:
     _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
     out, err = process.communicate()
-    version = re.search('([0-9.]+)', out).group(0)
-    if LooseVersion(version) < LooseVersion('0.12.0'):
-        _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
-        wkhtmltopdf_state = 'upgrade'
+    version_match = re.search('([0-9.]+)', out)
+    if version_match is None:
+        _logger.info('Failed to read "%s --version". Broken binary?' % _get_wkhtmltopdf_bin())
     else:
-        wkhtmltopdf_state = 'ok'
+        version = version_match.group(0)
+        if LooseVersion(version) < LooseVersion('0.12.0'):
+            _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
+            wkhtmltopdf_state = 'upgrade'
+        else:
+            wkhtmltopdf_state = 'ok'
 
     if config['workers'] == 1:
         _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
