@@ -280,6 +280,39 @@ PaymentScreenWidget.include({
         return encrypted_data;
     },
 
+    retry_credit_code_transaction: function (parsed_result, def, response, retry_nr) {
+        var message = "";
+
+        if (! retry_nr) {
+            retry_nr = 1;
+        }
+
+        if (retry_nr <= 5) {
+            if (response) {
+                message = "Retry #" + retry_nr + "...<br/><br/>" + response.message;
+            } else {
+                message = "Retry #" + retry_nr + "...";
+            }
+            def.notify({
+                message: message
+            });
+
+            setTimeout(function () {
+                self.credit_code_transaction(parsed_result, def, retry_nr + 1);
+            }, 1000);
+        } else {
+            if (response) {
+                message = "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + " (Mercury down?)<br/>" + response.message;
+            } else {
+                message = "No response from Mercury (Mercury down?)";
+            }
+            def.resolve({
+                message: message,
+                auto_close: false
+            });
+        }
+    },
+
     // Handler to manage the card reader string
     credit_code_transaction: function (parsed_result, old_deferred, retry_nr) {
         if(!allowOnlinePayment(this.pos)) {
@@ -316,6 +349,12 @@ PaymentScreenWidget.include({
         var rpc_def = session.rpc("/pos/send_payment_transaction", transaction)
                 .done(function (data) {
                     console.log(data); // todo
+
+                    // if not receiving a response, we should retry
+                    if (data === "timeout") {
+                        self.retry_credit_code_transaction(parsed_result, def, null, retry_nr);
+                        return;
+                    }
 
                     var response = decodeMercuryResponse(data);
                     response.journal_id = parsed_result.journal_id;
@@ -367,24 +406,7 @@ PaymentScreenWidget.include({
                     // if an error related to timeout or connectivity issues arised, then retry the same transaction
                     else {
                         if (lookUpCodeTransaction["TimeoutError"][response.error]) { // recoverable error
-                            if (! retry_nr) {
-                                retry_nr = 1;
-                            }
-
-                            if (retry_nr <= 5) {
-                                def.notify({
-                                    message: "Retry #" + retry_nr + "...<br/><br/>" + response.message,
-                                });
-                                setTimeout(function () {
-                                    self.credit_code_transaction(parsed_result, def, retry_nr + 1);
-                                }, 1000);
-                            } else {
-                                def.resolve({
-                                    message: "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + " (Mercury down?)<br/>" + response.message,
-                                    auto_close: false
-                                });
-                            }
-
+                            self.retry_credit_code_transaction(parsed_result, def, response, retry_nr);
                         } else { // not recoverable
                             def.resolve({
                                 message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error] + "<br/>" + response.message,
@@ -399,13 +421,6 @@ PaymentScreenWidget.include({
                         error: '-1',
                     });
                 });
-
-        // if not receiving a response for > 60 seconds, we should retry
-        setTimeout(function () {
-            if (rpc_def.state() == "pending") {
-                self.credit_code_transaction(parsed_result);
-            }
-        }, 65000);
     },
     credit_code_cancel: function () {
         return;

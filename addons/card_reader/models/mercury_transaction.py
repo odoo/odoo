@@ -1,5 +1,6 @@
 import cgi
 import urllib2
+import ssl
 from openerp import models
 
 soap_header = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com"><soapenv:Header/><soapenv:Body><mer:CreditTransaction><mer:tran>'
@@ -70,13 +71,12 @@ class MercuryTransaction(models.Model):
             'SOAPAction': data['url_base_action'] + '/CreditTransaction',
         }
 
+        r = urllib2.Request(data['payment_server'], data=xml_transaction, headers=headers)
         try:
-            r = urllib2.Request(data['payment_server'], data=xml_transaction, headers=headers)
-            u = urllib2.urlopen(r)  # todo jov: add timeout=
+            u = urllib2.urlopen(r, timeout=65)
             response = self._unescape_html(u.read())
-        except urllib2.HTTPError as e:
-            print e.code
-            response = e.read()
+        except (urllib2.URLError, ssl.SSLError):
+            response = "timeout"
 
         print '--------------RECV--------------'
         print response
