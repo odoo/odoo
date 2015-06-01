@@ -1519,11 +1519,10 @@ class account_invoice_line(osv.osv):
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
         result['name'] = res.partner_ref
 
+        result['uos_id'] = res.uom_id.id
         if uom_id:
             uom = product_uom_obj.browse(cr, uid, uom_id)
-            if res.uom_id.category_id.id != uom.category_id.id:
-                result['uos_id'] = res.uom_id.id
-            else:
+            if res.uom_id.category_id.id == uom.category_id.id:
                 result['uos_id'] = uom_id
 
         if res.description:
