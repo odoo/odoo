@@ -63,6 +63,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 'type': 'report',
                 'level': bool(report.style_overwrite) and report.style_overwrite or report.level,
                 'account_type': report.type =='sum' and 'view' or False, #used to underline the financial report balances
+                'report_id': report.id,
             }
             if data['form']['debit_credit']:
                 vals['debit'] = report.debit
