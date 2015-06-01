@@ -263,7 +263,7 @@ class mail_compose_message(osv.TransientModel):
             # static wizard (mail.message) values
             mail_values = {
                 'subject': wizard.subject,
-                'body': wizard.body,
+                'body': wizard.body or '',
                 'parent_id': wizard.parent_id and wizard.parent_id.id,
                 'partner_ids': [partner.id for partner in wizard.partner_ids],
                 'attachment_ids': [attach.id for attach in wizard.attachment_ids],

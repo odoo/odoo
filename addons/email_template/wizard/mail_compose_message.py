@@ -74,6 +74,7 @@ class mail_compose_message(osv.TransientModel):
             if wizard.template_id:
                 wizard_context['mail_notify_user_signature'] = False  # template user_signature is added when generating body_html
                 wizard_context['mail_auto_delete'] = wizard.template_id.auto_delete  # mass mailing: use template auto_delete value -> note, for emails mass mailing only
+                wizard_context['mail_server_id'] = wizard.template_id.mail_server_id.id
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
             new_attachment_ids = []

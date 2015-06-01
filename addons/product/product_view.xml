@@ -72,7 +72,7 @@
                             <page string="Information">
                                 <group colspan="4">
                                     <group>
-                                        <field name="type"/>
+                                        <field name="type" on_change="onchange_type(type)"/>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                         <field name="list_price"/>
                                     </group>

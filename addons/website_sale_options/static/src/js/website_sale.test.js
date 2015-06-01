@@ -69,9 +69,10 @@
                 title:     "check optional product is removed",
                 waitNot:   '.optional_product',
             },
+// aqui fail
             {
                 title:     "click on shop",
-                element:   "a:contains(Shop)",
+                element:   "a:contains(Continue Shopping)",
                 waitNot:   '#products_grid_before .js_attributes',
             },
             {

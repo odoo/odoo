@@ -214,6 +214,7 @@ class mail_notification(osv.Model):
             mail_values = {
                 'mail_message_id': message.id,
                 'auto_delete': (context or {}).get('mail_auto_delete', True),
+                'mail_server_id': (context or {}).get('mail_server_id', False),
                 'body_html': body_html,
                 'recipient_ids': [(4, id) for id in chunk],
                 'references': references,

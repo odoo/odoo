@@ -153,7 +153,7 @@ class PaymentAcquirerOgone(osv.Model):
             'OWNERZIP':  partner_values['zip'],
             'OWNERADDRESS':  partner_values['address'],
             'OWNERTOWN':  partner_values['city'],
-            'OWNERCTY':  partner_values['country'] and partner_values['country'].name or '',
+            'OWNERCTY':  partner_values['country'] and partner_values['country'].code or '',
             'OWNERTELNO': partner_values['phone'],
             'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
             'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),

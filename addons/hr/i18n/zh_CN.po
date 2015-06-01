@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-10-30 03:22+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-03-17 00:16+0000\n"
+"Last-Translator: Henry Siu <Unknown>\n"
+"Language-Team: <henry.siu@qq.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:44+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-18 06:14+0000\n"
+"X-Generator: Launchpad (build 17403)\n"
+"Language: zh_CN\n"
 
 #. module: hr
 #: code:addons/hr/hr.py:158
@@ -36,11 +37,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"              单击创建新的员工档案信息。\n"
-"              </p><p>\n"
-"              只需眼睛一扫系统的员工界面你就可以轻松地查找每个人的信息，比如联系方式、工作岗位等等。\n"
-"              </p>\n"
+"<p class=\\\"oe_view_nocontent_create\\\">\\n\n"
+"                点击添加一个新员工。\\n\n"
+"              </p><p>\\n\n"
+"                只需眼睛一扫系统的员工界面你就可以轻松地找到每个人的\\n\n"
+"                信息，比如联系方式、工作岗位、可用性等等。\\n\n"
+"              </p>\\n\n"
 "            "
 
 #. module: hr
@@ -56,9 +58,10 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"               单击创建部门信息。\n"
+"                点击创建一个部门。\n"
 "              </p><p>\n"
-"                系统的部门结构数据用于管理所有与员工部门有关的单据：报销单、时间表、准假申请、招聘等。\n"
+"                Odoo的部门结构用于按部门管理所有与员工有关的单据：\n"
+"                报销单、计工单、准假申请、招聘等。\n"
 "              </p>\n"
 "            "
 
@@ -76,11 +79,10 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                单击创建部门.\n"
+"                点击定义一个新部门。\n"
 "              </p><p>\n"
-"                OpenERP 的部门结构 用来管理所有跟部门员工相关\n"
-"                的单据：费用、计工单、请假、假期和招聘等等。\n"
-" \n"
+"                Odoo的部门结构用于按部门管理所有与员工有关的单据：\n"
+"                报销单、计工单、准假申请、招聘等。\n"
 "              </p>\n"
 "            "
 
@@ -107,13 +109,14 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                单击定义个一个新的职位\n"
+"                点击定义个一个新的工作职位\n"
 "              </p><p>\n"
-"               职位用来定义工作和它们的需求。\n"
-"                你能跟踪跟踪每个职位的员工数，并且根据你未来的计划跟进变化。\n"
+"                工作职位用于定义工作和它们的要求。\n"
+"                您能跟踪每个职位的员工数，并且根据你未来的计划变化。\n"
 "              </p>\n"
 "              <p>\n"
-"                你能附加一个调查表到职位信息中用于在招聘流程中评估此岗位的申请人。\n"
+"                您可以在工作职位中附加一个调查表。它将用于在招聘流程\n"
+"                中评估此岗位的申请人。\n"
 "              </p>\n"
 "            "
 
@@ -136,7 +139,7 @@ msgstr "允许基于计工单开票（销售应用模块将被安装）"
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "Allow timesheets validation by managers"
-msgstr "允许管理人员核准工时单"
+msgstr "允许管理人员验证计工单"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -163,7 +166,7 @@ msgstr "生日"
 msgid ""
 "By default 'Closed', set it to 'In Recruitment' if recruitment process is "
 "going on for this job position."
-msgstr ""
+msgstr "默认为 '关闭'，如果该岗位的招聘流程正在进行请设置为'招聘中'。"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -173,12 +176,12 @@ msgstr "取消"
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr "子分类"
+msgstr "下级分类"
 
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr "子部门"
+msgstr "下级部门"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -272,7 +275,7 @@ msgstr "出生日期"
 #: help:hr.employee,message_last_post:0
 #: help:hr.job,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后信息的日期"
+msgstr "记录上发布的最后信息的日期"
 
 #. module: hr
 #: view:hr.department:hr.view_department_filter
@@ -325,7 +328,7 @@ msgstr "员工分类"
 #. module: hr
 #: field:hr.employee.category,name:0
 msgid "Employee Tag"
-msgstr "员工类型"
+msgstr "员工标签"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -336,7 +339,7 @@ msgstr "员工标签"
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "银行支付员工工资的科目"
+msgstr "员工的银行工资账户"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_filter
@@ -365,17 +368,17 @@ msgstr "员工架构"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error! You cannot create recursive Categories."
-msgstr "错误！你不能创建循环的分类。"
+msgstr "错误！您不能创建递归的分类。"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
-msgstr "错误！你不能创建循环的部门"
+msgstr "错误！您不能创建递归的部门。"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "错误！，你不能创建递归的员工层次"
+msgstr "错误！您不能创建递归的员工层次。"
 
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
@@ -386,7 +389,7 @@ msgstr "预期的新员工"
 #: help:hr.job,expected_employees:0
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "新招聘后此职位上期望的员工人数"
+msgstr "新招聘后此职位上预期的员工数量"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -405,7 +408,7 @@ msgstr "关注"
 #: field:hr.employee,message_follower_ids:0
 #: field:hr.job,message_follower_ids:0
 msgid "Followers"
-msgstr "关注者"
+msgstr "关注人"
 
 #. module: hr
 #: view:hr.employee:hr.hr_kanban_view_employees
@@ -439,7 +442,7 @@ msgstr "已雇用员工"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
+msgstr "保存复杂的摘要（消息数量，……等）。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -477,7 +480,7 @@ msgstr "身份证号"
 #: help:hr.employee,message_unread:0
 #: help:hr.job,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "如果要求你关注新消息，勾选此项"
+msgstr "如果勾选此项，您需要关注新的消息。"
 
 #. module: hr
 #: view:hr.job:hr.view_job_filter
@@ -487,12 +490,12 @@ msgstr "在职"
 #. module: hr
 #: view:hr.job:hr.view_job_filter
 msgid "In Recruitment"
-msgstr "正在招聘"
+msgstr "招聘中"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_attendance:0
 msgid "Install attendances feature"
-msgstr "安装 出勤率特性"
+msgstr "安装考勤特性"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -503,7 +506,7 @@ msgstr "安装你所在国家的工资表"
 #: field:hr.employee,message_is_follower:0
 #: field:hr.job,message_is_follower:0
 msgid "Is a Follower"
-msgstr "是一个关注者"
+msgstr "是一个关注人"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_filter
@@ -532,18 +535,18 @@ msgstr "工作职位"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job_position
 msgid "Job Positions"
-msgstr "职位"
+msgstr "工作职位"
 
 #. module: hr
 #: field:hr.employee,job_id:0
 msgid "Job Title"
-msgstr "职位"
+msgstr "职位头衔"
 
 #. module: hr
 #: field:hr.department,jobs_ids:0
 #: view:hr.job:hr.view_job_filter
 msgid "Jobs"
-msgstr "职务"
+msgstr "工作"
 
 #. module: hr
 #: field:hr.employee,message_last_post:0
@@ -566,7 +569,7 @@ msgstr "最近更新者"
 #: field:hr.employee,write_date:0
 #: field:hr.employee.category,write_date:0
 msgid "Last Updated on"
-msgstr "最近更新时间"
+msgstr "最近更新日期"
 
 #. module: hr
 #: field:hr.employee,last_login:0
@@ -581,7 +584,7 @@ msgstr "启动招聘"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Leaves"
-msgstr "准假"
+msgstr "假期"
 
 #. module: hr
 #: field:hr.employee,login:0
@@ -601,12 +604,12 @@ msgstr "管理员工的费用"
 #. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
 msgid "Manage holidays, leaves and allocation requests"
-msgstr "管理假期、请假和分配请求"
+msgstr "管理节日、假期和分配申请"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
 msgid "Manage payroll"
-msgstr "管理工资单"
+msgstr "管理工资表"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_recruitment:0
@@ -646,7 +649,7 @@ msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "员工的中等尺寸照片。保留纵横比例，自动缩放为128x128px的图片。这个字段用在表单视图和某些看板视图。"
+msgstr "员工的中等尺寸照片。自动缩放为128x128px的图片，保持纵横比例。这个字段用在表单视图和某些看板视图。"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -670,7 +673,7 @@ msgstr "消息和通信历史"
 #: field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
-msgstr "名称"
+msgstr "姓名"
 
 #. module: hr
 #: field:hr.employee,country_id:0
@@ -690,20 +693,20 @@ msgstr "备注"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees currently occupying this job position."
-msgstr "此职位现有的员工人数"
+msgstr "此职位现有的员工人数。"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid ""
 "Number of hired employee must be less than expected number of employee in "
 "recruitment."
-msgstr "雇佣员工数量必须小于招聘预期数量。"
+msgstr "已雇佣员工数量必须小于正在招聘的预期数量。"
 
 #. module: hr
 #: help:hr.job,no_of_hired_employee:0
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr ""
+msgstr "招聘阶段此岗位已经雇佣的员工数量。"
 
 #. module: hr
 #: help:hr.job,no_of_recruitment:0
@@ -718,7 +721,7 @@ msgstr "办公地点"
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
 msgid "Open HR Menu"
-msgstr "打开 人力资源 菜单"
+msgstr "打开人力资源菜单"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_evaluation:0
@@ -728,7 +731,7 @@ msgstr "组织员工定期评估"
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr "其它证件号"
+msgstr "其它ID"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -743,7 +746,7 @@ msgstr "上级部门"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Employee Tag"
-msgstr "上级员工分类"
+msgstr "上级员工标签"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -753,7 +756,7 @@ msgstr "护照号"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
-msgstr "薪酬"
+msgstr "工资表"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -778,7 +781,7 @@ msgstr "公开信息"
 #. module: hr
 #: field:hr.config.settings,module_hr_contract:0
 msgid "Record contracts per employee"
-msgstr "记录每个员工的合同"
+msgstr "每位员工合同记录"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -793,7 +796,7 @@ msgstr "正在招聘"
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
 msgid "Related User"
-msgstr "相关用户"
+msgstr "相关的用户"
 
 #. module: hr
 #: field:res.users,employee_ids:0
@@ -818,12 +821,12 @@ msgstr "资源"
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr "社会保险号SIN"
+msgstr "SIN号码"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr "社会保险号SSN"
+msgstr "SSN号码"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -841,17 +844,17 @@ msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
-msgstr "小尺寸的员工照片。保留纵横比，自动缩放为64x64px。用在任何需要小图片的场合"
+msgstr "小尺寸的员工照片。自动缩放为64x64px，保持纵横比。用于任何需要小图片的场合。"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr "社会保险号"
+msgstr "社会保险号码"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr "社会保险号"
+msgstr "社会保障号码"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -868,7 +871,7 @@ msgstr "停止招聘"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordinate Hierarchy"
-msgstr "隶属结构"
+msgstr "下级结构"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -902,7 +905,7 @@ msgstr "人才管理"
 #: sql_constraint:hr.job:0
 msgid ""
 "The name of the job position must be unique per department in company!"
-msgstr ""
+msgstr "公司每个部门内的岗位名称必须唯一！"
 
 #. module: hr
 #: help:hr.employee,image:0
@@ -916,67 +919,67 @@ msgstr "这个字段保存员工的照片，限制为 1024x1024px"
 msgid ""
 "This installs the module account_analytic_analysis, which will install sales "
 "management too."
-msgstr "为此要安装模块 account_analytic_analysis, 也将安装销售管理"
+msgstr "为此要安装模块 account_analytic_analysis，也将安装销售管理"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
 msgid "This installs the module hr_attendance."
-msgstr "为此要安装模块 hr_attendance."
+msgstr "为此要安装模块 hr_attendance。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
 msgid "This installs the module hr_contract."
-msgstr "为此要安装模块hr_contract."
+msgstr "为此要安装模块 hr_contract。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
-msgstr "为此要安装模块 hr_evaluation."
+msgstr "为此要安装模块 hr_evaluation。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
 msgid "This installs the module hr_expense."
-msgstr "为此要安装模块hr_expense."
+msgstr "为此要安装模块 hr_expense。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_gamification:0
 msgid "This installs the module hr_gamification."
-msgstr ""
+msgstr "为此将安装模块 hr_gamification。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
 msgid "This installs the module hr_holidays."
-msgstr "为此要安装模块 hr_holidays."
+msgstr "为此要安装模块 hr_holidays。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_payroll:0
 msgid "This installs the module hr_payroll."
-msgstr "为此要安装模块 hr_payroll."
+msgstr "为此要安装模块 hr_payroll。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
 msgid "This installs the module hr_recruitment."
-msgstr "为此要安装模块hr_recruitment."
+msgstr "为此要安装模块 hr_recruitment。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
 msgid "This installs the module hr_timesheet."
-msgstr "为此要安装模块hr_timesheet."
+msgstr "为此要安装模块 hr_timesheet。"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "This installs the module hr_timesheet_sheet."
-msgstr "为此要安装模块hr_timesheet_sheet."
+msgstr "为此要安装模块 hr_timesheet_sheet。"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
 msgid "Time Tracking"
-msgstr "考勤跟踪"
+msgstr "时间跟踪"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Total Forecasted Employees"
-msgstr "预计员工数合计"
+msgstr "预计员工总数"
 
 #. module: hr
 #: view:hr.employee:hr.hr_kanban_view_employees
@@ -1003,7 +1006,7 @@ msgstr "用户"
 #: code:addons/hr/hr.py:273
 #, python-format
 msgid "Welcome to %s! Please help him/her take the first steps with Odoo!"
-msgstr ""
+msgstr "欢迎来到 %s！请帮助他/她迈开Odoo的第一步！"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1043,12 +1046,12 @@ msgstr "例如： 部分时间"
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "new employee(s) expected"
-msgstr ""
+msgstr "期望新员工"
 
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "no_of_recruitment"
-msgstr ""
+msgstr "不属于招聘"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration

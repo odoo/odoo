@@ -526,6 +526,7 @@ ALL_LANGUAGES = {
         'it_IT': u'Italian / Italiano',
         'iu_CA': u'Inuktitut / ᐃᓄᒃᑎᑐᑦ',
         'ja_JP': u'Japanese / 日本語',
+        'kab_DZ': u'Kabyle / Taqbaylit',
         'ko_KP': u'Korean (KP) / 한국어 (KP)',
         'ko_KR': u'Korean (KR) / 한국어 (KR)',
         'lo_LA': u'Lao / ພາສາລາວ',

@@ -37,6 +37,9 @@ from openerp.http import request
 
 _logger = logging.getLogger(__name__)
 
+# Only users who can modify the user (incl. the user herself) see the real contents of these fields
+USER_PRIVATE_FIELDS = ['password']
+
 #----------------------------------------------------------
 # Basic res.groups and res.users
 #----------------------------------------------------------
@@ -276,12 +279,14 @@ class res_users(osv.osv):
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
     # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update']
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
-            if 'password' in o and ('id' not in o or o['id'] != uid):
-                o['password'] = '********'
+            if ('id' not in o or o['id'] != uid):
+                for f in USER_PRIVATE_FIELDS:
+                    if f in o:
+                        o[f] = '********'
             return o
 
         if fields and (ids == [uid] or ids == uid):
@@ -329,6 +334,8 @@ class res_users(osv.osv):
                 # if partner is global we keep it that way
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']: 
                     user.partner_id.write({'company_id': user.company_id.id})
+            # clear default ir values when company changes
+            self.pool['ir.values'].get_defaults_dict.clear_cache(self.pool['ir.values'])
         # clear caches linked to the users
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         clear = partial(self.pool['ir.rule'].clear_cache, cr)

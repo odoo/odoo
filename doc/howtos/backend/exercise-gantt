@@ -35,7 +35,7 @@ Index: addons/openacademy/views/openacademy.xml
 ===================================================================
 --- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:21:46.543015785 +0200
 +++ addons/openacademy/views/openacademy.xml	2014-08-28 14:21:46.539015785 +0200
-@@ -145,11 +145,24 @@
+@@ -145,11 +145,23 @@
              </field>
          </record>
  
@@ -44,10 +44,9 @@ Index: addons/openacademy/views/openacademy.xml
 +            <field name="model">openacademy.session</field>
 +            <field name="arch" type="xml">
 +                <gantt string="Session Gantt" color="course_id"
-+                       date_start="start_date" date_delay="hours">
-+                    <level object="res.partner" link="instructor_id">
-+                        <field name="name"/>
-+                    </level>
++                       date_start="start_date" date_delay="hours"
++                       default_group_by='instructor_id'>
++                    <field name="name"/>
 +                </gantt>
 +            </field>
 +        </record>

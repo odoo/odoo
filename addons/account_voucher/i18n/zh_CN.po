@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-11-17 01:50+0000\n"
+"PO-Revision-Date: 2015-05-15 02:45+0000\n"
 "Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:27+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-16 05:44+0000\n"
+"X-Generator: Launchpad (build 17493)\n"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
@@ -29,6 +29,10 @@ msgid ""
 "\n"
 "* The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * '草稿'状态用于新建的和未确认凭证.                          \n"
+"* '形式发票'状态下凭证，没有凭证编号.                          \n"
+"* '已登账'状态指用户创建了凭证，凭证号已经生成，凭证中的项目已经进入账户 。\n"
+"* '取消' 状态用于用户将凭证取消。"
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
@@ -57,6 +61,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击新建一个新的供应商付款。\n"
+"              </p><p>\n"
+"                Odoo 帮助您了解您的实际付款和需要支付给供应商的付款余额。\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -70,6 +80,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建一个新的销售收据.\n"
+"              </p><p>\n"
+"                 销售收据被确认后，\n"
+"                您可记录客户与此销售收据相关的付款。\n"
+"                </p>\n"
+"            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -86,6 +103,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击新建一个付款。\n"
+"              </p><p>\n"
+"               输入客户及付款方法，\n"
+"               或手工创建一个付款记录，\n"
+"               Odoo将建议您核销还处于打开状态的发票\n"
+"               或销售收据。\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -98,6 +124,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建采购收据。\n"
+"              </p><p>\n"
+"                采购收据被确认后，\n"
+"                您可以记录与该收据相关的供应商付款。\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
@@ -111,6 +144,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"            通过这份报表,\n"
+"            您可以看到您客户的延期付款的发票汇总\n"
+"            这个搜索工具还可以定制您的发票报表，\n"
+"           计算分析您所需要的内容。\n"
+"          </p>\n"
+"        "
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0
@@ -161,7 +201,7 @@ msgstr "你确信要取消这个收据？"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Are you sure you want to unreconcile this record?"
-msgstr ""
+msgstr "您确认您想核销这条记录？"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:276
@@ -170,6 +210,8 @@ msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
 msgstr ""
+"在工作日,汇率为\n"
+"%s = %s"
 
 #. module: account_voucher
 #: field:sale.receipt.report,delay_to_pay:0
@@ -206,14 +248,14 @@ msgstr "取消"
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "取消收据"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Cancel Voucher"
-msgstr ""
+msgstr "取消付款凭证"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -269,13 +311,13 @@ msgstr "对应备注"
 #: field:account.voucher,create_uid:0
 #: field:account.voucher.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: account_voucher
 #: field:account.voucher,create_date:0
 #: field:account.voucher.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建于"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -329,7 +371,7 @@ msgstr "日期"
 #. module: account_voucher
 #: help:account.voucher,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "最新信息记录的日期。"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -393,7 +435,7 @@ msgstr "到期日期"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "到期月份"
 
 #. module: account_voucher
 #: help:account.voucher,date:0
@@ -444,7 +486,7 @@ msgstr "全部核销"
 #: code:addons/account_voucher/account_voucher.py:1104
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "跳转到设置面板"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -454,12 +496,12 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Group By"
-msgstr ""
+msgstr "分组按"
 
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
 msgid "Helping Sentence"
-msgstr ""
+msgstr "帮助语句"
 
 #. module: account_voucher
 #: help:account.voucher,message_summary:0
@@ -552,19 +594,19 @@ msgstr "保持打开"
 #. module: account_voucher
 #: field:account.voucher,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最新消息日期"
 
 #. module: account_voucher
 #: field:account.voucher,write_uid:0
 #: field:account.voucher.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最近更新者"
 
 #. module: account_voucher
 #: field:account.voucher,write_date:0
 #: field:account.voucher.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最新更新日期"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -892,7 +934,7 @@ msgstr "销售收据"
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_graph
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "销售收入分析"
 
 #. module: account_voucher
 #: field:sale.receipt.report,user_id:0
@@ -936,7 +978,7 @@ msgstr "状态更改"
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "状态已更改"
 
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
@@ -991,7 +1033,7 @@ msgstr "这张凭证已全部付完"
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "您当前支付的发票是无效的."
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
@@ -1014,7 +1056,7 @@ msgstr "此字段用于选择对已支付金额和已分配金额的差异如何
 msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
-msgstr ""
+msgstr "这有助于让您知道如何通过它来计算付款率"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1091,7 +1133,7 @@ msgstr "记账"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Validate Payment"
-msgstr ""
+msgstr "验证支付"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
@@ -1158,12 +1200,12 @@ msgstr "凭证行"
 #. module: account_voucher
 #: field:account.voucher,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "网站消息"
 
 #. module: account_voucher
 #: help:account.voucher,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "网站沟通记录"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:377
@@ -1196,7 +1238,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' to manage "
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
-msgstr ""
+msgstr "您需要设置'汇率收益账簿'来管理汇率差异相关的会计分录."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1097
@@ -1205,7 +1247,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' to manage "
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
-msgstr ""
+msgstr "您需要设置'汇率损失账簿'来管理汇率差异相关的会计分录."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1114
@@ -1220,14 +1262,14 @@ msgstr "改动"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "e.g. 003/10"
-msgstr ""
+msgstr "例如 003/10"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "e.g. Invoice SAJ/0042"
-msgstr ""
+msgstr "例如 发票SAJ/0042"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
