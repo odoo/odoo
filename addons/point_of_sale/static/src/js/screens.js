@@ -1480,7 +1480,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
         this.inputbuffer = "";
         this.firstinput  = true;
-            this.decimal_point = instance.web._t.database.parameters.decimal_point;
+        this.decimal_point = _t.database.parameters.decimal_point;
         
         // This is a keydown handler that prevents backspace from
         // doing a back navigation
