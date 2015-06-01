@@ -407,7 +407,7 @@ def route(route=None, **kw):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
-                response = response.get_response()
+                response = response.get_response(request.httprequest.environ)
             if isinstance(response, werkzeug.wrappers.BaseResponse):
                 response = Response.force_type(response)
                 response.set_default()
