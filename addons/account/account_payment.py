@@ -261,12 +261,12 @@ class account_payment(models.Model):
         invoice_ids = rec.get('invoice_ids') and rec['invoice_ids'][0][2] or None
         if invoice_ids and len(invoice_ids) == 1:
             invoice = self.env['account.invoice'].browse(invoice_ids)
-            rec['communication'] = rec.get('communication', invoice.reference)
-            rec['currency_id'] = rec.get('currency_id', invoice.currency_id.id)
-            rec['payment_type'] = rec.get('payment_type', invoice.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound')
-            rec['partner_type'] = rec.get('partner_type', MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type])
-            rec['partner_id'] = rec.get('partner_id', invoice.partner_id.id)
-            rec['amount'] = rec.get('amount', invoice.residual_signed)
+            rec['communication'] = invoice.reference
+            rec['currency_id'] = invoice.currency_id.id
+            rec['payment_type'] = invoice.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
+            rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type]
+            rec['partner_id'] = invoice.partner_id.id
+            rec['amount'] = invoice.residual_signed
         return rec
 
     def _get_invoices(self):
