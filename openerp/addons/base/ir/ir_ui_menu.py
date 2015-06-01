@@ -329,23 +329,19 @@ class ir_ui_menu(osv.osv):
         menu_ids = list(menu_ids)
 
         for menu in self.browse(cr, uid, menu_ids, context=context):
-            enabled = False
-            count = False
-            res[menu.id] = {
-                'needaction_enabled': enabled,
-                'needaction_counter': False,
-            }
             if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
-                obj = self.pool.get(menu.action.res_model, None)
+                obj = self.pool.get(menu.action.res_model)
                 if obj and obj._needaction:
                     if menu.action.type == 'ir.actions.act_window':
                         dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
                     else:
                         dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
-                    res[menu.id]['needaction_enabled'] = enabled = True
-                    res[menu.id]['needaction_counter'] = count = obj._needaction_count(cr, uid, dom, context=context)
-            if not enabled or count == 0:
-                del res[menu.id]
+                    res[menu.id] = dict(
+                        needaction_enabled=True,
+                        needaction_counter=obj._needaction_count(
+                            cr, uid, dom, context=context
+                        )
+                    )
         return res
 
     def get_user_roots(self, cr, uid, context=None):
