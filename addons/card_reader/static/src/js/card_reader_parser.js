@@ -342,6 +342,9 @@ PaymentScreenWidget.include({
                             order.selected_paymentline.record_no = response.record_no; // todo jov
                             order.selected_paymentline.mercury_data = response; // used to reverse transactions
 
+                            order.selected_paymentline.name =
+                                order.selected_paymentline.card_brand + " (****" +
+                                order.selected_paymentline.card_number + ")";
 
                             self.order_changes();
                             self.reset_input();
