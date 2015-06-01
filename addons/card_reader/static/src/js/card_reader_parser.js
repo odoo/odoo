@@ -321,33 +321,43 @@ PaymentScreenWidget.include({
                     response.journal_id = parsed_result.journal_id;
 
                     if (response.status === 'Approved') {
-                        // If the payment is approved, add a payment line
-                        var track1 = self._decode_track(parsed_result.code.match(self._track1));
-
-                        var order = self.pos.get_order();
-                        order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
-                        order.selected_paymentline.paid = true;
-                        order.selected_paymentline.amount = response.authorize;
-                        order.selected_paymentline.card_number = track1['card_number'].substr(-4);
-                        order.selected_paymentline.card_brand = response.card_type;
-                        order.selected_paymentline.card_owner_name = track1['card_owner_name'];
-                        order.selected_paymentline.ref_no = response.ref_no; // todo jov
-                        order.selected_paymentline.record_no = response.record_no; // todo jov
-                        order.selected_paymentline.mercury_data = response; // used to reverse transactions
-                        self.order_changes();
-                        self.reset_input();
-                        self.render_paymentlines();
-
-                        if (response.message === "PARTIAL AP") {
-                            def.resolve({
-                                message: "Partially approved",
-                                auto_close: false,
-                            });
-                        } else {
+                        // AP* indicates a duplicate request, so don't add anything for those
+                        if (response.message === "AP*") {
                             def.resolve({
                                 message: lookUpCodeTransaction["Approved"][response.error],
                                 auto_close: true,
                             });
+                        } else {
+                            // If the payment is approved, add a payment line
+                            var track1 = self._decode_track(parsed_result.code.match(self._track1));
+
+                            var order = self.pos.get_order();
+                            order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
+                            order.selected_paymentline.paid = true;
+                            order.selected_paymentline.amount = response.authorize;
+                            order.selected_paymentline.card_number = track1['card_number'].substr(-4);
+                            order.selected_paymentline.card_brand = response.card_type;
+                            order.selected_paymentline.card_owner_name = track1['card_owner_name'];
+                            order.selected_paymentline.ref_no = response.ref_no; // todo jov
+                            order.selected_paymentline.record_no = response.record_no; // todo jov
+                            order.selected_paymentline.mercury_data = response; // used to reverse transactions
+
+
+                            self.order_changes();
+                            self.reset_input();
+                            self.render_paymentlines();
+
+                            if (response.message === "PARTIAL AP") {
+                                def.resolve({
+                                    message: "Partially approved",
+                                    auto_close: false,
+                                });
+                            } else {
+                                def.resolve({
+                                    message: lookUpCodeTransaction["Approved"][response.error],
+                                    auto_close: true,
+                                });
+                            }
                         }
                     }
 
