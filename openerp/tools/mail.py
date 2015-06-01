@@ -514,6 +514,24 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
+def html_escape_keep_url(self, message):
+    """ Escape the message and transform the url into clickable link
+        :param string message: the message to escape url and transform them into clickable link
+        :returns the escaped message
+        :rtype : string
+    """
+    safe_message = ""
+    first = 0
+    last = 0
+    for m in re.finditer('(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?', message):
+        last = m.start()
+        safe_message += cgi.escape(message[first:last])
+        safe_message += '<a href="%s" target="_blank">%s</a>' % (cgi.escape(m.group(0)), m.group(0))
+        first = m.end()
+        last = m.end()
+    safe_message += cgi.escape(message[last:])
+    return safe_message
+
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
         html entities, using cgi.escape().
@@ -587,7 +605,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 #----------------------------------------------------------
 
 # matches any email in a body of text
-email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE) 
+email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE)
 
 # matches a string containing only one email
 single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)
