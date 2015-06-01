@@ -63,7 +63,6 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
         'data/account_tax_template.xml',
         'l10n_wizard.xml',
     ],
-    'license': 'Other OSI approved licence',
     'installable': False,
     'auto_install': False,
 }
