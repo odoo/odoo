@@ -319,9 +319,9 @@ class stock_picking(osv.osv):
             invoice_line_vals['invoice_id'] = invoices[key]
             invoice_line_vals['origin'] = origin
             if not is_extra_move[move.id]:
-                product_price_unit[invoice_line_vals['product_id']] = invoice_line_vals['price_unit']
-            if is_extra_move[move.id] and invoice_line_vals['product_id'] in product_price_unit:
-                invoice_line_vals['price_unit'] = product_price_unit[invoice_line_vals['product_id']]
+                product_price_unit[invoice_line_vals['product_id'], invoice_line_vals['uos_id']] = invoice_line_vals['price_unit']
+            if is_extra_move[move.id] and (invoice_line_vals['product_id'], invoice_line_vals['uos_id']) in product_price_unit:
+                invoice_line_vals['price_unit'] = product_price_unit[invoice_line_vals['product_id'], invoice_line_vals['uos_id']]
             if is_extra_move[move.id]:
                 desc = (inv_type == 'out_invoice' and move.product_id.product_tmpl_id.description_sale) or \
                     (inv_type == 'in_invoice' and move.product_id.product_tmpl_id.description_purchase)
