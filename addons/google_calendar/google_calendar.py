@@ -84,13 +84,14 @@ class SyncEvent(object):
 
     def compute_OP(self, modeFull=True):
         #If event are already in Gmail and in OpenERP
+        is_owner = self.OE.event.env.user.id == self.OE.event.user_id.id
         if self.OE.found and self.GG.found:
             #If the event has been deleted from one side, we delete on other side !
-            if self.OE.status != self.GG.status:
+            if self.OE.status != self.GG.status and is_owner:
                 self.OP = Delete((self.OE.status and "OE") or (self.GG.status and "GG"),
                                  'The event has been deleted from one side, we delete on other side !')
             #If event is not deleted !
-            elif self.OE.status and self.GG.status:
+            elif self.OE.status and (self.GG.status or not is_owner):
                 if self.OE.update.split('.')[0] != self.GG.update.split('.')[0]:
                     if self.OE.update < self.GG.update:
                         tmpSrc = 'GG'
