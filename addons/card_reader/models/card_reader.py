@@ -35,6 +35,7 @@ class account_bank_statement_line(models.Model):
     card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
     ref_no = fields.Char(string='Mercury reference number')
     record_no = fields.Char(string='Mercury record number')
+    invoice_no = fields.Integer(string='Mercury invoice number')
 
 class account_journal(models.Model):
     _inherit = 'account.journal'
@@ -53,7 +54,8 @@ class pos_order_card(models.Model):
             'card_brand': ui_paymentline.get('card_brand'),
             'card_owner_name': ui_paymentline.get('card_owner_name'),
             'ref_no': ui_paymentline.get('ref_no'),  # todo jov
-            'record_no': ui_paymentline.get('record_no')  # todo jov
+            'record_no': ui_paymentline.get('record_no'),  # todo jov
+            'invoice_no': ui_paymentline.get('invoice_no')
         })
 
         return fields
@@ -73,6 +75,7 @@ class pos_order_card(models.Model):
         # recent record_no and we need to delete after 6 months
         statement_line.ref_no = data.get('ref_no')
         statement_line.record_no = data.get('record_no')
+        statement_line.invoice_no = data.get('invoice_no')
 
         return statement_id
 
@@ -85,7 +88,8 @@ class pos_order_card(models.Model):
                 if statement_line.card_brand:
                     response = self.env['card_reader.mercury_transaction'].do_return({'transaction_type': 'Credit', 'transaction_code': 'ReturnByRecordNo',
                                                                                       'ref_no': statement_line.ref_no, 'record_no': statement_line.record_no,
-                                                                                      'purchase': statement_line.amount, 'journal_id': statement_line.journal_id.id}, self.user_id.id)
+                                                                                      'invoice_no': statement_line.invoice_no, 'purchase': statement_line.amount,
+                                                                                      'journal_id': statement_line.journal_id.id}, self.user_id.id)
 
                     if "<TextResponse>AP DUPE</TextResponse>" in response:
                         _logger.warning("Mercury credit card return was NOT approved, because it was a duplicate return.")
