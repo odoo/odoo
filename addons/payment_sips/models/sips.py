@@ -47,7 +47,7 @@ class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
     # Fields
     sips_merchant_id = fields.Char('API User Password',
-                                   required_if_provider='sips'),
+                                   required_if_provider='sips')
     sips_secret = fields.Char('Secret', size=64, required_if_provider='sips')
 
     # Methods
