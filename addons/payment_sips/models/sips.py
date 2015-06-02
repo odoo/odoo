@@ -9,11 +9,10 @@ from hashlib import sha256
 import urlparse
 import unicodedata
 
+from openerp.tools.float_utils import float_compare
+from openerp import models, fields, api
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_sips.controllers.main import SipsController
-from openerp.osv import osv, fields
-from openerp.tools.float_utils import float_compare
-from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -44,32 +43,27 @@ def unormalize(text):
     return text
 
 
-class AcquirerSips(osv.Model):
+class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
+    # Fields
+    sips_merchant_id = fields.Char('API User Password',
+                                   required_if_provider='sips'),
+    sips_secret = fields.Char('Secret', size=64, required_if_provider='sips')
 
-    def _get_sips_urls(self, cr, uid, environment, context=None):
-        """ Paypal URLS """
-        if environment == 'prod':
-            return {
-                'sips_form_url': 'https://payment-webinit.sips-atos.com/paymentInit',
-            }
-        else:
-            return {
-                'sips_form_url': 'https://payment-webinit.simu.sips-atos.com/paymentInit',
-            }
+    # Methods
+    def _get_sips_urls(self, environment):
+        """ Worldline SIPS URLS """
+        url = {
+            'prod': 'https://payment-webinit.sips-atos.com/paymentInit',
+            'test': 'https://payment-webinit.simu.sips-atos.com/paymentInit', }
 
-    def _get_providers(self, cr, uid, context=None):
-        providers = super(AcquirerSips, self)._get_providers(cr, uid, context=context)
+        return {'sips_form_url': url.get(environment, url['test']), }
+
+    @api.model
+    def _get_providers(self):
+        providers = super(AcquirerSips, self)._get_providers()
         providers.append(['sips', 'Sips'])
         return providers
-
-    _columns = {
-        'sips_merchant_id': fields.char('API User Password', required_if_provider='sips'),
-        'sips_secret': fields.char('Secret', size=64, required_if_provider='sips'),
-    }
-
-    _defaults = {
-    }
 
     def _sips_generate_shasign(self, acquirer, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -90,18 +84,19 @@ class AcquirerSips(osv.Model):
         shasign = sha256(data + key)
         return shasign.hexdigest()
 
-    def sips_form_generate_values(
-            self, cr, uid, id, partner_values, tx_values, context=None):
-        base_url = self.pool['ir.config_parameter'].get_param(
-            cr, SUPERUSER_ID, 'web.base.url')
-        acquirer = self.browse(cr, uid, id, context=context)
-
+    @api.model
+    def sips_form_generate_values(self, partner_values, tx_values):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        acquirer = self.browse(id)
+        #TODO: add currency code to currency object
         currency_code = '978'
         amount = int(tx_values.get('amount') * 100)
         if acquirer.environment == 'prod':
+            # For production envinronment, key version 2 is required
             merchant_id = getattr(acquirer, 'sips_merchant_id')
             key_version = '2'
         else:
+            # Test key provided by Atos Wordline works only with version 1
             merchant_id = '002001000000001'
             key_version = '1'
 
@@ -116,22 +111,22 @@ class AcquirerSips(osv.Model):
             'InterfaceVersion': 'HP_2.3',
         })
 
-        returnContext = {}
+        return_context = {}
         if sips_tx_values.get('return_url'):
-            returnContext[u'return_url'] = u'%s' % sips_tx_values.pop('return_url')
-        returnContext[u'reference'] = u'%s' % sips_tx_values['reference']
-        sips_tx_values['Data'] += u'|returnContext=%s' % (json.dumps(returnContext))
+            return_context[u'return_url'] = u'%s' % sips_tx_values.pop('return_url')
+        return_context[u'reference'] = u'%s' % sips_tx_values['reference']
+        sips_tx_values['Data'] += u'|returnContext=%s' % (json.dumps(return_context))
 
         shasign = self._sips_generate_shasign(acquirer, sips_tx_values)
         sips_tx_values['Seal'] = shasign
         return partner_values, sips_tx_values
 
-    def sips_get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
-        return self._get_sips_urls(cr, uid, acquirer.environment, context=context)['sips_form_url']
+    @api.model
+    def sips_get_form_action_url(self):
+        return self._get_sips_urls(self.environment)['sips_form_url']
 
 
-class TxSips(osv.Model):
+class TxSips(models.Model):
     _inherit = 'payment.transaction'
 
     # sips status
@@ -153,7 +148,8 @@ class TxSips(osv.Model):
             res[element_split[0]] = element_split[1]
         return res
 
-    def _sips_form_get_tx_from_data(self, cr, uid, data, context=None):
+    @api.model
+    def _sips_form_get_tx_from_data(self, data):
         """ Given a data dict coming from sips, verify it and find the related
         transaction record. """
 
@@ -164,8 +160,8 @@ class TxSips(osv.Model):
             custom = json.loads(data.pop('returnContext', False) or '{}')
             reference = custom.get('reference')
 
-        tx_ids = self.pool['payment.transaction'].search(cr, uid, [
-            ('reference', '=', reference)], context=context)
+        tx_ids = self.pool['payment.transaction'].search([
+            ('reference', '=', reference), ])
         if not tx_ids or len(tx_ids) > 1:
             error_msg = 'Sips: received data for reference %s' % reference
             if not tx_ids:
@@ -174,28 +170,27 @@ class TxSips(osv.Model):
                 error_msg += '; multiple order found'
             _logger.error(error_msg)
             raise ValidationError(error_msg)
-        return self.browse(cr, uid, tx_ids[0], context=context)
+        return self.browse(tx_ids[0])
 
-    def _sips_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+    def _sips_form_get_invalid_parameters(self, tx, data):
         invalid_parameters = []
 
         data = self._sips_data_to_object(data.get('Data'))
 
-        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
+        # TODO: txn_id: shoulb be false at draft, set afterwards, and verified with txn details
         if tx.acquirer_reference and data.get('transactionReference') != tx.acquirer_reference:
             invalid_parameters.append(('transactionReference', data.get('transactionReference'), tx.acquirer_reference))
-        # check what is buyed
+        # check what is bought
         if float_compare(float(data.get('amount', '0.0')) / 100, tx.amount, 2) != 0:
-            print float(data.get('amount', '0.0'))
             invalid_parameters.append(('amount', data.get('amount'), '%.2f' % tx.amount))
         if tx.partner_reference and data.get('customerId') != tx.partner_reference:
             invalid_parameters.append(('customerId', data.get('customerId'), tx.partner_reference))
 
         return invalid_parameters
 
-    def _sips_form_validate(self, cr, uid, tx, data, context=None):
+    @api.model
+    def _sips_form_validate(self, tx, data):
         data = self._sips_data_to_object(data.get('Data'))
-
         status = data.get('responseCode')
         data = {
             'acquirer_reference': data.get('transactionReference'),
