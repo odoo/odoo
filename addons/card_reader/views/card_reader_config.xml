@@ -65,7 +65,7 @@
           <field name="inherit_id" ref="account.view_bank_statement_form"/>
           <field name="arch" type="xml">
             <tree position="inside">
-              <field name="card_number"/>
+              <field name="prefixed_card_number"/>
               <field name="card_brand"/>
               <field name="card_owner_name"/>
             </tree>
@@ -78,7 +78,7 @@
           <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
           <field name="arch" type="xml">
             <xpath expr="//field[@name='amount']" position="before">
-              <field name="card_number"/>
+              <field name="prefixed_card_number"/>
               <field name="card_brand"/>
               <field name="card_owner_name"/>
             </xpath>

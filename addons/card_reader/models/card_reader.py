@@ -31,11 +31,19 @@ class account_bank_statement_line(models.Model):
     _inherit = "account.bank.statement.line"
 
     card_number = fields.Char(string='Card Number', size=4, help='The last 4 numbers of the card used to pay')
+    prefixed_card_number = fields.Char(string='Card Number', compute='_compute_prefixed_card_number')
     card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, Maestro, ...)')
     card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
     ref_no = fields.Char(string='Mercury reference number')
     record_no = fields.Char(string='Mercury record number')
     invoice_no = fields.Integer(string='Mercury invoice number')
+
+    @api.one
+    def _compute_prefixed_card_number(self):
+        if self.card_number:
+            self.prefixed_card_number = "********" + self.card_number
+        else:
+            self.prefixed_card_number = ""
 
 class account_journal(models.Model):
     _inherit = 'account.journal'
