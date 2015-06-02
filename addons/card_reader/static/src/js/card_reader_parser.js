@@ -127,7 +127,6 @@ var lookUpCodeTransaction = {
     },
     'FatalError': {
         '-1':     _t('Timeout error'),
-        '000000': _t('Insufficient balance on your card'),
         '001001': _t('General Failure'),
         '001003': _t('Invalid Command Format'),
         '001004': _t('Insufficient Fields'),
@@ -191,7 +190,6 @@ var lookUpCodeTransaction = {
         '100228': _t('Invalid Card Type'),
     },
 };
-
 // Popup to show all transaction state for the payment.
 
 var PaymentTransactionPopupWidget = PopupWidget.extend({
@@ -411,7 +409,7 @@ PaymentScreenWidget.include({
                             self.retry_credit_code_transaction(parsed_result, def, response, retry_nr);
                         } else { // not recoverable
                             def.resolve({
-                                message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error] + "<br/>" + response.message,
+                                message: "Error " + response.error + ":<br/>" + response.message,
                                 auto_close: false
                             });
                         }
@@ -515,8 +513,7 @@ PaymentScreenWidget.include({
                         });
                     } else {
                         def.resolve({
-                            message: "Error " + response.error + ": " + lookUpCodeTransaction["FatalError"][response.error]
-                                + "<br/>" + response.message,
+                            message: "Error " + response.error + ":<br/>" + response.message,
                         });
                     }
                 }
