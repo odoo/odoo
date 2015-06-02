@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_invoice_onshipping" model="ir.ui.view">
+        <field name="name">view_stock_invoice_onshipping</field>
+        <field name="model">stock.invoice.onshipping</field>
+        <field name="inherit_id" ref="stock_account.view_stock_invoice_onshipping"/>
+        <field name="arch" type="xml">
+            <field name="invoice_type" position="replace">
+                <field name="wizard_title" />
+            </field>
+            <field name="journal_id" position="attributes">
+                <attribute name="domain">[('type', '=', 'purchase')]</attribute>
+            </field>
+            <field name="journal_id" position="after">
+                <field name="need_two_invoices" invisible="1"/>
+                <field name="second_journal_id"
+                    domain="[('type', '=', 'sale')]"
+                    attrs="{'invisible': [('need_two_invoices', '=', False)],
+                            'required': [('need_two_invoices', '=', True)]}"
+                    />
+            </field>
+        </field>
+    </record>
+</odoo>
