@@ -50,9 +50,6 @@ class SipsController(http.Controller):
         type='http', auth='none', methods=['POST'])
     def sips_ipn(self, **post):
         """ Sips IPN. """
-        _logger.debug(
-            'Beginning Sips IPN form_feedback with post data %s',
-            pprint.pformat(post))
         self.sips_validate_data(**post)
         return ''
 
@@ -60,9 +57,6 @@ class SipsController(http.Controller):
         '/payment/sips/dpn'], type='http', auth="none", methods=['POST'])
     def sips_dpn(self, **post):
         """ Sips DPN """
-        _logger.debug(
-            'Beginning Sips DPN form_feedback with post data %s',
-            pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
         tx_id = self.sips_validate_data(**post)
         return werkzeug.utils.redirect(return_url)
