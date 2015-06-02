@@ -1,5 +1,6 @@
 import logging
 import sets
+import time
 
 from openerp import models, fields, api
 
@@ -99,8 +100,24 @@ class pos_order_card(models.Model):
                                                                                       'invoice_no': statement_line.invoice_no, 'purchase': statement_line.amount,
                                                                                       'journal_id': statement_line.journal_id.id}, self.user_id.id)
 
-                    if "<TextResponse>AP DUPE</TextResponse>" in response:
-                        _logger.warning("Mercury credit card return was NOT approved, because it was a duplicate return.")
-                    elif "<TextResponse>AP</TextResponse>" not in response:
+                    if "<TextResponse>AP</TextResponse>" in response:
+                        order = self.env['pos.order'].browse(abs['res_id'])
+
+                        data = {
+                            'amount': order.amount_total - order.amount_paid,
+                            'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                            'journal': statement_line.journal_id.id,
+                            'card_number': statement_line.card_number,
+                            'card_brand': statement_line.card_brand,
+                            'card_owner_name': statement_line.card_owner_name
+                        }
+
+                        if data['amount'] != 0.0:
+                            order.add_payment(abs['res_id'], data)
+
+                        order.signal_workflow('paid')
+                    elif "<TextResponse>AP*</TextResponse>" in response:
+                        _logger.warning("Mercury credit card return was NOT approved because it was a duplicate return.")
+                    else:
                         _logger.error("Mercury credit card return was NOT approved.")
         return abs
