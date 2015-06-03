@@ -28,6 +28,27 @@
         sequence: !eval 91
         action: !refid base.open_module_tree
 -   >
+    A Menu item using !menuitem
+-
+    !menuitem {
+        id: test_menu_2,
+        name: "Local Modules 2",
+        parent: base.menu_management,
+        sequence: 92,
+        action: base.open_module_tree
+    }
+-   >
+    Another menu item using !menuitem
+-
+    !menuitem {
+        id: test_menu_3,
+        name: "Local Modules 3",
+        parent: base.menu_management,
+        sequence: 93,
+        action: base.open_module_tree
+    }
+
+-   >
     Then these menu items should be present, properly configured and
     pointing to the same action.
 -
@@ -42,3 +63,19 @@
         - sequence == 91
         - parent_id.name == 'Modules'
         - action.name == 'Local Modules'
+-
+    !assert { model: ir.ui.menu, id: test_menu_2, string: menu item 2 is properly configured  }:
+        - name == 'Local Modules 2'
+        - sequence == 92
+        - parent_id.name == 'Modules'
+        - action.name == 'Local Modules'
+-
+    !assert { model: ir.ui.menu, id: test_menu_3, string: menu item 3 is properly configured  }:
+        - name == 'Local Modules 3'
+        - sequence == 93
+        - parent_id.name == 'Modules'
+        - action.name == 'Local Modules'
+-
+    !python { model: ir.ui.menu, id: test_menu_3 }: |
+        try: import IPython; IPython.embed()
+        except: import pdb; pdb.post_mortem() ; raise
