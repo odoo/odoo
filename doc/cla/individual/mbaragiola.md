@@ -1,4 +1,4 @@
-Argentina, 03/Jun/2015 
+Argentina, 2015-06-03 
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
