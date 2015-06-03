@@ -93,10 +93,10 @@ class stock_move(osv.osv):
         return invoice_line_id
 
     def _get_master_data(self, cr, uid, move, company, context=None):
-        if move.purchase_line_id:
+        if context.get('inv_type') in ('in_invoice', 'in_refund') and move.purchase_line_id:
             purchase_order = move.purchase_line_id.order_id
             return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-        elif move.picking_id:
+        elif context.get('inv_type') in ('in_invoice', 'in_refund') and move.picking_id:
             # In case of an extra move, it is better to use the data from the original moves
             for purchase_move in move.picking_id.move_lines:
                 if purchase_move.purchase_line_id:
@@ -113,7 +113,7 @@ class stock_move(osv.osv):
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        if move.purchase_line_id:
+        if inv_type in ('in_invoice', 'in_refund') and move.purchase_line_id:
             purchase_line = move.purchase_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit

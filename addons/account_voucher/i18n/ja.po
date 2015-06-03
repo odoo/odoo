@@ -1,38 +1,31 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-11-08 17:30+0000\n"
-"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:27+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
+"* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
-" *「ドラフト」状態はユーザーが新しくコード化されて伝票が未確認の場合に使用されます。\n"
-"* 伝票が「試算」状態の場合、伝票番号を持ちません。\n"
-"*「転記」状態はユーザーが伝票を作成する場合に使用され、伝票番号の生成と伝票項目の作成が行われます。\n"
-"*「キャンセル済」状態はユーザーが伝票をキャンセルした場合に使用されます。"
+msgstr " *「ドラフト」状態はユーザーが新しくコード化されて伝票が未確認の場合に使用されます。\n* 伝票が「試算」状態の場合、伝票番号を持ちません。\n*「転記」状態はユーザーが伝票を作成する場合に使用され、伝票番号の生成と伝票項目の作成が行われます。\n*「キャンセル済」状態はユーザーが伝票をキャンセルした場合に使用されます。"
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
@@ -56,17 +49,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new supplier payment.\n"
 "              </p><p>\n"
-"                Odoo helps you easily track payments you make and the "
-"remaining balances you need to pay your suppliers.\n"
+"                Odoo helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"クリックして新しい仕入先の支払いを作成します。\n"
-"</p><p>\n"
-"Odooは支払金額や支払いに必要な残高の追跡を簡単にします。\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nクリックして新しい仕入先の支払いを作成します。\n</p><p>\nOdooは支払金額や支払いに必要な残高の追跡を簡単にします。\n</p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -74,18 +60,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a sale receipt.\n"
 "              </p><p>\n"
-"                When the sale receipt is confirmed, you can record the "
-"customer\n"
+"                When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                クリックして販売領収書を作成します。\n"
-"              </p><p>\n"
-"                販売領収書が確認されると、これに関連する顧客入金を記録できます。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                クリックして販売領収書を作成します。\n              </p><p>\n                販売領収書が確認されると、これに関連する顧客入金を記録できます。\n              </p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -94,20 +73,12 @@ msgid ""
 "                Click to register a new payment. \n"
 "              </p><p>\n"
 "                Enter the customer and the payment method and then, either\n"
-"                create manually a payment record or Odoo will propose to "
-"you\n"
-"                automatically the reconciliation of this payment with the "
-"open\n"
+"                create manually a payment record or Odoo will propose to you\n"
+"                automatically the reconciliation of this payment with the open\n"
 "                invoices or sales receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"クリックして新しい支払いを登録してください。\n"
-"</p><p>\n"
-"顧客と支払い方法を入力してマニュアルで支払い記録を作成するか、未決済の請求書または売上伝票と一致する支払いをOdooが自動的に提案します。\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nクリックして新しい支払いを登録してください。\n</p><p>\n顧客と支払い方法を入力してマニュアルで支払い記録を作成するか、未決済の請求書または売上伝票と一致する支払いをOdooが自動的に提案します。\n</p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -119,20 +90,13 @@ msgid ""
 "                supplier payment related to this purchase receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                クリックして購入領収書を登録します。\n"
-"              </p><p>\n"
-"                購入領収書が確認されると、これに関連する仕入先支払を記録できます。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                クリックして購入領収書を登録します。\n              </p><p>\n                購入領収書が確認されると、これに関連する仕入先支払を記録できます。\n              </p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview of the amount "
-"invoiced\n"
+"            From this report, you can have an overview of the amount invoiced\n"
 "            to your customer as well as payment delays. The tool search can\n"
 "            also be used to personalise your Invoices reports and so, match\n"
 "            this analysis to your needs.\n"
@@ -141,8 +105,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,account_id:0
-#: field:account.voucher.line,account_id:0
+#: field:account.voucher,account_id:0 field:account.voucher.line,account_id:0
 #: field:sale.receipt.report,account_id:0
 msgid "Account"
 msgstr "口座"
@@ -197,9 +160,7 @@ msgstr ""
 msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
-msgstr ""
-"処理日時点の為替レートは次の通りでした。\n"
-"%s = %s"
+msgstr "処理日時点の為替レートは次の通りでした。\n%s = %s"
 
 #. module: account_voucher
 #: field:sale.receipt.report,delay_to_pay:0
@@ -246,8 +207,7 @@ msgid "Cancel Voucher"
 msgstr "支払取消"
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: selection:sale.receipt.report,state:0
+#: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
 msgid "Cancelled"
 msgstr "キャンセル済"
 
@@ -265,8 +225,7 @@ msgid ""
 msgstr "その仕訳帳エントリーに確信がなく、会計専門家のレビューが必要と付記したい場合はこのボックスをチェックして下さい。"
 
 #. module: account_voucher
-#: field:account.voucher,company_id:0
-#: field:account.voucher.line,company_id:0
+#: field:account.voucher,company_id:0 field:account.voucher.line,company_id:0
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,company_id:0
 msgid "Company"
@@ -296,8 +255,7 @@ msgid "Counterpart Comment"
 msgstr "相手のコメント"
 
 #. module: account_voucher
-#: field:account.voucher,create_uid:0
-#: field:account.voucher.line,create_uid:0
+#: field:account.voucher,create_uid:0 field:account.voucher.line,create_uid:0
 msgid "Created by"
 msgstr ""
 
@@ -305,7 +263,7 @@ msgstr ""
 #: field:account.voucher,create_date:0
 #: field:account.voucher.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "作成日"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -350,8 +308,7 @@ msgid "Customer Payments"
 msgstr "顧客入金"
 
 #. module: account_voucher
-#: field:account.voucher,date:0
-#: field:account.voucher.line,date_original:0
+#: field:account.voucher,date:0 field:account.voucher.line,date_original:0
 #: field:sale.receipt.report,date:0
 msgid "Date"
 msgstr "日付"
@@ -414,8 +371,7 @@ msgid "Draft Vouchers"
 msgstr "ドラフトバウチャー"
 
 #. module: account_voucher
-#: field:account.voucher,date_due:0
-#: field:account.voucher.line,date_due:0
+#: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
 #: field:sale.receipt.report,date_due:0
 msgid "Due Date"
 msgstr "期日"
@@ -435,7 +391,7 @@ msgstr "会計エントリーの有効日"
 #: code:addons/account_voucher/account_voucher.py:1063
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "エラー"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
@@ -462,7 +418,7 @@ msgstr "バウチャーが多通貨であるかどうかを示す内部目的の
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "フォロワー"
 
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
@@ -484,7 +440,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Group By"
-msgstr ""
+msgstr "グループ化"
 
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
@@ -499,11 +455,10 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,id:0
-#: field:account.voucher.line,id:0
+#: field:account.voucher,id:0 field:account.voucher.line,id:0
 #: field:sale.receipt.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -523,7 +478,7 @@ msgstr "内部注記"
 #: code:addons/account_voucher/account_voucher.py:959
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "操作は無効です。"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_invoice
@@ -585,14 +540,12 @@ msgid "Last Message Date"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,write_uid:0
-#: field:account.voucher.line,write_uid:0
+#: field:account.voucher,write_uid:0 field:account.voucher.line,write_uid:0
 msgid "Last Updated by"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,write_date:0
-#: field:account.voucher.line,write_date:0
+#: field:account.voucher,write_date:0 field:account.voucher.line,write_date:0
 msgid "Last Updated on"
 msgstr ""
 
@@ -604,12 +557,12 @@ msgstr "メモ"
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "メッセージ"
 
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "メッセージと通信履歴"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -685,8 +638,7 @@ msgstr "会社通貨での支払済金額"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
-#: field:account.voucher,partner_id:0
-#: field:account.voucher.line,partner_id:0
+#: field:account.voucher,partner_id:0 field:account.voucher.line,partner_id:0
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
@@ -703,8 +655,7 @@ msgid "Pay Bill"
 msgstr "請求書支払"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
 msgstr "直接支払"
 
@@ -715,17 +666,14 @@ msgid "Pay Invoice"
 msgstr "請求書支払"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
 msgstr "後払いまたはまとめ払い"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: field:account.voucher,pay_now:0
-#: selection:account.voucher,type:0
-#: field:sale.receipt.report,pay_now:0
-#: selection:sale.receipt.report,type:0
+#: field:account.voucher,pay_now:0 selection:account.voucher,type:0
+#: field:sale.receipt.report,pay_now:0 selection:sale.receipt.report,type:0
 msgid "Payment"
 msgstr "支払"
 
@@ -840,8 +788,7 @@ msgid "Pro-forma Vouchers"
 msgstr "プロフォーマバウチャー"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Purchase"
 msgstr "仕入"
 
@@ -863,8 +810,7 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Receipt"
 msgstr "レシート"
 
@@ -885,8 +831,7 @@ msgid "Register Payment"
 msgstr "支払登録"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Sale"
 msgstr "販売"
 
@@ -927,7 +872,7 @@ msgstr "販売記録分析"
 #. module: account_voucher
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "営業担当者"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -956,7 +901,7 @@ msgstr "ドラフトに設定"
 #: field:account.voucher,state:0
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Status"
-msgstr ""
+msgstr "ステータス"
 
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
@@ -971,7 +916,7 @@ msgstr "ステータスが変更されました。"
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "要約"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -1034,12 +979,10 @@ msgstr "このバウチャーには選択した通貨（支払通貨レート項
 #: help:account.voucher,payment_option:0
 msgid ""
 "This field helps you to choose what you want to do with the eventual "
-"difference between the paid amount and the sum of allocated amounts. You can "
-"either choose to keep open this difference on the partner's account, or "
+"difference between the paid amount and the sum of allocated amounts. You can"
+" either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
-msgstr ""
-"この項目は支払い金額と割当金額合計の結果的な差額に対して何をしたいかを選択することを手助けします。パートナのアカウント上にこの違いをそのままにしておくか、"
-"支払によってこれを消し込みするかを選択できます。"
+msgstr "この項目は支払い金額と割当金額合計の結果的な差額に対して何をしたいかを選択することを手助けします。パートナのアカウント上にこの違いをそのままにしておくか、支払によってこれを消し込みするかを選択できます。"
 
 #. module: account_voucher
 #: help:account.voucher,currency_help_label:0
@@ -1099,7 +1042,7 @@ msgstr "タイプ"
 #. module: account_voucher
 #: field:account.voucher,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未読メッセージ"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
@@ -1180,7 +1123,7 @@ msgstr "バウチャー統計"
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr ""
+msgstr "ステータス"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
@@ -1218,7 +1161,8 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:1243
 #, python-format
 msgid ""
-"You have to configure account base code and account tax code on the '%s' tax!"
+"You have to configure account base code and account tax code on the '%s' "
+"tax!"
 msgstr "%s 税の基本コードアカウントと税金コードアカウントを設定する必要があります。"
 
 #. module: account_voucher
@@ -1264,16 +1208,4 @@ msgstr "[例] 請求書SAJ/0042"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 msgid "or"
-msgstr ""
-
-#~ msgid "Group by month of Invoice Date"
-#~ msgstr "請求月によるグループ化"
-
-#~ msgid "Companies"
-#~ msgstr "会社"
-
-#~ msgid "Gain Exchange Rate Account"
-#~ msgstr "為替差益勘定"
-
-#~ msgid "Loss Exchange Rate Account"
-#~ msgstr "為替差損勘定"
+msgstr "または"

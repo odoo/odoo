@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-10-31 08:03+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-05-27 14:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:29+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.set_password_email
@@ -26,17 +27,13 @@ msgid ""
 "                        ${object.name},\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        You have been invited to connect to "
-"\"${object.company_id.name}\" in order to get access to your documents in "
-"Odoo.\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        To accept the invitation, click on the following "
-"link:\n"
+"                        To accept the invitation, click on the following link:\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
 "                    </ul>\n"
 "                    <p>\n"
 "                        Thanks,\n"
@@ -49,53 +46,18 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
-"\n"
-"                \n"
-"                    <p>\n"
-"                        ${object.name},\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        您被邀请链接到 \"${object.company_id.name}\"为了获取您在 "
-"Odoo的文件.\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        接收邀请, 点击下面的链接:\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
-"                    </ul>\n"
-"                    <p>\n"
-"                        谢谢,\n"
-"                    </p>\n"
-"                    <pre>\n"
-"--\n"
-"${object.company_id.name or ''}\n"
-"${object.company_id.email or ''}\n"
-"${object.company_id.phone or ''}\n"
-"                    </pre>\n"
-"                \n"
-"            "
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        您被邀请链接到 \"${object.company_id.name}\"为了获取您在 Odoo的文件.\n                    </p>\n                    <p>\n                        接收邀请, 点击下面的链接:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        谢谢,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the Odoo account linked to this "
-"email.</p>\n"
+"<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
 "\n"
-"<p>You may change your password by following <a "
-"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
-"\n"
-"<p> Odoo 帐号的密码重置请求的链接在此电子邮件内.</p>\n"
-"\n"
-"<p>您可以通过下面的链接修改您的密码 <a href=\"${object.signup_url}\">this link</a>.</p>\n"
-"\n"
-"<p>注: 如果您不想更改密码您可以忽略此邮件.</p>"
+msgstr "\n<p> Odoo 帐号的密码重置请求的链接在此电子邮件内.</p>\n\n<p>您可以通过下面的链接修改您的密码 <a href=\"${object.signup_url}\">this link</a>.</p>\n\n<p>注: 如果您不想更改密码您可以忽略此邮件.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
@@ -128,7 +90,8 @@ msgstr "一封包含验证证书以重置您的密码的电子邮件已经发送
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid ""
-"An invitation email containing the following subscription link has been sent:"
+"An invitation email containing the following subscription link has been "
+"sent:"
 msgstr "含有下列订阅链接邀请邮件已被发送："
 
 #. module: auth_signup
@@ -138,8 +101,7 @@ msgid "Authentification Failed."
 msgstr "认证失败"
 
 #. module: auth_signup
-#: view:website:auth_signup.reset_password
-#: view:website:auth_signup.signup
+#: view:website:auth_signup.reset_password view:website:auth_signup.signup
 msgid "Back to Login"
 msgstr "返回登录页面"
 
@@ -217,8 +179,7 @@ msgid "Send an Invitation Email"
 msgstr "发送一封邀请邮件"
 
 #. module: auth_signup
-#: view:website:auth_signup.signup
-#: view:website:web.login
+#: view:website:auth_signup.signup view:website:web.login
 msgid "Sign up"
 msgstr "注册"
 
@@ -268,8 +229,7 @@ msgid "Users"
 msgstr "用户"
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
-#: view:website:auth_signup.reset_password
+#: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
 msgstr "您的电子邮件"
 

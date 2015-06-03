@@ -129,6 +129,12 @@ class purchase_order(osv.osv):
             result[line.order_id.id] = True
         return result.keys()
 
+    def _get_purchase_order(self, cr, uid, ids, context=None):
+        result = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            result[order.id] = True
+        return result.keys()
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
@@ -274,6 +280,7 @@ class purchase_order(osv.osv):
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
                 'purchase.order.line': (_get_order, ['date_planned'], 10),
+                'purchase.order': (_get_purchase_order, ['order_line'], 10),
             }
         ),
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',

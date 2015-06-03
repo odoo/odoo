@@ -84,13 +84,14 @@ class SyncEvent(object):
 
     def compute_OP(self, modeFull=True):
         #If event are already in Gmail and in OpenERP
+        is_owner = self.OE.event.env.user.id == self.OE.event.user_id.id
         if self.OE.found and self.GG.found:
             #If the event has been deleted from one side, we delete on other side !
-            if self.OE.status != self.GG.status:
+            if self.OE.status != self.GG.status and is_owner:
                 self.OP = Delete((self.OE.status and "OE") or (self.GG.status and "GG"),
                                  'The event has been deleted from one side, we delete on other side !')
             #If event is not deleted !
-            elif self.OE.status and self.GG.status:
+            elif self.OE.status and (self.GG.status or not is_owner):
                 if self.OE.update.split('.')[0] != self.GG.update.split('.')[0]:
                     if self.OE.update < self.GG.update:
                         tmpSrc = 'GG'
@@ -423,7 +424,7 @@ class google_calendar(osv.AbstractModel):
                 if type == "write":
                     for oe_attendee in event['attendee_ids']:
                         if oe_attendee.email == google_attendee['email']:
-                            calendar_attendee_obj.write(cr, uid, [oe_attendee.id], {'state': google_attendee['responseStatus']}, context=context)
+                            calendar_attendee_obj.write(cr, uid, [oe_attendee.id], {'state': google_attendee['responseStatus'], 'google_internal_event_id': single_event_dict.get('id')}, context=context)
                             google_attendee['found'] = True
                             continue
 
@@ -442,6 +443,7 @@ class google_calendar(osv.AbstractModel):
                 partner_record.append((4, attendee.get('id')))
                 attendee['partner_id'] = attendee.pop('id')
                 attendee['state'] = google_attendee['responseStatus']
+                attendee['google_internal_event_id'] = single_event_dict.get('id')
                 attendee_record.append((0, 0, attendee))
         for google_alarm in single_event_dict.get('reminders', {}).get('overrides', []):
             alarm_id = calendar_alarm_obj.search(
@@ -626,7 +628,7 @@ class google_calendar(osv.AbstractModel):
                     update_date = datetime.strptime(response['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
                     ev_obj.write(cr, uid, att.event_id.id, {'oe_update_date': update_date})
                     new_ids.append(response['id'])
-                    att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_synchro_date': update_date})
+                    att_obj.write(cr, uid, [att.id for att in att.event_id.attendee_ids], {'google_internal_event_id': response['id'], 'oe_synchro_date': update_date})
                     cr.commit()
                 else:
                     _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
@@ -946,7 +948,7 @@ class google_calendar(osv.AbstractModel):
         self.pool['res.users'].write(cr, SUPERUSER_ID, uid, vals, context=context)
 
     def get_minTime(self, cr, uid, context=None):
-        number_of_week = self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.week_synchro', default=13)
+        number_of_week = int(self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.week_synchro', default=13))
         return datetime.now() - timedelta(weeks=number_of_week)
 
     def get_need_synchro_attendee(self, cr, uid, context=None):

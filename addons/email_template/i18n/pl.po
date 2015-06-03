@@ -1,21 +1,22 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * email_template
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-02-22 11:02+0000\n"
-"Last-Translator: Dariusz Żbikowski (Krokus) <darek@krokus.com.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-23 05:39+0000\n"
-"X-Generator: Launchpad (build 17355)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:365
@@ -40,8 +41,7 @@ msgid "Advanced Settings"
 msgstr "Ustawienia zaawansowane"
 
 #. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
+#: field:email.template,model_id:0 field:email_template.preview,model_id:0
 msgid "Applies to"
 msgstr "Zastosuj do:"
 
@@ -68,21 +68,18 @@ msgid "Available for mass mailing"
 msgstr "Dostępne dla poczty masowej"
 
 #. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
+#: field:email.template,body_html:0 field:email_template.preview,body_html:0
 #: field:ir.actions.server,body_html:0
 msgid "Body"
 msgstr "Treść"
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
+#: help:email.template,email_cc:0 help:email_template.preview,email_cc:0
 msgid "Carbon copy recipients (placeholders may be used here)"
 msgstr "Kopia (można stosować wyrażenia)"
 
 #. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
+#: field:email.template,email_cc:0 field:email_template.preview,email_cc:0
 msgid "Cc"
 msgstr "DW"
 
@@ -107,13 +104,10 @@ msgid "Comma-separated ids of recipient partners"
 msgstr "ID partnerów odbiorców oddzielone przecinkami"
 
 #. module: email_template
-#: help:email.template,partner_to:0
-#: help:email_template.preview,partner_to:0
+#: help:email.template,partner_to:0 help:email_template.preview,partner_to:0
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-"Lista id partnerów odbiorców oddzielona przecinkami (możesz stosować "
-"wyrażenie)"
+msgstr "Lista id partnerów odbiorców oddzielona przecinkami (możesz stosować wyrażenie)"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
@@ -121,8 +115,7 @@ msgid "Comma-separated recipient addresses"
 msgstr "Adresy odbiorców oddzielone przecinkami"
 
 #. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
+#: help:email.template,email_to:0 help:email_template.preview,email_to:0
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr "Adresy odbiorców oddzielane przecinkami (możesz stosować wyrażenia)"
 
@@ -137,8 +130,7 @@ msgid "Context Action"
 msgstr "Akcja kontekstowa"
 
 #. module: email_template
-#: field:email.template,create_uid:0
-#: field:email_template.preview,create_uid:0
+#: field:email.template,create_uid:0 field:email_template.preview,create_uid:0
 msgid "Created by"
 msgstr "Utworzone przez"
 
@@ -149,8 +141,7 @@ msgid "Created on"
 msgstr "Data utworzenia"
 
 #. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
+#: field:email.template,null_value:0 field:email_template.preview,null_value:0
 msgid "Default Value"
 msgstr "Wartość domyślna"
 
@@ -167,10 +158,7 @@ msgid ""
 "Default recipients of the record:\n"
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
-msgstr ""
-"Domyślni odbiorcy rekordu:\n"
-"- partnerzy (za pomocą ID partnera lub pola partner_id) LUB\n"
-"- e-mail (za pomocą adresu w polu email)"
+msgstr "Domyślni odbiorcy rekordu:\n- partnerzy (za pomocą ID partnera lub pola partner_id) LUB\n- e-mail (za pomocą adresu w polu email)"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:355
@@ -183,9 +171,7 @@ msgstr "Usunięcie rekordu akcji nie udało się."
 msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
-msgstr ""
-"Wyświetlaj opcję na dokumentach, aby otwierać kreatora wiadomości z tym "
-"szablonem."
+msgstr "Wyświetlaj opcję na dokumentach, aby otwierać kreatora wiadomości z tym szablonem."
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
@@ -234,16 +220,14 @@ msgid "Field"
 msgstr "Pole"
 
 #. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,copyvalue:0 help:email_template.preview,copyvalue:0
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr "Wyrażenie, które możesz skopiować do jednego z pól szablonu."
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
+#: field:email.template,email_from:0 field:email_template.preview,email_from:0
 #: field:ir.actions.server,email_from:0
 msgid "From"
 msgstr "Od"
@@ -254,8 +238,7 @@ msgid "Group by..."
 msgstr "Grupuj wg..."
 
 #. module: email_template
-#: field:email.template,id:0
-#: field:email_template.preview,id:0
+#: field:email.template,id:0 field:email_template.preview,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -263,10 +246,9 @@ msgstr "ID"
 #: help:email.template,user_signature:0
 #: help:email_template.preview,user_signature:0
 msgid ""
-"If checked, the user's signature will be appended to the text version of the "
-"message"
-msgstr ""
-"Jeśli zaznaczone, to podpis użytkownika zostanie dodany do tekstu wiadomości."
+"If checked, the user's signature will be appended to the text version of the"
+" message"
+msgstr "Jeśli zaznaczone, to podpis użytkownika zostanie dodany do tekstu wiadomości."
 
 #. module: email_template
 #: help:res.partner,opt_out:0
@@ -274,27 +256,20 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails for mass "
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
-msgstr ""
-"Jeśli \"opt-out\" jest zaznaczone, ten kontakt nie zgodził się na "
-"otrzymywanie maili w ramach mailingu masowego lub kampanii marketingowych. "
-"Filtr \"Dostępny dla marketingu masowego\" pozwala użytkownikom filtrować "
-"partnerów przy mailingu masowym."
+msgstr "Jeśli \"opt-out\" jest zaznaczone, ten kontakt nie zgodził się na otrzymywanie maili w ramach mailingu masowego lub kampanii marketingowych. Filtr \"Dostępny dla marketingu masowego\" pozwala użytkownikom filtrować partnerów przy mailingu masowym."
 
 #. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
+#: field:email.template,lang:0 field:email_template.preview,lang:0
 msgid "Language"
 msgstr "Język"
 
 #. module: email_template
-#: field:email.template,write_uid:0
-#: field:email_template.preview,write_uid:0
+#: field:email.template,write_uid:0 field:email_template.preview,write_uid:0
 msgid "Last Updated by"
 msgstr "Ostatnio modyfikowane przez"
 
 #. module: email_template
-#: field:email.template,write_date:0
-#: field:email_template.preview,write_date:0
+#: field:email.template,write_date:0 field:email_template.preview,write_date:0
 msgid "Last Updated on"
 msgstr "Data ostatniej modyfikacji"
 
@@ -304,20 +279,16 @@ msgid "Model"
 msgstr "Model"
 
 #. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
+#: field:email.template,name:0 field:email_template.preview,name:0
 msgid "Name"
 msgstr "Nazwa"
 
 #. module: email_template
-#: help:email.template,report_name:0
-#: help:email_template.preview,report_name:0
+#: help:email.template,report_name:0 help:email_template.preview,report_name:0
 msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
-msgstr ""
-"Nazwa dla pliku raportu (może zawierać wyrażenia)\n"
-"Rozszerzenie można ominąć. Będzie pobrane z typu raportu."
+msgstr "Nazwa dla pliku raportu (może zawierać wyrażenia)\nRozszerzenie można ominąć. Będzie pobrane z typu raportu."
 
 #. module: email_template
 #: field:res.partner,opt_out:0
@@ -330,9 +301,7 @@ msgstr "Odmowa"
 msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
-msgstr ""
-"Opcjonalny preferowany serwer poczty wychodzącej. Jeśli nie ustawione, to "
-"zostanie zastosowany serwer o najwyższym priorytecie."
+msgstr "Opcjonalny preferowany serwer poczty wychodzącej. Jeśli nie ustawione, to zostanie zastosowany serwer o najwyższym priorytecie."
 
 #. module: email_template
 #: field:email.template,report_template:0
@@ -341,22 +310,16 @@ msgid "Optional report to print and attach"
 msgstr "Opcjonalny raport do wydrukowania i załączenia"
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
+#: help:email.template,lang:0 help:email_template.preview,lang:0
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
-msgstr ""
-"Opcjonalny język tłumaczenia (kod ISO) do wybrania przy wysyłaniu "
-"wiadomości. Jeśli język nie zostanie wybrany, wersja angielska zostanie "
-"użyta. To powinno być wyrażenie zastępcze dostarczające odpowiedni język, "
-"np. ${object.partner_id.lang}."
+msgstr "Opcjonalny język tłumaczenia (kod ISO) do wybrania przy wysyłaniu wiadomości. Jeśli język nie zostanie wybrany, wersja angielska zostanie użyta. To powinno być wyrażenie zastępcze dostarczające odpowiedni język, np. ${object.partner_id.lang}."
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
+#: help:email.template,null_value:0 help:email_template.preview,null_value:0
 msgid "Optional value to use if the target field is empty"
 msgstr "Opcjonalna wartość do zastosowania, jeśli pole docelowe jest puste"
 
@@ -378,20 +341,16 @@ msgstr "Partner"
 
 #. module: email_template
 #: view:res.partner:email_template.res_partner_opt_out_search
-msgid ""
-"Partners that did not ask not to be included in mass mailing campaigns"
-msgstr ""
-"Partnerzy, którzy nie chcieli być uwzględnieni w kampaniach masowego mailingu"
+msgid "Partners that did not ask not to be included in mass mailing campaigns"
+msgstr "Partnerzy, którzy nie chcieli być uwzględnieni w kampaniach masowego mailingu"
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
+#: help:email.template,auto_delete:0 help:email_template.preview,auto_delete:0
 msgid "Permanently delete this email after sending it, to save space"
 msgstr "Ostatecznie usuń tę wiadomość po wysłaniu. Dla oszczędności miejsca."
 
 #. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
+#: field:email.template,copyvalue:0 field:email_template.preview,copyvalue:0
 msgid "Placeholder Expression"
 msgstr "Wyrażenie"
 
@@ -406,8 +365,7 @@ msgid "Preferred reply address"
 msgstr "Preferowany adres do odpowiedzi"
 
 #. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
+#: help:email.template,reply_to:0 help:email_template.preview,reply_to:0
 msgid "Preferred response address (placeholders may be used here)"
 msgstr "Preferowany adres zwrotny (może być wyrażenie)"
 
@@ -427,8 +385,7 @@ msgid "Recipients"
 msgstr "Adresaci"
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
+#: field:email.template,model:0 field:email_template.preview,model:0
 msgid "Related Document Model"
 msgstr "Model dokumentu"
 
@@ -439,14 +396,11 @@ msgstr "Usuń"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
-msgid ""
-"Remove the contextual action to use this template on related documents"
-msgstr ""
-"Usuń akcję kontekstową, aby stosować ten szablon na wybranych dokumentach."
+msgid "Remove the contextual action to use this template on related documents"
+msgstr "Usuń akcję kontekstową, aby stosować ten szablon na wybranych dokumentach."
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
+#: field:email.template,reply_to:0 field:email_template.preview,reply_to:0
 msgid "Reply-To"
 msgstr "Odpowiedz do"
 
@@ -457,8 +411,7 @@ msgid "Report Filename"
 msgstr "Nazwa pliki raportu"
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
+#: help:email.template,body_html:0 help:email_template.preview,body_html:0
 msgid "Rich-text/HTML version of the message (placeholders may be used here)"
 msgstr "Wersja Rich-text/HTML tej wiadomości (możesz stosować wyrażenia)"
 
@@ -487,12 +440,8 @@ msgstr "Zapisz jako nowy szablon"
 #: help:email_template.preview,model_object_field:0
 msgid ""
 "Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at "
-"the destination of the relationship."
-msgstr ""
-"Wybierz pole docelowe z powiązanego modelu dokumentu.\n"
-"Jeśli to pole jest  typu relacja to będzie można wybrać pole w docelowej "
-"relacji."
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr "Wybierz pole docelowe z powiązanego modelu dokumentu.\nJeśli to pole jest  typu relacja to będzie można wybrać pole w docelowej relacji."
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:318
@@ -501,15 +450,11 @@ msgid "Send Mail (%s)"
 msgstr "Wyślij wiadomość (%s)"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
+#: help:email.template,email_from:0 help:email_template.preview,email_from:0
 msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
-msgstr ""
-"Adres nadawcy (znaki zastępcze mogą być używane). Jeśli nieustawione, "
-"domyślnie zostanie ustawiony alias autora jeśli został skonfigurowany lub "
-"jego adres mailowy"
+msgstr "Adres nadawcy (znaki zastępcze mogą być używane). Jeśli nieustawione, domyślnie zostanie ustawiony alias autora jeśli został skonfigurowany lub jego adres mailowy"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:551
@@ -517,9 +462,7 @@ msgstr ""
 msgid ""
 "Sender email is missing or empty after template rendering. Specify one to "
 "deliver your message"
-msgstr ""
-"Brakuje adresu mailowego nadawcy lub jest pusty po wyrenderowaniu szablonu. "
-"Wpisz adres, aby wysłać wiadomość"
+msgstr "Brakuje adresu mailowego nadawcy lub jest pusty po wyrenderowaniu szablonu. Wpisz adres, aby wysłać wiadomość"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -539,8 +482,7 @@ msgstr "Akcja przycisku"
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
-msgstr ""
-"Akcja w bocznym pasku to udostępnienia tego szablonu dla rekordów tego modelu"
+msgstr "Akcja w bocznym pasku to udostępnienia tego szablonu dla rekordów tego modelu"
 
 #. module: email_template
 #: help:email.template,ref_ir_value:0
@@ -555,22 +497,19 @@ msgid "Sub-field"
 msgstr "Pod-pole"
 
 #. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
+#: field:email.template,sub_object:0 field:email_template.preview,sub_object:0
 msgid "Sub-model"
 msgstr "Podmodel"
 
 #. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
+#: field:email.template,subject:0 field:email_template.preview,subject:0
 #: field:ir.actions.server,subject:0
 msgid "Subject"
 msgstr "Temat"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
+#: help:email.template,subject:0 help:email_template.preview,subject:0
 msgid "Subject (placeholders may be used here)"
 msgstr "Temat (mozna stosować wyrażenia)"
 
@@ -594,32 +533,25 @@ msgid "Templates"
 msgstr "Szablony"
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
+#: help:email.template,model_id:0 help:email_template.preview,model_id:0
 msgid "The kind of document with with this template can be used"
 msgstr "Rodzaj dokumentu, z którym ten szablon może być stosowany"
 
 #. module: email_template
 #: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
-"The values displayed hereunder are informative. When sending the email, the "
-"values\n"
+"The values displayed hereunder are informative. When sending the email, the values\n"
 "                                will be taken from the email template."
-msgstr ""
-"Wyświetlone wartości mają charakter przykładowy. Przy wysyłaniu wiadomości, "
-"wartości\n"
-"                                zostaną wzięte z szablonu e-mail."
+msgstr "Wyświetlone wartości mają charakter przykładowy. Przy wysyłaniu wiadomości, wartości\n                                zostaną wzięte z szablonu e-mail."
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
+#: field:email.template,email_to:0 field:email_template.preview,email_to:0
 #: field:ir.actions.server,email_to:0
 msgid "To (Emails)"
 msgstr "Do (adresy)"
 
 #. module: email_template
-#: field:email.template,partner_to:0
-#: field:email_template.preview,partner_to:0
+#: field:email.template,partner_to:0 field:email_template.preview,partner_to:0
 #: field:ir.actions.server,partner_to:0
 msgid "To (Partners)"
 msgstr "Do (Partnerzy)"
@@ -648,19 +580,14 @@ msgstr "Uwaga!"
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr ""
-"Jeśli pole relacji jest wybrane jako pierwsze, to to pole pozwala ci wybrać "
-"pole docelowe w docelowym modelu (podmodelu)."
+msgstr "Jeśli pole relacji jest wybrane jako pierwsze, to to pole pozwala ci wybrać pole docelowe w docelowym modelu (podmodelu)."
 
 #. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:email.template,sub_object:0 help:email_template.preview,sub_object:0
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr ""
-"Kiedy pole relacji jest wybrane jako pierwsze, to pole pokazuje model, "
-"którego relacja dotyczy."
+msgstr "Kiedy pole relacji jest wybrane jako pierwsze, to pole pokazuje model, którego relacja dotyczy."
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -668,9 +595,7 @@ msgstr ""
 msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
-msgstr ""
-"Możesz załączać pliki do tego szablonu, które mają być dodane do wszystkich "
-"maili tworzonych z tego szablonu."
+msgstr "Możesz załączać pliki do tego szablonu, które mają być dodane do wszystkich maili tworzonych z tego szablonu."
 
 #. module: email_template
 #: view:ir.actions.server:email_template.view_server_action_form_template

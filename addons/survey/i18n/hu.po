@@ -1,34 +1,32 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * survey
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:27+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: survey
 #: model:email.template,body_html:survey.email_template_survey
 msgid ""
 "\n"
 "                \n"
-"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-"Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
 "                    <p>Hello,</p>\n"
-"                    <p>We are conducting a survey, and your response would "
-"be appreciated.</p>\n"
-"                    <p><a href=\"__URL__\">Please, click here to start "
-"survey</a></p>\n"
+"                    <p>We are conducting a survey, and your response would be appreciated.</p>\n"
+"                    <p><a href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "                    <p>Thanks for your participation!</p>\n"
 "                </div>\n"
 "                \n"
@@ -41,8 +39,7 @@ msgid "#Questions"
 msgstr "Kérdések száma"
 
 #. module: survey
-#: code:addons/survey/survey.py:246
-#: code:addons/survey/survey.py:543
+#: code:addons/survey/survey.py:246 code:addons/survey/survey.py:543
 #: code:addons/survey/survey.py:662
 #, python-format
 msgid "%s (copy)"
@@ -51,17 +48,14 @@ msgstr "%s (másolat)"
 #. module: survey
 #: view:website:survey.page
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">Click to add a survey.</p>\n"
-"                <p>You can create surveys for different purposes: customer "
-"opinion, services feedback, recruitment interviews, employee's periodical "
-"evaluations, marketing campaigns, etc.</p>\n"
-"                <p>Design easily your survey, send invitations to answer by "
-"email and analyse answers.</p>\n"
+"                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>\n"
+"                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>\n"
 "            "
 msgstr ""
 
@@ -70,7 +64,7 @@ msgstr ""
 #: model:survey.page,description:survey.feedback_3
 #: model:survey.survey,thank_you_message:survey.feedback_form
 msgid "<p></p>"
-msgstr ""
+msgstr "<p></p>"
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -94,8 +88,7 @@ msgstr ""
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
 msgid ""
-"<p>These questions relate to the ergonomy and ease of use of Odoo. Try to "
-"remind your firsts days on Odoo and\n"
+"<p>These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties.</p>"
 msgstr ""
 
@@ -154,7 +147,7 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,active_domain:0
 msgid "Active domain"
-msgstr ""
+msgstr "Aktív domain név"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -207,8 +200,7 @@ msgid "Answer Choices"
 msgstr ""
 
 #. module: survey
-#: field:survey.user_input,type:0
-#: field:survey.user_input_line,answer_type:0
+#: field:survey.user_input,type:0 field:survey.user_input_line,answer_type:0
 msgid "Answer Type"
 msgstr "Válasz típusa"
 
@@ -231,7 +223,7 @@ msgstr "Válaszok"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "A válaszok nem kerülnek be a az eredeti dokumentum  beszélgetés folyamatába. Ez hatással van a létrehozott üzenet azonosító ID-vel."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -241,39 +233,39 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,attachment_ids:0
 msgid "Attachments"
-msgstr ""
+msgstr "Mellékletek"
 
 #. module: survey
 #: field:survey.mail.compose.message,author_id:0
 msgid "Author"
-msgstr ""
+msgstr "Szerző"
 
 #. module: survey
 #: help:survey.mail.compose.message,author_id:0
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
-msgstr ""
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
+msgstr "Az üzenet szerzője. Ha nincs beállítva,  az e-mail ettől, egy címet tartalmaz ami nem mutat egyik partnerre sem."
 
 #. module: survey
 #: field:survey.mail.compose.message,author_avatar:0
 msgid "Author's Avatar"
-msgstr ""
+msgstr "Szerző avatárja"
 
 #. module: survey
 #: help:survey.mail.compose.message,body:0
 msgid "Automatically sanitized HTML contents"
-msgstr ""
+msgstr "Automatikusan letisztított HTML tartalom"
 
 #. module: survey
 #: view:website:survey.result_number
 msgid "Average"
-msgstr ""
+msgstr "Átlagos"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -283,12 +275,12 @@ msgstr "Mégse"
 #. module: survey
 #: field:survey.survey,res_model:0
 msgid "Category"
-msgstr ""
+msgstr "Kategória"
 
 #. module: survey
 #: field:survey.mail.compose.message,child_ids:0
 msgid "Child Messages"
-msgstr ""
+msgstr "Alcsoportba rakott üzenetek"
 
 #. module: survey
 #: view:website:survey.simple_choice
@@ -320,8 +312,7 @@ msgid "Close"
 msgstr "Bezárás"
 
 #. module: survey
-#: field:survey.stage,closed:0
-#: model:survey.stage,name:survey.stage_closed
+#: field:survey.stage,closed:0 model:survey.stage,name:survey.stage_closed
 msgid "Closed"
 msgstr "Lezárt"
 
@@ -361,12 +352,12 @@ msgstr "Befejezve"
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid "Compose Email"
-msgstr ""
+msgstr "Email írás"
 
 #. module: survey
 #: field:survey.mail.compose.message,composition_mode:0
 msgid "Composition mode"
-msgstr ""
+msgstr "Összeállítási mód"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
@@ -376,12 +367,12 @@ msgstr ""
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Constraints"
-msgstr ""
+msgstr "Feltételek"
 
 #. module: survey
 #: field:survey.mail.compose.message,body:0
 msgid "Contents"
-msgstr ""
+msgstr "Tartalmak"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -402,47 +393,42 @@ msgstr "Létrehozás dátuma"
 #. module: survey
 #: field:survey.label,create_uid:0
 #: field:survey.mail.compose.message,create_uid:0
-#: field:survey.page,create_uid:0
-#: field:survey.question,create_uid:0
-#: field:survey.stage,create_uid:0
-#: field:survey.survey,create_uid:0
+#: field:survey.page,create_uid:0 field:survey.question,create_uid:0
+#: field:survey.stage,create_uid:0 field:survey.survey,create_uid:0
 #: field:survey.user_input,create_uid:0
 #: field:survey.user_input_line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: survey
 #: field:survey.label,create_date:0
 #: field:survey.mail.compose.message,create_date:0
-#: field:survey.page,create_date:0
-#: field:survey.question,create_date:0
-#: field:survey.stage,create_date:0
-#: field:survey.survey,create_date:0
+#: field:survey.page,create_date:0 field:survey.question,create_date:0
+#: field:survey.stage,create_date:0 field:survey.survey,create_date:0
 #: field:survey.user_input,create_date:0
 #: field:survey.user_input_line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: survey
 #: field:survey.user_input,date_create:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: survey
 #: help:survey.mail.compose.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "A jelenlegi felhasználónak van egy kicsillagozott, kedvenc értesítése mely hozzá van rendelve az üzenethez."
 
 #. module: survey
 #: help:survey.mail.compose.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
-msgstr ""
+msgstr "A jelenlegi felhasználónak van egy olvasatlan értesítése ehhez az üzenethez csatolva"
 
 #. module: survey
-#: view:website:survey.result_choice
-#: view:website:survey.result_matrix
+#: view:website:survey.result_choice view:website:survey.result_matrix
 msgid "Data"
-msgstr ""
+msgstr "Adat"
 
 #. module: survey
 #: field:survey.mail.compose.message,date:0
@@ -468,18 +454,18 @@ msgstr ""
 #. module: survey
 #: help:survey.survey,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "A feljegyzésen történt utolsó üzenet dátuma."
 
 #. module: survey
 #: field:survey.user_input,deadline:0
 msgid "Deadline"
-msgstr ""
+msgstr "Határidő"
 
 #. module: survey
 #: help:survey.mail.compose.message,date_deadline:0
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the "
-"field is empty, the invitation is still valid."
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty, the invitation is still valid."
 msgstr ""
 
 #. module: survey
@@ -493,8 +479,7 @@ msgid "Delete!"
 msgstr ""
 
 #. module: survey
-#: field:survey.page,description:0
-#: field:survey.question,description:0
+#: field:survey.page,description:0 field:survey.question,description:0
 #: field:survey.survey,description:0
 msgid "Description"
 msgstr "Leírás"
@@ -507,7 +492,7 @@ msgstr ""
 #. module: survey
 #: view:survey.survey:survey.survey_kanban
 msgid "Design"
-msgstr ""
+msgstr "Terv"
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_2
@@ -562,19 +547,19 @@ msgstr "E-mail"
 #. module: survey
 #: field:survey.survey,email_template_id:0
 msgid "Email Template"
-msgstr ""
+msgstr "E-mail sablon"
 
 #. module: survey
 #: help:survey.mail.compose.message,email_from:0
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
-msgstr ""
+msgstr "A küldő e-mail címei. Ez a mező lesz beállítva, ha nem talált egyező partnert a bejövő levelekhez."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Email összeállító varázsló a felméréshez"
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_2
@@ -606,7 +591,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result
 msgid "Filters"
-msgstr ""
+msgstr "Szűrők"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
@@ -626,12 +611,12 @@ msgstr ""
 #. module: survey
 #: field:survey.survey,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Követők"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Format"
-msgstr ""
+msgstr "Formátum"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -649,16 +634,14 @@ msgid "From"
 msgstr "Kezdő dátum"
 
 #. module: survey
-#: view:website:survey.survey
-#: view:website:survey.survey_init
+#: view:website:survey.survey view:website:survey.survey_init
 msgid "Go back to surveys"
 msgstr ""
 
 #. module: survey
-#: view:website:survey.result_choice
-#: view:website:survey.result_matrix
+#: view:website:survey.result_choice view:website:survey.result_matrix
 msgid "Graph"
-msgstr ""
+msgstr "Grafikon"
 
 #. module: survey
 #: view:survey.page:survey.survey_page_search
@@ -666,14 +649,14 @@ msgstr ""
 #: view:survey.user_input:survey.survey_user_input_search
 #: view:survey.user_input_line:survey.survey_response_line_search
 msgid "Group By"
-msgstr ""
+msgstr "Csoportosítás"
 
 #. module: survey
 #: help:survey.survey,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
@@ -736,13 +719,9 @@ msgid "I'd like to contribute but I don't know how?"
 msgstr ""
 
 #. module: survey
-#: field:survey.label,id:0
-#: field:survey.mail.compose.message,id:0
-#: field:survey.page,id:0
-#: field:survey.question,id:0
-#: field:survey.stage,id:0
-#: field:survey.survey,id:0
-#: field:survey.user_input,id:0
+#: field:survey.label,id:0 field:survey.mail.compose.message,id:0
+#: field:survey.page,id:0 field:survey.question,id:0 field:survey.stage,id:0
+#: field:survey.survey,id:0 field:survey.user_input,id:0
 #: field:survey.user_input_line,id:0
 msgid "ID"
 msgstr "Azonosító ID"
@@ -755,7 +734,7 @@ msgstr ""
 #. module: survey
 #: help:survey.survey,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve akkor figyelje az új üzenetet."
 
 #. module: survey
 #: help:survey.survey,users_can_go_back:0
@@ -784,7 +763,7 @@ msgstr ""
 #: model:survey.question,comments_message:survey.feedback_4_1
 #, python-format
 msgid "If other, precise:"
-msgstr ""
+msgstr "Ha másik, pontosítsa:"
 
 #. module: survey
 #: view:website:survey.sfinished
@@ -794,12 +773,12 @@ msgstr ""
 #. module: survey
 #: model:survey.stage,name:survey.stage_in_progress
 msgid "In progress"
-msgstr ""
+msgstr "Folyamatban"
 
 #. module: survey
 #: help:survey.mail.compose.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "Elsődleges összefűzött üzenet."
 
 #. module: survey
 #: field:survey.question,validation_email:0
@@ -814,7 +793,7 @@ msgstr ""
 #. module: survey
 #: field:survey.survey,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ez egy követő"
 
 #. module: survey
 #: field:survey.survey,designed:0
@@ -860,36 +839,31 @@ msgstr ""
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
 #: model:ir.ui.menu,name:survey.menu_survey_label_form1
 msgid "Labels"
-msgstr ""
+msgstr "Feliratok"
 
 #. module: survey
 #: field:survey.survey,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Utolsó üzenet időpontja"
 
 #. module: survey
 #: field:survey.label,write_uid:0
-#: field:survey.mail.compose.message,write_uid:0
-#: field:survey.page,write_uid:0
-#: field:survey.question,write_uid:0
-#: field:survey.stage,write_uid:0
-#: field:survey.survey,write_uid:0
-#: field:survey.user_input,write_uid:0
+#: field:survey.mail.compose.message,write_uid:0 field:survey.page,write_uid:0
+#: field:survey.question,write_uid:0 field:survey.stage,write_uid:0
+#: field:survey.survey,write_uid:0 field:survey.user_input,write_uid:0
 #: field:survey.user_input_line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítette"
 
 #. module: survey
 #: field:survey.label,write_date:0
 #: field:survey.mail.compose.message,write_date:0
-#: field:survey.page,write_date:0
-#: field:survey.question,write_date:0
-#: field:survey.stage,write_date:0
-#: field:survey.survey,write_date:0
+#: field:survey.page,write_date:0 field:survey.question,write_date:0
+#: field:survey.stage,write_date:0 field:survey.survey,write_date:0
 #: field:survey.user_input,write_date:0
 #: field:survey.user_input_line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Utoljára frissítve"
 
 #. module: survey
 #: field:survey.user_input,last_displayed_page_id:0
@@ -909,11 +883,10 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,is_log:0
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "Egy Belső megjegyzés rögzítése"
 
 #. module: survey
-#: field:survey.survey,auth_required:0
-#: view:website:survey.auth_required
+#: field:survey.survey,auth_required:0 view:website:survey.auth_required
 msgid "Login required"
 msgstr ""
 
@@ -986,34 +959,34 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,record_name:0
 msgid "Message Record Name"
-msgstr ""
+msgstr "Üzenet rekord név"
 
 #. module: survey
 #: help:survey.mail.compose.message,type:0
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr ""
+msgstr "Üzenet típus: email az email üzenetre, figyelmeztetés egy rendszer üzenetre, hozzászólás egy másik üzenetre mint felhasználói válaszok"
 
 #. module: survey
 #: help:survey.mail.compose.message,message_id:0
 msgid "Message unique identifier"
-msgstr ""
+msgstr "Üzenet egyedi azonosító"
 
 #. module: survey
 #: field:survey.mail.compose.message,message_id:0
 msgid "Message-Id"
-msgstr ""
+msgstr "Üzenet-ID azonosító"
 
 #. module: survey
 #: field:survey.survey,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Üzenetek"
 
 #. module: survey
 #: help:survey.survey,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Üzenetek és kommunikáció történet"
 
 #. module: survey
 #: view:website:survey.result_number
@@ -1063,7 +1036,7 @@ msgstr "Név"
 #. module: survey
 #: help:survey.mail.compose.message,record_name:0
 msgid "Name get of the related document."
-msgstr ""
+msgstr "A név az ide vonatkozó dokumentumról levéve."
 
 #. module: survey
 #: view:survey.user_input:survey.survey_user_input_search
@@ -1078,7 +1051,7 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,no_auto_thread:0
 msgid "No threading for answers"
-msgstr ""
+msgstr "Válaszokhoz nincs hozzáfűzve"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
@@ -1103,22 +1076,22 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,notification_ids:0
 msgid "Notifications"
-msgstr ""
+msgstr "Értesítések"
 
 #. module: survey
 #: field:survey.mail.compose.message,notified_partner_ids:0
 msgid "Notified partners"
-msgstr ""
+msgstr "Értesített partnerek"
 
 #. module: survey
 #: field:survey.mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr ""
+msgstr "Kiértesített követők"
 
 #. module: survey
 #: help:survey.mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "A dokumentum kiértesített követői (csak tömeges üzenetküldés)"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1180,13 +1153,12 @@ msgstr "Opciók"
 #. module: survey
 #: field:survey.mail.compose.message,mail_server_id:0
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "Kimenő levelező szerver"
 
 #. module: survey
 #: view:survey.page:survey.survey_page_search
 #: view:survey.question:survey.survey_question_search
-#: field:survey.user_input_line,page_id:0
-#: view:website:survey.page
+#: field:survey.user_input_line,page_id:0 view:website:survey.page
 msgid "Page"
 msgstr "Oldal"
 
@@ -1211,7 +1183,7 @@ msgstr "Oldalak"
 #. module: survey
 #: field:survey.mail.compose.message,parent_id:0
 msgid "Parent Message"
-msgstr ""
+msgstr "Partner üzenet"
 
 #. module: survey
 #: view:survey.user_input:survey.survey_user_input_search
@@ -1223,7 +1195,7 @@ msgstr ""
 #: view:survey.user_input:survey.survey_user_input_search
 #: field:survey.user_input,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
@@ -1235,7 +1207,7 @@ msgstr ""
 #: help:survey.mail.compose.message,notified_partner_ids:0
 msgid ""
 "Partners that have a notification pushing this message in their mailboxes"
-msgstr ""
+msgstr "Partnerek akiknek van egy értesítésük ennek az üzenetnek a levelező ládájukba való mozgatására"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_permanent
@@ -1245,7 +1217,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result_choice
 msgid "Pie Chart"
-msgstr ""
+msgstr "Torta(szelet) diagram"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:213
@@ -1282,7 +1254,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_5
 msgid "Project Management"
-msgstr ""
+msgstr "Projekt kezelése"
 
 #. module: survey
 #: field:survey.mail.compose.message,public_url_html:0
@@ -1321,11 +1293,9 @@ msgstr ""
 
 #. module: survey
 #: view:survey.label:survey.survey_label_search
-#: field:survey.label,question_id:0
-#: field:survey.label,question_id_2:0
+#: field:survey.label,question_id:0 field:survey.label,question_id_2:0
 #: view:survey.question:survey.survey_question_search
-#: field:survey.user_input_line,question_id:0
-#: view:website:survey.result
+#: field:survey.user_input_line,question_id:0 view:website:survey.result
 msgid "Question"
 msgstr "Kérdés"
 
@@ -1366,24 +1336,24 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,res_id:0
 msgid "Related Document ID"
-msgstr ""
+msgstr "Kapcsolódó dokumentum azonosító ID"
 
 #. module: survey
 #: field:survey.mail.compose.message,model:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Ide vonatkozó dokumentum modell"
 
 #. module: survey
 #: help:survey.mail.compose.message,reply_to:0
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "Válasz email címek. Az automatikus  eszmecsere létrehozásban a  válasz-ennek figyelmen kívül hagyásoknak beállítása."
 
 #. module: survey
 #: field:survey.mail.compose.message,reply_to:0
 msgid "Reply-To"
-msgstr ""
+msgstr "Válasz"
 
 #. module: survey
 #: field:survey.survey,result_url:0
@@ -1408,17 +1378,17 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_1
 msgid "Sales Management"
-msgstr ""
+msgstr "Értékesítési menedzsment"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid "Save as a new template"
-msgstr ""
+msgstr "Mentse új sablonként"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid "Save as new template"
-msgstr ""
+msgstr "Mentse mint új sablon"
 
 #. module: survey
 #: field:survey.user_input,quizz_score:0
@@ -1493,8 +1463,7 @@ msgid "Sent Invitation Again"
 msgstr ""
 
 #. module: survey
-#: field:survey.question,sequence:0
-#: field:survey.stage,sequence:0
+#: field:survey.question,sequence:0 field:survey.stage,sequence:0
 msgid "Sequence"
 msgstr "Sorszám"
 
@@ -1529,8 +1498,7 @@ msgid "Show Comments Field"
 msgstr ""
 
 #. module: survey
-#: field:survey.user_input_line,skipped:0
-#: view:website:survey.result
+#: field:survey.user_input_line,skipped:0 view:website:survey.result
 msgid "Skipped"
 msgstr ""
 
@@ -1550,15 +1518,14 @@ msgid "Sorry, No one answered this survey yet"
 msgstr ""
 
 #. module: survey
-#: view:survey.stage:survey.survey_stage_form
-#: field:survey.survey,stage_id:0
+#: view:survey.stage:survey.survey_stage_form field:survey.survey,stage_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Szakasz"
 
 #. module: survey
 #: field:survey.mail.compose.message,starred:0
 msgid "Starred"
-msgstr ""
+msgstr "Kedvenc"
 
 #. module: survey
 #: view:website:survey.survey_init
@@ -1583,7 +1550,7 @@ msgstr "Tárgy"
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid "Subject..."
-msgstr ""
+msgstr "Tárgy..."
 
 #. module: survey
 #: view:website:survey.page
@@ -1593,7 +1560,7 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,subtype_id:0
 msgid "Subtype"
-msgstr ""
+msgstr "Altípus"
 
 #. module: survey
 #: field:survey.user_input_line,value_suggested:0
@@ -1613,21 +1580,19 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result_number
 msgid "Sum"
-msgstr ""
+msgstr "Összeg"
 
 #. module: survey
 #: field:survey.survey,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Összegzés"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_survey
 #: field:survey.mail.compose.message,survey_id:0
-#: view:survey.page:survey.survey_page_search
-#: field:survey.page,survey_id:0
+#: view:survey.page:survey.survey_page_search field:survey.page,survey_id:0
 #: view:survey.question:survey.survey_question_search
-#: field:survey.question,survey_id:0
-#: view:survey.survey:survey.survey_form
+#: field:survey.question,survey_id:0 view:survey.survey:survey.survey_form
 #: view:survey.survey:survey.survey_tree
 #: view:survey.user_input:survey.survey_user_input_search
 #: field:survey.user_input,survey_id:0
@@ -1713,20 +1678,20 @@ msgstr "Felmérések"
 #. module: survey
 #: selection:survey.mail.compose.message,type:0
 msgid "System notification"
-msgstr ""
+msgstr "Rendszerüzenet"
 
 #. module: survey
 #: help:survey.mail.compose.message,notification_ids:0
 msgid ""
 "Technical field holding the message notifications. Use notified_partner_ids "
 "to access notified partners."
-msgstr ""
+msgstr "Technikai mező a értesítés üzenetek tárolásához. Használja a notified_partner_ids az értesített partnerek eléréséhez."
 
 #. module: survey
 #: view:survey.survey:survey.survey_kanban
 #: view:survey.user_input:survey.survey_user_input_search
 msgid "Test"
-msgstr ""
+msgstr "Teszt"
 
 #. module: survey
 #: view:survey.survey:survey.survey_form
@@ -1795,14 +1760,14 @@ msgstr ""
 #: model:survey.question,validation_error_msg:survey.feedback_4_1
 #, python-format
 msgid "The answer you entered has an invalid format."
-msgstr ""
+msgstr "A beírt válasza nem megfelelő formátumú."
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:188
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__ "
-"is automaticaly converted into the special url of the survey."
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
 msgstr ""
 
 #. module: survey
@@ -1907,7 +1872,7 @@ msgstr ""
 #: model:survey.question,constr_error_msg:survey.feedback_4_1
 #, python-format
 msgid "This question requires an answer."
-msgstr ""
+msgstr "Erre a kérdésre kérjük válaszoljon."
 
 #. module: survey
 #: view:website:survey.nopages
@@ -1934,12 +1899,12 @@ msgstr ""
 #. module: survey
 #: field:survey.survey,title:0
 msgid "Title"
-msgstr ""
+msgstr "Cím"
 
 #. module: survey
 #: field:survey.mail.compose.message,to_read:0
 msgid "To read"
-msgstr ""
+msgstr "Elolvas"
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_4
@@ -1986,23 +1951,24 @@ msgstr ""
 #. module: survey
 #: field:survey.survey,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek"
 
 #. module: survey
 #: field:survey.mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "Használja az aktív domaint"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 #: field:survey.mail.compose.message,template_id:0
 msgid "Use template"
-msgstr ""
+msgstr "Sablon használata"
 
 #. module: survey
 #: help:survey.question,description:0
 msgid ""
-"Use this field to add             additional explanations about your question"
+"Use this field to add             additional explanations about your "
+"question"
 msgstr ""
 
 #. module: survey
@@ -2022,8 +1988,7 @@ msgid "User Input Lines"
 msgstr ""
 
 #. module: survey
-#: view:website:survey.result_choice
-#: view:website:survey.result_number
+#: view:website:survey.result_choice view:website:survey.result_number
 #: view:website:survey.result_text
 msgid "User Responses"
 msgstr ""
@@ -2051,7 +2016,7 @@ msgstr ""
 #. module: survey
 #: help:survey.mail.compose.message,vote_user_ids:0
 msgid "Users that voted for this message"
-msgstr ""
+msgstr "Felhasználók akik szavaztak erre az üzenetre"
 
 #. module: survey
 #: help:survey.survey,auth_required:0
@@ -2083,11 +2048,10 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,vote_user_ids:0
 msgid "Votes"
-msgstr ""
+msgstr "Szavazatok"
 
 #. module: survey
-#: code:addons/survey/survey.py:444
-#: code:addons/survey/survey.py:898
+#: code:addons/survey/survey.py:444 code:addons/survey/survey.py:898
 #: code:addons/survey/survey.py:1030
 #: code:addons/survey/wizard/survey_email_compose_message.py:95
 #: code:addons/survey/wizard/survey_email_compose_message.py:188
@@ -2133,7 +2097,7 @@ msgstr ""
 #. module: survey
 #: help:survey.mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "Akkor is, ha az üzenet egy balső megjegyzés (kizárólag hozzászólás módban)"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_2
@@ -2158,15 +2122,14 @@ msgstr ""
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to "
-"your audience. People can answer once per invitation, and whenever they want "
-"with the public web link (in this case, the \"Public in website\" setting "
-"must be enabled)."
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Public in website\" "
+"setting must be enabled)."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:898
-#: code:addons/survey/survey.py:1030
+#: code:addons/survey/survey.py:898 code:addons/survey/survey.py:1030
 #, python-format
 msgid "You cannot duplicate this             element!"
 msgstr ""
@@ -2201,7 +2164,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.page
 msgid "on"
-msgstr ""
+msgstr "Kész"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message

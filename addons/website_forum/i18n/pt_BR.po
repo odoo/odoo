@@ -1,21 +1,21 @@
-# Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_forum
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-09-20 12:50+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:31+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_forum
 #: model:email.template,body_html:website_forum.validation_email
@@ -25,15 +25,13 @@ msgid ""
 "    Hello ${object.name},\n"
 "</p>\n"
 "<p>\n"
-"    You have been invited to validate your email in order to get access to "
-"\"${object.company_id.name}\" Q/A Forums.\n"
+"    You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
 "</p>\n"
 "<p>\n"
 "    To validate your email, please click on the following link:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for "
-"\"${object.company_id.name}\" Q/A Forums</a></li>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for \"${object.company_id.name}\" Q/A Forums</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "    Thanks,\n"
@@ -128,25 +126,24 @@ msgid "Accepting an answer"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.post,active:0
-#: selection:forum.post,state:0
+#: field:forum.post,active:0 selection:forum.post,state:0
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Activity"
-msgstr ""
+msgstr "Atividade"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "All"
-msgstr ""
+msgstr "Tudo"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "Answer"
-msgstr ""
+msgstr "Resposta"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:411
@@ -187,12 +184,11 @@ msgid "Answered on"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.post,child_count:0
-#: field:forum.post,child_ids:0
+#: field:forum.post,child_count:0 field:forum.post,child_ids:0
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full
 msgid "Answers"
-msgstr ""
+msgstr "Respostas"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -228,7 +224,7 @@ msgstr ""
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
@@ -246,12 +242,11 @@ msgid "Badge \""
 msgstr ""
 
 #. module: website_forum
-#: field:res.users,badge_ids:0
-#: view:website:website_forum.badge
+#: field:res.users,badge_ids:0 view:website:website_forum.badge
 #: view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Badges"
-msgstr ""
+msgstr "Medalhas"
 
 #. module: website_forum
 #: view:website:website_forum.badge
@@ -335,7 +330,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "City"
-msgstr ""
+msgstr "Cidade"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -352,7 +347,7 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #. module: website_forum
 #: field:forum.forum,karma_close_all:0
@@ -383,7 +378,7 @@ msgstr ""
 #: view:website:website_forum.display_post_answer
 #: view:website:website_forum.post_description_full
 msgid "Comment"
-msgstr ""
+msgstr "Comentário"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_all:0
@@ -410,7 +405,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
 msgid "Comments"
-msgstr ""
+msgstr "Comentários"
 
 #. module: website_forum
 #: help:forum.post,website_message_ids:0
@@ -430,15 +425,15 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid ""
-"Congratulations! Your email has just been validated. You may now participate "
-"to our forums."
+"Congratulations! Your email has just been validated. You may now participate"
+" to our forums."
 msgstr ""
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 #: field:forum.post,content:0
 msgid "Content"
-msgstr ""
+msgstr "Conteúdo"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_all:0
@@ -458,7 +453,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -468,23 +463,20 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post.vote,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Data de Criação"
 
 #. module: website_forum
-#: field:forum.forum,create_uid:0
-#: field:forum.post,create_uid:0
-#: field:forum.post.reason,create_uid:0
-#: field:forum.post.vote,create_uid:0
+#: field:forum.forum,create_uid:0 field:forum.post,create_uid:0
+#: field:forum.post.reason,create_uid:0 field:forum.post.vote,create_uid:0
 #: field:forum.tag,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: website_forum
-#: field:forum.forum,create_date:0
-#: field:forum.post.reason,create_date:0
+#: field:forum.forum,create_date:0 field:forum.post.reason,create_date:0
 #: field:forum.tag,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_4
@@ -500,10 +492,9 @@ msgid "Critic"
 msgstr ""
 
 #. module: website_forum
-#: help:forum.forum,message_last_post:0
-#: help:forum.post,message_last_post:0
+#: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Data da última mensagem para o registro."
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
@@ -518,7 +509,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.forum,description:0
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_6
@@ -582,7 +573,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
@@ -662,13 +653,12 @@ msgstr ""
 #: field:forum.forum,message_follower_ids:0
 #: field:forum.post,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_search
-#: field:forum.post,forum_id:0
-#: field:forum.post.vote,forum_id:0
+#: field:forum.post,forum_id:0 field:forum.post.vote,forum_id:0
 #: field:forum.tag,forum_id:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
@@ -702,20 +692,19 @@ msgstr ""
 #: view:forum.forum:website_forum.view_forum_forum_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.model,name:website_forum.model_forum_forum
-#: model:ir.ui.menu,name:website_forum.menu_forum
-#: view:website:website.layout
+#: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
 msgid "Forums"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "Medalha de Ludificação"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "Desafio de ludificação"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -754,7 +743,7 @@ msgstr ""
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupar por"
 
 #. module: website_forum
 #: field:forum.forum,faq:0
@@ -785,30 +774,25 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
-msgstr ""
+msgstr "Ajuda"
 
 #. module: website_forum
-#: help:forum.forum,message_summary:0
-#: help:forum.post,message_summary:0
+#: help:forum.forum,message_summary:0 help:forum.post,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Contém o resumo da conversação (número de mensagens, ...). Este resumo é gerado diretamente em formato HTML para que possa ser inserido nas visões kanban."
 
 #. module: website_forum
-#: field:forum.forum,id:0
-#: field:forum.post,id:0
-#: field:forum.post.reason,id:0
-#: field:forum.post.vote,id:0
-#: field:forum.tag,id:0
+#: field:forum.forum,id:0 field:forum.post,id:0 field:forum.post.reason,id:0
+#: field:forum.post.vote,id:0 field:forum.tag,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_forum
-#: help:forum.forum,message_unread:0
-#: help:forum.post,message_unread:0
+#: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Se marcado novas mensagens solicitarão sua atenção."
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -827,7 +811,7 @@ msgstr ""
 #: field:forum.forum,message_is_follower:0
 #: field:forum.post,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "É um Seguidor"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -835,8 +819,7 @@ msgid "It appears your email has not been verified."
 msgstr ""
 
 #. module: website_forum
-#: field:res.users,karma:0
-#: view:website:website_forum.user_detail_full
+#: field:res.users,karma:0 view:website:website_forum.user_detail_full
 msgid "Karma"
 msgstr ""
 
@@ -901,26 +884,21 @@ msgid "Keep Informed"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_last_post:0
-#: field:forum.post,message_last_post:0
+#: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data da última mensagem"
 
 #. module: website_forum
-#: field:forum.forum,write_uid:0
-#: field:forum.post.reason,write_uid:0
-#: field:forum.post.vote,write_uid:0
-#: field:forum.tag,write_uid:0
+#: field:forum.forum,write_uid:0 field:forum.post.reason,write_uid:0
+#: field:forum.post.vote,write_uid:0 field:forum.tag,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última atualização por"
 
 #. module: website_forum
-#: field:forum.forum,write_date:0
-#: field:forum.post.reason,write_date:0
-#: field:forum.post.vote,write_date:0
-#: field:forum.tag,write_date:0
+#: field:forum.forum,write_date:0 field:forum.post.reason,write_date:0
+#: field:forum.post.vote,write_date:0 field:forum.tag,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última atualização em"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -938,16 +916,14 @@ msgid "Linking files (Editor)"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_ids:0
-#: field:forum.post,message_ids:0
+#: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensagens"
 
 #. module: website_forum
-#: help:forum.forum,message_ids:0
-#: help:forum.post,message_ids:0
+#: help:forum.forum,message_ids:0 help:forum.post,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Histórico de mensagens e comunicação"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -975,11 +951,10 @@ msgid "My Vote"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,name:0
-#: view:forum.post:website_forum.view_forum_post_form
+#: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
 #: field:forum.tag,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
@@ -1090,7 +1065,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Pessoas"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -1141,10 +1116,9 @@ msgid "Popular Question (500)"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.post.vote,post_id:0
-#: view:website:website_forum.post_comment
+#: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
 msgid "Post"
-msgstr ""
+msgstr "Lançar"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
@@ -1197,7 +1171,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,parent_id:0
 msgid "Question"
-msgstr ""
+msgstr "Pergunta"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:414
@@ -1233,11 +1207,10 @@ msgid "Question:"
 msgstr ""
 
 #. module: website_forum
-#: view:website:website_forum.forum_index
-#: view:website:website_forum.header
+#: view:website:website_forum.forum_index view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Questions"
-msgstr ""
+msgstr "Perguntas"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:376
@@ -1258,23 +1231,22 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,closed_reason_id:0
 msgid "Reason"
-msgstr ""
+msgstr "Motivo"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Reason:"
-msgstr ""
+msgstr "Motivo:"
 
 #. module: website_forum
-#: view:website:website_forum.404
-#: view:website:website_forum.private_profile
+#: view:website:website_forum.404 view:website:website_forum.private_profile
 msgid "Return to the question list."
 msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Save"
-msgstr ""
+msgstr "Salvar"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_26
@@ -1286,7 +1258,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Search"
-msgstr ""
+msgstr "Pesquisar"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1314,7 +1286,7 @@ msgstr ""
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_form
 msgid "Send a message to the group"
-msgstr ""
+msgstr "Enviar mensagem para o grupo"
 
 #. module: website_forum
 #: view:website:website_forum.404
@@ -1324,7 +1296,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Sort by"
-msgstr ""
+msgstr "Ordenar por"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1334,7 +1306,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_6
@@ -1349,10 +1321,9 @@ msgid "Student"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_summary:0
-#: field:forum.post,message_summary:0
+#: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumo"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
@@ -1364,17 +1335,14 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #. module: website_forum
-#: field:forum.post,tag_ids:0
-#: view:website:website_forum.ask_question
-#: view:website:website_forum.edit_post
-#: view:website:website_forum.forum_index
-#: view:website:website_forum.header
-#: view:website:website_forum.tag
+#: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
+#: view:website:website_forum.edit_post view:website:website_forum.forum_index
+#: view:website:website_forum.header view:website:website_forum.tag
 msgid "Tags"
-msgstr ""
+msgstr "Marcadores"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -1408,12 +1376,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,name:0
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #. module: website_forum
 #: field:forum.post.vote,recipient_id:0
 msgid "To"
-msgstr ""
+msgstr "Para"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1436,15 +1404,14 @@ msgid "Unlink its own comments"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_unread:0
-#: field:forum.post,message_unread:0
+#: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensagens não lidas"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Update"
-msgstr ""
+msgstr "Atualizar"
 
 #. module: website_forum
 #: field:forum.post,write_date:0
@@ -1484,12 +1451,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post.vote,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Usuário"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Usuários"
 
 #. module: website_forum
 #: field:forum.post,is_correct:0
@@ -1504,7 +1471,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Views"
-msgstr ""
+msgstr "Visões"
 
 #. module: website_forum
 #: field:forum.post.vote,vote:0
@@ -1513,26 +1480,25 @@ msgid "Vote"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.post,vote_count:0
-#: field:forum.post,vote_ids:0
+#: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
 #: view:website:website_forum.user_detail_full
 msgid "Votes"
-msgstr ""
+msgstr "Votos"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Website"
-msgstr ""
+msgstr "Site"
 
 #. module: website_forum
 #: field:forum.forum,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Mensagens do Site"
 
 #. module: website_forum
 #: help:forum.forum,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Histórico de Comunicação do Site"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_description:0
@@ -1550,8 +1516,7 @@ msgstr ""
 
 #. module: website_forum
 #: field:forum.forum,website_meta_title:0
-#: field:forum.post,website_meta_title:0
-#: field:forum.tag,website_meta_title:0
+#: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
 msgid "Website meta title"
 msgstr ""
 
@@ -1575,7 +1540,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "and"
-msgstr ""
+msgstr "e"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1583,8 +1548,7 @@ msgid "answers"
 msgstr ""
 
 #. module: website_forum
-#: view:website:website_forum.badge
-#: view:website:website_forum.user_badges
+#: view:website:website_forum.badge view:website:website_forum.user_badges
 msgid "awarded users"
 msgstr ""
 
@@ -1618,7 +1582,7 @@ msgstr ""
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "por"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1720,12 +1684,12 @@ msgstr ""
 #: view:website:website_forum.post_comment
 #: view:website:website_forum.post_description_full
 msgid "on"
-msgstr ""
+msgstr "em"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1790,7 +1754,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,self_reply:0
 msgid "unknown"
-msgstr ""
+msgstr "desconhecido"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1813,15 +1777,13 @@ msgid "views"
 msgstr ""
 
 #. module: website_forum
-#: view:website:website_forum.display_post
-#: view:website:website_forum.vote
+#: view:website:website_forum.display_post view:website:website_forum.vote
 msgid "vote"
 msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.display_post
-#: view:website:website_forum.user_detail_full
-#: view:website:website_forum.vote
+#: view:website:website_forum.user_detail_full view:website:website_forum.vote
 msgid "votes"
 msgstr ""
 

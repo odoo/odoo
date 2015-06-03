@@ -323,6 +323,9 @@ class stock_picking(osv.osv):
             if is_extra_move[move.id] and invoice_line_vals['product_id'] in product_price_unit:
                 invoice_line_vals['price_unit'] = product_price_unit[invoice_line_vals['product_id']]
             if is_extra_move[move.id]:
+                desc = (inv_type == 'out_invoice' and move.product_id.product_tmpl_id.description_sale) or \
+                    (inv_type == 'in_invoice' and move.product_id.product_tmpl_id.description_purchase)
+                invoice_line_vals['name'] += ' ' + desc if desc else ''
                 if extra_move_tax[move.picking_id, move.product_id]:
                     invoice_line_vals['invoice_line_tax_id'] = extra_move_tax[move.picking_id, move.product_id]
                 #the default product taxes

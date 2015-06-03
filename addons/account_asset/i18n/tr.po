@@ -1,21 +1,22 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_asset
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-02-14 18:05+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-15 06:37+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_asset
 #: field:account.asset.asset,entry_count:0
@@ -31,19 +32,12 @@ msgstr "Amortisman kalemleri sayısı"
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview on all depreciation. "
-"The\n"
-"            tool search can also be used to personalise your Assets reports "
-"and\n"
+"            From this report, you can have an overview on all depreciation. The\n"
+"            tool search can also be used to personalise your Assets reports and\n"
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"            Bu rapordan bütün amortismanlarınızı görebilirsiniz.\n"
-"            arama aracı ile demirbaş raporunuzu kişiselleştirebilirsiniz.\n"
-"          </p>\n"
-"        "
+msgstr "<p>\n            Bu rapordan bütün amortismanlarınızı görebilirsiniz.\n            arama aracı ile demirbaş raporunuzu kişiselleştirebilirsiniz.\n          </p>\n        "
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
@@ -84,8 +78,7 @@ msgstr "Analitik Hesap"
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:account.asset.asset:account_asset.view_account_asset_search
 #: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
+#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 #: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -211,9 +204,7 @@ msgstr "Süreyi Değiştir"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
-"Faturalar oluşturulurken bu kategorideki demirbaşların otomatikmen "
-"onaylanmasını istiyorsanız bunu işaretleyin."
+msgstr "Faturalar oluşturulurken bu kategorideki demirbaşların otomatikmen onaylanmasını istiyorsanız bunu işaretleyin."
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
@@ -221,47 +212,31 @@ msgid "Children Assets"
 msgstr "Alt Demirbaşlar"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.asset,method:0 help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
-"Amortisman kalemlerinin hesaplanmasında kullanılacak yöntemi seçin.\n"
-"  * Doğrusal:  Toplam Değer/amortisman sayısı formülü ile hesaplanır\n"
-"  * Azalan Oranlı: kalan değer * amortisman çarpanı formülü ile hesaplanır"
+msgstr "Amortisman kalemlerinin hesaplanmasında kullanılacak yöntemi seçin.\n  * Doğrusal:  Toplam Değer/amortisman sayısı formülü ile hesaplanır\n  * Azalan Oranlı: kalan değer * amortisman çarpanı formülü ile hesaplanır"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
 #: help:account.asset.category,method_time:0
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Amortisman tarihlerini ve satırlarını hesaplamakta kullanılacak yöntemi "
-"seçin.\n"
-"  * Amortisman Sayısı: 2 Amortisman arasındaki amortisman satır sayısını "
-"sabitleyin.\n"
-"  * Bitiş Tarihi: 2 Amortisman arasındaki ,amortismanın daha ileriye "
-"gidemeyeceği süreyi ve tarihi seçin."
+"Choose the method to use to compute the dates and number of depreciation lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Amortisman tarihlerini ve satırlarını hesaplamakta kullanılacak yöntemi seçin.\n  * Amortisman Sayısı: 2 Amortisman arasındaki amortisman satır sayısını sabitleyin.\n  * Bitiş Tarihi: 2 Amortisman arasındaki ,amortismanın daha ileriye gidemeyeceği süreyi ve tarihi seçin."
 
 #. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr ""
-"Çalışan demirbaşların amortisman satırlarının otomatikman işlenmesini "
-"istediğiniz dönemi seçin"
+msgstr "Çalışan demirbaşların amortisman satırlarının otomatikman işlenmesini istediğiniz dönemi seçin"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Kapat"
 
@@ -279,8 +254,7 @@ msgid "Company"
 msgstr "Şirket"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
+#: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Hesaplama Yöntemi"
 
@@ -448,8 +422,7 @@ msgstr "Bitiş Tarihi"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Bitiş Tarihi"
 
@@ -463,9 +436,7 @@ msgstr "Kayıtlar"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
-"Hata!\n"
-"Öz Yinelemeli demirbaşlar oluşturamazsınız."
+msgstr "Hata!\nÖz Yinelemeli demirbaşlar oluşturamazsınız."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81
@@ -510,25 +481,19 @@ msgid "History name"
 msgstr "Geçmiş adı"
 
 #. module: account_asset
-#: field:account.asset.asset,id:0
-#: field:account.asset.category,id:0
-#: field:account.asset.depreciation.line,id:0
-#: field:account.asset.history,id:0
+#: field:account.asset.asset,id:0 field:account.asset.category,id:0
+#: field:account.asset.depreciation.line,id:0 field:account.asset.history,id:0
 #: field:asset.asset.report,id:0
-#: field:asset.depreciation.confirmation.wizard,id:0
-#: field:asset.modify,id:0
+#: field:asset.depreciation.confirmation.wizard,id:0 field:asset.modify,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
-"Bu demirbaş için ilk amortisman kaydının ilk Ocak ayı yerine alış tarihinden "
-"yapılacağını belirtir."
+msgstr "Bu demirbaş için ilk amortisman kaydının ilk Ocak ayı yerine alış tarihinden yapılacağını belirtir."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -606,8 +571,7 @@ msgid "Next Period Depreciation"
 msgstr "Sonra Dönemdeki Amortisman"
 
 #. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
+#: field:account.asset.asset,note:0 field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Not"
@@ -616,8 +580,7 @@ msgstr "Not"
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:account.asset.category:account_asset.view_account_asset_category_form
 #: view:account.asset.history:account_asset.view_account_asset_history_form
-#: view:asset.modify:account_asset.asset_modify_form
-#: field:asset.modify,note:0
+#: view:asset.modify:account_asset.asset_modify_form field:asset.modify,note:0
 msgid "Notes"
 msgstr "Notlar"
 
@@ -678,8 +641,7 @@ msgid "Posted depreciation lines"
 msgstr "İşlenmiş amortisman kalemleri"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr "Kısmi Süreyle Orantılı"
 
@@ -688,8 +650,7 @@ msgstr "Kısmi Süreyle Orantılı"
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr ""
-"Kısmi süreyle orantı yalnızca süre yöntemine \"amortisman sayısı\" uygulanır."
+msgstr "Kısmi süreyle orantı yalnızca süre yöntemine \"amortisman sayısı\" uygulanır."
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0
@@ -765,8 +726,7 @@ msgid "State of Asset"
 msgstr "Demirbaş Durumu"
 
 #. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
+#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
 msgid "Status"
 msgstr "Durumu"
 
@@ -779,16 +739,9 @@ msgstr "İki amortisman arasındaki süreyi ay olarak belirtin"
 #: help:account.asset.history,method_time:0
 msgid ""
 "The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Tarihlerin ve amortisman satırlarının hesaplamasında kullanılan yöntem.\n"
-"Amortisman Sayısı: 2 Amortisman arasındakiamortisman satırı sayısını ve "
-"süresini sabitleyin .\n"
-"Bitiş Tarihi: Amortismanın daha öteye gidemeyeceği 2 amortisman arasındaki "
-"süreyi ve tarihi seçin."
+"Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Tarihlerin ve amortisman satırlarının hesaplamasında kullanılan yöntem.\nAmortisman Sayısı: 2 Amortisman arasındakiamortisman satırı sayısını ve süresini sabitleyin .\nBitiş Tarihi: Amortismanın daha öteye gidemeyeceği 2 amortisman arasındaki süreyi ve tarihi seçin."
 
 #. module: account_asset
 #: help:account.asset.asset,method_number:0
@@ -823,16 +776,9 @@ msgstr "Kullanıcı"
 #: help:account.asset.asset,state:0
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-"Yeni bir demirbaş oluşturulduğunda durumu 'Taslak' olarak ayarlanır.\n"
-"Demirbaş onaylandığında durmu 'çalışıyor' a çevrilir ve amortisman kalemleri "
-"muhasebeye işlenmeye başlar.\n"
-"Amortisman bittiğinden demirbaşı elle kapatabilirsiniz ya da son amortisman "
-"kalemi muhasebeye işlendiğinde durumu otomatik olarak kapanır."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
+msgstr "Yeni bir demirbaş oluşturulduğunda durumu 'Taslak' olarak ayarlanır.\nDemirbaş onaylandığında durmu 'çalışıyor' a çevrilir ve amortisman kalemleri muhasebeye işlenmeye başlar.\nAmortisman bittiğinden demirbaşı elle kapatabilirsiniz ya da son amortisman kalemi muhasebeye işlendiğinde durumu otomatik olarak kapanır."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
