@@ -30,12 +30,12 @@ class account_abstract_payment(models.AbstractModel):
     _name = "account.abstract.payment"
     _description = "Contains the logic shared between models which allows to register payments"
 
-    payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], default='outbound', string='Payment Type', required=True)
+    payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
     payment_method = fields.Many2one('account.payment.method', string='Payment Method', required=True)
     payment_method_code = fields.Char(related='payment_method.code',
         help="Technical field used to adapt the interface to the payment method selected.")
 
-    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')], default='supplier')
+    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')])
     partner_id = fields.Many2one('res.partner', string='Partner')
 
     amount = fields.Monetary(string='Payment Amount', required=True)
