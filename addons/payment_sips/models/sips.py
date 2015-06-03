@@ -84,6 +84,7 @@ class AcquirerSips(models.Model):
         shasign = sha256(data + key)
         return shasign.hexdigest()
 
+    @api.model
     def sips_form_generate_values(self, partner_values, tx_values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         acquirer = self.browse(id)
@@ -138,7 +139,6 @@ class TxSips(models.Model):
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
-
     def _sips_data_to_object(self, data):
         res = {}
         for element in data.split('|'):
@@ -146,6 +146,7 @@ class TxSips(models.Model):
             res[element_split[0]] = element_split[1]
         return res
 
+    @api.model
     def _sips_form_get_tx_from_data(self, data):
         """ Given a data dict coming from sips, verify it and find the related
         transaction record. """
@@ -157,7 +158,7 @@ class TxSips(models.Model):
             custom = json.loads(data.pop('returnContext', False) or '{}')
             reference = custom.get('reference')
 
-        tx_ids = self.pool['payment.transaction'].search([
+        tx_ids = self.env['payment.transaction'].search([
             ('reference', '=', reference), ])
         if not tx_ids or len(tx_ids) > 1:
             error_msg = 'Sips: received data for reference %s' % reference
@@ -169,12 +170,13 @@ class TxSips(models.Model):
             raise ValidationError(error_msg)
         return self.browse(tx_ids[0])
 
+    @api.model
     def _sips_form_get_invalid_parameters(self, tx, data):
         invalid_parameters = []
 
         data = self._sips_data_to_object(data.get('Data'))
 
-        # TODO: txn_id: shoulb be false at draft, set afterwards, and verified with txn details
+        # TODO: txn_id: should be false at draft, set afterwards, and verified with txn details
         if tx.acquirer_reference and data.get('transactionReference') != tx.acquirer_reference:
             invalid_parameters.append(('transactionReference', data.get('transactionReference'), tx.acquirer_reference))
         # check what is bought
@@ -185,6 +187,7 @@ class TxSips(models.Model):
 
         return invalid_parameters
 
+    @api.model
     def _sips_form_validate(self, tx, data):
         data = self._sips_data_to_object(data.get('Data'))
         status = data.get('responseCode')
