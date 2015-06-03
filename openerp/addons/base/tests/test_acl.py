@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 from lxml import etree
 
 from openerp.exceptions import AccessError
@@ -165,4 +165,4 @@ class TestACL(common.TransactionCase):
         self.erp_manager_group.write({'users': [(3, self.demo_uid)]})
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

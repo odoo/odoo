@@ -1330,11 +1330,6 @@ command-line (or in a CI system), but while actually running it is
 pretty simple the setup of the pre-requisite parts has some
 complexities.
 
-#. Install unittest2_ in your Python environment. Both
-   can trivially be installed via `pip <http://pip-installer.org>`_ or
-   `easy_install
-   <http://packages.python.org/distribute/easy_install.html>`_.
-
 #. Install PhantomJS_. It is a headless
    browser which allows automating running and testing web
    pages. QUnitSuite_ uses it to actually run the qunit_ test suite.
@@ -1401,8 +1396,6 @@ the OpenERP Web test suite.
 .. _qunit: http://qunitjs.com/
 
 .. _qunit assertions: http://api.qunitjs.com/category/assert/
-
-.. _unittest2: http://pypi.python.org/pypi/unittest2
 
 .. _QUnitSuite: http://pypi.python.org/pypi/QUnitSuite/
 

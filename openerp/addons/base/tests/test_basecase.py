@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import unittest2
+import unittest
 
 from openerp.tests import common
 
@@ -83,4 +83,4 @@ class test_transaction_case(common.TransactionCase):
         self.assertEqual(partner, p_browse_ref, "browse_ref() should resolve xid to browse records")
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

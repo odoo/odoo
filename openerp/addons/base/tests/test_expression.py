@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import openerp
 from openerp.osv.expression import get_unaccent_wrapper
@@ -521,4 +521,4 @@ class test_expression(common.TransactionCase):
         self.env['res.users'].search([('name', '=', 'test')])
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

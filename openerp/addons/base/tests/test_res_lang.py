@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import openerp.tests.common as common
 

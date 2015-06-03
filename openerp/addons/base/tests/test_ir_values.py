@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import openerp.tests.common as common
 
@@ -95,4 +95,4 @@ class test_ir_values(common.TransactionCase):
         assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == report_id, 'Bound action does not match definition'
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

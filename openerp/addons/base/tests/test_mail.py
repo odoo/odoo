@@ -4,13 +4,13 @@
 # > PYTHONPATH=. python2 openerp/tests/test_misc.py
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import unittest2
+import unittest
 
 from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, email_split
 import test_mail_examples
 
 
-class TestSanitizer(unittest2.TestCase):
+class TestSanitizer(unittest.TestCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
     def test_basic_sanitizer(self):
@@ -111,7 +111,7 @@ class TestSanitizer(unittest2.TestCase):
         self.assertNotIn('</body></html>', html, 'html_sanitize did not remove extra closing tags')
 
 
-class TestCleaner(unittest2.TestCase):
+class TestCleaner(unittest.TestCase):
     """ Test the email cleaner function that filters the content of incoming emails """
 
     def test_00_basic_text(self):
@@ -340,7 +340,7 @@ class TestCleaner(unittest2.TestCase):
         self.assertNotIn('encoding', new_html, 'html_email_cleaner did not remove correctly encoding attributes')
 
 
-class TestHtmlTools(unittest2.TestCase):
+class TestHtmlTools(unittest.TestCase):
     """ Test some of our generic utility functions about html """
 
     def test_plaintext2html(self):
@@ -367,7 +367,7 @@ class TestHtmlTools(unittest2.TestCase):
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
 
 
-class TestEmailTools(unittest2.TestCase):
+class TestEmailTools(unittest.TestCase):
     """ Test some of our generic utility functions for emails """
 
     def test_email_split(self):
@@ -382,4 +382,4 @@ class TestEmailTools(unittest2.TestCase):
             self.assertEqual(email_split(text), expected, 'email_split is broken')
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

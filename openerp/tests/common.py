@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-The module :mod:`openerp.tests.common` provides unittest2 test cases and a few
+The module :mod:`openerp.tests.common` provides unittest test cases and a few
 helpers and classes to write tests.
 
 """
@@ -15,7 +15,7 @@ import subprocess
 import threading
 import time
 import itertools
-import unittest2
+import unittest
 import urllib2
 import xmlrpclib
 from contextlib import contextmanager
@@ -79,7 +79,7 @@ def post_install(flag):
         return obj
     return decorator
 
-class BaseCase(unittest2.TestCase):
+class BaseCase(unittest.TestCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
     
@@ -352,7 +352,7 @@ class HttpCase(TransactionCase):
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None)
         except OSError:
-            raise unittest2.SkipTest("PhantomJS not found")
+            raise unittest.SkipTest("PhantomJS not found")
         try:
             self.phantom_poll(phantom, timeout)
         finally:

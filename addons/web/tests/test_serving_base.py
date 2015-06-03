@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import random
-import unittest2
+import unittest
 
 from openerp.tools import topological_sort
 
@@ -10,7 +10,7 @@ def sample(population):
         population,
             random.randint(0, min(len(population), 5)))
 
-class TestModulesLoading(unittest2.TestCase):
+class TestModulesLoading(unittest.TestCase):
     def setUp(self):
         self.mods = map(str, range(1000))
     def test_topological_sort(self):

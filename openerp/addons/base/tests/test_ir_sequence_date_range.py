@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 from openerp.tests import common
 from datetime import date
@@ -119,4 +119,4 @@ class test_ir_sequence_date_range_change_implementation(common.SingleTransaction
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

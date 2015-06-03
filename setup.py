@@ -162,7 +162,6 @@ setup(
         'requests',
         'simplejson',
         'suds-jurko',
-        'unittest2',
         'vatnumber',
         'vobject',
         'werkzeug',
@@ -172,7 +171,6 @@ setup(
         'SSL': ['pyopenssl'],
     },
     tests_require=[
-        'unittest2',
         'mock',
     ],
     **py2exe_options()

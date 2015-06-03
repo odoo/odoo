@@ -2,7 +2,7 @@
 # > PYTHONPATH=. python2 openerp/tests/test_view_validation.py
 from lxml import etree
 from StringIO import StringIO
-import unittest2
+import unittest
 
 from openerp.tools.view_validation import (valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
                                            valid_type_in_col, valid_att_in_field, valid_att_in_label,
@@ -92,7 +92,7 @@ valid_tree = etree.parse(StringIO('''\
 ''')).getroot()
 
 
-class test_view_validation(unittest2.TestCase):
+class test_view_validation(unittest.TestCase):
     """ Test the view validation code (but not the views themselves). """
 
     def test_page_validation(self):
@@ -128,4 +128,4 @@ class test_view_validation(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

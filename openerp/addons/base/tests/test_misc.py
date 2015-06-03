@@ -1,9 +1,9 @@
-import unittest2
+import unittest
 
 from openerp.tools import misc
 
 
-class test_countingstream(unittest2.TestCase):
+class test_countingstream(unittest.TestCase):
     def test_empty_stream(self):
         s = misc.CountingStream(iter([]))
         self.assertEqual(s.index, -1)
@@ -34,4 +34,4 @@ class test_countingstream(unittest2.TestCase):
         self.assertEqual(s.index, 0)
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()
