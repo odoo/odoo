@@ -84,7 +84,6 @@ class AcquirerSips(models.Model):
         shasign = sha256(data + key)
         return shasign.hexdigest()
 
-    @api.model
     def sips_form_generate_values(self, partner_values, tx_values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         acquirer = self.browse(id)
@@ -92,7 +91,7 @@ class AcquirerSips(models.Model):
         currency_code = '978'
         amount = int(tx_values.get('amount') * 100)
         if acquirer.environment == 'prod':
-            # For production envinronment, key version 2 is required
+            # For production environment, key version 2 is required
             merchant_id = getattr(acquirer, 'sips_merchant_id')
             key_version = '2'
         else:
@@ -121,7 +120,6 @@ class AcquirerSips(models.Model):
         sips_tx_values['Seal'] = shasign
         return partner_values, sips_tx_values
 
-    @api.model
     def sips_get_form_action_url(self):
         return self._get_sips_urls(self.environment)['sips_form_url']
 
@@ -148,7 +146,6 @@ class TxSips(models.Model):
             res[element_split[0]] = element_split[1]
         return res
 
-    @api.model
     def _sips_form_get_tx_from_data(self, data):
         """ Given a data dict coming from sips, verify it and find the related
         transaction record. """
@@ -188,7 +185,6 @@ class TxSips(models.Model):
 
         return invalid_parameters
 
-    @api.model
     def _sips_form_validate(self, tx, data):
         data = self._sips_data_to_object(data.get('Data'))
         status = data.get('responseCode')
