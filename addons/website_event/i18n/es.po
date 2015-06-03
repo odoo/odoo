@@ -1,21 +1,22 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_event
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-22 18:25+0000\n"
-"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/odoo-8/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:43+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event
 #: view:website:website_event.index
@@ -100,9 +101,7 @@ msgstr "Crear evento"
 msgid ""
 "Create a name for your new event and click <em>'Continue'</em>. e.g: "
 "Technical Training"
-msgstr ""
-"Crear un nombre para su nuevo evento y pulse <em>'Continuar'</em>. Por "
-"ejemplo: Formación técnica"
+msgstr "Crear un nombre para su nuevo evento y pulse <em>'Continuar'</em>. Por ejemplo: Formación técnica"
 
 #. module: website_event
 #. openerp-web
@@ -161,8 +160,8 @@ msgstr "Arrastar el bloque 'Texto' en su página de evento."
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
-msgid "Email Thread"
-msgstr "Hilo de mensajes"
+msgid "Event"
+msgstr "Evento"
 
 #. module: website_event
 #: view:website:website_event.introduction-open-days-in-los-angeles
@@ -185,6 +184,18 @@ msgstr "Menú del evento"
 #: view:website:website_event.404
 msgid "Event not found!"
 msgstr "Evento no encontrado"
+
+#. module: website_event
+#: model:mail.message.subtype,description:website_event.mt_event_published
+#: model:mail.message.subtype,name:website_event.mt_event_published
+msgid "Event published"
+msgstr "Evento publicado"
+
+#. module: website_event
+#: model:mail.message.subtype,description:website_event.mt_event_unpublished
+#: model:mail.message.subtype,name:website_event.mt_event_unpublished
+msgid "Event unpublished"
+msgstr "Evento despublicado"
 
 #. module: website_event
 #: view:website:website.layout
@@ -212,8 +223,7 @@ msgstr "Eventos:"
 msgid ""
 "Find out what people see and say about this event,\n"
 "                            and join the conversation."
-msgstr ""
-"Encontrar qué gente ve y habla sobre este evento, y unirse a la conversación."
+msgstr "Encontrar qué gente ve y habla sobre este evento, y unirse a la conversación."
 
 #. module: website_event
 #: view:website:website_event.event_description_full
@@ -235,7 +245,7 @@ msgid "Insert blocks to layout the body of your event."
 msgstr "Insertar bloques al diseño del cuerpo de su evento"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:38
+#: code:addons/website_event/models/event.py:44
 #, python-format
 msgid "Introduction"
 msgstr "Introducción"
@@ -253,8 +263,7 @@ msgstr "Diseñe su evento"
 #: code:addons/website_event/static/src/js/website.tour.event.js:12
 #, python-format
 msgid "Let's go through the first steps to publish a new event."
-msgstr ""
-"Vayamos a través de los primeros pasos para publicar un nuevo evento."
+msgstr "Vayamos a través de los primeros pasos para publicar un nuevo evento."
 
 #. module: website_event
 #: view:website:website.snippets
@@ -262,7 +271,7 @@ msgid "Local Events"
 msgstr "Eventos locales"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:39
+#: code:addons/website_event/models/event.py:45
 #, python-format
 msgid "Location"
 msgstr "Localización"
@@ -368,7 +377,7 @@ msgid "Publish your event"
 msgstr "Publicar su evento"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:61
+#: code:addons/website_event/models/event.py:67
 #, python-format
 msgid "Register"
 msgstr "Registrar"
@@ -424,9 +433,9 @@ msgstr "Iniciar tutorial"
 #: code:addons/website_event/static/src/js/website.tour.event.js:19
 #, python-format
 msgid ""
-"The <em>Content</em> menu allows you to create new pages, events, menus, etc."
-msgstr ""
-"El menú <em>Contenido</em> permite crear nuevas páginas, eventos, menús, etc."
+"The <em>Content</em> menu allows you to create new pages, events, menus, "
+"etc."
+msgstr "El menú <em>Contenido</em> permite crear nuevas páginas, eventos, menús, etc."
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:60
@@ -438,11 +447,8 @@ msgstr "Esta semana"
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:46
 #, python-format
-msgid ""
-"This is your new event page. We will edit the event presentation page."
-msgstr ""
-"Ésta es su página de nuevo evento. Se editará a continuación la página de "
-"presentación."
+msgid "This is your new event page. We will edit the event presentation page."
+msgstr "Ésta es su página de nuevo evento. Se editará a continuación la página de presentación."
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:68
@@ -532,9 +538,7 @@ msgid ""
 "Write here a quote from one of your attendees.\n"
 "                        It gives confidence in your\n"
 "                        events."
-msgstr ""
-"Escriba aquí una cita de uno de los asistentes. Dará credibilidad a sus "
-"eventos."
+msgstr "Escriba aquí una cita de uno de los asistentes. Dará credibilidad a sus eventos."
 
 #. module: website_event
 #: view:website:website_event.index
@@ -550,6 +554,11 @@ msgstr "no publicado"
 #: view:website:website_event.index
 msgid "pull-right"
 msgstr "pull-right"
+
+#. module: website_event
+#: view:website:website_event.event_details view:website:website_event.index
+msgid "to"
+msgstr "a"
 
 #. module: website_event
 #: view:website:website_event.index

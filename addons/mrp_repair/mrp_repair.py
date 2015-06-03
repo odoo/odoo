@@ -139,8 +139,8 @@ class mrp_repair(osv.osv):
             \n* The \'Cancelled\' status is used when user cancel repair order.'),
         'location_id': fields.many2one('stock.location', 'Current Location', select=True, required=True, readonly=True, states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, required=True, states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]}),
-        'lot_id': fields.many2one('stock.production.lot', 'Repaired Lot', domain="[('product_id','=', product_id)]", help="Products repaired are all belonging to this lot"),
-        'guarantee_limit': fields.date('Warranty Expiration', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards.", states={'confirmed': [('readonly', True)]}),
+        'lot_id': fields.many2one('stock.production.lot', 'Repaired Lot', domain="[('product_id','=', product_id)]", help="Products repaired are all belonging to this lot", oldname="prodlot_id"),
+        'guarantee_limit': fields.date('Warranty Expiration', states={'confirmed': [('readonly', True)]}),
         'operations': fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft': [('readonly', False)]}, copy=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
         'partner_invoice_id': fields.many2one('res.partner', 'Invoicing Address'),
@@ -408,6 +408,7 @@ class mrp_repair(osv.osv):
                             'price_subtotal': fee.product_uom_qty * fee.price_unit
                         })
                         repair_fee_obj.write(cr, uid, [fee.id], {'invoiced': True, 'invoice_line_id': invoice_fee_id})
+                inv_obj.button_reset_taxes(cr, uid, inv_id, context=context)
                 res[repair.id] = inv_id
         return res
 
@@ -472,7 +473,6 @@ class mrp_repair(osv.osv):
                     'partner_id': repair.address_id and repair.address_id.id or False,
                     'location_id': move.location_id.id,
                     'location_dest_id': move.location_dest_id.id,
-                    'state': 'assigned',
                 })
                 move_ids.append(move_id)
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
@@ -558,11 +558,15 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         @return: Dictionary of values.
         """
         res = {}
+        tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.to_invoice and line.price_unit * line.product_uom_qty or 0
-            cur = line.repair_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+            if line.to_invoice:
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
+                cur = line.repair_id.pricelist_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
+            else:
+                res[line.id] = 0
         return res
 
     _columns = {
@@ -649,11 +653,15 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         @return: Dictionary of values.
         """
         res = {}
+        tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.to_invoice and line.price_unit * line.product_uom_qty or 0
-            cur = line.repair_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+            if line.to_invoice:
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
+                cur = line.repair_id.pricelist_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
+            else:
+                res[line.id] = 0
         return res
 
     _columns = {

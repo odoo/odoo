@@ -1,21 +1,22 @@
-# Bulgarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/odoo-8/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:25+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bg\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product
 #: field:product.template,product_variant_count:0
@@ -23,11 +24,10 @@ msgid "# of Product Variants"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:725
-#: code:addons/product/product.py:1070
+#: code:addons/product/product.py:757 code:addons/product/product.py:1111
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (копие)"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
@@ -94,15 +94,45 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: view:product.template:product.product_template_only_form_view
+msgid ""
+": adding or deleting attributes\n"
+"                            will delete and recreate existing variants and lead\n"
+"                            to the loss of their possible customizations."
+msgstr ""
+
+#. module: product
+#: model:product.template,website_description:product.product_product_9_product_template
+msgid ""
+"<hr>\n"
+"                <section data-snippet-id=\"image-text\" class=\"mt16 mb16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-10 col-md-offset-1 mt32 mb32\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/keyboard.png\">\n"
+"                            </div>\n"
+"                            <div class=\"col-md-8 col-md-offset-2 mb32 text-center\">\n"
+"                                <h3>A great Keyboard. Cordless.</h3>\n"
+"                                <p>\n"
+"                                    The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
+"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
+"                                    you like — with the keyboard in front of your iPad or on your lap.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"            "
+msgstr ""
+
+#. module: product
 #: model:ir.actions.act_window,help:product.product_ul_form_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new Logistic Unit\n"
 "              </p><p>\n"
-"                The logistic unit defines the container used for the "
-"package.  \n"
-"                It has a type (e.g. pallet, box, ...) and you can specify "
-"its \n"
+"                The logistic unit defines the container used for the package.  \n"
+"                It has a type (e.g. pallet, box, ...) and you can specify its \n"
 "                size. \n"
 "              </p>\n"
 "            "
@@ -116,8 +146,7 @@ msgid ""
 "              </p><p>\n"
 "                Units of measure belonging to the same category can be\n"
 "                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of "
-"measure:\n"
+"                <i>'Time'</i>, you will have the following units of measure:\n"
 "                Hours, Days.\n"
 "              </p>\n"
 "            "
@@ -143,8 +172,7 @@ msgid ""
 "              </p><p>\n"
 "                There can be more than one version of a pricelist, each of\n"
 "                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
 "                etc.\n"
 "              </p>\n"
 "            "
@@ -156,17 +184,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a pricelist.\n"
 "              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
-"                the purchase price. The default price list has only one "
-"rule; use\n"
-"                the cost price defined on the product form, so that you do "
-"not have to\n"
-"                worry about supplier pricelists if you have very simple "
-"needs.\n"
+"                A price list contains rules to be evaluated in order to compute\n"
+"                the purchase price. The default price list has only one rule; use\n"
+"                the cost price defined on the product form, so that you do not have to\n"
+"                worry about supplier pricelists if you have very simple needs.\n"
 "              </p><p>\n"
-"                But you can also import complex price lists form your "
-"supplier\n"
+"                But you can also import complex price lists form your supplier\n"
 "                that may depends on the quantities ordered or the current\n"
 "                promotions.\n"
 "              </p>\n"
@@ -179,16 +202,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a pricelist.\n"
 "              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
+"                A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products.\n"
 "              </p><p>\n"
-"                Price lists may have several versions (2010, 2011, Promotion "
-"of\n"
-"                February 2010, etc.) and each version may have several "
-"rules.\n"
-"                (e.g. the customer price of a product category will be based "
-"on\n"
+"                Price lists may have several versions (2010, 2011, Promotion of\n"
+"                February 2010, etc.) and each version may have several rules.\n"
+"                (e.g. the customer price of a product category will be based on\n"
 "                the supplier price multiplied by 1.80).\n"
 "              </p>\n"
 "            "
@@ -213,8 +232,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new product.\n"
 "              </p><p>\n"
-"                You must define a product for everything you sell, whether "
-"it's\n"
+"                You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers.\n"
 "              </p><p>\n"
@@ -229,12 +247,485 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_category_action
 msgid ""
 "<p>\n"
-"                Here is a list of all your products classified by category. "
-"You\n"
-"                can click a category to get the list of all products linked "
-"to\n"
+"                Here is a list of all your products classified by category. You\n"
+"                can click a category to get the list of all products linked to\n"
 "                this category or to a child of this category.\n"
 "              </p>\n"
+"            "
+msgstr ""
+
+#. module: product
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid ""
+"<section data-snippet-id=\"image-text\" class=\"mt16 mb16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-9 col-md-offset-1 mb16\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/overview_hero.png\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"text-image\" class=\"mt16 mb16 oe_dark\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n"
+"                                <h3>Design. The thinnest iPod ever.</h3>\n"
+"                                <p>\n"
+"                                    About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
+"                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
+"                                    so you can see more of the music, photos, and videos you love.\n"
+"                                </p><p>\n"
+"                                    Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
+"                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
+"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/overview_design_silver.png\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"image-text\" class=\"mt16 mb16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-10 col-md-offset-1\">\n"
+"                                <h2 class=\"text-center\">Music. It's what beats inside.</h2>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-4 mt32 col-md-offset-1\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/purple.png\">\n"
+"                            </div>\n"
+"                            <div class=\"col-md-6 mt32\">\n"
+"                                <h3>How to get your groove on.</h3>\n"
+"                                <p>\n"
+"                                    Tap to play your favorite songs. Or entire albums.\n"
+"                                    Or everything by one artist. You can even browse by genres or composers.\n"
+"                                    Flip through your music: Album art looks great on the bigger screen.\n"
+"                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library.\n"
+"                                </p>\n"
+"                                <h3>Genius. Your own personal DJ.</h3>\n"
+"                                <p>\n"
+"                                        Say you’re listening to a song you love and you want to stay in the mood.\n"
+"                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
+"                                        and makes a Genius playlist for you. For more song combinations\n"
+"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
+"                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
+"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"image-text\" class=\"mt16 mb16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-12 text-center mb16\">\n"
+"                                <h2>Playlists. The perfect mix for every mood.</h2>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-4\">\n"
+"                                <h3>Sync to your heart’s content.</h3>\n"
+"                                <p>\n"
+"                                        iTunes on your Mac or PC makes it easy to load up\n"
+"                                        your iPod. Just choose the playlists, audiobooks,\n"
+"                                        podcasts, and other audio files you want, then sync.\n"
+"                                </p>\n"
+"                            </div><div class=\"col-md-4\">\n"
+"                                <h3>When one playlist isn’t enough.</h3>\n"
+"                                <p>\n"
+"                                        You probably have multiple playlists in iTunes on your computer.\n"
+"                                        One for your commute. One for the gym. Sync those playlists\n"
+"                                        to iPod, and you can play the perfect mix for whatever\n"
+"                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
+"                                        so it’s easy to switch between them and find the one you want without looking.\n"
+"                                </p>\n"
+"                            </div><div class=\"col-md-4\">\n"
+"                                <h3>Have Genius call the tunes.</h3>\n"
+"                                <p>\n"
+"                                        There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
+"                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
+"                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
+"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"            "
+msgstr ""
+
+#. module: product
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid ""
+"<section data-snippet-id=\"image-text\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 mt32 col-md-offset-1\">\n"
+"                                <h3>Ultrathin design</h3>\n"
+"                                <h3 class=\"text-muted\">The desktop. In its most advanced form ever</h3>\n"
+"                                <p>\n"
+"                                    Creating such a stunningly thin design took some equally stunning feats of technological innovation. We refined,re-imagined,or re-engineered everything about iMac from the inside out. The result is an advanced, elegant all-in-one computer that’s as much a work of art as it is state of the art.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 mt32\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/imac1.png\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"text-image\" class=\"mb16 oe_dark\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"text-center col-md-8 col-md-offset-2 mt16\">\n"
+"                                <h2>Beautiful widescreen display.</h2>\n"
+"                                <h3 class=\"text-muted\">Brilliance onscreen. And behind it.</h3>\n"
+"                                <p>\n"
+"                                    How did we make an already gorgeous widescreen display even better? By making it 75 percent less reflective. And by re-architecting the LCD and moving it right up against the cover glass. So you see your photos, games, movies, and everything else in vivid, lifelike detail. \n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-10 col-md-offset-1\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/imac2.png\" width=\"100%\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"image-text\" class=\"mt16 mb16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n"
+"                                <p class=\"text-muted\">\n"
+"                                    Powered by fourth-generation Intel Core processors, this iMac is the fastest yet. Every model in the lineup comes standard with a quad-core Intel Core i5 processor, starting at 2.7GHz and topping out at 3.4GHz.\n"
+"                                </p><p class=\"text-muted\">\n"
+"                                    And at the Apple Online Store, you can configure your iMac with an even more powerful Intel Core i7 processor, up to 3.5GHz.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mb32\">\n"
+"                                <h3>Key Features</h3>\n"
+"                                <p>\n"
+"                                        75 percent less reflection.\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                        Individually calibrated for true-to-life color.\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                        More energy efficient.\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                        Friendly to the environment.\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                        Highly rated designs.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"            "
+msgstr ""
+
+#. module: product
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid ""
+"<section data-snippet-id=\"text-image\" class=\"mb16 oe_dark\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n"
+"                                <h2>The full iPad experience.</h2>\n"
+"                                <h3 class=\"text-muted\">There's less of it, but no less to it.</h3>\n"
+"                                <p>\n"
+"                                        Everything you love about iPad — the beautiful screen,\n"
+"                                        fast and fluid performance, FaceTime and iSight cameras, \n"
+"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
+"                                        you’ll love about iPad mini, too. And you can hold it in one hand.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 mt16 mb16\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/design.png\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"image-text\" class=\"mt16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/mighty.png\">\n"
+"                            </div>\n"
+"                            <div class=\"col-md-6 mt32\">\n"
+"                                <h3>Beautiful 7.9‑inch display.</h3>\n"
+"                                <h4 class=\"small text-muted\"> A screen worthy of iPad.</h4>\n"
+"                                <p>\n"
+"                                    Everything you love about iPad — the beautiful\n"
+"                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
+"                                    But what really makes it stand out is its size. At 7.9 inches,\n"
+"                                    it’s perfectly sized to deliver an experience every bit as big as iPad.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"text-image\" class=\"mb16 oe_dark\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n"
+"                                <h2>Over 375,000 apps.</h2>\n"
+"                                <h3 class=\"text-muted\">If it's made for iPad, it's made for iPad mini.</h3>\n"
+"                                <p>\n"
+"                                    Right from the start, apps made for iPad also work with iPad mini.\n"
+"                                    They’re immersive, full-screen apps that let you do almost anything\n"
+"                                    you can imagine. And with automatic updates,\n"
+"                                    you're always getting the best experience possible.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 mt16\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/apps.png\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"image-text\" class=\"mt16 mb16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/ipad_why.png\">\n"
+"                            </div>\n"
+"                            <div class=\"col-md-6 mt64\">\n"
+"                                <h3>Why you'll love an iPad.</h3>\n"
+"                                <p>\n"
+"                                   Right from the start, there’s a lot to love about iPad.\n"
+"                                   It’s simple yet powerful. Thin and light yet full-\n"
+"                                   featured. It can do just about everything and be just\n"
+"                                   about anything.And because it’s so easy to use, it’s\n"
+"                                   easy to love.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"text-image\" class=\"mt16 mb16 oe_dark\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n"
+"                                <h2>Ultrafast wireless.</h2>\n"
+"                                <h3 class=\"text-muted\">Fast connections.The world over.</h3>\n"
+"                                <p>\n"
+"                                   With advanced Wi‑Fi that’s up to twice as fast as\n"
+"                                   any previous-generation iPad and access to fast\n"
+"                                   cellular data networks around the world, iPad mini\n"
+"                                   lets you download content, stream video,\n"
+"                                   and browse the web at amazing speeds.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 mt16 mb16\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/wireless.png\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"            "
+msgstr ""
+
+#. module: product
+#: model:product.template,website_description:product.product_product_4_product_template
+#: model:product.template,website_description:product.product_product_4b_product_template
+#: model:product.template,website_description:product.product_product_4c_product_template
+#: model:product.template,website_description:product.product_product_4d_product_template
+msgid ""
+"<section data-snippet-id=\"text-image\" class=\"mt16 mb16 oe_dark\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n"
+"                                <h3>Why you'll love an iPad.</h3>\n"
+"                                <p>\n"
+"                                    Right from the start, there’s a lot to love about\n"
+"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
+"                                    full-featured. It can do just about everything and\n"
+"                                    be just about anything.\n"
+"                                </p><p>\n"
+"                                    And because it’s so easy to use, it’s easy to love.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 mt16 mb16\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/ipad_why.png\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"image-text\" class=\"mt16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/ipad_experience.png\">\n"
+"                            </div>\n"
+"                            <div class=\"col-md-6 mt64\">\n"
+"                                <h3>The full iPad experience.</h3>\n"
+"                                <h4 class=\"small\">There is less of it, but no less to it.</h4>\n"
+"                                <p>\n"
+"                                    Everything you love about iPad — the beautiful\n"
+"                                    screen, fast and fluid performance, FaceTime and\n"
+"                                    iSight cameras, thousands of amazing apps, 10-hour\n"
+"                                    battery life* — is everything you’ll love about\n"
+"                                    iPad mini, too. And you can hold it in one hand.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"            "
+msgstr ""
+
+#. module: product
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid ""
+"<section data-snippet-id=\"text-image\" class=\"mt16 mb16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n"
+"                                <h3>Bose Mini Bluetooth Speaker.</h3>\n"
+"                                <p>\n"
+"                                    The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n"
+"                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
+"                                    full-featured. It can do just about everything and\n"
+"                                    experience music just about anywhere.\n"
+"                                </p>\n"
+"\n"
+"                                <div class=\"panel panel-default mt48\" data-snippet-id=\"panel\">\n"
+"                                    <div class=\"panel-heading\">\n"
+"                                        <h3 class=\"panel-title\">Characteristics</h3>\n"
+"                                    </div>\n"
+"                                    <div class=\"panel-body\">\n"
+"                                        <ul>\n"
+"                                            <li>Sleek, compact design</li>\n"
+"                                            <li>Efficient, high-quality audio</li>\n"
+"                                            <li>Remote control for power, volume, track seek</li>\n"
+"                                            <li>Auxiliary input for portable devices</li>\n"
+"                                            <li>Universal iPod docking station fits most iPod/iPhone models</li>\n"
+"                                            <li>Charges iPod/iPhone</li>\n"
+"                                            <li>Volume control on main system</li>\n"
+"                                        </ul>\n"
+"                                    </div>\n"
+"                                </div>\n"
+"\n"
+"                            </div>\n"
+"                            <div class=\"col-md-4 mt16 mb16 col-md-offset1\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/play_where_you_play.jpg\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"text-image\" class=\"mt16 mb16 oe_dark\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt16\">\n"
+"                                <h2>Plays where you play</h2>\n"
+"                                <p>\n"
+"                                        The SoundLink® Mini speaker is small and light enough\n"
+"                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n"
+"                                        Its low profile lets you place it almost anywhere and\n"
+"                                        provides a low center of gravity that makes it nearly\n"
+"                                        impossible to tip over.\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                    The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
+"                                    And at home, you can listen even longer—the charging cradle lets\n"
+"                                    you listen while it charges.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/more_features.png\">\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 col-md-offset-4 text-center mb16 mt16\">\n"
+"                                <h3>Bluetooth connectivity</h3>\n"
+"                                <p>\n"
+"                                    The speaker has a range of about 30 feet, so you can enjoy\n"
+"                                    the sound you want without wires. It pairs easily with your\n"
+"                                    smartphone, iPad® or other Bluetooth device.\n"
+"                                    And it remembers the most recent six devices you've used,\n"
+"                                    so reconnecting is even simpler.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"                <section data-snippet-id=\"text-image\" class=\"mt16 mb16\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-5 col-md-offset-1 mt32 mb16\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/bluetooth.jpg\">\n"
+"                            </div>\n"
+"                            <div class=\"col-md-5 mt16\">\n"
+"                                <h2>More features.</h2>\n"
+"                                <p>\n"
+"                                    Charging cradle recharges the battery and serves as a convenient\n"
+"                                    home base for your speaker, and it lets you play while it charges.\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                    Wall charger can be plugged into the cradle or directly into the speaker\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                    Auxiliary port lets you connect other audio sources, like an MP3 player\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                    USB port allows for software update to ensure ongoing Bluetooth device compatibility\n"
+"                                </p>\n"
+"                                <p>\n"
+"                                    Soft covers are available separately in blue, green or orange. Pick a color to match your style.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
+"            "
+msgstr ""
+
+#. module: product
+#: model:product.template,website_description:product.product_product_7_product_template
+msgid ""
+"<section data-snippet-id=\"text-image\" class=\"mt32\">\n"
+"                    <div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-8 col-md-offset-2 text-center\">\n"
+"                                <h3>Two is better than one.</h3>\n"
+"                                <p>\n"
+"                                    Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n"
+"                                    contains two separate high-performance drivers — a woofer to handle bass and\n"
+"                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n"
+"                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
+"                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
+"                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div><div class=\"row mt16\">\n"
+"                            <div class=\"col-md-2 mt16\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/promo_headphones.png\">\n"
+"                            </div>\n"
+"                            <div class=\"col-md-6\">\n"
+"                                <h3 class=\"mt16\">Hear, hear.</h3>\n"
+"                                <p>\n"
+"                                    The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n"
+"                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n"
+"                                    in your ear, creating a seal that isolates your music from your surroundings.\n"
+"                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
+"                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
+"                                    for the headphones themselves.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-4\">\n"
+"                                <h3 class=\"mt16\">Keep it clean.</h3>\n"
+"                                <p>\n"
+"                                    Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n"
+"                                    components from dust and debris. You can remove the caps for cleaning or replace\n"
+"                                    them with an extra set that’s included in the box.\n"
+"                                </p>\n"
+"                            </div>\n"
+"                        </div><div class=\"row\">\n"
+"                            <div class=\"col-md-2 col-md-offset-5 mt16\">\n"
+"                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/buds_closeup.png\">\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </section>\n"
 "            "
 msgstr ""
 
@@ -248,16 +739,16 @@ msgstr ""
 #. module: product
 #: help:product.template,description_sale:0
 msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 
 #. module: product
 #: help:product.template,description_purchase:0
 msgid ""
-"A description of the Product that you want to communicate to your suppliers. "
-"This description will be copied to every Purchase Order, Receipt and "
+"A description of the Product that you want to communicate to your suppliers."
+" This description will be copied to every Purchase Order, Receipt and "
 "Supplier Invoice/Refund."
 msgstr ""
 
@@ -274,19 +765,16 @@ msgid "Accessories"
 msgstr "Аксесоари"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.template,active:0
-#: field:product.uom,active:0
+#: field:product.price.type,active:0 field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0 field:product.product,active:0
+#: field:product.template,active:0 field:product.uom,active:0
 msgid "Active"
 msgstr "Активен"
 
 #. module: product
 #: model:product.category,name:product.product_category_all
 msgid "All"
-msgstr ""
+msgstr "Всички"
 
 #. module: product
 #: model:product.template,description:product.product_product_37_product_template
@@ -329,7 +817,7 @@ msgid "Associated field in the product form."
 msgstr "Свързано поле в формата на продукта"
 
 #. module: product
-#: code:addons/product/pricelist.py:208
+#: code:addons/product/pricelist.py:215
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -340,7 +828,7 @@ msgstr ""
 #: field:product.attribute.line,attribute_id:0
 #: field:product.attribute.value,attribute_id:0
 msgid "Attribute"
-msgstr ""
+msgstr "Атрибут"
 
 #. module: product
 #: field:product.attribute.value,price_extra:0
@@ -363,7 +851,7 @@ msgstr ""
 #: model:ir.ui.menu,name:product.menu_attribute_action
 #: field:product.product,attribute_value_ids:0
 msgid "Attributes"
-msgstr ""
+msgstr "Атрибути"
 
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
@@ -378,7 +866,8 @@ msgstr ""
 #. module: product
 #: help:product.template,list_price:0
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
+"Base price to compute the customer price. Sometimes called the catalog "
+"price."
 msgstr ""
 
 #. module: product
@@ -404,7 +893,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
 msgid "Black"
-msgstr ""
+msgstr "Черен"
 
 #. module: product
 #: model:product.template,name:product.product_product_35_product_template
@@ -446,15 +935,12 @@ msgstr "Кашон 30x40x60"
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
-msgstr ""
-"Като махнете отметката на активното поле можете да забраните единица мярка, "
-"без да я изтриете."
+msgstr "Като махнете отметката на активното поле можете да забраните единица мярка, без да я изтриете."
 
 #. module: product
 #: view:product.price_list:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr ""
-"Изчисляване на цена на продукт за единица на база версия на ценова листа."
+msgstr "Изчисляване на цена на продукт за единица на база версия на ценова листа."
 
 #. module: product
 #: field:product.template,rental:0
@@ -470,10 +956,10 @@ msgstr "Продаваем"
 #. module: product
 #: view:product.price_list:product.view_product_price_list
 msgid "Cancel"
-msgstr ""
+msgstr "Откажи"
 
 #. module: product
-#: code:addons/product/product.py:210
+#: code:addons/product/product.py:214
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -537,8 +1023,7 @@ msgstr ""
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
 #: field:product.pricelist.version,company_id:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
+#: field:product.supplierinfo,company_id:0 field:product.template,company_id:0
 msgid "Company"
 msgstr "Фирма"
 
@@ -546,7 +1031,7 @@ msgstr "Фирма"
 #: model:product.category,name:product.product_category_8
 #: model:product.public.category,name:product.Components
 msgid "Components"
-msgstr ""
+msgstr "Компоненти"
 
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
@@ -596,7 +1081,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:178
+#: code:addons/product/product.py:181
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -613,7 +1098,8 @@ msgstr "Себестойност"
 #: help:product.template,standard_price:0
 msgid ""
 "Cost price of the product template used for standard stock valuation in "
-"accounting and used as a base price on purchase orders."
+"accounting and used as a base price on purchase orders. Expressed in the "
+"default unit of measure of the product."
 msgstr ""
 
 #. module: product
@@ -622,23 +1108,18 @@ msgstr ""
 #: field:product.attribute.line,create_uid:0
 #: field:product.attribute.price,create_uid:0
 #: field:product.attribute.value,create_uid:0
-#: field:product.category,create_uid:0
-#: field:product.packaging,create_uid:0
+#: field:product.category,create_uid:0 field:product.packaging,create_uid:0
 #: field:product.price.history,create_uid:0
-#: field:product.price.type,create_uid:0
-#: field:product.price_list,create_uid:0
+#: field:product.price.type,create_uid:0 field:product.price_list,create_uid:0
 #: field:product.pricelist,create_uid:0
 #: field:product.pricelist.item,create_uid:0
 #: field:product.pricelist.type,create_uid:0
 #: field:product.pricelist.version,create_uid:0
-#: field:product.product,create_uid:0
-#: field:product.supplierinfo,create_uid:0
-#: field:product.template,create_uid:0
-#: field:product.ul,create_uid:0
-#: field:product.uom,create_uid:0
-#: field:product.uom.categ,create_uid:0
+#: field:product.product,create_uid:0 field:product.supplierinfo,create_uid:0
+#: field:product.template,create_uid:0 field:product.ul,create_uid:0
+#: field:product.uom,create_uid:0 field:product.uom.categ,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Създадено от"
 
 #. module: product
 #: field:pricelist.partnerinfo,create_date:0
@@ -646,8 +1127,7 @@ msgstr ""
 #: field:product.attribute.line,create_date:0
 #: field:product.attribute.price,create_date:0
 #: field:product.attribute.value,create_date:0
-#: field:product.category,create_date:0
-#: field:product.packaging,create_date:0
+#: field:product.category,create_date:0 field:product.packaging,create_date:0
 #: field:product.price.history,create_date:0
 #: field:product.price.type,create_date:0
 #: field:product.price_list,create_date:0
@@ -657,18 +1137,15 @@ msgstr ""
 #: field:product.pricelist.version,create_date:0
 #: field:product.product,create_date:0
 #: field:product.supplierinfo,create_date:0
-#: field:product.template,create_date:0
-#: field:product.ul,create_date:0
-#: field:product.uom,create_date:0
-#: field:product.uom.categ,create_date:0
+#: field:product.template,create_date:0 field:product.ul,create_date:0
+#: field:product.uom,create_date:0 field:product.uom.categ,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Създадено на"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
 #: field:product.price.type,currency_id:0
-#: field:product.pricelist,currency_id:0
-#: view:website:product.report_pricelist
+#: field:product.pricelist,currency_id:0 view:website:product.report_pricelist
 msgid "Currency"
 msgstr "Валута"
 
@@ -702,7 +1179,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr ""
+msgstr "Ден(дни)"
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
@@ -724,9 +1201,7 @@ msgstr "По подразбиране мерни единици, използв�
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr ""
-"По подразбиране мер. ед. използвани при нареждане за закупуване. Трябва да "
-"бъде в същата категория като мер. ед. по подразбиране."
+msgstr "По подразбиране мер. ед. използвани при нареждане за закупуване. Трябва да бъде в същата категория като мер. ед. по подразбиране."
 
 #. module: product
 #: field:product.supplierinfo,delay:0
@@ -734,10 +1209,8 @@ msgid "Delivery Lead Time"
 msgstr "Време за доставка"
 
 #. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: field:product.template,description:0
-#: view:website:product.report_pricelist
+#: field:pricelist.partnerinfo,name:0 field:product.packaging,name:0
+#: field:product.template,description:0 view:website:product.report_pricelist
 msgid "Description"
 msgstr "Описание"
 
@@ -772,8 +1245,7 @@ msgid "EAN"
 msgstr "EAN"
 
 #. module: product
-#: field:product.product,ean13:0
-#: field:product.template,ean13:0
+#: field:product.product,ean13:0 field:product.template,ean13:0
 msgid "EAN13 Barcode"
 msgstr ""
 
@@ -798,10 +1270,10 @@ msgid "Error ! You cannot create recursive categories."
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:178
+#: code:addons/product/product.py:181
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Грешка!"
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -875,13 +1347,13 @@ msgstr "Фиксиран"
 #: field:product.product,message_follower_ids:0
 #: field:product.template,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Последователи"
 
 #. module: product
 #: help:product.pricelist.item,min_quantity:0
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to "
-"minimum quantity specified in this field."
+"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"Expressed in the default UoM of the product."
 msgstr ""
 
 #. module: product
@@ -906,16 +1378,13 @@ msgstr ""
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr ""
-"Предоставя различни начини за пакетиране на един и същ продукт. Това не се "
-"отразява на нареждане за товарене и се използва главно, ако използвате "
-"модула EDI."
+msgstr "Предоставя различни начини за пакетиране на един и същ продукт. Това не се отразява на нареждане за товарене и се използва главно, ако използвате модула EDI."
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation "
-"gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation"
+" gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
 
@@ -926,10 +1395,8 @@ msgstr "Показва в последователен ред при показ�
 
 #. module: product
 #: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
-msgstr ""
-"Показва в последователен ред при показване на списък с продуктови категории."
+msgid "Gives the sequence order when displaying a list of product categories."
+msgstr "Показва в последователен ред при показване на списък с продуктови категории."
 
 #. module: product
 #: model:product.template,name:product.product_product_44_product_template
@@ -1034,48 +1501,35 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
 msgid "Hour(s)"
-msgstr ""
+msgstr "Час(ове)"
 
 #. module: product
 #: help:product.uom,factor_inv:0
 msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of "
-"Measure in this category:\n"
+"How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
 
 #. module: product
 #: help:product.uom,factor:0
 msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of "
-"Measure for this category:\n"
+"How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
 
 #. module: product
-#: field:pricelist.partnerinfo,id:0
-#: field:product.attribute,id:0
-#: field:product.attribute.line,id:0
-#: field:product.attribute.price,id:0
-#: field:product.attribute.value,id:0
-#: field:product.category,id:0
-#: field:product.packaging,id:0
-#: field:product.price.history,id:0
-#: field:product.price.type,id:0
-#: field:product.price_list,id:0
-#: field:product.pricelist,id:0
-#: field:product.pricelist.item,id:0
-#: field:product.pricelist.type,id:0
-#: field:product.pricelist.version,id:0
-#: field:product.product,id:0
-#: field:product.supplierinfo,id:0
-#: field:product.template,id:0
-#: field:product.ul,id:0
-#: field:product.uom,id:0
-#: field:product.uom.categ,id:0
-#: field:report.product.report_pricelist,id:0
+#: field:pricelist.partnerinfo,id:0 field:product.attribute,id:0
+#: field:product.attribute.line,id:0 field:product.attribute.price,id:0
+#: field:product.attribute.value,id:0 field:product.category,id:0
+#: field:product.packaging,id:0 field:product.price.history,id:0
+#: field:product.price.type,id:0 field:product.price_list,id:0
+#: field:product.pricelist,id:0 field:product.pricelist.item,id:0
+#: field:product.pricelist.type,id:0 field:product.pricelist.version,id:0
+#: field:product.product,id:0 field:product.supplierinfo,id:0
+#: field:product.template,id:0 field:product.ul,id:0 field:product.uom,id:0
+#: field:product.uom.categ,id:0 field:report.product.report_pricelist,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: product
 #: help:product.product,message_unread:0
@@ -1090,8 +1544,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.product,active:0
-#: help:product.template,active:0
+#: help:product.product,active:0 help:product.template,active:0
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
@@ -1104,13 +1557,13 @@ msgstr ""
 #. module: product
 #: field:product.template,image:0
 msgid "Image"
-msgstr ""
+msgstr "Изображение"
 
 #. module: product
 #: help:product.product,image:0
 msgid ""
-"Image of the product variant (Big-sized image of product template if false). "
-"It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false)."
+" It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
 
@@ -1149,7 +1602,7 @@ msgid "Ink Cartridge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:385
+#: code:addons/product/product.py:397
 #, python-format
 msgid "Integrity Error!"
 msgstr ""
@@ -1157,7 +1610,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_2
 msgid "Internal"
-msgstr ""
+msgstr "Вътрешен"
 
 #. module: product
 #: field:product.template,categ_id:0
@@ -1165,11 +1618,10 @@ msgid "Internal Category"
 msgstr ""
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
+#: field:product.product,code:0 field:product.product,default_code:0
 #: field:product.template,default_code:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Вътрешно означение"
 
 #. module: product
 #: help:product.product,ean13:0
@@ -1179,7 +1631,7 @@ msgstr ""
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "Inventory"
-msgstr ""
+msgstr "Наличност"
 
 #. module: product
 #: model:product.category,name:product.ipad
@@ -1195,6 +1647,12 @@ msgstr ""
 #: field:product.product,message_is_follower:0
 #: field:product.template,message_is_follower:0
 msgid "Is a Follower"
+msgstr "Е последовател"
+
+#. module: product
+#: field:product.product,is_product_variant:0
+#: field:product.template,is_product_variant:0
+msgid "Is product variant"
 msgstr ""
 
 #. module: product
@@ -1236,31 +1694,25 @@ msgstr ""
 #: field:product.product,message_last_post:0
 #: field:product.template,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Дата на последното съобщение"
 
 #. module: product
-#: field:pricelist.partnerinfo,write_uid:0
-#: field:product.attribute,write_uid:0
+#: field:pricelist.partnerinfo,write_uid:0 field:product.attribute,write_uid:0
 #: field:product.attribute.line,write_uid:0
 #: field:product.attribute.price,write_uid:0
 #: field:product.attribute.value,write_uid:0
-#: field:product.category,write_uid:0
-#: field:product.packaging,write_uid:0
+#: field:product.category,write_uid:0 field:product.packaging,write_uid:0
 #: field:product.price.history,write_uid:0
-#: field:product.price.type,write_uid:0
-#: field:product.price_list,write_uid:0
+#: field:product.price.type,write_uid:0 field:product.price_list,write_uid:0
 #: field:product.pricelist,write_uid:0
 #: field:product.pricelist.item,write_uid:0
 #: field:product.pricelist.type,write_uid:0
 #: field:product.pricelist.version,write_uid:0
-#: field:product.product,write_uid:0
-#: field:product.supplierinfo,write_uid:0
-#: field:product.template,write_uid:0
-#: field:product.ul,write_uid:0
-#: field:product.uom,write_uid:0
-#: field:product.uom.categ,write_uid:0
+#: field:product.product,write_uid:0 field:product.supplierinfo,write_uid:0
+#: field:product.template,write_uid:0 field:product.ul,write_uid:0
+#: field:product.uom,write_uid:0 field:product.uom.categ,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно обновено от"
 
 #. module: product
 #: field:pricelist.partnerinfo,write_date:0
@@ -1268,23 +1720,18 @@ msgstr ""
 #: field:product.attribute.line,write_date:0
 #: field:product.attribute.price,write_date:0
 #: field:product.attribute.value,write_date:0
-#: field:product.category,write_date:0
-#: field:product.packaging,write_date:0
+#: field:product.category,write_date:0 field:product.packaging,write_date:0
 #: field:product.price.history,write_date:0
-#: field:product.price.type,write_date:0
-#: field:product.price_list,write_date:0
+#: field:product.price.type,write_date:0 field:product.price_list,write_date:0
 #: field:product.pricelist,write_date:0
 #: field:product.pricelist.item,write_date:0
 #: field:product.pricelist.type,write_date:0
 #: field:product.pricelist.version,write_date:0
-#: field:product.product,write_date:0
-#: field:product.supplierinfo,write_date:0
-#: field:product.template,write_date:0
-#: field:product.ul,write_date:0
-#: field:product.uom,write_date:0
-#: field:product.uom.categ,write_date:0
+#: field:product.product,write_date:0 field:product.supplierinfo,write_date:0
+#: field:product.template,write_date:0 field:product.ul,write_date:0
+#: field:product.uom,write_date:0 field:product.uom.categ,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно обновено на"
 
 #. module: product
 #: help:product.pricelist.version,date_end:0
@@ -1302,7 +1749,7 @@ msgstr ""
 #. module: product
 #: field:product.category,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Ляв родител"
 
 #. module: product
 #: field:product.ul,length:0
@@ -1350,8 +1797,7 @@ msgstr "Основен доставчик"
 #. module: product
 #: help:product.template,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
-msgstr ""
-"Основен доставчик, който е най-висок приоритет в списък на доставчиците."
+msgstr "Основен доставчик, който е най-висок приоритет в списък на доставчиците."
 
 #. module: product
 #: model:res.groups,name:product.group_uom
@@ -1389,10 +1835,9 @@ msgid "Measure Type"
 msgstr "Вид мярка"
 
 #. module: product
-#: field:product.product,image_medium:0
-#: field:product.template,image_medium:0
+#: field:product.product,image_medium:0 field:product.template,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Картинка със среден размер"
 
 #. module: product
 #: help:product.template,image_medium:0
@@ -1409,14 +1854,12 @@ msgid "Memory"
 msgstr ""
 
 #. module: product
-#: field:product.product,message_ids:0
-#: field:product.template,message_ids:0
+#: field:product.product,message_ids:0 field:product.template,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Съобщения"
 
 #. module: product
-#: help:product.product,message_ids:0
-#: help:product.template,message_ids:0
+#: help:product.product,message_ids:0 help:product.template,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
 
@@ -1476,14 +1919,10 @@ msgid "Multimedia Speakers"
 msgstr ""
 
 #. module: product
-#: field:product.attribute,name:0
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
-#: field:product.uom.categ,name:0
+#: field:product.attribute,name:0 field:product.category,complete_name:0
+#: field:product.category,name:0 field:product.pricelist.type,name:0
+#: field:product.pricelist.version,name:0 field:product.template,name:0
+#: field:product.ul,name:0 field:product.uom.categ,name:0
 msgid "Name"
 msgstr "Име"
 
@@ -1508,18 +1947,17 @@ msgid "New Price ="
 msgstr "Нова цена ="
 
 #. module: product
-#: code:addons/product/product.py:705
+#: code:addons/product/product.py:737
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
 "as of old Unit of Measure '%s'. If you need to change the unit of measure, "
-"you may deactivate this product from the 'Procurements' tab and create a new "
-"one."
+"you may deactivate this product from the 'Procurements' tab and create a new"
+" one."
 msgstr ""
 
 #. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
+#: selection:product.category,type:0 selection:product.template,state:0
 msgid "Normal"
 msgstr "Нормален"
 
@@ -1561,18 +1999,13 @@ msgid "On demand hard-disk having capacity based on requirement."
 msgstr ""
 
 #. module: product
-#: field:product.template,is_product_variant:0
-msgid "Only one product variant"
-msgstr ""
-
-#. module: product
 #: view:product.packaging:product.product_packaging_form_view
 #: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Other Info"
 msgstr "Друга информация"
 
 #. module: product
-#: code:addons/product/pricelist.py:391
+#: code:addons/product/pricelist.py:432
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -1665,10 +2098,9 @@ msgid "Pen drive, SP-4"
 msgstr ""
 
 #. module: product
-#: field:product.product,price:0
-#: field:product.template,price:0
+#: field:product.product,price:0 field:product.template,price:0
 msgid "Price"
-msgstr ""
+msgstr "Цена"
 
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
@@ -1843,7 +2275,7 @@ msgstr ""
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "Procurements"
-msgstr ""
+msgstr "Доставки"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1871,7 +2303,7 @@ msgstr ""
 #. module: product
 #: field:product.template,attribute_line_ids:0
 msgid "Product Attributes"
-msgstr ""
+msgstr "Атрибути на продукта"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1890,8 +2322,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
-#: field:product.pricelist.item,categ_id:0
-#: field:product.uom,category_id:0
+#: field:product.pricelist.item,categ_id:0 field:product.uom,category_id:0
 msgid "Product Category"
 msgstr "Категория на продукта"
 
@@ -1908,7 +2339,7 @@ msgstr "Продуктов мениджър"
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "Product Name"
-msgstr ""
+msgstr "Име на продукт"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2000,15 +2431,14 @@ msgid "Products by Category"
 msgstr "Продукти по категория"
 
 #. module: product
-#: code:addons/product/product.py:809
+#: code:addons/product/product.py:841
 #, python-format
 msgid "Products: "
 msgstr "Продукти: "
 
 #. module: product
 #: model:product.price.type,name:product.list_price
-#: field:product.product,lst_price:0
-#: field:product.template,lst_price:0
+#: field:product.product,lst_price:0 field:product.template,lst_price:0
 msgid "Public Price"
 msgstr "Публична цена"
 
@@ -2020,7 +2450,7 @@ msgstr "Публична ценова листа"
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "Purchase"
-msgstr ""
+msgstr "Поръчка"
 
 #. module: product
 #: field:product.template,description_purchase:0
@@ -2038,8 +2468,7 @@ msgid "Purchase Unit of Measure"
 msgstr "Мерни единице на покупката"
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
+#: field:pricelist.partnerinfo,min_quantity:0 field:product.supplierinfo,qty:0
 msgid "Quantity"
 msgstr "Количество"
 
@@ -2106,7 +2535,7 @@ msgstr ""
 #. module: product
 #: field:product.category,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Подходящ партньор"
 
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
@@ -2157,7 +2586,7 @@ msgstr ""
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "Sales"
-msgstr ""
+msgstr "Продажби"
 
 #. module: product
 #: view:res.partner:product.view_partner_property_form
@@ -2180,10 +2609,8 @@ msgid "Select category for the current product"
 msgstr "Изберете категория за текущия продукт"
 
 #. module: product
-#: field:product.attribute.value,sequence:0
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
+#: field:product.attribute.value,sequence:0 field:product.category,sequence:0
+#: field:product.packaging,sequence:0 field:product.pricelist.item,sequence:0
 #: field:product.supplierinfo,sequence:0
 msgid "Sequence"
 msgstr "Последователност"
@@ -2212,23 +2639,19 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-"Определя цена, така че да е кратна на тази стойност.\n"
-"Закръгляване се прилага, след отстъпка и преди увеличение.\n"
-"За да са цените катот тази 9.99, определете закръгляване 10, доплащане -0,01"
+msgstr "Определя цена, така че да е кратна на тази стойност.\nЗакръгляване се прилага, след отстъпка и преди увеличение.\nЗа да са цените катот тази 9.99, определете закръгляване 10, доплащане -0,01"
 
 #. module: product
-#: field:product.product,image_small:0
-#: field:product.template,image_small:0
+#: field:product.product,image_small:0 field:product.template,image_small:0
 msgid "Small-sized image"
-msgstr ""
+msgstr "Картинка с малък размер"
 
 #. module: product
 #: help:product.template,image_small:0
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr ""
 
 #. module: product
@@ -2317,11 +2740,10 @@ msgstr "Складируем продукт"
 #: field:product.product,message_summary:0
 #: field:product.template,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Обобщение"
 
 #. module: product
-#: field:product.supplierinfo,name:0
-#: field:product.template,seller_ids:0
+#: field:product.supplierinfo,name:0 field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Доставчик"
 
@@ -2342,7 +2764,7 @@ msgid "Supplier Pricelist"
 msgstr "Ценова листа на доставчик"
 
 #. module: product
-#: code:addons/product/pricelist.py:392
+#: code:addons/product/pricelist.py:433
 #, python-format
 msgid "Supplier Prices on the product form"
 msgstr ""
@@ -2403,6 +2825,13 @@ msgid "The code of the transport unit."
 msgstr "Код на транспортната единица"
 
 #. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid ""
+"The computed price is expressed in the default Unit of Measure of the "
+"product."
+msgstr ""
+
+#. module: product
 #: help:product.uom,rounding:0
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
@@ -2437,16 +2866,16 @@ msgstr "Дължина на пакета"
 #. module: product
 #: help:product.supplierinfo,min_qty:0
 msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product Unit of Measure if not empty, in the default unit of measure of the "
-"product otherwise."
+"The minimal quantity to purchase to this supplier, expressed in the supplier"
+" Product Unit of Measure if not empty, in the default unit of measure of the"
+" product otherwise."
 msgstr ""
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
 msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
-"Measure if any or in the default Unit of Measure of the product otherrwise."
+"The minimal quantity to trigger this rule, expressed in the supplier Unit of"
+" Measure if any or in the default Unit of Measure of the product otherrwise."
 msgstr ""
 
 #. module: product
@@ -2465,12 +2894,11 @@ msgid "The number of packages by layer"
 msgstr "Брой пакети на слой"
 
 #. module: product
-#: code:addons/product/product.py:385
+#: code:addons/product/product.py:397
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
-"You trying to delete an attribute value with a reference on a product "
-"variant."
+"You trying to delete an attribute value with a reference on a product variant."
 msgstr ""
 
 #. module: product
@@ -2520,8 +2948,8 @@ msgstr ""
 #. module: product
 #: help:product.product,image_variant:0
 msgid ""
-"This field holds the image used as image for the product variant, limited to "
-"1024x1024px."
+"This field holds the image used as image for the product variant, limited to"
+" 1024x1024px."
 msgstr ""
 
 #. module: product
@@ -2534,11 +2962,6 @@ msgstr ""
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Unit of Measure."
-msgstr ""
-
-#. module: product
-#: help:product.product,price_extra:0
-msgid "This is le sum of the extra price of all attributes"
 msgstr ""
 
 #. module: product
@@ -2555,6 +2978,11 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: help:product.product,price_extra:0
+msgid "This is the sum of the extra price of all attributes"
+msgstr ""
+
+#. module: product
 #: view:product.template:product.product_template_form_view
 msgid "This note will be displayed on requests for quotation..."
 msgstr ""
@@ -2562,8 +2990,8 @@ msgstr ""
 #. module: product
 #: help:pricelist.partnerinfo,price:0
 msgid ""
-"This price will be considered as a price for the supplier Unit of Measure if "
-"any or the default Unit of Measure of the product otherwise"
+"This price will be considered as a price for the supplier Unit of Measure if"
+" any or the default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -2571,9 +2999,7 @@ msgstr ""
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr ""
-"Тази ценова листа ще бъде използвана, а не тази по подразбиране, за продажби "
-"за настоящ партньор"
+msgstr "Тази ценова листа ще бъде използвана, а не тази по подразбиране, за продажби за настоящ партньор"
 
 #. module: product
 #: model:product.template,description:product.product_product_9_product_template
@@ -2585,18 +3011,14 @@ msgstr ""
 msgid ""
 "This supplier's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-"Продуктов код на доставчик ще се използват при отпечатване на искане за "
-"оферта. Когато е празен ще се използва вътрешен такъв."
+msgstr "Продуктов код на доставчик ще се използват при отпечатване на искане за оферта. Когато е празен ще се използва вътрешен такъв."
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-"Това име на доставчика на ме на продукта ще се използва при отпечатване на "
-"искане за оферта. Да се съхранява празен за да се използва вътрешно."
+msgstr "Това име на доставчика на ме на продукта ще се използва при отпечатване на искане за оферта. Да се съхранява празен за да се използва вътрешно."
 
 #. module: product
 #: model:product.template,description:product.product_product_2_product_template
@@ -2623,8 +3045,7 @@ msgstr "Общo тегло на пратката"
 
 #. module: product
 #: view:product.template:product.product_template_search_view
-#: field:product.ul,type:0
-#: field:product.uom,uom_type:0
+#: field:product.ul,type:0 field:product.uom,uom_type:0
 msgid "Type"
 msgstr "Тип"
 
@@ -2646,8 +3067,7 @@ msgstr "Единична цена"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
-#: field:product.template,uom_id:0
-#: field:product.uom,name:0
+#: field:product.template,uom_id:0 field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr "Мерна единица"
 
@@ -2663,7 +3083,7 @@ msgid "Unit of Measure Categories"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:705
+#: code:addons/product/product.py:737
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -2696,26 +3116,24 @@ msgstr "Категории мерни единици"
 #: field:product.product,message_unread:0
 #: field:product.template,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Непрочетени съобщения"
 
 #. module: product
 #: help:product.pricelist.type,key:0
 msgid ""
 "Used in the code to select specific prices based on the context. Keep "
 "unchanged."
-msgstr ""
-"Използва се в кода за избор на конкретни цени на базата на контекста. Да се "
-"съхранява непроменена."
+msgstr "Използва се в кода за избор на конкретни цени на базата на контекста. Да се съхранява непроменена."
 
 #. module: product
 #: field:product.attribute.value,name:0
 msgid "Value"
-msgstr ""
+msgstr "Стойност"
 
 #. module: product
 #: field:product.attribute,value_ids:0
 msgid "Values"
-msgstr ""
+msgstr "Стойности"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2769,11 +3187,15 @@ msgid "Volume"
 msgstr "Обем"
 
 #. module: product
-#: code:addons/product/pricelist.py:208
-#: code:addons/product/product.py:210
+#: view:product.template:product.product_template_only_form_view
+msgid "Warning"
+msgstr "Предупреждение"
+
+#. module: product
+#: code:addons/product/pricelist.py:215 code:addons/product/product.py:214
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Предупреждение!"
 
 #. module: product
 #: field:product.template,warranty:0
@@ -2801,10 +3223,7 @@ msgid ""
 "When a version is duplicated it is set to non active, so that the dates do "
 "not overlaps with original version. You should change the dates and "
 "reactivate the pricelist"
-msgstr ""
-"Ако версията се дублира се определя като неактивна, така че датите да не се "
-"препокриват с оригиналната версия. Трябва да промените датите и да "
-"активирате отново ценовата листа"
+msgstr "Ако версията се дублира се определя като неактивна, така че датите да не се препокриват с оригиналната версия. Трябва да промените датите и да активирате отново ценовата листа"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -2953,6 +3372,11 @@ msgid "note to be displayed on quotations..."
 msgstr ""
 
 #. module: product
+#: view:product.price_list:product.view_product_price_list
+msgid "or"
+msgstr "или"
+
+#. module: product
 #: model:product.uom,name:product.product_uom_oz
 msgid "oz(s)"
 msgstr ""
@@ -2970,4 +3394,4 @@ msgstr ""
 #. module: product
 #: field:product.price.history,company_id:0
 msgid "unknown"
-msgstr ""
+msgstr "неизвестен"

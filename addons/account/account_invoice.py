@@ -87,7 +87,8 @@ class account_invoice(models.Model):
     @api.returns('account.analytic.journal', lambda r: r.id)
     def _get_journal_analytic(self, inv_type):
         """ Return the analytic journal corresponding to the given invoice type. """
-        journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
+        type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
+        journal_type = type2journal.get(inv_type, 'sale')
         journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
         if not journal:
             raise except_orm(_('No Analytic Journal!'),
@@ -130,7 +131,7 @@ class account_invoice(models.Model):
                 continue
             # Get the correct line residual amount
             if line.currency_id == self.currency_id:
-                line_amount = line.currency_id and line.amount_residual_currency or line.amount_residual
+                line_amount = line.amount_residual_currency if line.currency_id else line.amount_residual
             else:
                 from_currency = line.company_id.currency_id.with_context(date=line.date)
                 line_amount = from_currency.compute(line.amount_residual, self.currency_id)
@@ -642,7 +643,7 @@ class account_invoice(models.Model):
             partner = invoice.partner_id
             if partner.lang:
                 ctx['lang'] = partner.lang
-            for taxe in account_invoice_tax.compute(invoice).values():
+            for taxe in account_invoice_tax.compute(invoice.with_context(ctx)).values():
                 account_invoice_tax.create(taxe)
         # dummy write on self to trigger recomputations
         return self.with_context(ctx).write({'invoice_line': []})
@@ -809,7 +810,7 @@ class account_invoice(models.Model):
             # create the analytical lines, one move line per invoice line
             iml = inv._get_analytic_lines()
             # check if taxes are all computed
-            compute_taxes = account_invoice_tax.compute(inv)
+            compute_taxes = account_invoice_tax.compute(inv.with_context(lang=inv.partner_id.lang))
             inv.check_tax_lines(compute_taxes)
 
             # I disabled the check_total feature
@@ -840,7 +841,7 @@ class account_invoice(models.Model):
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
 
-            name = inv.name or inv.supplier_invoice_number or '/'
+            name = inv.supplier_invoice_number or inv.name or '/'
             totlines = []
             if inv.payment_term:
                 totlines = inv.with_context(ctx).payment_term.compute(total, date_invoice)[0]
@@ -1097,6 +1098,7 @@ class account_invoice(models.Model):
         values['date_invoice'] = date or fields.Date.context_today(invoice)
         values['state'] = 'draft'
         values['number'] = False
+        values['origin'] = invoice.number
 
         if period_id:
             values['period_id'] = period_id
@@ -1140,7 +1142,7 @@ class account_invoice(models.Model):
         else:
             ref = self.number
         partner = self.partner_id._find_accounting_partner(self.partner_id)
-        name = name or self.invoice_line.name or self.number
+        name = name or self.invoice_line[0].name or self.number
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'name': name,
@@ -1260,7 +1262,7 @@ class account_invoice_line(models.Model):
     uos_id = fields.Many2one('product.uom', string='Unit of Measure',
         ondelete='set null', index=True)
     product_id = fields.Many2one('product.product', string='Product',
-        ondelete='set null', index=True)
+        ondelete='restrict', index=True)
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('type', 'not in', ['view', 'closed'])],
         default=_default_account,
@@ -1347,7 +1349,7 @@ class account_invoice_line(models.Model):
         if type in ('in_invoice', 'in_refund'):
             values['price_unit'] = price_unit or product.standard_price
         else:
-            values['price_unit'] = product.list_price
+            values['price_unit'] = product.lst_price
 
         values['uos_id'] = uom_id or product.uom_id.id
         domain = {'uos_id': [('category_id', '=', product.uom_id.category_id.id)]}
@@ -1412,10 +1414,10 @@ class account_invoice_line(models.Model):
             for tax in taxes:
                 if inv.type in ('out_invoice', 'in_invoice'):
                     tax_code_id = tax['base_code_id']
-                    tax_amount = line.price_subtotal * tax['base_sign']
+                    tax_amount = tax['price_unit'] * line.quantity * tax['base_sign']
                 else:
                     tax_code_id = tax['ref_base_code_id']
-                    tax_amount = line.price_subtotal * tax['ref_base_sign']
+                    tax_amount = tax['price_unit'] * line.quantity * tax['ref_base_sign']
 
                 if tax_code_found:
                     if not tax_code_id:
@@ -1518,12 +1520,11 @@ class account_invoice_tax(models.Model):
 
     @api.multi
     def amount_change(self, amount, currency_id=False, company_id=False, date_invoice=False):
-        factor = self.factor_tax if self else 1
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
-            amount = currency.compute(amount * factor, company.currency_id, round=False)
+            amount = currency.compute(amount, company.currency_id, round=False)
         return {'value': {'tax_amount': amount}}
 
     @api.v8
@@ -1619,7 +1620,7 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices',
-        readonly=True)
+        readonly=True, copy=False)
 
     def _find_accounting_partner(self, partner):
         '''

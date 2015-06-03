@@ -22,7 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 from openerp import SUPERUSER_ID
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
@@ -352,21 +352,21 @@ class procurement_order(osv.osv):
                     prods = self._product_virtual_get(cr, uid, op)
                     if prods is None:
                         continue
-                    if prods < op.product_min_qty:
+                    if float_compare(prods, op.product_min_qty, precision_rounding=op.product_uom.rounding) < 0:
                         qty = max(op.product_min_qty, op.product_max_qty) - prods
-
                         reste = op.qty_multiple > 0 and qty % op.qty_multiple or 0.0
-                        if reste > 0:
+                        if float_compare(reste, 0.0, precision_rounding=op.product_uom.rounding) > 0:
                             qty += op.qty_multiple - reste
 
-                        if qty <= 0:
+                        if float_compare(qty, 0.0, precision_rounding=op.product_uom.rounding) <= 0:
                             continue
 
                         qty -= orderpoint_obj.subtract_procurements(cr, uid, op, context=context)
 
-                        if qty > 0:
+                        qty_rounded = float_round(qty, precision_rounding=op.product_uom.rounding)
+                        if qty_rounded > 0:
                             proc_id = procurement_obj.create(cr, uid,
-                                                             self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
+                                                             self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, context=context),
                                                              context=context)
                             self.check(cr, uid, [proc_id])
                             self.run(cr, uid, [proc_id])

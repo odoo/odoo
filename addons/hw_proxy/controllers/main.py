@@ -98,7 +98,7 @@ class Proxy(http.Controller):
             <p>
             Copy and paste your printer's device description in the form below. You can find
             your printer's description in the device list above. If you find that your printer works
-            well, please send your printer's description to <a href='mailto:support@openerp.com'>
+            well, please send your printer's description to <a href='mailto:support@odoo.com'>
             support@openerp.com</a> so that we can add it to the default list of supported devices.
             </p>
             <form action='/hw_proxy/escpos/add_supported_device' method='GET'>
@@ -192,12 +192,12 @@ class Proxy(http.Controller):
         print 'print_receipt' + str(receipt)
 
     @http.route('/hw_proxy/is_scanner_connected', type='json', auth='none', cors='*')
-    def print_receipt(self, receipt):
+    def is_scanner_connected(self, receipt):
         print 'is_scanner_connected?' 
         return False
 
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
-    def print_receipt(self, receipt):
+    def scanner(self, receipt):
         print 'scanner' 
         time.sleep(10)
         return ''

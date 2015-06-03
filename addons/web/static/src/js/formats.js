@@ -196,7 +196,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                         + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
-                value = instance.web.str_to_date(value.substring(0,10));
+                value = instance.web.auto_str_to_date(value);
             return value.toString(normalize_format(l10n.date_format));
         case 'time':
             if (typeof(value) == "string")
@@ -238,10 +238,6 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':
-            tmp = Number(value);
-            if (!isNaN(tmp))
-                return tmp;
-
             var tmp2 = value;
             do {
                 tmp = tmp2;
@@ -271,9 +267,16 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                     value, (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
-            datetime = Date.parseExact(value.toString().replace(/\d+/g, function(m){
+            datetime = Date.parseExact(value, (date_pattern));
+            if (datetime !== null)
+                return instance.web.datetime_to_str(datetime);
+            var leading_zero_value = value.toString().replace(/\d+/g, function(m){
                 return m.length === 1 ? "0" + m : m ;
-            }), (date_pattern + ' ' + time_pattern));
+            });
+            datetime = Date.parseExact(leading_zero_value, (date_pattern + ' ' + time_pattern));
+            if (datetime !== null)
+                return instance.web.datetime_to_str(datetime);
+            datetime = Date.parseExact(leading_zero_value, (date_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
             datetime = Date.parse(value);
@@ -359,6 +362,11 @@ instance.web.round_precision = function(value, precision){
  */
 instance.web.round_decimals = function(value, decimals){
     return instance.web.round_precision(value, Math.pow(10,-decimals));
+};
+
+instance.web.float_is_zero = function(value, decimals){
+    epsilon = Math.pow(10, -decimals);
+    return Math.abs(instance.web.round_precision(value, epsilon)) < epsilon;
 };
 
 })();

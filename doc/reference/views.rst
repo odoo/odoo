@@ -132,6 +132,14 @@ root can have the following attributes:
     <reference/views/form>`'s fields and buttons are thus accepted by list
     views although they may not have any meaning if the list view is
     non-editable
+``default_order``
+    overrides the ordering of the view, replacing the model's default order.
+    The value is a comma-separated list of fields, postfixed by ``desc`` to
+    sort in reverse order:
+
+    .. code-block:: xml
+
+        <tree default_order="sequence,name desc">
 ``colors``
     allows changing the color of a row's text based on the corresponding
     record's attributes.
@@ -843,7 +851,9 @@ Possible children of the view element are:
     an object with all the requested fields as its attributes. Each field has
     two attributes ``value`` and ``raw_value``, the former is formatted
     according to current user parameters, the latter is the direct value from
-    a :meth:`~openerp.models.Model.read`
+    a :meth:`~openerp.models.Model.read` (except for date and datetime fields
+    that are `formatted according to user's locale
+    <https://github.com/odoo/odoo/blob/8.0/addons/web_kanban/static/src/js/kanban.js#L900>`_)
   ``read_only_mode``
     self-explanatory
 
@@ -926,9 +936,9 @@ calendar view are:
 
 ``date_start`` (required)
     name of the record's field holding the start date for the event
-``date_end``
+``date_stop``
     name of the record's field holding the end date for the event, if
-    ``date_end`` is provided records become movable (via drag and drop)
+    ``date_stop`` is provided records become movable (via drag and drop)
     directly in the calendar
 ``date_delay``
     alternative to ``date_end``, provides the duration of the event instead of

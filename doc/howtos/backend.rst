@@ -1,14 +1,18 @@
 .. queue:: backend/series
 
-=======
-Backend
-=======
+=================
+Building a Module
+=================
+
+.. warning::
+
+    This tutorial requires :ref:`having installed Odoo <setup/install>`
 
 Start/Stop the Odoo server
 ==========================
 
 Odoo uses a client/server architecture in which clients are web browsers
-accessing the odoo server via RPC.
+accessing the Odoo server via RPC.
 
 Business logic and extension is generally performed on the server side,
 although supporting client features (e.g. new data representation such as
@@ -70,31 +74,9 @@ option.
     most command-line options can also be set using :ref:`a configuration
     file <reference/cmdline/config>`
 
-An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`. It
-is mandatory and contains a single python dictionary declaring various
-metadata for the module: the module's name and description, list of Odoo
-modules required for this one to work properly, references to data files, …
-
-The manifest's general structure is::
-
-    {
-        'name': "MyModule",
-        'version': '1.0',
-        'depends': ['base'],
-        'author': "Author Name",
-        'category': 'Category',
-        'description': """
-        Description text
-        """,
-        # data files always loaded at installation
-        'data': [
-            'mymodule_view.xml',
-        ],
-        # data files containing optionally loaded demonstration data
-        'demo': [
-            'demo_data.xml',
-        ],
-    }
+An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`.
+See the :ref:`manifest documentation <reference/module/manifest>` information
+about it.
 
 A module is also a
 `Python package <http://docs.python.org/2/tutorial/modules.html#packages>`_
@@ -104,15 +86,15 @@ files in the module.
 For instance, if the module has a single ``mymodule.py`` file ``__init__.py``
 might contain::
 
-    import mymodule
+    from . import mymodule
 
-Fortunately, there is a mechanism to help you set up an module. The command
-``odoo.py`` has a subcommand :ref:`scaffold <reference/cmdline/scaffold>` to
-create an empty module:
+Odoo provides a mechanism to help set up a new module, :ref:`odoo.py
+<reference/cmdline/server>` has a subcommand :ref:`scaffold
+<reference/cmdline/scaffold>` to create an empty module:
 
-.. code:: bash
+.. code-block:: console
 
-    odoo.py scaffold <module name> <where to put it>
+    $ odoo.py scaffold <module name> <where to put it>
 
 The command creates a subdirectory for your module, and automatically creates a
 bunch of standard files for a module. Most of them simply contain commented code
@@ -782,6 +764,7 @@ method should simply set the value of the field to compute on every record in
 
         name = fields.Char(compute='_compute_name')
 
+        @api.multi
         def _compute_name(self):
             for record in self:
                 record.name = str(random.randint(1, 1e6))
@@ -1691,14 +1674,14 @@ server with the library ``xmlrpclib``::
    uid = xmlrpclib.ServerProxy(root + 'common').login(DB, USER, PASS)
    print "Logged in as %s (uid: %d)" % (USER, uid)
 
-   # Create a new idea
+   # Create a new note
    sock = xmlrpclib.ServerProxy(root + 'object')
    args = {
-       'name' : 'Another idea',
-       'description' : 'This is another idea of mine',
-       'inventor_id': uid,
+       'color' : 8,
+       'memo' : 'This is a note',
+       'create_uid': uid,
    }
-   idea_id = sock.execute(DB, uid, PASS, 'idea.idea', 'create', args)
+   note_id = sock.execute(DB, uid, PASS, 'note.note', 'create', args)
 
 .. exercise:: Add a new service to the client
 
@@ -1780,13 +1763,13 @@ with the standard Python libraries ``urllib2`` and ``json``::
     url = "http://%s:%s/jsonrpc" % (HOST, PORT)
     uid = call(url, "common", "login", DB, USER, PASS)
 
-    # create a new idea
+    # create a new note
     args = {
-        'name' : 'Another idea',
-        'description' : 'This is another idea of mine',
-        'inventor_id': uid,
+        'color' : 8,
+        'memo' : 'This is another note',
+        'create_uid': uid,
     }
-    idea_id = call(url, "object", "execute", DB, uid, PASS, 'idea.idea', 'create', args)
+    note_id = call(url, "object", "execute", DB, uid, PASS, 'note.note', 'create', args)
 
 Here is the same program, using the library
 `jsonrpclib <https://pypi.python.org/pypi/jsonrpclib>`::
@@ -1805,13 +1788,13 @@ Here is the same program, using the library
         args = [DB, uid, PASS, model, method] + list(args)
         return server.call(service="object", method="execute", args=args)
 
-    # create a new idea
+    # create a new note
     args = {
-        'name' : 'Another idea',
-        'description' : 'This is another idea of mine',
-        'inventor_id': uid,
+        'color' : 8,
+        'memo' : 'This is another note',
+        'create_uid': uid,
     }
-    idea_id = invoke('idea.idea', 'create', args)
+    note_id = invoke('note.note', 'create', args)
 
 Examples can be easily adapted from XML-RPC to JSON-RPC.
 

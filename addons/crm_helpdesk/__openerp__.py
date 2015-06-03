@@ -47,7 +47,6 @@ and categorize your interventions with a channel and a priority level.
     'test': ['test/process/help-desk.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/helpdesk_analysis.jpeg','images/helpdesk_categories.jpeg','images/helpdesk_requests.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

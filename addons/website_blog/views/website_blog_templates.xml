@@ -161,8 +161,8 @@
     <xpath expr="//*[@name='blog_post_data']" position="inside">
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
-            <t t-foreach="blog_post.tag_ids" t-as="tag">
-                <a t-attf-href="#{blog_url(tag=tag)}" t-esc="tag.name"/> &amp;nbsp;
+            <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                <a t-attf-href="#{blog_url(tag=one_tag)}" t-esc="one_tag.name"/> &amp;nbsp;
             </t>
         </p>
     </xpath>
@@ -326,8 +326,8 @@
     <xpath expr="//p[@name='blog_post_data']" position="after">
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
-            <t t-foreach="blog_post.tag_ids" t-as="tag">
-                <a t-attf-href="#{blog_url(tag=tag)}" t-esc="tag.name"/> &amp;nbsp;
+            <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                <a t-attf-href="#{blog_url(tag=one_tag)}" t-esc="one_tag.name"/> &amp;nbsp;
             </t>
         </p>
     </xpath>

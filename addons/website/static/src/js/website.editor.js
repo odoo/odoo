@@ -927,6 +927,12 @@
         close: function () {
             this.$el.modal('hide');
         },
+        destroy: function () {
+            this.$el.modal('hide').remove();
+            if($(".modal.in").length>0){
+                $('body').addClass('modal-open');
+            }
+        },
     });
 
     website.editor.LinkDialog = website.editor.Dialog.extend({
@@ -1900,7 +1906,12 @@
             this._super();
         },
         clear: function () {
-            delete this.media.$.dataset.src;
+            if(this.media.$.dataset.ckeSavedSrc){
+                delete this.media.$.dataset.ckeSavedSrc;
+            }
+            if(this.media.$.dataset.src){
+                delete this.media.$.dataset.src;
+            }
             this.media.$.className = this.media.$.className.replace(/(^|\s)media_iframe_video(\s|$)/g, ' ');
         },
     });

@@ -46,7 +46,6 @@ Provide Templates for Chart of Accounts, Taxes for Uruguay.
     'demo': [],
     'auto_install': False,
     'installable': True,
-    'images': ['images/config_chart_l10n_uy.jpeg','images/l10n_uy_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

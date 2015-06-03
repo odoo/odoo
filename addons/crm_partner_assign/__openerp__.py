@@ -54,7 +54,6 @@ to an appropriate local partner, based on the distance and the weight that was a
     'test': ['test/partner_assign.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/partner_geo_localization.jpeg','images/partner_grade.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

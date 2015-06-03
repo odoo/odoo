@@ -50,7 +50,7 @@ def navbarify(node, navbar=None):
             #                     reference
             # no bullet_list.list_item -> don't dropdownify
             if not list_item.children[1].children:
-                return
+                continue
 
             list_item['classes'].append('dropdown')
             # list_item.compact_paragraph.reference
@@ -68,8 +68,13 @@ def visit_table(self, node):
     self._table_row_index = 0
     self.context.append(self.compact_p)
     self.compact_p = True
-    classes = ' '.join({'table', self.settings.table_style}).strip()
-    self.body.append(self.starttag(node, 'table', CLASS=classes))
+
+    classes = {self.settings.table_style}
+    node_classes = node.get('classes', [])
+    if 'no-table' in node_classes: node_classes.remove('no-table')
+    else: classes.add('table')
+
+    self.body.append(self.starttag(node, 'table', CLASS=' '.join(classes).strip()))
 
 def starttag_data(self, node, tagname, suffix='\n', empty=False, **attributes):
     attributes.update(

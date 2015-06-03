@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime
-import hashlib
 import logging
 import os
 import re
@@ -17,6 +15,7 @@ from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
 from openerp.tools import config
 from openerp.osv import orm
+from openerp.tools.safe_eval import safe_eval as eval
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +43,27 @@ class ir_http(orm.AbstractModel):
         else:
             request.uid = request.session.uid
 
+    bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
+    def is_a_bot(self):
+        # We don't use regexp and ustr voluntarily
+        # timeit has been done to check the optimum method
+        ua = request.httprequest.environ.get('HTTP_USER_AGENT', '').lower()
+        try:
+            return any(bot in ua for bot in self.bots)
+        except UnicodeDecodeError:
+            return any(bot in ua.encode('ascii', 'ignore') for bot in self.bots)
+
+    def get_nearest_lang(self, lang):
+        # Try to find a similar lang. Eg: fr_BE and fr_FR
+        if lang in request.website.get_languages():
+            return lang
+
+        short = lang.split('_')[0]
+        for code, name in request.website.get_languages():
+            if code.startswith(short):
+                return code
+        return False
+
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
@@ -56,7 +76,10 @@ class ir_http(orm.AbstractModel):
             # in all cases, website processes them
             request.website_enabled = True
 
-        request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
+        request.website_multilang = (
+            request.website_enabled and
+            func and func.routing.get('multilang', func.routing['type'] == 'http')
+        )
 
         if 'geoip' not in request.session:
             record = {}
@@ -76,7 +99,8 @@ class ir_http(orm.AbstractModel):
             if self.geo_ip_resolver and request.httprequest.remote_addr:
                 record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
-            
+
+        cook_lang = request.httprequest.cookies.get('website_lang')
         if request.website_enabled:
             try:
                 if func:
@@ -91,38 +115,40 @@ class ir_http(orm.AbstractModel):
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:
-                if request.website_multilang:
-                    # If the url doesn't contains the lang and that it's the first connection, we to retreive the user preference if it exists.
-                    if not path[1] in langs and not request.httprequest.cookies.get('session_id'):
-                        if request.lang not in langs:
-                            # Try to find a similar lang. Eg: fr_BE and fr_FR
-                            short = request.lang.split('_')[0]
-                            langs_withshort = [lg[0] for lg in request.website.get_languages() if lg[0].startswith(short)]
-                            if len(langs_withshort):
-                                request.lang = langs_withshort[0]
-                            else:
-                                request.lang = request.website.default_lang_code
-                        # We redirect with the right language in url
-                        if request.lang != request.website.default_lang_code:
-                            path.insert(1, request.lang)
-                            path = '/'.join(path) or '/'
-                            return request.redirect(path + '?' + request.httprequest.query_string)
-                    else:
-                        request.lang = request.website.default_lang_code
+                nearest_lang = not func and self.get_nearest_lang(path[1])
+                url_lang = nearest_lang and path[1]
+                preferred_lang = ((cook_lang if cook_lang in langs else False)
+                                  or self.get_nearest_lang(request.lang)
+                                  or request.website.default_lang_code)
 
-            request.context['lang'] = request.lang
-            if not func:
-                if path[1] in langs:
-                    request.lang = request.context['lang'] = path.pop(1)
+                is_a_bot = self.is_a_bot()
+
+                request.lang = request.context['lang'] = nearest_lang or preferred_lang
+                # if lang in url but not the displayed or default language --> change or remove
+                # or no lang in url, and lang to dispay not the default language --> add lang
+                # and not a POST request
+                # and not a bot or bot but default lang in url
+                if ((url_lang and (url_lang != request.lang or url_lang == request.website.default_lang_code))
+                        or (not url_lang and request.website_multilang and request.lang != request.website.default_lang_code)
+                        and request.httprequest.method != 'POST') \
+                        and (not is_a_bot or (url_lang and url_lang == request.website.default_lang_code)):
+                    if url_lang:
+                        path.pop(1)
+                    if request.lang != request.website.default_lang_code:
+                        path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
-                    if request.lang == request.website.default_lang_code:
-                        # If language is in the url and it is the default language, redirect
-                        # to url without language so google doesn't see duplicate content
-                        return request.redirect(path + '?' + request.httprequest.query_string, code=301)
-                    return self.reroute(path)
+                    redirect = request.redirect(path + '?' + request.httprequest.query_string)
+                    redirect.set_cookie('website_lang', request.lang)
+                    return redirect
+                elif url_lang:
+                    path.pop(1)
+                    return self.reroute('/'.join(path) or '/')
             # bind modified context
             request.website = request.website.with_context(request.context)
-        return super(ir_http, self)._dispatch()
+        resp = super(ir_http, self)._dispatch()
+        if request.website_enabled and cook_lang != request.lang and hasattr(resp, 'set_cookie'):
+            resp.set_cookie('website_lang', request.lang)
+        return resp
 
     def reroute(self, path):
         if not hasattr(request, 'rerouting'):
@@ -163,38 +189,7 @@ class ir_http(orm.AbstractModel):
                     path += '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path, code=301)
 
-    def _serve_attachment(self):
-        domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
-        if attach:
-            wdate = attach[0]['__last_update']
-            datas = attach[0]['datas']
-            response = werkzeug.wrappers.Response()
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            try:
-                response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
-            except ValueError:
-                # just in case we have a timestamp without microseconds
-                response.last_modified = datetime.datetime.strptime(wdate, server_format)
-
-            response.set_etag(hashlib.sha1(datas).hexdigest())
-            response.make_conditional(request.httprequest)
-
-            if response.status_code == 304:
-                return response
-
-            response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
-            response.data = datas.decode('base64')
-            return response
-
     def _handle_exception(self, exception, code=500):
-        # This is done first as the attachment path may
-        # not match any HTTP controller, so the request
-        # may not be website-enabled.
-        attach = self._serve_attachment()
-        if attach:
-            return attach
-
         is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)
         if not is_website_request:
             # Don't touch non website requests exception handling

@@ -24,6 +24,7 @@ import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
@@ -127,6 +128,7 @@ class delivery_carrier(osv.osv):
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
             if grid_id and not (record.normal_price or record.free_if_more_than):
                 grid_pool.unlink(cr, uid, grid_id, context=context)
+                grid_id = None
 
             # Check that float, else 0.0 is False
             if not (isinstance(record.normal_price,float) or record.free_if_more_than):
@@ -207,15 +209,20 @@ class delivery_grid(osv.osv):
         weight = 0
         volume = 0
         quantity = 0
+        total_delivery = 0.0
         product_uom_obj = self.pool.get('product.uom')
         for line in order.order_line:
+            if line.state == 'cancel':
+                continue
+            if line.is_delivery:
+                total_delivery += line.price_subtotal + self.pool['sale.order']._amount_line_tax(cr, uid, line, context=context)
             if not line.product_id or line.is_delivery:
                 continue
             q = product_uom_obj._compute_qty(cr, uid, line.product_uom.id, line.product_uom_qty, line.product_id.uom_id.id)
             weight += (line.product_id.weight or 0.0) * q
             volume += (line.product_id.volume or 0.0) * q
             quantity += q
-        total = order.amount_total or 0.0
+        total = (order.amount_total or 0.0) - total_delivery
 
         return self.get_price_from_picking(cr, uid, id, total,weight, volume, quantity, context=context)
 

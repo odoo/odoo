@@ -1,31 +1,32 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_byproduct
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:29+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr "Ведомость материалов"
+msgstr "Спецификация"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "Спецификация"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
@@ -33,25 +34,24 @@ msgid "Byproduct"
 msgstr ""
 
 #. module: mrp_byproduct
-#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view
-#: field:mrp.bom,sub_products:0
+#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
 msgid "Byproducts"
 msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Изменение количества продуктов"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -73,17 +73,17 @@ msgstr "Фиксированный"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
@@ -93,7 +93,7 @@ msgstr "Производственный заказ"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
-msgstr "Продукция"
+msgstr "Товар"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_qty:0
@@ -103,7 +103,7 @@ msgstr "Кол-во продукции"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Ед. изм. продукции"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,subproduct_type:0
@@ -127,4 +127,4 @@ msgstr "Переменный"
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Внимание"

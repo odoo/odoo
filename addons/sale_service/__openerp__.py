@@ -48,7 +48,6 @@ completed.
 """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
-    'images': ['images/product.jpeg', 'images/task_from_SO.jpeg'],
     'depends': ['project', 'procurement', 'sale', 'procurement_jit'],
     'data': ['views/sale_service_view.xml'],
     'demo': ['demo/sale_service_demo.xml'],

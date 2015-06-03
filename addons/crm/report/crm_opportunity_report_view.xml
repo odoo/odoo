@@ -60,8 +60,6 @@
                     <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
                     <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
-                    <filter string="New" name="new"
-                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
                     <filter string="Lost" name="lost"

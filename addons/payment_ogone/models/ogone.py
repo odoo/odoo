@@ -153,7 +153,7 @@ class PaymentAcquirerOgone(osv.Model):
             'OWNERZIP':  partner_values['zip'],
             'OWNERADDRESS':  partner_values['address'],
             'OWNERTOWN':  partner_values['city'],
-            'OWNERCTY':  partner_values['country'] and partner_values['country'].name or '',
+            'OWNERCTY':  partner_values['country'] and partner_values['country'].code or '',
             'OWNERTELNO': partner_values['phone'],
             'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
             'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
@@ -224,10 +224,10 @@ class PaymentTxOgone(osv.Model):
     def _ogone_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
         invalid_parameters = []
 
-        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
+        # TODO: txn_id: should be false at draft, set afterwards, and verified with txn details
         if tx.acquirer_reference and data.get('PAYID') != tx.acquirer_reference:
             invalid_parameters.append(('PAYID', data.get('PAYID'), tx.acquirer_reference))
-        # check what is buyed
+        # check what is bought
         if float_compare(float(data.get('amount', '0.0')), tx.amount, 2) != 0:
             invalid_parameters.append(('amount', data.get('amount'), '%.2f' % tx.amount))
         if data.get('currency') != tx.currency_id.name:

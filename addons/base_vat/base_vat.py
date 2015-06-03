@@ -70,6 +70,7 @@ _ref_vat = {
     'se': 'SE123456789701',
     'si': 'SI12345679',
     'sk': 'SK0012345675',
+    'tr': 'TR1234567890 (VERGINO) veya TR12345678901 (TCKIMLIKNO)' # Levent Karakas @ Eska Yazilim A.S.
 }
 
 class res_partner(osv.osv):
@@ -91,6 +92,10 @@ class res_partner(osv.osv):
                         getattr(vatnumber, check_func_name, None)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
+            if country_code.upper() == 'EU':
+                # Foreign companies that trade with non-enterprises in the EU
+                # may have a VATIN starting with "EU" instead of a country code.
+                return True
             res_country = self.pool.get('res.country')
             return bool(res_country.search(cr, uid, [('code', '=ilike', country_code)], context=context))
         return check_func(vat_number)
@@ -311,5 +316,47 @@ class res_partner(osv.osv):
             return int(vat[10]) == dig_check
         else:
             return False
+
+    # VAT validation in Turkey, contributed by # Levent Karakas @ Eska Yazilim A.S.
+    def check_vat_tr(self, vat):
+
+        if not (10 <= len(vat) <= 11):
+            return False
+        try:
+            int(vat)
+        except ValueError:
+            return False
+
+        # check vat number (vergi no)
+        if len(vat) == 10:
+            sum = 0
+            check = 0
+            for f in range(0,9):
+                c1 = (int(vat[f]) + (9-f)) % 10
+                c2 = ( c1 * (2 ** (9-f)) ) % 9
+                if (c1 != 0) and (c2 == 0): c2 = 9
+                sum += c2
+            if sum % 10 == 0:
+                check = 0
+            else:
+                check = 10 - (sum % 10)
+            return int(vat[9]) == check
+
+        # check personal id (tc kimlik no)
+        if len(vat) == 11:
+            c1a = 0
+            c1b = 0
+            c2 = 0
+            for f in range(0,9,2):
+                c1a += int(vat[f])
+            for f in range(1,9,2):
+                c1b += int(vat[f])
+            c1 = ( (7 * c1a) - c1b) % 10
+            for f in range(0,10):
+                c2 += int(vat[f])
+            c2 = c2 % 10
+            return int(vat[9]) == c1 and int(vat[10]) == c2
+
+        return False
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

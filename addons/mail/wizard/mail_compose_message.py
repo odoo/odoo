@@ -73,6 +73,9 @@ class mail_compose_message(osv.TransientModel):
         result['res_id'] = result.get('res_id', context.get('active_id'))
         result['parent_id'] = result.get('parent_id', context.get('message_id'))
 
+        if not result['model'] or not self.pool.get(result['model']) or not hasattr(self.pool[result['model']], 'message_post'):
+            result['no_auto_thread'] = True
+
         # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
         if result['composition_mode'] == 'reply':
             result['composition_mode'] = 'comment'
@@ -231,7 +234,7 @@ class mail_compose_message(osv.TransientModel):
                         self.pool['mail.mail'].create(cr, uid, mail_values, context=context)
                     else:
                         subtype = 'mail.mt_comment'
-                        if context.get('mail_compose_log') or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
+                        if wizard.is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
                             subtype = False
                         if wizard.composition_mode == 'mass_post':
                             context = dict(context,
@@ -260,7 +263,7 @@ class mail_compose_message(osv.TransientModel):
             # static wizard (mail.message) values
             mail_values = {
                 'subject': wizard.subject,
-                'body': wizard.body,
+                'body': wizard.body or '',
                 'parent_id': wizard.parent_id and wizard.parent_id.id,
                 'partner_ids': [partner.id for partner in wizard.partner_ids],
                 'attachment_ids': [attach.id for attach in wizard.attachment_ids],

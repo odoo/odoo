@@ -32,7 +32,7 @@ class base_config_settings(osv.osv_memory):
             help='Work in multi-company environments, with appropriate security access between companies.\n'
                  '-This installs the module multi_company.'),
         'module_share': fields.boolean('Allow documents sharing',
-            help="""Share or embbed any screen of openerp."""),
+            help="""Share or embbed any screen of Odoo."""),
         'module_portal': fields.boolean('Activate the customer portal',
             help="""Give your customers access to their documents."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with google, facebook, ...'),

@@ -106,7 +106,7 @@ class Message(models.Model):
     display_name = fields.Char(string='Abstract', compute='_compute_display_name')
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
-    discussion_name = fields.Char(related='discussion.name', readonly=True)
+    discussion_name = fields.Char(related='discussion.name')
 
     @api.one
     @api.constrains('author', 'discussion')
@@ -151,12 +151,6 @@ class Message(models.Model):
         self.double_size = 0
         size = self.size
         self.double_size = self.double_size + size
-
-
-class Talk(models.Model):
-    _name = 'test_new_api.talk'
-
-    parent = fields.Many2one('test_new_api.discussion', delegate=True, required=True)
 
 
 class MixedModel(models.Model):

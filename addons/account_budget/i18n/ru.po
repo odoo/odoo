@@ -1,21 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_budget
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-05-29 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:50+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -23,20 +24,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new budget.\n"
 "              </p><p>\n"
-"                A budget is a forecast of your company's income and/or "
-"expenses\n"
-"                expected for a period in the future. A budget is defined on "
-"some\n"
-"                financial accounts and/or analytic accounts (that may "
-"represent\n"
+"                A budget is a forecast of your company's income and/or expenses\n"
+"                expected for a period in the future. A budget is defined on some\n"
+"                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)\n"
 "              </p><p>\n"
 "                By keeping track of where your money goes, you may be less\n"
 "                likely to overspend, and more likely to meet your financial\n"
-"                goals. Forecast a budget by detailing the expected revenue "
-"per\n"
-"                analytic account and monitor its evolution based on the "
-"actuals\n"
+"                goals. Forecast a budget by detailing the expected revenue per\n"
+"                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period.\n"
 "              </p>\n"
 "            "
@@ -73,14 +69,14 @@ msgstr "Анализ с"
 #: view:website:account_budget.report_budget
 #: view:website:account_budget.report_crossoveredbudget
 msgid "Analysis from:"
-msgstr ""
+msgstr "Аналитика от:"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 #: model:ir.model,name:account_budget.model_account_analytic_account
 #: view:website:account_budget.report_analyticaccountbudget
 msgid "Analytic Account"
-msgstr "Счет аналитического учета"
+msgstr "Счёт аналитики"
 
 #. module: account_budget
 #: view:website:account_budget.report_analyticaccountbudget
@@ -90,7 +86,7 @@ msgstr ""
 #. module: account_budget
 #: view:crossovered.budget:account_budget.crossovered_budget_view_form
 msgid "Approve"
-msgstr "Одобрить"
+msgstr "Утвердить"
 
 #. module: account_budget
 #: view:crossovered.budget:account_budget.crossovered_budget_view_form
@@ -129,7 +125,7 @@ msgstr "Статьи бюджета"
 #: view:website:account_budget.report_budget
 #: view:website:account_budget.report_crossoveredbudget
 msgid "Budget:"
-msgstr ""
+msgstr "Бюджет:"
 
 #. module: account_budget
 #: view:account.budget.post:account_budget.view_budget_post_form
@@ -164,7 +160,7 @@ msgstr "Бюджеты"
 #: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
 #: view:account.budget.report:account_budget.account_budget_report_view
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Отменить"
 
 #. module: account_budget
 #: view:crossovered.budget:account_budget.crossovered_budget_view_form
@@ -177,8 +173,7 @@ msgid "Cancelled"
 msgstr "Отменено"
 
 #. module: account_budget
-#: field:account.budget.post,code:0
-#: field:crossovered.budget,code:0
+#: field:account.budget.post,code:0 field:crossovered.budget,code:0
 msgid "Code"
 msgstr "Код"
 
@@ -192,12 +187,12 @@ msgstr "Компания"
 #. module: account_budget
 #: view:crossovered.budget:account_budget.crossovered_budget_view_form
 msgid "Confirm"
-msgstr "Подтвердить"
+msgstr "Утвердить"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Confirmed"
-msgstr "Подтверждено"
+msgstr "Утверждено"
 
 #. module: account_budget
 #: field:account.budget.analytic,create_uid:0
@@ -208,7 +203,7 @@ msgstr "Подтверждено"
 #: field:crossovered.budget,create_uid:0
 #: field:crossovered.budget.lines,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: account_budget
 #: field:account.budget.analytic,create_date:0
@@ -219,7 +214,7 @@ msgstr ""
 #: field:crossovered.budget,create_date:0
 #: field:crossovered.budget.lines,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: account_budget
 #: view:website:account_budget.report_analyticaccountbudget
@@ -262,10 +257,9 @@ msgid "Duration"
 msgstr "Длительность"
 
 #. module: account_budget
-#: field:crossovered.budget,date_to:0
-#: field:crossovered.budget.lines,date_to:0
+#: field:crossovered.budget,date_to:0 field:crossovered.budget.lines,date_to:0
 msgid "End Date"
-msgstr "Дата окончания"
+msgstr "Конечная дата"
 
 #. module: account_budget
 #: field:account.budget.analytic,date_to:0
@@ -276,24 +270,22 @@ msgid "End of period"
 msgstr "Конец периода"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:118
+#: code:addons/account_budget/account_budget.py:124
 #, python-format
 msgid "Error!"
-msgstr "Ошибка !"
+msgstr "Ошибка!"
 
 #. module: account_budget
 #: field:account.budget.analytic,id:0
 #: field:account.budget.crossvered.report,id:0
 #: field:account.budget.crossvered.summary.report,id:0
-#: field:account.budget.post,id:0
-#: field:account.budget.report,id:0
-#: field:crossovered.budget,id:0
-#: field:crossovered.budget.lines,id:0
+#: field:account.budget.post,id:0 field:account.budget.report,id:0
+#: field:crossovered.budget,id:0 field:crossovered.budget.lines,id:0
 #: field:report.account_budget.report_analyticaccountbudget,id:0
 #: field:report.account_budget.report_budget,id:0
 #: field:report.account_budget.report_crossoveredbudget,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_budget
 #: field:account.budget.analytic,write_uid:0
@@ -304,7 +296,7 @@ msgstr ""
 #: field:crossovered.budget,write_uid:0
 #: field:crossovered.budget.lines,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: account_budget
 #: field:account.budget.analytic,write_date:0
@@ -315,11 +307,10 @@ msgstr ""
 #: field:crossovered.budget,write_date:0
 #: field:crossovered.budget.lines,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: account_budget
-#: field:account.budget.post,name:0
-#: field:crossovered.budget,name:0
+#: field:account.budget.post,name:0 field:crossovered.budget,name:0
 msgid "Name"
 msgstr "Имя"
 
@@ -338,7 +329,7 @@ msgstr "Проц.(%)"
 #. module: account_budget
 #: field:crossovered.budget.lines,percentage:0
 msgid "Percentage"
-msgstr "Проценты"
+msgstr "Процент"
 
 #. module: account_budget
 #: view:account.budget.post:account_budget.view_budget_post_form
@@ -375,7 +366,7 @@ msgstr "Факт. сумма"
 #: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
 #: view:account.budget.report:account_budget.account_budget_report_view
 msgid "Print"
-msgstr "Распечатать"
+msgstr "Печать"
 
 #. module: account_budget
 #: view:account.budget.report:account_budget.account_budget_report_view
@@ -397,12 +388,12 @@ msgstr "Напечатано:"
 #. module: account_budget
 #: view:crossovered.budget:account_budget.crossovered_budget_view_form
 msgid "Reset to Draft"
-msgstr "Вернуть в черновики"
+msgstr "Возврат к разработке"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
 msgid "Responsible User"
-msgstr "Ответственный пользователь"
+msgstr "Ответственный"
 
 #. module: account_budget
 #: view:account.budget.analytic:account_budget.account_budget_analytic_view
@@ -416,7 +407,7 @@ msgstr "Выберите даты периода"
 #: field:crossovered.budget,date_from:0
 #: field:crossovered.budget.lines,date_from:0
 msgid "Start Date"
-msgstr "Дата начала"
+msgstr "Начальная дата"
 
 #. module: account_budget
 #: field:account.budget.analytic,date_from:0
@@ -429,10 +420,10 @@ msgstr "Начало периода"
 #. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
-msgstr "Состояние"
+msgstr "Статус"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:118
+#: code:addons/account_budget/account_budget.py:124
 #, python-format
 msgid "The Budget '%s' has no accounts!"
 msgstr "Бюджет '%s' не имеет счетов !"
@@ -470,7 +461,7 @@ msgstr "Этот мастер используется для печати ит�
 #. module: account_budget
 #: view:crossovered.budget:account_budget.view_crossovered_budget_search
 msgid "To Approve"
-msgstr "Одобрить"
+msgstr "Подтвердить"
 
 #. module: account_budget
 #: view:crossovered.budget:account_budget.view_crossovered_budget_search
@@ -482,7 +473,7 @@ msgstr "Утвердить бюджет"
 #: view:website:account_budget.report_budget
 #: view:website:account_budget.report_crossoveredbudget
 msgid "Total:"
-msgstr ""
+msgstr "Всего:"
 
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
@@ -493,3 +484,23 @@ msgstr "Проверить пользователя"
 #: selection:crossovered.budget,state:0
 msgid "Validated"
 msgstr "Проверено"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+msgid "at"
+msgstr "в"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "or"
+msgstr "или"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "to"
+msgstr "до"

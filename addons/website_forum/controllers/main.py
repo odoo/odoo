@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 import simplejson
@@ -223,6 +224,7 @@ class WebsiteForum(http.Controller):
                         question_tag_ids.append((4, tag_ids[0]))
                     else:
                         question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
+                question_tag_ids = {forum.id: question_tag_ids}
         elif tag_version == "select2":
             question_tag_ids = Forum._tag_to_write_vals(cr, uid, [forum.id], post.get('question_tags', ''), context)
 
@@ -238,6 +240,11 @@ class WebsiteForum(http.Controller):
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
+
+        # Hide posts from abusers (negative karma), except for moderators
+        if not question.can_view:
+            raise werkzeug.exceptions.NotFound()
+
         # increment view counter
         request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [question.id], context=context)
 
@@ -345,7 +352,7 @@ class WebsiteForum(http.Controller):
                 body=kwargs.get('comment'),
                 type='comment',
                 subtype='mt_comment',
-                context=dict(context, mail_create_nosubcribe=True))
+                context=dict(context, mail_create_nosubscribe=True))
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
@@ -403,6 +410,11 @@ class WebsiteForum(http.Controller):
         Tag = request.registry['forum.tag']
         Forum = request.registry['forum.forum']
         tag_version = kwargs.get('tag_type', 'texttext')
+        
+        vals = {
+            'name': kwargs.get('question_name'),
+            'content': kwargs.get('content'),
+        }
         if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
             if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
                 tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
@@ -413,15 +425,10 @@ class WebsiteForum(http.Controller):
                     else:
                         new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
                         question_tags.append(new_tag)
-            tags_val = [(6, 0, question_tags)]
+                vals['tag_ids'] = [(6, 0, question_tags)]
         elif tag_version == "select2":  # new version
-            tags_val = Forum._tag_to_write_vals(cr, uid, [forum.id], kwargs.get('question_tag', ''), context)
+            vals['tag_ids'] = Forum._tag_to_write_vals(cr, uid, [forum.id], kwargs.get('question_tag', ''), context)[forum.id]
 
-        vals = {
-            'tag_ids': tags_val[forum.id],
-            'name': kwargs.get('question_name'),
-            'content': kwargs.get('content'),
-        }
         request.registry['forum.post'].write(cr, uid, [post.id], vals, context=context)
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
@@ -506,28 +513,40 @@ class WebsiteForum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
-        if not user.exists() or user.karma < 1:
+        current_user = User.browse(cr, SUPERUSER_ID, uid, context=context)
+
+        # Users with high karma can see users with karma <= 0 for
+        # moderation purposes, IFF they have posted something (see below)
+        if (not user.exists() or
+               (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
-        if user_id != request.session.uid and not user.website_published:
-            return request.website.render("website_forum.private_profile", values)
+
         # questions and answers by user
-        user_questions, user_answers = [], []
         user_question_ids = Post.search(cr, uid, [
                 ('parent_id', '=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
             ], order='create_date desc', context=context)
         count_user_questions = len(user_question_ids)
-        # displaying only the 20 most recent questions
-        user_questions = Post.browse(cr, uid, user_question_ids[:20], context=context)
 
+        if (user_id != request.session.uid and not
+                (user.website_published or
+                    (count_user_questions and current_user.karma > forum.karma_unlink_all))):
+            return request.website.render("website_forum.private_profile", values)
+
+        # limit length of visible posts by default for performance reasons, except for the high
+        # karma users (not many of them, and they need it to properly moderate the forum)
+        post_display_limit = None
+        if current_user.karma < forum.karma_unlink_all:
+            post_display_limit = 20
+
+        user_questions = Post.browse(cr, uid, user_question_ids[:post_display_limit], context=context)
         user_answer_ids = Post.search(cr, uid, [
                 ('parent_id', '!=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
             ], order='create_date desc', context=context)
         count_user_answers = len(user_answer_ids)
-        # displaying only the 20  most recent answers
-        user_answers = Post.browse(cr, uid, user_answer_ids[:20], context=context)
+        user_answers = Post.browse(cr, uid, user_answer_ids[:post_display_limit], context=context)
 
         # showing questions which user following
         obj_ids = Followers.search(cr, SUPERUSER_ID, [('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)], context=context)

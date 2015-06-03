@@ -58,6 +58,11 @@ class product_template(osv.osv):
         'valuation': 'manual_periodic',
     }
 
+    def onchange_type(self, cr, uid, ids, type):
+        res = super(product_template, self).onchange_type(cr, uid, ids, type)
+        if type in ('consu', 'service'):
+            res = {'value': {'valuation': 'manual_periodic'}}
+        return res
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
@@ -151,7 +156,14 @@ class product_template(osv.osv):
         return True
 
 
+class product_product(osv.osv):
+    _inherit = 'product.product'
 
+    def onchange_type(self, cr, uid, ids, type):
+        res = super(product_product, self).onchange_type(cr, uid, ids, type)
+        if type in ('consu', 'service'):
+            res = {'value': {'valuation': 'manual_periodic'}}
+        return res
 
 
 class product_category(osv.osv):

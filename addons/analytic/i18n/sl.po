@@ -1,21 +1,23 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:58+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:278
@@ -26,7 +28,7 @@ msgstr "%s (kopija)"
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr "Hierarhija konta"
+msgstr "Hierarhija kontov"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
@@ -36,7 +38,7 @@ msgstr "Računovodja"
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account/Contract Name"
-msgstr "Konto/Pogodba"
+msgstr "Naziv konta/pogodbe"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
@@ -81,9 +83,7 @@ msgstr "Stanje"
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
-"Izračunano z množenjem količine in cene podane v ceni vrednosti Izdelka. "
-"Vedno izraženo v glavni valuti podjetja."
+msgstr "Izračunano z množenjem količine in cene podane v ceni vrednosti Izdelka. Vedno izraženo v glavni valuti družbe."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -104,7 +104,7 @@ msgstr "Zaprto"
 #: field:account.analytic.account,company_id:0
 #: field:account.analytic.line,company_id:0
 msgid "Company"
-msgstr "Podjetje"
+msgstr "Družba"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_closed
@@ -124,7 +124,7 @@ msgstr "Pogodba odprta"
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_closed
 msgid "Contract closed"
-msgstr "Pogodba zaprta"
+msgstr "Pogodba zaključena"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_opened
@@ -155,18 +155,18 @@ msgstr "Pogodba: "
 #. module: analytic
 #: field:account.analytic.line,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Datum nastanka"
 
 #. module: analytic
 #: field:account.analytic.account,create_uid:0
 #: field:account.analytic.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: analytic
 #: field:account.analytic.account,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -191,7 +191,7 @@ msgstr "Datum"
 #. module: analytic
 #: help:account.analytic.account,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum zadnjega objavljenega sporočila na zapisu."
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -218,12 +218,12 @@ msgstr "Napaka!"
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You cannot create recursive analytic accounts."
-msgstr "Napaka ! Ni možno kreirati rekurzivnih kontov."
+msgstr "Napaka! Ne morete ustvariti rekurzivnih analitičnih kontov."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Expiration Date"
-msgstr ""
+msgstr "Datum izteka"
 
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
@@ -240,45 +240,34 @@ msgstr "Polno ime"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek (število sporočil,..)"
+msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavi v poglede tipa kanban."
 
 #. module: analytic
-#: field:account.analytic.account,id:0
-#: field:account.analytic.line,id:0
+#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Če je izbrano, zahtevajo nova sporočila vašo pozornost."
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Vrsta pogled ne omogoča knjiženja.\n"
-"Analitični konto se uporablja , kot normalni konti v računovodstvu.\n"
-"Pogodba ali Projekt vam dajeta dodatne možnosti."
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
+msgstr "Izbira tipa pogled pomeni, da dnevniški vnosi za ta konto ne bododovoljeni.\nTip 'Analitični konto' pomeni običajne konte za uporabo v računovodstvu.\nIzbira Pogodba ali Projekt omogoča upravljanjeveljavnosti in obračunskih opcij za ta konto.\nPosebni tip 'Predloga pogodbe' omogoča določanje predloges privzetimi podatki za večkratno uporabo."
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
-msgstr ""
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
+msgstr "Če nastavite družbo, mora biti izbrana valuta enaka valuti družbe. \nLe na kontih tipa 'pogled' lahko družbo odstranite in tako spremenite valuto. To je koristno le za namene konsolidacije pri večjem številu družb, kiposlujejo v različnih valutah."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -293,19 +282,19 @@ msgstr "Je sledilec"
 #. module: analytic
 #: field:account.analytic.account,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum zadnjega sporočila"
 
 #. module: analytic
 #: field:account.analytic.account,write_uid:0
 #: field:account.analytic.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnjič posodobil"
 
 #. module: analytic
 #: field:account.analytic.account,write_date:0
 #: field:account.analytic.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
@@ -315,7 +304,7 @@ msgstr "Sporočila"
 #. module: analytic
 #: help:account.analytic.account,message_ids:0
 msgid "Messages and communication history"
-msgstr "Sporočila in zgodovina sporočil"
+msgstr "Komunikacije in kronologija"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -326,18 +315,12 @@ msgstr "Novo"
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
-msgstr ""
-"Ko bo pretekel datum veljavnosti\n"
-"                                        ali pa presežena količina uslug ,\n"
-"                                        bo o tem obveščena odgovorna oseba."
+msgstr "Ko bo pretekel datum veljavnosti pogodbe\n                                        ali pa presežena maksimalna količina enot storitev, \n                                        bo o tem obveščena upravitelj konta.\n                                        preko e-pošte, da bi s kupvem lahko obnovil\n                                        pogodbo."
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
@@ -347,12 +330,12 @@ msgstr "Nadrejeni analitični konto"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Prepaid Service Units"
-msgstr "Dogovorjena količina uslug"
+msgstr "V naprej plačane enote storitev"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Project Manager"
-msgstr "Vodja projekta"
+msgstr "Upravitelj projekta"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -381,12 +364,12 @@ msgstr "Obnovitev"
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr "Določa zgornjo mejo delovnih ur po pogodbi."
+msgstr "Določa zgornjo mejo delovnih ur po pogodbi vezani na časovnico (npr. število ur v pogodbi o omejeni podpori)."
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr "Določa vrednost količine za štetje."
+msgstr "Določa znesek količine za štetje."
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
@@ -448,4 +431,4 @@ msgstr "Opozorilo"
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
-msgstr "Ni možno kreirati vrstice na kontu vrste pogled."
+msgstr "Ustvarjanje analitičnih postavk na kontu tipa 'Pogled' (zbirni konto) ni mogoče."
