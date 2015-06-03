@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import textwrap
-import unittest2
+import unittest
 
 from lxml import etree, html
 from lxml.builder import E
@@ -10,7 +10,7 @@ from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.ir_qweb import html_to_text
 from openerp.addons.website.models.website import slugify, unslug
 
-class TestUnslug(unittest2.TestCase):
+class TestUnslug(unittest.TestCase):
     def test_unslug(self):
         tests = {
             '': (None, None),
@@ -31,7 +31,7 @@ class TestUnslug(unittest2.TestCase):
             self.assertEqual(unslug(slug), expected)
 
 
-class TestHTMLToText(unittest2.TestCase):
+class TestHTMLToText(unittest.TestCase):
     def test_rawstring(self):
         self.assertEqual(
             "foobar",
@@ -255,7 +255,7 @@ class TestConvertBack(common.TransactionCase):
             "element edition should have been written directly to the m2o record"
         )
 
-class TestTitleToSlug(unittest2.TestCase):
+class TestTitleToSlug(unittest.TestCase):
     """
     Those tests should pass with or without python-slugify
     See website/models/website.py slugify method

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import unittest2
+import unittest
 
 import openerp
 from openerp.tools.misc import mute_logger
@@ -13,7 +13,7 @@ def registry():
     return openerp.modules.registry.RegistryManager.get(DB)
 
 
-class test_cr_execute(unittest2.TestCase):
+class test_cr_execute(unittest.TestCase):
     """ Try cr.execute with wrong parameters """
 
     @mute_logger('openerp.sql_db')

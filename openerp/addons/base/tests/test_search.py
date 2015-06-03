@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import openerp.tests.common as common
 
@@ -106,4 +106,4 @@ class test_search(common.TransactionCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

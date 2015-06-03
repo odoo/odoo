@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 from openerp.osv.orm import except_orm
 import openerp.tests.common as common
@@ -405,4 +405,4 @@ workflow"""
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()
