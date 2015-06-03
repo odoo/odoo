@@ -15,6 +15,7 @@ odoo.define('account_asset.widget', function(require) {
 
 var core = require('web.core');
 var QWeb = core.qweb;
+var session = require('web.session');
 var list_widget_registry = core.list_widget_registry;
 var Column = list_widget_registry.get('field');
 
@@ -28,7 +29,7 @@ var WidgetOnButton = Column.extend({
         var template = this.icon && 'ListView.row.buttonwidget';
         return QWeb.render(template, {
             widget: this,
-            prefix: instance.session.prefix,
+            prefix: session.prefix,
             disabled: this.has_value,
             invisible : true ? this.parent_state !== 'open' : false
         });
