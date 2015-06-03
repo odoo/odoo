@@ -246,6 +246,9 @@ class res_partner(osv.osv):
             # first read invoices in the user's currency
             all_partner_ids = self.pool['res.partner'].search(
                 cr, uid, [('id', 'child_of', partner_id)], context=context)
+            # searching account.invoice.report via the orm is comparatively
+            # expensive (searching for many2one fields generates in $idlist
+            # queries), so we do the simplest and most common case in sql
             cr.execute(
                 'select sum(price_total) '
                 'from account_invoice_report '
@@ -253,7 +256,7 @@ class res_partner(osv.osv):
                 'partner_id in %s and state not in %s and currency_id=%s',
                 (tuple(all_partner_ids), tuple(['draft', 'cancel']),
                  user.company_id.currency_id.id))
-            result[partner_id] = sum(s or 0.0 for s, in cr.fetchall()) or 0.0
+            result[partner_id] = sum(s or 0.0 for s, in cr.fetchall())
             # and then add invoices in other currencies
             domain = [
                 ('partner_id', 'in', all_partner_ids),
@@ -261,8 +264,9 @@ class res_partner(osv.osv):
                 ('currency_id', '!=', user.company_id.currency_id.id),
             ]
             invoice_ids = account_invoice_report.search(cr, uid, domain, context=context)
-            invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
-            result[partner_id] += sum(inv.user_currency_price_total for inv in invoices) or 0.0
+            if invoice_ids:
+                invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
+                result[partner_id] += sum(inv.user_currency_price_total for inv in invoices)
         return result
 
     def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
