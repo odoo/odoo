@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#   Inline Technology Services, LLC.
-#   http://www.inlinetechnology.com
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL
+#    Odoo Module
+#    Copyright (C) 2015 Inline Technology Services (http://www.inlinetechnology.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as

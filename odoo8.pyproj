@@ -13,7 +13,7 @@
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
     <InterpreterVersion />
-    <CommandLineArguments>--addons-path=F:\Projects_InlineTechnology\odoo-8.0-20150330\openerp\addons --config=F:\Projects_InlineTechnology\odoo-8.0-20150330\openerp-server.conf --db-filter=MyCompany2</CommandLineArguments>
+    <CommandLineArguments>--addons-path=F:\Projects_InlineTechnology\odoo\addons --config=F:\Projects_InlineTechnology\odoo\openerp-server.conf --db-filter=MyCompany2</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
@@ -674,6 +674,7 @@
     <Content Include="addons\hr_employee_health_insurance\hr_employee_extended_view.xml" />
     <Content Include="addons\hr_employee_health_insurance\hr_employee_extended_view.xml~" />
     <Content Include="addons\hr_employee_health_insurance\hr_employee_health_insurance_view.xml" />
+    <Content Include="addons\hr_employee_health_insurance\security\ir.model.access.csv" />
     <Content Include="addons\hr_employee_health_insurance\static\description\icon.png" />
     <Content Include="addons\hr_evaluation\hr_evaluation_data.xml" />
     <Content Include="addons\hr_evaluation\hr_evaluation_demo.xml" />
@@ -732,6 +733,9 @@
     <Content Include="addons\hr_payroll\wizard\hr_payroll_payslips_by_employees.xml" />
     <Content Include="addons\hr_payroll_account\hr_payroll_account_demo.xml" />
     <Content Include="addons\hr_payroll_account\hr_payroll_account_view.xml" />
+    <Content Include="addons\hr_public_holidays\create_holiday_cron.xml" />
+    <Content Include="addons\hr_public_holidays\hr_public_holidays_view.xml" />
+    <Content Include="addons\hr_public_holidays\security\ir.model.access.csv" />
     <Content Include="addons\hr_recruitment\hr_recruitment_data.xml" />
     <Content Include="addons\hr_recruitment\hr_recruitment_demo.xml" />
     <Content Include="addons\hr_recruitment\hr_recruitment_installer_view.xml" />
@@ -4376,6 +4380,10 @@
     <Compile Include="addons\hr_payroll_account\wizard\__init__.py" />
     <Compile Include="addons\hr_payroll_account\__init__.py" />
     <Compile Include="addons\hr_payroll_account\__openerp__.py" />
+    <Compile Include="addons\hr_public_holidays\create_holiday_calendar.py" />
+    <Compile Include="addons\hr_public_holidays\hr_public_holidays.py" />
+    <Compile Include="addons\hr_public_holidays\__init__.py" />
+    <Compile Include="addons\hr_public_holidays\__openerp__.py" />
     <Compile Include="addons\hr_recruitment\hr_recruitment.py" />
     <Compile Include="addons\hr_recruitment\report\hr_recruitment_report.py" />
     <Compile Include="addons\hr_recruitment\report\__init__.py" />
@@ -5974,6 +5982,7 @@
     <Folder Include="addons\hr_employee_extended\static\" />
     <Folder Include="addons\hr_employee_extended\static\description" />
     <Folder Include="addons\hr_employee_health_insurance" />
+    <Folder Include="addons\hr_employee_health_insurance\security\" />
     <Folder Include="addons\hr_employee_health_insurance\static\" />
     <Folder Include="addons\hr_employee_health_insurance\static\description" />
     <Folder Include="addons\hr_evaluation" />
@@ -6015,6 +6024,8 @@
     <Folder Include="addons\hr_payroll\wizard" />
     <Folder Include="addons\hr_payroll_account" />
     <Folder Include="addons\hr_payroll_account\wizard" />
+    <Folder Include="addons\hr_public_holidays\" />
+    <Folder Include="addons\hr_public_holidays\security\" />
     <Folder Include="addons\hr_recruitment" />
     <Folder Include="addons\hr_recruitment\report" />
     <Folder Include="addons\hr_recruitment\security" />
