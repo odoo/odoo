@@ -1,10 +1,7 @@
 # -*- coding: utf-'8' "-*-"
 
 import base64
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 from hashlib import sha1
 import hmac
 import logging

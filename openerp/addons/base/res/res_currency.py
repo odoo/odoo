@@ -9,7 +9,7 @@ from openerp import api, fields as fields2
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_round, float_is_zero, float_compare
-import simplejson as json
+import json
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 

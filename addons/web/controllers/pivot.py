@@ -1,5 +1,5 @@
 from openerp import http
-import simplejson
+import json
 from openerp.http import request, serialize_exception as _serialize_exception
 from cStringIO import StringIO
 from collections import deque
@@ -18,7 +18,7 @@ class TableExporter(http.Controller):
 
     @http.route('/web/pivot/export_xls', type='http', auth="user")
     def export_xls(self, data, token):
-        jdata = simplejson.loads(data)
+        jdata = json.loads(data)
         nbr_measures = jdata['nbr_measures']
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet(jdata['title'][:30])

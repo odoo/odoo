@@ -1,9 +1,6 @@
 # -*- coding: utf-'8' "-*-"
 
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 import logging
 from hashlib import sha256
 import urlparse

@@ -3,7 +3,7 @@ import logging
 import werkzeug.urls
 import urlparse
 import urllib2
-import simplejson
+import json
 
 import openerp
 from openerp.addons.auth_signup.res_users import SignupError
@@ -33,7 +33,7 @@ class res_users(osv.Model):
             url = endpoint + '?' + params
         f = urllib2.urlopen(url)
         response = f.read()
-        return simplejson.loads(response)
+        return json.loads(response)
 
     def _auth_oauth_validate(self, cr, uid, provider, access_token, context=None):
         """ return the validation data corresponding to the access token """
@@ -82,7 +82,7 @@ class res_users(osv.Model):
         except openerp.exceptions.AccessDenied, access_denied_exception:
             if context and context.get('no_user_creation'):
                 return None
-            state = simplejson.loads(params['state'])
+            state = json.loads(params['state'])
             token = state.get('t')
             values = self._generate_signup_values(cr, uid, provider, validation, params, context=context)
             try:

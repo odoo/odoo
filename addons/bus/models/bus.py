@@ -4,7 +4,6 @@ import json
 import logging
 import random
 import select
-import simplejson
 import threading
 import time
 
@@ -21,7 +20,7 @@ TIMEOUT = 50
 # Bus
 #----------------------------------------------------------
 def json_dump(v):
-    return simplejson.dumps(v, separators=(',', ':'))
+    return json.dumps(v, separators=(',', ':'))
 
 def hashable(key):
     if isinstance(key, list):
@@ -79,8 +78,8 @@ class ImBus(models.Model):
         for notif in notifications:
             result.append({
                 'id': notif['id'],
-                'channel': simplejson.loads(notif['channel']),
-                'message': simplejson.loads(notif['message']),
+                'channel': json.loads(notif['channel']),
+                'message': json.loads(notif['message']),
             })
         return result
 

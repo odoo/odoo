@@ -32,7 +32,7 @@ import openerp
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_repr, float_round, frozendict, html_sanitize
-import simplejson
+import json
 from openerp import SUPERUSER_ID, registry
 
 @contextmanager
@@ -1674,10 +1674,10 @@ class serialized(_column):
     __slots__ = []
 
     def _symbol_set_struct(val):
-        return simplejson.dumps(val)
+        return json.dumps(val)
 
     def _symbol_get_struct(self, val):
-        return simplejson.loads(val or '{}')
+        return json.loads(val or '{}')
 
     _symbol_c = '%s'
     _symbol_f = _symbol_set_struct

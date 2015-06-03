@@ -27,7 +27,7 @@ from zlib import adler32
 
 import babel.core
 import psycopg2
-import simplejson
+import json
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
 import werkzeug.exceptions
@@ -529,10 +529,10 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session_id
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, simplejson.dumps(response),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response),)
         else:
             mime = 'application/json'
-            body = simplejson.dumps(response)
+            body = json.dumps(response)
 
         return Response(
                     body, headers=[('Content-Type', mime),

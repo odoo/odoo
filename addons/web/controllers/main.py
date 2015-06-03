@@ -12,7 +12,7 @@ import datetime
 import hashlib
 import os
 import re
-import simplejson
+import json
 import sys
 import time
 import urllib2
@@ -53,7 +53,7 @@ else:
     loader = jinja2.PackageLoader('openerp.addons.web', "views")
 
 env = jinja2.Environment(loader=loader, autoescape=True)
-env.filters["json"] = simplejson.dumps
+env.filters["json"] = json.dumps
 
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
@@ -79,7 +79,7 @@ def serialize_exception(f):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
+            return werkzeug.exceptions.InternalServerError(json.dumps(error))
     return wrap
 
 def redirect_with_hash(*args, **kw):
@@ -1121,7 +1121,7 @@ class Binary(http.Controller):
                     ufile.content_type, base64.b64encode(data)]
         except Exception, e:
             args = [False, e.message]
-        return out % (simplejson.dumps(callback), simplejson.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args))
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
@@ -1147,7 +1147,7 @@ class Binary(http.Controller):
         except Exception:
             args = {'error': "Something horrible happened"}
             _logger.exception("Fail to upload attachment %s" % ufile.filename)
-        return out % (simplejson.dumps(callback), simplejson.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args))
 
     @http.route([
         '/web/binary/company_logo',
@@ -1395,7 +1395,7 @@ class ExportFormat(object):
         raise NotImplementedError()
 
     def base(self, data, token):
-        params = simplejson.loads(data)
+        params = json.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
                                 'import_compat')(
@@ -1521,7 +1521,7 @@ class Reports(http.Controller):
     @http.route('/web/report', type='http', auth="user")
     @serialize_exception
     def index(self, action, token):
-        action = simplejson.loads(action)
+        action = json.loads(action)
 
         report_srv = request.session.proxy("report")
         context = dict(request.context)

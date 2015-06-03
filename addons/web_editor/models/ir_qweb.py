@@ -9,12 +9,12 @@ Also, adds methods to convert values back to openerp models.
 import cStringIO
 import datetime
 import itertools
+import json
 import logging
 import os
 import urllib2
 import urlparse
 import re
-import simplejson
 import hashlib
 
 import pytz
@@ -165,7 +165,7 @@ class Contact(orm.AbstractModel):
             cr, uid, field_name, record, options, source_element, g_att, t_att,
             qweb_context, context=context)
         if getattr(record, field_name):
-            return itertools.chain(attrs, [('data-oe-contact-options', simplejson.dumps(options))])
+            return itertools.chain(attrs, [('data-oe-contact-options', json.dumps(options))])
         else:
             return attrs
 
