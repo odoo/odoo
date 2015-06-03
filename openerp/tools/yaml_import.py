@@ -366,7 +366,7 @@ class YamlInterpreter(object):
                 self.cr.commit()
 
     def _create_record(self, model, fields, view_info=None, parent={}, default=True):
-        """This function processes the !record tag in yalm files. It simulates the record creation through an xml
+        """This function processes the !record tag in yaml files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
             :param model: model instance
