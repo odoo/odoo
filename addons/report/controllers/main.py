@@ -24,7 +24,7 @@ from openerp.addons.web.controllers.main import _serialize_exception
 from openerp.osv import osv
 from openerp.tools import html_escape
 
-import simplejson
+import json
 from werkzeug import exceptions, url_decode
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
@@ -49,11 +49,11 @@ class ReportController(Controller):
             docids = [int(i) for i in docids.split(',')]
         options_data = None
         if data.get('options'):
-            options_data = simplejson.loads(data['options'])
+            options_data = json.loads(data['options'])
         if data.get('context'):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
             # the user explicitely wants to change the lang, this mechanism overwrites it. 
-            data_context = simplejson.loads(data['context'])
+            data_context = json.loads(data['context'])
             if data_context.get('lang'):
                 del data_context['lang']
             context.update(data_context)
@@ -106,7 +106,7 @@ class ReportController(Controller):
         type [1]
         :returns: Response with a filetoken cookie and an attachment header
         """
-        requestcontent = simplejson.loads(data)
+        requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
         try:
             if type == 'qweb-pdf':
@@ -141,7 +141,7 @@ class ReportController(Controller):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return request.make_response(html_escape(simplejson.dumps(error)))
+            return request.make_response(html_escape(json.dumps(error)))
 
     @route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):

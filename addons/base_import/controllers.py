@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import simplejson
+import json
 
 from openerp.http import Controller, route
 
@@ -15,4 +15,4 @@ class ImportController(Controller):
         }, req.context)
 
         return 'window.top.%s(%s)' % (
-            jsonp, simplejson.dumps({'result': written}))
+            jsonp, json.dumps({'result': written}))

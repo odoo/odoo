@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import simplejson
+import json
 import cgi
 from openerp import tools
 from openerp.osv import fields, osv

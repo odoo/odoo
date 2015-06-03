@@ -1,4 +1,4 @@
-import simplejson
+import json
 import urllib
 import openerp
 from openerp import http
@@ -14,7 +14,7 @@ class google_auth(http.Controller):
     def oauth2callback(self, **kw):
         """ This route/function is called by Google when user Accept/Refuse the consent of Google """
         
-        state = simplejson.loads(kw['state'])
+        state = json.loads(kw['state'])
         dbname = state.get('d')
         service = state.get('s')
         url_return = state.get('f')

@@ -7,7 +7,7 @@ import threading
 import time
 import random
 
-import simplejson
+import json
 import openerp
 from openerp.osv import osv, fields
 from openerp.http import request
@@ -21,7 +21,7 @@ TIMEOUT = 50
 # Bus
 #----------------------------------------------------------
 def json_dump(v):
-    return simplejson.dumps(v, separators=(',', ':'))
+    return json.dumps(v, separators=(',', ':'))
 
 def hashable(key):
     if isinstance(key, list):
@@ -73,7 +73,7 @@ class ImBus(osv.Model):
         channels = [json_dump(c) for c in channels]
         domain.append(('channel','in',channels))
         notifications = self.search_read(cr, openerp.SUPERUSER_ID, domain)
-        return [{"id":notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])} for notif in notifications]
+        return [{"id":notif["id"], "channel": json.loads(notif["channel"]), "message":json.loads(notif["message"])} for notif in notifications]
 
 class ImDispatch(object):
     def __init__(self):

@@ -1,4 +1,4 @@
-import simplejson
+import json
 from lxml import etree
 
 from ..exceptions import except_orm
@@ -83,7 +83,7 @@ def simplify_modifiers(modifiers):
 def transfer_modifiers_to_node(modifiers, node):
     if modifiers:
         simplify_modifiers(modifiers)
-        node.set('modifiers', simplejson.dumps(modifiers))
+        node.set('modifiers', json.dumps(modifiers))
 
 def setup_modifiers(node, field=None, context=None, in_tree_view=False):
     """ Processes node attributes and field descriptors to generate
@@ -118,12 +118,12 @@ def test_modifiers(what, expected):
         node = etree.fromstring(what)
         transfer_node_to_modifiers(node, modifiers)
         simplify_modifiers(modifiers)
-        json = simplejson.dumps(modifiers)
+        json = json.dumps(modifiers)
         assert json == expected, "%s != %s" % (json, expected)
     elif isinstance(what, dict):
         transfer_field_to_modifiers(what, modifiers)
         simplify_modifiers(modifiers)
-        json = simplejson.dumps(modifiers)
+        json = json.dumps(modifiers)
         assert json == expected, "%s != %s" % (json, expected)
 
 

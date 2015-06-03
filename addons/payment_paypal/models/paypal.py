@@ -1,10 +1,7 @@
 # -*- coding: utf-'8' "-*-"
 
 import base64
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 import logging
 import urlparse
 import werkzeug.urls

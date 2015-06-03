@@ -6,7 +6,7 @@ import time
 import uuid
 import random
 
-import simplejson
+import json
 
 import openerp
 from openerp.http import request
@@ -411,7 +411,7 @@ class Controller(openerp.addons.bus.bus.Controller):
         registry, cr, context, uid = request.registry, request.cr, request.context, request.session.uid
         # get the image
         Session = registry.get("im_chat.session")
-        image_b64 = Session.get_image(cr, openerp.SUPERUSER_ID, uuid, simplejson.loads(user_id), context)
+        image_b64 = Session.get_image(cr, openerp.SUPERUSER_ID, uuid, json.loads(user_id), context)
         # built the response
         image_data = base64.b64decode(image_b64)
         headers = [('Content-Type', 'image/png')]

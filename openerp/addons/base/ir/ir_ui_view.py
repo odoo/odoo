@@ -29,7 +29,7 @@ import os
 import time
 from operator import itemgetter
 
-import simplejson
+import json
 import werkzeug
 import HTMLParser
 from lxml import etree
@@ -1005,7 +1005,7 @@ class view(osv.osv):
             keep_query=keep_query,
             request=request, # might be unbound if we're not in an httprequest context
             debug=request.debug if request else False,
-            json=simplejson,
+            json=json,
             quote_plus=werkzeug.url_quote_plus,
             time=time,
             datetime=datetime,
@@ -1019,7 +1019,7 @@ class view(osv.osv):
         def get_modules_order():
             if request:
                 from openerp.addons.web.controllers.main import module_boot
-                return simplejson.dumps(module_boot())
+                return json.dumps(module_boot())
             return '[]'
         qcontext['get_modules_order'] = get_modules_order
 

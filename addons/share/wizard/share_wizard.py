@@ -24,7 +24,7 @@ import time
 import uuid
 from openerp import SUPERUSER_ID
 
-import simplejson
+import json
 
 from openerp import api
 from openerp import tools
@@ -118,7 +118,7 @@ class share_wizard(osv.TransientModel):
         if search:
             js_options['search_view'] = True
 
-        js_options_str = (', ' + simplejson.dumps(js_options)) if js_options else ''
+        js_options_str = (', ' + json.dumps(js_options)) if js_options else ''
 
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default=None, context=context)
         user = wizard.result_line_ids[0]
@@ -128,12 +128,12 @@ class share_wizard(osv.TransientModel):
 <script type="text/javascript">
     new openerp.init(%(init)s).web.embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
 </script> """ % {
-            'init': simplejson.dumps(openerp.conf.server_wide_modules),
+            'init': json.dumps(openerp.conf.server_wide_modules),
             'base_url': base_url or '',
-            'server': simplejson.dumps(base_url),
-            'dbname': simplejson.dumps(cr.dbname),
-            'login': simplejson.dumps(user.login),
-            'password': simplejson.dumps(user.password),
+            'server': json.dumps(base_url),
+            'dbname': json.dumps(cr.dbname),
+            'login': json.dumps(user.login),
+            'password': json.dumps(user.password),
             'action': user.user_id.action_id.id,
             'options': js_options_str,
         }

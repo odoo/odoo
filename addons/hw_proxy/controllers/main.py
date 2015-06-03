@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 import commands
-import simplejson
+import json
 import os
 import os.path
 import openerp
 import time
 import random
 import subprocess
-import simplejson
+import json
 import werkzeug
 import werkzeug.wrappers
 _logger = logging.getLogger(__name__)

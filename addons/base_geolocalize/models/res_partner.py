@@ -19,10 +19,7 @@
 #
 ##############################################################################
 
-try:
-    import simplejson as json
-except ImportError:
-    import json     # noqa
+import json
 import urllib
 
 from openerp.osv import osv, fields

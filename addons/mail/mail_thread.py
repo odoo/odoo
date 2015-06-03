@@ -24,10 +24,7 @@ from collections import OrderedDict
 import datetime
 import dateutil
 import email
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 from lxml import etree
 import logging
 import pytz

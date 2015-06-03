@@ -27,10 +27,7 @@ import time
 import urllib2
 import urlparse
 
-try:
-    import simplejson as json
-except ImportError:
-    import json     # noqa
+import json
 
 from openerp.release import serie
 from openerp.tools.translate import _
