@@ -151,11 +151,13 @@ class account_journal(models.Model):
                     if not line.journal_entry_ids:
                         number_to_reconcile += 1
             # optimization to read sum of balance from account_move_line
-            query = """SELECT sum(balance) FROM account_move_line WHERE account_id in (%s, %s);"""
-            self.env.cr.execute(query, (self.default_debit_account_id.id, self.default_credit_account_id.id))
-            query_results = self.env.cr.dictfetchall()
-            if query_results and query_results[0].get('sum') != None:
-                account_sum = query_results[0].get('sum')
+            account_ids = tuple(filter(None, [self.default_debit_account_id.id, self.default_credit_account_id.id]))
+            if account_ids:
+                query = """SELECT sum(balance) FROM account_move_line WHERE account_id in %s;"""
+                self.env.cr.execute(query, (account_ids,))
+                query_results = self.env.cr.dictfetchall()
+                if query_results and query_results[0].get('sum') != None:
+                    account_sum = query_results[0].get('sum')
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             # optimization to find total and sum of invoice that are in draft, open state
