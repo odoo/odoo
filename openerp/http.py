@@ -494,8 +494,8 @@ class JsonRequest(WebRequest):
 
         # Read POST content or POST Form Data named "request"
         try:
-            self.jsonrequest = simplejson.loads(request)
-        except simplejson.JSONDecodeError:
+            self.jsonrequest = json.loads(request)
+        except ValueError:
             msg = 'Invalid JSON data: %r' % (request,)
             _logger.error('%s: %s', self.httprequest.path, msg)
             raise werkzeug.exceptions.BadRequest(msg)
