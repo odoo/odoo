@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 import threading
 import types
 import time # used to eval time.strftime expressions
@@ -18,8 +19,39 @@ from openerp import SUPERUSER_ID
 
 # YAML import needs both safe and unsafe eval, but let's
 # default to /safe/.
-unsafe_eval = eval
+_original_eval = eval
 from safe_eval import safe_eval as eval
+
+class DummyModule(object):
+    """ Class to simulate a temporary module in sys.modules.
+        Mostly used to trick IPython into believing it's running in the context
+        of a real module when it's embedded during an unsafe_eval()
+    """
+
+    def __init__(self, namespace=None, **kw):
+        if namespace is None:
+            namespace = {}
+        namespace.update(kw)
+        # put this "module" in openerp.tools.yaml_import.unsafe_eval by default
+        namespace.setdefault('__name__', __name__ + '.unsafe_eval')
+        # if given, use the namespace that was passed in, instead of a copy, so
+        #  eval() can mutate it directly
+        self.__dict__ = namespace
+
+    def __enter__(self):
+        self.__original = sys.modules.get(self.__name__, None)
+        sys.modules[self.__name__] = self
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        if self.__original is not None:
+            sys.modules[self.__name__] = self.__original
+        else:
+            del sys.modules[self.__name__]
+
+def unsafe_eval(expr, globals_dict=None, locals_dict=None):
+    with DummyModule(globals_dict):
+        return _original_eval(expr, globals_dict, locals_dict)
 
 import assertion_report
 
@@ -578,7 +610,8 @@ class YamlInterpreter(object):
         }
         try:
             code_obj = compile(statements, self.filename, 'exec')
-            unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
+            globals_dict = dict(ref=self.get_id, __file__=self.filename)
+            unsafe_eval(code_obj, globals_dict, code_context)
         except AssertionError, e:
             self._log_assert_failure('AssertionError in Python code %s (line %d): %s',
                 python.name, python.first_line, e)
