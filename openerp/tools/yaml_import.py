@@ -165,9 +165,9 @@ class YamlInterpreter(object):
                 _, id = self.pool['ir.model.data'].get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
             except ValueError:
-                raise ValueError("""%s not found when processing %s.
+                raise ValueError("""%r not found when processing %s.
     This Yaml file appears to depend on missing data. This often happens for
-    tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
+    tests that belong to a module's test suite and depend on each other.""" % (xml_id, self.filename))
 
         return id
 
