@@ -500,7 +500,11 @@ class YamlInterpreter(object):
             else:
                 value = ids
         elif node.id:
-            value = self.get_id(node.id)
+            if field and field.type == 'reference':
+                record = self.get_record(node.id)
+                value = "%s,%s" % (record._name, record.id)
+            else:
+                value = self.get_id(node.id)
         else:
             value = None
         return value
@@ -518,7 +522,7 @@ class YamlInterpreter(object):
             elements = self.process_ref(expression, field)
             if field.type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
-            else: # many2one
+            else: # many2one or reference
                 if isinstance(elements, (list,tuple)):
                     value = self._get_first_result(elements)
                 else:
@@ -539,6 +543,9 @@ class YamlInterpreter(object):
             # enforce ISO format for string datetime values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
             value = expression
+        elif field.type == "reference":
+            record = self.get_record(expression)
+            value = "%s,%s" % (record._name, record.id)
         else: # scalar field
             if is_eval(expression):
                 value = self.process_eval(expression)
