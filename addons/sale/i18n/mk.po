@@ -1,39 +1,37 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-11-08 13:10+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:18+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -42,27 +40,20 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
 "       % endif\n"
 "       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "    <p>\n"
 "        You can view your quotation online:\n"
 "    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
-"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
-"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
-"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
-"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View "
-"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -71,16 +62,11 @@ msgid ""
 "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -92,135 +78,34 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Здраво ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Ова е вашето ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} од ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>РЕФЕРЕНЦИ</strong><br />\n"
-"       &nbsp;&nbsp;Број на нарачка: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Вкупно: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Датум на нарачка: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Референца на нарачка: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Ваша референца: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Ваш контакт: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"    <p>\n"
-"        Можете да го видите вашето барање преку интернет:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
-"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
-"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
-"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
-"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">Види "
-"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>Исто така може директно да платите преку Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>Ако имате било какви прашања, слободно контактирајте не.</p>\n"
-"    <p>Ви благодариме што ја избравте ${object.company_id.name or 'нашата "
-"компанија'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Телефон:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Веб :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Почитувани ${object.partner_id.name},</p>\n    \n    <p>Ова е вашата ${object.state in ('draft', 'sent') and 'понуда' or 'потврда на нарачка'} од ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>РЕФЕРЕНЦИ</strong><br />\n       &nbsp;&nbsp;Број на нарачка: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Вкупен износ на нарачката: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Датум на нарачка: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Референца на нарачка: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Ваша референца: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Ваш контакт: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        Можете да ја видите вашата понуда преку интернет:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">Види ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>Исто така, можете директно да платите преку Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Ако имате било какви прашања, слободно контактирајте нѐ.</p>\n    <p>Ви благодариме што ја избравте ${object.company_id.name or 'нашата компанија'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Телефон:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Вебсајт :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
-#: field:product.product,sales_count:0
-#: field:product.template,sales_count:0
+#: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
 msgstr "# Продажба"
 
 #. module: sale
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr "# од ставки"
+msgstr "# на ставки"
 
 #. module: sale
 #: field:sale.report,product_uom_qty:0
@@ -237,18 +122,14 @@ msgstr "# од налогот за продажба"
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Понуда' or 'Нарачка'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -258,110 +139,55 @@ msgstr "(ажурирај)"
 #. module: sale
 #: help:sale.order.line,state:0
 msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.    "
-"                 \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.   "
-"                  \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.        "
-"             \n"
+"* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
-"*Статусот 'Нацрт' е поставен кога поврзаниот налог за продажба е во состојба "
-"нацрт. *Статусот 'Потврдено' е поставен кога поврзаниот налог за продажба е "
-"потврден. *Статусот 'Исклучок' е поставен кога поврзаниот налог за продажба "
-"е поставек како исклучок. \n"
-"*Статусот 'Завршено' е поставен кога ставката од налогот за продажба е "
-"одбрана. *Статусот 'Откажано' е поставен кога корисникот го откажува "
-"поврзаниот налог за продажба."
+msgstr "*Статусот 'Нацрт' е поставен кога поврзаниот налог за продажба е во состојба нацрт. *Статусот 'Потврдено' е поставен кога поврзаниот налог за продажба е потврден. *Статусот 'Исклучок' е поставен кога поврзаниот налог за продажба е поставек како исклучок. \n*Статусот 'Завршено' е поставен кога ставката од налогот за продажба е одбрана. *Статусот 'Откажано' е поставен кога корисникот го откажува поврзаниот налог за продажба."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a quotation that can be converted into a "
-"sales\n"
+"                    Click to create a quotation that can be converted into a sales\n"
 "                    order.\n"
 "                </p><p>\n"
-"                    Odoo will help you efficiently handle the complete sales "
-"flow:\n"
-"                    quotation, sales order, delivery, invoicing and "
-"payment.\n"
+"                    Odoo will help you efficiently handle the complete sales flow:\n"
+"                    quotation, sales order, delivery, invoicing and payment.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Кликнете да креирате понуда што може да биде\n"
-"                    конвертирана во налог за продажба.\n"
-"                </p><p>\n"
-"                    Odoo ќе ви помогне ефикасно да се справите со целосниот "
-"тек на продажба:\n"
-"                    понуда, налог за проажба, испорака, фактурирање и "
-"плаќање.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Кликнете да креирате понуда што може да биде\n                    конвертирана во налог за продажба.\n                </p><p>\n                    Odoo ќе ви помогне ефикасно да се справите со целосниот тек на продажба:\n                    понуда, налог за проажба, испорака, фактурирање и плаќање.\n                </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation or sales order for this "
-"customer.\n"
+"                Click to create a quotation or sales order for this customer.\n"
 "              </p><p>\n"
-"                Odoo will help you efficiently handle the complete sale "
-"flow:\n"
+"                Odoo will help you efficiently handle the complete sale flow:\n"
 "                quotation, sales order, delivery, invoicing and\n"
 "                payment.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customer to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customer to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете да креирате понуда или налог за продажба за овој "
-"клиент.\n"
-"              </p><p>\n"
-"                Odoo ќе ви помогне ефикасно да се справите со целосниот тек "
-"на продажбата:\n"
-"                понуда, налог за продажба, испорака, фактурирање и\n"
-"                плаќање.\n"
-"              </p><p>\n"
-"                Социјалната функција ви помага да организирате дискусии за "
-"секој налог\n"
-"                за продажба, и им дозволува на вашите клиенти да го следат "
-"развојот на\n"
-"                налогот за продажба.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате понуда или налог за продажба за овој клиент.\n              </p><p>\n                Odoo ќе ви помогне ефикасно да се справите со целосниот тек на продажбата:\n                понуда, налог за продажба, испорака, фактурирање и\n                плаќање.\n              </p><p>\n                Социјалната функција ви помага да организирате дискусии за секој налог\n                за продажба, и им дозволува на вашите клиенти да го следат развојот на\n                налогот за продажба.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
+"                Click to create a quotation that can be converted into a sales\n"
 "                order.\n"
 "              </p><p>\n"
-"                Odoo will help you efficiently handle the complete sales "
-"flow:\n"
+"                Odoo will help you efficiently handle the complete sales flow:\n"
 "                quotation, sales order, delivery, invoicing and payment.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете да креирате понуда што може да биде\n"
-"                конвертирана во налог за продажба.\n"
-"              </p><p>\n"
-"                Odoo ќе ви помогне ефикасно да се справите со целиот тек на "
-"продажбата:\n"
-"                понуда, налог за продажба, испорака, фактурирање и наплата.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате понуда што може да биде\n                конвертирана во налог за продажба.\n              </p><p>\n                Odoo ќе ви помогне ефикасно да се справите со целиот тек на продажбата:\n                понуда, налог за продажба, испорака, фактурирање и наплата.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -370,59 +196,28 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a quotation, the first step of a new sale.\n"
 "              </p><p>\n"
-"                Odoo will help you handle efficiently the complete sale "
-"flow:\n"
+"                Odoo will help you handle efficiently the complete sale flow:\n"
 "                from the quotation to the sales order, the\n"
 "                delivery, the invoicing and the payment collection.\n"
 "              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customers to keep track of the "
-"evolution\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customers to keep track of the evolution\n"
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете да креирате понуда, првиот чекор кон нова "
-"продажба.\n"
-"              </p><p>\n"
-"                Odoo ќе ви помогне ефикасно да се справите со целиот тек на "
-"продажбата:\n"
-"                од понудата до налогот за продажба,\n"
-"                испораката, фактурирањето и наплатата.\n"
-"              </p><p>\n"
-"                Социјалната функција ви помага да организирате дискусии за "
-"секој\n"
-"                налог за продажба, и им дозволува на вашите клиенти да ја "
-"следат\n"
-"                еволуцијата на налогот за продажба.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате понуда, првиот чекор кон нова продажба.\n              </p><p>\n                Odoo ќе ви помогне ефикасно да се справите со целиот тек на продажбата:\n                од понудата до налогот за продажба,\n                испораката, фактурирањето и наплатата.\n              </p><p>\n                Социјалната функција ви помага да организирате дискусии за секој\n                налог за продажба, и им дозволува на вашите клиенти да ја следат\n                еволуцијата на налогот за продажба.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
 msgid ""
 "<p>\n"
-"                Here is a list of each sales order line to be invoiced. You "
-"can\n"
-"                invoice sales orders partially, by lines of sales order. You "
-"do\n"
-"                not need this list if you invoice from the delivery orders "
-"or\n"
+"                Here is a list of each sales order line to be invoiced. You can\n"
+"                invoice sales orders partially, by lines of sales order. You do\n"
+"                not need this list if you invoice from the delivery orders or\n"
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Ова е листа на секоја ставка од налогот за продажба која "
-"треба да биде фактурирана. \n"
-"                Може да ги фактурирате налозите за продажба парцијално, по "
-"ставки од налогот за продажба. \n"
-"                Оваа листа не ви е потребна доколку фактурирате од "
-"испратниците или ја фактурирате продажбата во целост.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Ова е листа на секоја ставка од налогот за продажба која треба да биде фактурирана. \n                Може да ги фактурирате налозите за продажба парцијално, по ставки од налогот за продажба. \n                Оваа листа не ви е потребна доколку фактурирате од испратниците или ја фактурирате продажбата во целост.\n              </p>\n            "
 
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
@@ -472,21 +267,14 @@ msgstr "Аванс на %s %s"
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr ""
-"После кликнувањето на 'Прикажи ставки за фактурирање' изберете ги ставките "
-"за фактурирање и креирајте фактура од опаѓачкото мени 'Повеќе'."
+msgstr "После кликнувањето на 'Прикажи ставки за фактурирање' изберете ги ставките за фактурирање и креирајте фактура од опаѓачкото мени 'Повеќе'."
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid ""
-"All items in these order lines will be invoiced. You can also invoice a "
-"percentage of the sales order\n"
-"                    or a fixed price (for advances) directly from the sales "
-"order form if you prefer."
-msgstr ""
-"Сите точки во овие ставки на налогот ќе бидат фактурирани. Исто така можете "
-"да фактурирате процент од налогот за продажба или фиксна цена (за аванси) "
-"директно од формуларот на налогот за продажба доколку така преферирате."
+"All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
+"                    or a fixed price (for advances) directly from the sales order form if you prefer."
+msgstr "Сите точки во овие ставки на налогот ќе бидат фактурирани. Исто така можете да фактурирате процент од налогот за продажба или фиксна цена (за аванси) директно од формуларот на налогот за продажба доколку така преферирате."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -521,8 +309,7 @@ msgstr "Овозможува поставување на попуст на ст�
 #. module: sale
 #: help:sale.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to sell a given product or a given customer.\n"
+"Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
 msgstr ""
@@ -535,40 +322,24 @@ msgstr "Дозволува употреба на различни мерни е�
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
 msgid ""
-"Allows to define your customer contracts conditions: invoicing method (fixed "
-"price, on timesheet, advance invoice), the exact pricing (650€/day for a "
-"developer), the duration (one year support contract).\n"
-"You will be able to follow the progress of the contract and invoice "
-"automatically.\n"
+"Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
+"You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr ""
-"Дозволува да ги дефинирате условите на договорите со вашите клиенти: начин "
-"на фактурирање (фиксна цена, според временски распоред, авансно "
-"фактурирање), точната цена (650€/дневно за изведувачот), времетраењето "
-"(договор за поддршка од една година).\n"
-"Ќе можете да го следите напредокот на договорот и автоматско фактурирање.\n"
-"-Ова го инсталира модулот account_analytic_analysis ."
+msgstr "Дозволува да ги дефинирате условите на договорите со вашите клиенти: начин на фактурирање (фиксна цена, според временски распоред, авансно фактурирање), точната цена (650€/дневно за изведувачот), времетраењето (договор за поддршка од една година).\nЌе можете да го следите напредокот на договорот и автоматско фактурирање.\n-Ова го инсталира модулот account_analytic_analysis ."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-"Ви дозволува да управувате со различните цени врз основа на правилата по "
-"категорија на клиенти. На пример: 10% за трговци на мало, промоција од 5 EUR "
-"за овој производ и др."
+msgstr "Ви дозволува да управувате со различните цени врз основа на правилата по категорија на клиенти. На пример: 10% за трговци на мало, промоција од 5 EUR за овој производ и др."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
 msgid ""
-"Allows you to Make Quotation, Sale Order using different Order policy and "
-"Manage Related Stock.\n"
+"Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "-This installs the module sale_stock."
-msgstr ""
-"Дозволува да направите Понуда, Налог за продажба користејќи различни полиси "
-"на нарачка и да управувате со поврзаната залиха.\n"
-"-Ова го инсталира модулот sale_stock."
+msgstr "Дозволува да направите Понуда, Налог за продажба користејќи различни полиси на нарачка и да управувате со поврзаната залиха.\n-Ова го инсталира модулот sale_stock."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -578,19 +349,15 @@ msgstr "Дозволува да примените попуст по ставк�
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
 msgid ""
-"Allows you to categorize your sales and deliveries (picking lists) between "
-"different journals, and perform batch operations on journals.\n"
+"Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
 msgstr ""
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
 msgid ""
-"Allows you to define what is the default function of a specific user on a "
-"given account.\n"
-"This is mostly used when a user encodes his timesheet. The values are "
-"retrieved and the fields are auto-filled. But the possibility to change "
-"these values is still available.\n"
+"Allows you to define what is the default function of a specific user on a given account.\n"
+"This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.\n"
 "-This installs the module analytic_user_function."
 msgstr ""
 
@@ -598,24 +365,19 @@ msgstr ""
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
-"Ви дозволува да изберете и да одржувате различни единици мерки за "
-"производите."
+msgstr "Ви дозволува да изберете и да одржувате различни единици мерки за производите."
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
-"Ви дозволува да специфицирате аналитичко конто на налозите за продажба."
+msgstr "Ви дозволува да специфицирате аналитичко конто на налозите за продажба."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
-"Овозможува да назначите различна адреса за испорака и фактурирање на налогот "
-"за продажба."
+msgstr "Овозможува да назначите различна адреса за испорака и фактурирање на налогот за продажба."
 
 #. module: sale
 #: field:sale.report,analytic_account_id:0
@@ -643,8 +405,7 @@ msgstr "Пред испорака"
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
-msgstr ""
-"Пред да изберете производ, изберете клиент во формуларот за продажба."
+msgstr "Пред да изберете производ, изберете клиент во формуларот за продажба."
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -684,8 +445,7 @@ msgid "Cancel Quotation"
 msgstr "Откажи понуда"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
+#: selection:sale.order,state:0 selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
 msgstr "Откажано"
@@ -700,8 +460,7 @@ msgstr "Не може да го откажете овој налог за про
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
-"Не може да се избрише ставка од налогот за продажба која е во состојба '%s'."
+msgstr "Не може да се избрише ставка од налогот за продажба која е во состојба '%s'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1140
@@ -709,9 +468,7 @@ msgstr ""
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
-"Не може да пронајде ставка од ценовникот која одговара на овој производ и "
-"количина. Треба да да го промените производот, количината или ценовникот."
+msgstr "Не може да пронајде ставка од ценовникот која одговара на овој производ и количина. Треба да да го промените производот, количината или ценовникот."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -727,8 +484,7 @@ msgstr "Означи го полето за да ги групирате фак�
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
-"Изберете го ова поле за да управувате со понудите во овој тим на продажба."
+msgstr "Изберете го ова поле за да управувате со понудите во овој тим на продажба."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -756,8 +512,7 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: sale
-#: field:sale.order,company_id:0
-#: field:sale.order.line,company_id:0
+#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,company_id:0
 msgid "Company"
@@ -814,8 +569,7 @@ msgstr "Креирај и прикажи фактура"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
-#: view:sale.order:sale.view_order_form
-#: field:sale.order,order_policy:0
+#: view:sale.order:sale.view_order_form field:sale.order,order_policy:0
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Create Invoice"
 msgstr "Креирај фактура"
@@ -839,8 +593,7 @@ msgstr "Направи фактури"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_uid:0
-#: field:sale.make.invoice,create_uid:0
-#: field:sale.order,create_uid:0
+#: field:sale.make.invoice,create_uid:0 field:sale.order,create_uid:0
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
@@ -848,8 +601,7 @@ msgstr "Креирано од"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
-#: field:sale.make.invoice,create_date:0
-#: field:sale.order.line,create_date:0
+#: field:sale.make.invoice,create_date:0 field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
 msgstr "Креирано на"
@@ -865,8 +617,7 @@ msgid "Currency"
 msgstr "Валута"
 
 #. module: sale
-#: view:sale.order:sale.view_sales_order_filter
-#: field:sale.order,partner_id:0
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 #: view:sale.report:sale.view_order_product_search
 msgid "Customer"
@@ -938,9 +689,7 @@ msgstr "Стандардни рокови и услови за понуди."
 msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
-msgstr ""
-"Дефинира цел на фактурирање во подесувањата за тимот на продажба за набрзина "
-"да се видат достигнувањата и прогнозата за даден период."
+msgstr "Дефинира цел на фактурирање во подесувањата за тимот на продажба за набрзина да се видат достигнувањата и прогнозата за даден период."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -950,7 +699,7 @@ msgstr "Адреса на испорака"
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Време за доставување"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
@@ -958,8 +707,7 @@ msgid "Delivery address for current sales order."
 msgstr "Адреса за испорака за тековен налог за продажба."
 
 #. module: sale
-#: field:sale.order.line,name:0
-#: view:website:sale.report_saleorder_document
+#: field:sale.order.line,name:0 view:website:sale.report_saleorder_document
 msgid "Description"
 msgstr "Опис"
 
@@ -989,12 +737,10 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "Дали навистина сакате да креирате фактура(и)?"
 
 #. module: sale
-#: view:sale.order:sale.view_sales_order_filter
-#: selection:sale.order,state:0
+#: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
 #: view:sale.order.line:sale.view_order_line_form2
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
-#: selection:sale.order.line,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order.line,state:0 selection:sale.report,state:0
 msgid "Done"
 msgstr "Завршено"
 
@@ -1030,12 +776,9 @@ msgid "Enable Invoicing Sales order lines"
 msgstr "Овозможува фактурирање на ставки од налогот за продажба"
 
 #. module: sale
-#: code:addons/sale/sale.py:154
-#: code:addons/sale/sale.py:390
-#: code:addons/sale/sale.py:522
-#: code:addons/sale/sale.py:605
-#: code:addons/sale/sale.py:934
-#: code:addons/sale/sale.py:951
+#: code:addons/sale/sale.py:154 code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:522 code:addons/sale/sale.py:605
+#: code:addons/sale/sale.py:934 code:addons/sale/sale.py:951
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
@@ -1079,9 +822,7 @@ msgstr "Следбеници"
 #. module: sale
 #: help:sale.config.settings,timesheet:0
 msgid ""
-"For modifying account analytic view to show important data to project "
-"manager of services companies.You can also view the report of account "
-"analytic summary user-wise as well as month wise.\n"
+"For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
 msgstr ""
 
@@ -1093,16 +834,10 @@ msgstr "Прогноза"
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
 msgid ""
-"Forecast of the invoice revenue for the current month. This is the amount "
-"the sales \n"
-"team should invoice this month. It is used to compute the progression ratio "
-"\n"
+"Forecast of the invoice revenue for the current month. This is the amount the sales \n"
+"team should invoice this month. It is used to compute the progression ratio \n"
 " of the current and forecast revenue on the kanban view."
-msgstr ""
-"Прогнозирајте го приходот од фактури за тековниот месец. Ова е сумата што \n"
-"тимот за продажба треба да го фактурира овој месец. Се користи за да се "
-"пресмета степенот на прогресија \n"
-" на тековниот и прогнозираниот приход во kanban прегледот."
+msgstr "Прогнозирајте го приходот од фактури за тековниот месец. Ова е сумата што \nтимот за продажба треба да го фактурира овој месец. Се користи за да се пресмета степенот на прогресија \n на тековниот и прогнозираниот приход во kanban прегледот."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1110,10 +845,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
-"Од овој извештај, може да имате преглед на износот фактуриран на вашиот "
-"клиент. Алатката пребарај може да се користи за персонализација на вашите "
-"извештаи за Фактури и да се совпаднат овие анализи со вашите потреби."
+msgstr "Од овој извештај, може да имате преглед на износот фактуриран на вашиот клиент. Алатката пребарај може да се користи за персонализација на вашите извештаи за Фактури и да се совпаднат овие анализи со вашите потреби."
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -1123,25 +855,15 @@ msgstr "Генерирај фактури врз основа на ставки�
 #. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr ""
-"Го дава редоследот на секвенците кога ја прикажува листата на ставки од "
-"налогот за продажба."
+msgstr "Го дава редоследот на секвенците кога ја прикажува листата на ставки од налогот за продажба."
 
 #. module: sale
 #: help:sale.order,state:0
 msgid ""
 "Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs     "
-"          in the invoice validation (Invoice Exception) or in the picking "
-"list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed           "
-"    but waiting for the scheduler to run on the order date."
-msgstr ""
-"Го дава статусот на понудата или налогот за продажба. Статусот исклучок "
-"автоматски се поставува кога се појавува кога ќе се случи поништување во "
-"процесот на валидација на факурата (Исклучок фактура) или во процесот на "
-"требување (Исклучок испорака). Статусот „Чекам термин\" е поставен кога "
-"фактурата е потврдена но се чека планерот да го покрене датумот на нарачка."
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
+msgstr "Го дава статусот на понудата или налогот за продажба. Статусот исклучок автоматски се поставува кога се појавува кога ќе се случи поништување во процесот на валидација на факурата (Исклучок фактура) или во процесот на требување (Исклучок испорака). Статусот „Чекам термин\" е поставен кога фактурата е потврдена но се чека планерот да го покрене датумот на нарачка."
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1161,9 +883,7 @@ msgstr "Групирај ги фактурите"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е "
-"директно во html формат со цел да биде вметнато во kanban преглед."
+msgstr "Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: sale
 #: code:addons/sale/res_config.py:100
@@ -1172,12 +892,9 @@ msgid "Hour"
 msgstr "Час"
 
 #. module: sale
-#: field:sale.advance.payment.inv,id:0
-#: field:sale.make.invoice,id:0
-#: field:sale.order,id:0
-#: field:sale.order.line,id:0
-#: field:sale.order.line.make.invoice,id:0
-#: field:sale.report,id:0
+#: field:sale.advance.payment.inv,id:0 field:sale.make.invoice,id:0
+#: field:sale.order,id:0 field:sale.order.line,id:0
+#: field:sale.order.line.make.invoice,id:0 field:sale.report,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -1192,9 +909,7 @@ msgstr "Доколку е штиклирано, новите пораки го �
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
-msgstr ""
-"Доколку го промените ценовникот за овој налог (и евентуално валутата), "
-"цените на постојните ставки на налогот нема да бидат ажурирани."
+msgstr "Доколку го промените ценовникот за овој налог (и евентуално валутата), цените на постојните ставки на налогот нема да бидат ажурирани."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1209,11 +924,8 @@ msgstr "Во тек"
 #. module: sale
 #: code:addons/sale/sale.py:274
 #, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
-"За да можете да избришете потврден налог за продажба, мора прво да го "
-"откажете!"
+msgid "In order to delete a confirmed sales order, you must cancel it before!"
+msgstr "За да можете да избришете потврден налог за продажба, мора прво да го откажете!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:105
@@ -1222,8 +934,7 @@ msgid "Incorrect Data"
 msgstr "Неточни податоци"
 
 #. module: sale
-#: code:addons/sale/sale.py:274
-#: code:addons/sale/sale.py:990
+#: code:addons/sale/sale.py:274 code:addons/sale/sale.py:990
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Invalid Action!"
@@ -1248,8 +959,7 @@ msgid "Invoice Date"
 msgstr "Датум на фактура"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Invoice Exception"
 msgstr "Исклучување на фактура"
 
@@ -1297,16 +1007,10 @@ msgstr "Адреса на фактура и испорака:"
 #: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
+"Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
-msgstr ""
-"За оваа ставка на налогот за продажба не може да биде креирана фактура "
-"поради една од следниве причини:\n"
-"1.Состојбата на оваа ставка од налогот за продажба е или \"нацрт\" или "
-"\"откажи\"!\n"
-"2.Ставката од налогот за продажба е фактурирана !"
+msgstr "За оваа ставка на налогот за продажба не може да биде креирана фактура поради една од следниве причини:\n1.Состојбата на оваа ставка од налогот за продажба е или \"нацрт\" или \"откажи\"!\n2.Ставката од налогот за продажба е фактурирана !"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:102
@@ -1327,8 +1031,7 @@ msgstr "Фактурирај го целиот налог за продажба"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
-#: field:sale.order,invoice_exists:0
-#: field:sale.order.line,invoiced:0
+#: field:sale.order,invoice_exists:0 field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Фактурирано"
 
@@ -1381,8 +1084,7 @@ msgstr "Датум на последна порака"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
-#: field:sale.make.invoice,write_uid:0
-#: field:sale.order,write_uid:0
+#: field:sale.make.invoice,write_uid:0 field:sale.order,write_uid:0
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
@@ -1390,8 +1092,7 @@ msgstr "Последно ажурирање од"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
-#: field:sale.make.invoice,write_date:0
-#: field:sale.order,write_date:0
+#: field:sale.make.invoice,write_date:0 field:sale.order,write_date:0
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
@@ -1461,9 +1162,7 @@ msgstr "Нема пронајдено валидна ставка од цено�
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
-"Број на денови помеѓу потврдување на нарачката и испорака на производите на "
-"клиентот"
+msgstr "Број на денови помеѓу потврдување на нарачката и испорака на производите на клиентот"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1483,19 +1182,10 @@ msgstr "На барање"
 #. module: sale
 #: help:sale.order,order_policy:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. "
-"\n"
-"On delivery order: A draft invoice can be created from the delivery order "
-"when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be "
-"paid before the products can be delivered."
-msgstr ""
-"На барање: Нацрт фактурата може да биде креирана од налогот за продажба кога "
-"е потребно. \n"
-"По испратница: Нацрт фактурата може да биде креирана од испратницата кога "
-"производите се испорачани. \n"
-"Пред испорака: Нацрт фактурата е креирана од налогот за продажба и мора да "
-"биде платена пред производите да бидат испорачани."
+"On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr "На барање: Нацрт фактурата може да биде креирана од налогот за продажба кога е потребно. \nПо испратница: Нацрт фактурата може да биде креирана од испратницата кога производите се испорачани. \nПред испорака: Нацрт фактурата е креирана од налогот за продажба и мора да биде платена пред производите да бидат испорачани."
 
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
@@ -1514,8 +1204,7 @@ msgid "Order"
 msgstr "Нарачка"
 
 #. module: sale
-#: view:sale.order:sale.view_order_form
-#: field:sale.order,order_line:0
+#: view:sale.order:sale.view_order_form field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Ставки на налог"
 
@@ -1541,8 +1230,7 @@ msgid "Order N°"
 msgstr "Нарачка N°"
 
 #. module: sale
-#: field:sale.order,name:0
-#: field:sale.order.line,order_id:0
+#: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Референца на налог"
 
@@ -1577,8 +1265,7 @@ msgid "Paid"
 msgstr "Платено"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
-#: field:sale.report,partner_id:0
+#: model:ir.model,name:sale.model_res_partner field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "Партнер"
 
@@ -1630,8 +1317,7 @@ msgid "Price Reduce"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.report,pricelist_id:0
+#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "Ценовник"
 
@@ -1671,8 +1357,7 @@ msgstr "Набавки"
 #: field:sale.order,product_id:0
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
-#: field:sale.order.line,product_id:0
-#: field:sale.report,product_id:0
+#: field:sale.order.line,product_id:0 field:sale.report,product_id:0
 msgid "Product"
 msgstr "Производ"
 
@@ -1720,8 +1405,7 @@ msgstr "Количина (UoS)"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
-#: view:sale.order:sale.view_quotation_tree
-#: selection:sale.report,state:0
+#: view:sale.order:sale.view_quotation_tree selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Понуда"
 
@@ -1815,8 +1499,7 @@ msgstr "Креирај повторно фактура"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
-"Референца на документот кој го генерираше ова барање за налог за продажба."
+msgstr "Референца на документот кој го генерираше ова барање за налог за продажба."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -1889,13 +1572,11 @@ msgid "Sales Make Invoice"
 msgstr "Фактура за направена продажба"
 
 #. module: sale
-#: code:addons/sale/sale.py:284
-#: model:ir.model,name:sale.model_sale_order
+#: code:addons/sale/sale.py:284 model:ir.model,name:sale.model_sale_order
 #: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:sale.view_order_form
-#: view:sale.order:sale.view_sales_order_filter
-#: selection:sale.order,state:0
+#: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
 msgstr "Налог за продажба"
@@ -1932,11 +1613,9 @@ msgstr "Ставки од налогот за продажба поврзани 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid ""
-"Sales Order Lines that are confirmed, done or in exception state and haven't "
-"yet been invoiced"
-msgstr ""
-"Ставки од налогот за продажба кои се потврдени, завршени или во состојба на "
-"исклучок и се уште не се фактурирани"
+"Sales Order Lines that are confirmed, done or in exception state and haven't"
+" yet been invoiced"
+msgstr "Ставки од налогот за продажба кои се потврдени, завршени или во состојба на исклучок и се уште не се фактурирани"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1985,8 +1664,7 @@ msgstr "Статистики на налози за продажба"
 #: field:account.invoice,section_id:0
 #: view:account.invoice.report:sale.view_account_invoice_report_search_inherit
 #: field:account.invoice.report,section_id:0
-#: view:sale.order:sale.view_sales_order_filter
-#: field:sale.order,section_id:0
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,section_id:0
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
@@ -2008,12 +1686,10 @@ msgid "Sales order lines done"
 msgstr "Ставките од налогот за продажба се завршени"
 
 #. module: sale
-#: view:sale.order:sale.view_sales_order_filter
-#: field:sale.order,user_id:0
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,user_id:0
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: field:sale.order.line,salesman_id:0
-#: view:sale.report:sale.view_order_product_search
-#: field:sale.report,user_id:0
+#: view:sale.report:sale.view_order_product_search field:sale.report,user_id:0
 msgid "Salesperson"
 msgstr "Продавач"
 
@@ -2037,12 +1713,8 @@ msgstr "Пребарување на нефактурирани ставки"
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
-"                You may have to create it and set it as a default value on "
-"this field."
-msgstr ""
-"Изберете производ од типот услуга кој е наречен 'Авансен производ'. Можеби "
-"ќе треба да го креирате или да го поставите како стандардна вредност на ова "
-"поле."
+"                You may have to create it and set it as a default value on this field."
+msgstr "Изберете производ од типот услуга кој е наречен 'Авансен производ'. Можеби ќе треба да го креирате или да го поставите како стандардна вредност на ова поле."
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -2050,9 +1722,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr ""
-"Изберете како сакате да го фактурирате овој налог. Ова ќе креира нацрт "
-"фактура која може да биде изменета пред валидација."
+msgstr "Изберете како сакате да го фактурирате овој налог. Ова ќе креира нацрт фактура која може да биде изменета пред валидација."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -2070,8 +1740,7 @@ msgid "Shipped"
 msgstr "Испорачано"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Shipping Exception"
 msgstr "Исклучок при испорачување"
 
@@ -2117,16 +1786,12 @@ msgstr "Кратка содржина"
 #. module: sale
 #: help:crm.case.section,invoiced_target:0
 msgid ""
-"Target of invoice revenue for the current month. This is the amount the "
-"sales \n"
+"Target of invoice revenue for the current month. This is the amount the sales \n"
 "team estimates to be able to invoice this month."
-msgstr ""
-"Целен приход од фактури за тековен месец. Оваа е сумата што тимот \n"
-"за продажба смета дека ќе може да го фактурира овој месец."
+msgstr "Целен приход од фактури за тековен месец. Оваа е сумата што тимот \nза продажба смета дека ќе може да го фактурира овој месец."
 
 #. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 #: view:website:sale.report_saleorder_document
 msgid "Taxes"
 msgstr "Даноци"
@@ -2183,9 +1848,7 @@ msgstr "Вредноста на авансен изност мора да бид
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
-msgstr ""
-"Нема дефинирано Фискална позиција или категорија на приходно конто "
-"дефинирано за дадени карактеристики на категории на производи."
+msgstr "Нема дефинирано Фискална позиција или категорија на приходно конто дефинирано за дадени карактеристики на категории на производи."
 
 #. module: sale
 #: code:addons/sale/sale.py:154
@@ -2214,8 +1877,7 @@ msgstr "Оваа година"
 #: help:sale.config.settings,module_sale_margin:0
 msgid ""
 "This adds the 'Margin' on sales order.\n"
-"This gives the profitability by calculating the difference between the Unit "
-"Price and Cost Price.\n"
+"This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n"
 "-This installs the module sale_margin."
 msgstr ""
 
@@ -2235,26 +1897,17 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr ""
-"Ова е листа на фактури кои се генерирани за овој налог за продажба. Истиот "
-"налог за продажба може да биде фактуриран на неколку пати ( по ставка на "
-"пример)."
+msgstr "Ова е листа на фактури кои се генерирани за овој налог за продажба. Истиот налог за продажба може да биде фактуриран на неколку пати ( по ставка на пример)."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr ""
-"Овој извештај врши анализи на вашите понуди и налози за продажба. Анализите "
-"ги проверуваат вашите приходи од продажба и ги сортираат по различни групи "
-"на критериуми (продавач, партнер, производ, и др.). Употребете го овој "
-"извештај за да направите анализи на продажбите кои се уште не се "
-"фактурирани. Доколку сакате да го анализирате вашиот обрт, треба да го "
-"користите Извештајот за анализи на фактури во сметководствената апликација."
+msgstr "Овој извештај врши анализи на вашите понуди и налози за продажба. Анализите ги проверуваат вашите приходи од продажба и ги сортираат по различни групи на критериуми (продавач, партнер, производ, и др.). Употребете го овој извештај за да направите анализи на продажбите кои се уште не се фактурирани. Доколку сакате да го анализирате вашиот обрт, треба да го користите Извештајот за анализи на фактури во сметководствената апликација."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -2264,13 +1917,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
-"Овој извештај прави анализа на вашите понуди. Анализата го проверува вашиот "
-"приход од продажба и го сортира според различни групи на критериуми "
-"(продавач, партнер, производ, итн.) Користете го овој извештај за да "
-"извршите анализа на продажби што се уште не се фактурирани. Ако сакате да го "
-"анализирате вашиот обрт, би требало да го користитте извештајот за анализа "
-"на фактури во апликацијата за сметководство."
+msgstr "Овој извештај прави анализа на вашите понуди. Анализата го проверува вашиот приход од продажба и го сортира според различни групи на критериуми (продавач, партнер, производ, итн.) Користете го овој извештај за да извршите анализа на продажби што се уште не се фактурирани. Ако сакате да го анализирате вашиот обрт, би требало да го користитте извештајот за анализа на фактури во апликацијата за сметководство."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2280,13 +1927,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
-"Ова врши анализа на вашите налози за продажба. Анализата ги проверува вашите "
-"приходи од продажба и ги сортира според различни групи на критериуми "
-"(продавач, партнер, производ, итн.) Користете го овој извештај за да "
-"изведете анализа на продажбите што сеуште не се фактурирани. Ако сакате да "
-"го анализирате вашиот обрт, би требало да го користите извештајот за анализа "
-"на фактури во апликацијата сметководство."
+msgstr "Ова врши анализа на вашите налози за продажба. Анализата ги проверува вашите приходи од продажба и ги сортира според различни групи на критериуми (продавач, партнер, производ, итн.) Користете го овој извештај за да изведете анализа на продажбите што сеуште не се фактурирани. Ако сакате да го анализирате вашиот обрт, би требало да го користите извештајот за анализа на фактури во апликацијата сметководство."
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2302,11 +1943,9 @@ msgstr "Да се фактурира"
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
 msgid ""
-"To allow your salesman to make invoices for sales order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-"Дозволете му на вашиот продавач да прави фактури за ставките од налогот за "
-"продажба со користење на менито 'Ставки за фактурирање'."
+"To allow your salesman to make invoices for sales order lines using the menu"
+" 'Lines to Invoice'."
+msgstr "Дозволете му на вашиот продавач да прави фактури за ставките од налогот за продажба со користење на менито 'Ставки за фактурирање'."
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -2384,27 +2023,16 @@ msgid ""
 "Use Invoice the whole sale order to create the final invoice.\n"
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
-"                Use Some Order Lines to invoice a selection of the sales "
-"order lines."
-msgstr ""
-"Употребете го целиот налог за продажба за да ја креирате конечната фактура.\n"
-"                Употребете процент за да фактурирате процент од целата "
-"сума.\n"
-"                Употребете фиксна цена за да фактурирате специфична сума "
-"однапред.\n"
-"                Употребете некои ставки од налогот за да фактурирате "
-"селекција од ставките на налогот за продажба."
+"                Use Some Order Lines to invoice a selection of the sales order lines."
+msgstr "Употребете го целиот налог за продажба за да ја креирате конечната фактура.\n                Употребете процент за да фактурирате процент од целата сума.\n                Употребете фиксна цена за да фактурирате специфична сума однапред.\n                Употребете некои ставки од налогот за да фактурирате селекција од ставките на налогот за продажба."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid ""
 "Use contract to be able to manage your services with\n"
-"                        multiple invoicing as part of the same contract "
-"with\n"
+"                        multiple invoicing as part of the same contract with\n"
 "                        your customer."
-msgstr ""
-"Употребете договор за да може да ги менаџирате вашите услуги со повеќекратно "
-"фактурирање како дел од еден ист договор со вашиот клиент."
+msgstr "Употребете договор за да може да ги менаџирате вашите услуги со повеќекратно фактурирање како дел од еден ист договор со вашиот клиент."
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
@@ -2432,8 +2060,7 @@ msgid "View Invoice"
 msgstr "Погледни фактура"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Чекам распоред"
 
@@ -2474,8 +2101,7 @@ msgstr "Што сакате да фактурирате?"
 #: code:addons/sale/sale.py:990
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
-"Не може да откажете ставка од налогот за продажба која е веќе фактурирана."
+msgstr "Не може да откажете ставка од налогот за продажба која е веќе фактурирана."
 
 #. module: sale
 #: code:addons/sale/sale.py:605
@@ -2487,17 +2113,14 @@ msgstr "Не може да потврдите налог за продажба �
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "You cannot create invoice when sales order is not confirmed."
-msgstr ""
-"Не можете да креирате фактура додека налогот за продажба не е потврден."
+msgstr "Не можете да креирате фактура додека налогот за продажба не е потврден."
 
 #. module: sale
 #: code:addons/sale/sale.py:523
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
-"Не можете да ги групирате продажбите доколку имате различни валути за ист "
-"партнер."
+msgstr "Не можете да ги групирате продажбите доколку имате различни валути за ист партнер."
 
 #. module: sale
 #: code:addons/sale/sale.py:1130
@@ -2505,9 +2128,7 @@ msgstr ""
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr ""
-"Треба да изберете ценовник или купувач во формуларот за продажби !\n"
-"Подесете еден пред да изберете производ."
+msgstr "Треба да изберете ценовник или купувач во формуларот за продажби !\nПодесете еден пред да изберете производ."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:55
@@ -2531,12 +2152,3 @@ msgstr "или"
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
 msgstr "sale.group_delivery_invoice_address"
-
-#~ msgid "Order Date"
-#~ msgstr "Датум на налогот"
-
-#~ msgid "Reference Unit of Measure"
-#~ msgstr "Референтна единица мерка"
-
-#~ msgid "Shipping address :"
-#~ msgstr "Адреса на испорака :"

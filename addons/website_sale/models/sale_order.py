@@ -4,6 +4,7 @@ import random
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
+from openerp.tools.translate import _
 
 
 class sale_order(osv.Model):
@@ -73,6 +74,8 @@ class sale_order(osv.Model):
 
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
+            if so.state != 'draft':
+                raise osv.except_osv(_('Error!'), _('It is forbidden to modify a sale order which is not in draft status'))
             if line_id != False:
                 line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
                 if line_ids:

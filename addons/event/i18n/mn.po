@@ -1,59 +1,44 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-8/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:40+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_event
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from "
-"${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to "
-"${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
+"        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p>Сайн байна уу ${object.name},</p>\n        <p>Таны бүртгүүлсэн ${object.event_id.name} арга хэмжээ нь баталгаажсан бөгөөд ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}-с ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} хооронд зохион байгуулагдана.\n        Ямарваа нэмэлт мэдээлэл авахаар бол манай арга хэмжээний хэлтэстэй холбогдоно уу.</p>\n        <p>Оролцож байгаад баярлалаа!</p>\n        <p>Амжилт хүсье</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
 msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
+"        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
-"\n"
-"        <p>Сайн байна уу? ${object.name},</p>\n"
-"        <p> ${object.event_id.name} үйл явдалд таныг бүртгэснээ бид "
-"баталгаажуулж байна.\n"
-"        Үйл явдал баталгаажмагц та илүү хэрэгтэй мэдээллийг (тов, хөтөлбөр "
-"гэх мэт...) өгөх \n"
-"        эмэйлүүдийг хүлээн авах болно.</p>\n"
-"        <p>Оролцож байгаад баярлалаа!</p>\n"
-"        <p>Танд амжилт хүсье</p>"
+msgstr "\n        <p>Сайн байна уу? ${object.name},</p>\n        <p> ${object.event_id.name} арга хэмжээнд таныг бүртгэснээ бид баталгаажуулж байна.\n        Арга хэмжээ баталгаажмагц та илүү хэрэгтэй мэдээллийг (тов, хөтөлбөр гэх мэт...) өгөх \n        эмэйлүүдийг хүлээн авах болно.</p>\n        <p>Оролцож байгаад баярлалаа!</p>\n        <p>Танд амжилт хүсье</p>"
 
 #. module: event
 #: field:report.event.registration,confirm_state:0
@@ -73,21 +58,15 @@ msgstr "(батлагдсан:"
 #. module: event
 #: model:event.event,description:event.event_0
 msgid ""
-"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-"
-"snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
 "    <div class=\"carousel-inner\">\n"
-"        <div class=\"item oe_img_bg active\" style=\"background-image: "
-"url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
 "            <div class=\"container\">\n"
 "                <div class=\"row content\">\n"
-"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-"
-"md-5 col-md-offset-1 mt16\">\n"
-"                        <img alt=\"Banner Odoo Image\" class=\"img-"
-"responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" "
-"style=\"\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
 "                    </div>\n"
-"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" "
-"style=\"text-align: center; color: white;\">\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
 "                        <h2>5 Intensive Days</h2>\n"
 "                        <h4>to learn .JS development</h4>\n"
 "                    </div>\n"
@@ -104,11 +83,7 @@ msgid ""
 "</div>\n"
 "\n"
 "<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"<p><span style=\"text-align: -webkit-center; \">This course is dedicated "
-"to developers who need to grasp knowledge of the <strong>business "
-"applications development </strong>process. This course is for new developers "
-"or for IT professionals eager to learn more about technical "
-"aspects.</span></p>\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -134,8 +109,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Loops</li>\n"
 "\t<li class=\"list-group-item\">Arrays</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop simple dynamic "
-"compenents in HTML pages.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -148,8 +122,7 @@ msgid ""
 "<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
 "</div>\n"
 "\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to "
-"JQuery</li>\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
 "\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
 "\t<li class=\"list-group-item\">Underscore</li>\n"
 "\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
@@ -157,8 +130,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
 "\t<li class=\"list-group-item\">Calling the ORM</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to create dynamic page "
-"interacting with the ORM.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -179,8 +151,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Integrated Help</li>\n"
 "\t<li class=\"list-group-item\">How to Debug</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop a full application "
-"with backend and user interface.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -196,8 +167,7 @@ msgid ""
 "<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
 "<p><strong>Objectives:</strong></p>\n"
 "\n"
-"<p><strong>Having attended this course, participants should be able "
-"to:</strong></p>\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
 "\n"
 "<ul><li>Understand the development concepts and architecture;</li>\n"
 "\t<li>Install and administer your own server;</li>\n"
@@ -213,14 +183,11 @@ msgid ""
 "<p><strong>Requirements:</strong></p>\n"
 "\n"
 "<ul><li>Bring your own laptop.</li>\n"
-"\t<li>Participants are expected to have some knowledge in programming. A "
-"basic knowledge of the Python programming is recommended.</li>\n"
-"\t<li>Participants preferably have a functional knowledge of our software "
-"(see Functional Training).</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
 "</ul><p></p>\n"
 "\n"
-"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo "
-"Official Website</a>.</p>\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -232,48 +199,38 @@ msgid ""
 "<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
 "<h1 class=\"text-center\">Read Great Contents</h1>\n"
 "\n"
-"<h3 class=\"text-muted text-center\">What do people say about this "
-"course?</h3>\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>I did not expect such a great learning experience. I feel like I can "
-"develop anything now.</p>\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>This course help me build my first application within a month. Definetly "
-"worth its price.</p>\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
-msgstr ""
+msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>Эрчимжүүлсэн 5 өдөр</h2>\n                        <h4>.JS хөгжүүлэлт сурах</h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>Course Summary</h2>\n</div>\n\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">Энэ курс нь хөгжүүлэгчдэд зориулсан бөгөөд <strong>бизнесийн аппликэшнийн хөгжүүлэлт</strong>ийг сургахад зориулагдсан болно. Энэ курс нь шинэ хөгжүүлэгч болон МТ-н туршлагатай хөгжүүлэгчдэд зориулагдсан техникийн асуудлыг тайлбарласан курс юм.</span></p>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>Та юу сурах вэ?</h2>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Өдөр 1</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Javascript-н удиртгал</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n\t<li class=\"list-group-item\">Хувьсагчид &amp; Операторууд</li>\n\t<li class=\"list-group-item\">Strings буюу тэмдэгт мөрийн тухай</li>\n\t<li class=\"list-group-item\">Функцүүд</li>\n\t<li class=\"list-group-item\">Давталтууд</li>\n\t<li class=\"list-group-item\">Массив</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>HTML хуудас доторх хялбар динамик агуулгыг хөгжүүлэх талаар суралцана..</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Өдөр 2</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Odoo-н веб клиент</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n\t<li class=\"list-group-item\">JQuery-н ахисан түвшний ойлголтууд</li>\n\t<li class=\"list-group-item\">Доогуур зураас</li>\n\t<li class=\"list-group-item\">QWeb-н удиртгал</li>\n\t<li class=\"list-group-item\">Контроллёр болон харагдац</li>\n\t<li class=\"list-group-item\">CSS</li>\n\t<li class=\"list-group-item\">ORM-г дуудах</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>ORM-тай харилцан ажиллах байдлаар динамик агуулгыг үүсгэх чадвартай болно.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Өдөр 3</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Бүрэн хэмжээний аппликэшнийг үүсгэх</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Модулиуд</li>\n\t<li class=\"list-group-item\">Python обьектууд</li>\n\t<li class=\"list-group-item\">Тайлангийн хөдөлгүүр</li>\n\t<li class=\"list-group-item\">Ажлын урсгал</li>\n\t<li class=\"list-group-item\">Сургалтын төвийн модуль</li>\n\t<li class=\"list-group-item\">Уялдуулсан тусламж</li>\n\t<li class=\"list-group-item\">Хэрхэн дебаагдах</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Бүрэн хэмжээний аппликэшнийг хөгжүүлэх бүрэн чадвартай болох бөгөөд хэрэглэгчийн интерфэйс арын төгсгөл аль альныг хийх чадвартай болно..</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>Шаардлагууд</h2>\n</div>\n\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>Зорилтууд:</strong></p>\n\n<p><strong>Курсад суралцсанаар танай чаддаг болох зүйлс:</strong></p>\n\n<ul><li>Хөгжүүлэлтийн зарчим болон архитектурыг ойлгох;</li>\n\t<li>Өөрийн серверийг суулгаж удирдах;</li>\n\t<li>Тухайлсан аппликэшнд зориулсан шинэ модуль хөгжүүлэх.</li>\n</ul><p></p>\n\n<p><strong>Манай үнэнд дараах зүйлс агуулагдсан:</strong></p>\n\n<ul><li>уух зүйлс болон үдийн хоол;</li>\n\t<li>сургалтын материал.</li>\n</ul><p></p>\n\n<p><strong>Шаардлагууд:</strong></p>\n\n<ul><li>Өөрийн зөөврийн компьютераа авчрах.</li>\n\t<li>Оролцогчид нь програмчлалын анхан шатны мэдлэгтэй байх ёстой. Python програмчлалын мэдлэгтэй байвал давуу талтай.</li>\n\t<li>Оролцогчид нь функционалийн мэдлэгтэй байвал сайн (Функционалийн сургалтыг харна уу).</li>\n</ul><p></p>\n\n<p>Илүү их мэдээлэл авахын тулд, visit the <a href=\"http://openerp.com/\">Odoo-н албан ёсны вебсайт руу хандана уу</a>.</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Агуу агуулгуудыг унших</h1>\n\n<h3 class=\"text-muted text-center\">Энэ курсын талаар хүмүүс юу гэж хэлж байна вэ?</h3>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Би ийм суралцах туршлага таамаглаагүй байсан. Би одоо ямар ч хөгжүүлэлтийг хийж чадна гэж бодож байна.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Энэ курс нь би эхнийхээ аппликэшнийг сар хүрэхгүй хугацаанд хийхэд тусаллаа. Төлбөрийн үнэ цэнэдээ бүрэн хүрэх сургалт.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
 
 #. module: event
 #: model:event.event,description:event.event_3
 msgid ""
-"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-"
-"snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
 "    <div class=\"carousel-inner\">\n"
-"        <div class=\"item oe_img_bg active\" style=\"background-image: "
-"url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
 "            <div class=\"container\">\n"
 "                <div class=\"row content\">\n"
-"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-"
-"md-5 col-md-offset-1 mt16\">\n"
-"                        <img alt=\"Banner Odoo Image\" class=\"img-"
-"responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" "
-"style=\"\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
 "                    </div>\n"
-"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" "
-"style=\"text-align: center; color: white;\">\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
 "                        <h2>5 Intensive Days</h2>\n"
-"                        <h4>to learn <i>business applications "
-"development</i></h4>\n"
+"                        <h4>to learn <i>business applications development</i></h4>\n"
 "                    </div>\n"
 "                </div>\n"
 "            </div>\n"
@@ -288,11 +245,7 @@ msgid ""
 "</div>\n"
 "\n"
 "<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"<p><span style=\"text-align: -webkit-center; \">This course is dedicated "
-"to developers who need to grasp knowledge of the <strong>business "
-"applications development </strong>process. This course is for new developers "
-"or for IT professionals eager to learn more about technical "
-"aspects.</span></p>\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -318,8 +271,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Loops</li>\n"
 "\t<li class=\"list-group-item\">Arrays</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop simple dynamic "
-"compenents in HTML pages.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -332,8 +284,7 @@ msgid ""
 "<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
 "</div>\n"
 "\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to "
-"JQuery</li>\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
 "\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
 "\t<li class=\"list-group-item\">Underscore</li>\n"
 "\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
@@ -341,8 +292,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
 "\t<li class=\"list-group-item\">Calling the ORM</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to create dynamic page "
-"interacting with the ORM.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -363,8 +313,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Integrated Help</li>\n"
 "\t<li class=\"list-group-item\">How to Debug</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop a full application "
-"with backend and user interface.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -380,8 +329,7 @@ msgid ""
 "<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
 "<p><strong>Objectives:</strong></p>\n"
 "\n"
-"<p><strong>Having attended this course, participants should be able "
-"to:</strong></p>\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
 "\n"
 "<ul><li>Understand the development concepts and architecture;</li>\n"
 "\t<li>Install and administer your own server;</li>\n"
@@ -397,14 +345,11 @@ msgid ""
 "<p><strong>Requirements:</strong></p>\n"
 "\n"
 "<ul><li>Bring your own laptop.</li>\n"
-"\t<li>Participants are expected to have some knowledge in programming. A "
-"basic knowledge of the Python programming is recommended.</li>\n"
-"\t<li>Participants preferably have a functional knowledge of our software "
-"(see Functional Training).</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
 "</ul><p></p>\n"
 "\n"
-"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo "
-"Official Website</a>.</p>\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -416,45 +361,36 @@ msgid ""
 "<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
 "<h1 class=\"text-center\">Read Great Contents</h1>\n"
 "\n"
-"<h3 class=\"text-muted text-center\">What do people say about this "
-"course?</h3>\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>I did not expect such a great learning experience. I feel like I can "
-"develop anything now.</p>\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>This course help me build my first application within a month. Definetly "
-"worth its price.</p>\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
-msgstr ""
+msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>Эрчимжүүлсэн 5 хоног</h2>\n                        <h4><i>бизнес аппликэшн хөгжүүлэх</i></h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>Курсын хураангуй</h2>\n</div>\n\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">Энэ курс нь хөгжүүлэгчдэд зориулсан бөгөөд <strong>бизнесийн аппликэшнийн хөгжүүлэлт</strong>ийг сургахад зориулагдсан болно. Энэ курс нь шинэ хөгжүүлэгч болон МТ-н туршлагатай хөгжүүлэгчдэд зориулагдсан техникийн асуудлыг тайлбарласан курс юм.</span></p>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>Та юу сурах вэ?</h2>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Өдөр 1</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Javascript-н удиртгал</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Сайн уу Дэлхий програм бичих</li>\n\t<li class=\"list-group-item\">Хувьсагчууд &amp; Операторууд</li>\n\t<li class=\"list-group-item\">Strings буюу тэмдэгт мөрийн тухай</li>\n\t<li class=\"list-group-item\">Функцүүд</li>\n\t<li class=\"list-group-item\">Давталтууд</li>\n\t<li class=\"list-group-item\">Массив</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>HTML хуудас доторх хялбар динамик агуулгыг хөгжүүлэх талаар суралцана.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Өдөр 2</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Odoo-н веб клиент</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n\t<li class=\"list-group-item\">JQuery-н ахисан түвшний ойлголтууд</li>\n\t<li class=\"list-group-item\">Доогуур зураас</li>\n\t<li class=\"list-group-item\">QWeb-н удиртгал</li>\n\t<li class=\"list-group-item\">Контроллёр болон харагдац</li>\n\t<li class=\"list-group-item\">CSS</li>\n\t<li class=\"list-group-item\">ORM-г дуудах</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>ORM-тай харилцан ажиллах байдлаар динамик агуулгыг үүсгэх чадвартай болно.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Өдөр 3</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Бүрэн хэмжээний аппликэшнийг үүсгэх</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n\t<li class=\"list-group-item\">Python обьектууд</li>\n\t<li class=\"list-group-item\">Тайлангийн хөдөлгүүр</li>\n\t<li class=\"list-group-item\">Ажлын урсгал</li>\n\t<li class=\"list-group-item\">Сургалтын төвийн модуль</li>\n\t<li class=\"list-group-item\">Уялдуулсан тусламж</li>\n\t<li class=\"list-group-item\">Хэрхэн дебаагдах</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Бүрэн хэмжээний аппликэшнийг хөгжүүлэх бүрэн чадвартай болох бөгөөд хэрэглэгчийн интерфэйс арын төгсгөл аль альныг хийх чадвартай болно.</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>Requirements</h2>\n</div>\n\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>Зорилтууд:</strong></p>\n\n<p><strong>Курсад суралцсанаар танай чаддаг болох зүйлс:</strong></p>\n\n<ul><li>Хөгжүүлэлтийн зарчим болон архитектурыг ойлгох;</li>\n\t<li>Өөрийн серверийг суулгаж удирдах;</li>\n\t<li>Тухайлсан аппликэшнд зориулсан шинэ модуль хөгжүүлэх.</li>\n</ul><p></p>\n\n<p><strong>Манай үнэнд дараах зүйлс агуулагдсан:</strong></p>\n\n<ul><li>уух зүйлс болон үдийн хоол;</li>\n\t<li>сургалтын материал.</li>\n</ul><p></p>\n\n<p><strong>Шаардлагууд:</strong></p>\n\n<ul><li>Өөрийн зөөврийн компьютераа авчрах.</li>\n\t<li>Оролцогчид нь програмчлалын анхан шатны мэдлэгтэй байх ёстой. Python програмчлалын мэдлэгтэй байвал давуу талтай.</li>\n\t<li>Оролцогчид нь функционалийн мэдлэгтэй байвал сайн (Функционалийн сургалтыг харна уу).</li>\n</ul><p></p>\n\n<p>Илүү их мэдээлэл авахын тулд, <a href=\"http://openerp.com/\">Odoo албан ёсны вебсайт руу хандана уу</a>.</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Агуу агуулгуудыг унших</h1>\n\n<h3 class=\"text-muted text-center\">Энэ курсын талаар хүмүүс юу гэж хэлж байна вэ?</h3>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Би ийм суралцах туршлага таамаглаагүй байсан. Би одоо ямар ч хөгжүүлэлтийг хийж чадна гэж бодож байна.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Энэ курс нь би эхнийхээ аппликэшнийг сар хүрэхгүй хугацаанд хийхэд тусаллаа. Төлбөрийн үнэ цэнэдээ бүрэн хүрэх сургалт.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
 
 #. module: event
 #: model:event.event,description:event.event_1
 msgid ""
-"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-"
-"snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
 "    <div class=\"carousel-inner\">\n"
-"        <div class=\"item oe_img_bg active\" style=\"background-image: "
-"url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
 "            <div class=\"container\">\n"
 "                <div class=\"row content\">\n"
-"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-"
-"md-5 col-md-offset-1 mt16\">\n"
-"                        <img alt=\"Banner Odoo Image\" class=\"img-"
-"responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" "
-"style=\"\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
 "                    </div>\n"
-"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" "
-"style=\"text-align: center; color: white;\">\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
 "                        <h2>5 Intensive Days</h2>\n"
 "                        <h4>to learn technical aspects</h4>\n"
 "                    </div>\n"
@@ -471,11 +407,7 @@ msgid ""
 "</div>\n"
 "\n"
 "<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
-"<p><span style=\"text-align: -webkit-center; \">This course is dedicated "
-"to developers who need to grasp knowledge of the <strong>business "
-"applications development </strong>process. This course is for new developers "
-"or for IT professionals eager to learn more about technical "
-"aspects.</span></p>\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -501,8 +433,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Loops</li>\n"
 "\t<li class=\"list-group-item\">Arrays</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop simple dynamic "
-"compenents in HTML pages.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -515,8 +446,7 @@ msgid ""
 "<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
 "</div>\n"
 "\n"
-"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to "
-"JQuery</li>\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
 "\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
 "\t<li class=\"list-group-item\">Underscore</li>\n"
 "\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
@@ -524,8 +454,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
 "\t<li class=\"list-group-item\">Calling the ORM</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to create dynamic page "
-"interacting with the ORM.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -546,8 +475,7 @@ msgid ""
 "\t<li class=\"list-group-item\">Integrated Help</li>\n"
 "\t<li class=\"list-group-item\">How to Debug</li>\n"
 "</ul><div class=\"panel-footer text-center\">\n"
-"<p class=\"text-muted\"><i>You will be able to develop a full application "
-"with backend and user interface.</i></p>\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -563,8 +491,7 @@ msgid ""
 "<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
 "<p><strong>Objectives:</strong></p>\n"
 "\n"
-"<p><strong>Having attended this course, participants should be able "
-"to:</strong></p>\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
 "\n"
 "<ul><li>Understand the development concepts and architecture;</li>\n"
 "\t<li>Install and administer your own server;</li>\n"
@@ -580,14 +507,11 @@ msgid ""
 "<p><strong>Requirements:</strong></p>\n"
 "\n"
 "<ul><li>Bring your own laptop.</li>\n"
-"\t<li>Participants are expected to have some knowledge in programming. A "
-"basic knowledge of the Python programming is recommended.</li>\n"
-"\t<li>Participants preferably have a functional knowledge of our software "
-"(see Functional Training).</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
 "</ul><p></p>\n"
 "\n"
-"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo "
-"Official Website</a>.</p>\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
@@ -599,26 +523,23 @@ msgid ""
 "<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
 "<h1 class=\"text-center\">Read Great Contents</h1>\n"
 "\n"
-"<h3 class=\"text-muted text-center\">What do people say about this "
-"course?</h3>\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>I did not expect such a great learning experience. I feel like I can "
-"develop anything now.</p>\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "\n"
 "<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
 "<blockquote data-snippet-id=\"quote\">\n"
-"<p>This course help me build my first application within a month. Definetly "
-"worth its price.</p>\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
 "<small>John Doe, CEO</small></blockquote>\n"
 "</div>\n"
 "</div>\n"
 "</div>\n"
-msgstr ""
+msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>Эрчимжүүлсэн 5 өдөр</h2>\n                        <h4>техник ойлголтуудыг сурах</h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>Курсын хураангуй</h2>\n</div>\n\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">Энэ курс нь хөгжүүлэгчдэд зориулсан бөгөөд <strong>бизнесийн аппликэшнийн хөгжүүлэлт</strong>ийг сургахад зориулагдсан болно. Энэ курс нь шинэ хөгжүүлэгч болон МТ-н туршлагатай хөгжүүлэгчдэд зориулагдсан техникийн асуудлыг тайлбарласан курс юм.</span></p>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>What you will learn?</h2>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Өдөр 1</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Javascript-н удиртгал</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n\t<li class=\"list-group-item\">Хувьсагчид &amp; Операторууд</li>\n\t<li class=\"list-group-item\">Strings буюу тэмдэгт мөрийн тухай</li>\n\t<li class=\"list-group-item\">Функцүүд</li>\n\t<li class=\"list-group-item\">Давталтууд</li>\n\t<li class=\"list-group-item\">Массив</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>HTML хуудас доторх хялбар динамик агуулгыг хөгжүүлэх талаар суралцана.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 2</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Odoo-н веб клиент</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n\t<li class=\"list-group-item\">JQuery-н ахисан түвшний ойлголтууд</li>\n\t<li class=\"list-group-item\">Доогуур зураас</li>\n\t<li class=\"list-group-item\">QWeb-н удиртгал</li>\n\t<li class=\"list-group-item\">Контроллёр болон харагдац</li>\n\t<li class=\"list-group-item\">CSS</li>\n\t<li class=\"list-group-item\">ORM-г дуудах</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>ORM-тай харилцан ажиллах байдлаар динамик агуулгыг үүсгэх чадвартай болно.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Өдөр 3</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Бүрэн хэмжээний аппликэшнийг үүсгэх</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Модулиуд</li>\n\t<li class=\"list-group-item\">Python обьектууд</li>\n\t<li class=\"list-group-item\">Тайлангийн хөдөлгүүр</li>\n\t<li class=\"list-group-item\">Ажлын урсгал</li>\n\t<li class=\"list-group-item\">Сургалтын төвийн модуль</li>\n\t<li class=\"list-group-item\">Уялдуулсан тусламж</li>\n\t<li class=\"list-group-item\">Хэрхэн дебаагдах</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Бүрэн хэмжээний аппликэшнийг хөгжүүлэх бүрэн чадвартай болох бөгөөд хэрэглэгчийн интерфэйс арын төгсгөл аль альныг хийх чадвартай болно.</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>Requirements</h2>\n</div>\n\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>Зорилтууд:</strong></p>\n\n<p><strong>Курсад суралцсанаар танай чаддаг болох зүйлс:</strong></p>\n\n<ul><li>Хөгжүүлэлтийн зарчим болон архитектурыг ойлгох;</li>\n\t<li>Өөрийн серверийг суулгаж удирдах;</li>\n\t<li>Тухайлсан аппликэшнд зориулсан шинэ модуль хөгжүүлэх.</li>\n</ul><p></p>\n\n<p><strong>Манай үнэнд дараах зүйлс агуулагдсан:</strong></p>\n\n<ul><li>уух зүйлс болон үдийн хоол;</li>\n\t<li>сургалтын материал.</li>\n</ul><p></p>\n\n<p><strong>Шаардлагууд:</strong></p>\n\n<ul><li>Өөрийн зөөврийн компьютераа авчрах.</li>\n\t<li>Оролцогчид нь програмчлалын анхан шатны мэдлэгтэй байх ёстой. Python програмчлалын мэдлэгтэй байвал давуу талтай.</li>\n\t<li>Оролцогчид нь функционалийн мэдлэгтэй байвал сайн (Функционалийн сургалтыг харна уу).</li>\n</ul><p></p>\n\n<p>Илүү их мэдээлэл авахын тулд, <a href=\"http://openerp.com/\">Odoo-н албан ёсны вебсайт руу хандана уу</a>.</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Агуу агуулгуудыг унших</h1>\n\n<h3 class=\"text-muted text-center\">Энэ курсын талаар хүмүүс юу гэж хэлж байна вэ?</h3>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Би ийм суралцах туршлага таамаглаагүй байсан. Би одоо ямар ч хөгжүүлэлтийг хийж чадна гэж бодож байна.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Энэ курс нь би эхнийхээ аппликэшнийг сар хүрэхгүй хугацаанд хийхэд тусаллаа. Төлбөрийн үнэ цэнэдээ бүрэн хүрэх сургалт.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -626,8 +547,7 @@ msgid ""
 "<div class=\"oe_structure\">\n"
 "    <center><strong>Conference on Business Applications</strong></center>\n"
 "    <p> </p>\n"
-"    <p> During this conference, our team will give a detailed overview of "
-"our business applications. You’ll know all the benefits of using it.</p>\n"
+"    <p> During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it.</p>\n"
 "    <p> </p>\n"
 "    <p><strong>Objectives:</strong></p>\n"
 "    <p>Having attended this conference, participants should be able to:</p>\n"
@@ -639,28 +559,22 @@ msgid ""
 "    <p><strong>Program:</strong></p>\n"
 "    <ul>\n"
 "    <li>Introduction, CRM, Sales Management</li>\n"
-"    <li>Purchase, Sales &amp; Purchase management, Financial "
-"accounting.</li>\n"
+"    <li>Purchase, Sales &amp; Purchase management, Financial accounting.</li>\n"
 "    <li>Project management, Human resources, Contract management.</li>\n"
-"    <li>Warehouse management, Manufacturing (MRP) &amp; Sales, "
-"Import/Export.</li>\n"
+"    <li>Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export.</li>\n"
 "    <li>Point of Sale (POS), Introduction to report customization.</li>\n"
 "    </ul>\n"
 "    <p> </p>\n"
 "    <p><strong>Where to find us:</strong></p>\n"
-"    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United "
-"States)</p>\n"
-"    <p>For any additional information, please contact us at <a "
-"href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n"
+"    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)</p>\n"
+"    <p>For any additional information, please contact us at <a href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n"
 "    <p> </p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Luigi Roni, Senior Event Manager</p>\n"
 "    <p> </p>\n"
-"    <p align=\"RIGHT\"><em>(Chamber Works reserves the right to cancel, re-"
-"name or re-locate<br>the event or change the dates on which it is "
-"held.)</em></p>\n"
+"    <p align=\"RIGHT\"><em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the event or change the dates on which it is held.)</em></p>\n"
 "</div>\n"
-msgstr ""
+msgstr "<div class=\"oe_structure\">\n    <center><strong>Бизнес аппликэшний чуулган</strong></center>\n    <p> </p>\n    <p>Энэ чуулганы явцад манай баг нь бизнес аппликэшнийн нарийвчилсан дэлгэрэнгүй мэдээллийг өгнө. Ингэснээр хэрэглэхэд ямар ач тустай болохыг та бүрэн мэдэх болно.</p>\n    <p> </p>\n    <p><strong>Зорилтууд:</strong></p>\n    <p>Энэ чуулганд оролцсоноор дараах чадварыг эзэмшинэ:</p>\n    <ul>\n    <li>Олон модулиудыг ойлгох;</li>\n    <li>Үндсэн аппликэшнуудын функционалийн урсгал;</li>\n    </ul>\n    <p> </p>\n    <p><strong>Хөтөлбөр:</strong></p>\n    <ul>\n    <li>Удиртгал, CRM, Борлуулалтын менежмент</li>\n    <li>Худалдан авалт, Борлуулалт &amp; Худалдан авалтын менежмент, Санхүүгийн НББ.</li>\n    <li>Төслийн менежмент, Хүний нөөц, Гэрээний менежмент.</li>\n    <li>Агуулахын менежмент, Үйлдвэрлэл (MRP) &amp; Борлуулалт, Импорт/Экспорт.</li>\n    <li>Борлуулалтын цэг (POS), тайланг өөриймшүүлэх удиртгал.</li>\n    </ul>\n    <p> </p>\n    <p><strong>Биднийг хаанаас олох вэ:</strong></p>\n    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)</p>\n    <p>Аливаа нэмэлт асуудлаар бидэнтэй холбогдоно ууу <a href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n    <p> </p>\n    <p>Амжилт хүсье,</p>\n    <p>Luigi Roni, Үйл ажиллагааны ахлах менежер</p>\n    <p> </p>\n    <p align=\"RIGHT\"><em>(Ажлыг ахлагч нь үйл ажиллагааг цуцлах, нэрийг өөрчлөх, байршлыг өөрчлөх, хугацааг өөрчлөх эрхтэй.</em></p>\n</div>\n"
 
 #. module: event
 #: model:event.event,badge_innerright:event.event_1
@@ -672,7 +586,7 @@ msgid ""
 "                Picture of the exhibition hall\n"
 "            </div>\n"
 "        "
-msgstr ""
+msgstr "<div>\n                <h2>Үзэсгэлэнгийн танхим</h2>\n            </div>\n            <div>\n                Үзэсгэлэнгийн танхимийн зураг\n            </div>\n        "
 
 #. module: event
 #: model:event.event,badge_innerleft:event.event_1
@@ -681,21 +595,11 @@ msgid ""
 "            <table class=\"text-center\">\n"
 "                <tr>\n"
 "                    <td width=\"10%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: 10px;\"><div>Full</div><div> Catering</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Full</div><div> Catering</div></td>\n"
 "                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: 10px;\"><div>BBQ &amp;</div><div>Beer Event</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>BBQ &amp;</div><div>Beer Event</div></td>\n"
 "                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: 10px;\"><div>Awards &amp;</div> <div>Walking</div><div> "
-"Dinner</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Awards &amp;</div> <div>Walking</div><div> Dinner</div></td>\n"
 "                    <td width=\"10%\"></td>\n"
 "                </tr>\n"
 "                <tr style=\"background:lightgrey; height: 15px;\">\n"
@@ -714,16 +618,9 @@ msgid ""
 "            <table class=\"text-center\">\n"
 "                <tr>\n"
 "                    <td width=\"10%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: 10px;\"><div>Drinks</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Drinks</div></td>\n"
 "                    <td width=\"5%\"></td>\n"
-"                    <td width=\"10%\" style=\"height:45px; width:110px; "
-"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
-"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
-"center; padding-top: "
-"10px;\"><div>Premium</div><div>Ticket</div><div>onsite</div></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Premium</div><div>Ticket</div><div>onsite</div></td>\n"
 "                    <td width=\"25%\"></td>\n"
 "                </tr>\n"
 "                <tr style=\"background:lightgrey; height: 15px;\">\n"
@@ -738,25 +635,21 @@ msgid ""
 "                </tr>\n"
 "            </table>\n"
 "        "
-msgstr ""
+msgstr "<h2>Дээд зэрэглэлийн тасалбар</h2>\n            <table class=\"text-center\">\n                <tr>\n                    <td width=\"10%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Бүрэн хэмжээний</div><div> Хүлээн авалт</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>BBQ &amp;</div><div>Шар айраг арга хэмжээ</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Шагнал &amp;</div> <div>Алхалт</div><div> Оройн зоог</div></td>\n                    <td width=\"10%\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 15px;\">\n                    <td colspan=\"7\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 35px;\">\n                    <td></td>\n                    <td>Өдөр тутам</td>\n                    <td colspan=\"3\">June 4th</td>\n                    <td>6-р сарын 5</td>\n                    <td></td>\n                </tr>\n            </table>\n            <br><br>\n            <h2>Үнэгүй тасалбар</h2>\n            <table class=\"text-center\">\n                <tr>\n                    <td width=\"10%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Уух зүйлс</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Дээд зэрэглэлийн</div><div>тасалбар</div><div>газар дээрээ</div></td>\n                    <td width=\"25%\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 15px;\">\n                    <td colspan=\"5\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 35px;\">\n                    <td></td>\n                    <td>Өдөр тутам</td>\n                    <td></td>\n                    <td>60 €/өдөрт<div>30 €/Баасан</div></td>\n                    <td></td>\n                </tr>\n            </table>\n        "
 
 #. module: event
 #: model:event.event,badge_back:event.event_1
 msgid ""
 "<h2>Program</h2>\n"
-"            <div><strong>Registrations</strong><small> are from 8:30 am, "
-"except on Friday from 9:00 am</small></div>\n"
+"            <div><strong>Registrations</strong><small> are from 8:30 am, except on Friday from 9:00 am</small></div>\n"
 "            <div>\n"
-"                <strong>Lunch</strong><small> is served between 1:00 pm and "
-"2:00 pm.</small>\n"
+"                <strong>Lunch</strong><small> is served between 1:00 pm and 2:00 pm.</small>\n"
 "            </div>\n"
 "            <h2>Special Events</h2>\n"
 "            <table style=\"border: 1px solid black;\">\n"
 "                <tr style=\"border: 1px solid black;\">\n"
-"                    <td class=\"text-center\" "
-"width=\"15%\"><strong>4/6</strong></td>\n"
-"                    <td class=\"text-center\" "
-"width=\"25%\"><strong>19h00</strong></td>\n"
+"                    <td class=\"text-center\" width=\"15%\"><strong>4/6</strong></td>\n"
+"                    <td class=\"text-center\" width=\"25%\"><strong>19h00</strong></td>\n"
 "                    <td><small>Barbecue Beer Event</small></td>\n"
 "                </tr>\n"
 "                <tr>\n"
@@ -778,18 +671,15 @@ msgid ""
 "                </div>\n"
 "            </div>\n"
 "            <div class=\"row\">\n"
-"                <small class=\"col-xs-3\" style=\"float: left; padding-"
-"right: 0px; padding-left: 0px;\">sponsored by</small>\n"
-"                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-"
-"left: 0px;\">\n"
+"                <small class=\"col-xs-3\" style=\"float: left; padding-right: 0px; padding-left: 0px;\">sponsored by</small>\n"
+"                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-left: 0px;\">\n"
 "                <span>\n"
-"                    <img class=\"img img-responsive\" "
-"src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n"
+"                    <img class=\"img img-responsive\" src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n"
 "                </span>\n"
 "                </div>\n"
 "            </div>\n"
 "        "
-msgstr ""
+msgstr "<h2>Хөтөлбөр</h2>\n            <div><strong>Бүртгэл</strong><small>  8:30 am-с эхлэнэ, Баасанд 9:00 am-с эхлэнэ</small></div>\n            <div>\n                <strong>Үдийн цай</strong><small> 1:00 pm - 2:00 pm хооронд.</small>\n            </div>\n            <h2>Тусгай арга хэмжээ</h2>\n            <table style=\"border: 1px solid black;\">\n                <tr style=\"border: 1px solid black;\">\n                    <td class=\"text-center\" width=\"15%\"><strong>4/6</strong></td>\n                    <td class=\"text-center\" width=\"25%\"><strong>19h00</strong></td>\n                    <td><small>Шорлог Пивоны арга хэмжээ</small></td>\n                </tr>\n                <tr>\n                    <td class=\"text-center\"><strong>5/6</strong></td>\n                    <td class=\"text-center\"><strong>18h30</strong></td>\n                    <td><small>Odoo шагналын ёслол</small></td>\n                </tr>\n            </table>\n            <br>\n            <div class=\"row\">\n                <div class=\"col-xs-5\">\n                <p>\n                    <i class=\"fa fa-twitter\"></i> #OpenDays\n                </p>\n                </div>\n                <div class=\"col-xs-6\">\n                <div class=\"small\">Wifi сүлжээ: opendays</div>\n                <div class=\"small\">Wifi нууц үг: odoo2014</div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <small class=\"col-xs-3\" style=\"float: left; padding-right: 0px; padding-left: 0px;\">ивээн тэтгэсэн</small>\n                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-left: 0px;\">\n                <span>\n                    <img class=\"img img-responsive\" src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n                </span>\n                </div>\n            </div>\n        "
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -797,14 +687,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "               Click to add a new event.\n"
 "             </p><p>\n"
-"               Odoo helps you schedule and efficiently organize your "
-"events:\n"
-"               track subscriptions and participations, automate the "
-"confirmation emails,\n"
+"               Odoo helps you schedule and efficiently organize your events:\n"
+"               track subscriptions and participations, automate the confirmation emails,\n"
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Шинэ арга хэмжээ үүсгэхдээ дарна уу.\n             </p><p>\n               Odoo нь арга хэмжээг оновчтойгоор товлох, зохион байгуулах,\n               бүртгэл болон оролцогчдыг хөтлөх, баталгаажуулах эмэйлийг  автоматжуулах,\n               тасалбар зарах зэрэгт тусладаг.\n             </p>\n           "
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -827,7 +715,7 @@ msgstr "Үйл явдалд оролцсон"
 #. module: event
 #: field:event.event,seats_available:0
 msgid "Available Seats"
-msgstr ""
+msgstr "Байгаа суудлууд"
 
 #. module: event
 #: view:event.confirm:event.view_event_confirm
@@ -847,8 +735,7 @@ msgid "Cancel Registration"
 msgstr "Цуцласан бүртгэл"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
+#: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
@@ -863,11 +750,10 @@ msgstr "Хэрэв холбогч нь илтгэгч бол энэ сонгол
 #: code:addons/event/event.py:219
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Хаах өдөр эхлэх өдөрөөс өмнө байж болохгүй."
 
 #. module: event
-#: field:event.event,company_id:0
-#: field:event.registration,company_id:0
+#: field:event.event,company_id:0 field:event.registration,company_id:0
 #: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,company_id:0
 msgid "Company"
@@ -876,7 +762,7 @@ msgstr "Компани"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Applications"
-msgstr ""
+msgstr "Бизнес Аппликэшний чуулган"
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -901,8 +787,7 @@ msgid "Confirm Registration"
 msgstr "Бүртгэлийг батлах"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: selection:event.event,state:0
+#: view:event.event:event.view_event_search selection:event.event,state:0
 #: view:event.registration:event.view_registration_search
 #: selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
@@ -926,20 +811,16 @@ msgid "Country"
 msgstr "Улс"
 
 #. module: event
-#: field:event.confirm,create_uid:0
-#: field:event.event,create_uid:0
-#: field:event.registration,create_uid:0
-#: field:event.type,create_uid:0
+#: field:event.confirm,create_uid:0 field:event.event,create_uid:0
+#: field:event.registration,create_uid:0 field:event.type,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: event
-#: field:event.confirm,create_date:0
-#: field:event.event,create_date:0
-#: field:event.registration,create_date:0
-#: field:event.type,create_date:0
+#: field:event.confirm,create_date:0 field:event.event,create_date:0
+#: field:event.registration,create_date:0 field:event.type,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -950,7 +831,7 @@ msgstr "Одоогийн бүртгэл"
 #: help:event.event,message_last_post:0
 #: help:event.registration,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
 
 #. module: event
 #: field:event.type,default_registration_max:0
@@ -968,8 +849,7 @@ msgid "Default Reply-To"
 msgstr "Үндсэн Хариулах"
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: field:event.event,description:0
+#: view:event.event:event.view_event_form field:event.event,description:0
 msgid "Description"
 msgstr "Тодорхойлолт"
 
@@ -1034,12 +914,12 @@ msgstr "Үйл явдлын батламжлах Имэйл"
 #. module: event
 #: field:report.event.registration,event_date:0
 msgid "Event Date"
-msgstr ""
+msgstr "Арга хэмжээний огноо"
 
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Event Description..."
-msgstr ""
+msgstr "Арга хэмжээний тайлбар..."
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -1049,12 +929,12 @@ msgstr "Үйл явдалын дэлгэрэнгүй"
 #. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Event Month"
-msgstr ""
+msgstr "Арга хэмжээний сар"
 
 #. module: event
 #: field:event.event,name:0
 msgid "Event Name"
-msgstr ""
+msgstr "Арга хэмжээний нэр"
 
 #. module: event
 #: view:event.event:event.view_event_calendar
@@ -1073,7 +953,7 @@ msgstr "Бүртгэгдсэн үйл ажиллагаа"
 #: code:addons/event/event.py:348
 #, python-format
 msgid "Event Registration confirmed."
-msgstr ""
+msgstr "Арга хэмжээний бүртгэл батлагдсан."
 
 #. module: event
 #: field:report.event.registration,user_id:0
@@ -1089,8 +969,7 @@ msgstr "Үйл явдлын төлөв"
 #. module: event
 #: view:event.event:event.view_event_search
 #: view:event.type:event.view_event_type_form
-#: view:event.type:event.view_event_type_tree
-#: field:event.type,name:0
+#: view:event.type:event.view_event_type_tree field:event.type,name:0
 #: model:ir.model,name:event.model_event_type
 #: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,event_type:0
@@ -1156,19 +1035,19 @@ msgstr "Дагагчид"
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Functional Webinar"
-msgstr ""
+msgstr "Функционалийн вебинар"
 
 #. module: event
 #: view:event.event:event.view_event_search
 #: view:event.registration:event.view_registration_search
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: event
 #: model:ir.module.category,description:event.module_category_event_management
 msgid "Helps you manage your Events."
-msgstr "Танд өөрийн үйл явдал, арга хэмжээг зохион байгуулахад туслана."
+msgstr "Танд өөрийн арга хэмжээг зохион байгуулахад туслана."
 
 #. module: event
 #: help:event.event,message_summary:0
@@ -1176,22 +1055,17 @@ msgstr "Танд өөрийн үйл явдал, арга хэмжээг зох�
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
-"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
+msgstr "Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: event
-#: field:event.confirm,id:0
-#: field:event.event,id:0
-#: field:event.registration,id:0
-#: field:event.type,id:0
+#: field:event.confirm,id:0 field:event.event,id:0
+#: field:event.registration,id:0 field:event.type,id:0
 #: field:report.event.registration,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
+#: help:event.event,message_unread:0 help:event.registration,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Хэрэв тэмдэглэгдсэн бол шинэ зурвас нь анхаарал татахыг шаардана."
 
@@ -1199,19 +1073,17 @@ msgstr "Хэрэв тэмдэглэгдсэн бол шинэ зурвас нь 
 #: help:event.event,state:0
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr ""
+msgstr "Хэрэв арга хэмжээ үүсгэгдэн бол төлөв нь 'Ноорог' байна. Хэрэв арга хэмжээг тодорхой өдөр батласан бол төлөв нь 'Батласан' болно. Хэрэв арга хэмжээ дууссан бол төлөв нь 'Хийгдсэн' болно. Хэрэв арга хэмжээг цуцласан бол төлөв нь 'Цуцлагдсан' болно."
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
 msgid ""
 "If you set an email template, each participant will receive this email "
 "announcing the confirmation of the event."
-msgstr ""
-"Хэрэв эмэйл үлгэрийг тохируулбал оролцогч бүр үйл явдал баталгаажсан тухай "
-"эмэйл зарыг хүлээн авах болно."
+msgstr "Хэрэв эмэйл үлгэрийг тохируулбал оролцогч бүр арга хэмжээ баталгаажсан тухай эмэйл зарыг хүлээн авах болно."
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -1224,53 +1096,42 @@ msgstr "Дагагч эсэх"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr ""
-"Энэ үйл явдлыг сонгоход энэхүү баталгаажуулах мэйл утгыг анхны утгаараа "
-"сонгоно"
+msgstr "Энэ үйл явдлыг сонгоход энэхүү баталгаажуулах мэйл утгыг анхны утгаараа сонгоно"
 
 #. module: event
 #: help:event.type,default_email_registration:0
 msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
-msgstr ""
-"Энэ үйл явдлыг сонгоход энэхүү баталгааны эмэйл утгыг анхныхаараа сонгох "
-"болно."
+msgstr "Энэ үйл явдлыг сонгоход энэхүү баталгааны эмэйл утгыг анхныхаараа сонгох болно."
 
 #. module: event
 #: help:event.type,default_registration_max:0
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
-"Үйл явдлыг сонгоход энэ нь энэхүү хамгийн их утгыг анхныхаараа сонгох болно."
+msgstr "Үйл явдлыг сонгоход энэ нь энэхүү хамгийн их утгыг анхныхаараа сонгох болно."
 
 #. module: event
 #: help:event.type,default_registration_min:0
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-"Энэ үйл явдлыг сонгоход энэ нь энэхүү хамгийн бага утгыг анхныхаараа сонгох "
-"болно"
+msgstr "Энэ үйл явдлыг сонгоход энэ нь энэхүү хамгийн бага утгыг анхныхаараа сонгох болно"
 
 #. module: event
 #: field:event.event,message_last_post:0
 #: field:event.registration,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Сүүлийн зурвасын огноо"
 
 #. module: event
-#: field:event.confirm,write_uid:0
-#: field:event.event,write_uid:0
-#: field:event.registration,write_uid:0
-#: field:event.type,write_uid:0
+#: field:event.confirm,write_uid:0 field:event.event,write_uid:0
+#: field:event.registration,write_uid:0 field:event.type,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: event
-#: field:event.confirm,write_date:0
-#: field:event.event,write_date:0
-#: field:event.registration,write_date:0
-#: field:event.type,write_date:0
+#: field:event.confirm,write_date:0 field:event.event,write_date:0
+#: field:event.registration,write_date:0 field:event.type,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: event
 #: field:event.event,address_id:0
@@ -1290,29 +1151,27 @@ msgstr "Менежер"
 #. module: event
 #: field:report.event.registration,seats_max:0
 msgid "Max Seats"
-msgstr ""
+msgstr "Хамгийн их суудал"
 
 #. module: event
 #: field:event.event,seats_max:0
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "Хамгийн их боломжит суудлууд"
 
 #. module: event
-#: field:event.event,message_ids:0
-#: field:event.registration,message_ids:0
+#: field:event.event,message_ids:0 field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Зурвас"
 
 #. module: event
-#: help:event.event,message_ids:0
-#: help:event.registration,message_ids:0
+#: help:event.event,message_ids:0 help:event.registration,message_ids:0
 msgid "Messages and communication history"
 msgstr "Зурвас болон харилцсан түүх"
 
 #. module: event
 #: field:event.event,seats_min:0
 msgid "Minimum Reserved Seats"
-msgstr ""
+msgstr "Хамгийн бага захиалагдсан суудал"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1326,8 +1185,7 @@ msgid "My Registrations"
 msgstr "Миний бүртгэлүүд"
 
 #. module: event
-#: view:event.event:event.view_event_tree
-#: field:event.registration,name:0
+#: view:event.event:event.view_event_tree field:event.registration,name:0
 msgid "Name"
 msgstr "Нэр"
 
@@ -1349,11 +1207,10 @@ msgid "New registration confirmed: %s."
 msgstr "Шинэ бүртгэл баталгаажлаа: %s."
 
 #. module: event
-#: code:addons/event/event.py:213
-#: code:addons/event/event.py:337
+#: code:addons/event/event.py:213 code:addons/event/event.py:337
 #, python-format
 msgid "No more available seats."
-msgstr ""
+msgstr "Өөр суудал алга."
 
 #. module: event
 #: view:event.event:event.view_event_kanban
@@ -1363,7 +1220,7 @@ msgstr "Тасалбар алга."
 #. module: event
 #: field:report.event.registration,nbevent:0
 msgid "Number of Events"
-msgstr ""
+msgstr "Арга хэмжээний тоо"
 
 #. module: event
 #: field:event.registration,nb_register:0
@@ -1373,12 +1230,12 @@ msgstr "Оролцогчийн тоо"
 #. module: event
 #: field:event.event,seats_used:0
 msgid "Number of Participations"
-msgstr ""
+msgstr "Оролцогчийн тоо"
 
 #. module: event
 #: field:report.event.registration,nbregistration:0
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Бүртгэлийн тоо"
 
 #. module: event
 #: view:event.event:event.view_event_kanban
@@ -1388,7 +1245,7 @@ msgstr "Зөвхөн"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
-msgstr ""
+msgstr "Лос Анжелосын нээлттэй өдөрлөг"
 
 #. module: event
 #: model:ir.actions.client,name:event.action_client_event_menu
@@ -1403,7 +1260,7 @@ msgstr "Зохион байгуулагч"
 #. module: event
 #: field:event.event,organizer_id:0
 msgid "Organizer"
-msgstr ""
+msgstr "Зохион байгуулагч"
 
 #. module: event
 #: view:event.registration:event.view_registration_search
@@ -1441,7 +1298,7 @@ msgstr "Бүртгэх"
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Register with this event"
-msgstr "Энэ үйл явдалтай бүртгэх"
+msgstr "Энэ арга хэмжээтэй бүртгэх"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -1465,12 +1322,12 @@ msgstr "Бүртгүүлсэн огноо"
 #. module: event
 #: view:event.registration:event.view_registration_search
 msgid "Registration Day"
-msgstr ""
+msgstr "Бүртгэлийн өдөр"
 
 #. module: event
 #: view:event.registration:event.view_registration_search
 msgid "Registration Month"
-msgstr ""
+msgstr "Бүртгэлийн сар"
 
 #. module: event
 #: field:report.event.registration,registration_state:0
@@ -1483,8 +1340,7 @@ msgid "Registration contact"
 msgstr "Бүртгэлийн холбогч"
 
 #. module: event
-#: view:event.event:event.view_event_form
-#: field:event.event,registration_ids:0
+#: view:event.event:event.view_event_form field:event.event,registration_ids:0
 #: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.ui.menu,name:event.menu_action_registration
@@ -1509,7 +1365,7 @@ msgstr "Хариулах Эмэйл"
 #. module: event
 #: field:event.event,seats_reserved:0
 msgid "Reserved Seats"
-msgstr ""
+msgstr "Захиалагдсан суудлууд"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1560,11 +1416,10 @@ msgstr "Эхлэл огноо"
 #. module: event
 #: view:event.event:event.view_event_search
 msgid "Start Month"
-msgstr ""
+msgstr "Эхлэх Сар"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: field:event.event,state:0
+#: view:event.event:event.view_event_search field:event.event,state:0
 #: view:event.registration:event.view_registration_search
 #: field:event.registration,state:0
 msgid "Status"
@@ -1590,19 +1445,16 @@ msgstr "Хураангуй"
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Technical Training"
-msgstr ""
+msgstr "Техникийн сургалт"
 
 #. module: event
 #: help:event.event,reply_to:0
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr ""
-"Үйл явдал болон бүртгэл баталгаажихад үйл явдлын зохион байгуулагчийн эмэйл "
-"хаяг нь энд 'Хариулах' гэсэн талбар гарахаар энд тавигдана. Хэрэв эмэйл "
-"үүдийг хэрэглэдэг бол тэр хаягаа мөн энд тавьж бас болно."
+msgstr "Үйл явдал болон бүртгэл баталгаажихад үйл явдлын зохион байгуулагчийн эмэйл хаяг нь энд 'Хариулах' гэсэн талбар гарахаар энд тавигдана. Хэрэв эмэйл үүдийг хэрэглэдэг бол тэр хаягаа мөн энд тавьж бас болно."
 
 #. module: event
 #: help:event.type,default_reply_to:0
@@ -1610,32 +1462,27 @@ msgid ""
 "The email address of the organizer which is put in the 'Reply-To' of all "
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
-msgstr ""
-"Үйл явдал болон бүртгэлийн үед автомата илгээгдэх имэйлийн 'Хариулах' гэдэг "
-"дээр үйл явдал зохион байгуулагчийн хаяг тавигддаг. Түүнчлэн хэрэв эмэйл "
-"үүдийн хаяг байгаа бол түүнийгээ тавих бас боломжтой."
+msgstr "Арга хэмжээ болон бүртгэлийн үед автомата илгээгдэх имэйлийн 'Хариулах' гэдэг дээр арга хэмжээ зохион байгуулагчийн хаяг тавигддаг. Түүнчлэн хэрэв эмэйл үүдийн хаяг байгаа бол түүнийгээ тавих бас боломжтой."
 
 #. module: event
 #: help:event.event,seats_max:0
 msgid ""
 "The maximum registration level is equal to the sum of the maximum "
-"registration of event ticket. If you have too much registrations you are not "
-"able to confirm your event. (0 to ignore this rule )"
-msgstr ""
+"registration of event ticket. If you have too much registrations you are not"
+" able to confirm your event. (0 to ignore this rule )"
+msgstr "Хамгийн их бүртгэлийн түвшин нь арга хэмжээний хамгийн их бүртгэлийн нийлбэртэй тэнцүү. Хэрэв танд хэт их бүртгэл байгаа бол арга хэмжээг батлах боломжгүй. (0 байвал энэ дүрмийг хэрэгсэхгүй )"
 
 #. module: event
 #: help:event.event,email_registration_id:0
 msgid ""
-"This field contains the template of the mail that will be automatically sent "
-"each time a registration for this event is confirmed."
-msgstr ""
-"Энэ талбар нь энэ үйл явдлын бүртгэл баталгаажих бүрт илгээгдэх имэйлийн "
-"үлгэрийг агуулна."
+"This field contains the template of the mail that will be automatically sent"
+" each time a registration for this event is confirmed."
+msgstr "Энэ талбар нь энэ үйл явдлын бүртгэл баталгаажих бүрт илгээгдэх имэйлийн үлгэрийг агуулна."
 
 #. module: event
 #: field:event.event,date_tz:0
 msgid "Timezone"
-msgstr ""
+msgstr "Цагийн бүс"
 
 #. module: event
 #: field:event.event,type:0
@@ -1649,8 +1496,7 @@ msgid "Types of Events"
 msgstr "Үйл явдлын төрөлүүд"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: selection:event.event,state:0
+#: view:event.event:event.view_event_search selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Батлагаажаагүй"
@@ -1658,11 +1504,10 @@ msgstr "Батлагаажаагүй"
 #. module: event
 #: field:event.event,seats_unconfirmed:0
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Батлагдаагүй урьдчилж захиалсан суудал"
 
 #. module: event
-#: view:event.event:event.view_event_search
-#: field:event.event,message_unread:0
+#: view:event.event:event.view_event_search field:event.event,message_unread:0
 #: view:event.registration:event.view_registration_search
 #: field:event.registration,message_unread:0
 msgid "Unread Messages"
@@ -1694,9 +1539,7 @@ msgstr "Хэрэглэгч"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr ""
-"Анхааруулга: Энэ үйл явдал нь хамгийн бага хязгаартаа хүрээгүй байна. "
-"Батлахдаа та итгэлтэй байна уу?"
+msgstr "Анхааруулга: Энэ арга хэмжээ нь хамгийн бага хязгаартаа хүрээгүй байна. Батлахдаа та итгэлтэй байна уу?"
 
 #. module: event
 #: help:event.event,seats_min:0
@@ -1704,10 +1547,7 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
-"Үйл явдал бүрт хамгийн бага бүртгэлийн түвшинг тодорхойлж болно. Хэрэв "
-"хангалттай бүртгүүлэгчгүй бол үйл явдлыг батлах боломжгүй байна. (0-г тавьж "
-"энэ дүрмийг хэрэгсэхгүй болгоно)"
+msgstr "Үйл явдал бүрт хамгийн бага бүртгэлийн түвшинг тодорхойлж болно. Хэрэв хангалттай бүртгүүлэгчгүй бол үйл явдлыг батлах боломжгүй байна. (0-г тавьж энэ дүрмийг хэрэгсэхгүй болгоно)"
 
 #. module: event
 #: code:addons/event/event.py:229
@@ -1715,15 +1555,13 @@ msgstr ""
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
-"Та энэ үйл явдалд 'Оролцсон' гэснээр бүртгүүлсэн байна. Хэрэв энэ үйл явдлыг "
-"цуцлахыг хүсч байвал ноорог болгоно уу."
+msgstr "Та энэ арга хэмжээнд 'Оролцсон' гэснээр бүртгүүлсэн байна. Хэрэв энэ арга хэмжээг цуцлахыг хүсч байвал ноорог болгоно уу."
 
 #. module: event
 #: code:addons/event/event.py:364
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr "Энэ үйлдлийг хийхийн тулд үйл явдал эхлэх өдөрийг хүлээх хэрэгтэй."
+msgstr "Энэ үйлдлийг хийхийн тулд арга хэмжээ эхлэх өдөрийг хүлээх хэрэгтэй."
 
 #. module: event
 #: model:email.template,subject:event.confirmation_event
@@ -1750,6 +1588,3 @@ msgstr "тасалбар"
 #: view:event.event:event.view_event_kanban
 msgid "tickets"
 msgstr "тасалбарууд"
-
-#~ msgid "Participant / Contact"
-#~ msgstr "Оролцогч / Холбогч"

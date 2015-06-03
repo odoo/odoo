@@ -129,6 +129,12 @@ class purchase_order(osv.osv):
             result[line.order_id.id] = True
         return result.keys()
 
+    def _get_purchase_order(self, cr, uid, ids, context=None):
+        result = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            result[order.id] = True
+        return result.keys()
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
@@ -274,6 +280,7 @@ class purchase_order(osv.osv):
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
                 'purchase.order.line': (_get_order, ['date_planned'], 10),
+                'purchase.order': (_get_purchase_order, ['order_line'], 10),
             }
         ),
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
@@ -1029,7 +1036,7 @@ class purchase_order_line(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
-            if line.state not in ['draft', 'cancel']:
+            if line.order_id.state in ['approved', 'done'] and line.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
@@ -1545,7 +1552,7 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
+        for order in purchase_order_obj.browse(cr, user_id, po_ids, context=context):
             purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
             invoiced = []
             shipped = True
@@ -1558,8 +1565,8 @@ class account_invoice(osv.Model):
                 if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
                     invoiced.append(po_line.id)
             if invoiced and shipped:
-                self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
-            workflow.trg_write(uid, 'purchase.order', order.id, cr)
+                self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})
+            workflow.trg_write(user_id, 'purchase.order', order.id, cr)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

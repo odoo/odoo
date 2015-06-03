@@ -1,21 +1,22 @@
-# Persian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-12-25 18:13+0000\n"
-"Last-Translator: ErfanJeddy <erfanjeddy@yahoo.com>\n"
-"Language-Team: Persian <fa@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Persian (http://www.transifex.com/projects/p/odoo-8/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:26+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
@@ -91,21 +92,18 @@ msgstr ""
 #. module: stock_account
 #: help:stock.inventory,period_id:0
 msgid ""
-"Choose the accounting period where you want to value the stock moves created "
-"by the inventory instead of the default one (chosen by the inventory end "
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
 "date)"
 msgstr ""
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid ""
-"Choose the date for which you want to get the stock valuation of your "
-"products.\n"
+"Choose the date for which you want to get the stock valuation of your products.\n"
 "\n"
-"                        This will filter the stock operation that weren't "
-"done at the selected date, to retreive the quantity\n"
-"                        you had, and gives you the inventory value according "
-"to the standard price used at that time."
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
 msgstr ""
 
 #. module: stock_account
@@ -224,21 +222,16 @@ msgid "Group by partner"
 msgstr "گروه‌بندی بر اساس شریک تجاری"
 
 #. module: stock_account
-#: field:stock.change.standard.price,id:0
-#: field:stock.history,id:0
-#: field:stock.invoice.onshipping,id:0
-#: field:wizard.valuation.history,id:0
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
 msgid "ID"
 msgstr "شناسه"
 
 #. module: stock_account
 #: help:stock.change.standard.price,new_price:0
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
 
 #. module: stock_account
@@ -255,8 +248,8 @@ msgstr ""
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
 msgstr ""
 
 #. module: stock_account
@@ -281,8 +274,7 @@ msgid "Inventory Value"
 msgstr ""
 
 #. module: stock_account
-#: field:procurement.order,invoice_state:0
-#: field:stock.move,invoice_state:0
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
 msgstr "کنترل فاکتور"
@@ -383,8 +375,7 @@ msgstr ""
 #: code:addons/stock_account/product.py:83
 #, python-format
 msgid ""
-"One of the following information is missing on the product or product "
-"category and prevents the accounting valuation entries to be created:\n"
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
 "    Product: %s\n"
 "    Stock Input Account: %s\n"
 "    Stock Output Account: %s\n"
@@ -511,12 +502,9 @@ msgstr ""
 #. module: stock_account
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
@@ -580,8 +568,7 @@ msgstr ""
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
-"This allows to automatically launch the invoicing wizard if the delivery is "
-"to be invoiced when you send or deliver goods.\n"
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
 msgstr ""
 
@@ -641,8 +628,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
+"value for all products in this category. It can also directly be set on each"
+" product"
 msgstr ""
 
 #. module: stock_account
@@ -660,8 +647,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
+"default value for all products in this category. It can also directly be set"
+" on each product"
 msgstr ""
 
 #. module: stock_account
@@ -702,4 +689,4 @@ msgstr "_اعمال"
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "or"
-msgstr ""
+msgstr "یا"

@@ -1,21 +1,22 @@
-# Thai translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Thai <th@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Thai (http://www.transifex.com/projects/p/odoo-8/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:57+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:262
@@ -29,8 +30,7 @@ msgid "# Bill of Material"
 msgstr ""
 
 #. module: mrp
-#: field:product.product,mo_count:0
-#: field:product.template,mo_count:0
+#: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:323
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (สำเนา)"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:977
@@ -49,11 +49,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
-"'Consume only' mode will only consume the products with the quantity "
-"selected.\n"
-"'Consume & Produce' mode will consume as well as produce the products with "
-"the quantity selected and it will finish the production order when total "
-"ordered quantities are produced."
+"'Consume only' mode will only consume the products with the quantity selected.\n"
+"'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
 msgstr ""
 
 #. module: mrp
@@ -62,8 +59,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a component to a bill of material.\n"
 "              </p><p>\n"
-"                Bills of materials components are components and by-"
-"products\n"
+"                Bills of materials components are components and by-products\n"
 "                used to create master bills of materials.  Use this menu to\n"
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
@@ -78,8 +74,7 @@ msgid ""
 "              </p><p>\n"
 "                Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as "
-"capacity\n"
+"                considered as units for task assignation as well as capacity\n"
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
@@ -91,10 +86,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a bill of material. \n"
 "              </p><p>\n"
-"                Bills of Materials allow you to define the list of required "
-"raw\n"
-"                materials used to make a finished product; through a "
-"manufacturing\n"
+"                Bills of Materials allow you to define the list of required raw\n"
+"                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products.\n"
 "              </p><p>\n"
 "                Odoo uses these BoMs to automatically propose manufacturing\n"
@@ -109,17 +102,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a group of properties.\n"
 "              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
+"                Define specific property groups that can be assigned to your\n"
 "                bill of materials and sales orders. Properties allows Odoo\n"
-"                to automatically select the right bill of materials "
-"according\n"
+"                to automatically select the right bill of materials according\n"
 "                to properties selected in the sales order by salesperson.\n"
 "              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
+"                For instance, in the property group \"Warranty\", you an have\n"
+"                two properties: 1 year warranty, 3 years warranty. Depending\n"
 "                on the propoerties selected in the sales order, Odoo will\n"
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
@@ -135,10 +124,8 @@ msgid ""
 "                A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
@@ -151,12 +138,10 @@ msgid ""
 "                Click to create a new property.\n"
 "              </p><p>\n"
 "                The Properties in Odoo are used to select the right bill of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
+"                materials for manufacturing a product when you have different\n"
 "                ways of building the same product.  You can assign several\n"
 "                properties to each bill of materials.  When a salesperson\n"
-"                creates a sales order, they can relate it to several "
-"properties\n"
+"                creates a sales order, they can relate it to several properties\n"
 "                and Odoo will automatically select the BoM to use according\n"
 "                the needs.\n"
 "              </p>\n"
@@ -170,8 +155,7 @@ msgid ""
 "                Click to create a routing.\n"
 "              </p><p>\n"
 "                Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers "
-"in\n"
+"                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials.\n"
 "              </p>\n"
@@ -187,10 +171,8 @@ msgid ""
 "                A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
@@ -207,10 +189,9 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,active:0
-#: field:mrp.routing,active:0
+#: field:mrp.bom,active:0 field:mrp.routing,active:0
 msgid "Active"
-msgstr ""
+msgstr "เปิดใช้งาน"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:68
@@ -222,8 +203,7 @@ msgstr ""
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra "
-"products on BoMs !"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
 
 #. module: mrp
@@ -272,12 +252,12 @@ msgstr ""
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Apply"
-msgstr ""
+msgstr "นำไปใช้"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
 msgid "Approve"
-msgstr ""
+msgstr "อนุมัติ"
 
 #. module: mrp
 #: help:product.template,produce_delay:0
@@ -334,8 +314,7 @@ msgid "Bill Of Material"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
 msgstr ""
@@ -418,7 +397,7 @@ msgstr ""
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Cancel"
-msgstr ""
+msgstr "ยกเลิก"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -428,7 +407,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ถูกยกเลิก"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:183
@@ -489,26 +468,23 @@ msgstr ""
 #. module: mrp
 #: field:mrp.routing,code:0
 msgid "Code"
-msgstr ""
+msgstr "รหัส"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "บริษัท"
 
 #. module: mrp
-#: field:mrp.bom,company_id:0
-#: field:mrp.production,company_id:0
-#: field:mrp.routing,company_id:0
-#: field:mrp.routing.workcenter,company_id:0
+#: field:mrp.bom,company_id:0 field:mrp.production,company_id:0
+#: field:mrp.routing,company_id:0 field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 #: field:report.mrp.inout,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "บริษัท"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.mrp_bom_component_tree_view
 #: view:product.template:mrp.product_template_search_view_procurment
@@ -536,7 +512,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "ตั้งค่า"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -547,7 +523,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Confirm"
-msgstr ""
+msgstr "ยืนยัน"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -584,8 +560,7 @@ msgstr ""
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_lines2:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.production,move_lines2:0 view:website:mrp.report_mrporder
 msgid "Consumed Products"
 msgstr ""
 
@@ -623,46 +598,34 @@ msgid "Costing Information"
 msgstr ""
 
 #. module: mrp
-#: field:change.production.qty,create_uid:0
-#: field:mrp.bom,create_uid:0
-#: field:mrp.bom.line,create_uid:0
-#: field:mrp.config.settings,create_uid:0
+#: field:change.production.qty,create_uid:0 field:mrp.bom,create_uid:0
+#: field:mrp.bom.line,create_uid:0 field:mrp.config.settings,create_uid:0
 #: field:mrp.product.produce,create_uid:0
 #: field:mrp.product.produce.line,create_uid:0
-#: field:mrp.product_price,create_uid:0
-#: field:mrp.production,create_uid:0
+#: field:mrp.product_price,create_uid:0 field:mrp.production,create_uid:0
 #: field:mrp.production.product.line,create_uid:0
 #: field:mrp.production.workcenter.line,create_uid:0
-#: field:mrp.property,create_uid:0
-#: field:mrp.property.group,create_uid:0
-#: field:mrp.routing,create_uid:0
-#: field:mrp.routing.workcenter,create_uid:0
-#: field:mrp.workcenter,create_uid:0
-#: field:mrp.workcenter.load,create_uid:0
+#: field:mrp.property,create_uid:0 field:mrp.property.group,create_uid:0
+#: field:mrp.routing,create_uid:0 field:mrp.routing.workcenter,create_uid:0
+#: field:mrp.workcenter,create_uid:0 field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "สร้างโดย"
 
 #. module: mrp
-#: field:change.production.qty,create_date:0
-#: field:mrp.bom,create_date:0
-#: field:mrp.bom.line,create_date:0
-#: field:mrp.config.settings,create_date:0
+#: field:change.production.qty,create_date:0 field:mrp.bom,create_date:0
+#: field:mrp.bom.line,create_date:0 field:mrp.config.settings,create_date:0
 #: field:mrp.product.produce,create_date:0
 #: field:mrp.product.produce.line,create_date:0
-#: field:mrp.product_price,create_date:0
-#: field:mrp.production,create_date:0
+#: field:mrp.product_price,create_date:0 field:mrp.production,create_date:0
 #: field:mrp.production.product.line,create_date:0
 #: field:mrp.production.workcenter.line,create_date:0
-#: field:mrp.property,create_date:0
-#: field:mrp.property.group,create_date:0
-#: field:mrp.routing,create_date:0
-#: field:mrp.routing.workcenter,create_date:0
-#: field:mrp.workcenter,create_date:0
-#: field:mrp.workcenter.load,create_date:0
+#: field:mrp.property,create_date:0 field:mrp.property.group,create_date:0
+#: field:mrp.routing,create_date:0 field:mrp.routing.workcenter,create_date:0
+#: field:mrp.workcenter,create_date:0 field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "สร้างเมื่อ"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -676,8 +639,7 @@ msgid "Cycles Cost"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,message_last_post:0
-#: help:mrp.production,message_last_post:0
+#: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
 msgstr ""
@@ -699,13 +661,11 @@ msgid "Define manufacturers on products "
 msgstr ""
 
 #. module: mrp
-#: field:mrp.property,description:0
-#: field:mrp.property.group,description:0
-#: field:mrp.routing,note:0
-#: field:mrp.routing.workcenter,note:0
+#: field:mrp.property,description:0 field:mrp.property.group,description:0
+#: field:mrp.routing,note:0 field:mrp.routing.workcenter,note:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
-msgstr ""
+msgstr "รายละเอียด"
 
 #. module: mrp
 #: help:mrp.workcenter,note:0
@@ -727,22 +687,21 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Done"
-msgstr ""
+msgstr "เสร็จสมบูรณ์"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
 msgid "End Date"
-msgstr ""
+msgstr "วันสิ้นสุด"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:679
-#: code:addons/mrp/stock.py:183
+#: code:addons/mrp/mrp.py:679 code:addons/mrp/stock.py:183
 #: code:addons/mrp/stock.py:259
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "ผิดพลาด!"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -779,7 +738,7 @@ msgstr ""
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "ติดตาม"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -796,12 +755,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
 msgid "General Account"
-msgstr ""
+msgstr "บัญชีทั่วไป"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 msgid "General Information"
-msgstr ""
+msgstr "ข้อมูลทั่วไป"
 
 #. module: mrp
 #: help:mrp.bom,sequence:0
@@ -827,7 +786,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr ""
+msgstr "จัดกลุ่มโดย"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -836,11 +795,10 @@ msgstr ""
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Group By..."
-msgstr ""
+msgstr "จัดกลุ่มตาม..."
 
 #. module: mrp
-#: help:mrp.bom,message_summary:0
-#: help:mrp.production,message_summary:0
+#: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
 #: help:mrp.production.workcenter.line,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
@@ -859,28 +817,18 @@ msgid "Hourly Cost"
 msgstr ""
 
 #. module: mrp
-#: field:change.production.qty,id:0
-#: field:mrp.bom,id:0
-#: field:mrp.bom.line,id:0
-#: field:mrp.config.settings,id:0
-#: field:mrp.product.produce,id:0
-#: field:mrp.product.produce.line,id:0
-#: field:mrp.product_price,id:0
-#: field:mrp.production,id:0
-#: field:mrp.production.product.line,id:0
-#: field:mrp.production.workcenter.line,id:0
-#: field:mrp.property,id:0
-#: field:mrp.property.group,id:0
-#: field:mrp.routing,id:0
-#: field:mrp.routing.workcenter,id:0
-#: field:mrp.workcenter,id:0
-#: field:mrp.workcenter.load,id:0
-#: field:report.mrp.inout,id:0
+#: field:change.production.qty,id:0 field:mrp.bom,id:0 field:mrp.bom.line,id:0
+#: field:mrp.config.settings,id:0 field:mrp.product.produce,id:0
+#: field:mrp.product.produce.line,id:0 field:mrp.product_price,id:0
+#: field:mrp.production,id:0 field:mrp.production.product.line,id:0
+#: field:mrp.production.workcenter.line,id:0 field:mrp.property,id:0
+#: field:mrp.property.group,id:0 field:mrp.routing,id:0
+#: field:mrp.routing.workcenter,id:0 field:mrp.workcenter,id:0
+#: field:mrp.workcenter.load,id:0 field:report.mrp.inout,id:0
 #: field:report.mrp.report_mrpbomstructure,id:0
-#: field:report.workcenter.load,id:0
-#: field:stock.move.consume,id:0
+#: field:report.workcenter.load,id:0 field:stock.move.consume,id:0
 msgid "ID"
-msgstr ""
+msgstr "รหัส"
 
 #. module: mrp
 #: help:mrp.bom,product_id:0
@@ -889,11 +837,10 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,message_unread:0
-#: help:mrp.production,message_unread:0
+#: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "ถ้าการตรวจสอบข้อความใหม่ให้ระบุความสนใจของคุณ"
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -926,19 +873,18 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:289
-#: code:addons/mrp/mrp.py:315
+#: code:addons/mrp/mrp.py:289 code:addons/mrp/mrp.py:315
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "การกระทำไม่ถูกต้อง!"
 
 #. module: mrp
 #: field:mrp.bom,message_is_follower:0
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "เป็นผู้ติดตาม"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -949,53 +895,40 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_last_post:0
-#: field:mrp.production,message_last_post:0
+#: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
 msgstr ""
 
 #. module: mrp
-#: field:change.production.qty,write_uid:0
-#: field:mrp.bom,write_uid:0
-#: field:mrp.bom.line,write_uid:0
-#: field:mrp.config.settings,write_uid:0
+#: field:change.production.qty,write_uid:0 field:mrp.bom,write_uid:0
+#: field:mrp.bom.line,write_uid:0 field:mrp.config.settings,write_uid:0
 #: field:mrp.product.produce,write_uid:0
 #: field:mrp.product.produce.line,write_uid:0
-#: field:mrp.product_price,write_uid:0
-#: field:mrp.production,write_uid:0
+#: field:mrp.product_price,write_uid:0 field:mrp.production,write_uid:0
 #: field:mrp.production.product.line,write_uid:0
 #: field:mrp.production.workcenter.line,write_uid:0
-#: field:mrp.property,write_uid:0
-#: field:mrp.property.group,write_uid:0
-#: field:mrp.routing,write_uid:0
-#: field:mrp.routing.workcenter,write_uid:0
-#: field:mrp.workcenter,write_uid:0
-#: field:mrp.workcenter.load,write_uid:0
+#: field:mrp.property,write_uid:0 field:mrp.property.group,write_uid:0
+#: field:mrp.routing,write_uid:0 field:mrp.routing.workcenter,write_uid:0
+#: field:mrp.workcenter,write_uid:0 field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "อัพเดทครั้งสุดท้ายโดย"
 
 #. module: mrp
-#: field:change.production.qty,write_date:0
-#: field:mrp.bom,write_date:0
-#: field:mrp.bom.line,write_date:0
-#: field:mrp.config.settings,write_date:0
+#: field:change.production.qty,write_date:0 field:mrp.bom,write_date:0
+#: field:mrp.bom.line,write_date:0 field:mrp.config.settings,write_date:0
 #: field:mrp.product.produce,write_date:0
 #: field:mrp.product.produce.line,write_date:0
-#: field:mrp.product_price,write_date:0
-#: field:mrp.production,write_date:0
+#: field:mrp.product_price,write_date:0 field:mrp.production,write_date:0
 #: field:mrp.production.product.line,write_date:0
 #: field:mrp.production.workcenter.line,write_date:0
-#: field:mrp.property,write_date:0
-#: field:mrp.property.group,write_date:0
-#: field:mrp.routing,write_date:0
-#: field:mrp.routing.workcenter,write_date:0
-#: field:mrp.workcenter,write_date:0
-#: field:mrp.workcenter.load,write_date:0
+#: field:mrp.property,write_date:0 field:mrp.property.group,write_date:0
+#: field:mrp.routing,write_date:0 field:mrp.routing.workcenter,write_date:0
+#: field:mrp.workcenter,write_date:0 field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1005,7 +938,7 @@ msgstr ""
 #. module: mrp
 #: field:stock.move.consume,location_id:0
 msgid "Location"
-msgstr ""
+msgstr "สถานที่"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -1018,8 +951,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: mrp
-#: field:mrp.product.produce,lot_id:0
-#: field:mrp.product.produce.line,lot_id:0
+#: field:mrp.product.produce,lot_id:0 field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
 msgstr ""
@@ -1042,11 +974,10 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr ""
+msgstr "ผู้จัดการ"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:33
-#: code:addons/mrp/stock.py:256
+#: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
 msgstr ""
@@ -1067,11 +998,10 @@ msgstr ""
 #: view:product.product:mrp.product_product_form_view_bom_button
 #: view:product.template:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
-msgstr ""
+msgstr "การผลิต"
 
 #. module: mrp
-#: field:mrp.bom,product_efficiency:0
-#: field:mrp.bom.line,product_efficiency:0
+#: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
 msgid "Manufacturing Efficiency"
 msgstr ""
 
@@ -1154,23 +1084,21 @@ msgid "Master Data"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_ids:0
-#: field:mrp.production,message_ids:0
+#: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
 #: field:mrp.production.workcenter.line,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "ข้อความ"
 
 #. module: mrp
-#: help:mrp.bom,message_ids:0
-#: help:mrp.production,message_ids:0
+#: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "ข้อความและประวัติการสื่อสาร"
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "โหมด"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
@@ -1178,20 +1106,17 @@ msgid "Mrp Workcenter"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,name:0
-#: field:mrp.production.product.line,name:0
-#: view:mrp.property:mrp.view_mrp_property_search
-#: field:mrp.property,name:0
-#: field:mrp.routing,name:0
-#: field:mrp.routing.workcenter,name:0
+#: field:mrp.bom,name:0 field:mrp.production.product.line,name:0
+#: view:mrp.property:mrp.view_mrp_property_search field:mrp.property,name:0
+#: field:mrp.routing,name:0 field:mrp.routing.workcenter,name:0
 #: view:website:mrp.report_mrporder
 msgid "Name"
-msgstr ""
+msgstr "ชื่อ"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "New"
-msgstr ""
+msgstr "ใหม่"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:127
@@ -1210,11 +1135,10 @@ msgid "No. Of Hours"
 msgstr ""
 
 #. module: mrp
-#: selection:mrp.bom,type:0
-#: selection:mrp.bom.line,type:0
+#: selection:mrp.bom,type:0 selection:mrp.bom.line,type:0
 #: selection:mrp.production,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "ปกติ"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1229,7 +1153,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Notes"
-msgstr ""
+msgstr "บันทึกย่อ"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
@@ -1240,8 +1164,7 @@ msgstr ""
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
-#: field:mrp.routing.workcenter,hour_nbr:0
-#: field:report.workcenter.load,hour:0
+#: field:mrp.routing.workcenter,hour_nbr:0 field:report.workcenter.load,hour:0
 msgid "Number of Hours"
 msgstr ""
 
@@ -1267,7 +1190,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr ""
+msgstr "ปฏิบัติการ"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -1302,7 +1225,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Pending"
-msgstr ""
+msgstr "รอดำเนินการ"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1343,7 +1266,7 @@ msgstr ""
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
 msgid "Print"
-msgstr ""
+msgstr "พิมพ์"
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1358,12 +1281,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "ระดับความสำคัญ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "จัดซื้อ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
@@ -1390,18 +1313,15 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: field:mrp.bom,product_tmpl_id:0
+#: view:mrp.bom:mrp.view_mrp_bom_filter field:mrp.bom,product_tmpl_id:0
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
-#: field:mrp.bom.line,product_id:0
-#: field:mrp.product.produce.line,product_id:0
+#: field:mrp.bom.line,product_id:0 field:mrp.product.produce.line,product_id:0
 #: view:mrp.production:mrp.view_mrp_production_filter
 #: field:mrp.production,product_id:0
 #: field:mrp.production.product.line,product_id:0
-#: field:stock.move.consume,product_id:0
-#: view:website:mrp.report_mrporder
+#: field:stock.move.consume,product_id:0 view:website:mrp.report_mrporder
 msgid "Product"
-msgstr ""
+msgstr "ผลิตภัณฑ์"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1435,23 +1355,21 @@ msgid "Product Qty"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,product_qty:0
-#: field:mrp.bom.line,product_qty:0
+#: field:mrp.bom,product_qty:0 field:mrp.bom.line,product_qty:0
 #: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Quantity"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,product_rounding:0
-#: field:mrp.bom.line,product_rounding:0
+#: field:mrp.bom,product_rounding:0 field:mrp.bom.line,product_rounding:0
 msgid "Product Rounding"
 msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "รูปแบบสินค้า"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
@@ -1477,8 +1395,7 @@ msgid "Product UOS Quantity"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0
-#: field:mrp.bom.line,product_uom:0
+#: field:mrp.bom,product_uom:0 field:mrp.bom.line,product_uom:0
 #: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.move.consume,product_uom:0
@@ -1573,7 +1490,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Products"
-msgstr ""
+msgstr "สินค้า"
 
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
@@ -1582,8 +1499,7 @@ msgstr ""
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_lines:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.production,move_lines:0 view:website:mrp.report_mrporder
 msgid "Products to Consume"
 msgstr ""
 
@@ -1601,14 +1517,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_action
-#: view:mrp.bom:mrp.mrp_bom_form_view
-#: field:mrp.bom,property_ids:0
+#: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,property_ids:0
 #: field:mrp.bom.line,property_ids:0
 #: view:mrp.property:mrp.mrp_property_form_view
 #: view:mrp.property:mrp.mrp_property_tree_view
 #: field:procurement.order,property_ids:0
 msgid "Properties"
-msgstr ""
+msgstr "คุณสมบัติ"
 
 #. module: mrp
 #: view:mrp.property.group:mrp.mrp_property_group_form_view
@@ -1628,8 +1543,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
 #: view:mrp.property:mrp.view_mrp_property_search
-#: field:mrp.property,group_id:0
-#: field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
 msgid "Property Group"
 msgstr ""
 
@@ -1640,16 +1554,14 @@ msgid "Property Groups"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.product_price,number:0
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:stock.move.consume,product_qty:0
-#: view:website:mrp.report_mrpbomstructure
-#: view:website:mrp.report_mrporder
+#: view:website:mrp.report_mrpbomstructure view:website:mrp.report_mrporder
 #, python-format
 msgid "Quantity"
-msgstr ""
+msgstr "จำนวน"
 
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
@@ -1669,7 +1581,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Ready"
-msgstr ""
+msgstr "พร้อม"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1677,8 +1589,7 @@ msgid "Ready to Produce"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.bom:mrp.mrp_bom_form_view
-#: field:mrp.bom,code:0
+#: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
 #: field:mrp.production,name:0
 msgid "Reference"
 msgstr "อ้างอิง"
@@ -1702,7 +1613,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "ทรัพยากร"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
@@ -1717,18 +1628,16 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "รับผิดชอบ"
 
 #. module: mrp
-#: help:mrp.bom,product_rounding:0
-#: help:mrp.bom.line,product_rounding:0
+#: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
 msgid "Rounding applied on the product quantity."
 msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: field:mrp.bom,routing_id:0
+#: view:mrp.bom:mrp.view_mrp_bom_filter field:mrp.bom,routing_id:0
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: field:mrp.bom.line,routing_id:0
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1749,8 +1658,8 @@ msgstr ""
 #: help:mrp.routing.workcenter,routing_id:0
 msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
-"Routing is indicated then,the third tab of a production order (Work Centers) "
-"will be automatically pre-completed."
+"Routing is indicated then,the third tab of a production order (Work Centers)"
+" will be automatically pre-completed."
 msgstr ""
 
 #. module: mrp
@@ -1813,7 +1722,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Search"
-msgstr ""
+msgstr "ค้นหา"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -1851,13 +1760,11 @@ msgid "Select time unit"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,sequence:0
-#: field:mrp.bom.line,sequence:0
+#: field:mrp.bom,sequence:0 field:mrp.bom.line,sequence:0
 #: field:mrp.production.workcenter.line,sequence:0
-#: field:mrp.routing.workcenter,sequence:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.routing.workcenter,sequence:0 view:website:mrp.report_mrporder
 msgid "Sequence"
-msgstr ""
+msgstr "กำหนดเลขที่เอกสาร"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1867,8 +1774,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,type:0
 msgid ""
-"Set: When processing a sales order for this product, the delivery order will "
-"contain the raw materials, instead of the finished product."
+"Set: When processing a sales order for this product, the delivery order will"
+" contain the raw materials, instead of the finished product."
 msgstr ""
 
 #. module: mrp
@@ -1906,18 +1813,18 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "วันที่เริ่ม"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 #: field:mrp.production,state:0
 msgid "Status"
-msgstr ""
+msgstr "สถานะ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "ย้ายสต็อก"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -1933,11 +1840,10 @@ msgid "Stock value variation"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_summary:0
-#: field:mrp.production,message_summary:0
+#: field:mrp.bom,message_summary:0 field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "สรุป"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -1951,8 +1857,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:333
-#: code:addons/mrp/mrp.py:421
+#: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -1969,8 +1874,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,routing_id:0
-#: help:mrp.bom.line,routing_id:0
+#: help:mrp.bom,routing_id:0 help:mrp.bom.line,routing_id:0
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
@@ -1988,8 +1892,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid ""
-"This allows to add state, date_start,date_stop in production order operation "
-"lines (in the \"Work Centers\" tab).\n"
+"This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
 msgstr ""
 
@@ -2037,8 +1940,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
-"Time in hours for this Work Center to achieve the operation of the specified "
-"routing."
+"Time in hours for this Work Center to achieve the operation of the specified"
+" routing."
 msgstr ""
 
 #. module: mrp
@@ -2047,8 +1950,7 @@ msgid "To Consume"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:162
-#: code:addons/mrp/report/price.py:213
+#: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr ""
@@ -2085,7 +1987,7 @@ msgstr ""
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Type"
-msgstr ""
+msgstr "ชนิด"
 
 #. module: mrp
 #: field:mrp.workcenter.load,time_unit:0
@@ -2098,38 +2000,35 @@ msgid "Unit of Measure"
 msgstr "หน่วยของการวัด"
 
 #. module: mrp
-#: help:mrp.bom,product_uom:0
-#: help:mrp.bom.line,product_uom:0
+#: help:mrp.bom,product_uom:0 help:mrp.bom.line,product_uom:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_unread:0
-#: field:mrp.production,message_unread:0
+#: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
 #: field:mrp.production.workcenter.line,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "ข้อความที่ไม่ได้อ่าน"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Update"
-msgstr ""
+msgstr "อัปเดต"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Urgent"
-msgstr ""
+msgstr "เร่งด่วน"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
-msgstr ""
+msgstr "ผู้ใช้งาน"
 
 #. module: mrp
-#: field:mrp.bom,date_start:0
-#: field:mrp.bom.line,date_start:0
+#: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
 msgid "Valid From"
 msgstr ""
 
@@ -2146,20 +2045,17 @@ msgid "Valid From Month"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,date_stop:0
-#: field:mrp.bom.line,date_stop:0
+#: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom.line,date_start:0
-#: help:mrp.bom.line,date_stop:0
+#: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,date_start:0
-#: help:mrp.bom,date_stop:0
+#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
 msgstr ""
 
@@ -2181,23 +2077,20 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "คลังสินค้า"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:333
-#: code:addons/mrp/mrp.py:421
+#: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "แจ้งเตือน"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:339
-#: code:addons/mrp/stock.py:42
-#: code:addons/mrp/stock.py:44
-#: code:addons/mrp/stock.py:169
+#: code:addons/mrp/mrp.py:339 code:addons/mrp/stock.py:42
+#: code:addons/mrp/stock.py:44 code:addons/mrp/stock.py:169
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "คำเตือน!"
 
 #. module: mrp
 #: field:mrp.bom,website_message_ids:0
@@ -2218,7 +2111,7 @@ msgstr ""
 #: view:report.workcenter.load:mrp.view_workcenter_load_search
 #: field:report.workcenter.load,name:0
 msgid "Week"
-msgstr ""
+msgstr "สัปดาห์"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
@@ -2229,15 +2122,15 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
 msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
-"linked to manufacturing activities, receipts of products and delivery orders."
+"linked to manufacturing activities, receipts of products and delivery "
+"orders."
 msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
+"                                will contain the raw materials, instead of the finished product."
 msgstr ""
 
 #. module: mrp
@@ -2250,14 +2143,10 @@ msgstr ""
 #: help:mrp.production,state:0
 msgid ""
 "When the production order is created the status is set to 'Draft'.\n"
-"                If the order is confirmed the status is set to 'Waiting "
-"Goods'.\n"
-"                If any exceptions are there, the status is set to 'Picking "
-"Exception'.\n"
-"                If the stock is available then the status is set to 'Ready "
-"to Produce'.\n"
-"                When the production gets started then the status is set to "
-"'In Production'.\n"
+"                If the order is confirmed the status is set to 'Waiting Goods'.\n"
+"                If any exceptions are there, the status is set to 'Picking Exception'.\n"
+"                If the stock is available then the status is set to 'Ready to Produce'.\n"
+"                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
 msgstr ""
 
@@ -2354,7 +2243,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
 msgid "Working Time"
-msgstr ""
+msgstr "เวลาทำงาน"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_byproduct:0
@@ -2382,7 +2271,7 @@ msgstr ""
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr ""
+msgstr "วัน"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2402,7 +2291,7 @@ msgstr ""
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "or"
-msgstr ""
+msgstr "หรือ"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2415,4 +2304,4 @@ msgstr ""
 #: field:mrp.product.produce.line,track_production:0
 #: field:mrp.production,ready_production:0
 msgid "unknown"
-msgstr ""
+msgstr "ไม่ทราบ"

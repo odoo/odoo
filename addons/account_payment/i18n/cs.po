@@ -1,21 +1,22 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:25+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,8 +24,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
@@ -84,7 +84,7 @@ msgstr ""
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankovní účet"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -94,7 +94,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,bank_id:0
 msgid "Bank account"
-msgstr ""
+msgstr "Bankovní účet"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -112,7 +112,7 @@ msgstr ""
 #: view:payment.order.create:account_payment.view_create_payment_order
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -148,8 +148,7 @@ msgid "Communication Type"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Společnost"
@@ -157,7 +156,7 @@ msgstr "Společnost"
 #. module: account_payment
 #: field:payment.line,company_currency:0
 msgid "Company Currency"
-msgstr ""
+msgstr "Měna společnosti"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -183,31 +182,28 @@ msgstr "Vytvořeno"
 #. module: account_payment
 #: field:account.payment.make.payment,create_uid:0
 #: field:account.payment.populate.statement,create_uid:0
-#: field:payment.line,create_uid:0
-#: field:payment.mode,create_uid:0
-#: field:payment.order,create_uid:0
-#: field:payment.order.create,create_uid:0
+#: field:payment.line,create_uid:0 field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0 field:payment.order.create,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Vytvořil(a)"
 
 #. module: account_payment
 #: field:account.payment.make.payment,create_date:0
 #: field:account.payment.populate.statement,create_date:0
-#: field:payment.mode,create_date:0
-#: field:payment.order,create_date:0
+#: field:payment.mode,create_date:0 field:payment.order,create_date:0
 #: field:payment.order.create,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Vytvořeno"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Datum vytvoření"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Currency"
-msgstr ""
+msgstr "Měna"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_tree
@@ -217,7 +213,7 @@ msgstr ""
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
 msgid "Desitination Account"
-msgstr ""
+msgstr "Protiúčet"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
@@ -239,19 +235,18 @@ msgstr "Přímo"
 #: view:payment.order:account_payment.view_payment_order_search
 #: selection:payment.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "Provedeno"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_search
 #: selection:payment.order,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Koncept"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr ""
+msgstr "Splatnost"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -279,7 +274,7 @@ msgstr ""
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr ""
+msgstr "Řádky položek"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -291,12 +286,12 @@ msgstr ""
 #: code:addons/account_payment/account_move_line.py:57
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Chyba!"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Datum provedení"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -317,24 +312,22 @@ msgstr "Volný"
 #: view:payment.line:account_payment.view_payment_line_form
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "General Information"
-msgstr ""
+msgstr "Obecné informace"
 
 #. module: account_payment
 #: view:payment.mode:account_payment.view_payment_mode_search
 #: view:payment.order:account_payment.view_payment_order_search
 msgid "Group By"
-msgstr ""
+msgstr "Seskupit podle"
 
 #. module: account_payment
 #: field:account.payment.make.payment,id:0
-#: field:account.payment.populate.statement,id:0
-#: field:payment.line,id:0
-#: field:payment.mode,id:0
-#: field:payment.order,id:0
+#: field:account.payment.populate.statement,id:0 field:payment.line,id:0
+#: field:payment.mode,id:0 field:payment.order,id:0
 #: field:payment.order.create,id:0
 #: field:report.account_payment.report_paymentorder,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -357,12 +350,12 @@ msgstr ""
 #: view:payment.line:account_payment.view_payment_line_form
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Information"
-msgstr ""
+msgstr "Informace"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
@@ -382,44 +375,40 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Invoices"
-msgstr ""
+msgstr "Faktury"
 
 #. module: account_payment
 #: view:payment.mode:account_payment.view_payment_mode_search
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr ""
+msgstr "Kniha"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Položky deníku"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_uid:0
 #: field:account.payment.populate.statement,write_uid:0
-#: field:payment.line,write_uid:0
-#: field:payment.mode,write_uid:0
-#: field:payment.order,write_uid:0
-#: field:payment.order.create,write_uid:0
+#: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Naposled upraveno"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_date:0
 #: field:account.payment.populate.statement,write_date:0
-#: field:payment.line,write_date:0
-#: field:payment.mode,write_date:0
-#: field:payment.order,write_date:0
-#: field:payment.order.create,write_date:0
+#: field:payment.line,write_date:0 field:payment.mode,write_date:0
+#: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Naposled upraveno"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Zaplatit"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -429,12 +418,12 @@ msgstr ""
 #. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
-msgstr ""
+msgstr "Způsob platby"
 
 #. module: account_payment
 #: field:payment.mode,name:0
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
@@ -444,7 +433,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr ""
+msgstr "Objednávka"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
@@ -454,11 +443,10 @@ msgid "Owner Account"
 msgstr "Majitel účtu"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: view:website:account_payment.report_paymentorder
 msgid "Partner"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -470,12 +458,12 @@ msgstr "Měna protistrany"
 #: view:payment.line:account_payment.view_payment_line_form
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Payment"
-msgstr ""
+msgstr "Platba"
 
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
-msgstr ""
+msgstr "Datum úhrady"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -501,7 +489,7 @@ msgstr ""
 #: view:payment.order:account_payment.view_payment_order_search
 #: field:payment.order,mode:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Platební režim"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.action_report_payment_order
@@ -509,7 +497,7 @@ msgstr ""
 #: view:payment.order:account_payment.view_payment_order_form
 #: view:payment.order:account_payment.view_payment_order_search
 msgid "Payment Order"
-msgstr ""
+msgstr "Platební příkaz"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -578,17 +566,17 @@ msgstr "Odkaz"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Zodpovídá"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Plánované datum"
 
 #. module: account_payment
 #: view:payment.order.create:account_payment.view_create_payment_order
 msgid "Search"
-msgstr ""
+msgstr "Hledat"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_search
@@ -620,7 +608,7 @@ msgstr "Uložit jako koncept"
 #: view:payment.order:account_payment.view_payment_order_search
 #: field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -659,7 +647,7 @@ msgstr ""
 #: field:payment.order,total:0
 #: view:website:account_payment.report_paymentorder
 msgid "Total"
-msgstr ""
+msgstr "Celkem"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -705,7 +693,7 @@ msgstr ""
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
 msgid "Yes"
-msgstr ""
+msgstr "Ano"
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:42
@@ -718,7 +706,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Vaše reference"
 
 #. module: account_payment
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
@@ -731,4 +719,4 @@ msgstr ""
 #: view:payment.order.create:account_payment.view_create_payment_order
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "or"
-msgstr ""
+msgstr "nebo"

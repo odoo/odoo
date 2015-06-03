@@ -1071,7 +1071,7 @@ class pos_order(osv.osv):
             order_account = order.partner_id and \
                             order.partner_id.property_account_receivable and \
                             order.partner_id.property_account_receivable.id or \
-                            account_def and account_def.id or current_company.account_receivable.id
+                            account_def and account_def.id
 
             if move_id is None:
                 # Create an entry for the sale
@@ -1335,9 +1335,9 @@ class pos_order_line(osv.osv):
         'name': fields.char('Line No', required=True, copy=False),
         'notice': fields.char('Discount Notice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
-        'price_unit': fields.float(string='Unit Price', digits_compute=dp.get_precision('Account')),
+        'price_unit': fields.float(string='Unit Price', digits_compute=dp.get_precision('Product Price')),
         'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoS')),
-        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits_compute=dp.get_precision('Account'), string='Subtotal w/o Tax', store=True),
+        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits_compute=dp.get_precision('Product Price'), string='Subtotal w/o Tax', store=True),
         'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits_compute=dp.get_precision('Account'), string='Subtotal', store=True),
         'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Account')),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
