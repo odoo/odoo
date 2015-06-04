@@ -1354,6 +1354,7 @@ class stock_picking(osv.osv):
             'product_uom_qty': qty,
             'name': _('Extra Move: ') + name,
             'state': 'draft',
+            'restrict_partner_id': op.owner_id,
             }
         return res
 
