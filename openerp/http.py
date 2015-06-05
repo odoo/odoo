@@ -955,7 +955,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
-        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
