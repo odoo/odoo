@@ -2098,11 +2098,25 @@ class BaseModel(object):
             if f not in groupby_fields
             if f in self._fields
             if self._fields[f].type in ('integer', 'float')
+            if not self._fields[f].group_expression
+            if getattr(self._fields[f].base_field.column, '_classic_write', False)
+        ]
+
+        expression_fields = [
+            f for f in fields
+            if f not in ('id', 'sequence')
+            if f not in groupby_fields
+            if f in self._fields
+            if self._fields[f].type in ('integer', 'float')
+            if self._fields[f].group_expression
             if getattr(self._fields[f].base_field.column, '_classic_write', False)
         ]
 
         field_formatter = lambda f: (self._fields[f].group_operator or 'sum', self._inherits_join_calc(f, query), f)
         select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
+
+        for ef in expression_fields:
+            select_terms.append('(%s) as "%s" ' % (self._fields[ef].group_expression, ef))
 
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
