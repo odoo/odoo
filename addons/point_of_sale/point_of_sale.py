@@ -578,9 +578,12 @@ class pos_order(osv.osv):
 
     def _process_order(self, cr, uid, order, context=None):
         order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
-
+        journal_ids = []
         for payments in order['statement_ids']:
             self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
+            journal_id = payments[2].get('journal_id')
+            if journal_id not in journal_ids:
+                journal_ids.append(journal_id)
 
         session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
         if session.sequence_number <= order['sequence_number']:
@@ -590,16 +593,15 @@ class pos_order(osv.osv):
         if not float_is_zero(order['amount_return'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')):
             cash_journal = session.cash_journal_id
             if not cash_journal:
-                cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
-                if not len(cash_journal_ids):
+                cash_journals = filter(lambda journal: journal.type=='cash', self.pool['account.journal'].browse(cr, uid, journal_ids, context=context))
+                if not len(cash_journals):
                     raise osv.except_osv( _('error!'),
                         _("No cash statement found for this session. Unable to record returned cash."))
-                cash_journal = cash_journal_ids[0].journal_id
             self.add_payment(cr, uid, order_id, {
                 'amount': -order['amount_return'],
                 'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'payment_name': _('return'),
-                'journal': cash_journal.id,
+                'journal': cash_journals[0].id,
             }, context=context)
         return order_id
 
