@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import openerp.tests.common
 
-DB = openerp.tests.common.DB
+DB = openerp.tests.common.get_db_name()
 
 class test_xmlrpc(openerp.tests.common.HttpCase):
     at_install = False
