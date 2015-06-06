@@ -3,7 +3,6 @@ from openerp.tools import mute_logger
 from openerp.tests import common
 
 UID = common.ADMIN_USER_ID
-DB = common.get_db_name()
 
 
 class TestORM(common.TransactionCase):
