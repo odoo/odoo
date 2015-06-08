@@ -347,7 +347,7 @@ PaymentScreenWidget.include({
 
         var rpc_def = session.rpc("/pos/send_payment_transaction", transaction)
                 .done(function (data) {
-                    console.log(data); // todo
+                    console.log(data); // todo jov
 
                     // if not receiving a response, we should retry
                     if (data === "timeout") {
@@ -376,8 +376,8 @@ PaymentScreenWidget.include({
                             order.selected_paymentline.card_number = track1['card_number'].substr(-4);
                             order.selected_paymentline.card_brand = response.card_type;
                             order.selected_paymentline.card_owner_name = track1['card_owner_name'];
-                            order.selected_paymentline.ref_no = response.ref_no; // todo jov
-                            order.selected_paymentline.record_no = response.record_no; // todo jov
+                            order.selected_paymentline.ref_no = response.ref_no;
+                            order.selected_paymentline.record_no = response.record_no;
                             order.selected_paymentline.invoice_no = response.invoice_no;
                             order.selected_paymentline.mercury_data = response; // used to reverse transactions
 

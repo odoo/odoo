@@ -1,7 +1,10 @@
 import cgi
 import urllib2
 import ssl
-from openerp import models
+from datetime import datetime, timedelta
+
+from openerp import models, api
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 soap_header = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com"><soapenv:Header/><soapenv:Body><mer:CreditTransaction><mer:tran>'
 soap_footer = '</mer:tran><mer:pw>xyz</mer:pw></mer:CreditTransaction></soapenv:Body></soapenv:Envelope>'
@@ -98,3 +101,12 @@ class MercuryTransaction(models.Model):
         self._setup_request(data, request_uid)
         response = self._do_request('card_reader.mercury_return', data)
         return response
+
+    # One time (the ones we use) Mercury tokens are required to be
+    # deleted after 6 months
+    @api.model
+    def cleanup_old_tokens(self):
+        for order in self.env['pos.order'].search([]):
+            if datetime.strptime(order.create_date, DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=6 * 30) < datetime.now():
+                order.ref_no = ""
+                order.record_no = ""

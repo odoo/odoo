@@ -62,8 +62,8 @@ class pos_order_card(models.Model):
             'card_number': ui_paymentline.get('card_number'),
             'card_brand': ui_paymentline.get('card_brand'),
             'card_owner_name': ui_paymentline.get('card_owner_name'),
-            'ref_no': ui_paymentline.get('ref_no'),  # todo jov
-            'record_no': ui_paymentline.get('record_no'),  # todo jov
+            'ref_no': ui_paymentline.get('ref_no'),
+            'record_no': ui_paymentline.get('record_no'),
             'invoice_no': ui_paymentline.get('invoice_no')
         })
 
@@ -80,8 +80,6 @@ class pos_order_card(models.Model):
         statement_line.card_brand = data.get('card_brand')
         statement_line.card_owner_name = data.get('card_owner_name')
 
-        # todo jov: this needs some work in that we can only keep most
-        # recent record_no and we need to delete after 6 months
         statement_line.ref_no = data.get('ref_no')
         statement_line.record_no = data.get('record_no')
         statement_line.invoice_no = data.get('invoice_no')
