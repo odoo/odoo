@@ -91,7 +91,8 @@ class account_invoice_line(osv.osv):
             if not cacc:
                 cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
             if dacc and cacc:
-                price_unit = i_line.move_id and i_line.move_id.price_unit or i_line.product_id.standard_price
+                factor = i_line.uos_id.factor
+                price_unit = i_line.move_id and (i_line.move_id.price_unit/factor) or i_line.product_id.standard_price
                 return [
                     {
                         'type':'src',
