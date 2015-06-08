@@ -42,7 +42,7 @@
         <field name="subject">Welcoming ${object.name} </field>
         <field name="body_html"><![CDATA[
             <p>
-                %if user.has_group('hr.group_multi_departments') and object.department_id:
+                %if object.department_id:
                     I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}
                     in ${object.department_id.name}.
                 %else:

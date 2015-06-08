@@ -29,12 +29,12 @@
                             <h1>
                                 <field name="name"/>
                             </h1>
-                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
-                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
                             <label for="work_email" class="oe_edit_only"/>
                             <field name="work_email" widget="email"/>
                             <label for="work_phone" class="oe_edit_only"/>
                             <field name="work_phone"/>
+                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
@@ -50,15 +50,10 @@
                                         <field name="work_location"/>
                                     </group>
                                     <group string="Position">
-                                        <field name="department_id" groups="hr.group_multi_departments" on_change="onchange_department_id(department_id)"/>
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
-                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User"
-                                            context="{'default_groups_ref': ['base.group_user']}"/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -70,7 +65,6 @@
                                         <field name="identification_id" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
-                                        <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group string="Contact Information">
                                         <field name="address_home_id"
@@ -90,6 +84,11 @@
                                 <group>
                                     <group string="Active" name="active_group">
                                         <field name="active"/>
+                                    </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User"
+                                            context="{'default_groups_ref': ['base.group_user']}"/>
                                     </group>
                                 </group>
                             </page>
@@ -112,7 +111,7 @@
                     <field name="work_phone"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="department_id" groups="hr.group_multi_departments"/>
+                    <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
                     <field name="coach_id" invisible="1"/>
@@ -127,14 +126,14 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
-                    <field name="department_id" groups="hr.group_multi_departments"/>
+                    <field name="department_id"/>
                     <field name="category_ids" groups="base.group_hr_user"/>
                     <field name="job_id" />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}" groups="hr.group_multi_departments"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
@@ -250,7 +249,7 @@
                     <field name="work_phone"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="department_id" groups="hr.group_multi_departments"/>
+                    <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="coach_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
@@ -358,7 +357,7 @@
                         </div>
                         <div class="oe_right" name="buttons"/>
                         <group name="employee_data">
-                            <field name="department_id" groups="hr.group_multi_departments" class="oe_inline"/>
+                            <field name="department_id" class="oe_inline"/>
                             <field name="no_of_recruitment" class="oe_inline" />
                         </group>
                         <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
@@ -384,7 +383,7 @@
             <field name="arch" type="xml">
                 <tree string="Job" decoration-bf="message_unread==True">
                     <field name="name"/>
-                    <field name="department_id" groups="hr.group_multi_departments"/>
+                    <field name="department_id"/>
                     <field name="no_of_employee"/>
                     <field name="no_of_recruitment"/>
                     <field name="expected_employees"/>
@@ -403,11 +402,11 @@
                     <field name="name" string="Job"/>
                     <filter domain="[('state','=','open')]" string="In Position"/>
                     <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
-                    <field name="department_id" groups="hr.group_multi_departments"/>
+                    <field name="department_id"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}" groups="hr.group_multi_departments"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
@@ -517,7 +516,7 @@
             id="menu_hr_department_tree"
             parent="menu_hr_root"
             sequence="1"
-            groups="group_multi_departments"/>
+            groups="base.group_hr_user"/>
 
     </data>
 </openerp>

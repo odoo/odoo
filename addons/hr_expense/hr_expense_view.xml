@@ -46,7 +46,7 @@
                 <tree decoration-warning="state == 'draft'" decoration-muted="state == 'cancelled'" string="Expenses" editable="top">
                     <field name="employee_id"/>
                     <field name="date"/>
-                    <field name="department_id" groups="hr.group_multi_departments"/>
+                    <field name="department_id"/>
                     <field name="name" string="Expense Sheet"/>
                     <field name="amount" widget="monetary"/>
                     <field name="state"/>
@@ -76,7 +76,7 @@
                         <group>
                             <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                             <field name="date"/>
-                            <field name="department_id" groups="hr.group_multi_departments"/>
+                            <field name="department_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group>
@@ -159,7 +159,7 @@
                     <field name="name" string="Expenses"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="department_id" groups="hr.group_multi_departments" string="Department" context="{'invisible_department': False}"/>
+                    <field name="department_id" string="Department" context="{'invisible_department': False}"/>
                     <filter domain="[('state','=','draft')]" string="New" help="New Expense"/>
                     <filter domain="[('state','=','confirm')]" string="To Approve" name="confirm" help="Confirmed Expenses"/>
                     <filter domain="[('state','=','accepted')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
@@ -170,7 +170,7 @@
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}" groups="hr.group_multi_departments"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Expenses Month" domain="[]" context="{'group_by':'date'}" help="Expenses by Month"/>
                     </group>
                     <separator />
