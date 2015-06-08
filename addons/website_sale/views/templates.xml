@@ -1180,7 +1180,7 @@
                   </ul>
               </div>
               <div class="col-lg-3 col-sm-3">
-                  <t t-foreach="acquirers or []" t-as="acquirer">
+                  <t t-foreach="acquirers or []" t-as="acquirer" id="acquirers_list">
                       <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
                         <div t-raw="acquirer.button"/>
                         <div t-field="acquirer.pre_msg"/>
@@ -1204,6 +1204,17 @@
       </div>
 
   </t>
+</template>
+
+<template id="payment_sale_note" inherit_id="payment" name="Display Sale Note" customize_show="True" active="False">
+  <xpath expr="//t[@id='acquirers_list']" position="before">
+    <t t-set="sale_note" t-value="website_sale_order.get_salenote(website_sale_order.partner_id.id)"/>
+    <t t-if="sale_note and sale_note != ''">
+      <div class="oe_accept_cgv_button">
+        <label><input type="checkbox" checked="checked" id="checkbox_cgv"/> <t t-esc="sale_note"/></label>
+      </div>
+    </t>
+  </xpath>
 </template>
 
 <template id="confirmation">
