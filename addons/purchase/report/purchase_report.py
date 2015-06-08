@@ -69,7 +69,7 @@ class purchase_report(osv.osv):
                 select
                     min(l.id) as id,
                     s.date_order as date,
-                    s.state,
+                    l.state,
                     s.date_approve,
                     s.minimum_planned_date as expected_date,
                     s.dest_address_id,
@@ -116,7 +116,7 @@ class purchase_report(osv.osv):
                     l.product_id,
                     t.categ_id,
                     s.date_order,
-                    s.state,
+                    l.state,
                     spt.warehouse_id,
                     u.uom_type,
                     u.category_id,
