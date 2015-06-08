@@ -35,7 +35,7 @@
                     <separator/>
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                     <field name="employee_id"/>
-                    <field name="department_id" groups="hr.group_multi_departments"/>
+                    <field name="department_id"/>
                     <field name="holiday_status_id"/>
                     <group expand="0" string="Group By">
                         <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
@@ -581,14 +581,6 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='active_group']" position="before">
-                    <group string="Leaves" groups="base.group_no_one">
-                        <label for="remaining_leaves"/>
-                        <div>
-                            <field name="remaining_leaves" class="oe_inline"/> days
-                        </div>
-                    </group>
-                </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="%(act_hr_employee_holiday_request_approved)d"
                             icon="fa-calendar"

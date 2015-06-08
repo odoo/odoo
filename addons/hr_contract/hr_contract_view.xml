@@ -29,7 +29,7 @@
                         </button>
                     </xpath>
                     <xpath expr="//field[@name='coach_id']" position="after">
-                        <field name="manager"/>
+                        <field name="manager" groups="base.group_no_one"/>
                     </xpath>
                     <xpath expr="//group[@name='active_group']" position="before">
                         <group string="Current Contract">
@@ -61,7 +61,7 @@
                     <field name="date_end"/>
                     <field name="working_hours"/>
                     <field name="employee_id"/>
-                    <field name="department_id" groups="hr.group_multi_departments"/>
+                    <field name="department_id"/>
                     <field name="state"/>
                     <filter string="To Renew" name="to_renew" domain="[('state', '=', 'pending')]"/>
                     <separator />
@@ -98,7 +98,7 @@
                             <field name="job_id"/>
                         </group>
                         <group>
-                            <field name="department_id" groups="hr.group_multi_departments"/>
+                            <field name="department_id"/>
                             <field name="type_id"/>
                         </group>
                     </group>
