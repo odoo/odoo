@@ -13,7 +13,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_ogone.controllers.main import OgoneController
 from openerp.addons.payment_ogone.data import ogone
 from openerp.osv import osv, fields
-from openerp.tools import float_round
+from openerp.tools import float_repr
 from openerp.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -145,7 +145,7 @@ class PaymentAcquirerOgone(osv.Model):
         temp_ogone_tx_values = {
             'PSPID': acquirer.ogone_pspid,
             'ORDERID': tx_values['reference'],
-            'AMOUNT': '%d' % int(float_round(tx_values['amount'], 2) * 100),
+            'AMOUNT': float_repr(tx_values['amount'] * 100, 0),
             'CURRENCY': tx_values['currency'] and tx_values['currency'].name or '',
             'LANGUAGE':  partner_values['lang'],
             'CN':  partner_values['name'],
@@ -351,7 +351,7 @@ class PaymentTxOgone(osv.Model):
             'USERID': tx.acquirer_id.ogone_userid,
             'PSWD': tx.acquirer_id.ogone_password,
             'OrderID': tx.reference,
-            'amount':  '%d' % int(float_round(tx.amount, 2) * 100),  # tde check amount or str * 100 ?
+            'amount': float_repr(tx_values['amount'] * 100, 0),
             'CURRENCY': tx.currency_id.name,
             'LANGUAGE': tx.partner_lang,
             'OPERATION': 'SAL',
