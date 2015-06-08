@@ -911,18 +911,18 @@ class account_bank_statement_line(osv.osv):
                         if credit_at_old_rate - credit_at_current_rate:
                             currency_diff = credit_at_current_rate - credit_at_old_rate
                             to_create.append(self.get_currency_rate_line(cr, uid, st_line, currency_diff, move_id, context=context))
-                    if mv_line.currency_id and mv_line_dict['currency_id'] == mv_line.currency_id.id:
-                        amount_unreconciled = mv_line.amount_residual_currency
-                    else:
-                        amount_unreconciled = currency_obj.compute(cr, uid, company_currency.id, mv_line_dict['currency_id'] , mv_line.amount_residual, context=ctx)
-                    if float_is_zero(mv_line_dict['amount_currency'] + amount_unreconciled, precision_rounding=mv_line.currency_id.rounding):
-                        amount = mv_line_dict['debit'] or mv_line_dict['credit']
-                        sign = -1 if mv_line_dict['debit'] else 1
-                        currency_rate_difference = sign * (mv_line.amount_residual - amount)
-                        if not company_currency.is_zero(currency_rate_difference):
-                            exchange_lines = self._get_exchange_lines(cr, uid, st_line, mv_line, currency_rate_difference, mv_line_dict['currency_id'], move_id, context=context)
-                            for exchange_line in exchange_lines:
-                                to_create.append(exchange_line)
+                        if mv_line.currency_id and mv_line_dict['currency_id'] == mv_line.currency_id.id:
+                            amount_unreconciled = mv_line.amount_residual_currency
+                        else:
+                            amount_unreconciled = currency_obj.compute(cr, uid, company_currency.id, mv_line_dict['currency_id'] , mv_line.amount_residual, context=ctx)
+                        if float_is_zero(mv_line_dict['amount_currency'] + amount_unreconciled, precision_rounding=mv_line.currency_id.rounding):
+                            amount = mv_line_dict['debit'] or mv_line_dict['credit']
+                            sign = -1 if mv_line_dict['debit'] else 1
+                            currency_rate_difference = sign * (mv_line.amount_residual - amount)
+                            if not company_currency.is_zero(currency_rate_difference):
+                                exchange_lines = self._get_exchange_lines(cr, uid, st_line, mv_line, currency_rate_difference, mv_line_dict['currency_id'], move_id, context=context)
+                                for exchange_line in exchange_lines:
+                                    to_create.append(exchange_line)
 
                     else:
                         mv_line_dict['debit'] = debit_at_current_rate
