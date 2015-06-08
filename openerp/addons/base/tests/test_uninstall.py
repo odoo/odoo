@@ -6,7 +6,7 @@ import openerp
 from openerp import SUPERUSER_ID
 import common
 
-DB = common.DB
+DB = common.get_db_name()
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 def registry(model):
