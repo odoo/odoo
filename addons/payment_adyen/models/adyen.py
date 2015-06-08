@@ -13,7 +13,7 @@ import urlparse
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_adyen.controllers.main import AdyenController
 from openerp.osv import osv, fields
-from openerp.tools import float_round
+from openerp.tools import float_repr
 
 _logger = logging.getLogger(__name__)
 
@@ -81,7 +81,7 @@ class AcquirerAdyen(osv.Model):
         adyen_tx_values = dict(tx_values)
         adyen_tx_values.update({
             'merchantReference': tx_values['reference'],
-            'paymentAmount': '%d' % int(float_round(tx_values['amount'], 2) * 100),
+            'paymentAmount': float_repr(tx_values['amount'] * 100, 0),
             'currencyCode': tx_values['currency'] and tx_values['currency'].name or '',
             'shipBeforeDate': tmp_date,
             'skinCode': acquirer.adyen_skin_code,
