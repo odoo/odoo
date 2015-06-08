@@ -169,8 +169,8 @@ class MailThread(models.AbstractModel):
         for record in self:
             record.message_unread = res.get(record.id, 0) >= 1
             if record.message_unread:
-                record.message_summary = "<span class='oe_kanban_mail_new' title='%(title)s'><i class='fa fa-comments'/> %(count)d</span>" % {
-                    'title': '%d%s' % (res[record.id], _('unread messages')),
+                record.message_summary = "<span class='oe_kanban_mail_new' title='%(title)s'><i class='fa fa-comments-o'/>%(count)d</span>" % {
+                    'title': '%d %s' % (res[record.id], _('Unread Messages')),
                     'count': res[record.id]}
             else:
                 record.message_summary = ''
