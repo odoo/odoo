@@ -8,12 +8,11 @@
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <field name="property_account_position" position="after">
-                    <field name="company_registry"/>
-                    <label for="vat_subjected" string="Subjected to the VAT"/>
+                    <label for="vat"/>
                     <div name="vat_info">
-                        <field name="vat_subjected"/>
-                        <field name="vat" placeholder="e.g. BE0477472701" attrs="{'invisible': [('vat_subjected', '=', False)]}"/>
-                        <button colspan="2" name="button_check_vat" string="Check Validity" type="object" attrs="{'invisible': ['|', ('vat', '=', False), ('vat_subjected', '=', False)]}"/>
+                        <field name="vat" on_change="vat_change(vat)" placeholder="e.g. BE0477472701" class="oe_inline"/>
+                        <button colspan="2" name="button_check_vat" string="Check Validity" type="object" icon="gtk-execute" class="oe_inline"/>
+                        <field name="vat_subjected" class="oe_inline"/>
                     </div>
                 </field>
             </field>
