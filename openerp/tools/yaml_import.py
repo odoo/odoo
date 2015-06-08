@@ -749,14 +749,14 @@ class YamlInterpreter(object):
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
         if node.id and parent_id:
-            self.id_map[node.id] = int(parent_id)
+            self.id_map[node.id] = int(pid)
 
         if node.action and pid:
             action_type = node.type or 'act_window'
             action_id = self.get_id(node.action)
             action = "ir.actions.%s,%d" % (action_type, action_id)
             self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
-                    'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
+                    'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=node.id)
 
     def process_act_window(self, node):
         assert getattr(node, 'id'), "Attribute %s of act_window is empty !" % ('id',)
