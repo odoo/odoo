@@ -19,7 +19,7 @@ This is a complete document management system.
 """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com',
-    'depends': ['knowledge', 'mail'],
+    'depends': ['mail'],
     'data': [
         'security/document_security.xml',
         'document_view.xml',

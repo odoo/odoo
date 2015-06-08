@@ -74,10 +74,10 @@
         <field name="act_window_id" ref="crm_lead_opportunities"/>
     </record>
 
-    <menuitem name="CRM" id="base.menu_crm" parent="base.menu_base_partner" sequence="2"/>
-    <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_crm" sequence="1"
+    <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
+    <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" sequence="1"
             action="crm_lead_all_leads"/>
-    <menuitem name="Opportunities" id="menu_crm_opportunities" parent="base.menu_crm" sequence="2"
+    <menuitem name="Opportunities" id="menu_crm_opportunities" parent="base.menu_sales" sequence="2"
             action="crm_lead_opportunities"
             groups="base.group_sale_salesman,base.group_sale_manager"/>
 

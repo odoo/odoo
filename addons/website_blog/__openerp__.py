@@ -13,7 +13,7 @@ OpenERP Blog
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['knowledge', 'website_mail', 'website_partner'],
+    'depends': ['document', 'website_mail', 'website_partner'],
     'data': [
         'data/website_blog_data.xml',
         'views/website_blog_views.xml',
