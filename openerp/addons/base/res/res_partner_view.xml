@@ -449,8 +449,8 @@
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-        <menuitem name="CRM" id="base.menu_crm" parent="base.menu_base_partner" sequence="2"/>
-        <menuitem id="menu_partner_form" parent="base.menu_crm" action="action_partner_form" sequence="4"/>
+        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
+        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="3"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>

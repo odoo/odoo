@@ -339,11 +339,11 @@
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
         <menuitem action="product_template_action"
             id="menu_product_template_action"
-            parent="base.menu_sales" sequence="4" />
+            parent="base.menu_sales" sequence="13" />
 
         <!-- product product -->
 
-        <menuitem id="prod_config_main" name="Products" parent="base.menu_sale_config" sequence="2"/>
+        <menuitem id="prod_config_main" name="Products" parent="base.menu_sale_config" sequence="2" groups="base.group_no_one"/>
 
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>

@@ -15,7 +15,6 @@
         <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_config_settings" sequence="1" groups="base.group_no_one"/>
         <menuitem id="menu_reordering_rules_config" name="Schedulers Management" parent="menu_stock_config_settings" sequence="3" groups="base.group_no_one"/>
         <menuitem id="menu_routes_config" name="Routes" parent="menu_stock_config_settings" sequence="2" groups="base.group_no_one"/>
-        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="2"/>
 
 
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
@@ -271,8 +270,8 @@
             </field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
-            parent="menu_traceability" groups="stock.group_production_lot"
-            sequence="1"/>
+            parent="menu_stock_inventory_control" groups="stock.group_production_lot"
+            sequence="101"/>
 
         #
         # Lot composition (history)
@@ -1286,7 +1285,7 @@
             <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="18" groups="stock.group_locations"/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_stock_inventory_control" sequence="118" groups="stock.group_locations"/>
 
         <!--
             Receipt Picking (By Stock Move)
@@ -1819,7 +1818,7 @@
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_config_settings" sequence="5"/>
         <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_reordering_rules_config" sequence="1"/>
         <menuitem id="stock.menu_warehouse_report" name="Reports" sequence="99" parent="stock.menu_stock_root" groups="group_stock_manager"/>
-        <menuitem id="menu_quants" name="Quantitative Valuation" parent="menu_traceability" sequence="20" action="quantsact" groups="base.group_no_one"/>
+        <menuitem id="menu_quants" name="Quantitative Valuation" parent="menu_stock_inventory_control" sequence="120" action="quantsact" groups="base.group_no_one"/>
         <menuitem id="menu_procurement_rules" name="Global Procurement Rules" parent="stock.menu_routes_config" action="procrules" groups="base.group_no_one" sequence="3"/>
         <menuitem id="menu_stock_location_path" name="Global Push Rules" parent="stock.menu_routes_config" action="stolocpath" groups="base.group_no_one" sequence="4"/>
         <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="4"/>
@@ -1939,9 +1938,9 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_package" name="Packages" parent="menu_traceability" action="action_package_view" groups="stock.group_tracking_lot" sequence="2"/>
+        <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
         <menuitem id="menu_package_config" name="Packages" parent="menu_packs_config" action="action_package_view" groups="stock.group_tracking_lot" sequence="2"/>
-        <menuitem id="menu_packagings" name="Packagings" parent="menu_traceability" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
+        <menuitem id="menu_packagings" name="Packagings" parent="stock.menu_warehouse_report" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
         <menuitem id="menu_packagings_config" name="Packagings" parent="menu_packs_config" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
 
         

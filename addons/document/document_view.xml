@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-    <menuitem name="Document Management" id="menu_document_management_configuration" parent="knowledge.menu_document" sequence="1"/>
+    <menuitem name="Knowledge" id="menu_document" groups="base.group_system,base.group_document_user" icon="fa-magic" sequence="300"/>
+    <menuitem name="Document Management" id="menu_document_management_configuration" parent="menu_document" sequence="1" groups="base.group_no_one"/>
 
     <record model="ir.ui.view" id="view_document_directory_form">
         <field name="name">document.directory</field>
