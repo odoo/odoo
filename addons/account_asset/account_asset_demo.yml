@@ -2,16 +2,17 @@
     Creating demo data that require looking for accounts
 -
     !python {model: ir.model.data} : |
-        expenses_journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'purchase')])
+        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
+        journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'general'), ('id', '!=', company.currency_exchange_journal_id.id)])
         expense_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_expenses'))])
         xfa_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_fixed_assets'))])
         if not xfa_account_id:
             xfa_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_current_assets'))])
         from datetime import datetime, timedelta
         import time
-        if xfa_account_id and expense_account_id and expenses_journal_id:
+        if xfa_account_id and expense_account_id and journal_id:
             vals = {
-                'journal_id': expenses_journal_id[0],
+                'journal_id': journal_id[0],
                 'name': 'Hardware - 3 Years',
                 'method_number': 3,
                 'account_asset_id': xfa_account_id[0],
@@ -20,7 +21,7 @@
             }
             self._update(cr, uid, 'account.asset.category', 'account_asset', vals, 'account_asset_category_fixedassets0')
             vals = {
-                'journal_id': expenses_journal_id[0],
+                'journal_id': journal_id[0],
                 'name': 'Cars - 5 Years',
                 'method_number': 5,
                 'account_asset_id': xfa_account_id[0],
@@ -64,11 +65,13 @@
             sale_account_id = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_revenue'))])
         if xfa_account_id and sale_account_id:
             vals = {
-                'journal_id': expenses_journal_id[0],
-                'name': 'Revenue Recognition Maintenance Contract - 3 Years',
-                'method_number': 6,
+                'journal_id': journal_id[0],
+                'name': 'Revenue Recognition Maintenance Contract - 1 Years',
+                'method_number': 12,
+                'method_period': 1,
                 'account_asset_id': xfa_account_id[0],
                 'account_depreciation_id': xfa_account_id[0],
                 'account_income_recognition_id': sale_account_id[0],
+                'type': 'sale',
             }
             self._update(cr, uid, 'account.asset.category', 'account_asset', vals, 'account_asset_category_sale')

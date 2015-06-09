@@ -43,12 +43,12 @@
         <field name="context">{'asset_type': 'sale'}</field>
     </record>
 
-    <menuitem name="Deferred Revenue Entries" action="action_recognition_depreciation_confirmation_wizard"
+    <menuitem name="Generate Deferred Revenue Entries" action="action_recognition_depreciation_confirmation_wizard"
         id="menu_recognition_depreciation_confirmation_wizard"
-        parent="account.menu_finance_payables" sequence="2"/>
+        parent="account.menu_finance_entries" sequence="112" groups="base.group_no_one"/>
 
-    <menuitem name="Assets Entries" action="action_asset_depreciation_confirmation_wizard"
+    <menuitem name="Generate Assets Entries" action="action_asset_depreciation_confirmation_wizard"
         id="menu_asset_depreciation_confirmation_wizard"
-        parent="account.menu_finance_receivables" sequence="1"/>
+        parent="account.menu_finance_entries" sequence="111" groups="base.group_no_one"/>
 
 </odoo>

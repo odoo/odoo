@@ -58,8 +58,8 @@ class AccountAssetAsset(models.Model):
 
     account_move_line_ids = fields.One2many('account.move.line', 'asset_id', string='Entries', readonly=True, states={'draft': [('readonly', False)]})
     entry_count = fields.Integer(compute='_entry_count', string='# Asset Entries')
-    name = fields.Char(string='Asset/Deferred Revenue Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
-    code = fields.Char(string='Reference', size=32, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['ir.sequence'].next_by_code('account.asset.code'))
+    name = fields.Char(string='Asset Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    code = fields.Char(string='Reference', size=32, readonly=True, states={'draft': [('readonly', False)]})
     value = fields.Float(string='Gross Value', required=True, readonly=True, digits=0, states={'draft': [('readonly', False)]}, oldname='purchase_value')
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env.user.company_id.currency_id.id)
@@ -104,6 +104,7 @@ class AccountAssetAsset(models.Model):
             if asset.account_move_line_ids:
                 raise UserError(_('You cannot delete a document that contains posted lines.'))
         return super(AccountAssetAsset, self).unlink()
+
     @api.multi
     def _get_last_depreciation_date(self):
         """
@@ -118,6 +119,11 @@ class AccountAssetAsset(models.Model):
             GROUP BY a.id, a.date """, (tuple(self.ids),))
         result = dict(self.env.cr.fetchall())
         return result
+
+    @api.model
+    def _cron_generate_entries(self):
+        assets = self.env['account.asset.asset'].search([('state', '=', 'open')])
+        assets._compute_entries(datetime.today())
 
     def _compute_board_amount(self, sequence, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date):
         amount = 0
@@ -193,9 +199,9 @@ class AccountAssetAsset(models.Model):
                     'amount': amount,
                     'asset_id': self.id,
                     'sequence': sequence,
-                    'name': (self.code or str(self.id)) + '/' + str(sequence),
+                    'name': (self.code or '') + '/' + str(sequence),
                     'remaining_value': residual_amount,
-                    'depreciated_value': (self.value - self.salvage_value) - (residual_amount + amount),
+                    'depreciated_value': self.value - (self.salvage_value + residual_amount),
                     'depreciation_date': depreciation_date.strftime(DF),
                 }
                 commands.append((0, False, vals))
@@ -329,7 +335,7 @@ class AccountAssetDepreciationLine(models.Model):
     parent_state = fields.Selection(related='asset_id.state', string='State of Asset')
     amount = fields.Float(string='Current Depreciation', digits=0, required=True)
     remaining_value = fields.Float(string='Next Period Depreciation', digits=0, required=True)
-    depreciated_value = fields.Float(string='Amount Already Depreciated', required=True)
+    depreciated_value = fields.Float(string='Cumulative Depreciation', required=True)
     depreciation_date = fields.Date('Depreciation Date', index=True)
     move_id = fields.Many2one('account.move', string='Depreciation Entry')
     move_check = fields.Boolean(compute='_get_move_check', string='Posted', track_visibility='always', store=True)
@@ -349,16 +355,15 @@ class AccountAssetDepreciationLine(models.Model):
             current_currency = line.asset_id.currency_id
             amount = company_currency.compute(line.amount, current_currency)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
-            asset_name = line.asset_id.name
-            reference = line.name
+            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, line.asset_id.method_number)
+            reference = line.asset_id.code
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id
             categ_type = line.asset_id.category_id.type
             debit_account = line.asset_id.category_id.account_asset_id.id
             credit_account = line.asset_id.category_id.account_depreciation_id.id
             move_line_1 = {
-                'name': asset_name or reference,
-                'ref': reference,
+                'name': asset_name,
                 'account_id': credit_account,
                 'debit': 0.0,
                 'credit': amount,
@@ -371,8 +376,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'asset_id': line.asset_id.id if categ_type == 'sale' else False,
             }
             move_line_2 = {
-                'name': asset_name or reference,
-                'ref': reference,
+                'name': asset_name,
                 'account_id': debit_account,
                 'credit': 0.0,
                 'debit': amount,
@@ -385,7 +389,6 @@ class AccountAssetDepreciationLine(models.Model):
                 'asset_id': line.asset_id.id if categ_type == 'purchase' else False
             }
             move_vals = {
-                'name': asset_name,
                 'ref': reference,
                 'date': depreciation_date or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,

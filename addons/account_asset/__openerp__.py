@@ -36,6 +36,7 @@ Keeps track of the revenue recognition installments, and creates corresponding j
         'views/account_asset_invoice_view.xml',
         'report/account_asset_report_view.xml',
         'views/account_asset.xml',
+        'account_asset_cron.xml',
     ],
     'qweb': [
         "static/src/xml/account_asset_template.xml",

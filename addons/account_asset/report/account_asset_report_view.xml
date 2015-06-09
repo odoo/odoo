@@ -7,10 +7,8 @@
         <field name="arch" type="xml">
             <pivot string="Assets Analysis" disable_linking="True">
                 <field name="asset_category_id" type="row"/>
-                <field name="date" type="col"/>
-                <field name="posted_value" type="measure"/>
                 <field name="gross_value" type="measure"/>
-                <field name="depreciation_value" type="measure"/>
+                <field name="unposted_value" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -20,8 +18,8 @@
         <field name="arch" type="xml">
             <graph string="Assets Analysis" type="pivot">
                 <field name="asset_category_id" type="row"/>
-                <field name="date" type="col"/>
                 <field name="gross_value" type="measure"/>
+                <field name="unposted_value" type="measure"/>
             </graph>
         </field>
     </record>
@@ -157,12 +155,7 @@
     <menuitem action="action_asset_asset_report"
               id="menu_action_asset_asset_report"
               parent="account.menu_finance_reports" sequence="21"/>
-              
-    <!--
-        Asset Revenue Recognition Menu
-    -->
-    
     <menuitem action="action_asset_revenue_report"
           id="menu_action_asset_revenue_report"
-          parent="account.menu_finance_reports" sequence="20"/>
+          parent="account.menu_finance_reports" sequence="22"/>
 </odoo>
