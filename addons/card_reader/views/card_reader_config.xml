@@ -64,11 +64,11 @@
           <field name="model">account.bank.statement</field>
           <field name="inherit_id" ref="account.view_bank_statement_form"/>
           <field name="arch" type="xml">
-            <tree position="inside">
+            <xpath expr="//field[@name='amount']" position="before">
               <field name="prefixed_card_number"/>
               <field name="card_brand"/>
               <field name="card_owner_name"/>
-            </tree>
+            </xpath>
           </field>
         </record>
 
