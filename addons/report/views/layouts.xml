@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<template id="layout" inherit_id="web.layout" primary="True">
-    <!-- Add report attributes -->
-    <xpath expr="//html" position="attributes">
-        <attribute name="t-att-data-report-margin-top">data_report_margin_top if data_report_margin_top else None</attribute>
-        <attribute name="t-att-data-report-header-spacing">data_report_header_spacing if data_report_header_spacing else None</attribute>
-        <attribute name="t-att-data-report-dpi">data_report_dpi if data_report_dpi else None</attribute>
-    </xpath>
-    <!-- Add report style -->
-    <xpath expr="//head" position="inside">
-        <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-        <link href="/website/static/src/css/website.css" rel="stylesheet"/>
-        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-        <link href="/base/static/src/css/description.css" rel="stylesheet"/>
-        <style type="text/css">
-            <t t-call="report.style"/>
-        </style>
-    </xpath>
-    <!-- Remove conflicting style -->
-    <xpath expr="//head/link[@href='/web/static/src/css/full.css']" position="replace"></xpath>
+<template id="layout" name="Report layout">&lt;!DOCTYPE html&gt;
+    <html t-att-lang="lang and lang.replace('_', '-')"
+          t-att-data-editable="'1' if editable else None"
+          t-att-data-translatable="'1' if translatable else None"
+          t-att-data-edit_translations="'1' if edit_translations else None"
+          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-report-margin-top="data_report_margin_top"
+          t-att-data-report-header-spacing="data_report_header_spacing"
+          t-att-data-report-dpi="data_report_dpi">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="initial-scale=1"/>
+            <title><t t-esc="title or 'Odoo Report'"/></title>
+            <link rel='stylesheet' href='/report/static/src/css/report.css'/>
+            <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            <t t-if="editable">
+                <t t-call-assets="web_editor.assets_editor"/>
+                <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
+                <script type="text/javascript" src='/report/static/src/js/report.editor.js' />
+            </t>
+        </head>
+        <body class="container" t-att-style="editable and 'margin-top: 40px;'">
+            <div id="wrapwrap">
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </div>
+        </body>
+    </html>
 </template>
 
 <template id="html_container">
@@ -27,22 +37,6 @@
     <t t-call="report.layout">
         <t t-raw="0"/>
     </t>
-</template>
-
-<template id="style" name="Report Style">
-    body {
-        color: #000 !important;
-        word-wrap: break-word;
-    }
-    .border-black td {
-        border-top: 1px solid black !important;
-    }
-    .table-condensed > thead > tr > th {
-        border-bottom: 1px solid black !important;
-    }
-    .zero_min_height {
-        min-height: 0px !important;
-    }
 </template>
 
 <template id="external_layout">

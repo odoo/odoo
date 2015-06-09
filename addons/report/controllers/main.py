@@ -28,22 +28,21 @@ class ReportController(Controller):
 
         if docids:
             docids = [int(i) for i in docids.split(',')]
-        options_data = None
         if data.get('options'):
-            options_data = simplejson.loads(data['options'])
+            data['options'] = simplejson.loads(data['options'])
         if data.get('context'):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
-            # the user explicitely wants to change the lang, this mechanism overwrites it. 
-            data_context = simplejson.loads(data['context'])
-            if data_context.get('lang'):
-                del data_context['lang']
-            context.update(data_context)
+            # the user explicitely wants to change the lang, this mechanism overwrites it.
+            data['context'] = simplejson.loads(data['context'])
+            if data['context'].get('lang'):
+                del data['context']['lang']
+            context.update(data['context'])
 
         if converter == 'html':
-            html = report_obj.get_html(cr, uid, docids, reportname, data=options_data, context=context)
+            html = report_obj.get_html(cr, uid, docids, reportname, data=data, context=context)
             return request.make_response(html)
         elif converter == 'pdf':
-            pdf = report_obj.get_pdf(cr, uid, docids, reportname, data=options_data, context=context)
+            pdf = report_obj.get_pdf(cr, uid, docids, reportname, data=data, context=context)
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:
