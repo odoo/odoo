@@ -75,6 +75,7 @@ class sale_order(osv.Model):
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
             if so.state != 'draft':
+                request.session['sale_order_id'] = None
                 raise osv.except_osv(_('Error!'), _('It is forbidden to modify a sale order which is not in draft status'))
             if line_id != False:
                 line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
