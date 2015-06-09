@@ -331,8 +331,10 @@ var Followers = form_common.AbstractField.extend({
             _.each(records, function (record, record_name) {
                 if (old_model != record.parent_model) {
                     if (old_model != '') {
-                        var index = $($list).find('.oe_subtype').length;
-                        $(($list).find('.oe_subtype')[index-1]).addClass('oe_subtype_border');
+                        var $last_separator = $list.find('.oe_subtype').last();
+                        if ($last_separator) {
+                            $last_separator.addClass('oe_subtype_border');
+                        }
                     }
                     old_model = record.parent_model;
                 }
