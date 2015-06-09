@@ -33,6 +33,7 @@ var models = require('point_of_sale.models');
 var core = require('web.core');
 var Model = require('web.Model');
 var utils = require('web.utils');
+var formats = require('web.formats');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -1546,14 +1547,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
             this.inputbuffer = newbuf;
             var order = this.pos.get_order();
             if (order.selected_paymentline) {
-                    var amount;
-                    try{
-                        amount = instance.web.parse_value(this.inputbuffer, {type: "float"});
-                    }
-                    catch(e){
-                        amount = 0;
-                    }
-                    order.selected_paymentline.set_amount(amount);
+                var amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                order.selected_paymentline.set_amount(amount);
                 this.order_changes();
                 this.render_paymentlines();
                 this.$('.paymentline.selected .edit').text(this.inputbuffer);
