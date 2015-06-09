@@ -260,6 +260,22 @@ ScreenWidget.include({
 
 // On Payment screen, allow electronic payments
 PaymentScreenWidget.include({
+    _does_credit_payment_line_exist: function (amount, card_number, card_brand, card_owner_name) {
+        var i = 0;
+        var lines = this.pos.get_order().get_paymentlines();
+
+        for (i = 0; i < lines.length; i++) {
+            if (lines[i].amount === amount &&
+                lines[i].card_number === card_number &&
+                lines[i].card_brand === card_brand &&
+                lines[i].card_owner_name === card_owner_name) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
     retry_credit_code_transaction: function (parsed_result, def, response, retry_nr) {
         var message = "";
 
@@ -343,7 +359,8 @@ PaymentScreenWidget.include({
 
                     if (response.status === 'Approved') {
                         // AP* indicates a duplicate request, so don't add anything for those
-                        if (response.message === "AP*") {
+                        if (response.message === "AP*" && self._does_credit_payment_line_exist(response.authorize, decodedMagtek['number'],
+                                                                                               response.card_type, decodedMagtek['name'])) {
                             def.resolve({
                                 message: lookUpCodeTransaction["Approved"][response.error],
                                 auto_close: true,
