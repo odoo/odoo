@@ -57,7 +57,7 @@
                             attrs="{'invisible':['|', ('no_auto_thread', '=', False), ('composition_mode', '!=', 'mass_mail')],
                                     'required':[('no_auto_thread', '=', True), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
-                    <field name="body"/>
+                    <field name="body" options="{'style-inline': true}"/>
                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
                     <footer>
                         <button string="Send" name="send_mail_action" type="object" class="oe_highlight"/>

@@ -612,61 +612,6 @@ var FieldText = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     },
 });
 
-/**
- * FieldTextHtml Widget
- * Intended for FieldText widgets meant to display HTML content. This
- * widget will instantiate the CLEditor (see cleditor in static/src/lib)
- * To find more information about CLEditor configutation: go to
- * http://premiumsoftware.net/cleditor/docs/GettingStarted.html
- */
-var FieldTextHtml = common.AbstractField.extend(common.ReinitializeFieldMixin, {
-    template: 'FieldTextHtml',
-    init: function() {
-        this._super.apply(this, arguments);
-    },
-    initialize_content: function() {
-        var self = this;
-        if (! this.get("effective_readonly")) {
-            self._updating_editor = false;
-            this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || 'calc(100% - 4px)');
-            var height = ((this.node.attrs || {}).editor_height || 250);
-            this.$textarea.cleditor({
-                width:      width, // width not including margins, borders or padding
-                height:     height, // height not including margins, borders or padding
-                controls:   // controls to add to the toolbar
-                            "bold italic underline strikethrough " +
-                            "| removeformat | bullets numbering | outdent " +
-                            "indent | link unlink | source",
-                bodyStyle:  // style to assign to document body contained within the editor
-                            "margin:4px; color:#4c4c4c; font-size:13px; font-family:'Lucida Grande',Helvetica,Verdana,Arial,sans-serif; cursor:text"
-            });
-            this.$cleditor = this.$textarea.cleditor()[0];
-            this.$cleditor.change(function() {
-                if (! self._updating_editor) {
-                    self.$cleditor.updateTextArea();
-                    self.internal_set_value(self.$textarea.val());
-                }
-            });
-            if (this.field.translate) {
-                var $img = $('<img class="oe_field_translate oe_input_icon" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>')
-                    .click(this.on_translate);
-                this.$cleditor.$toolbar.append($img);
-            }
-        }
-    },
-    render_value: function() {
-        if (! this.get("effective_readonly")) {
-            this.$textarea.val(this.get('value') || '');
-            this._updating_editor = true;
-            this.$cleditor.updateFrame();
-            this._updating_editor = false;
-        } else {
-            this.$el.html(this.get('value'));
-        }
-    },
-});
-
 var FieldBoolean = common.AbstractField.extend({
     template: 'FieldBoolean',
     start: function() {
@@ -1658,7 +1603,6 @@ core.form_widget_registry
     .add('email', FieldEmail)
     .add('url', FieldUrl)
     .add('text',FieldText)
-    .add('html', FieldTextHtml)
     .add('char_domain', FieldCharDomain)
     .add('date', FieldDate)
     .add('datetime', FieldDatetime)
