@@ -7,6 +7,7 @@ import logging
 
 import openerp
 from openerp import SUPERUSER_ID
+from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
@@ -87,6 +88,9 @@ class base_action_rule(osv.osv):
         'on_change_fields': fields.char(string="On Change Fields Trigger",
             help="Comma-separated list of field names that triggers the onchange."),
     }
+
+    # which fields have an impact on the registry
+    CRITICAL_FIELDS = ['model_id', 'active', 'kind', 'on_change_fields']
 
     _defaults = {
         'active': True,
@@ -298,6 +302,8 @@ class base_action_rule(osv.osv):
         return updated
 
     def _update_cron(self, cr, uid, context=None):
+        """ Activate the cron job depending on whether there exists action rules
+        based on time conditions. """
         try:
             cron = self.pool['ir.model.data'].get_object(
                 cr, uid, 'base_action_rule', 'ir_cron_crm_action', context=context)
@@ -306,36 +312,32 @@ class base_action_rule(osv.osv):
 
         return cron.toggle(model=self._name, domain=[('kind', '=', 'on_time')])
 
-    @openerp.api.one
-    def _purge_custom_onchange(self):
-        if self.kind != 'on_change':
-            return
-        model = self.env[self.model_id.model]
-        for field_name in self.on_change_fields.split(","):
-            field_name = field_name.strip()
-            if model._onchange_methods.get(field_name):
-                model._onchange_methods[field_name] = [method for method in model._onchange_methods[field_name] if method.func_name != 'base_action_rule_onchange']
+    def _update_registry(self, cr, uid, context=None):
+        """ Update the registry after a modification on action rules. """
+        if self.pool.ready:
+            # for the sake of simplicity, simply force the registry to reload
+            cr.commit()
+            openerp.api.Environment.reset()
+            RegistryManager.new(cr.dbname)
+            RegistryManager.signal_registry_change(cr.dbname)
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
-        if self._register_hook(cr, [res_id]):
-            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         self._update_cron(cr, uid, context=context)
+        self._update_registry(cr, uid, context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        self._purge_custom_onchange(cr, uid, ids, context=context)
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
-        if self._register_hook(cr, ids):
-            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
-        self._update_cron(cr, uid, context=context)
+        if set(vals) & set(self.CRITICAL_FIELDS):
+            self._update_cron(cr, uid, context=context)
+            self._update_registry(cr, uid, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(base_action_rule, self).unlink(cr, uid, ids, context=context)
         self._update_cron(cr, uid, context=context)
+        self._update_registry(cr, uid, context=context)
         return res
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
