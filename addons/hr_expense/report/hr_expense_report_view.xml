@@ -36,7 +36,7 @@
                 <filter string="Approved" domain="[('state','=','accepted')]" help="Approved Expenses"/>
                 <filter string="Done" domain="[('state','=', 'done')]" help="Done Expenses"/>
                 <field name="employee_id"/>
-                <field name="department_id"/>
+                <field name="department_id" groups="hr.group_multi_departments"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="product_id"/>
                     <field name="user_id"/>
@@ -47,7 +47,7 @@
                 </group>
                 <group expand="1" string="Group By">
                     <filter string="Validation User" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Department" context="{'group_by':'department_id'}"/>
+                    <filter string="Department" groups="hr.group_multi_departments" context="{'group_by':'department_id'}"/>
                     <filter string="Product" context="{'group_by':'product_id'}"/>
                     <filter string="Status" context="{'group_by':'state'}"/>
                     <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

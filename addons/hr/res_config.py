@@ -32,6 +32,10 @@ class hr_config_settings(osv.osv_memory):
             help ="""This installs the module hr_payroll."""),
         'module_website_hr_recruitment': fields.boolean('Publish jobs on your website',
             help ="""This installs the module website_hr_recruitment"""),
+        'group_multi_departments': fields.boolean(
+            "Manage employees by department",
+            implied_group='hr.group_multi_departments', group="base.group_hr_user",
+            help="""Allows you to manage employees by department."""),
         'group_hr_attendance': fields.boolean('Track attendances for all employees',
             implied_group='base.group_hr_attendance',
             help="Allocates attendance group to all users."),
