@@ -492,6 +492,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
             'shape': 'square',
             'seats': 1,
         });
+        tw.save_changes();
         this.select_table(tw);
         this.check_empty_floor();
     },
