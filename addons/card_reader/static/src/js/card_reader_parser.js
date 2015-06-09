@@ -81,6 +81,38 @@ function decodeMercuryResponse (data) {
     };
 }
 
+function decodeMagtek (magtekInput) {
+    // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
+    var _track1_regex = /%B?([0-9]*)\^([A-Z\/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/;
+
+    var track1 = magtekInput.match(_track1_regex);
+    var magtek_generated = magtekInput.split('|');
+
+    var to_return = {};
+    track1.shift(); // get rid of complete match
+    to_return['number'] = track1.shift().substr(-4);
+    to_return['name'] = track1.shift();
+    track1.shift(); // expiration date
+    track1.shift(); // service code
+    track1.shift(); // discretionary data
+    track1.shift(); // zero pad
+
+    magtek_generated.shift(); // track1 and track2
+    magtek_generated.shift(); // clear text crc
+    magtek_generated.shift(); // encryption counter
+    to_return['encrypted_block'] = magtek_generated.shift();
+    magtek_generated.shift(); // enc session id
+    magtek_generated.shift(); // device serial
+    magtek_generated.shift(); // magneprint data
+    magtek_generated.shift(); // magneprint status
+    magtek_generated.shift(); // enc track3
+    to_return['encrypted_key'] = magtek_generated.shift();
+    magtek_generated.shift(); // enc track1
+    magtek_generated.shift(); // reader enc status
+
+    return to_return;
+}
+
 var _paylineproto = pos_model.Paymentline.prototype;
 
 pos_model.Paymentline = pos_model.Paymentline.extend({
@@ -228,52 +260,6 @@ ScreenWidget.include({
 
 // On Payment screen, allow electronic payments
 PaymentScreenWidget.include({
-    // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
-    _track1:/%B?([0-9]*)\^([A-Z\/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/,
-    _track2:/\;([0-9]+)=([0-9]{4})(.{3})([^?]+)\?/,
-
-    // Extract data from a track list to a track dictionnary
-    _decode_track: function(track_list) {
-
-        if(track_list < 6) return {};
-
-        return {
-            'private'        : track_list.pop(),
-            'service_code'   : track_list.pop(),
-            'validity'       : track_list.pop(),
-            'card_owner_name': track_list.pop(),
-            'card_number'    : track_list.pop(),
-            'original'       : track_list.pop(),
-        };
-
-    },
-    // Extract data from crypted track list to a track dictionnary
-    _decode_encrypted_data: function (code_list) {
-        if(code_list < 13) return {};
-        var encrypted_data = {
-            'format_code'           : code_list.pop(),
-            'enc_crc'               : code_list.pop(),
-            'clear_text_crc'        : code_list.pop(),
-        };
-
-        if(code_list.lenght > 10) {
-            encrypted_data['encryption_counter'] = code_list.pop();
-        }
-
-        _.extend(encrypted_data, {
-            'dukpt_serial_n'        : code_list.pop(),
-            'enc_session_id'        : code_list.pop(),
-            'device_serial'         : code_list.pop(),
-            'magneprint_data'       : code_list.pop(),
-            'magneprint_status'     : code_list.pop(),
-            'enc_track3'            : code_list.pop(),
-            'enc_track2'            : code_list.pop(),
-            'enc_track1'            : code_list.pop(),
-            'reader_enc_status'     : code_list.pop(),
-        });
-        return encrypted_data;
-    },
-
     retry_credit_code_transaction: function (parsed_result, def, response, retry_nr) {
         var message = "";
 
@@ -314,10 +300,12 @@ PaymentScreenWidget.include({
         }
 
         var self = this;
+        var decodedMagtek = decodeMagtek(parsed_result.code);
 
-        // Construct a dictionnary to store all data from the magnetic card
+        // Construct a dictionary to store all data from the magnetic card
         var transaction = {
-            'encrypted_data'    : this._decode_encrypted_data(parsed_result.code.split('|')),
+            'encrypted_key'     : decodedMagtek['encrypted_key'],
+            'encrypted_block'   : decodedMagtek['encrypted_block'],
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
             'invoice_no'        : self.pos.get_order().sequence_number,
@@ -362,15 +350,13 @@ PaymentScreenWidget.include({
                             });
                         } else {
                             // If the payment is approved, add a payment line
-                            var track1 = self._decode_track(parsed_result.code.match(self._track1));
-
                             var order = self.pos.get_order();
                             order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
                             order.selected_paymentline.paid = true;
                             order.selected_paymentline.amount = response.authorize;
-                            order.selected_paymentline.card_number = track1['card_number'].substr(-4);
+                            order.selected_paymentline.card_number = decodedMagtek['number'];
                             order.selected_paymentline.card_brand = response.card_type;
-                            order.selected_paymentline.card_owner_name = track1['card_owner_name'];
+                            order.selected_paymentline.card_owner_name = decodedMagtek['name'];
                             order.selected_paymentline.ref_no = response.ref_no;
                             order.selected_paymentline.record_no = response.record_no;
                             order.selected_paymentline.invoice_no = response.invoice_no;
