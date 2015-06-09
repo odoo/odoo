@@ -445,7 +445,9 @@ class account_bank_statement_line(osv.osv):
     def cancel(self, cr, uid, ids, context=None):
         account_move_obj = self.pool.get('account.move')
         move_ids = []
-        for line in self.browse(cr, uid, ids, context=context):
+        lines = self.browse(cr, uid, ids, context=context)
+        lines[0].statement_id.state = 'draft'
+        for line in lines:
             if line.journal_entry_id:
                 move_ids.append(line.journal_entry_id.id)
                 for aml in line.journal_entry_id.line_id:
