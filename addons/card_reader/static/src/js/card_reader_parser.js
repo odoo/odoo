@@ -324,7 +324,7 @@ PaymentScreenWidget.include({
             'encrypted_block'   : decodedMagtek['encrypted_block'],
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
-            'invoice_no'        : self.pos.get_order().sequence_number,
+            'invoice_no'        : self.pos.get_order().uid.replace(/-/g,''),
             'purchase'          : parsed_result.total,
             'journal_id'        : parsed_result.journal_id,
         };
