@@ -202,10 +202,10 @@
                     <filter name="to_approve" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <field name="employee_id"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="hr.group_multi_departments"/>
                     <group expand="0" string="Group By">
                         <filter string="Employees" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}" groups="hr.group_multi_departments"/>
                     </group>
                 </search>
             </field>
@@ -256,14 +256,6 @@
                     <group name="timesheets_grp" string="Timesheets">
                         <field name="timesheet_range"/>
                         <field name="timesheet_max_difference"/>
-                        <div>
-                            <label for="timesheet_range" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)]}"/>
-                            <field name="timesheet_range" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}" class="oe_inline"/>
-                        </div>
-                        <div>
-                            <label for="timesheet_max_difference" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)]}"/>
-                            <field name="timesheet_max_difference" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}" class="oe_inline"/>
-                        </div>
                     </group>
                 </xpath>
             </field>
