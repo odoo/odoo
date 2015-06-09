@@ -511,7 +511,13 @@ class Home(http.Controller):
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = "Wrong login/password"
-        return request.render('web.login', values)
+        if request.env.ref('web.login', False):
+            return request.render('web.login', values)
+        else:
+            # probably not an odoo compatible database
+            error = 'Unable to login on database %s' % request.session.db
+            return werkzeug.utils.redirect('/web/database/selector?error=%s' % error, 303)
+
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
@@ -664,6 +670,7 @@ class Database(http.Controller):
         return env.get_template("database_selector.html").render({
             'databases': dbs,
             'debug': request.debug,
+            'error': kw.get('error')
         })
 
     @http.route('/web/database/manager', type='http', auth="none")
