@@ -1079,10 +1079,14 @@ class Binary(http.Controller):
         Model = request.registry[model]
         cr, uid, context = request.cr, request.uid, request.context
         fields = [field]
+        content_type = 'application/octet-stream'
         if filename_field:
             fields.append(filename_field)
         if id:
+            fields.append('file_type')
             res = Model.read(cr, uid, [int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(cr, uid, fields, context)
         filecontent = base64.b64decode(res.get(field) or '')
@@ -1092,9 +1096,10 @@ class Binary(http.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return request.make_response(filecontent,
-                [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', content_disposition(filename))])
+            return request.make_response(
+                filecontent, [('Content-Type', content_type),
+                              ('Content-Disposition',
+                               content_disposition(filename))])
 
     @http.route('/web/binary/saveas_ajax', type='http', auth="public")
     @serialize_exception
@@ -1106,6 +1111,7 @@ class Binary(http.Controller):
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
+        content_type = 'application/octet-stream'
 
         Model = request.session.model(model)
         fields = [field]
@@ -1114,7 +1120,10 @@ class Binary(http.Controller):
         if data:
             res = {field: data, filename_field: jdata.get('filename', None)}
         elif id:
+            fields.append('file_type')
             res = Model.read([int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field) or '')
@@ -1125,9 +1134,10 @@ class Binary(http.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return request.make_response(filecontent,
-                headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', content_disposition(filename))],
+            return request.make_response(
+                filecontent, headers=[('Content-Type', content_type),
+                                      ('Content-Disposition',
+                                       content_disposition(filename))],
                 cookies={'fileToken': token})
 
     @http.route('/web/binary/upload', type='http', auth="user")
