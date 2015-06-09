@@ -351,33 +351,17 @@
 
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_vignette oe_semantic_html_override">
-                                <a type="open" href="#" class="oe_kanban_action">
+                            <div class="o_kanban_two_column_tags oe_kanban_global_click">
+                                <div class="o_kanban_tags_section">
+                                    <field name="tag_ids"/>
+                                </div>
+                                <div class="o_kanban_image">
                                     <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)"/>
-                                </a>
+                                </div>
                                 <div class="oe_kanban_details">
-                                    <h4 class="oe_partner_heading">
-                                        <a type="open">
-                                            <field name="license_plate"/><br/>
-                                            <field name="model_id" />
-                                        </a>
-                                    </h4>
-                                    <t t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value">
-                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
-                                            <span class="oe_tag oe_kanban_color_3"><field name="contract_renewal_name" />
-                                               <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
-                                            </span>
-                                        </a>
-                                    </t>
-
-                                    <t t-if="record.contract_renewal_overdue.raw_value">
-                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
-                                            <span class="oe_tag oe_kanban_color_2"><field name="contract_renewal_name" />
-                                                <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
-                                            </span>
-                                        </a>
-                                    </t>
-
+                                    <strong>
+                                        <field name="license_plate"/> : <field name="model_id"/>
+                                    </strong>
                                     <ul>
                                         <li>
                                             <t t-if="record.driver_id.raw_value"><field name="driver_id"/></t>
@@ -385,10 +369,15 @@
                                         <li>
                                             <t t-if="record.location.raw_value"><field name="location"/></t>
                                         </li>
-
                                     </ul>
-
-                                    <field name="tag_ids"/>
+                                    <div class="o_kanban_button">
+                                        <a t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-warning" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                            <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
+                                        </a>
+                                        <a t-if="record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-danger" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                            <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </t>
