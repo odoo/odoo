@@ -320,8 +320,7 @@ class AccountBankStatement(models.Model):
         for statement in self:
             for st_line in statement.line_ids:
                 if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
-                    bank_obj = self.env['res.partner.bank']
-                    bank_vals = bank_obj.onchange_partner_id(self.cr, self.uid, [st_line.bank_account_id.id], st_line.partner_id.id, context=self._context)['value']
+                    bank_vals = st_line.bank_account_id.onchange_partner_id(st_line.partner_id.id)['value']
                     bank_vals.update({'partner_id': st_line.partner_id.id})
                     st_line.bank_account_id.write(bank_vals)
 
