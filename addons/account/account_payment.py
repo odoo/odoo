@@ -197,7 +197,7 @@ class account_payment(models.Model):
 
     company_id = fields.Many2one(store=True)
 
-    name = fields.Char(readonly=True, copy=False)
+    name = fields.Char(readonly=True, copy=False, default="Draft Payment") # The name is attributed upon post()
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')], readonly=True, default='draft', copy=False, string="Status")
 
     payment_type = fields.Selection(selection_add=[('transfer', 'Internal Transfer')])
