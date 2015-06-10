@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sales_team
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-02-09 08:02+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-27 09:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-10 07:11+0000\n"
-"X-Generator: Launchpad (build 17331)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_case_section_act
@@ -24,22 +25,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click here to define a new sales team.\n"
 "                </p><p>\n"
-"                    Use sales team to organize your different salespersons "
-"or\n"
+"                    Use sales team to organize your different salespersons or\n"
 "                    departments into separate teams. Each team will work in\n"
 "                    its own list of opportunities.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Klik hier om een verkoopteam aan te maken.\n"
-"                </p><p>\n"
-"                    Gebruik verkoopteams voor het onderverdelen van "
-"verschillende verkopers\n"
-"                    of afdelingen in verschillende teams. Ieder team werkt\n"
-"                    met zijn eigen lijst van prospects.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Klik hier om een verkoopteam aan te maken.\n                </p><p>\n                    Gebruik verkoopteams voor het onderverdelen van verschillende verkopers\n                    of afdelingen in verschillende teams. Ieder team werkt\n                    met zijn eigen lijst van prospects.\n                </p>\n            "
 
 #. module: sales_team
 #: field:crm.case.section,active:0
@@ -49,9 +40,7 @@ msgstr "Actief"
 #. module: sales_team
 #: help:sale.config.settings,group_multi_salesteams:0
 msgid "Allows you to use Sales Teams to manage your leads and opportunities."
-msgstr ""
-"Geeft u de mogelijkheid om verkoopteams te gebruiken voor het beheren van "
-"leads en prospects"
+msgstr "Geeft u de mogelijkheid om verkoopteams te gebruiken voor het beheren van leads en prospects"
 
 #. module: sales_team
 #: field:crm.case.section,child_ids:0
@@ -113,9 +102,7 @@ msgstr "Fout ! U kunt geen recursief verkoopteam maken."
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr ""
-"Volg dit verkoopteam om automatisch de afspraken verbonden aan gebruikers "
-"van dit team de volgen."
+msgstr "Volg dit verkoopteam om automatisch de afspraken verbonden aan gebruikers van dit team de volgen."
 
 #. module: sales_team
 #: field:crm.case.section,message_follower_ids:0
@@ -132,10 +119,7 @@ msgstr "Groepeer op..."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
 
 #. module: sales_team
 #: field:crm.case.section,id:0
@@ -150,11 +134,9 @@ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 #. module: sales_team
 #: help:crm.case.section,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the sales team "
-"without removing it."
-msgstr ""
-"Als het actief veld is aangevinkt, kunt u het verkoopteam verbergen zonder "
-"het te verwijderen."
+"If the active field is set to true, it will allow you to hide the sales team"
+" without removing it."
+msgstr "Als het actief veld is aangevinkt, kunt u het verkoopteam verbergen zonder het te verwijderen."
 
 #. module: sales_team
 #: model:crm.case.section,name:sales_team.crm_case_section_1
@@ -244,8 +226,7 @@ msgstr "Antwoord aan"
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
 #: view:crm.case.section:sales_team.crm_case_section_view_tree
-#: field:crm.case.section,name:0
-#: field:res.partner,section_id:0
+#: field:crm.case.section,name:0 field:res.partner,section_id:0
 msgid "Sales Team"
 msgstr "Verkoopteam"
 
@@ -305,9 +286,7 @@ msgstr "De verkoopteam code moet uniek zijn!"
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this sales team"
-msgstr ""
-"Het e-mail adres wat in het 'antwoord-aan' veld wordt gezet van alle e-mails "
-"die door Odoo worden verstuurt over werkzaamheden van het verkoopteam."
+msgstr "Het e-mail adres wat in het 'antwoord-aan' veld wordt gezet van alle e-mails die door Odoo worden verstuurt over werkzaamheden van het verkoopteam."
 
 #. module: sales_team
 #: field:crm.case.section,message_unread:0
@@ -323,8 +302,7 @@ msgstr "Gebruikers"
 #: help:crm.case.section,change_responsible:0
 msgid ""
 "When escalating to this team override the salesman with the team leader."
-msgstr ""
-"Bij het escaleren naar dit team, vervang de verkoper door de teamleider."
+msgstr "Bij het escaleren naar dit team, vervang de verkoper door de teamleider."
 
 #. module: sales_team
 #: field:crm.case.section,working_hours:0

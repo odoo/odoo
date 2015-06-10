@@ -1,21 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-26 08:15+0000\n"
-"Last-Translator: Alexander Deynichenko <adeynichenko@gmail.com>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-27 05:42+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
@@ -25,12 +26,12 @@ msgstr "# Продуктов"
 #. module: stock_account
 #: view:product.template:stock_account.view_template_property_form
 msgid "- update"
-msgstr ""
+msgstr "- обновить"
 
 #. module: stock_account
 #: view:product.category:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr ""
+msgstr "Свойства счета запасов"
 
 #. module: stock_account
 #: view:stock.config.settings:stock_account.view_stock_config_settings_inherit
@@ -91,21 +92,18 @@ msgstr ""
 #. module: stock_account
 #: help:stock.inventory,period_id:0
 msgid ""
-"Choose the accounting period where you want to value the stock moves created "
-"by the inventory instead of the default one (chosen by the inventory end "
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
 "date)"
 msgstr ""
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid ""
-"Choose the date for which you want to get the stock valuation of your "
-"products.\n"
+"Choose the date for which you want to get the stock valuation of your products.\n"
 "\n"
-"                        This will filter the stock operation that weren't "
-"done at the selected date, to retreive the quantity\n"
-"                        you had, and gives you the inventory value according "
-"to the standard price used at that time."
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
 msgstr ""
 
 #. module: stock_account
@@ -128,7 +126,7 @@ msgstr "Себестоимость"
 #. module: stock_account
 #: field:product.template,cost_method:0
 msgid "Costing Method"
-msgstr ""
+msgstr "Метод ценообразования"
 
 #. module: stock_account
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
@@ -143,7 +141,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_stock_invoice_onshipping
 msgid "Create Draft Invoices"
-msgstr ""
+msgstr "Создать черновые счета"
 
 #. module: stock_account
 #: view:stock.picking:stock_account.view_picking_inherit_form2
@@ -158,12 +156,12 @@ msgstr ""
 #. module: stock_account
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
-msgstr ""
+msgstr "Создать и открыть счет когда пользователь завершит заказ на доставку"
 
 #. module: stock_account
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
 msgid "Create invoice"
-msgstr ""
+msgstr "Создать счет"
 
 #. module: stock_account
 #: field:stock.change.standard.price,create_uid:0
@@ -193,7 +191,7 @@ msgstr "Дата"
 #. module: stock_account
 #: field:stock.invoice.onshipping,journal_id:0
 msgid "Destination Journal"
-msgstr ""
+msgstr "Журнал назначения"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:83
@@ -211,7 +209,7 @@ msgstr ""
 #. module: stock_account
 #: field:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Generate accounting entries per stock movement"
-msgstr ""
+msgstr "Генерировать проводки по складским перемещениям"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
@@ -221,25 +219,20 @@ msgstr "Группировать по"
 #. module: stock_account
 #: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
-msgstr ""
+msgstr "Группировать по партнерам"
 
 #. module: stock_account
-#: field:stock.change.standard.price,id:0
-#: field:stock.history,id:0
-#: field:stock.invoice.onshipping,id:0
-#: field:wizard.valuation.history,id:0
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: stock_account
 #: help:stock.change.standard.price,new_price:0
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
-msgstr ""
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "Если себестоимость продукции увеличится, счет изменения суммы остатка будет дебитоваться, а счет исходящих ТМЦ  кредитоваться на сумму (разница себестоимости * доступное количество).\nЕсли себестоимость продукции уменьшится, счет изменения суммы остатка будет кредитоваться, а счет исходящих ТМЦ  дебитоваться."
 
 #. module: stock_account
 #: help:product.template,valuation:0
@@ -255,8 +248,8 @@ msgstr ""
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
 msgstr ""
 
 #. module: stock_account
@@ -273,7 +266,7 @@ msgstr ""
 #: view:product.template:stock_account.view_template_property_form
 #: field:product.template,valuation:0
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "Оценка запасов"
 
 #. module: stock_account
 #: field:stock.history,inventory_value:0
@@ -281,11 +274,10 @@ msgid "Inventory Value"
 msgstr ""
 
 #. module: stock_account
-#: field:procurement.order,invoice_state:0
-#: field:stock.move,invoice_state:0
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
-msgstr ""
+msgstr "Управление счетами"
 
 #. module: stock_account
 #: field:stock.invoice.onshipping,invoice_date:0
@@ -296,7 +288,7 @@ msgstr "Дата счета"
 #: field:procurement.rule,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Статус счета"
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
@@ -345,13 +337,13 @@ msgstr ""
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
 msgid "Move"
-msgstr ""
+msgstr "Перемещение"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:116
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "Нет разницы между стандартной ценой и новой ценой!"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
@@ -362,13 +354,13 @@ msgstr ""
 #. module: stock_account
 #: selection:stock.return.picking,invoice_state:0
 msgid "No invoicing"
-msgstr ""
+msgstr "Нет счета"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_invoice_onshipping.py:82
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr ""
+msgstr "Нет комплектовочных листов требующих выставления счетов."
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
@@ -377,14 +369,13 @@ msgstr ""
 #: selection:stock.move,invoice_state:0
 #: selection:stock.picking,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Неприменимо"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:83
 #, python-format
 msgid ""
-"One of the following information is missing on the product or product "
-"category and prevents the accounting valuation entries to be created:\n"
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
 "    Product: %s\n"
 "    Stock Input Account: %s\n"
 "    Stock Output Account: %s\n"
@@ -401,7 +392,7 @@ msgstr ""
 #. module: stock_account
 #: selection:product.template,valuation:0
 msgid "Periodical (manual)"
-msgstr ""
+msgstr "Периодически (вручную)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -421,7 +412,7 @@ msgstr "Поставка"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Правило снабжения"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
@@ -449,7 +440,7 @@ msgstr "Шаблон продукта"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "Исходящие потоки"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -464,7 +455,7 @@ msgstr ""
 #. module: stock_account
 #: selection:product.template,valuation:0
 msgid "Real Time (automated)"
-msgstr ""
+msgstr "В реальном времени (автоматически)"
 
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
@@ -489,7 +480,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Разукомплектовать"
 
 #. module: stock_account
 #: field:stock.history,source:0
@@ -511,29 +502,26 @@ msgstr ""
 #. module: stock_account
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
 #: field:product.category,property_stock_account_input_categ:0
 #: field:product.template,property_stock_account_input:0
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Счет стоимости входящих ТМЦ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_invoice_onshipping
 msgid "Stock Invoice Onshipping"
-msgstr ""
+msgstr "Счёт по доставке"
 
 #. module: stock_account
 #: field:product.category,property_stock_journal:0
 msgid "Stock Journal"
-msgstr ""
+msgstr "Складской журнал"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -545,7 +533,7 @@ msgstr "Движение запаса"
 #: field:product.category,property_stock_account_output_categ:0
 #: field:product.template,property_stock_account_output:0
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Счет стоимости исходящих ТМЦ"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
@@ -556,17 +544,17 @@ msgstr ""
 #. module: stock_account
 #: field:product.category,property_stock_valuation_account_id:0
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Счёт оценки запасов"
 
 #. module: stock_account
 #: field:stock.location,valuation_in_account_id:0
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Счёт оценки запаса (входяшего)"
 
 #. module: stock_account
 #: field:stock.location,valuation_out_account_id:0
 msgid "Stock Valuation Account (Outgoing)"
-msgstr ""
+msgstr "Счёт оценки запасов (исходящих)"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_history.py:30
@@ -580,8 +568,7 @@ msgstr ""
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
-"This allows to automatically launch the invoicing wizard if the delivery is "
-"to be invoiced when you send or deliver goods.\n"
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
 msgstr ""
 
@@ -592,17 +579,17 @@ msgstr ""
 #: selection:stock.move,invoice_state:0
 #: selection:stock.picking,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Счет будет выставлен"
 
 #. module: stock_account
 #: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr ""
+msgstr "Будет возвращено / выставлено в счете"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
 msgid "Total Value"
-msgstr ""
+msgstr "Общая стоимость"
 
 #. module: stock_account
 #: help:stock.location,valuation_in_account_id:0
@@ -612,7 +599,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "Используется для оценки инвентаризации в реальном времени. Когда задан по виртуальному месту хранения (не внутреннего типа), этот счёт будет использован для хранения значения продуктов перемещённых из внутреннего места хранения в это место хранения, вместо заданного исходящего счёта в товаре. Это не оказывает влияния на внутренние места хранения."
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -622,7 +609,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "Используется для оценки инвентаризации в реальном времени. Когда задан по виртуальному месту хранения (не внутреннего типа), этот счёт будет использован для хранения значения продуктов перемещённых из этого места хранения во внутреннее место хранения, вместо заданного исходящего счёта в товаре. Это не оказывает влияния на внутренние места хранения."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -641,9 +628,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
-msgstr ""
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "При проведении оценки инвентаризации в реальном времени, корреспондирующие элементы журнала для всех входящих перемещений запасов будут отправлены на этот счёт, если нет конкретного счёта заданного по исходному месту хранения. Его также можно установить непосредственно для каждого продукта."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_input:0
@@ -652,7 +639,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "При проведении оценки инвентаризации в реальном времени, корреспондирующие пункты журнала для всех входящих перемещений запасов будут отправлены на этот счёт, если нет конкретного счёта заданного по исходному месту хранения. Его также можно установить непосредственно для каждого товара."
 
 #. module: stock_account
 #: help:product.category,property_stock_account_output_categ:0
@@ -660,9 +647,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
-msgstr ""
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "При проведении оценки инвентаризации в реальном времени, корреспондирующие пункты журнала для всех входящих перемещений запасов будут отправлены на этот счёт, если нет конкретного счёта заданного по месту назначения. Его также можно установить непосредственно для каждого продукта."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -671,21 +658,21 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "При проведении оценки инвентаризации в реальном времени, корреспондирующие элементы журнала для всех исходящих перемещений будут помещены на этот счёт, если нет задан счёт в месте назначения. Его также можно установить непосредственно для каждого продукта."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
+msgstr "При оценке стоимости запасов в реальном времени, это бухгалтерский журнал в который будут автоматически добавляться записи при обработке перемещений ТМЦ."
 
 #. module: stock_account
 #: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
+msgstr "При оценке запасов в реальном времени, этот счет будет содержать текущую оценку стоимости продуктов."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
@@ -695,11 +682,11 @@ msgstr ""
 #. module: stock_account
 #: view:stock.change.standard.price:stock_account.view_change_standard_price
 msgid "_Apply"
-msgstr ""
+msgstr "_Применить"
 
 #. module: stock_account
 #: view:stock.change.standard.price:stock_account.view_change_standard_price
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "or"
-msgstr ""
+msgstr "или"

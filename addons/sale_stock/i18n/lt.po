@@ -1,21 +1,22 @@
-# Lithuanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Lithuanian <lt@li.org>\n"
+"PO-Revision-Date: 2015-06-01 22:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Lithuanian (http://www.transifex.com/projects/p/odoo-8/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:20+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
@@ -140,9 +141,7 @@ msgstr "Incoterm sąlygos"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Tarptautinės prekybos (sutarčių) sąlygos, numatančios specifines prekių "
-"pristatymo sąlygas užsienio prekyboje."
+msgstr "Tarptautinės prekybos (sutarčių) sąlygos, numatančios specifines prekių pristatymo sąlygas užsienio prekyboje."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -162,10 +161,7 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to "
-"the Timesheet line entries for particular date and particular user  with the "
-"effect of creating, editing and deleting either ways and to automatically "
-"creates project tasks from procurement lines.\n"
+"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
 msgstr ""
 
@@ -173,8 +169,8 @@ msgstr ""
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -192,7 +188,7 @@ msgstr "Pakuočių skaičius"
 #: code:addons/sale_stock/res_config.py:78
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Tiktais administratorius gali keisti nustatymus"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -203,9 +199,7 @@ msgstr "Pakuotės tipas"
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
-"Pasirinkite \"Siųsti turimus produktus\", jeigu užsakymą bus galima "
-"pristatyti ir dalimis."
+msgstr "Pasirinkite \"Siųsti turimus produktus\", jeigu užsakymą bus galima pristatyti ir dalimis."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:275
@@ -231,12 +225,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produktas"
 
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Produkto šablonas"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -307,8 +301,7 @@ msgid "Selectable on Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Pristatyta"
 
@@ -330,7 +323,7 @@ msgstr ""
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr ""
+msgstr "Išsiųsti sąskaitas"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -345,15 +338,13 @@ msgid "View Delivery Order"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Sandėlis"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr ""
 
 #. module: sale_stock
@@ -388,10 +379,5 @@ msgstr "dienos"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
-
-#~ msgid "Picked"
-#~ msgstr "Pristatyta"

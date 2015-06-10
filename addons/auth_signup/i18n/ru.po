@@ -1,23 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-25 16:24+0000\n"
-"Last-Translator: user3 <Unknown>\n"
-"Language-Team: Russian <http://translate.starlight-"
-"biz.com//projects/odoo/auth_signup/ru/>\n"
+"PO-Revision-Date: 2015-05-29 12:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-26 05:56+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
 "Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.set_password_email
@@ -28,17 +27,13 @@ msgid ""
 "                        ${object.name},\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        You have been invited to connect to "
-"\"${object.company_id.name}\" in order to get access to your documents in "
-"Odoo.\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        To accept the invitation, click on the following "
-"link:\n"
+"                        To accept the invitation, click on the following link:\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
 "                    </ul>\n"
 "                    <p>\n"
 "                        Thanks,\n"
@@ -57,11 +52,9 @@ msgstr ""
 #: model:email.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the Odoo account linked to this "
-"email.</p>\n"
+"<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
 "\n"
-"<p>You may change your password by following <a "
-"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
@@ -92,13 +85,13 @@ msgstr "Разрешить регистрацию внешним пользов�
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
-"На указанный адрес было выслано письмо с инструкциями по сбросу пароля"
+msgstr "На указанный адрес было выслано письмо с инструкциями по сбросу пароля"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid ""
-"An invitation email containing the following subscription link has been sent:"
+"An invitation email containing the following subscription link has been "
+"sent:"
 msgstr ""
 
 #. module: auth_signup
@@ -108,8 +101,7 @@ msgid "Authentification Failed."
 msgstr ""
 
 #. module: auth_signup
-#: view:website:auth_signup.reset_password
-#: view:website:auth_signup.signup
+#: view:website:auth_signup.reset_password view:website:auth_signup.signup
 msgid "Back to Login"
 msgstr "Войти"
 
@@ -138,8 +130,7 @@ msgstr "Включить сброс пароля со страницы вход�
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
-"Если не отмечено, только приглашенные пользователи могут зарегистрироваться"
+msgstr "Если не отмечено, только приглашенные пользователи могут зарегистрироваться"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:109
@@ -188,8 +179,7 @@ msgid "Send an Invitation Email"
 msgstr ""
 
 #. module: auth_signup
-#: view:website:auth_signup.signup
-#: view:website:web.login
+#: view:website:auth_signup.signup view:website:web.login
 msgid "Sign up"
 msgstr ""
 
@@ -231,9 +221,7 @@ msgstr "Шаблон новых пользователей, созданных �
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
-"Это позволяет пользователям запросить сброс пароля со страницы входа в "
-"систему."
+msgstr "Это позволяет пользователям запросить сброс пароля со страницы входа в систему."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -241,8 +229,7 @@ msgid "Users"
 msgstr "Пользователи"
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
-#: view:website:auth_signup.reset_password
+#: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
 msgstr "Ваш электронный адрес"
 

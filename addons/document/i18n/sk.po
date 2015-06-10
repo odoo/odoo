@@ -1,25 +1,25 @@
-# Slovak translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Slovak <sk@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovak (http://www.transifex.com/projects/p/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:39+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr ""
 
@@ -31,11 +31,10 @@ msgid "%s (%s)"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:117
-#: code:addons/document/document.py:307
+#: code:addons/document/document.py:117 code:addons/document/document.py:307
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kópia)"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -43,8 +42,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
@@ -54,14 +52,13 @@ msgstr ""
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
 msgstr ""
 
 #. module: document
 #: field:document.directory.content.type,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktívny"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
@@ -83,7 +80,7 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "April"
-msgstr ""
+msgstr "Apríl"
 
 #. module: document
 #. openerp-web
@@ -95,26 +92,25 @@ msgstr ""
 #. module: document
 #: view:ir.attachment:document.view_document_file_tree
 msgid "Attachments"
-msgstr ""
+msgstr "Prílohy"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
 msgstr ""
 
 #. module: document
@@ -126,7 +122,7 @@ msgstr ""
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Spoločnost"
 
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
@@ -161,7 +157,7 @@ msgstr ""
 #: field:document.directory.dctx,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Vytvoril"
 
 #. module: document
 #: field:document.configuration,create_date:0
@@ -170,18 +166,18 @@ msgstr ""
 #: field:document.directory.dctx,create_date:0
 #: field:document.storage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Vytvorené"
 
 #. module: document
 #: field:document.directory,create_uid:0
 msgid "Creator"
-msgstr ""
+msgstr "Vytvoril"
 
 #. module: document
 #: field:document.directory,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
-msgstr ""
+msgstr "Dátum vytvorenia"
 
 #. module: document
 #: field:document.directory,write_date:0
@@ -191,7 +187,7 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -226,7 +222,7 @@ msgstr ""
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
-msgstr ""
+msgstr "Slovník"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -266,8 +262,7 @@ msgid "Directory name contains special characters!"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #, python-format
 msgid "Directory name must be unique!"
 msgstr ""
@@ -280,7 +275,7 @@ msgstr ""
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
 msgid "Document Management"
-msgstr ""
+msgstr "Dokumenty"
 
 #. module: document
 #: field:document.directory.content,extension:0
@@ -295,7 +290,7 @@ msgstr "Dokumenty"
 #. module: document
 #: field:document.directory,domain:0
 msgid "Domain"
-msgstr ""
+msgstr "Doména"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -307,8 +302,8 @@ msgstr ""
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
 
@@ -326,7 +321,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.dctx,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "Výraz"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -336,12 +331,12 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Február"
 
 #. module: document
 #: field:document.directory.dctx,field:0
 msgid "Field"
-msgstr ""
+msgstr "Pole"
 
 #. module: document
 #: help:document.directory,resource_field:0
@@ -353,7 +348,7 @@ msgstr ""
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "Fields"
-msgstr ""
+msgstr "Polia"
 
 #. module: document
 #: field:report.document.user,datas_fname:0
@@ -431,24 +426,21 @@ msgstr ""
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Group By"
-msgstr ""
+msgstr "Zoskupiť podľa"
 
 #. module: document
 #: field:document.directory,group_ids:0
 msgid "Groups"
-msgstr ""
+msgstr "Skupiny"
 
 #. module: document
-#: field:document.configuration,id:0
-#: field:document.directory,id:0
+#: field:document.configuration,id:0 field:document.directory,id:0
 #: field:document.directory.content,id:0
 #: field:document.directory.content.type,id:0
-#: field:document.directory.dctx,id:0
-#: field:document.storage,id:0
-#: field:report.document.file,id:0
-#: field:report.document.user,id:0
+#: field:document.directory.dctx,id:0 field:document.storage,id:0
+#: field:report.document.file,id:0 field:report.document.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
@@ -460,8 +452,8 @@ msgstr ""
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
@@ -480,17 +472,17 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "January"
-msgstr ""
+msgstr "Január"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Júl"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "June"
-msgstr ""
+msgstr "Jún"
 
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
@@ -509,7 +501,7 @@ msgstr ""
 #: field:document.directory.dctx,write_uid:0
 #: field:document.storage,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Naposledy upravoval"
 
 #. module: document
 #: field:document.configuration,write_date:0
@@ -518,17 +510,17 @@ msgstr ""
 #: field:document.directory.dctx,write_date:0
 #: field:document.storage,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Naposledy upravované"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Marec"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
-msgstr ""
+msgstr "Máj"
 
 #. module: document
 #: field:document.directory.content.type,mimetype:0
@@ -551,10 +543,9 @@ msgid "Modified Date"
 msgstr ""
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mesiac"
 
 #. module: document
 #: view:ir.attachment:document.view_attach_filter_inherit0
@@ -564,7 +555,7 @@ msgstr ""
 #. module: document
 #: field:document.directory,name:0
 msgid "Name"
-msgstr ""
+msgstr "Meno"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -574,12 +565,12 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "November"
-msgstr ""
+msgstr "Číslo"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "October"
-msgstr ""
+msgstr "Október"
 
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
@@ -601,10 +592,9 @@ msgstr ""
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,user_id:0
 #: view:ir.attachment:document.view_attach_filter_inherit2
-#: field:ir.attachment,user_id:0
-#: field:report.document.user,user_id:0
+#: field:ir.attachment,user_id:0 field:report.document.user,user_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Vlastník"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -625,12 +615,12 @@ msgstr ""
 #: view:ir.attachment:document.view_attach_filter_inherit2
 #: field:ir.attachment,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: document
 #: field:document.directory.content,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "Predpona"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.act_res_partner_document
@@ -641,12 +631,12 @@ msgstr "Súvisiace dokumenty"
 #. module: document
 #: field:document.directory.content,report_id:0
 msgid "Report"
-msgstr ""
+msgstr "Výkaz"
 
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "ID prostriedku"
 
 #. module: document
 #: field:document.directory,ressource_type_id:0
@@ -666,7 +656,7 @@ msgstr ""
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "Security"
-msgstr ""
+msgstr "Bezpečnosť"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -678,7 +668,7 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -688,7 +678,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Postupnosť"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
@@ -708,7 +698,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,suffix:0
 msgid "Suffix"
-msgstr ""
+msgstr "Prípona"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -741,7 +731,7 @@ msgstr ""
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,type:0
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: document
 #: help:document.directory,domain:0
@@ -755,8 +745,7 @@ msgid "Users File"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #: code:addons/document/document.py:347
 #, python-format
 msgid "ValidateError"
@@ -770,14 +759,14 @@ msgstr ""
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
 msgstr ""
 
 #. module: document
 #: field:report.document.user,name:0
 msgid "Year"
-msgstr ""
+msgstr "Rok"
 
 #. module: document
 #: view:ir.attachment:document.view_document_file_form
@@ -787,9 +776,9 @@ msgstr ""
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "neznámy"

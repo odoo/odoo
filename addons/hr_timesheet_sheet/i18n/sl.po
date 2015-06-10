@@ -1,37 +1,31 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014, 2015.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet_sheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-03-24 16:10+0000\n"
-"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
-"Language-Team: Slovenian <translate@matmoz.si>\n"
+"PO-Revision-Date: 2015-06-04 05:30+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
 "Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"timesheet.                 \n"
-"* The 'Confirmed' status is used for to confirm the timesheet by user.       "
-"          \n"
-"* The 'Done' status is used when users timesheet is accepted by his/her "
-"senior."
-msgstr ""
-" * Stanje 'Osnutek' ob nastanku časovnice.                 \n"
-"* Stanje 'Potrjeno', ko uporabnik potrdi svojo časovnico.                 \n"
-"* Stanje 'Opravljeno', ko je sprejeto/overjeno s strani nadrejenih."
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
+"* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
+"* The 'Done' status is used when users timesheet is accepted by his/her senior."
+msgstr " * Stanje 'Osnutek' ob nastanku časovnice.                 \n* Stanje 'Potrjeno', ko uporabnik potrdi svojo časovnico.                 \n* Stanje 'Opravljeno', ko je sprejeto/overjeno s strani nadrejenih."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
@@ -63,23 +57,11 @@ msgid ""
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager.\n"
 "              </p><p>\n"
-"                Timesheets can also be invoiced to customers, depending on "
-"the\n"
+"                Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Nova časovnica v odobritvi.\n"
-"              </p><p>\n"
-"                Časovnice je potrebno vpisovati vsak dan in potrditi enkrat\n"
-"                tedensko. Ko je časovnica potrjena, gre v overjanje k\n"
-"                upravitelju.\n"
-"              </p><p>\n"
-"                Časovnice se lahko tudi obračunavajo kupcem, glede na\n"
-"                nastavitve vsake posamezne pogodbe.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nova časovnica v odobritvi.\n              </p><p>\n                Časovnice je potrebno vpisovati vsak dan in potrditi enkrat\n                tedensko. Ko je časovnica potrjena, gre v overjanje k\n                upravitelju.\n              </p><p>\n                Časovnice se lahko tudi obračunavajo kupcem, glede na\n                nastavitve vsake posamezne pogodbe.\n              </p>\n            "
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -112,9 +94,7 @@ msgstr "Dovoljena razlika med časovnicami in evidenco prisotnosti (v urah)"
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr ""
-"Dovoljena razlika v urah med prijavami/odjavami in obdelavo časovnice na "
-"enem listu. Nastavite na 0 v kolikor ne želite nikakršnega nadzora."
+msgstr "Dovoljena razlika v urah med prijavami/odjavami in obdelavo časovnice na enem listu. Nastavite na 0 v kolikor ne želite nikakršnega nadzora."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
@@ -291,8 +271,7 @@ msgstr "Kadri"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Napaka: Prijava (odnosno Odjava) mora slediti Odjavi (odnosno Prijavi)"
+msgstr "Napaka: Prijava (odnosno Odjava) mora slediti Odjavi (odnosno Prijavi)"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -329,9 +308,7 @@ msgstr "Združi po"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v "
-"html formatu, da se lahko vstavlja v poglede kanban."
+msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v poglede kanban."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -339,8 +316,7 @@ msgid "Hours"
 msgstr "Ur"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.current.open,id:0
-#: field:hr_timesheet_sheet.sheet,id:0
+#: field:hr.timesheet.current.open,id:0 field:hr_timesheet_sheet.sheet,id:0
 #: field:hr_timesheet_sheet.sheet.account,id:0
 #: field:hr_timesheet_sheet.sheet.day,id:0
 msgid "ID"
@@ -363,38 +339,32 @@ msgstr "V osnutku"
 msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
-msgstr ""
-"Delojemalcu morate dodeliti analitični dnevnik, npr. dnevnik časovnic."
+msgstr "Delojemalcu morate dodeliti analitični dnevnik, npr. dnevnik časovnic."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link him/her to a "
-"user."
-msgstr ""
-"Delojemalec mora biti povezan z uporabnikom, da se lahko ustvari časovnica."
+"In order to create a timesheet for this employee, you must link him/her to a"
+" user."
+msgstr "Delojemalec mora biti povezan z uporabnikom, da se lahko ustvari časovnica."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product, like 'Consultant'."
-msgstr ""
-"Delojemalec mora biti povezan s proizvodom (npr. svetovalec), da se zanj "
-"lahko ustvari časovnica."
+"In order to create a timesheet for this employee, you must link the employee"
+" to a product, like 'Consultant'."
+msgstr "Delojemalec mora biti povezan s proizvodom (npr. svetovalec), da se zanj lahko ustvari časovnica."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product."
-msgstr ""
-"Delojemalec mora biti povezan s proizvodom, da se zanj lahko ustvari "
-"časovnica."
+"In order to create a timesheet for this employee, you must link the employee"
+" to a product."
+msgstr "Delojemalec mora biti povezan s proizvodom, da se zanj lahko ustvari časovnica."
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
@@ -475,14 +445,9 @@ msgid ""
 "the system. From the same form, you can register your attendances (Sign "
 "In/Out) and describe the working hours made on the different projects. At "
 "the end of the period defined in the company, the timesheet is confirmed by "
-"the user and can be validated by his manager. If required, as defined on the "
-"project, you can generate the invoices based on the timesheet."
-msgstr ""
-"V 'Moje časovnice' vpisujete svoje aktivnosti v sistem. Iz istega obrazce "
-"lahko knjižite prisotnost (Prijava/Odjava) ali zapišete delovne ure na "
-"različnih projektih. Ob koncu obdobja določenem v obrazcu podjetja, "
-"časovnica uporabnik potrdi, upravitelj pa lahko overi. Če je v projektu tako "
-"nastavljeno, se na osnovi časovnice izvaja obračun."
+"the user and can be validated by his manager. If required, as defined on the"
+" project, you can generate the invoices based on the timesheet."
+msgstr "V 'Moje časovnice' vpisujete svoje aktivnosti v sistem. Iz istega obrazce lahko knjižite prisotnost (Prijava/Odjava) ali zapišete delovne ure na različnih projektih. Ob koncu obdobja določenem v obrazcu podjetja, časovnica uporabnik potrdi, upravitelj pa lahko overi. Če je v projektu tako nastavljeno, se na osnovi časovnice izvaja obračun."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
@@ -564,8 +529,7 @@ msgid "Set to Draft"
 msgstr "Nastavi kot osnutek"
 
 #. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0
-#: field:hr.attendance,sheet_id:0
+#: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.account,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
@@ -583,8 +547,7 @@ msgstr "Odjava"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
-#: field:hr.timesheet.report,state:0
-#: field:hr_timesheet_sheet.sheet,state:0
+#: field:hr.timesheet.report,state:0 field:hr_timesheet_sheet.sheet,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -605,9 +568,7 @@ msgstr "Povzetek"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr ""
-"Časovnica ne more biti overjena, ker ne vsebuje enakega števila prijav in "
-"odjav."
+msgstr "Časovnica ne more biti overjena, ker ne vsebuje enakega števila prijav in odjav."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -805,8 +766,7 @@ msgstr "Teden "
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr ""
-"Datuma prisotnosti izven datumov trenutne časovnice ni mogoče vnesti."
+msgstr "Datuma prisotnosti izven datumov trenutne časovnice ni mogoče vnesti."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
@@ -814,9 +774,7 @@ msgstr ""
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr ""
-"Prisotnosti ne morete vnesti v že predloženo časovnico. Vprašajte "
-"upravitelja, da jo ponastavi pred dodajanjem prisotnosti."
+msgstr "Prisotnosti ne morete vnesti v že predloženo časovnico. Vprašajte upravitelja, da jo ponastavi pred dodajanjem prisotnosti."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
@@ -841,17 +799,14 @@ msgstr "Časovnice ne morete podvojiti"
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr ""
-"Datuma prisotnosti izven datumov trenutne časovnice ni mogoče vnesti."
+msgstr "Datuma prisotnosti izven datumov trenutne časovnice ni mogoče vnesti."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
-"Dveh prekrivajočih se časovnic ne morete imeti!\n"
-"Uporabite meni 'Moje tekoče časovnice' v izogib temu problemu."
+msgstr "Dveh prekrivajočih se časovnic ne morete imeti!\nUporabite meni 'Moje tekoče časovnice' v izogib temu problemu."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
@@ -859,15 +814,12 @@ msgstr ""
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
-"Dveh prekrivajočih se časovnic ne morete imeti!\n"
-"Uporabite meni 'Moje časovnice', da se izognete temu problemu."
+msgstr "Dveh prekrivajočih se časovnic ne morete imeti!\nUporabite meni 'Moje časovnice', da se izognete temu problemu."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr ""
-"Vnosa v časovnico, ki je v stanju Potrjeno/Opravljeno, ni možno spreminjati!"
+msgstr "Vnosa v časovnico, ki je v stanju Potrjeno/Opravljeno, ni možno spreminjati!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
@@ -888,9 +840,7 @@ msgstr "Vnosov v potrjeno časovnico ni mogoče spreminjati."
 msgid ""
 "You will be able to register your working hours and\n"
 "                        activities."
-msgstr ""
-"Beležili boste lahko svoje delovne ure in\n"
-"                        dejavnosti."
+msgstr "Beležili boste lahko svoje delovne ure in\n                        dejavnosti."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
