@@ -8,6 +8,7 @@ var core    = require('web.core');
 var screens = require('point_of_sale.screens');
 var gui     = require('point_of_sale.gui');
 var pos_model = require('point_of_sale.models');
+var utils = require('web.utils');
 
 var Qweb    = core.qweb;
 var _t      = core._t;
@@ -18,6 +19,7 @@ var BarcodeParser = require('barcodes.BarcodeParser');
 var PopupWidget = require('point_of_sale.popups');
 var ScreenWidget = screens.ScreenWidget;
 var PaymentScreenWidget = screens.PaymentScreenWidget;
+var round_pr = utils.round_precision;
 
 var onlinePaymentJournal = [];
 
@@ -114,12 +116,12 @@ function decodeMagtek (magtekInput) {
 }
 
 var _paylineproto = pos_model.Paymentline.prototype;
-
 pos_model.Paymentline = pos_model.Paymentline.extend({
     init_from_JSON: function (json) {
         _paylineproto.init_from_JSON.apply(this, arguments);
         this.paid = json.paid;
         this.mercury_data = json.mercury_data;
+        this.swipe_pending = json.swipe_pending;
     },
     export_as_JSON: function () {
         return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid,
@@ -129,7 +131,8 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
                                                                               ref_no: this.ref_no,
                                                                               record_no: this.record_no,
                                                                               invoice_no: this.invoice_no,
-                                                                              mercury_data: this.mercury_data});
+                                                                              mercury_data: this.mercury_data,
+                                                                              swipe_pending: this.swipe_pending});
     }
 });
 
@@ -258,8 +261,54 @@ ScreenWidget.include({
     }
 });
 
+// Normally, everything that is tendered is paid. This is not the case
+// anymore, because now we can have paymentlines that are waiting for
+// a swipe
+var _orderproto = pos_model.Order.prototype;
+pos_model.Order = pos_model.Order.extend({
+    get_due: function(paymentline) {
+        var due = 0;
+        if (!paymentline) {
+            due = this.get_total_with_tax() - this.get_total_paid();
+        } else {
+            due = this.get_total_with_tax();
+            var lines = this.paymentlines.models;
+            for (var i = 0; i < lines.length; i++) {
+                if (lines[i] === paymentline) {
+                    break;
+                } else if (! lines[i].swipe_pending) {
+                    due -= lines[i].get_amount();
+                }
+            }
+        }
+        return round_pr(Math.max(0,due), this.pos.currency.rounding);
+    },
+    get_total_paid: function() {
+        return this.paymentlines.reduce((function(sum, paymentLine) {
+            if (! paymentLine.swipe_pending) {
+                return sum + paymentLine.get_amount();
+            } else {
+                return sum;
+            }
+        }), 0);
+    },
+});
+
 // On Payment screen, allow electronic payments
 PaymentScreenWidget.include({
+    _get_swipe_pending_line: function () {
+        var i = 0;
+        var lines = this.pos.get_order().get_paymentlines();
+
+        for (i = 0; i < lines.length; i++) {
+            if (lines[i].swipe_pending) {
+                return lines[i];
+            }
+        }
+
+        return 0;
+    },
+
     _does_credit_payment_line_exist: function (amount, card_number, card_brand, card_owner_name) {
         var i = 0;
         var lines = this.pos.get_order().get_paymentlines();
@@ -368,8 +417,16 @@ PaymentScreenWidget.include({
                         } else {
                             // If the payment is approved, add a payment line
                             var order = self.pos.get_order();
-                            order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
-                            order.selected_paymentline.paid = true;
+                            var swipe_pending_line = self._get_swipe_pending_line();
+
+                            if (swipe_pending_line) {
+                                order.select_paymentline(swipe_pending_line);
+                            } else {
+                                order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
+                            }
+
+                            order.selected_paymentline.swipe_pending = false;
+                            order.selected_paymentline.paid = true; // todo jov
                             order.selected_paymentline.amount = response.authorize;
                             order.selected_paymentline.card_number = decodedMagtek['number'];
                             order.selected_paymentline.card_brand = response.card_type;
@@ -530,13 +587,49 @@ PaymentScreenWidget.include({
     click_delete_paymentline: function (cid) {
         var lines = this.pos.get_order().get_paymentlines();
 
-        for ( var i = 0; i < lines.length; i++ ) {
+        for (var i = 0; i < lines.length; i++) {
             if (lines[i].cid === cid && lines[i].mercury_data) {
                 this.do_reversal(lines[i].mercury_data, false);
             }
         }
 
         this._super(cid);
+    },
+
+    // make sure there is only one paymentline waiting for a swipe
+    click_paymentmethods: function (id) {
+        var i;
+        var cashregister = null;
+        for (i = 0; i < this.pos.cashregisters.length; i++) {
+            if (this.pos.cashregisters[i].journal_id[0] === id){
+                cashregister = this.pos.cashregisters[i];
+                break;
+            }
+        }
+
+        if (cashregister.journal.type === 'bank') {
+            var already_swipe_pending = false;
+            var lines = this.pos.get_order().get_paymentlines();
+
+            for (i = 0; i < lines.length; i++) {
+                if (lines[i].cashregister.journal.type === 'bank' && lines[i].swipe_pending) {
+                    already_swipe_pending = true;
+                }
+            }
+
+            if (already_swipe_pending) {
+                this.gui.show_popup('error',{
+                    'title': 'Error',
+                    'body':  'One credit card swipe already pending.',
+                });
+            } else {
+                this._super(id);
+                this.pos.get_order().selected_paymentline.swipe_pending = true;
+                this.render_paymentlines();
+            }
+        } else {
+            this._super(id);
+        }
     },
 
     show: function () {
