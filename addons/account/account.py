@@ -275,27 +275,40 @@ class AccountJournal(models.Model):
     @api.multi
     def write(self, vals):
         for journal in self:
-            if 'company_id' in vals and journal.company_id.id != vals['company_id']:
-                if self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1):
-                    raise UserError(_('This journal already contains items, therefore you cannot modify its company field.'))
+            if ('company_id' in vals and journal.company_id.id != vals['company_id']):
+                if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
+                    raise UserError(_('This journal already contains items, therefore you cannot modify its company.'))
+            if ('code' in vals and journal.code != vals['code']):
+                if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
+                    raise UserError(_('This journal already contains items, therefore you cannot modify its short name.'))
+            new_prefix = self._get_sequence_prefix(vals['code'], refund=False)
+            journal.sequence_id.write({'prefix': new_prefix})
+            if journal.refund_sequence_id:
+                new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
+                journal.refund_sequence_id.write({'prefix': new_prefix})
         return super(AccountJournal, self).write(vals)
 
     @api.model
+    def _get_sequence_prefix(self, code, refund=False):
+        prefix = code.upper()
+        if refund:
+            prefix = 'R' + prefix
+        return prefix + '/%(year)s/'
+
+    @api.model
     def _create_sequence(self, vals, refund=False):
-        """ Create new no_gap entry sequence for every new Joural
-        """
-        prefix = vals['code'].upper()
+        """ Create new no_gap entry sequence for every new Journal"""
+        prefix = self._get_sequence_prefix(vals['code'], refund)
         if refund:
             prefix = 'R' + prefix
         seq = {
             'name': vals['name'],
             'implementation': 'no_gap',
-            'prefix': prefix + '/%(year)s/',
+            'prefix': prefix,
             'padding': 4,
             'number_increment': 1,
             'use_date_range': True,
         }
-
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
         return self.env['ir.sequence'].create(seq)
