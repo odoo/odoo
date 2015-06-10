@@ -482,7 +482,7 @@ class website_sale(http.Controller):
         if not remove_prefix:
             return query
 
-        return dict((field_name, data[prefix + field_name]) for field_name in all_fields if data.get(prefix + field_name))
+        return dict((field_name, data[prefix + field_name]) for field_name in all_fields if prefix + field_name in data)
 
     def checkout_form_validate(self, data):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
