@@ -757,6 +757,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 .reduceXTicks(false)
                 .stacked(self.bar_ui === 'stack')
                 .showControls(show_controls);
+          chart.yAxis.tickFormat(function(d) { return openerp.web.format_value(d, { type : 'float' });});
 
             if (self.width / data[0].values.length < 80) {
                 chart.rotateLabels(-15);

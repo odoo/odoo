@@ -355,12 +355,20 @@ class sale_order_line(osv.osv):
         res.update({'warning': warning})
         return res
 
+    def button_cancel(self, cr, uid, ids, context=None):
+        lines = self.browse(cr, uid, ids, context=context)
+        for procurement in lines.mapped('procurement_ids'):
+            for move in procurement.move_ids:
+                if move.state == 'done' and not move.scrapped:
+                    raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sale order line which is linked to a stock move already done.'))
+        return super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
+
 class stock_move(osv.osv):
     _inherit = 'stock.move'
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
-        if move.procurement_id and move.procurement_id.sale_line_id:
+        if context.get('inv_type') in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
                 'invoice_lines': [(4, invoice_line_id)]
@@ -378,10 +386,10 @@ class stock_move(osv.osv):
         return invoice_line_id
 
     def _get_master_data(self, cr, uid, move, company, context=None):
-        if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
+        if context.get('inv_type') in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
             sale_order = move.procurement_id.sale_line_id.order_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
-        elif move.picking_id.sale_id and context.get('inv_type') == 'out_invoice':
+        elif move.picking_id.sale_id and context.get('inv_type') in ('out_invoice', 'out_refund'):
             # In case of extra move, it is better to use the same data as the original moves
             sale_order = move.picking_id.sale_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
@@ -389,7 +397,7 @@ class stock_move(osv.osv):
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        if move.procurement_id and move.procurement_id.sale_line_id:
+        if inv_type in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
             res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
@@ -405,14 +413,23 @@ class stock_move(osv.osv):
             res['price_unit'] = res['price_unit'] / uos_coeff
         return res
 
-    def _get_moves_taxes(self, cr, uid, moves, context=None):
-        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, context=context)
-        for move in moves:
-            if move.procurement_id and move.procurement_id.sale_line_id:
-                is_extra_move[move.id] = False
-                extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.procurement_id.sale_line_id.tax_id])]
+    def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
+        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, inv_type, context=context)
+        if inv_type == 'out_invoice':
+            for move in moves:
+                if move.procurement_id and move.procurement_id.sale_line_id:
+                    is_extra_move[move.id] = False
+                    extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.procurement_id.sale_line_id.tax_id])]
+                elif move.picking_id.sale_id and move.product_id.product_tmpl_id.taxes_id:
+                    fp = move.picking_id.sale_id.fiscal_position
+                    res = self.pool.get("account.invoice.line").product_id_change(cr, uid, [], move.product_id.id, None, partner_id=move.picking_id.partner_id.id, fposition_id=(fp and fp.id), context=context)
+                    extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_id'])]
         return (is_extra_move, extra_move_tax)
 
+    def _get_taxes(self, cr, uid, move, context=None):
+        if move.procurement_id.sale_line_id.tax_id:
+            return [tax.id for tax in move.procurement_id.sale_line_id.tax_id]
+        return super(stock_move, self)._get_taxes(cr, uid, move, context=context)
 
 class stock_location_route(osv.osv):
     _inherit = "stock.location.route"
@@ -467,5 +484,6 @@ class stock_picking(osv.osv):
                 'user_id': sale.user_id.id,
                 'section_id': sale.section_id.id,
                 'name': sale.client_order_ref or '',
+                'comment': sale.note,
                 })
         return inv_vals

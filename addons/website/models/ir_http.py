@@ -15,6 +15,7 @@ from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
 from openerp.tools import config
 from openerp.osv import orm
+from openerp.tools.safe_eval import safe_eval as eval
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ class ir_http(orm.AbstractModel):
         else:
             request.uid = request.session.uid
 
-    bots = "bot|crawl|slurp|spider|curl|wget".split("|")
+    bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
     def is_a_bot(self):
         # We don't use regexp and ustr voluntarily
         # timeit has been done to check the optimum method
@@ -114,8 +115,8 @@ class ir_http(orm.AbstractModel):
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:
-                url_lang = not func and path[1]
-                nearest_lang = url_lang and self.get_nearest_lang(path[1])
+                nearest_lang = not func and self.get_nearest_lang(path[1])
+                url_lang = nearest_lang and path[1]
                 preferred_lang = ((cook_lang if cook_lang in langs else False)
                                   or self.get_nearest_lang(request.lang)
                                   or request.website.default_lang_code)

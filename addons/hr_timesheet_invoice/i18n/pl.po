@@ -1,21 +1,22 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet_invoice
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-29 08:50+0000\n"
-"Last-Translator: Tobiasz Rozum (OpenGLOBE.pl) <tobiasz.rozum@openglobe.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:51+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
@@ -33,11 +34,9 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new type of invoicing.\n"
 "              </p><p>\n"
-"                Odoo allows you to create default invoicing types. You "
-"might\n"
+"                Odoo allows you to create default invoicing types. You might\n"
 "                have to regularly assign discounts because of a specific\n"
-"                contract or agreement with a customer. From this menu, you "
-"can\n"
+"                contract or agreement with a customer. From this menu, you can\n"
 "                create additional types of invoicing to speed up your\n"
 "                invoicing.\n"
 "              </p>\n"
@@ -157,16 +156,14 @@ msgstr "Błąd konfiguracji!"
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:180
 #, python-format
-msgid ""
-"Contract incomplete. Please fill in the Customer and Pricelist fields."
+msgid "Contract incomplete. Please fill in the Customer and Pricelist fields."
 msgstr "Umowa jest niekompletna. Wypełnij pola Klient i Cennik."
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,price:0
 #: field:hr.timesheet.invoice.create.final,price:0
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
-#: field:report.timesheet.line,cost:0
-#: field:report_timesheet.user,cost:0
+#: field:report.timesheet.line,cost:0 field:report_timesheet.user,cost:0
 #: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Cost"
 msgstr "Koszt"
@@ -355,9 +352,7 @@ msgstr "Luty"
 msgid ""
 "Fill this field only if you want to force to use a specific product. Keep "
 "empty to use the real product that comes from the cost."
-msgstr ""
-"Wypełnij to pole, jeśli chcesz wymusić określony produkt na fakturze. Zostaw "
-"puste, aby stosować produkt pochodzący z kosztu."
+msgstr "Wypełnij to pole, jeśli chcesz wymusić określony produkt na fakturze. Zostaw puste, aby stosować produkt pochodzący z kosztu."
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
@@ -402,11 +397,9 @@ msgstr "Grupuj wg"
 #: field:report.account.analytic.line.to.invoice,id:0
 #: field:report.analytic.account.close,id:0
 #: field:report.hr_timesheet_invoice.report_analyticprofit,id:0
-#: field:report.timesheet.line,id:0
-#: field:report_timesheet.account,id:0
+#: field:report.timesheet.line,id:0 field:report_timesheet.account,id:0
 #: field:report_timesheet.account.date,id:0
-#: field:report_timesheet.invoice,id:0
-#: field:report_timesheet.user,id:0
+#: field:report_timesheet.invoice,id:0 field:report_timesheet.user,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -493,9 +486,7 @@ msgstr "Fakturowanie"
 msgid ""
 "It allows to set the discount while making invoice, keep empty if the "
 "activities should not be invoiced."
-msgstr ""
-"To pozwala stosować upusty w fakturach. Zostaw puste, jeśli aktywności nie "
-"powinny być fakturowane."
+msgstr "To pozwala stosować upusty w fakturach. Zostaw puste, jeśli aktywności nie powinny być fakturowane."
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -601,8 +592,7 @@ msgstr "Maj"
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,month:0
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
-#: field:report.timesheet.line,month:0
-#: field:report_timesheet.account,month:0
+#: field:report.timesheet.line,month:0 field:report_timesheet.account,month:0
 #: field:report_timesheet.account.date,month:0
 #: field:report_timesheet.user,month:0
 msgid "Month"
@@ -731,9 +721,7 @@ msgstr "Stan"
 msgid ""
 "The cost of each work done will be displayed on the invoice. You probably "
 "don't want to check this"
-msgstr ""
-"Koszt pracy będzie wydrukowany na fakturze. Prawdopodobnie nie chcesz tego "
-"zaznaczyć."
+msgstr "Koszt pracy będzie wydrukowany na fakturze. Prawdopodobnie nie chcesz tego zaznaczyć."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
@@ -750,9 +738,7 @@ msgstr "Produkt, który będzie stosowany do fakturowania pozostałej kwoty."
 msgid ""
 "The product to invoice is defined on the employee form, the price will be "
 "deducted by this pricelist on the product."
-msgstr ""
-"Produkt do fakturowania jest zdefiniowany w formularzu pracownika. Cena "
-"będzie pobrana z cennika w produkcie."
+msgstr "Produkt do fakturowania jest zdefiniowany w formularzu pracownika. Cena będzie pobrana z cennika w produkcie."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,date:0
@@ -965,17 +951,16 @@ msgstr "Ostrzeżenie !"
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
 msgid ""
-"When reinvoicing costs, the amount on the invoice lines is given by the sale "
-"price of the corresponding product (if any, and if its sale price is not 0). "
-"You can use the following field to enforce the use of a single product for "
-"all the chosen lines in the future invoices."
+"When reinvoicing costs, the amount on the invoice lines is given by the sale"
+" price of the corresponding product (if any, and if its sale price is not "
+"0). You can use the following field to enforce the use of a single product "
+"for all the chosen lines in the future invoices."
 msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,name:0
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
-#: field:report.timesheet.line,name:0
-#: field:report_timesheet.account,name:0
+#: field:report.timesheet.line,name:0 field:report_timesheet.account,name:0
 #: field:report_timesheet.account.date,name:0
 #: field:report_timesheet.user,name:0
 msgid "Year"

@@ -1,26 +1,29 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-19 05:41+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: project
 #: field:res.partner,task_count:0
 msgid "# Tasks"
-msgstr ""
+msgstr "عدد المهام"
 
 #. module: project
 #: field:report.project.task.user,no_of_days:0
@@ -31,15 +34,14 @@ msgstr "# من الايام"
 #: field:project.task.history.cumulative,nbr_tasks:0
 #: field:report.project.task.user,nbr:0
 msgid "# of Tasks"
-msgstr ""
+msgstr "عدد المهام"
 
 #. module: project
-#: code:addons/project/project.py:360
-#: code:addons/project/project.py:380
+#: code:addons/project/project.py:360 code:addons/project/project.py:380
 #: code:addons/project/project.py:703
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (نسخة)"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -65,7 +67,7 @@ msgid ""
 "                Click to add a new tag.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإضافة وسم جديد.\n</p>"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -74,8 +76,7 @@ msgid ""
 "                Click to add a stage in the task pipeline.\n"
 "              </p><p>\n"
 "                Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or "
-"issue.\n"
+"                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue.\n"
 "              </p>\n"
@@ -87,12 +88,9 @@ msgstr ""
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p>\n"
-"                    Odoo's project management allows you to manage the "
-"pipeline\n"
-"                    of tasks in order to get things done efficiently. You "
-"can\n"
-"                    track progress, discuss on tasks, attach documents, "
-"etc.\n"
+"                    Odoo's project management allows you to manage the pipeline\n"
+"                    of tasks in order to get things done efficiently. You can\n"
+"                    track progress, discuss on tasks, attach documents, etc.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -103,14 +101,13 @@ msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "يتلقى رسائل من"
 
 #. module: project
 #: field:project.project,active:0
@@ -120,12 +117,12 @@ msgstr "نشط"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Add a Description..."
-msgstr ""
+msgstr "أضف وصفاً..."
 
 #. module: project
 #: view:project.task.type:project.task_type_edit
 msgid "Add a description..."
-msgstr ""
+msgstr "أضف وصفاً..."
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -135,37 +132,37 @@ msgstr "الإدارة"
 #. module: project
 #: field:project.project,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "الكنية"
 
 #. module: project
 #: field:project.project,alias_model:0
 msgid "Alias Model"
-msgstr ""
+msgstr "لقب الكائن"
 
 #. module: project
 #: field:project.config.settings,group_manage_delegation_task:0
 msgid "Allow task delegation"
-msgstr ""
+msgstr "السماح بالتفويض في المهام"
 
 #. module: project
 #: help:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Allows you to compute Time Estimation on tasks."
-msgstr ""
+msgstr "السماح بحساب تقديرات الوقت في المهام."
 
 #. module: project
 #: help:project.config.settings,group_tasks_work_on_tasks:0
 msgid "Allows you to compute work on tasks."
-msgstr ""
+msgstr "السماح بحساب الأعمال المنجزة في المهام."
 
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
 msgid "Allows you to delegate tasks to other users."
-msgstr ""
+msgstr "السماح بتفويض مستخدمين آخرين في المهام."
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
 msgid "Analysis"
-msgstr ""
+msgstr "التحليل"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -175,12 +172,12 @@ msgstr "حساب تحليلي"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Append this project to another one using analytic accounts hierarchy"
-msgstr ""
+msgstr "إلحاق هذا المشروع بآخر باستخدام الهيكل الشجري للحسابات التحليلية"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 msgid "Apply"
-msgstr ""
+msgstr "تطبيق"
 
 #. module: project
 #: field:project.task.delegate,user_id:0
@@ -190,18 +187,18 @@ msgstr "تعيين لـ"
 #. module: project
 #: field:report.project.task.user,date_start:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "تاريخ التخصيص"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "شهر الإسناد"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr ""
+msgstr "المهام المسندة"
 
 #. module: project
 #: field:report.project.task.user,user_id:0
@@ -220,7 +217,7 @@ msgstr "مكلف إلى"
 #: code:addons/project/project.py:212
 #, python-format
 msgid "Attachments"
-msgstr ""
+msgstr "المُرفقات"
 
 #. module: project
 #: field:report.project.task.user,hours_delay:0
@@ -239,12 +236,12 @@ msgstr "محظورة"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "حسب المسئول"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
 msgid "By Reviewer"
-msgstr ""
+msgstr "حسب المراجع"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
@@ -270,7 +267,7 @@ msgstr "إلغاء"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Cancel Project"
-msgstr ""
+msgstr "إلغاء المشروع"
 
 #. module: project
 #: selection:project.project,state:0
@@ -281,7 +278,7 @@ msgstr "ملغي"
 #. module: project
 #: model:ir.model,name:project.model_project_category
 msgid "Category of project's task, issue, ..."
-msgstr ""
+msgstr "فئة مهام المشروع، المشكلات، ..."
 
 #. module: project
 #: code:addons/project/project.py:921
@@ -289,30 +286,27 @@ msgstr ""
 msgid ""
 "Child task still open.\n"
 "Please cancel or complete child task first."
-msgstr ""
-"المهمة الوليدة التي لا تزال مفتوحة .\n"
-"  يرجى إلغاء أو إكمال المهمة الوليدة أولاص."
+msgstr "المهمة الوليدة التي لا تزال مفتوحة .\n  يرجى إلغاء أو إكمال المهمة الوليدة أولاص."
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Close Project"
-msgstr ""
+msgstr "إغلاق المشروع"
 
 #. module: project
 #: selection:project.project,state:0
 msgid "Closed"
-msgstr ""
+msgstr "مغلق"
 
 #. module: project
-#: field:project.project,color:0
-#: field:project.task,color:0
+#: field:project.project,color:0 field:project.task,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "لون الفهرس"
 
 #. module: project
 #: view:project.task.type:project.task_type_search
 msgid "Common"
-msgstr ""
+msgstr "مشترك"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -321,8 +315,7 @@ msgstr "الشركات"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,company_id:0
 msgid "Company"
@@ -333,9 +326,7 @@ msgstr "شركة"
 msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
-msgstr ""
-"تحسب الفرق بين الساعات المخطط لها من قبل مدير المشروع والساعات الإجمالية "
-"للمهمة."
+msgstr "تحسب الفرق بين الساعات المخطط لها من قبل مدير المشروع والساعات الإجمالية للمهمة."
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -351,14 +342,14 @@ msgstr "محسوب باستخدام مجموع مهام الأعمال المن�
 #: model:ir.actions.act_window,name:project.action_config_settings
 #: view:project.config.settings:project.view_config_settings
 msgid "Configure Project"
-msgstr ""
+msgstr "إعداد المشروع"
 
 #. module: project
 #: view:project.project:project.view_project
 #: view:project.project:project.view_project_project_filter
 #: field:report.project.task.user,partner_id:0
 msgid "Contact"
-msgstr ""
+msgstr "جهة الاتصال"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
@@ -368,7 +359,7 @@ msgstr ""
 #. module: project
 #: field:project.project,analytic_account_id:0
 msgid "Contract/Analytic"
-msgstr ""
+msgstr "العقد/الحساب التحليلي"
 
 #. module: project
 #: field:project.task,create_date:0
@@ -378,47 +369,42 @@ msgstr "إنشاء تاريخ"
 #. module: project
 #: field:project.category,create_uid:0
 #: field:project.config.settings,create_uid:0
-#: field:project.project,create_uid:0
-#: field:project.task,create_uid:0
+#: field:project.project,create_uid:0 field:project.task,create_uid:0
 #: field:project.task.delegate,create_uid:0
-#: field:project.task.type,create_uid:0
-#: field:project.task.work,create_uid:0
+#: field:project.task.type,create_uid:0 field:project.task.work,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أُنشئ بواسطة"
 
 #. module: project
 #: field:project.category,create_date:0
 #: field:project.config.settings,create_date:0
 #: field:project.project,create_date:0
 #: field:project.task.delegate,create_date:0
-#: field:project.task.type,create_date:0
-#: field:project.task.work,create_date:0
+#: field:project.task.type,create_date:0 field:project.task.work,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "إنشاؤه في"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Creation Date"
-msgstr ""
+msgstr "تاريخ الإنشاء"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_history_cumulative
 #: model:ir.ui.menu,name:project.menu_action_view_task_history_cumulative
 msgid "Cumulative Flow"
-msgstr ""
+msgstr "التدفق التراكمي"
 
 #. module: project
-#: view:project.project:project.edit_project
-#: field:project.task,partner_id:0
+#: view:project.project:project.edit_project field:project.task,partner_id:0
 msgid "Customer"
 msgstr "عميل"
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "تاريخ"
 
@@ -426,12 +412,12 @@ msgstr "تاريخ"
 #: help:project.project,message_last_post:0
 #: help:project.task,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاريخ آخر رسالة نُشرت لهذا البند"
 
 #. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "أيام حتى الإسناد"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
@@ -447,7 +433,7 @@ msgstr "الموعد النهائي"
 #. module: project
 #: field:project.task.type,case_default:0
 msgid "Default for New Projects"
-msgstr ""
+msgstr "افتراضي للمشروعات الجديدة"
 
 #. module: project
 #: field:project.task,delay_hours:0
@@ -483,7 +469,7 @@ msgstr "مفوَّض إلى"
 #: code:addons/project/project.py:938
 #, python-format
 msgid "Delegated User should be specified"
-msgstr ""
+msgstr "يجب تحديد المستخدم الذي ستفوضه"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -493,17 +479,16 @@ msgstr "المهام المفوضة"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Delegation"
-msgstr ""
+msgstr "التفويض"
 
 #. module: project
 #: view:project.project:project.view_project_kanban
 #: view:project.task:project.view_task_kanban
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
 #. module: project
-#: view:project.task:project.view_task_form2
-#: field:project.task,description:0
+#: view:project.task:project.view_task_form2 field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "وصف"
@@ -511,7 +496,7 @@ msgstr "وصف"
 #. module: project
 #: model:project.task.type,name:project.project_tt_design
 msgid "Design"
-msgstr ""
+msgstr "تصميم"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
@@ -522,7 +507,7 @@ msgstr "التّطوير"
 #: view:project.project:project.edit_project
 #: view:project.project:project.view_project_kanban
 msgid "Documents"
-msgstr ""
+msgstr "الوثائق"
 
 #. module: project
 #: selection:project.task.delegate,state:0
@@ -538,7 +523,7 @@ msgstr "تم بواسطة"
 #. module: project
 #: view:project.task:project.view_task_kanban
 msgid "Edit..."
-msgstr ""
+msgstr "حرّر..."
 
 #. module: project
 #: field:report.project.task.user,hours_effective:0
@@ -548,7 +533,7 @@ msgstr "فاعلية الساعات"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "لقب البريد الإلكتروني"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -558,8 +543,7 @@ msgid "End Date"
 msgstr "تاريخ الإنتهاء"
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "تاريخ الانتهاء"
 
@@ -583,9 +567,7 @@ msgstr "خطأ! يجب ان يكون تاريخ بدء المشروع اقل م�
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
-msgstr ""
-"الوقت المقدر لك للتحقق من صلاحية العمل المكتمل من المستخدم لمن قمت بتفويضه "
-"بهذه المهمة."
+msgstr "الوقت المقدر لك للتحقق من صلاحية العمل المكتمل من المستخدم لمن قمت بتفويضه بهذه المهمة."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -597,19 +579,17 @@ msgstr "الوقت المقدر لغلق هذه المهمة بواسطة الم
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr ""
-"الوقت التقديري لإنجاز المهمة، يضعها في العادة مدير المشروع عندما تكون المهمة "
-"في حالة المسودة."
+msgstr "الوقت التقديري لإنجاز المهمة، يضعها في العادة مدير المشروع عندما تكون المهمة في حالة المسودة."
 
 #. module: project
 #: model:project.category,name:project.project_category_03
 msgid "Experiment"
-msgstr ""
+msgstr "تجربة"
 
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "الفلاتر التفصيلية"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -619,12 +599,12 @@ msgstr "معلومات إضافية"
 #. module: project
 #: model:project.category,name:project.project_category_02
 msgid "Feature request"
-msgstr ""
+msgstr "طلب خاصية"
 
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded in Kanban View"
-msgstr ""
+msgstr "مطوية في كانبان"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -637,7 +617,7 @@ msgstr ""
 #: field:project.project,message_follower_ids:0
 #: field:project.task,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "المتابعون"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -647,12 +627,12 @@ msgstr ""
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Gantt View"
-msgstr ""
+msgstr "واجهة جانت"
 
 #. module: project
 #: field:project.config.settings,module_sale_service:0
 msgid "Generate tasks from sale orders"
-msgstr ""
+msgstr "إنشاء مهام من أوامر البيع"
 
 #. module: project
 #: help:project.project,sequence:0
@@ -670,18 +650,18 @@ msgstr "يعطي النظام تسلسل عند عرض قائمة المهام."
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Group By"
-msgstr ""
+msgstr "تجميع حسب"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "المساعدة والدعم الفني"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "مرتفع"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -690,12 +670,11 @@ msgid "History of Tasks"
 msgstr "تاريخ المهام"
 
 #. module: project
-#: help:project.project,message_summary:0
-#: help:project.task,message_summary:0
+#: help:project.project,message_summary:0 help:project.task,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل إدراجها في عروض كانبان."
 
 #. module: project
 #: help:project.project,privacy_visibility:0
@@ -708,8 +687,7 @@ msgid ""
 "   if portal is activated, portal users see the tasks or issues followed by\n"
 "   them or by someone of their company\n"
 "- Employees Only: employees see all tasks or issues\n"
-"- Followers Only: employees see only the followed tasks or issues; if "
-"portal\n"
+"- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
 msgstr ""
 
@@ -724,30 +702,24 @@ msgid "Hours to Validate"
 msgstr "ساعات التحقق من الصلاحية"
 
 #. module: project
-#: field:project.category,id:0
-#: field:project.config.settings,id:0
-#: field:project.project,id:0
-#: field:project.task,id:0
-#: field:project.task.delegate,id:0
-#: field:project.task.history,id:0
-#: field:project.task.history.cumulative,id:0
-#: field:project.task.type,id:0
-#: field:project.task.work,id:0
-#: field:report.project.task.user,id:0
+#: field:project.category,id:0 field:project.config.settings,id:0
+#: field:project.project,id:0 field:project.task,id:0
+#: field:project.task.delegate,id:0 field:project.task.history,id:0
+#: field:project.task.history.cumulative,id:0 field:project.task.type,id:0
+#: field:project.task.work,id:0 field:report.project.task.user,id:0
 msgid "ID"
 msgstr "معرّف"
 
 #. module: project
-#: help:project.project,message_unread:0
-#: help:project.task,message_unread:0
+#: help:project.project,message_unread:0 help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "عند التفعيل، يجب الانتباه الى الرسائل الجديدة"
 
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid ""
-"If checked, this contract will be available in the project menu and you will "
-"be able to manage tasks or track issues"
+"If checked, this contract will be available in the project menu and you will"
+" be able to manage tasks or track issues"
 msgstr ""
 
 #. module: project
@@ -755,30 +727,24 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
-msgstr ""
-"اذا تم تعيين الحقل الفعال الى خطأ, سيسمح لك بإخفاء المشروع بدون ازالتها."
+msgstr "اذا تم تعيين الحقل الفعال الى خطأ, سيسمح لك بإخفاء المشروع بدون ازالتها."
 
 #. module: project
 #: help:project.task,progress:0
 msgid ""
 "If the task has a progress of 99.99% you should close the task if it's "
 "finished or reevaluate the time"
-msgstr ""
-"إذا كانت المهمة لديها من التقدم 99.99٪ يجب إغلاق المهمة إذا تم الإنتهاء أو "
-"إعادة تقييم الوقت"
+msgstr "إذا كانت المهمة لديها من التقدم 99.99٪ يجب إغلاق المهمة إذا تم الإنتهاء أو إعادة تقييم الوقت"
 
 #. module: project
 #: help:project.task.type,case_default:0
 msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
-msgstr ""
-"إذا قمت بتحديد هذا الحقل، سيتم اقترح هذه المرحلة بشكل افتراضي على كل مشروع "
-"جديد. وسوف يتم تعيين هذه المرحلة للمشاريع القائمة."
+msgstr "إذا قمت بتحديد هذا الحقل، سيتم اقترح هذه المرحلة بشكل افتراضي على كل مشروع جديد. وسوف يتم تعيين هذه المرحلة للمشاريع القائمة."
 
 #. module: project
-#: selection:project.project,state:0
-#: selection:project.task,kanban_state:0
+#: selection:project.project,state:0 selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "قيد التقدم"
@@ -811,7 +777,7 @@ msgstr ""
 #: code:addons/project/project.py:171
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "إجراء خاطئ"
 
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
@@ -822,16 +788,15 @@ msgstr ""
 #: field:project.project,message_is_follower:0
 #: field:project.task,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: project
 #: view:project.category:project.project_category_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "نسخة الحالة"
 
 #. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
+#: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr ""
@@ -839,64 +804,55 @@ msgstr ""
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "آخر رسالة"
 
 #. module: project
 #: field:project.project,message_last_post:0
 #: field:project.task,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "تاريخ آخر رسالة"
 
 #. module: project
 #: field:project.task,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "تاريخ آخر تعديل"
 
 #. module: project
 #: field:project.task,date_last_stage_update:0
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "آخر تحديث للمرحلة"
 
 #. module: project
 #: field:project.category,write_uid:0
-#: field:project.config.settings,write_uid:0
-#: field:project.project,write_uid:0
-#: field:project.task,write_uid:0
-#: field:project.task.delegate,write_uid:0
-#: field:project.task.type,write_uid:0
-#: field:project.task.work,write_uid:0
+#: field:project.config.settings,write_uid:0 field:project.project,write_uid:0
+#: field:project.task,write_uid:0 field:project.task.delegate,write_uid:0
+#: field:project.task.type,write_uid:0 field:project.task.work,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: project
 #: field:project.category,write_date:0
 #: field:project.config.settings,write_date:0
-#: field:project.project,write_date:0
-#: field:project.task.delegate,write_date:0
-#: field:project.task.type,write_date:0
-#: field:project.task.work,write_date:0
+#: field:project.project,write_date:0 field:project.task.delegate,write_date:0
+#: field:project.task.type,write_date:0 field:project.task.work,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث فى"
 
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads (for example: http://etherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
 
 #. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
-msgstr ""
-"اربط هذا المشروع بالحساب التحليلي اذا كنت تحتاج الى ادارة مالية على "
-"المشاريع. وهي تمكنك بالاتصال بالمشاريع مع الميزانيات, والتخطيط, والتكلفة "
-"وتحليل العائد, سجلات الدوام على المشروع, وهكذا."
+msgstr "اربط هذا المشروع بالحساب التحليلي اذا كنت تحتاج الى ادارة مالية على المشاريع. وهي تمكنك بالاتصال بالمشاريع مع الميزانيات, والتخطيط, والتكلفة وتحليل العائد, سجلات الدوام على المشروع, وهكذا."
 
 #. module: project
 #: field:project.config.settings,group_tasks_work_on_tasks:0
@@ -931,21 +887,19 @@ msgid "Merge"
 msgstr "دمج"
 
 #. module: project
-#: field:project.project,message_ids:0
-#: field:project.task,message_ids:0
+#: field:project.project,message_ids:0 field:project.task,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "الرسائل"
 
 #. module: project
-#: help:project.project,message_ids:0
-#: help:project.task,message_ids:0
+#: help:project.project,message_ids:0 help:project.task,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "الرسائل و سجل التواصل"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Miscellaneous"
-msgstr ""
+msgstr "متفرقات"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -971,7 +925,7 @@ msgstr "المهام الخاصة بي"
 #. module: project
 #: field:project.category,name:0
 msgid "Name"
-msgstr ""
+msgstr "الاسم"
 
 #. module: project
 #: selection:project.project,state:0
@@ -979,13 +933,13 @@ msgstr ""
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "New"
-msgstr ""
+msgstr "جديد"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
 msgid "New Mail"
-msgstr ""
+msgstr "بريد جديد"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1003,8 +957,7 @@ msgstr "وصف مهمة جديدة"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
-msgstr ""
-"حالة جديدة لمهمتك الخاصة. وسيرد التعليق تلقائيًا عند غلق المهمة المتأخرة"
+msgstr "حالة جديدة لمهمتك الخاصة. وسيرد التعليق تلقائيًا عند غلق المهمة المتأخرة"
 
 #. module: project
 #: help:project.task.delegate,name:0
@@ -1017,7 +970,7 @@ msgstr "عنوان جديد للمهمة المؤجلة للمستخدم"
 #: selection:project.task.history.cumulative,kanban_state:0
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "عادي"
 
 #. module: project
 #: field:project.task,active:0
@@ -1052,12 +1005,12 @@ msgstr "فتح"
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
 msgid "Open Project Menu"
-msgstr ""
+msgstr "فتح قائمة المشروعات"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Other Info"
-msgstr ""
+msgstr "معلومات أخرى"
 
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
@@ -1077,8 +1030,7 @@ msgid "Parent"
 msgstr "الرئيسي"
 
 #. module: project
-#: view:project.task:project.view_task_form2
-#: field:project.task,parent_ids:0
+#: view:project.task:project.view_task_form2 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "المهام الاساسية"
 
@@ -1090,8 +1042,7 @@ msgstr "شريك"
 #. module: project
 #: view:project.project:project.edit_project
 #: view:project.project:project.view_project_project_filter
-#: selection:project.project,state:0
-#: selection:project.task.delegate,state:0
+#: selection:project.project,state:0 selection:project.task.delegate,state:0
 msgid "Pending"
 msgstr "معلّق"
 
@@ -1125,21 +1076,20 @@ msgid "Please delete the project linked with this account first."
 msgstr "رجاء قم بحذف رابط المشروع مع هذا الحساب أولاً"
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "أولوية"
 
 #. module: project
 #: field:project.project,privacy_visibility:0
 msgid "Privacy / Visibility"
-msgstr ""
+msgstr "الخصوصية/الظهور"
 
 #. module: project
 #: code:addons/project/project.py:202
 #, python-format
 msgid "Private project: followers Only"
-msgstr ""
+msgstr "مشروع خاص: لمتابعيه فقط"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -1153,8 +1103,7 @@ msgstr "التّقدّم"
 #: view:project.project:project.edit_project
 #: view:project.task:project.view_task_form2
 #: view:project.task:project.view_task_search_form
-#: field:project.task,project_id:0
-#: field:project.task.delegate,project_id:0
+#: field:project.task,project_id:0 field:project.task.delegate,project_id:0
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,project_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -1191,12 +1140,12 @@ msgstr "اسم المشروع"
 #. module: project
 #: view:project.project:project.view_project_kanban
 msgid "Project Settings"
-msgstr ""
+msgstr "إعدادات المشروع"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Project Stages"
-msgstr ""
+msgstr "مراحل المشروع"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -1230,8 +1179,7 @@ msgstr "مهمة المشروع"
 msgid ""
 "Project's members are users who can have an access to the tasks related to "
 "this project."
-msgstr ""
-"اعضاء المشروع هم مستخدمين يمكنهم الوصول للمهمة المتعلقة بهذا المشروع."
+msgstr "اعضاء المشروع هم مستخدمين يمكنهم الوصول للمهمة المتعلقة بهذا المشروع."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -1244,8 +1192,7 @@ msgstr "مهام المشروع"
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:project.view_project
 #: view:project.project:project.view_project_project_gantt
-#: field:project.task.type,project_ids:0
-#: view:res.company:project.task_company
+#: field:project.task.type,project_ids:0 view:res.company:project.task_company
 #, python-format
 msgid "Projects"
 msgstr "المشروعات"
@@ -1268,17 +1215,17 @@ msgstr ""
 #: code:addons/project/project.py:200
 #, python-format
 msgid "Public project"
-msgstr ""
+msgstr "مشروع عام"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Re-open project"
-msgstr ""
+msgstr "إعادة فتح المشروع"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
 msgid "Ready"
-msgstr ""
+msgstr "جاهز"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -1286,7 +1233,7 @@ msgstr ""
 #: selection:project.task.history.cumulative,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "جاهز للمرحلة المقبلة"
 
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
@@ -1301,7 +1248,7 @@ msgstr "إعادة تضمين وصف المهمة في مهمة المستخدم
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Remaining"
-msgstr ""
+msgstr "المتبقي"
 
 #. module: project
 #: view:project.task:project.view_task_tree2
@@ -1315,7 +1262,7 @@ msgstr "الساعات المتبقية"
 #: field:project.task.history,remaining_hours:0
 #: field:project.task.history.cumulative,remaining_hours:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "الوقت المتبقي"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1332,7 +1279,7 @@ msgstr "مسؤول"
 #: field:project.task,reviewer_id:0
 #: field:report.project.task.user,reviewer_id:0
 msgid "Reviewer"
-msgstr ""
+msgstr "المراجع"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1340,8 +1287,7 @@ msgid "Search Project"
 msgstr "ابحث عن المشروع"
 
 #. module: project
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
+#: field:project.project,sequence:0 field:project.task,sequence:0
 #: field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "مسلسل"
@@ -1364,8 +1310,7 @@ msgstr "الساعات المقضية"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
-#: field:project.task,stage_id:0
-#: field:project.task.history,type_id:0
+#: field:project.task,stage_id:0 field:project.task.history,type_id:0
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,type_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -1376,7 +1321,7 @@ msgstr "مرحلة"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "تغيرت المرحلة"
 
 #. module: project
 #: field:project.task.type,name:0
@@ -1386,7 +1331,7 @@ msgstr "اسم المرحلة"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "تغيرت المرحلة"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -1413,23 +1358,21 @@ msgstr "تاريخ البدء"
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: field:report.project.task.user,state:0
 msgid "Status"
-msgstr ""
+msgstr "الحالة"
 
 #. module: project
 #: help:project.project,planned_hours:0
 msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"مجموع الساعات المخططة لكل المهام المتعلقة بهذا المشروع ومشاريعها المتفرعة."
+msgstr "مجموع الساعات المخططة لكل المهام المتعلقة بهذا المشروع ومشاريعها المتفرعة."
 
 #. module: project
 #: help:project.project,effective_hours:0
 msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"مجموع الساعات المقضية لكل المهم المتعلقة بهذا المشروع ومشاريعها الفرعية."
+msgstr "مجموع الساعات المقضية لكل المهم المتعلقة بهذا المشروع ومشاريعها الفرعية."
 
 #. module: project
 #: help:project.project,total_hours:0
@@ -1442,12 +1385,12 @@ msgstr "مجموع الساعات الكلية لكل المهام المتعل�
 #: field:project.project,message_summary:0
 #: field:project.task,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "الملخّص"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 msgid "Support"
-msgstr ""
+msgstr "الدعم"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_category_action
@@ -1455,7 +1398,7 @@ msgstr ""
 #: view:project.category:project.project_category_form_view
 #: field:project.task,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "الوسوم"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -1473,26 +1416,26 @@ msgstr "مهمة"
 #. module: project
 #: field:project.project,tasks:0
 msgid "Task Activities"
-msgstr ""
+msgstr "أنشطة المهمة"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_assigned
 #: model:mail.message.subtype,name:project.mt_project_task_assigned
 #: model:mail.message.subtype,name:project.mt_task_assigned
 msgid "Task Assigned"
-msgstr ""
+msgstr "أسندت المهمة"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr ""
+msgstr "تم حجب المهمة"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "تم إنشاء المهمة"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
@@ -1502,7 +1445,7 @@ msgstr "تأخير المهمة"
 #. module: project
 #: model:res.groups,name:project.group_delegate_task
 msgid "Task Delegation"
-msgstr ""
+msgstr "تفويض المهمة"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -1513,7 +1456,7 @@ msgstr ""
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
-msgstr ""
+msgstr "المهمة جاهزة للمرحلة التالية"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -1525,16 +1468,15 @@ msgstr "مرحلة المهمة"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "تغيرت مرحلة المهمة"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Task Stages"
-msgstr ""
+msgstr "مراحل المهمة"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "ملخص المهمة"
 
@@ -1548,17 +1490,17 @@ msgstr "عمل المهمة"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr ""
+msgstr "تم حجب المهمة"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task created"
-msgstr ""
+msgstr "تم إنشاء المهمة"
 
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Task summary..."
-msgstr ""
+msgstr "ملخص المهمة..."
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1568,7 +1510,7 @@ msgstr "تحليل المهمة"
 #. module: project
 #: model:res.groups,name:project.group_tasks_work_on_tasks
 msgid "Task's Work on Tasks"
-msgstr ""
+msgstr "الأعمال المنجزة في المهام"
 
 #. module: project
 #: field:account.analytic.account,use_tasks:0
@@ -1609,7 +1551,7 @@ msgstr "المهام بالمستخدم والمشروع"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Team"
-msgstr ""
+msgstr "فريق"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1637,19 +1579,14 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
-"This allows you to transfer the entries under tasks defined for Project "
-"Management to the timesheet line entries for particular date and user, with "
-"the effect of creating, editing and deleting either ways.\n"
+"This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
 msgstr ""
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
 msgid ""
-"This feature automatically creates project tasks from service products in "
-"sale orders. More precisely, tasks are created for procurement lines with "
-"product of type 'Service', procurement method 'Make to Order', and supply "
-"method 'Manufacture'.\n"
+"This feature automatically creates project tasks from service products in sale orders. More precisely, tasks are created for procurement lines with product of type 'Service', procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "-This installs the module sale_service."
 msgstr ""
 
@@ -1659,10 +1596,7 @@ msgid ""
 "This field is computed automatically and have the same behavior than the "
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
-msgstr ""
-"تم حساب هذا الحلق تلقائيًا وله نفس السلوك عن منطقية الحقل ‘الفعال‘: اذا تم "
-"ربط المهمة للقالب اوللمشروع الغير مفعل, سيتم اخفائها الا اذا طلبت على وجه "
-"التحديد."
+msgstr "تم حساب هذا الحلق تلقائيًا وله نفس السلوك عن منطقية الحقل ‘الفعال‘: اذا تم ربط المهمة للقالب اوللمشروع الغير مفعل, سيتم اخفائها الا اذا طلبت على وجه التحديد."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -1670,10 +1604,7 @@ msgid ""
 "This report allows you to analyse the performance of your projects and "
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
-msgstr ""
-"يسمح لك هذا التقرير بتحليل اداء المشاريع الخاصة بك والمستخدمين. يمكنك تحليل "
-"كميات المهام, الساعات المقضية مقارنة بالساعات المخطط اليها, عدد الايام "
-"المتوسط لفتح او غلق المهمة, هكذا."
+msgstr "يسمح لك هذا التقرير بتحليل اداء المشاريع الخاصة بك والمستخدمين. يمكنك تحليل كميات المهام, الساعات المقضية مقارنة بالساعات المخطط اليها, عدد الايام المتوسط لفتح او غلق المهمة, هكذا."
 
 #. module: project
 #: help:project.task.type,fold:0
@@ -1691,21 +1622,16 @@ msgstr ""
 #: help:res.company,project_time_mode_id:0
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
-msgstr ""
-"ستعين هذه وحدة القياس المستخدمة في المشروعات والمهام.\n"
-"اذا استخدمت سجل الدوام المتصل بالمشاريع(وحدة سجل الدوام_للمشروع), لا تنسى "
-"بضبط الوحدة الصحيحة للقياس في الموظفين الخاصين بك."
+"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
+msgstr "ستعين هذه وحدة القياس المستخدمة في المشروعات والمهام.\nاذا استخدمت سجل الدوام المتصل بالمشاريع(وحدة سجل الدوام_للمشروع), لا تنسى بضبط الوحدة الصحيحة للقياس في الموظفين الخاصين بك."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "تقدير زمن إنجاز المهام"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "الوقت المستغرق"
 
@@ -1729,7 +1655,7 @@ msgstr ""
 #. module: project
 #: field:project.task,total_hours:0
 msgid "Total"
-msgstr ""
+msgstr "الإجمالي"
 
 #. module: project
 #: field:report.project.task.user,total_hours:0
@@ -1746,8 +1672,7 @@ msgstr "إجمالي الوقت"
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr ""
-"إجمالي الوقت المتبقي، يمكن إعادة تقدير من خلال الشخص المحال إليه المهمة."
+msgstr "إجمالي الوقت المتبقي، يمكن إعادة تقدير من خلال الشخص المحال إليه المهمة."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1758,7 +1683,7 @@ msgstr ""
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Unassigned"
-msgstr ""
+msgstr "غير مخصص"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1766,20 +1691,19 @@ msgid "Unassigned Tasks"
 msgstr "مهام غير معينة"
 
 #. module: project
-#: field:project.project,message_unread:0
-#: field:project.task,message_unread:0
+#: field:project.project,message_unread:0 field:project.task,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "رسائل غير مقروءة"
 
 #. module: project
 #: model:project.category,name:project.project_category_04
 msgid "Usability"
-msgstr ""
+msgstr "سهولة الاستخدام"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Use Tasks"
-msgstr ""
+msgstr "استخدام المهام"
 
 #. module: project
 #: field:project.config.settings,module_pad:0
@@ -1789,12 +1713,12 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr ""
+msgstr "المستخدم"
 
 #. module: project
 #: field:project.task,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "البريد الإلكتروني للمستخدم"
 
 #. module: project
 #: help:project.task.delegate,project_id:0
@@ -1818,12 +1742,11 @@ msgid "Validation Task Title"
 msgstr "التحقق من صحة عنوان العمل"
 
 #. module: project
-#: code:addons/project/project.py:435
-#: code:addons/project/project.py:921
+#: code:addons/project/project.py:435 code:addons/project/project.py:921
 #: code:addons/project/project.py:1228
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "تحذير!"
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -1838,7 +1761,7 @@ msgstr "ملخص العمل"
 #. module: project
 #: field:project.project,resource_calendar_id:0
 msgid "Working Time"
-msgstr ""
+msgstr "ساعات العمل"
 
 #. module: project
 #: field:project.task,progress:0
@@ -1853,14 +1776,15 @@ msgstr ""
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "عبء العمل"
 
 #. module: project
 #: code:addons/project/project.py:172
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
+"project's tasks and then delete the project or simply deactivate the "
+"project."
 msgstr ""
 
 #. module: project
@@ -1882,28 +1806,22 @@ msgstr "_التفويض"
 #. module: project
 #: view:project.task:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "or"
-msgstr ""
+msgstr "أو"
 
 #. module: project
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "المهام"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0
 #: field:project.project,task_ids:0
 msgid "unknown"
-msgstr ""
-
-#~ msgid "Users"
-#~ msgstr "المستخدمون"
-
-#~ msgid "# of tasks"
-#~ msgstr "# من المهام"
+msgstr "غير معروف"

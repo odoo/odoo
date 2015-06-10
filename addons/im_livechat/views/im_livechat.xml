@@ -108,7 +108,8 @@
         <!-- Bundle of Librairies of the Bus, Chat, Livechat -->
         <template id="internal_lib" name="Librairies of the Livechat">
             <!-- Datejs -->
-            <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
+            <script type="text/javascript" t-att-src="'/web/static/lib/datejs/globalization/%s.js'
+                % (request.session.context.get('lang').replace('_','-'))"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>

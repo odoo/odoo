@@ -1,21 +1,22 @@
-# French translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-04-13 16:09+0000\n"
-"Last-Translator: Lionel Sausin - Numérigraphe <Unknown>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/projects/p/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-14 05:37+0000\n"
-"X-Generator: Launchpad (build 17423)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -26,13 +27,10 @@ msgstr "Nb. de lignes"
 #: help:mrp.production.workcenter.line,state:0
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
+"* When order is completely processed that time it is set in 'Finished' status."
 msgstr ""
 
 #. module: mrp_operations
@@ -42,29 +40,13 @@ msgid ""
 "            Click to start a new work order.\n"
 "          </p><p>\n"
 "            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Cliquez pour commencer un nouvel ordre de travail.\n"
-"          </p><p>\n"
-"            Pour fabriquer ou assembler des produits, et utiliser les "
-"matières premières\n"
-"            et les produits finis, vous devez aussi pouvoir traiter des "
-"opérations de fabrication.\n"
-"            Ces opérations de fabrication sont souvent appelées \"ordre de "
-"travail\". Ces opérations\n"
-"            peuvent avoir des impacts variables sur le coût de\n"
-"            la fabrication et le planning selon la charge de travail "
-"disponible.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Cliquez pour commencer un nouvel ordre de travail.\n          </p><p>\n            Pour fabriquer ou assembler des produits, et utiliser les matières premières\n            et les produits finis, vous devez aussi pouvoir traiter des opérations de fabrication.\n            Ces opérations de fabrication sont souvent appelées \"ordre de travail\". Ces opérations\n            peuvent avoir des impacts variables sur le coût de\n            la fabrication et le planning selon la charge de travail disponible.\n          </p>\n        "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -76,28 +58,11 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
+"            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Cliquez pour commencer un nouvel ordre de travail. \n"
-"          </p><p>\n"
-"            Les ordres de travail sont les listes des opérations à effectuer "
-"pour chaque\n"
-"            ordre de fabrication. Lorsque le premier ordre de travail d'un "
-"ordre de\n"
-"            fabrication est commencé, cet ordre de fabrication est "
-"automatiquement\n"
-"            marqué comme commencé. Lorsque la dernière opération d'un ordre "
-"de fabrication\n"
-"            est terminée, l'OF est automatiquement marqué comme terminé et "
-"les articles\n"
-"            correspondants sont produits.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Cliquez pour commencer un nouvel ordre de travail. \n          </p><p>\n            Les ordres de travail sont les listes des opérations à effectuer pour chaque\n            ordre de fabrication. Lorsque le premier ordre de travail d'un ordre de\n            fabrication est commencé, cet ordre de fabrication est automatiquement\n            marqué comme commencé. Lorsque la dernière opération d'un ordre de fabrication\n            est terminée, l'OF est automatiquement marqué comme terminé et les articles\n            correspondants sont produits.\n          </p>\n        "
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -136,9 +101,7 @@ msgstr "Annulé"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr ""
-"Cocher cette case pour pouvoir déplacer indépendamment chaque ordre de "
-"fabrication, sans déplacer les ordres dépendants."
+msgstr "Cocher cette case pour pouvoir déplacer indépendamment chaque ordre de fabrication, sans déplacer les ordres dépendants."
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
@@ -261,8 +224,7 @@ msgid "Hours by Work Center"
 msgstr "Heures par poste de charge"
 
 #. module: mrp_operations
-#: field:mrp.workorder,id:0
-#: field:mrp_operations.operation,id:0
+#: field:mrp.workorder,id:0 field:mrp_operations.operation,id:0
 #: field:mrp_operations.operation.code,id:0
 msgid "ID"
 msgstr "Id."
@@ -284,25 +246,20 @@ msgstr "En progress"
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
-"Pour terminer cette opération, il faut que son état soit \"Démarré\" ou "
-"\"Repris\" !"
+msgstr "Pour terminer cette opération, il faut que son état soit \"Démarré\" ou \"Repris\" !"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:445
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
-"Pour mettre en attente cette opération, l'état doit être \"Démarré\" ou "
-"\"Repris\" !"
+msgstr "Pour mettre en attente cette opération, l'état doit être \"Démarré\" ou \"Repris\" !"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:449
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
-"Pour reprendre cette opération, elle doit être dans l'état \"En attente\" !"
+msgstr "Pour reprendre cette opération, elle doit être dans l'état \"En attente\" !"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -364,9 +321,7 @@ msgstr "Nom de l'Opération"
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr ""
-"L'opération a déjà commencé ! Vous pouvez suspendre, finir ou annuler cette "
-"opération."
+msgstr "L'opération a déjà commencé ! Vous pouvez suspendre, finir ou annuler cette opération."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:457
@@ -515,12 +470,12 @@ msgstr "Date planifiée"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Date planifiée, par mois"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Mois planifié"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
@@ -599,9 +554,7 @@ msgstr "Mouvement de stock"
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr ""
-"Le temps écoulé entre le début et la fin de l'opération dans ce poste de "
-"charge"
+msgstr "Le temps écoulé entre le début et la fin de l'opération dans ce poste de charge"
 
 #. module: mrp_operations
 #: field:mrp.workorder,total_cycles:0
@@ -686,6 +639,3 @@ msgstr "Heures de travail"
 #: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload
 msgid "Workload"
 msgstr ""
-
-#~ msgid "Date Planned"
-#~ msgstr "Date Planifiée"

@@ -1,27 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_picking_wave
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-02-11 10:53+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-12 07:09+0000\n"
-"X-Generator: Launchpad (build 17336)\n"
-
-#. module: stock_picking_wave
-#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
-#: field:stock.picking.wave,state:0
-msgid "State"
-msgstr "Állam/Megye"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
@@ -29,30 +24,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a Picking Wave. \n"
 "              </p><p>\n"
-"                The Goal of the picking waves is to group operations that "
-"may \n"
-"                (needs to) be done together in order to increase their "
-"efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) "
-"or\n"
-"                help the timing management of operations (tasks to be done "
-"at 1pm).\n"
+"                The Goal of the picking waves is to group operations that may \n"
+"                (needs to) be done together in order to increase their efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) or\n"
+"                help the timing management of operations (tasks to be done at 1pm).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson kiválogatási hullám létrehozásához. \n"
-"              </p><p>\n"
-"                A kiválogatási hullámok célja a műveletek csoportosítása, "
-"melyeknek elvégzése\n"
-"                lehet (szükséges) együttesen, ahhoz, hogy megemelje a "
-"hatékonyságot.\n"
-"                Hasznos lehet, munkákat kijelölni (egy ember = egy hullám) "
-"vagy\n"
-"                az időzítő kezelés műveleteinek segítségére (az ügyet le "
-"kell zárni du. 1 órára).\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson kiválogatási hullám létrehozásához. \n              </p><p>\n                A kiválogatási hullámok célja a műveletek csoportosítása, melyeknek elvégzése\n                lehet (szükséges) együttesen, ahhoz, hogy megemelje a hatékonyságot.\n                Hasznos lehet, munkákat kijelölni (egy ember = egy hullám) vagy\n                az időzítő kezelés műveleteinek segítségére (az ügyet le kell zárni du. 1 órára).\n              </p>\n            "
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -146,8 +124,7 @@ msgid "Group By"
 msgstr "Csoportosítás ezzel"
 
 #. module: stock_picking_wave
-#: field:stock.picking.to.wave,id:0
-#: field:stock.picking.wave,id:0
+#: field:stock.picking.to.wave,id:0 field:stock.picking.wave,id:0
 msgid "ID"
 msgstr "Azonosító ID"
 
@@ -217,8 +194,7 @@ msgstr "Kiválogatási lista"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
-#: field:stock.picking,wave_id:0
-#: field:stock.picking.to.wave,wave_id:0
+#: field:stock.picking,wave_id:0 field:stock.picking.to.wave,wave_id:0
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
 msgid "Picking Wave"
 msgstr "Kiválogatási hullám"
@@ -281,9 +257,7 @@ msgstr "Egy hullám kiválasztása"
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
-msgstr ""
-"Egyes kiválogatások még várnak a termékekre. Kérem ellenőrizze vagy "
-"erőltesse az elérhetőségüket mielőtt befejezettnek állítaná ezt a hullámoit."
+msgstr "Egyes kiválogatások még várnak a termékekre. Kérem ellenőrizze vagy erőltesse az elérhetőségüket mielőtt befejezettnek állítaná ezt a hullámoit."
 
 #. module: stock_picking_wave
 #: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
@@ -294,6 +268,12 @@ msgstr "Speculoos"
 #: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
 msgid "Speculoos - A belgian speciality"
 msgstr "Speculoos - egy belga specialítás"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+#: field:stock.picking.wave,state:0
+msgid "State"
+msgstr "Állam/Megye"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form

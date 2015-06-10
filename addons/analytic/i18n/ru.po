@@ -1,23 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-25 16:24+0000\n"
-"Last-Translator: user3 <Unknown>\n"
-"Language-Team: Russian <http://translate.starlight-"
-"biz.com//projects/odoo/analytic/ru/>\n"
+"PO-Revision-Date: 2015-05-29 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-26 05:56+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
 "Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:278
@@ -83,9 +82,7 @@ msgstr "Баланс"
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
-"Рассчитывается путем умножения количества и цены, взятой из себестоимости "
-"ТМЦ. Всегда выражено в основной валюте компании."
+msgstr "Рассчитывается путем умножения количества и цены, взятой из себестоимости ТМЦ. Всегда выражено в основной валюте компании."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -242,13 +239,10 @@ msgstr "Полное название"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Содержит обзор чата (количество сообщений, ...). Это краткое изложение "
-"непосредственно в HTML формате для того, чтобы вставить в виды kanban."
+msgstr "Содержит обзор чата (количество сообщений, ...). Это краткое изложение непосредственно в HTML формате для того, чтобы вставить в виды kanban."
 
 #. module: analytic
-#: field:account.analytic.account,id:0
-#: field:account.analytic.line,id:0
+#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -260,25 +254,18 @@ msgstr "Если проверенные новые сообщения требу
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
 msgstr ""
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
 msgstr ""
 
 #. module: analytic
@@ -327,13 +314,10 @@ msgstr "Новый"
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
 msgstr ""
 

@@ -1,21 +1,22 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-10-24 09:42+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2015-05-27 14:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:29+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.set_password_email
@@ -26,17 +27,13 @@ msgid ""
 "                        ${object.name},\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        You have been invited to connect to "
-"\"${object.company_id.name}\" in order to get access to your documents in "
-"Odoo.\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
 "                    </p>\n"
 "                    <p>\n"
-"                        To accept the invitation, click on the following "
-"link:\n"
+"                        To accept the invitation, click on the following link:\n"
 "                    </p>\n"
 "                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
 "                    </ul>\n"
 "                    <p>\n"
 "                        Thanks,\n"
@@ -49,57 +46,18 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
-"\n"
-"                \n"
-"                    <p>\n"
-"                        ${object.name},\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        Поканети сте да се поврзете на "
-"\"${object.company_id.name}\" за да пристапите на вашите документи во Odoo.\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        За да ја прифатите поканата, кликнете на следниот "
-"линк:\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Прифати покана "
-"за \"${object.company_id.name}\"</a></li>\n"
-"                    </ul>\n"
-"                    <p>\n"
-"                        Ви благодариме,\n"
-"                    </p>\n"
-"                    <pre>\n"
-"--\n"
-"${object.company_id.name or ''}\n"
-"${object.company_id.email or ''}\n"
-"${object.company_id.phone or ''}\n"
-"                    </pre>\n"
-"                \n"
-"            "
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Поканети сте да се поврзете на \"${object.company_id.name}\" за да пристапите на вашите документи во Odoo.\n                    </p>\n                    <p>\n                        За да ја прифатите поканата, кликнете на следниот линк:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Прифати покана за \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Ви благодариме,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the Odoo account linked to this "
-"email.</p>\n"
+"<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
 "\n"
-"<p>You may change your password by following <a "
-"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
-"\n"
-"<p>Побарано е ресетирање на лозинка за Odoo налог поврзан со овој е-"
-"маил.</p>\n"
-"\n"
-"<p>Можете да ја промените вашата лозинка следејќи го <a "
-"href=\"${object.signup_url}\">овој линк</a>.</p>\n"
-"\n"
-"<p>Забелешка: Ако не сте го побарале ова, слободно можете да го игнорирате "
-"овој е-маил.</p>"
+msgstr "\n<p>Побарано е ресетирање на лозинка за Odoo налог поврзан со овој е-маил.</p>\n\n<p>Можете да ја промените вашата лозинка следејќи го <a href=\"${object.signup_url}\">овој линк</a>.</p>\n\n<p>Забелешка: Ако не сте го побарале ова, слободно можете да го игнорирате овој е-маил.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
@@ -111,9 +69,7 @@ msgstr "${object.company_id.name} покана за поврзување на Od
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
-msgstr ""
-"За овој корисник е побарано ресетирање на лозинка. Испратена е Е-маил порака "
-"со следниот линк:"
+msgstr "За овој корисник е побарано ресетирање на лозинка. Испратена е Е-маил порака со следниот линк:"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -134,7 +90,8 @@ msgstr "Беше испратен e-mail со акредитиви за ресе
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid ""
-"An invitation email containing the following subscription link has been sent:"
+"An invitation email containing the following subscription link has been "
+"sent:"
 msgstr "Испратена е Е-маил порака со следниот линк за претплата:"
 
 #. module: auth_signup
@@ -144,8 +101,7 @@ msgid "Authentification Failed."
 msgstr "Најавувањето не е успешно."
 
 #. module: auth_signup
-#: view:website:auth_signup.reset_password
-#: view:website:auth_signup.signup
+#: view:website:auth_signup.reset_password view:website:auth_signup.signup
 msgid "Back to Login"
 msgstr "Врати се на најава"
 
@@ -174,8 +130,7 @@ msgstr "Дозволи ресетирање на лозинка од стран�
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
-"Доколку е одштиклирано, само поканети корисници можат да се регистрираат."
+msgstr "Доколку е одштиклирано, само поканети корисници можат да се регистрираат."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:109
@@ -224,8 +179,7 @@ msgid "Send an Invitation Email"
 msgstr "Испрати Е-маил порака со покана"
 
 #. module: auth_signup
-#: view:website:auth_signup.signup
-#: view:website:web.login
+#: view:website:auth_signup.signup view:website:web.login
 msgid "Sign up"
 msgstr "Регистрирај се"
 
@@ -267,9 +221,7 @@ msgstr "Урнек корисник за новите корисници кре�
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
-"Ова дозволува корисниците да активираат ресетирање на лозинката од "
-"страницата за најавување."
+msgstr "Ова дозволува корисниците да активираат ресетирање на лозинката од страницата за најавување."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -277,8 +229,7 @@ msgid "Users"
 msgstr "Корисници"
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
-#: view:website:auth_signup.reset_password
+#: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
 msgstr "Ваш Е-маил"
 

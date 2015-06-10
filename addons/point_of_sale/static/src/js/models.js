@@ -1118,29 +1118,29 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return this.get('name');
         },
         getSubtotal : function(){
-            return (this.get('orderLines')).reduce((function(sum, orderLine){
+            return round_pr((this.get('orderLines')).reduce((function(sum, orderLine){
                 return sum + orderLine.get_display_price();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         getTotalTaxIncluded: function() {
-            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+            return round_pr((this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_with_tax();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         getDiscountTotal: function() {
-            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+            return round_pr((this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         getTotalTaxExcluded: function() {
-            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+            return round_pr((this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_without_tax();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         getTax: function() {
-            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+            return round_pr((this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.get_tax();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         getTaxDetails: function(){
             var details = {};
@@ -1164,9 +1164,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return fulldetails;
         },
         getPaidTotal: function() {
-            return (this.get('paymentLines')).reduce((function(sum, paymentLine) {
+            return round_pr((this.get('paymentLines')).reduce((function(sum, paymentLine) {
                 return sum + paymentLine.get_amount();
-            }), 0);
+            }), 0), this.pos.currency.rounding);
         },
         getChange: function() {
             return this.getPaidTotal() - this.getTotalTaxIncluded();

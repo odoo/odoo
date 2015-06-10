@@ -1816,10 +1816,9 @@ openerp.mail = function (session) {
                 this.$('oe_mail_thread').hide();
                 return;
             }
-
             this.node.params = _.extend(this.node.params, {
                 'message_ids': this.get_value(),
-                'show_compose_message': this.view.is_action_enabled('edit'),
+                'show_compose_message': true,
             });
             this.node.context = {
                 'mail_read_set_read': true,  // set messages as read in Chatter

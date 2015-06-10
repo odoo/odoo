@@ -1,38 +1,36 @@
-# French translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_followup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Quentin THEURET <quentin@theuret.net>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2015-06-01 07:31+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
+"Language-Team: French (http://www.transifex.com/projects/p/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:24+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "\n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
+"    Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take\n"
 "appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to\n"
 "contact our accounting department.  \n"
 "\n"
 "    </p>\n"
@@ -52,60 +50,21 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"\n"
-"    <p>Cher ${object.name},</p>\n"
-"    <p>\n"
-"    A l'examen de votre compte, nous constatons que sauf erreur ou omission "
-"de notre part, nous n'avons toujours pas reçu à ce jour de règlement des "
-"factures reprises sur le relevé ci-dessous. Nous vous remercions de bien "
-"vouloir régulariser cette situation sous huitaine.\n"
-"\n"
-"\n"
-"Au cas où votre règlement se serait croisé avec la présente, nous vous "
-"prions de ne pas en tenir compte. N'hésitez pas à contacter notre service "
-"comptable.\n"
-"\n"
-"    </p>\n"
-"<br/>\n"
-"Veuillez agréer nos salutations distinguées,\n"
-"<br/>\n"
-"   <br/>\n"
-"${user.name}\n"
-"\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Cher ${object.name},</p>\n    <p>\n    A l'examen de votre compte, nous constatons que sauf erreur ou omission de notre part, nous n'avons toujours pas reçu à ce jour de règlement des factures reprises sur le relevé ci-dessous. Nous vous remercions de bien vouloir régulariser cette situation sous huitaine.\n\n\nAu cas où votre règlement se serait croisé avec la présente, nous vous prions de ne pas en tenir compte. N'hésitez pas à contacter notre service comptable.\n\n    </p>\n<br/>\nVeuillez agréer nos salutations distinguées,\n<br/>\n   <br/>\n${user.name}\n\n<br/>\n<br/>\n\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
 "    Despite several reminders, your account is still not settled.\n"
-"Unless full payment is made in next 8 days, legal action for the recovery of "
-"the debt will be taken without\n"
+"Unless full payment is made in next 8 days, legal action for the recovery of the debt will be taken without\n"
 "further notice.\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "</p>\n"
 "<br/>\n"
 "Best Regards,\n"
@@ -122,55 +81,19 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Cher ${object.name},</p>\n"
-"    <p>\n"
-"    Malgré plusieurs rappels, votre compte est toujours débiteur.\n"
-"Nous vous mettons donc en demeure de nous régler sous huitaine l’intégralité "
-"de la somme. Passé ce délai,\n"
-"nous mettrons en œuvre toutes les démarches légales nécessaires au "
-"recouvrement de notre créance sans nouvelle notification.\n"
-"J'espère que ces actions ne seront pas nécessaires et vous trouverez le "
-"détail des factures impayées ci-dessous.\n"
-"Pour toutes questions concernant ce sujet. n'hésitez pas à prendre contact "
-"avec notre service comptable.\n"
-"</p>\n"
-"<br/>\n"
-"Veuillez agréer nos salutations distinguées,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>Cher ${object.name},</p>\n    <p>\n    Malgré plusieurs rappels, votre compte est toujours débiteur.\nNous vous mettons donc en demeure de nous régler sous huitaine l’intégralité de la somme. Passé ce délai,\nnous mettrons en œuvre toutes les démarches légales nécessaires au recouvrement de notre créance sans nouvelle notification.\nJ'espère que ces actions ne seront pas nécessaires et vous trouverez le détail des factures impayées ci-dessous.\nPour toutes questions concernant ce sujet. n'hésitez pas à prendre contact avec notre service comptable.\n</p>\n<br/>\nVeuillez agréer nos salutations distinguées,\n<br/>\n<br/>\n${user.name}\n<br/>\n<br/>\n\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
+"    Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take\n"
 "appropriate measures in order to carry out this payment in the next 8 days.\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to\n"
 "contact our accounting department.\n"
 "    </p>\n"
 "<br/>\n"
@@ -186,56 +109,21 @@ msgid ""
 "<br/>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Dear ${object.name},</p>\n"
-"    <p>\n"
-"    A l'examen de votre compte, nous constatons que sauf erreur ou omission "
-"de notre part, nous n'avons toujours pas reçu à ce jour de règlement des "
-"factures reprises sur le relevé ci-dessous. Nous vous remercions de bien "
-"vouloir régulariser cette situation sous huitaine.\n"
-"Au cas où votre règlement se serait croisé avec ce courriel, nous vous "
-"prions de ne pas en tenir compte. N'hésitez pas à contacter notre service "
-"comptable. \n"
-"    </p>\n"
-"<br/>\n"
-"Veuillez agréer nos salutations distinguées,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"<br/>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>Dear ${object.name},</p>\n    <p>\n    A l'examen de votre compte, nous constatons que sauf erreur ou omission de notre part, nous n'avons toujours pas reçu à ce jour de règlement des factures reprises sur le relevé ci-dessous. Nous vous remercions de bien vouloir régulariser cette situation sous huitaine.\nAu cas où votre règlement se serait croisé avec ce courriel, nous vous prions de ne pas en tenir compte. N'hésitez pas à contacter notre service comptable. \n    </p>\n<br/>\nVeuillez agréer nos salutations distinguées,\n<br/>\n<br/>\n${user.name}\n<br/>\n<br/>\n\n${object.get_followup_table_html() | safe}\n\n<br/>\n</div>\n            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "    \n"
 "    <p>Dear ${object.name},</p>\n"
 "   <p>\n"
-"    We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account\n"
-"which means that we will no longer be able to supply your company with "
-"(goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting\n"
+"    We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account\n"
+"which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting\n"
 "department. so that we can resolve the matter quickly.\n"
 "Details of due payments is printed below.\n"
 " </p>\n"
@@ -255,44 +143,7 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Cher ${object.name},</p>\n"
-"   <p>\n"
-"    Nous constatons avec regret que malgré notre précédent rappel, votre "
-"compte est toujours débiteur.\n"
-"Nous vous mettons donc en demeure de nous régler sous huitaine l’intégralité "
-"de la somme. Passé ce délai,\n"
-"nous bloquerons votre compte ce qui signifie que vous ne pourrez plus passer "
-"de commandes\n"
-"auprès de notre société (articles/services).\n"
-"Si pour une raison qui nous est inconnue vous ne pouvez régler ces factures, "
-"n'hésitez pas à prendre contact\n"
-"avec notre service comptable afin que nous trouvions une solution rapide à "
-"ce problème.\n"
-"\n"
-"Le détail des factures impayées est listé ci-dessous.\n"
-" </p>\n"
-"<br/>\n"
-"Veuillez agréer nos salutations distinguées,\n"
-"    \n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"    \n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>Cher ${object.name},</p>\n   <p>\n    Nous constatons avec regret que malgré notre précédent rappel, votre compte est toujours débiteur.\nNous vous mettons donc en demeure de nous régler sous huitaine l’intégralité de la somme. Passé ce délai,\nnous bloquerons votre compte ce qui signifie que vous ne pourrez plus passer de commandes\nauprès de notre société (articles/services).\nSi pour une raison qui nous est inconnue vous ne pouvez régler ces factures, n'hésitez pas à prendre contact\navec notre service comptable afin que nous trouvions une solution rapide à ce problème.\n\nLe détail des factures impayées est listé ci-dessous.\n </p>\n<br/>\nVeuillez agréer nos salutations distinguées,\n    \n<br/>\n<br/>\n${user.name}\n    \n<br/>\n<br/>\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -302,33 +153,14 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
-"\n"
-"Cher %(partner_name),\n"
-"\n"
-"Malgré plusieurs rappels de notre part, vous n'avez pas régularisé vos "
-"paiements.\n"
-"\n"
-"Faute d'un règlement total sous 8 jours, nous engagerons les démarches "
-"juridiques nécessaires pour recouvrer les sommes dues.\n"
-"\n"
-"Nous espérons que ces démarches ne seront pas nécessaires. Vous trouverez ci-"
-"dessous les détails des sommes en attente de règlement.\n"
-"\n"
-"Notre service comptabilité demeure à votre disposition pour toute question "
-"relative à la présente relance.\n"
-"\n"
-"Bien cordialement,\n"
+msgstr "\nCher %(partner_name),\n\nMalgré plusieurs rappels de notre part, vous n'avez pas régularisé vos paiements.\n\nFaute d'un règlement total sous 8 jours, nous engagerons les démarches juridiques nécessaires pour recouvrer les sommes dues.\n\nNous espérons que ces démarches ne seront pas nécessaires. Vous trouverez ci-dessous les détails des sommes en attente de règlement.\n\nNotre service comptabilité demeure à votre disposition pour toute question relative à la présente relance.\n\nBien cordialement,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -339,36 +171,15 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
 "            "
-msgstr ""
-"\n"
-"Cher %(partner_name)s,\n"
-"\n"
-"Malgré plusieurs rappels, votre compte est toujours débiteur.\n"
-"\n"
-"Nous vous mettons donc en demeure de nous régler sous huitaine l’intégralité "
-"de la somme. Passé ce délai,\n"
-"nous mettrons en œuvre toutes les démarches légales nécessaires au "
-"recouvrement de notre créance sans nouvelle notification.\n"
-"\n"
-"J'espère que ces actions ne seront pas nécessaires et vous trouverez le "
-"détail des factures impayées ci-dessous.\n"
-"\n"
-"Pour toutes questions concernant ce sujet. n'hésitez pas à prendre contact "
-"avec notre service comptable.\n"
-"\n"
-"Veuillez agréer nos salutations distinguées,\n"
-"            "
+msgstr "\nCher %(partner_name)s,\n\nMalgré plusieurs rappels, votre compte est toujours débiteur.\n\nNous vous mettons donc en demeure de nous régler sous huitaine l’intégralité de la somme. Passé ce délai,\nnous mettrons en œuvre toutes les démarches légales nécessaires au recouvrement de notre créance sans nouvelle notification.\n\nJ'espère que ces actions ne seront pas nécessaires et vous trouverez le détail des factures impayées ci-dessous.\n\nPour toutes questions concernant ce sujet. n'hésitez pas à prendre contact avec notre service comptable.\n\nVeuillez agréer nos salutations distinguées,\n            "
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -376,29 +187,12 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"Exception made if there was a mistake of ours, it seems that the following "
-"amount stays unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days.\n"
+"Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to contact our accounting department.  "
-"\n"
+"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
-msgstr ""
-"\n"
-"Cher %(partner_name)s,\n"
-"\n"
-"A l'examen de votre compte, nous constatons que sauf erreur ou omission de "
-"notre part, nous n'avons toujours pas reçu à ce jour de règlement des "
-"factures reprises sur le relevé ci-dessous. Nous vous remercions de bien "
-"vouloir régulariser cette situation dans les 8 jours.\n"
-"\n"
-"Au cas où votre règlement se serait croisé avec la présente, nous vous "
-"prions de ne pas en tenir compte. N'hésitez pas à contacter notre service "
-"comptable.\n"
-"\n"
-"Veuillez agréer nos salutations distinguées,\n"
+msgstr "\nCher %(partner_name)s,\n\nA l'examen de votre compte, nous constatons que sauf erreur ou omission de notre part, nous n'avons toujours pas reçu à ce jour de règlement des factures reprises sur le relevé ci-dessous. Nous vous remercions de bien vouloir régulariser cette situation dans les 8 jours.\n\nAu cas où votre règlement se serait croisé avec la présente, nous vous prions de ne pas en tenir compte. N'hésitez pas à contacter notre service comptable.\n\nVeuillez agréer nos salutations distinguées,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -406,41 +200,17 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
+"We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
 "\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account which means that we will no longer "
-"be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
 "\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting department, so that we can resolve the "
-"matter quickly.\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department, so that we can resolve the matter quickly.\n"
 "\n"
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
-"\n"
-"Cher %(partner_name)s,\n"
-"\n"
-"Nous constatons avec regret que malgré notre précédent rappel, votre compte "
-"est toujours débiteur.\n"
-"\n"
-" Nous vous mettons donc en demeure de nous régler sous huitaine "
-"l’intégralité de la somme. Passé ce délai, nous bloquerons votre compte ce "
-"qui signifie que vous ne pourrez plus passer de commandes auprès de notre "
-"société (articles/services).\n"
-"\n"
-"Si pour une raison qui nous est inconnue vous ne pouvez régler ces factures, "
-"n'hésitez pas à prendre contact avec notre service comptable afin que nous "
-"trouvions une solution rapide à ce problème.\n"
-"\n"
-"Le détail des factures impayées est listé ci-dessous.\n"
-"\n"
-"Veuillez agréer nos salutations distinguées,\n"
+msgstr "\nCher %(partner_name)s,\n\nNous constatons avec regret que malgré notre précédent rappel, votre compte est toujours débiteur.\n\n Nous vous mettons donc en demeure de nous régler sous huitaine l’intégralité de la somme. Passé ce délai, nous bloquerons votre compte ce qui signifie que vous ne pourrez plus passer de commandes auprès de notre société (articles/services).\n\nSi pour une raison qui nous est inconnue vous ne pouvez régler ces factures, n'hésitez pas à prendre contact avec notre service comptable afin que nous trouvions une solution rapide à ce problème.\n\nLe détail des factures impayées est listé ci-dessous.\n\nVeuillez agréer nos salutations distinguées,\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:174
@@ -545,10 +315,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define follow-up levels and their related actions.\n"
 "              </p><p>\n"
-"                For each step, specify the actions to be taken and delay in "
-"days. It is\n"
-"                possible to use print and e-mail templates to send specific "
-"messages to\n"
+"                For each step, specify the actions to be taken and delay in days. It is\n"
+"                possible to use print and e-mail templates to send specific messages to\n"
 "                the customer.\n"
 "              </p>\n"
 "          "
@@ -577,8 +345,7 @@ msgstr "Action à effectuer"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
-msgstr ""
-"Action à lancer. Par ex: Appeler, vérifier si le paiement est arrivé, ..."
+msgstr "Action à lancer. Par ex: Appeler, vérifier si le paiement est arrivé, ..."
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
@@ -620,8 +387,7 @@ msgid "Assign a Responsible"
 msgstr "Attribuer un responsable"
 
 #. module: account_followup
-#: field:account.move.line,result:0
-#: field:account_followup.stat,balance:0
+#: field:account.move.line,result:0 field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
 msgid "Balance"
 msgstr "Balance"
@@ -636,13 +402,8 @@ msgstr "Balance > 0"
 msgid ""
 "Below is the history of the transactions of this\n"
 "                            customer. You can check \"No Follow-up\" in\n"
-"                            order to exclude it from the next follow-up "
-"actions."
-msgstr ""
-"Ci-dessous se trouve l'historique des transactions de ce \n"
-"                            client.  Vous pouvez sélectionner \"Aucun "
-"suivi\" afin \n"
-"                            de le retirer de la prochaine action de relance."
+"                            order to exclude it from the next follow-up actions."
+msgstr "Ci-dessous se trouve l'historique des transactions de ce \n                            client.  Vous pouvez sélectionner \"Aucun suivi\" afin \n                            de le retirer de la prochaine action de relance."
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -689,7 +450,7 @@ msgstr ""
 #: field:account_followup.print,create_uid:0
 #: field:account_followup.sending.results,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Créé par"
 
 #. module: account_followup
 #: field:account_followup.followup,create_date:0
@@ -697,7 +458,7 @@ msgstr ""
 #: field:account_followup.print,create_date:0
 #: field:account_followup.sending.results,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Créé le"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -717,12 +478,12 @@ msgstr "Promesse de paiement client"
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Customer ref:"
-msgstr ""
+msgstr "Ref. du client :"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Date:"
-msgstr ""
+msgstr "Date :"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
@@ -752,14 +513,12 @@ msgstr "Faire une relance manuelle"
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
-msgstr ""
-"Ne changez pas ce message si vous voulez envoyer des courriels dans la "
-"langue du partenaire, ou configurez-le à partir des données de la société"
+msgstr "Ne changez pas ce message si vous voulez envoyer des courriels dans la langue du partenaire, ou configurez-le à partir des données de la société"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Document: Customer account statement"
-msgstr ""
+msgstr "Document : Relevé de compte client"
 
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
@@ -925,44 +684,37 @@ msgstr "Niveau de relance"
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
-"Donne l'ordre de la séquence quand vous affichez une liste des lignes de "
-"relance."
+msgstr "Donne l'ordre de la séquence quand vous affichez une liste des lignes de relance."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Group By"
-msgstr ""
+msgstr "Regrouper par"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid ""
 "He said the problem was temporary and promised to pay 50% before 15th of "
 "May, balance before 1st of July."
-msgstr ""
-"Il dit que le problème n'est que passager et il a promis de payer 50% avant "
-"le 15 mai, et le solde avant le 1er juilet."
+msgstr "Il dit que le problème n'est que passager et il a promis de payer 50% avant le 15 mai, et le solde avant le 1er juilet."
 
 #. module: account_followup
 #: field:account_followup.followup,id:0
-#: field:account_followup.followup.line,id:0
-#: field:account_followup.print,id:0
+#: field:account_followup.followup.line,id:0 field:account_followup.print,id:0
 #: field:account_followup.sending.results,id:0
 #: field:account_followup.stat,id:0
 #: field:account_followup.stat.by.partner,id:0
 #: field:report.account_followup.report_followup,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default email template"
-msgstr ""
-"Sauf indication contraire sur le dernier niveau de relance, le modèle par "
-"défaut sera utilisé pour l'envoi"
+msgstr "Sauf indication contraire sur le dernier niveau de relance, le modèle par défaut sera utilisé pour l'envoi"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -993,7 +745,7 @@ msgstr "Lignes d'écriture"
 #: field:account_followup.print,write_uid:0
 #: field:account_followup.sending.results,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Dernière modification par"
 
 #. module: account_followup
 #: field:account_followup.followup,write_date:0
@@ -1001,7 +753,7 @@ msgstr ""
 #: field:account_followup.print,write_date:0
 #: field:account_followup.sending.results,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Dernière mise à jour le"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -1037,9 +789,7 @@ msgstr ""
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
 msgid "Latest date that the follow-up level of the partner was changed"
-msgstr ""
-"Date à laquelle le niveau de relance du partenaire a été changé pour la "
-"dernière fois"
+msgstr "Date à laquelle le niveau de relance du partenaire a été changé pour la dernière fois"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
@@ -1139,9 +889,7 @@ msgstr "Une seule relance est autorisée par société"
 msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
-msgstr ""
-"Si besoin, vous pouvez assigner un utilisateur à ce champ, ce qui en fera le "
-"responsable de cette action."
+msgstr "Si besoin, vous pouvez assigner un utilisateur à ce champ, ce qui en fera le responsable de cette action."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -1206,8 +954,7 @@ msgstr "Imprimer les paiements en retard"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Print overdue payments report independent of follow-up line"
-msgstr ""
-"Imprimer les relances de paiement indépendamment de la ligne de relance"
+msgstr "Imprimer les relances de paiement indépendamment de la ligne de relance"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -1338,11 +1085,9 @@ msgstr "Le"
 #: code:addons/account_followup/report/account_followup_print.py:82
 #, python-format
 msgid ""
-"The followup plan defined for the current company does not have any followup "
-"action."
-msgstr ""
-"Les niveaux de relances définis pour la société actuelle ne contiennent "
-"aucune action de relance."
+"The followup plan defined for the current company does not have any followup"
+" action."
+msgstr "Les niveaux de relances définis pour la société actuelle ne contiennent aucune action de relance."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
@@ -1354,8 +1099,7 @@ msgstr "Le niveau de relance maximum"
 msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
-msgstr ""
-"Le degré maximal de relance sans prendre en compte les écritures en litige"
+msgstr "Le degré maximal de relance sans prendre en compte les écritures en litige"
 
 #. module: account_followup
 #: help:account_followup.followup.line,delay:0
@@ -1363,10 +1107,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr ""
-"Nombre de jours à attendre après la date d'échéance de la facture avant "
-"d'envoyer la relance. Il peut être négatif si vous souhaitez envoyer une "
-"simple invitation avant l'échéance."
+msgstr "Nombre de jours à attendre après la date d'échéance de la facture avant d'envoyer la relance. Il peut être négatif si vous souhaitez envoyer une simple invitation avant l'échéance."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -1380,9 +1121,7 @@ msgstr ""
 #: code:addons/account_followup/account_followup.py:319
 #, python-format
 msgid "There is no followup plan defined for the current company."
-msgstr ""
-"Il n'y a aucun plan de suivi des paiements défini pour la société utilisée "
-"actuellement."
+msgstr "Il n'y a aucun plan de suivi des paiements défini pour la société utilisée actuellement."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -1393,26 +1132,20 @@ msgstr "Exercice comptable"
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid ""
 "This action will send follow-up emails, print the letters and\n"
-"                        set the manual actions per customer, according to "
-"the follow-up levels defined."
+"                        set the manual actions per customer, according to the follow-up levels defined."
 msgstr ""
 
 #. module: account_followup
 #: help:account_followup.print,date:0
-msgid ""
-"This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
-"Ce champ vous permet de sélectionner une date pour planifier vos relances"
+msgid "This field allow you to select a forecast date to plan your follow-ups"
+msgstr "Ce champ vous permet de sélectionner une date pour planifier vos relances"
 
 #. module: account_followup
 #: help:res.partner,payment_next_action:0
 msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
-msgstr ""
-"Ceci est la prochaine action à entreprendre. Elle sera automatiquement "
-"renseignée lorsqu'un partenaire recevra une relance d'un niveau exigeant une "
-"action manuelle. "
+msgstr "Ceci est la prochaine action à entreprendre. Elle sera automatiquement renseignée lorsqu'un partenaire recevra une relance d'un niveau exigeant une action manuelle. "
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -1429,20 +1162,12 @@ msgid ""
 "To remind customers of paying their invoices, you can\n"
 "                        define different actions depending on how severely\n"
 "                        overdue the customer is. These actions are bundled\n"
-"                        into follow-up levels that are triggered when the "
-"due\n"
+"                        into follow-up levels that are triggered when the due\n"
 "                        date of an invoice has passed a certain\n"
-"                        number of days. If there are other overdue invoices "
-"for the \n"
+"                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
-msgstr ""
-"Pour rappeler à vos clients de payer leurs factures, vous pouvez définir "
-"différentes actions selon leur retard. Ces actions sont regroupées par "
-"niveaux de relances. Chaque niveau est activé quand l'échéance d'une facture "
-"dépasse un délai prédéfini. Si un client possède plusieurs factures "
-"impayées, les actions correspondant à la facture la plus en retard seront "
-"exécutées."
+msgstr "Pour rappeler à vos clients de payer leurs factures, vous pouvez définir différentes actions selon leur retard. Ces actions sont regroupées par niveaux de relances. Chaque niveau est activé quand l'échéance d'une facture dépasse un délai prédéfini. Si un client possède plusieurs factures impayées, les actions correspondant à la facture la plus en retard seront exécutées."
 
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
@@ -1485,11 +1210,9 @@ msgstr "Échéance la plus en retard"
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ""
 "Write here the introduction in the letter,\n"
-"                            according to the level of the follow-up. You "
-"can\n"
+"                            according to the level of the follow-up. You can\n"
 "                            use the following keywords in the text. Don't\n"
-"                            forget to translate in all languages you "
-"installed\n"
+"                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
 msgstr ""
 
@@ -1498,17 +1221,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You became responsible to do the next action for the payment follow-up of"
-msgstr ""
-"Vous êtes maintenant en charge de la prochaine relance de paiement de"
+msgstr "Vous êtes maintenant en charge de la prochaine relance de paiement de"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
-"Votre description n'est pas correcte, utilisez une légende exacte  ou %% si "
-"vous souhaitez utiliser le caractère pour cent."
+msgstr "Votre description n'est pas correcte, utilisez une légende exacte  ou %% si vous souhaitez utiliser le caractère pour cent."
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form

@@ -330,6 +330,10 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
+        if order.state != 'draft':
+            request.website.sale_reset()
+            return {}
+
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
         if not display:
             return None
@@ -934,11 +938,14 @@ class website_sale(http.Controller):
         return ret
 
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
-    def get_unit_price(self, product_ids, add_qty, **kw):
+    def get_unit_price(self, product_ids, add_qty, use_order_pricelist=False, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         products = pool['product.product'].browse(cr, uid, product_ids, context=context)
         partner = pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
+        if use_order_pricelist:
+            pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
+        else:
+            pricelist_id = partner.property_product_pricelist.id
         prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [], [(product, add_qty, partner) for product in products], context=context)
         return {product_id: prices[product_id][pricelist_id][0] for product_id in product_ids}
 
