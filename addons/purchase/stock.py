@@ -46,11 +46,11 @@ class stock_move(osv.osv):
             default['purchase_line_id'] = False
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
-    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, inv_type, context=None):
         if move.purchase_line_id:
             invoice_line_vals['purchase_line_id'] = move.purchase_line_id.id
             invoice_line_vals['account_analytic_id'] = move.purchase_line_id.account_analytic_id.id or False
-        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, inv_type, context=context)
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
             self.pool.get('purchase.order.line').write(cr, uid, [purchase_line.id], {
@@ -75,11 +75,11 @@ class stock_move(osv.osv):
                 invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_line_vals['invoice_id']}, context=context)
         return invoice_line_id
 
-    def _get_master_data(self, cr, uid, move, company, context=None):
-        if move.purchase_line_id:
+    def _get_master_data(self, cr, uid, move, company, inv_type, context=None):
+        if inv_type in ('in_invoice', 'in_refund') and move.purchase_line_id:
             purchase_order = move.purchase_line_id.order_id
             return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-        elif move.picking_id:
+        elif inv_type in ('in_invoice', 'in_refund') and move.picking_id:
             # In case of an extra move, it is better to use the data from the original moves
             for purchase_move in move.picking_id.move_lines:
                 if purchase_move.purchase_line_id:
@@ -91,12 +91,12 @@ class stock_move(osv.osv):
             if partner and partner.property_product_pricelist_purchase and code == 'incoming':
                 currency = partner.property_product_pricelist_purchase.currency_id.id
                 return partner, uid, currency
-        return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
+        return super(stock_move, self)._get_master_data(cr, uid, move, company, inv_type, context=context)
 
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        if move.purchase_line_id:
+        if inv_type in ('in_invoice', 'in_refund') and move.purchase_line_id:
             purchase_line = move.purchase_line_id
             res['invoice_line_tax_ids'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
