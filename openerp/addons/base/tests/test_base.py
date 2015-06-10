@@ -464,6 +464,17 @@ class test_translation(common.TransactionCase):
         fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang':'fr_FR'})
         self.assertEqual(fr_context_cat.name, 'Clients (copie)', "Did not used default value for translated value")
 
+    def test_104_orderby_translated_field(self):
+        """ Test search ordered by a translated field. """
+        # create a category with a French translation
+        category = self.env['res.partner.category'].create({'name': 'Padawans'})
+        category_fr = category.with_context(lang='fr_FR')
+        category_fr.write({'name': 'Apprentis'})
+        # search for categories, and sort them by (translated) name
+        categories = category_fr.search([('id', 'in', [self.cat_id, category.id])], order='name')
+        self.assertEqual(categories.ids, [category.id, self.cat_id],
+            "Search ordered by translated name should return Padawans (Apprentis) before Customers (Clients)")
+
 test_state = None
 #: Stores state information across multiple test classes
 def setUpModule():

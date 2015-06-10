@@ -2183,7 +2183,11 @@ class BaseModel(object):
                 implicit=True,
             )
             model, alias = parent_model, parent_alias
-        return '"%s"."%s"' % (alias, field)
+        # handle the case where the field is translated
+        if model._columns[field].translate:
+            return model._generate_translated_field(alias, field, query)
+        else:
+            return '"%s"."%s"' % (alias, field)
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:
@@ -4526,6 +4530,27 @@ class BaseModel(object):
                         parent_model=inherited_model)
 
     @api.model
+    def _generate_translated_field(self, table_alias, field, query):
+        """
+        Add possibly missing JOIN with translations table to ``query`` and
+        generate the expression for the translated field.
+
+        :return: the qualified field name (or expression) to use for ``field``
+        """
+        lang = self._context.get('lang')
+        if lang and lang != 'en_US':
+            alias, alias_statement = query.add_join(
+                (table_alias, 'ir_translation', 'id', 'res_id', field),
+                implicit=False,
+                outer=True,
+                extra='"{rhs}"."name" = %s AND "{rhs}"."lang" = %s AND "{rhs}"."value" != %s',
+                extra_params=["%s,%s" % (self._name, field), lang, ""],
+            )
+            return 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, field)
+        else:
+            return '"%s"."%s"' % (table_alias, field)
+
+    @api.model
     def _generate_m2o_order_by(self, order_field, query):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
@@ -4593,7 +4618,10 @@ class BaseModel(object):
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
-                        inner_clause = '"%s"."%s"' % (self._table, order_field)
+                        if order_column.translate:
+                            inner_clause = self._generate_translated_field(self._table, order_field, query)
+                        else:
+                            inner_clause = '"%s"."%s"' % (self._table, order_field)
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
