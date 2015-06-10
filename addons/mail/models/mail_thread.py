@@ -79,11 +79,9 @@ class MailThread(models.AbstractModel):
     message_unread = fields.Boolean(
         'Unread Messages', compute='_get_message_unread', search='_search_message_unread',
         help="If checked new messages require your attention.")
-    message_summary = fields.Text(
-        'Summary', compute='_get_message_unread',
-        help="Holds the Chatter summary (number of messages, ...). "\
-             "This summary is directly in html format in order to "\
-             "be inserted in kanban views.")
+    message_unread_counter = fields.Integer(
+        'Unread Messages', compute='_get_message_unread',
+        help="Number of unread messages")
 
     @api.multi
     def _get_followers(self):
@@ -152,8 +150,6 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _get_message_unread(self):
-        """ Compute the existence of unread message (message_unread) + the kanban
-        summary for unread messages (message_summary) """
         res = dict((res_id, 0) for res_id in self.ids)
 
         # search for unread messages, directly in SQL to improve performances
@@ -166,13 +162,8 @@ class MailThread(models.AbstractModel):
             res[result[0]] += 1
 
         for record in self:
-            record.message_unread = res.get(record.id, 0) >= 1
-            if record.message_unread:
-                record.message_summary = "<span class='oe_kanban_mail_new' title='%(title)s'><i class='fa fa-comments-o'/>%(count)d</span>" % {
-                    'title': '%d %s' % (res[record.id], _('Unread Messages')),
-                    'count': res[record.id]}
-            else:
-                record.message_summary = ''
+            record.message_unread_counter = res.get(record.id, 0)
+            record.message_unread = bool(record.message_unread_counter)
 
     @api.model
     def _search_message_unread(self, operator, operand):

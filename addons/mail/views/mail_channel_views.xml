@@ -19,7 +19,7 @@
                 <kanban>
                     <field name="message_follower_ids"/>
                     <field name="message_is_follower"/>
-                    <field name="message_summary"/>
+                    <field name="message_unread_counter"/>
                     <field name="description"/>
                     <field name="alias_id"/>
                     <field name="alias_name"/>
@@ -44,7 +44,9 @@
                                         <field name="description"/>
                                     </div>
                                     <div class="oe_kanban_bottom_left">
-                                        <t t-raw="record.message_summary.raw_value"/>
+                                        <t t-if="record.message_unread_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                        </t>
                                     </div>
                                     <div class="oe_group_button">
                                         <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_group_join">Unfollow</button>

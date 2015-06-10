@@ -79,7 +79,7 @@
                 <field name="user_id"/>
                 <field name="category_id"/>
                 <field name="kanban_state"/>
-                <field name="message_summary"/>
+                <field name="message_unread_counter"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
@@ -108,7 +108,9 @@
                                     <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:2px;">
-                                    <t t-raw="record.message_summary.raw_value"/>
+                                    <t t-if="record.message_unread_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    </t>
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
@@ -254,7 +256,7 @@
                 <field name="category_id"/>
                 <field name="serial_no"/>
                 <field name="model"/>
-                <field name="message_summary"/>
+                <field name="message_unread_counter"/>
                 <field name="maintenance_ids"/>
                 <templates>
                     <t t-name="kanban-tooltip">
@@ -293,7 +295,9 @@
                                     <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
-                                    <t t-raw="record.message_summary.raw_value"/>
+                                    <t t-if="record.message_unread_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    </t>
                                     <span t-if="record.model.raw_value"><field name="model"/></span>
                                 </div>
                             </div>

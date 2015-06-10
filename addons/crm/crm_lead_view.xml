@@ -277,8 +277,7 @@
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="partner_address_email"/>
-                    <field name="message_summary"/>
-                    <field name="message_unread"/>
+                    <field name="message_unread_counter"/>
                     <field name="tag_ids"/>
                     <field name="partner_id"/>
                     <templates>
@@ -304,12 +303,15 @@
                                     </div>
                                     <div>
                                         <strong><field name="name"/></strong>
-                                    </div>
+                                    </div>7ccf2b71ad1bc7819dad782dc6f89f2fa447eb85
                                     <div class="text-muted">
                                         <span t-if="record.planned_revenue.raw_value"><t t-esc="record.planned_revenue.value"/><field name="company_currency"/></span> <span t-if="record.partner_id.value"> - <t t-esc="record.partner_id.value"/></span>
                                     </div>
                                     <div class="o_kanban_footer">
-                                        <field name="priority" widget="priority" groups="base.group_user"/> <t t-raw="record.message_summary.raw_value"/>
+                                        <field name="priority" widget="priority" groups="base.group_user"/>
+                                        <t t-if="record.message_unread_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                        </t>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     </div>
                                 </div>

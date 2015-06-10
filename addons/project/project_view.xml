@@ -332,7 +332,7 @@
                     <field name="sequence"/>
                     <field name="remaining_hours" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
-                    <field name="message_summary"/>
+                    <field name="message_unread_counter"/>
                     <field name="tag_ids"/>
                     <field name="displayed_image_id"/>
                     <templates>
@@ -363,7 +363,9 @@
                                 </div>
                                 <div class="oe_kanban_bottom_left">
                                     <field name="priority" widget="priority"/>
-                                    <t t-raw="record.message_summary.raw_value"/>
+                                    <t t-if="record.message_unread_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    </t>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>

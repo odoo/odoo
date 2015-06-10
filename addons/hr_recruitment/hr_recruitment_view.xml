@@ -261,7 +261,7 @@
                 <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
-                <field name="message_summary"/>
+                <field name="message_unread_counter"/>
                 <field name="attachment_number"/>
                 <templates>
                     <t t-name="kanban-tooltip">
@@ -301,7 +301,9 @@
                                     </div>
                                 </div>
                                 <div class="oe_kanban_bottom_left oe_margin_top_4">
-                                    <t t-raw="record.message_summary.raw_value"/>
+                                    <t t-if="record.message_unread_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    </t>
                                     <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
                                 </div>
                                 <div class="oe_kanban_footer_left oe_margin_top_4">
