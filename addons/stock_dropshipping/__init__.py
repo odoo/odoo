@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import stock_dropshipping
+
+import models
 import wizard

@@ -42,7 +42,7 @@
 -
   !python {model: stock.invoice.onshipping}: |
     wiz_id = self.create(cr, uid, {'invoice_date': '2010-08-04', 'journal_id': ref('sales_journal')},
-      {'active_ids': [ref("stock_picking_out0")], "active_model": "stock.picking"})
+      {"active_ids": [ref("stock_picking_out0")], "active_id": ref("stock_picking_out0"), "active_model": "stock.picking"})
     self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US",
       "search_default_available": 1, "tz": False, "active_model": "stock.picking",
       "contact_display": "partner", "active_ids": [ref("stock_picking_out0")], "active_id": ref("stock_picking_out0")})

@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Author: Leonardo Pistone
-# Copyright 2015 Camptocamp SA
+# coding: utf-8
 
 from openerp.tests.common import TransactionCase
 

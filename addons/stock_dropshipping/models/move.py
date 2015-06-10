@@ -1,27 +1,14 @@
-#    Author: Leonardo Pistone
-#    Copyright 2015 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# coding: utf-8
+
 from openerp import models, api
 
 
-class Move(models.Model):
+class StockMove(models.Model):
     _inherit = "stock.move"
 
     @api.model
     def _create_invoice_line_from_vals(self, move, invoice_line_vals, inv_type):
-        invoice_line_id = super(Move, self)._create_invoice_line_from_vals(move, invoice_line_vals, inv_type)
+        invoice_line_id = super(StockMove, self)._create_invoice_line_from_vals(move, invoice_line_vals, inv_type)
 
         purchase_line = move.purchase_line_id
         sale_line = move.procurement_id.sale_line_id
@@ -43,7 +30,7 @@ class Move(models.Model):
 
     @api.model
     def _get_master_data(self, move, company, inv_type):
-        partner, uid, currency = super(Move, self)._get_master_data(move, company, inv_type)
+        partner, uid, currency = super(StockMove, self)._get_master_data(move, company, inv_type)
         new_partner_id = self.env.context.get('partner_to_invoice_id')
         if new_partner_id:
             partner = self.env['res.partner'].browse(new_partner_id)
