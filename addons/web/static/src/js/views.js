@@ -597,7 +597,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
 
         if (options && options.state && options.state.view_type) {
             var view_type = options.state.view_type;
-            var view_descr = this.views[view_type]
+            var view_descr = this.views[view_type];
             this.default_view = view_descr && view_descr.multi_record ? view_type : undefined;
         }
     },
