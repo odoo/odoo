@@ -2175,7 +2175,7 @@ class BaseModel(object):
         parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
         return parent_alias
 
-    def _inherits_join_calc(self, field, query):
+    def _inherits_join_calc(self, field, query, context=None):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
@@ -2184,8 +2184,11 @@ class BaseModel(object):
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
+        if context is None:
+            context = {}
         # INVARIANT: alias is the SQL alias of model._table in query
         model, alias = self, self._table
+        parent_model = None
         while field in model._inherit_fields and field not in model._columns:
             # retrieve the parent model where field is inherited from
             parent_model_name = model._inherit_fields[field][0]
@@ -2197,7 +2200,10 @@ class BaseModel(object):
                 implicit=True,
             )
             model, alias = parent_model, parent_alias
-        return '"%s"."%s"' % (alias, field)
+        inner_clause = '%s."%s"' % (alias, field)
+        if parent_model and getattr(parent_model._columns[field], 'translate', False):
+            inner_clause = parent_model._generate_translated_field_order_by(alias, field, query, context=context) or inner_clause
+        return inner_clause
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:
@@ -4522,6 +4528,23 @@ class BaseModel(object):
             apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
                         parent_model=inherited_model)
 
+    def _generate_translated_field_order_by(self, table_alias, order_field, query, context=None):
+        if context is None:
+            context = {}
+        inner_clause = None
+        lang = context.get('lang', 'en_US')
+        if lang and lang != 'en_US':
+            trans_name = self._name + "," + order_field
+            alias, alias_statement = query.add_join(
+                (table_alias, 'ir_translation', 'id', 'res_id', 'ir_translation'),
+                implicit=False,
+                outer=True,
+                add_condition='AND "%(alias)s"."name" = \'%(trans_name)s\' AND "%(alias)s"."lang" = \'%(lang)s\' AND "%(alias)s"."value" != \'\'',
+                add_condition_args={'trans_name': trans_name, 'lang': lang})
+            inner_clause = 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, order_field)
+        return inner_clause
+
+
     def _generate_m2o_order_by(self, order_field, query):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
@@ -4565,7 +4588,7 @@ class BaseModel(object):
         qualify = lambda field: '"%s"."%s"' % (dst_alias, field)
         return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
 
-    def _generate_order_by(self, order_spec, query):
+    def _generate_order_by(self, order_spec, query, context=None):
         """
         Attempt to construct an appropriate ORDER BY clause based on order_spec, which must be
         a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
@@ -4589,6 +4612,8 @@ class BaseModel(object):
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
                         inner_clause = '"%s"."%s"' % (self._table, order_field)
+                        if getattr(order_column, 'translate', False):
+                            inner_clause = self._generate_translated_field_order_by(self._table, order_field, query, context=context) or inner_clause
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
@@ -4597,7 +4622,7 @@ class BaseModel(object):
                     parent_obj = self.pool[self._inherit_fields[order_field][3]]
                     order_column = parent_obj._columns[order_field]
                     if order_column._classic_read:
-                        inner_clause = self._inherits_join_calc(order_field, query)
+                        inner_clause = self._inherits_join_calc(order_field, query, context=context)
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
@@ -4637,7 +4662,7 @@ class BaseModel(object):
 
         query = self._where_calc(cr, user, args, context=context)
         self._apply_ir_rules(cr, user, query, 'read', context=context)
-        order_by = self._generate_order_by(order, query)
+        order_by = self._generate_order_by(order, query, context)
         from_clause, where_clause, where_clause_params = query.get_sql()
 
         where_str = where_clause and (" WHERE %s" % where_clause) or ''

@@ -39,7 +39,7 @@ class Query(object):
       - etc.
     """
 
-    def __init__(self, tables=None, where_clause=None, where_clause_params=None, joins=None):
+    def __init__(self, tables=None, where_clause=None, where_clause_params=None, joins=None, add_conditions=None):
 
         # holds the list of tables joined using default JOIN.
         # the table names are stored double-quoted (backwards compatibility)
@@ -66,6 +66,12 @@ class Query(object):
         #       SELECT ... FROM "table_a" LEFT JOIN "table_b" ON ("table_a"."table_a_col1" = "table_b"."table_b_col")
         #                                 LEFT JOIN "table_c" ON ("table_a"."table_a_col2" = "table_c"."table_c_col")
         self.joins = joins or {}
+        # holds the additional conditions for table joins that should not be in the where clause
+        # but in the join condition itself. The dict key is a tuple with the table along with the regular join clause
+        # self.add_contions = {
+        #     ('table_a', ('table_b', 'table_a_col1', 'table_b_col', 'LEFT JOIN')): 'AND "table_b"."table_b_col3" = true'
+        # }
+        self.add_conditions = add_conditions or {}
 
     def _get_table_aliases(self):
         from openerp.osv.expression import get_alias_from_query
@@ -79,7 +85,7 @@ class Query(object):
             mapping[statement] = table
         return mapping
 
-    def add_join(self, connection, implicit=True, outer=False):
+    def add_join(self, connection, implicit=True, outer=False, add_condition=None, add_condition_args={}):
         """ Join a destination table to the current table.
 
             :param implicit: False if the join is an explicit join. This allows
@@ -87,7 +93,7 @@ class Query(object):
                 OpenERP 7.0. It therefore adds the JOIN specified in ``connection``
                 If True, the join is done implicitely, by adding the table alias
                 in the from clause and the join condition in the where clause
-                of the query. Implicit joins do not handle outer parameter.
+                of the query. Implicit joins do not handle outer, add_condition, add_condition_args parameters.
             :param connection: a tuple ``(lhs, table, lhs_col, col, link)``.
                 The join corresponds to the SQL equivalent of::
 
@@ -102,6 +108,13 @@ class Query(object):
                       columns so it would not be correct (e.g. for
                       ``_inherits`` or when a domain criterion explicitly
                       adds filtering)
+            :param add_condition: None if no additional join condition is needed.
+                A string with the additional join condition otherwise.
+                This is used to provide an additional condition to the join clause,
+                that cannot be added in the where clause (e.g. for LEFT join concerns).
+                The string is formatted with the `add_condition_args` dict, which automatically includes
+                the alias generated for `lhs`.
+            :param add_condition_args: a dict with variables used for the `add_condition` string formatting.
         """
         from openerp.osv.expression import generate_table_alias
         (lhs, table, lhs_col, col, link) = connection
@@ -125,7 +138,11 @@ class Query(object):
             else:
                 # add JOIN
                 self.tables.append(alias_statement)
-                self.joins.setdefault(lhs, []).append((alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN'))
+                join_tuple = (alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN')
+                self.joins.setdefault(lhs, []).append(join_tuple)
+                if add_condition:
+                    add_condition_args = dict({'alias': alias}, **add_condition_args)
+                    self.add_conditions[(lhs, join_tuple)] = add_condition % add_condition_args
             return alias, alias_statement
 
     def get_sql(self):
@@ -138,8 +155,11 @@ class Query(object):
         def add_joins_for_table(table, query_from):
             for (dest_table, lhs_col, col, join) in self.joins.get(table, []):
                 tables_to_process.remove(alias_mapping[dest_table])
-                query_from += ' %s %s ON ("%s"."%s" = "%s"."%s")' % \
+                query_from += ' %s %s ON (("%s"."%s" = "%s"."%s")' % \
                     (join, alias_mapping[dest_table], table, lhs_col, dest_table, col)
+                if self.add_conditions.get((table, (dest_table, lhs_col, col, join))):
+                    query_from += self.add_conditions[(table, (dest_table, lhs_col, col, join))]
+                query_from += ')'
                 query_from = add_joins_for_table(dest_table, query_from)
             return query_from
 
