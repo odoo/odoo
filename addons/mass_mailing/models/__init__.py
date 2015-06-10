@@ -6,4 +6,4 @@ import mail_mail
 import mail_thread
 import res_config
 import mass_mailing_report
-import website_links
+import link_tracker

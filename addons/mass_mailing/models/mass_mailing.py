@@ -208,7 +208,7 @@ class MassMailingCampaign(osv.Model):
         cr.execute("""
             SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_campaign_id AS id 
             FROM mail_mail_statistics AS stats
-            LEFT OUTER JOIN website_links_click AS clicks ON clicks.mail_stat_id = stats.id
+            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mail_stat_id = stats.id
             WHERE stats.mass_mailing_campaign_id IN %s
             GROUP BY stats.mass_mailing_campaign_id
         """, (tuple(ids), ))
@@ -436,7 +436,7 @@ class MassMailing(osv.Model):
         cr.execute("""
             SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_id AS id 
             FROM mail_mail_statistics AS stats
-            LEFT OUTER JOIN website_links_click AS clicks ON clicks.mail_stat_id = stats.id
+            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mail_stat_id = stats.id
             WHERE stats.mass_mailing_id IN %s
             GROUP BY stats.mass_mailing_id
         """, (tuple(ids), ))
@@ -583,7 +583,7 @@ class MassMailing(osv.Model):
 
     def mass_mailing_statistics_action(self, cr, uid, ids, context=None):
         res = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'mass_mailing', 'action_view_mass_mailing_statistics', context=context)
-        link_click_ids = self.pool['website.links.click'].search(cr, uid, [('mass_mailing_id', 'in', ids)], context=context)
+        link_click_ids = self.pool['link.tracker.click'].search(cr, uid, [('mass_mailing_id', 'in', ids)], context=context)
         res['domain'] = [('id', 'in', link_click_ids)]
         return res
 
@@ -796,7 +796,7 @@ class MassMailing(osv.Model):
             if utm_mixin.medium_id:
                 vals['medium_id'] = utm_mixin.medium_id.id
 
-            res[mass_mailing.id] = self.pool['website.links'].convert_links(cr, uid, html, vals, blacklist=['/unsubscribe_from_list'], context=context)
+            res[mass_mailing.id] = self.pool['link.tracker'].convert_links(cr, uid, html, vals, blacklist=['/unsubscribe_from_list'], context=context)
 
         return res
 

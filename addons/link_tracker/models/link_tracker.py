@@ -21,12 +21,13 @@ def VALIDATE_URL(url):
     return url
 
 
-class website_links(models.Model):
-    """website_links allow users to wrap any URL into a short and trackable URL
-    via a frontend and backend interface. website_links counts clicks on each tracked link.
+class link_tracker(models.Model):
+    """link_tracker allow users to wrap any URL into a short and trackable URL.
+    link_tracker counts clicks on each tracked link.
     This module is also used by mass_mailing, where each link in mail_mail html_body are converted into
     a trackable link to get the click-through rate of each mass_mailing."""
-    _name = "website.links"
+
+    _name = "link.tracker"
     _rec_name = "short_url"
 
     _inherit = ['utm.mixin']
@@ -34,10 +35,10 @@ class website_links(models.Model):
     url = fields.Char(string='Target URL', required=True)
     count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
     short_url = fields.Char(string='Tracked URL', compute='_compute_short_url')
-    link_click_ids = fields.One2many('website.links.click', 'link_id', string='Clicks')
+    link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
     title = fields.Char(string='Page Title', store=True)
     favicon = fields.Char(string='Favicon', compute='_compute_favicon', store=True)
-    link_code_ids = fields.One2many('website.links.code', 'link_id', string='Codes')
+    link_code_ids = fields.One2many('link.tracker.code', 'link_id', string='Codes')
     code = fields.Char(string='Short URL code', compute='_compute_code')
     redirected_url = fields.Char(string='Redirected URL', compute='_compute_redirected_url')
     short_url_host = fields.Char(string='Host of the short URL', compute='_compute_short_url_host')
@@ -81,7 +82,7 @@ class website_links(models.Model):
 
     @api.one
     def _compute_code(self):
-        record = self.env['website.links.code'].search([('link_id', '=', self.id)], limit=1, order='id DESC')
+        record = self.env['link.tracker.code'].search([('link_id', '=', self.id)], limit=1, order='id DESC')
         self.code = record.code
 
     @api.one
@@ -127,7 +128,7 @@ class website_links(models.Model):
 
     @api.multi
     def action_view_statistics(self):
-        action = self.env['ir.actions.act_window'].for_xml_id('website_links', 'action_view_click_statistics')
+        action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'action_view_click_statistics')
         action['domain'] = [('link_id', '=', self.id)]
         return action
 
@@ -177,16 +178,16 @@ class website_links(models.Model):
             if fname not in create_vals:
                 create_vals[fname] = False
 
-        link = super(website_links, self).create(create_vals)
+        link = super(link_tracker, self).create(create_vals)
 
-        code = self.env['website.links.code'].get_random_code_string()
-        self.env['website.links.code'].create({'code': code, 'link_id': link.id})
+        code = self.env['link.tracker.code'].get_random_code_string()
+        self.env['link.tracker.code'].create({'code': code, 'link_id': link.id})
 
         return link
 
     @api.model
     def get_url_from_code(self, code, context=None):
-        code_rec = self.env['website.links.code'].sudo().search([('code', '=', code)])
+        code_rec = self.env['link.tracker.code'].sudo().search([('code', '=', code)])
 
         if not code_rec:
             return None
@@ -198,11 +199,11 @@ class website_links(models.Model):
     ]
 
 
-class website_links_code(models.Model):
-    _name = "website.links.code"
+class link_tracker_code(models.Model):
+    _name = "link.tracker.code"
 
     code = fields.Char(string='Short URL Code', store=True)
-    link_id = fields.Many2one('website.links', 'Link', required=True, ondelete='cascade')
+    link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
 
     @api.model
     def get_random_code_string(self):
@@ -220,19 +221,19 @@ class website_links_code(models.Model):
     ]
 
 
-class website_links_click(models.Model):
-    _name = "website.links.click"
+class link_tracker_click(models.Model):
+    _name = "link.tracker.click"
     _rec_name = "link_id"
 
     click_date = fields.Date(string='Create Date')
-    link_id = fields.Many2one('website.links', 'Link', required=True, ondelete='cascade')
+    link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country', 'Country')
 
     @api.model
     def add_click(self, code, ip, country_code, stat_id=False):
         self = self.sudo()
-        code_rec = self.env['website.links.code'].search([('code', '=', code)])
+        code_rec = self.env['link.tracker.code'].search([('code', '=', code)])
 
         if not code_rec:
             return None

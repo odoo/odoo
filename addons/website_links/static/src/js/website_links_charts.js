@@ -131,7 +131,7 @@ website.if_dom_contains('div.o_website_links_chart', function() {
         // Get the code of the link
         var link_id = $('#link_id').val();
 
-        var clicks = new Model('website.links.click');
+        var clicks = new Model('link.tracker.click');
         var links_domain = ['link_id', '=', parseInt(link_id)];
 
         var total_clicks = function() {

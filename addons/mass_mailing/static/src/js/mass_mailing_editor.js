@@ -1,4 +1,4 @@
-odoo.define('website_mail.website_mail', function (require) {
+odoo.define('mass_mailing.editor', function (require) {
 "use strict";
 
 var Model = require('web.Model');
@@ -36,7 +36,7 @@ options.registry["width-x"] = options.Class.extend({
                 if ($handle.hasClass(handler)) { compass = handler; }
             });
             if(self.is_image){ compass = "image"; }
-            self.BuildingBlock.editor_busy = true;
+            self.buildingBlock.editor_busy = true;
 
             var $body = $(document.body);
 
@@ -63,7 +63,7 @@ options.registry["width-x"] = options.Class.extend({
             var body_mouseup = function(){
                 $body.unbind('mousemove', body_mousemove);
                 $body.unbind('mouseup', body_mouseup);
-                self.BuildingBlock.editor_busy = false;
+                self.buildingBlock.editor_busy = false;
                 self.$target.removeClass("resize_editor_busy");
             };
             $body.mousemove(body_mousemove);
@@ -78,7 +78,7 @@ options.registry["width-x"] = options.Class.extend({
             var width = offset + target_width - event.pageX;
         }
         target.css("width", width + "px");
-        self.BuildingBlock.cover_target(self.$overlay, self.$target);
+        self.buildingBlock.cover_target(self.$overlay, self.$target);
         return;
     },
     get_int_width: function ($el) {
@@ -106,7 +106,7 @@ options.registry["width-x"] = options.Class.extend({
             });
         }
         this._super($clone);
-        this.BuildingBlock.cover_target(this.$overlay, this.$target);
+        this.buildingBlock.cover_target(this.$overlay, this.$target);
     },
     on_remove: function () {
         var remove_index = $(this.$target).index();
@@ -118,7 +118,7 @@ options.registry["width-x"] = options.Class.extend({
             });
         }
         this._super();
-        this.BuildingBlock.cover_target(this.$overlay, this.$target);
+        this.buildingBlock.cover_target(this.$overlay, this.$target);
     },
 });
 
@@ -168,6 +168,9 @@ web_editor.Class.include({
         $("#choose_template").children().toggleClass("hidden");
         $("body").trigger("resize");
         $(window.top).trigger('resize');
+        setTimeout(function () {
+            $(".note-popover").toggleClass("hidden", $("#templates").is(":visible"));
+        },0);
     },
     on_set_snippet_template: function (event) {
         var $editable = $("#editable_area");

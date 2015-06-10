@@ -10,7 +10,7 @@
                         <tr>
                             <td valign="center" style="text-align:center">
                                 &amp;nbsp;
-                                <a t-att-href="(website.company_id.website) or '#'" style="text-decoration:none">
+                                <a t-att-href="(company_id.website) or '#'" style="text-decoration:none">
                                     <img src="/logo.png" style="padding:10px;height:auto;max-width:600px" alt="Your Logo" />
                                 </a>
                                 &amp;nbsp;
@@ -28,7 +28,7 @@
                         <tr>
                             <td style="font-web_editor/font_to_img: 30px; text-align:center">
                                 &amp;nbsp;
-                                <a t-att-href="(website.company_id.website) or '#'" style="text-decoration:none;color:#008000">
+                                <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;color:#008000">
                                     <strong>Your Company</strong>
                                 </a>
                                 &amp;nbsp;
@@ -45,13 +45,13 @@
                     <tr>
                         <td valign="center" width="270" style="padding:10px 10px 10px 5px">
                             &amp;nbsp;
-                            <a t-att-href="(website.company_id.website) or '#'" style="text-decoration:none">
+                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none">
                                 <img src="/logo.png" style="padding:10px;height:auto;max-width:600px" alt="Your Logo" />
                             </a>
                             &amp;nbsp;
                         </td>
                         <td valign="center" width="270" style="padding:10px 15px 10px 10px;vertical-align:middle">
-                            <table border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse">
+                            <table t-if="website" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse">
                                 <tr>
                                     <t t-if="website.social_facebook">
                                         <td align="right">
@@ -95,13 +95,13 @@
                     <tr>
                         <td valign="center" width="270" style="padding-left:5px;font-size:30px">
                             &amp;nbsp;
-                            <a t-att-href="(website.company_id.website) or '#'" style="text-decoration:none;color: #008000">
+                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;color: #008000">
                                 <strong>Your Company</strong>
                             </a>
                             &amp;nbsp;
                         </td>
                         <td valign="center" width="270" style="padding:10px 15px 10px 10px;vertical-align:middle">
-                            <table border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse">
+                            <table t-if="website" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse">
                                 <tr>
                                     <t t-if="website.social_facebook">
                                         <td align="right">
@@ -249,7 +249,7 @@
                                         </ul>
                                     </td>
                                     <td style="width: 60px;vertical-align:middle;display: table-cell">
-                                        <ul style="border-left:1px solid #e6e6e6;list-style-type:none;padding-left:16px">
+                                        <ul t-if="website" style="border-left:1px solid #e6e6e6;list-style-type:none;padding-left:16px">
                                             <t t-if="website.social_facebook">
                                                 <li style="width:33%;margin-left:0">
                                                     <a t-att-href="website.social_facebook">
@@ -259,14 +259,14 @@
                                             </t>
                                             <t t-if="website.social_twitter">
                                                 <li style="width:34%;margin-left:0">
-                                                    <a t-att-href="website.social_facebook">
+                                                    <a t-att-href="website.social_twitter">
                                                       <span style="color: rgb(75,110,168);" class="fa fa-twitter-square fa-2x"></span>
                                                     </a>
                                                 </li>
                                             </t>
                                             <t t-if="website.social_googleplus">
                                                 <li style="width:33%;margin-left:0">
-                                                    <a t-att-href="website.social_facebook">
+                                                    <a t-att-href="website.social_googleplus">
                                                       <span style="color: rgb(221,75,57);" class="fa fa-google-plus-square fa-2x"></span>
                                                     </a>
                                                 </li>
@@ -486,7 +486,7 @@
                 <table style="width:100%;text-align:justify;margin:0 auto;color:#414141;border-collapse:collapse">
                     <tr>
                         <td style="padding:10px 30px;font-size:14px">
-                            <p style="margin:0">Dear John</p>
+                            <p style="margin:0">Dear ${object.name}</p>
                             <p style="margin:0">Great stories have personality. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.<br/></p>
                             <p style="margin:0">Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
                             <p style="margin:0">Kind Regards,</p>
@@ -606,7 +606,7 @@
     </xpath>
 
     <xpath expr="//div[@id='email_designer_default_footer']/div[2]" position="inside">
-        <div name="Social + Text" class="zenflat o_mail_block_footer_social">
+        <div t-if="website" name="Social + Text" class="zenflat o_mail_block_footer_social">
             <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #EEEEEE repeat top /100%;color:#414141">
                 <div style="padding:10px">
                     <table cellspacing="0" cellpadding="0" style="margin: 0 auto;width:600px;border-collapse:collapse">
@@ -657,7 +657,8 @@
                         <tr>
                             <td style="font-size:12px;text-align:center;padding-top:10px;padding-bottom:5px;color:#414141">
                                 &amp;nbsp;
-                                <a style="color:#414141" href="/unsubscribe_from_list">Unsubscribe</a> | <a style="color:#414141" href="/page/contactus">Contact</a>
+                                <a style="color:#414141" href="/unsubscribe_from_list">Unsubscribe</a>
+                                <t t-if="website"> | <a style="color:#414141" href="/page/contactus">Contact</a> </t>
                                 &amp;nbsp;
                             </td>
                         </tr>
@@ -679,12 +680,14 @@
                             <tr>
                                 <td valign="middle" align="right" style="font-size:12px;padding:20px;text-align:center">
                                     &amp;nbsp;
-                                    <a style="color:#414141" href="/page/contactus">Contact Us</a> | 
-                                    <t t-if="website.social_facebook">
-                                        <a style="color:#414141" t-att-href="website.social_facebook">Facebook</a> | 
-                                    </t>
-                                    <t t-if="website.social_twitter">
-                                        <a style="color:#414141" t-att-href="website.social_twitter">Twitter</a> | 
+                                    <t t-if="website">
+                                        <a style="color:#414141" href="/page/contactus">Contact Us</a> | 
+                                        <t t-if="website.social_facebook">
+                                            <a style="color:#414141" t-att-href="website.social_facebook">Facebook</a> | 
+                                        </t>
+                                        <t t-if="website.social_twitter">
+                                            <a style="color:#414141" t-att-href="website.social_twitter">Twitter</a> | 
+                                        </t>
                                     </t>
                                     <a href="/unsubscribe_from_list" style="color:#414141">Unsubscribe</a>
                                     &amp;nbsp;

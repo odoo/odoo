@@ -56,7 +56,7 @@
                         <tr>
                             <td valign="center" style="text-align:center">
                                 &amp;nbsp;
-                                <a t-att-href="(website.company_id.website) or '#'" style="text-decoration:none;">
+                                <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
                                     <img src="/logo.png" style="padding:10px;height:auto;max-width:600px;width:200px" alt="Your Logo" />
                                 </a>
                                 &amp;nbsp;
@@ -74,7 +74,7 @@
                         <tr>
                             <td valign="center" style="text-align:center;font-size: 30px">
                                 &amp;nbsp;
-                                <a t-att-href="(website.company_id.website) or '#'" style="text-decoration:none;color: inherit;">
+                                <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;color: inherit;">
                                     <strong>Your Company</strong>
                                 </a>
                                 &amp;nbsp;
@@ -91,13 +91,13 @@
                     <tr>
                         <td valign="center" width="270" style="padding:10px 10px 10px 5px;">
                             &amp;nbsp;
-                            <a t-att-href="(website.company_id.website) or '#'" style="text-decoration:none;">
+                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
                                 <img src="/logo.png" style="padding:10px;height:auto;max-width:600px;width:200px" alt="Your Logo" />
                             </a>
                             &amp;nbsp;
                         </td>
                         <td valign="center" width="270" style="padding:10px 15px 10px 10px">
-                            <table border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;background:inherit;color:inherit">
+                            <table t-if="website" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;background:inherit;color:inherit">
                                 <tr>
                                     <td align="right">
                                         <a t-att-href="(website.social_facebook) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_facebook.png" style="height:auto;max-width:70px" alt="social icon"/></a>
@@ -128,13 +128,13 @@
                     <tr>
                         <td valign="center" width="270" style="padding:10px 10px 10px 5px;font-size: 30px">
                             &amp;nbsp;
-                            <a t-att-href="(website.company_id.website) or '#'" style="text-decoration:none;color: inherit">
+                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;color: inherit">
                                 <strong>Your Company</strong>
                             </a>
                             &amp;nbsp;
                         </td>
                         <td valign="center" width="270" style="padding:10px 15px 10px 10px">
-                            <table border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;background:inherit;color:inherit">
+                            <table t-if="website" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;background:inherit;color:inherit">
                                 <tr>
                                     <td align="right">
                                         <a t-att-href="(website.social_facebook) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_facebook.png" style="height:auto;max-width:70px" alt="social icon" /></a>
@@ -343,7 +343,7 @@
                 <table style="width:100%;text-align:justify;margin:0 auto;background:inherit;color:inherit;border-collapse:collapse;color:inherit">
                     <tr>
                         <td style="padding:10px 30px;font-size:14px">
-                            <p style="margin:0">Dear John</p>
+                            <p style="margin:0">Dear ${object.name}</p>
                             <p style="margin:0">Great stories have personality. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.<br/></p>
                             <p style="margin:0">Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
                             <p style="margin:0">Kind Regards,</p>
@@ -401,7 +401,7 @@
         </span> Footers
     </div>
     <div class="o_panel_body">
-        <div name="Social + Text" class="basic_theme o_mail_block_footer_social">
+        <div t-if="website" name="Social + Text" class="basic_theme o_mail_block_footer_social">
             <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
                 <table style="margin: 0 auto;border-collapse:collapse;background:inherit;color:inherit;width:600px" cellpadding="0" cellspacing="0">
                     <tbody>
@@ -459,7 +459,8 @@
                         <tr>
                             <td style="font-size:12px;text-align:center;padding:10px">
                                 &amp;nbsp;
-                                <a style="color:inherit" href="/unsubscribe_from_list">Unsubscribe</a> | <a style="color:inherit" href="/page/contactus">Contact</a>
+                                <a style="color:inherit" href="/unsubscribe_from_list">Unsubscribe</a>
+                                <t t-if="website"> | <a style="color:inherit" href="/page/contactus">Contact</a> </t>
                                 &amp;nbsp;
                             </td>
                         </tr>
@@ -481,7 +482,13 @@
                             <tr>
                                 <td valign="middle" align="right" style="font-size:12px;padding:20px;text-align:center">
                                     &amp;nbsp;
-                                    <a style="color:inherit" href="/page/contactus">Contact Us</a> | <a style="color:inherit" t-att-href="(website.social_facebook) or '#'">Facebook</a> | <a style="color:inherit" t-att-href="(website.social_twitter) or '#'">Twitter</a> | <a style="color:inherit" href="#">Support</a> | <a href="/unsubscribe_from_list" style="color:inherit">Unsubscribe</a>
+                                    <t t-if="website">
+                                        <a style="color:inherit" href="/page/contactus">Contact Us</a> | 
+                                        <a style="color:inherit" t-att-href="(website.social_facebook) or '#'">Facebook</a> | 
+                                        <a style="color:inherit" t-att-href="(website.social_twitter) or '#'">Twitter</a> | 
+                                        <a style="color:inherit" href="#">Support</a> | 
+                                    </t>
+                                    <a href="/unsubscribe_from_list" style="color:inherit">Unsubscribe</a>
                                     &amp;nbsp;
                                 </td>
                             </tr>
