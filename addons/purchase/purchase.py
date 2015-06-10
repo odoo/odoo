@@ -1336,7 +1336,8 @@ class account_invoice(osv.Model):
                     not all(picking.invoice_state in ['invoiced'] for picking in order.picking_ids)):
                 shipped = False
             for po_line in order.order_line:
-                if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
+                if (po_line.invoice_lines and 
+                        all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
                     invoiced.append(po_line.id)
             if invoiced and shipped:
                 self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})
