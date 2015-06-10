@@ -3,47 +3,41 @@
 
 {
     'name': 'Employee Appraisals',
-    'version': '0.1',
-    'author': 'OpenERP SA',
+    'version': '1.0',
+    'author': 'Odoo S.A',
     'category': 'Human Resources',
     'sequence': 31,
-    'website': 'https://www.odoo.com/page/appraisal',
-    'summary': 'Periodical Evaluations, Appraisals, Surveys',
+    'website': 'https://www.odoo.com',
+    'summary': 'Periodical Appraisal',
     'depends': ['hr', 'calendar', 'survey'],
     'description': """
-Periodical Employees evaluation and appraisals
+Periodical Employees appraisal
 ==============================================
 
-By using this application you can maintain the motivational process by doing periodical evaluations of your employees' performance. The regular assessment of human resources can benefit your people as well your organization.
+By using this application you can maintain the motivational process by doing periodical appraisals of your employees performance. The regular assessment of human resources can benefit your people as well your organization.
 
-An evaluation plan can be assigned to each employee. These plans define the frequency and the way you manage your periodic personal evaluations. You will be able to define steps and attach interview forms to each step.
-
-Manages several types of evaluations: bottom-up, top-down, self-evaluations and the final evaluation by the manager.
+An appraisal plan can be assigned to each employee. These plans define the frequency and the way you manage your periodic personal appraisal.
 
 Key Features
 ------------
-* Ability to create employees evaluations.
-* An evaluation can be created by an employee for subordinates, juniors as well as his manager.
-* The evaluation is done according to a plan in which various surveys can be created. Each survey can be answered by a particular level in the employees hierarchy. The final review and evaluation is done by the manager.
-* Every evaluation filled by employees can be viewed in a PDF form.
-* Interview Requests are generated automatically by OpenERP according to employees evaluation plans. Each user receives automatic emails and requests to perform a periodical evaluation of their colleagues.
+* Ability to create employee's appraisal(s).
+* An appraisal can be created by an employee's manager or automatically based on schedule which defined in employee form.
+* The appraisal is done according to a plan in which various surveys can be created. Each survey can be answered by a particular level in the employees hierarchy. The final review and appraisal is done by the manager.
+* Manager, colleague, collaborator, and employee himself/herself receives email to perform a periodical appraisal.
+* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.
+* Meeting Requests are created manually according to employees appraisals.
 """,
     "data": [
         'security/ir.model.access.csv',
-        'security/hr_evaluation_security.xml',
-        'hr_evaluation_view.xml',
-        'report/hr_evaluation_report_view.xml',
-        'survey_data_appraisal.xml',
-        'hr_evaluation_data.xml',
-        'hr_evaluation_installer.xml',
-        'hr_dashboard.xml',
+        'security/hr_appraisal_security.xml',
+        'views/hr_appraisal_views.xml',
+        'views/hr_department_views.xml',
+        'views/hr_appraisal.xml',
+        'report/hr_appraisal_report_views.xml',
+        'data/survey_survey_data.xml',
+        'data/hr_appraisal_data.xml',
     ],
     "demo": ["hr_evaluation_demo.xml"],
-    # 'test': [
-    #     'test/test_hr_evaluation.yml',
-    #     'test/hr_evalution_demo.yml',
-    # ],
-    'auto_install': False,
     'installable': True,
     'application': True,
 }
