@@ -421,6 +421,7 @@ PaymentScreenWidget.include({
                     });
                 });
     },
+
     credit_code_cancel: function () {
         return;
     },
@@ -545,12 +546,6 @@ PaymentScreenWidget.include({
         }
     }
 });
-
-window.test_card_reader = {
-    MagneticParser: BarcodeParser,
-    ScreenWidget: ScreenWidget,
-    QWeb : Qweb,
-};
 
 return {
     MagneticParser: BarcodeParser,
