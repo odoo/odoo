@@ -347,8 +347,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             pager : (!popup || !form) && !inline,
             display_title : !popup,
             headless: (popup || inline) && form,
-            search_disable_custom_filters: action.context && action.context.search_disable_custom_filters,
-            default_view: action.context && action.context.params && action.context.params.view_type
+            search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
         });
         action.menu_id = options.action_menu_id;
         action.context.params = _.extend({ 'action' : action.id }, action.context.params);
