@@ -1526,7 +1526,7 @@ var FieldMonetary = FieldFloat.extend({
     init: function() {
         this._super.apply(this, arguments);
         this.set({"currency": false});
-        var currency_field = (this.options && this.options.currency_field) || this.currency_field || 'currency_id';
+        var currency_field = (this.options && this.options.currency_field) || this.field.currency_field || 'currency_id';
         if (currency_field) {
             this.field_manager.on("field_changed:" + currency_field, this, function() {
                 this.set({"currency": this.field_manager.get_field_value(currency_field)});

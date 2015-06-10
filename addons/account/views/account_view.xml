@@ -494,7 +494,7 @@
                                          context="{'default_supplier': 1}"
                                          attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="company_currency_id" invisible="1"/>
+                                    <field name="journal_currency_id" invisible="1"/>
                                     <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="bank_account_id" groups="base.group_no_one" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
@@ -575,7 +575,7 @@
                     <field name="ref"/>
                     <field name="partner_id"/>
                     <field name="amount"/>
-                    <field name="company_currency_id" invisible="1"/>
+                    <field name="journal_currency_id" invisible="1"/>
                     <field name="sequence"/>
                     <field name="note"/>
                 </group>
@@ -596,7 +596,7 @@
                     <field name="ref"/>
                     <field name="partner_id"/>
                     <field name="amount"/>
-                    <field name="company_currency_id" invisible="1"/>
+                    <field name="journal_currency_id" invisible="1"/>
                     <field name="note"/>
                 </tree>
             </field>

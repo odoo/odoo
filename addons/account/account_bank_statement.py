@@ -333,8 +333,8 @@ class AccountBankStatementLine(models.Model):
 
     name = fields.Char(string='Communication', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
-    amount = fields.Monetary(digits=0, currency_field='company_currency_id')
-    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id',
+    amount = fields.Monetary(digits=0, currency_field='journal_currency_id')
+    journal_currency_id = fields.Many2one('res.currency', related='journal_id.currency_id',
         help='Utility field to express amount currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
     bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account')
