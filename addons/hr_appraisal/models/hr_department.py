@@ -1,29 +1,19 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from openerp import api, fields, models, _
 
 
 class hr_department(models.Model):
     _inherit = 'hr.department'
 
     @api.multi
-    def _compute_interview_request(self):
-        Interview = self.env['hr.evaluation.interview']
-        for department in self:
-            department.interview_request_count = Interview.search_count([
-                ('user_to_review_id.department_id', '=', department.id),
-                ('state', '=', 'waiting_answer')
-            ])
+    def action_number_of_answers(self):
+        self.ensure_one()
+        action_hr_appraisal = self.env.ref('hr_appraisal.hr_appraisal_action_from_department').read()[0]
+        action_hr_appraisal['display_name'] = _('Appraisal to Process')
+        action_hr_appraisal['domain'] = str([('id', 'in', self.appraisal_process_ids.ids)])
+        return action_hr_appraisal
 
-    @api.multi
-    def _compute_appraisal_to_start(self):
-        Evaluation = self.env['hr_evaluation.evaluation']
-        for department in self:
-            department.appraisal_to_start_count = Evaluation.search_count([
-                ('employee_id.department_id', '=', department.id),
-                ('state', '=', 'draft')
-            ])
-
-    appraisal_to_start_count = fields.Integer(
-        compute='_compute_appraisal_to_start', string='Appraisal to Start')
-    interview_request_count = fields.Integer(
-        compute='_compute_interview_request', string='Interview Request')
+    appraisal_process_ids = fields.One2many('hr.appraisal', 'department_id', domain=['&', ('state', '=', 'pending'), '|', ('date_close', '<=', fields.Datetime.now()), ('completed_user_input_ids.state', '=', 'done')], string='Appraisal to Process')
+    appraisal_start_ids = fields.One2many('hr.appraisal', 'department_id', domain=[('state', '=', 'new')], string='Appraisal to Start')

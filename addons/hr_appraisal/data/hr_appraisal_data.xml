@@ -1,47 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- After installation of the module, open the related menu -->
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="hr.action_client_hr_menu"/>
             <field name="state">open</field>
         </record>
-        <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_all_employees"/>
-            <field name="message_type">notification</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="subject">Employee Appraisals application installed!</field>
-            <field name="body"><![CDATA[<p>Manage employee reviews: you can define an appraisal campaign with several steps, with specific evaluation surveys according to hierarchy levels. Evaluations filled by employees may be exported as pdf files.</p>]]></field>
-        </record>
 
-
-        <record id="hr_evaluation_plan_managersevaluationplan0" model="hr_evaluation.plan">
-            <field eval="1" name="active"/>
-            <field eval="6" name="month_next"/>
-            <field name="name">Manager's Appraisal Plan</field>
-            <field eval="3" name="month_first"/>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
-
-
-        <record id="hr_evaluation_plan_phase_sendtoemployee0" model="hr_evaluation.plan.phase">
-            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
-            <field name="name">Send to Employee</field>
-            <field eval="0" name="send_anonymous_manager"/>
-            <field eval="1" name="sequence"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="action">self</field>
-            <field eval="0" name="send_anonymous_employee"/>
-            <field eval="0" name="send_answer_employee"/>
-            <field name="survey_id" ref="appraisal_form"/>
-            <field eval="0" name="send_answer_manager"/>
-            <field eval="0" name="wait"/>
-        </record>
-
-
-        <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">
+        <record forcecreate="True" id="ir_cron_scheduler_appraisal" model="ir.cron">
            <field name="name">Run Employee Appraisal</field>
            <field eval="True" name="active" />
            <field name="user_id" ref="base.user_root" />
@@ -49,8 +15,50 @@
            <field name="interval_type">days</field>
            <field name="numbercall">-1</field>
            <field eval="'hr.employee'" name="model" />
-           <field eval="'run_employee_evaluation'" name="function" />
+           <field eval="'run_employee_appraisal'" name="function"/>
            <field eval="'(False,)'" name="args" />
         </record>
+
+        <record id="send_appraisal_template" model="mail.template">
+            <field name="name">Appraisal Survey - Send by Email</field>
+            <field name="model_id" ref="hr_appraisal.model_hr_appraisal" />
+            <field name="auto_delete" eval="True" />
+            <field name="subject">Appraisal Regarding</field>
+            <field name="email_to">${ctx['email']}</field>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); ">
+                    <p>Hello ${ctx.get('employee').name},</p>
+                    % if ctx.get('employee').id == object.employee_id.id:
+                        <p>We are conducting your Appraisal and your response would be appreciated.</p>
+                    % else:
+                        <p>We are conducting an Appraisal for ${object.employee_id.name}, and your response would be appreciated.</p>
+                    % endif
+                    <p><a href="__URL__">Please, click here to start Appraisal</a></p>
+                    <p>Kindly post your response for the appraisal till : ${object.date_close}</p>
+                    <p>Thanks for your participation!</p>
+                </div>
+                ]]>
+            </field>
+        </record>
+        <record id="mt_appraisal_new" model="mail.message.subtype">
+            <field name="name">Appraisal Created</field>
+            <field name="res_model">hr.appraisal</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="False"/>
+            <field name="description">Appraisal Created</field>
+        </record>
+        <record id="mt_appraisal_meeting" model="mail.message.subtype">
+            <field name="name">Meeting Scheduled</field>
+            <field name="res_model">hr.appraisal</field>
+            <field name="default" eval="False"/>
+            <field name="description">Meeting Scheduled</field>
+        </record>
+        <record id="mt_appraisal_sent" model="mail.message.subtype">
+            <field name="name">Appraisal sent</field>
+            <field name="res_model">hr.appraisal</field>
+            <field name="default" eval="False"/>
+            <field name="description">Appraisal Sent</field>
+        </record>
     </data>
-</openerp>
+</odoo>
