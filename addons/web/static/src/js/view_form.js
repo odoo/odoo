@@ -78,6 +78,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     template: "FormView",
     display_name: _lt('Form'),
     view_type: "form",
+    multi_record: false,
     /**
      * @constructs instance.web.FormView
      * @extends instance.web.View

@@ -11,6 +11,7 @@ instance.web.DiagramView = instance.web.View.extend({
     display_name: _lt('Diagram'),
     view_type: 'diagram',
     searchable: false,
+    multi_record: false,
     init: function(parent, dataset, view_id, options) {
         var self = this;
         this._super(parent);
