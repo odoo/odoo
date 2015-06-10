@@ -1330,7 +1330,7 @@ class procurement_order(osv.osv):
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
 
-        seller_qty = procurement.product_id.seller_qty
+        seller_qty = procurement.product_id.seller_qty if procurement.location_id.usage != 'customer' else 0.0
         pricelist_id = partner.property_product_pricelist_purchase.id
         uom_id = procurement.product_id.uom_po_id.id
         qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
@@ -1369,12 +1369,15 @@ class procurement_order(osv.osv):
             qty = -qty
 
         # Make sure we use the minimum quantity of the partner corresponding to the PO
-        if po_line.product_id.seller_id.id == po_line.order_id.partner_id.id:
-            supplierinfo_min_qty = po_line.product_id.seller_qty
-        else:
-            supplierinfo_obj = self.pool.get('product.supplierinfo')
-            supplierinfo_ids = supplierinfo_obj.search(cr, uid, [('name', '=', po_line.order_id.partner_id.id), ('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
-            supplierinfo_min_qty = supplierinfo_obj.browse(cr, uid, supplierinfo_ids).min_qty
+        # This does not apply in case of dropshipping
+        supplierinfo_min_qty = 0.0
+        if po_line.order_id.location_id.usage != 'customer':
+            if po_line.product_id.seller_id.id == po_line.order_id.partner_id.id:
+                supplierinfo_min_qty = po_line.product_id.seller_qty
+            else:
+                supplierinfo_obj = self.pool.get('product.supplierinfo')
+                supplierinfo_ids = supplierinfo_obj.search(cr, uid, [('name', '=', po_line.order_id.partner_id.id), ('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
+                supplierinfo_min_qty = supplierinfo_obj.browse(cr, uid, supplierinfo_ids).min_qty
 
         if supplierinfo_min_qty == 0.0:
             qty += po_line.product_qty
