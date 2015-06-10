@@ -22,7 +22,7 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
-from openerp.tools import float_compare
+from openerp.tools import float_compare, float_round
 from openerp.tools.translate import _
 import product
 
@@ -239,6 +239,7 @@ class stock_landed_cost(osv.osv):
         line_obj = self.pool.get('stock.valuation.adjustment.lines')
         unlink_ids = line_obj.search(cr, uid, [('cost_id', 'in', ids)], context=context)
         line_obj.unlink(cr, uid, unlink_ids, context=context)
+        digits = dp.get_precision('Product Price')(cr)
         towrite_dict = {}
         for cost in self.browse(cr, uid, ids, context=None):
             if not cost.picking_ids:
@@ -261,6 +262,7 @@ class stock_landed_cost(osv.osv):
                 total_line += 1
 
             for line in cost.cost_lines:
+                value_split = 0.0
                 for valuation in cost.valuation_adjustment_lines:
                     value = 0.0
                     if valuation.cost_line_id and valuation.cost_line_id.id == line.id:
@@ -280,6 +282,11 @@ class stock_landed_cost(osv.osv):
                             value = valuation.former_cost * per_unit
                         else:
                             value = (line.price_unit / total_line)
+
+                        if digits:
+                            value = float_round(value, precision_digits=digits[1], rounding_method='UP')
+                            value = min(value, line.price_unit - value_split)
+                            value_split += value
 
                         if valuation.id not in towrite_dict:
                             towrite_dict[valuation.id] = value

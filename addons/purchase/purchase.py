@@ -76,6 +76,8 @@ class purchase_order(osv.osv):
             if purchase.order_line:
                 min_date=purchase.order_line[0].date_planned
                 for line in purchase.order_line:
+                    if line.state == 'cancel':
+                        continue
                     if line.date_planned < min_date:
                         min_date=line.date_planned
                 res[purchase.id]=min_date
@@ -129,10 +131,16 @@ class purchase_order(osv.osv):
             result[line.order_id.id] = True
         return result.keys()
 
+    def _get_purchase_order(self, cr, uid, ids, context=None):
+        result = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            result[order.id] = True
+        return result.keys()
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
-            res[purchase.id] = all(line.invoiced for line in purchase.order_line)
+            res[purchase.id] = all(line.invoiced for line in purchase.order_line if line.state != 'cancel')
         return res
     
     def _get_journal(self, cr, uid, context=None):
@@ -274,6 +282,7 @@ class purchase_order(osv.osv):
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
                 'purchase.order.line': (_get_order, ['date_planned'], 10),
+                'purchase.order': (_get_purchase_order, ['order_line'], 10),
             }
         ),
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
@@ -352,7 +361,10 @@ class purchase_order(osv.osv):
         order_line_ids = []
         proc_obj = self.pool.get('procurement.order')
         for order in self.browse(cr, uid, ids, context=context):
-            order_line_ids += [po_line.id for po_line in order.order_line]
+            if status in ('draft', 'cancel'):
+                order_line_ids += [po_line.id for po_line in order.order_line]
+            else: # Do not change the status of already cancelled lines
+                order_line_ids += [po_line.id for po_line in order.order_line if po_line.state != 'cancel']
         if order_line_ids:
             line.write(cr, uid, order_line_ids, {'state': status}, context=context)
         if order_line_ids and status == 'cancel':
@@ -443,7 +455,7 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if po.invoice_method == 'manual':
                 if not po.invoice_ids:
-                    context.update({'active_ids' :  [line.id for line in po.order_line]})
+                    context.update({'active_ids' :  [line.id for line in po.order_line if line.state != 'cancel']})
                     wizard_obj.makeInvoices(cr, uid, [], context=context)
 
         for po in self.browse(cr, uid, ids, context=context):
@@ -546,9 +558,9 @@ class purchase_order(osv.osv):
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         todo = []
         for po in self.browse(cr, uid, ids, context=context):
-            if not po.order_line:
+            if not any(line.state != 'cancel' for line in po.order_line):
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
-            if po.invoice_method == 'picking' and not any([l.product_id and l.product_id.type in ('product', 'consu') for l in po.order_line]):
+            if po.invoice_method == 'picking' and not any([l.product_id and l.product_id.type in ('product', 'consu') and l.state != 'cancel' for l in po.order_line]):
                 raise osv.except_osv(
                     _('Error!'),
                     _("You cannot confirm a purchase order with Invoice Control Method 'Based on incoming shipments' that doesn't contain any stockable item."))
@@ -668,6 +680,8 @@ class purchase_order(osv.osv):
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
             for po_line in order.order_line:
+                if po_line.state == 'cancel':
+                    continue
                 acc_id = self._choose_account_from_po_line(cr, uid, po_line, context=context)
                 inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
@@ -693,6 +707,8 @@ class purchase_order(osv.osv):
     def has_stockable_product(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
+                if order_line.state == 'cancel':
+                    continue
                 if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
                     return True
         return False
@@ -802,6 +818,8 @@ class purchase_order(osv.osv):
         new_group = self.pool.get("procurement.group").create(cr, uid, {'name': order.name, 'partner_id': order.partner_id.id}, context=context)
 
         for order_line in order_lines:
+            if order_line.state == 'cancel':
+                continue
             if not order_line.product_id:
                 continue
 
@@ -859,7 +877,7 @@ class purchase_order(osv.osv):
         proc_obj = self.pool.get("procurement.order")
         po_lines = []
         for po in self.browse(cr, uid, ids, context=context):
-            po_lines += [x.id for x in po.order_line]
+            po_lines += [x.id for x in po.order_line if x.state != 'cancel']
         if po_lines:
             procs = proc_obj.search(cr, uid, [('purchase_line_id', 'in', po_lines)], context=context)
             if procs:
@@ -940,7 +958,8 @@ class purchase_order(osv.osv):
                 if porder.origin:
                     order_infos['origin'] = (order_infos['origin'] or '') + ' ' + porder.origin
 
-            order_lines_to_move[order_key] += [order_line.id for order_line in porder.order_line]
+            order_lines_to_move[order_key] += [order_line.id for order_line in porder.order_line
+                                               if order_line.state != 'cancel']
 
         allorders = []
         orders_info = {}
@@ -1029,7 +1048,7 @@ class purchase_order_line(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
-            if line.state not in ['draft', 'cancel']:
+            if line.order_id.state in ['approved', 'done'] and line.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
@@ -1199,17 +1218,17 @@ class procurement_order(osv.osv):
 
     def propagate_cancel(self, cr, uid, procurement, context=None):
         if procurement.rule_id.action == 'buy' and procurement.purchase_line_id:
-            uom_obj = self.pool.get("product.uom")
             purchase_line_obj = self.pool.get('purchase.order.line')
-            uom = procurement.purchase_line_id.product_uom
-            product_qty = uom_obj._compute_qty_obj(cr, uid, procurement.product_uom, procurement.product_qty, uom, context=context)
             if procurement.purchase_line_id.state not in ('draft', 'cancel'):
                     raise osv.except_osv(_('Error!'),
                         _('Can not cancel this procurement as the related purchase order has been confirmed already.  Please cancel the purchase order first. '))
-            if float_compare(procurement.purchase_line_id.product_qty, product_qty, 0, precision_rounding=uom.rounding) > 0:
-                purchase_line_obj.write(cr, uid, [procurement.purchase_line_id.id], {'product_qty': procurement.purchase_line_id.product_qty - product_qty}, context=context)
-            else:
+
+            new_qty, new_price = self._calc_new_qty_price(cr, uid, procurement, cancel=True, context=context)
+            if new_qty != procurement.purchase_line_id.product_qty:
+                purchase_line_obj.write(cr, uid, [procurement.purchase_line_id.id], {'product_qty': new_qty, 'price_unit': new_price}, context=context)
+            if float_compare(new_qty, 0.0, precision_rounding=procurement.product_uom.rounding) != 1:
                 purchase_line_obj.action_cancel(cr, uid, [procurement.purchase_line_id.id], context=context)
+                purchase_line_obj.unlink(cr, uid, [procurement.purchase_line_id.id], context=context)
         return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
 
     def _run(self, cr, uid, procurement, context=None):
@@ -1339,6 +1358,41 @@ class procurement_order(osv.osv):
             'taxes_id': [(6, 0, taxes)],
         }
 
+    def _calc_new_qty_price(self, cr, uid, procurement, po_line=None, cancel=False, context=None):
+        if not po_line:
+            po_line = procurement.purchase_line_id
+
+        uom_obj = self.pool.get('product.uom')
+        qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty,
+            procurement.product_id.uom_po_id.id)
+        if cancel:
+            qty = -qty
+
+        # Make sure we use the minimum quantity of the partner corresponding to the PO
+        if po_line.product_id.seller_id.id == po_line.order_id.partner_id.id:
+            supplierinfo_min_qty = po_line.product_id.seller_qty
+        else:
+            supplierinfo_obj = self.pool.get('product.supplierinfo')
+            supplierinfo_ids = supplierinfo_obj.search(cr, uid, [('name', '=', po_line.order_id.partner_id.id), ('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
+            supplierinfo_min_qty = supplierinfo_obj.browse(cr, uid, supplierinfo_ids).min_qty
+
+        if supplierinfo_min_qty == 0.0:
+            qty += po_line.product_qty
+        else:
+            # Recompute quantity by adding existing running procurements.
+            for proc in po_line.procurement_ids:
+                qty += uom_obj._compute_qty(cr, uid, proc.product_uom.id, proc.product_qty,
+                    proc.product_id.uom_po_id.id) if proc.state == 'running' else 0.0
+            qty = max(qty, supplierinfo_min_qty) if qty > 0.0 else 0.0
+
+        price = po_line.price_unit
+        if qty != po_line.product_qty:
+            pricelist_obj = self.pool.get('product.pricelist')
+            pricelist_id = po_line.order_id.partner_id.property_product_pricelist_purchase.id
+            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_uom.id})[pricelist_id]
+
+        return qty, price
+
     def make_po(self, cr, uid, ids, context=None):
         """ Resolve the purchase from procurement, which may result in a new PO creation, a new PO line creation or a quantity change on existing PO line.
         Note that some operations (as the PO creation) are made as SUPERUSER because the current user may not have rights to do it (mto product launched by a sale for example)
@@ -1376,9 +1430,12 @@ class procurement_order(osv.osv):
                     available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
                     if available_po_line_ids:
                         po_line = po_line_obj.browse(cr, uid, available_po_line_ids[0], context=context)
-                        po_line_obj.write(cr, SUPERUSER_ID, po_line.id, {'product_qty': po_line.product_qty + line_vals['product_qty']}, context=context)
                         po_line_id = po_line.id
-                        sum_po_line_ids.append(procurement.id)
+                        new_qty, new_price = self._calc_new_qty_price(cr, uid, procurement, po_line=po_line, context=context)
+
+                        if new_qty > po_line.product_qty:
+                            po_line_obj.write(cr, SUPERUSER_ID, po_line.id, {'product_qty': new_qty, 'price_unit': new_price}, context=context)
+                            sum_po_line_ids.append(procurement.id)
                     else:
                         line_vals.update(order_id=po_id)
                         po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
@@ -1507,7 +1564,7 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
+        for order in purchase_order_obj.browse(cr, user_id, po_ids, context=context):
             purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
             invoiced = []
             shipped = True
@@ -1520,8 +1577,8 @@ class account_invoice(osv.Model):
                 if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
                     invoiced.append(po_line.id)
             if invoiced and shipped:
-                self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
-            workflow.trg_write(uid, 'purchase.order', order.id, cr)
+                self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})
+            workflow.trg_write(user_id, 'purchase.order', order.id, cr)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

@@ -1,21 +1,22 @@
-# Swedish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2015-05-27 12:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Swedish (http://www.transifex.com/projects/p/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:38+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -26,32 +27,16 @@ msgstr "<="
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a delivery price list for a specific "
-"region.\n"
+"                Click to create a delivery price list for a specific region.\n"
 "              </p><p>\n"
 "                The delivery price list allows you to compute the cost and\n"
 "                sales price of the delivery according to the weight of the\n"
-"                products and other criteria. You can define several price "
-"lists\n"
-"                for each delivery method: per country or a zone in a "
-"specific\n"
+"                products and other criteria. You can define several price lists\n"
+"                for each delivery method: per country or a zone in a specific\n"
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Klicka för att skapa en leveransprislista för en viss "
-"region.\n"
-"               </p><p>\n"
-"                 Med leveransprislistan kan du beräkna kostnaden och\n"
-"                 försäljningspriset för leveransen baserat på produkternas "
-"vikt\n"
-"                 och andra kriterier. Du kan definiera flera prislistor\n"
-"                 för varje leveransmetod: per land eller ett område i ett "
-"visst\n"
-"                 land som definieras av ett postnummerområde.\n"
-"               </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Klicka för att skapa en leveransprislista för en viss region.\n               </p><p>\n                 Med leveransprislistan kan du beräkna kostnaden och\n                 försäljningspriset för leveransen baserat på produkternas vikt\n                 och andra kriterier. Du kan definiera flera prislistor\n                 för varje leveransmetod: per land eller ett område i ett visst\n                 land som definieras av ett postnummerområde.\n               </p>\n            "
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -59,16 +44,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new deliver method. \n"
 "              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
+"                Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method.\n"
 "              </p><p>\n"
-"                These methods allow to automatically compute the delivery "
-"price\n"
-"                according to your settings; on the sales order (based on "
-"the\n"
+"                These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
@@ -80,8 +61,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: field:delivery.carrier,active:0
-#: field:delivery.grid,active:0
+#: field:delivery.carrier,active:0 field:delivery.grid,active:0
 msgid "Active"
 msgstr "Aktiv"
 
@@ -115,15 +95,14 @@ msgstr "Beloppsgräns för fri frakt i företagets valuta"
 #. module: delivery
 #: field:delivery.carrier,available:0
 msgid "Available"
-msgstr ""
+msgstr "Tillgänglig"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 #: view:delivery.carrier:delivery.view_delivery_carrier_tree
 #: field:delivery.grid,carrier_id:0
 #: model:ir.model,name:delivery.model_delivery_carrier
-#: field:stock.picking,carrier_id:0
-#: view:website:stock.report_picking
+#: field:stock.picking,carrier_id:0 view:website:stock.report_picking
 msgid "Carrier"
 msgstr "Speditör"
 
@@ -142,17 +121,13 @@ msgstr "Spårnummer"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr ""
-"Kryssa denna ruta om du vill administrera leveranspriser avhängigt "
-"destinationen, vikten eller ordertotalen etc."
+msgstr "Kryssa denna ruta om du vill administrera leveranspriser avhängigt destinationen, vikten eller ordertotalen etc."
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
-"Komplettera detta fält om du planerar att fakturera frakten baserad på "
-"plocken."
+msgstr "Komplettera detta fält om du planerar att fakturera frakten baserad på plocken."
 
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
@@ -171,18 +146,16 @@ msgid "Countries"
 msgstr "Länder"
 
 #. module: delivery
-#: field:delivery.carrier,create_uid:0
-#: field:delivery.grid,create_uid:0
+#: field:delivery.carrier,create_uid:0 field:delivery.grid,create_uid:0
 #: field:delivery.grid.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Skapad av"
 
 #. module: delivery
-#: field:delivery.carrier,create_date:0
-#: field:delivery.grid,create_date:0
+#: field:delivery.carrier,create_date:0 field:delivery.grid,create_date:0
 #: field:delivery.grid.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Skapad den"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:162
@@ -211,8 +184,7 @@ msgid "Delivery Grids"
 msgstr "Leveransmatris"
 
 #. module: delivery
-#: field:delivery.carrier,name:0
-#: field:res.partner,property_delivery_carrier:0
+#: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Leveransmetod"
@@ -271,7 +243,7 @@ msgstr "Fritt om det överstiger %.2f"
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "General Information"
-msgstr ""
+msgstr "Allmän information"
 
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
@@ -311,8 +283,7 @@ msgid "Grid definition"
 msgstr "Matrisdefinition"
 
 #. module: delivery
-#: field:delivery.carrier,id:0
-#: field:delivery.grid,id:0
+#: field:delivery.carrier,id:0 field:delivery.grid,id:0
 #: field:delivery.grid.line,id:0
 msgid "ID"
 msgstr "ID"
@@ -322,34 +293,28 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr ""
-"Om det aktiva fältet är falskt, så kan du gömma transportör utan att radera."
+msgstr "Om det aktiva fältet är falskt, så kan du gömma transportör utan att radera."
 
 #. module: delivery
 #: help:delivery.grid,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr ""
-"Om det aktuella fältet är falskt, kan du gömma leveranskombinationerna utan "
-"att radera dem."
+msgstr "Om det aktuella fältet är falskt, kan du gömma leveranskombinationerna utan att radera dem."
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
-"Om ordervärdet överstiger ett visst belopp, kan kunden erhålla fri frakt"
+msgstr "Om ordervärdet överstiger ett visst belopp, kan kunden erhålla fri frakt"
 
 #. module: delivery
 #: view:sale.order:delivery.view_order_withcarrier_form
 msgid ""
-"If you don't 'Add in Quote', the exact price will be computed when invoicing "
-"based on delivery order(s)."
-msgstr ""
-"Om du inte \"Lägg i offert\", kommer det exakta priset beräknas vid "
-"fakturering baserad på leveransordern."
+"If you don't 'Add in Quote', the exact price will be computed when invoicing"
+" based on delivery order(s)."
+msgstr "Om du inte \"Lägg i offert\", kommer det exakta priset beräknas vid fakturering baserad på leveransordern."
 
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
@@ -365,22 +330,19 @@ msgstr ""
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
-"Håll tomt om prissättningen beror på avancerad prissättning per destination"
+msgstr "Håll tomt om prissättningen beror på avancerad prissättning per destination"
 
 #. module: delivery
-#: field:delivery.carrier,write_uid:0
-#: field:delivery.grid,write_uid:0
+#: field:delivery.carrier,write_uid:0 field:delivery.grid,write_uid:0
 #: field:delivery.grid.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Senast uppdaterad av"
 
 #. module: delivery
-#: field:delivery.carrier,write_date:0
-#: field:delivery.grid,write_date:0
+#: field:delivery.carrier,write_date:0 field:delivery.grid,write_date:0
 #: field:delivery.grid.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Senast uppdaterad"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -451,8 +413,7 @@ msgid "Picking to be invoiced"
 msgstr "Plockning att fakturera"
 
 #. module: delivery
-#: field:delivery.carrier,price:0
-#: selection:delivery.grid.line,type:0
+#: field:delivery.carrier,price:0 selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Pris"
@@ -486,7 +447,7 @@ msgstr "Kundorder"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Orderrad"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:237
@@ -497,8 +458,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,sequence:0
-#: field:delivery.grid.line,sequence:0
+#: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
 msgid "Sequence"
 msgstr "Sekvens"
 
@@ -528,8 +488,7 @@ msgstr "Transportören %s (id: %d) saknar leveransrutnät!"
 #: code:addons/delivery/sale.py:74
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
-"Orderstatus måste vara preleminär för att kunna lägga till leveransrader"
+msgstr "Orderstatus måste vara preleminär för att kunna lägga till leveransrader"
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
@@ -558,8 +517,7 @@ msgid "Unable to fetch delivery method!"
 msgstr ""
 
 #. module: delivery
-#: field:stock.move,weight_uom_id:0
-#: field:stock.picking,weight_uom_id:0
+#: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Måttenhet"
 
@@ -575,8 +533,7 @@ msgid "Unit of measurement for Weight"
 msgstr "Viktsenhet"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
+#: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
 msgid "Variable"
 msgstr "Variabel"
 
@@ -587,8 +544,7 @@ msgstr "Variabel faktor"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.picking,volume:0
 msgid "Volume"
 msgstr "Volym"
 
@@ -600,11 +556,9 @@ msgstr "Varning!"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.move,weight:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.move,weight:0
 #: view:stock.picking:delivery.view_picking_withcarrier_out_form
-#: field:stock.picking,weight:0
-#: view:website:stock.report_picking
+#: field:stock.picking,weight:0 view:website:stock.report_picking
 msgid "Weight"
 msgstr "Vikt"
 

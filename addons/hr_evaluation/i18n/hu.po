@@ -1,48 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_evaluation
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-10-29 11:06+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:46+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
-
-#. module: hr_evaluation
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_1
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_2
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_3
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_4
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_5
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_1
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_2
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_3
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_3_1
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_3_2
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_1
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_2
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_3
-#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_5_1
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_1_1
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_1_2
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_1
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_2
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_3
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_4
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_5
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_6
-#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_7
-msgid "The answer you entered has an invalid format."
-msgstr "A beírt válasza nem megfelelő formátumú."
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:84
@@ -63,22 +37,7 @@ msgid ""
 "%(user_signature)s\n"
 "\n"
 "        "
-msgstr ""
-"\n"
-"Dátum: %(date)s\n"
-"\n"
-"Tisztelt %(employee_name)s,\n"
-"\n"
-"Én egy értékelést készítek erre vonatkozólag %(eval_name)s.\n"
-"\n"
-"Megtisztelő válaszát várva.\n"
-"\n"
-"\n"
-"Köszönettel,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        "
+msgstr "\nDátum: %(date)s\n\nTisztelt %(employee_name)s,\n\nÉn egy értékelést készítek erre vonatkozólag %(eval_name)s.\n\nMegtisztelő válaszát várva.\n\n\nKöszönettel,\n--\n%(user_signature)s\n\n        "
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,nbr:0
@@ -109,112 +68,42 @@ msgstr "(user_signature)s: Felhsználó neve"
 #: model:survey.page,description:hr_evaluation.opinion_1
 msgid ""
 "<h2>At the supervisor's appraisal date</h2>\n"
-"<p>His direct reports will be invited through Odoo to express a feedback on "
-"their supervisor's leadership and to give their opinion about their own "
-"engagement and effectiveness, the continuous improvement and openness in "
-"action in thecompany...</p>\n"
-"<p>The employees will send back their anonymous answers to Odoo. The data "
-"will be handled by the HR manager and a brief summary of the data will be "
-"sent to the concerned supervisor, to his team and to the supervisor's "
-"supervisor.</p>\n"
-"<p>The appraiser should rate the employee's major work accomplishments and "
-"performance according to the metric provided below\n"
+"<p>His direct reports will be invited through Odoo to express a feedback on their supervisor's leadership and to give their opinion about their own engagement and effectiveness, the continuous improvement and openness in action in thecompany...</p>\n"
+"<p>The employees will send back their anonymous answers to Odoo. The data will be handled by the HR manager and a brief summary of the data will be sent to the concerned supervisor, to his team and to the supervisor's supervisor.</p>\n"
+"<p>The appraiser should rate the employee's major work accomplishments and performance according to the metric provided below\n"
 "</p><ol>\n"
-"<li>Significantly exceeds standards and expectations required of the "
-"position</li>\n"
+"<li>Significantly exceeds standards and expectations required of the position</li>\n"
 "<li>Exceeds standards and expectations</li>\n"
 "<li>Meet standards and expectations</li>\n"
 "<li>Did not meet standards and expectations</li>\n"
 "<li>Significantly below standards and expectations</li>\n"
 "</ol>"
-msgstr ""
-"<h2>Az ellenőr értékelésének dátuma</h2>\n"
-"<p>A közvetlen jelentését behívja az Odoo rendszerén keresztül az ellenőr "
-"vezetői képességeire vonatkozó visszajelzése kifejezéséhez, valamint "
-"javaslataihoz a saját programja és annak hatékonyságának vonatkozásában, a "
-"vállalati tevékenységek  folyamatos fejlődő és nyitott működéséhez...</p>\n"
-"<p>A munkavállalók visszaküldik névtelen válaszaikat az Odoo rendszerhez. Az "
-"adatokat a Emberi Erőforrás HR manager kapja meg és egy rövid összefoglalót "
-"kap erről az ellenőr, a csoportja és az ellenőr felügyelete.</p>\n"
-"<p>Az értékelőnek kell a munkavállaló elvégzett fő tevékenységét és "
-"teljesítményét értékelnie az alábbi mértékegység szerint\n"
-"</p><ol>\n"
-"<li>Jelentősen az általános és a beosztástól elvártak felett</li>\n"
-"<li>Általánosnál és elvárásoknál jobban</li>\n"
-"<li>Általános és elvárt feltételeknek megfelelően</li>\n"
-"<li>Általános és elvárt feltételeket nem teljesítette</li>\n"
-"<li>Jelentősen az általános és elvárt feltételek alatt</li>\n"
-"</ol>"
+msgstr "<h2>Az ellenőr értékelésének dátuma</h2>\n<p>A közvetlen jelentését behívja az Odoo rendszerén keresztül az ellenőr vezetői képességeire vonatkozó visszajelzése kifejezéséhez, valamint javaslataihoz a saját programja és annak hatékonyságának vonatkozásában, a vállalati tevékenységek  folyamatos fejlődő és nyitott működéséhez...</p>\n<p>A munkavállalók visszaküldik névtelen válaszaikat az Odoo rendszerhez. Az adatokat a Emberi Erőforrás HR manager kapja meg és egy rövid összefoglalót kap erről az ellenőr, a csoportja és az ellenőr felügyelete.</p>\n<p>Az értékelőnek kell a munkavállaló elvégzett fő tevékenységét és teljesítményét értékelnie az alábbi mértékegység szerint\n</p><ol>\n<li>Jelentősen az általános és a beosztástól elvártak felett</li>\n<li>Általánosnál és elvárásoknál jobban</li>\n<li>Általános és elvárt feltételeknek megfelelően</li>\n<li>Általános és elvárt feltételeket nem teljesítette</li>\n<li>Jelentősen az általános és elvárt feltételek alatt</li>\n</ol>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_1
 msgid ""
 "<h2>Overall Purpose Of Employee Appraisal</h2>\n"
-"<ul><li>To initiate a clear and open communication of performance "
-"expectations\n"
-"</li><li>To assist employees in their professional growth, through the "
-"identification of strengths and opportunities for\n"
+"<ul><li>To initiate a clear and open communication of performance expectations\n"
+"</li><li>To assist employees in their professional growth, through the identification of strengths and opportunities for\n"
 "development</li></ul>\n"
 "<h2>At the outset of the appraisal time period</h2>\n"
-"<ul><li>It is the joint responsibility of the employee and the supervisor "
-"(appraiser) to establish a feasible work plan for the\n"
-"coming year, including major employee responsibilities and corresponding "
-"benchmarks against which results will be\n"
+"<ul><li>It is the joint responsibility of the employee and the supervisor (appraiser) to establish a feasible work plan for the\n"
+"coming year, including major employee responsibilities and corresponding benchmarks against which results will be\n"
 "evaluated.\n"
-"</li><li>Critical or key elements of performance and professional "
-"development needs (if any), should also be noted at this time</li></ul>\n"
+"</li><li>Critical or key elements of performance and professional development needs (if any), should also be noted at this time</li></ul>\n"
 "<h2>At the conclusion of the appraisal time period</h2>\n"
-"<ul><li>The employee will be responsible for completing a draft of the "
-"Appraisal Form as a tool for self-appraisal and a starting\n"
-"point for the supervisor’s evaluation. The employee can add examples of "
-"achievements for each criterion.\n"
+"<ul><li>The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-appraisal and a starting\n"
+"point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.\n"
 "Once the form had been filled, the employee send it to his supervisor.\n"
-"</li><li>It is the primary responsibility of the supervisor to gather the "
-"necessary input from the appropriate sources of feedback\n"
-"(internal and/or external customers, peers). In case of collaboration with "
-"Odoo SA Belgium, the supervisor must\n"
-"receive completed evaluation form from the employee's Belgian project "
-"manager.\n"
-"</li><li>The supervisor synthesizes and integrates all input into the "
-"completed appraisal. He motivates his evaluation in the ad\n"
+"</li><li>It is the primary responsibility of the supervisor to gather the necessary input from the appropriate sources of feedback\n"
+"(internal and/or external customers, peers). In case of collaboration with Odoo SA Belgium, the supervisor must\n"
+"receive completed evaluation form from the employee's Belgian project manager.\n"
+"</li><li>The supervisor synthesizes and integrates all input into the completed appraisal. He motivates his evaluation in the ad\n"
 "hoc fields.\n"
-"</li><li>The employee may choose to offer comments or explanation regarding "
-"the completed review.\n"
-"</li><li>The supervisor send the form to the HR department in India and in "
-"Belgium</li></ul>"
-msgstr ""
-"<h2>Munkavállalói értékelés céljának összefoglalása</h2>\n"
-"<ul><li>Egy tiszta és nyitott, a teljesítmény elvárásokról szóló "
-"kommunikáció elkezdéséhez\n"
-"</li><li>Segítségnyújtás a munkavállalók szakmai fejlődéséhez, a további "
-"fejlődéshez az erősségek és lehetőségek feltárásával</li></ul>\n"
-"<h2>Az értékelés kezdő időpontjának kitűzése</h2>\n"
-"<ul><li>A megvalósítható munka terv létrehozása, az elkövetkező évre "
-"vonatkozólag, egy közös érdek a munkavállaló és annak mentora (értékelője) "
-"közt, beleértve a fő munkavállalói felelősségvállalásokat és megfelelő "
-"szintek kiválasztását , melynek eredményei lesznek felhasználva az "
-"értékeléshez.\n"
-"</li><li>Kritikus vagy kulcs teljesítmény és szakmai fejlődést igénylő (ha "
-"van) elemeket, is le kell jegyezni ekkor</li></ul>\n"
-"<h2>A kiértékelési időtartam végeztével</h2>\n"
-"<ul><li>A munkavállaló felelőssége lesz az Értékesítési űrlap tervezet "
-"kitöltése az önértékelés eszközeként és mint kiindulási pont a mentor "
-"értékeléséhez. A munkavállaló hozzáfűzhet minden egyes követelményhez "
-"példákat a teljesítésekről.\n"
-"Miután az űrlap kitöltésre került, a munkavállaló elküldi a felügyelőjéhez, "
-"mentorához.\n"
-"</li><li>A felügyelő mentor elsődleges felelőssége a szükséges visszajelzés "
-"forrásokból beszerezni az információkat\n"
-"(belső és/vagy külső ügyfelek, kapcsolat párok). Egy Odoo Belgium "
-"együttműködés esetén, a Belga projekt irányítójától teljes jelentést kell "
-"kapnia a felügyeleti tagnak.\n"
-"</li><li>A felügyeleti tag előállítja és beépíti az összes bejövő, kitöltött "
-"értékelési információt. Ő, véletlenszerű mezőkön jelzi  indoklásait az "
-"értékeléseken.\n"
-"</li><li>A munkavállaló választhat, hogy megjegyzéssel vagy magyarázattal "
-"egészíti ki a kitöltött felülvizsgálatot.\n"
-"</li><li>A felügyelő mentor átküldi az űrlapot a Belga és Indiai Emberi "
-"Erőforrás HR osztályának</li></ul>"
+"</li><li>The employee may choose to offer comments or explanation regarding the completed review.\n"
+"</li><li>The supervisor send the form to the HR department in India and in Belgium</li></ul>"
+msgstr "<h2>Munkavállalói értékelés céljának összefoglalása</h2>\n<ul><li>Egy tiszta és nyitott, a teljesítmény elvárásokról szóló kommunikáció elkezdéséhez\n</li><li>Segítségnyújtás a munkavállalók szakmai fejlődéséhez, a további fejlődéshez az erősségek és lehetőségek feltárásával</li></ul>\n<h2>Az értékelés kezdő időpontjának kitűzése</h2>\n<ul><li>A megvalósítható munka terv létrehozása, az elkövetkező évre vonatkozólag, egy közös érdek a munkavállaló és annak mentora (értékelője) közt, beleértve a fő munkavállalói felelősségvállalásokat és megfelelő szintek kiválasztását , melynek eredményei lesznek felhasználva az értékeléshez.\n</li><li>Kritikus vagy kulcs teljesítmény és szakmai fejlődést igénylő (ha van) elemeket, is le kell jegyezni ekkor</li></ul>\n<h2>A kiértékelési időtartam végeztével</h2>\n<ul><li>A munkavállaló felelőssége lesz az Értékesítési űrlap tervezet kitöltése az önértékelés eszközeként és mint kiindulási pont a mentor értékeléséhez. A munkavállaló hozzáfűzhet minden egyes követelményhez példákat a teljesítésekről.\nMiután az űrlap kitöltésre került, a munkavállaló elküldi a felügyelőjéhez, mentorához.\n</li><li>A felügyelő mentor elsődleges felelőssége a szükséges visszajelzés forrásokból beszerezni az információkat\n(belső és/vagy külső ügyfelek, kapcsolat párok). Egy Odoo Belgium együttműködés esetén, a Belga projekt irányítójától teljes jelentést kell kapnia a felügyeleti tagnak.\n</li><li>A felügyeleti tag előállítja és beépíti az összes bejövő, kitöltött értékelési információt. Ő, véletlenszerű mezőkön jelzi  indoklásait az értékeléseken.\n</li><li>A munkavállaló választhat, hogy megjegyzéssel vagy magyarázattal egészíti ki a kitöltött felülvizsgálatot.\n</li><li>A felügyelő mentor átküldi az űrlapot a Belga és Indiai Emberi Erőforrás HR osztályának</li></ul>"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
@@ -222,8 +111,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new appraisal.\n"
 "              </p><p>\n"
-"                Each employee may be assigned an Appraisal Plan. Such a "
-"plan\n"
+"                Each employee may be assigned an Appraisal Plan. Such a plan\n"
 "                defines the frequency and the way you manage your periodic\n"
 "                personnel evaluation. You will be able to define steps and\n"
 "                attach interviews to each step. Odoo manages all kinds of\n"
@@ -231,27 +119,13 @@ msgid ""
 "                evaluation by the manager.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson új értékelés készítéséhez.\n"
-"              </p><p>\n"
-"                Mindegyik munkavállalót kijelölheti egy értékelési "
-"tervezethez. Ilyen tervezet\n"
-"                határozza meg a személyes személyi értékelésének a \n"
-"                gyakoriságát és kezelésének módját. Meghatározhat lépéseket\n"
-"                és lépésenkénti interjúkat adhat hozzá. Odoo rendszer\n"
-"                mindenféle értékelést támogat: alulról-felfelé, fentről-"
-"lefelé, ön-értékelés és\n"
-"                igazgatói végső értékelés.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson új értékelés készítéséhez.\n              </p><p>\n                Mindegyik munkavállalót kijelölheti egy értékelési tervezethez. Ilyen tervezet\n                határozza meg a személyes személyi értékelésének a \n                gyakoriságát és kezelésének módját. Meghatározhat lépéseket\n                és lépésenkénti interjúkat adhat hozzá. Odoo rendszer\n                mindenféle értékelést támogat: alulról-felfelé, fentről-lefelé, ön-értékelés és\n                igazgatói végső értékelés.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new interview request related to a "
-"personal evaluation.\n"
+"                Click to create a new interview request related to a personal evaluation.\n"
 "              </p><p>\n"
 "                Interview requests are usually generated automatically by\n"
 "                Odoo according to an employee's appraisal plan. Each user\n"
@@ -259,18 +133,7 @@ msgid ""
 "                colleagues periodically.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattinson a személyes értékeléshez tartozó új interjú igény "
-"létrehozásához.\n"
-"              </p><p>\n"
-"                Interjú igény általában az Odoo rendszer által "
-"automatikusan\n"
-"                létrehozott az egyén értékelési tervezetéből. Az összes\n"
-"                felhasználó időnként automatikusa kap felkérést és emailt \n"
-"                a kollégák felmérésére.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattinson a személyes értékeléshez tartozó új interjú igény létrehozásához.\n              </p><p>\n                Interjú igény általában az Odoo rendszer által automatikusan\n                létrehozott az egyén értékelési tervezetéből. Az összes\n                felhasználó időnként automatikusa kap felkérést és emailt \n                a kollégák felmérésére.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
@@ -279,26 +142,12 @@ msgid ""
 "                Click to define a new appraisal plan.\n"
 "              </p><p>\n"
 "                You can define appraisal plans (ex: first interview after 6\n"
-"                months, then every year). Then, each employee can be linked "
-"to\n"
+"                months, then every year). Then, each employee can be linked to\n"
 "                an appraisal plan so that Odoo can automatically generate\n"
 "                interview requests to managers and/or subordinates.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson új felmérési tervezet létrehozásához.\n"
-"              </p><p>\n"
-"                Meghatározhat felmérési haditerveket (pl: első interjú 6 "
-"hónap\n"
-"                elteltével, utána minden évben). Aztán, minden egyes "
-"munkavállalót\n"
-"                hozzárendelhet egy felmérési tervhez, így az Odoo rendszer "
-"automatikusan\n"
-"                létrehozhat interjú igényeket a felelős vezetőknek és/vagy "
-"alárendeltjeinek.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kattintson új felmérési tervezet létrehozásához.\n              </p><p>\n                Meghatározhat felmérési haditerveket (pl: első interjú 6 hónap\n                elteltével, utána minden évben). Aztán, minden egyes munkavállalót\n                hozzárendelhet egy felmérési tervhez, így az Odoo rendszer automatikusan\n                létrehozhat interjú igényeket a felelős vezetőknek és/vagy alárendeltjeinek.\n              </p>\n            "
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_2
@@ -318,36 +167,21 @@ msgstr "<p></p>"
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_4
 msgid ""
-"<p>Identify professional, performance, or project objectives you recommend "
-"for employee’s continued career development\n"
+"<p>Identify professional, performance, or project objectives you recommend for employee’s continued career development\n"
 "over the coming year.</p>"
-msgstr ""
-"<p>Határozza meg a foglalkozást, teljesítményt, vagy projekt célokat, amiket "
-"a munkavállaló folyamatos pálya fejlesztéséhez javasol az elkövetkező "
-"évben.</p>"
+msgstr "<p>Határozza meg a foglalkozást, teljesítményt, vagy projekt célokat, amiket a munkavállaló folyamatos pálya fejlesztéséhez javasol az elkövetkező évben.</p>"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.appraisal_3
 msgid ""
-"<p>The appraiser should rate the employee’s major work accomplishments and "
-"performance according to the metric provided\n"
+"<p>The appraiser should rate the employee’s major work accomplishments and performance according to the metric provided\n"
 "below:</p><ol>\n"
-"<li> Significantly exceeds standards and expectations required of the "
-"position\n"
+"<li> Significantly exceeds standards and expectations required of the position\n"
 "</li><li> Exceeds standards and expectations\n"
 "</li><li> Meet standards and expectations\n"
 "</li><li> Did not meet standards and expectations\n"
 "</li><li> Significantly below standards and expectations</li></ol>"
-msgstr ""
-"<p>Az értékelőnek kell a munkavállaló elvégzett fő tevékenységét és "
-"teljesítményét értékelnie az alábbi mértékegység szerint\n"
-"</p><ol>\n"
-"<li>Jelentősen az általános és a beosztástól elvártak felett</li>\n"
-"<li>Általánosnál és elvárásoknál jobban</li>\n"
-"<li>Általános és elvárt feltételeknek megfelelően</li>\n"
-"<li>Általános és elvárt feltételeket nem teljesítette</li>\n"
-"<li>Jelentősen az általános és elvárt feltételek alatt</li>\n"
-"</ol>"
+msgstr "<p>Az értékelőnek kell a munkavállaló elvégzett fő tevékenységét és teljesítményét értékelnie az alábbi mértékegység szerint\n</p><ol>\n<li>Jelentősen az általános és a beosztástól elvártak felett</li>\n<li>Általánosnál és elvárásoknál jobban</li>\n<li>Általános és elvárt feltételeknek megfelelően</li>\n<li>Általános és elvárt feltételeket nem teljesítette</li>\n<li>Jelentősen az általános és elvárt feltételek alatt</li>\n</ol>"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_1
@@ -362,9 +196,7 @@ msgstr "Képesség az előírás szerinti munka elvégzésére és követésére
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_5
 msgid "Ability to manage planning resources, risks, budgets and deadlines"
-msgstr ""
-"Képesség a forrás tervezések,  kockázatok, költségvetés és határidők "
-"tervezésére"
+msgstr "Képesség a forrás tervezések,  kockázatok, költségvetés és határidők tervezésére"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
@@ -391,9 +223,7 @@ msgstr "Elvégzendő művelet"
 msgid ""
 "Actions by Executive management show genuine interest in the well-being of "
 "employees"
-msgstr ""
-"A vezető tisztségviselő intézkedései valóban előtérbe helyezik a "
-"munkavállalók jólétét"
+msgstr "A vezető tisztségviselő intézkedései valóban előtérbe helyezik a munkavállalók jólétét"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,active:0
@@ -405,9 +235,7 @@ msgstr "Aktív"
 msgid ""
 "Adaptability: Ability to adapt oneself to organizational changes while "
 "keeping efficiency"
-msgstr ""
-"Alkalmazhatóság: Képes alkalmazkodni a szervezeti változásokra a hatékonyság "
-"megtartása mellett"
+msgstr "Alkalmazhatóság: Képes alkalmazkodni a szervezeti változásokra a hatékonyság megtartása mellett"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_3
@@ -503,8 +331,7 @@ msgstr "Értékelés fázisai"
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_tree
-#: field:hr_evaluation.plan,name:0
-#: field:hr_evaluation.plan.phase,plan_id:0
+#: field:hr_evaluation.plan,name:0 field:hr_evaluation.plan.phase,plan_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Appraisal Plan"
 msgstr "Értékelés tervezet"
@@ -615,18 +442,14 @@ msgstr "Törölt"
 #: help:hr_evaluation.plan.phase,mail_feature:0
 msgid ""
 "Check this box if you want to send mail to employees coming under this phase"
-msgstr ""
-"Jelölje be a négyzetet ha e-mailt szeretne küldeni annak az alkalmazottnak "
-"aki ebbe a fázisba kerül"
+msgstr "Jelölje be a négyzetet ha e-mailt szeretne küldeni annak az alkalmazottnak aki ebbe a fázisba kerül"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
 msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
 "before launching this phase."
-msgstr ""
-"Jelölje ki ezt a négyzetet, ha azt szeretné, hogy az összes megelőző fázis "
-"be legyen fejezve, mielőtt ezt a fázist elindítaná."
+msgstr "Jelölje ki ezt a négyzetet, ha azt szeretné, hogy az összes megelőző fázis be legyen fejezve, mielőtt ezt a fázist elindítaná."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,closed:0
@@ -637,9 +460,7 @@ msgstr "Zárás dátuma"
 #: model:survey.label,value:hr_evaluation.arow_3_1_9
 msgid ""
 "Communication skills (written & verbally): clearness, concision, exactitude"
-msgstr ""
-"Kommunikációs képességek (írott & szóban): tisztán érthetőség, tartalom, "
-"pontosság"
+msgstr "Kommunikációs képességek (írott & szóban): tisztán érthetőség, tartalom, pontosság"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
@@ -653,17 +474,13 @@ msgstr "Vállalat"
 msgid ""
 "Compared to similar jobs in other companies where I could work, my total "
 "compensation..."
-msgstr ""
-"Összehasonlítva más vállalatnál végzett hasonló munkával, ahol dolgozhatnék, "
-"az összes költségtérítésem..."
+msgstr "Összehasonlítva más vállalatnál végzett hasonló munkával, ahol dolgozhatnék, az összes költségtérítésem..."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_3
 msgid ""
 "Compliance to internal rules and processes (timesheets completion, etc.)"
-msgstr ""
-"Belső szabályok és folyamatok kötelességvállalása (időbeosztás teljesítése, "
-"stb.)"
+msgstr "Belső szabályok és folyamatok kötelességvállalása (időbeosztás teljesítése, stb.)"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_4
@@ -746,8 +563,7 @@ msgstr "Elindítás késleltetés"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_2
 msgid "Delegation: Ability to efficiently assign tasks to other people"
-msgstr ""
-"Küldetés: Képesség a feladat többi emberhez való hatákony kiosztásában"
+msgstr "Küldetés: Képesség a feladat többi emberhez való hatákony kiosztásában"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_1
@@ -917,9 +733,7 @@ msgstr "Csoportosítás..."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
-"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
+msgstr "A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_1
@@ -931,25 +745,19 @@ msgstr "Büszkén közlöm másokkal, hogy itt dolgozom"
 msgid ""
 "I am willing to put in a great deal of effort beyond what is expected to "
 "help my workgroup succeed"
-msgstr ""
-"Nagy erőfeszítések árán szeretnék az elvártakon túl teljesíteni, hogy "
-"segíthessek a csoportom céljának elérésében"
+msgstr "Nagy erőfeszítések árán szeretnék az elvártakon túl teljesíteni, hogy segíthessek a csoportom céljának elérésében"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_4
 msgid "I believe the information that I get from the person I report to."
-msgstr ""
-"Hiszek abban az információban amit attól kapok akinek jelentést írok."
+msgstr "Hiszek abban az információban amit attól kapok akinek jelentést írok."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_2
 msgid ""
 "I consistently acquire new knowledge, skills or understanding through "
 "contact with my supervisor. He helps me growing my compete"
-msgstr ""
-"Következetessen elsajátítom az új ismereteket, gyakorlatokat vagy megértem a "
-"felügyelő mentorommal felvett kapcsolaton keresztül. Segít a szakértelmem "
-"fejlődésében"
+msgstr "Következetessen elsajátítom az új ismereteket, gyakorlatokat vagy megértem a felügyelő mentorommal felvett kapcsolaton keresztül. Segít a szakértelmem fejlődésében"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_3_2
@@ -961,9 +769,7 @@ msgstr "Van elég munkám"
 msgid ""
 "I have the same opportunity to succeed as others with similar experiences, "
 "performance and educational background"
-msgstr ""
-"Megvan ugyanaz a lehetőségem a siker elérésében, mint ugyanazokkal, "
-"gyakorlattal, teljesítménnyel és tanulmányi háttérrel rendelkezőknek"
+msgstr "Megvan ugyanaz a lehetőségem a siker elérésében, mint ugyanazokkal, gyakorlattal, teljesítménnyel és tanulmányi háttérrel rendelkezőknek"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_5_1
@@ -975,25 +781,19 @@ msgstr "Ismerem a vállalkozás értékeit és azt szemelőtt tartom"
 msgid ""
 "I mostly work on value-added tasks for the company, the products or the "
 "services"
-msgstr ""
-"Legtöbbször éték-növelő feladatokat végzek a vállalkozás, a termék vagy a "
-"szolgáltatás részére"
+msgstr "Legtöbbször éték-növelő feladatokat végzek a vállalkozás, a termék vagy a szolgáltatás részére"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_6_4
 msgid "I understand the company strategy and how my workgroup supports it"
-msgstr ""
-"Megértem a vállalkozás stratégiáját és a csoportom annak támogatásában való "
-"részvételét"
+msgstr "Megértem a vállalkozás stratégiáját és a csoportom annak támogatásában való részvételét"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_3
 msgid ""
 "I would prefer to remain with this company even if a comparable job were "
 "available in another company"
-msgstr ""
-"Én szívesebben maradnék ennél a vállalkozásnál, még akkor is, ha egy másik "
-"helyen hasonló munkahely állna rendelkezésre"
+msgstr "Én szívesebben maradnék ennél a vállalkozásnál, még akkor is, ha egy másik helyen hasonló munkahely állna rendelkezésre"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_3_1
@@ -1001,10 +801,8 @@ msgid "I'm efficient at work and my achievements are successful"
 msgstr "Hatékonyan dolgozom és az eredményeim sikeresek"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,id:0
-#: field:hr.evaluation.report,id:0
-#: field:hr_evaluation.evaluation,id:0
-#: field:hr_evaluation.plan,id:0
+#: field:hr.evaluation.interview,id:0 field:hr.evaluation.report,id:0
+#: field:hr_evaluation.evaluation,id:0 field:hr_evaluation.plan,id:0
 #: field:hr_evaluation.plan.phase,id:0
 msgid "ID"
 msgstr "Azonosító ID"
@@ -1047,9 +845,7 @@ msgstr "Ha másik, pontosítsa:"
 msgid ""
 "If the evaluation does not meet the expectations, you can propose an action "
 "plan"
-msgstr ""
-"Ha az értékelés nem az elvárásonak megfelelő, lehetősége van egy cselekvési "
-"tervet javasolnia"
+msgstr "Ha az értékelés nem az elvárásonak megfelelő, lehetősége van egy cselekvési tervet javasolnia"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
@@ -1145,9 +941,7 @@ msgstr "Irányítás"
 msgid ""
 "Leadership: create a challenging and motivating work environment aligned "
 "with the company's strategy"
-msgstr ""
-"Irányítás: hozzon létre egy motiváló, érdeklődésre számot tartó munka "
-"környezetet a vállalati stratégiához illesztve"
+msgstr "Irányítás: hozzon létre egy motiváló, érdeklődésre számot tartó munka környezetet a vállalati stratégiához illesztve"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_4
@@ -1162,11 +956,9 @@ msgstr "Magyarázat"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_2_3
 msgid ""
-"Listens and takes into account all ideas and do his best to put in place the "
-"best of these"
-msgstr ""
-"Halgassa meg és gondolja át az ötleteket és törekedjen, hogy a legjobbak a "
-"helyükre kerüljenek"
+"Listens and takes into account all ideas and do his best to put in place the"
+" best of these"
+msgstr "Halgassa meg és gondolja át az ötleteket és törekedjen, hogy a legjobbak a helyükre kerüljenek"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
@@ -1211,8 +1003,7 @@ msgstr "Hónap"
 msgid ""
 "My best achievements have been communicated to the community, internally or "
 "to customers"
-msgstr ""
-"A legjobb eredményeimet átbeszélte a közösség, belső osztályok vagy ügyfelek"
+msgstr "A legjobb eredményeimet átbeszélte a közösség, belső osztályok vagy ügyfelek"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_2
@@ -1224,9 +1015,7 @@ msgstr "A munkám kifejezi a személyes sokoldaluságom érzését"
 msgid ""
 "My work contributes towards the continuous improvement of the company, our "
 "services or products"
-msgstr ""
-"A munkám hozzájárul a folyamatos vállalkozás, szolgáltatásaink vagy "
-"termékeink fejlesztéséhez"
+msgstr "A munkám hozzájárul a folyamatos vállalkozás, szolgáltatásaink vagy termékeink fejlesztéséhez"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_1
@@ -1263,9 +1052,7 @@ msgstr "Nyitottsághoz"
 msgid ""
 "Our workgroup identifies and reduces waste of time in our activities and "
 "processes"
-msgstr ""
-"Munkacsoportjaink azonosítják és csökkentik a fölösleges munkákat a "
-"tevékenységeken és folyamatokon belül"
+msgstr "Munkacsoportjaink azonosítják és csökkentik a fölösleges munkákat a tevékenységeken és folyamatokon belül"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
@@ -1277,9 +1064,7 @@ msgstr "Átlag"
 msgid ""
 "Overall, I believe the quality of products and/or services my workgroup "
 "delivers is improving"
-msgstr ""
-"Általánosságban, hiszem, hogy a csoportunk által készített termékek és/vagy "
-"szolgáltatások minősége javul"
+msgstr "Általánosságban, hiszem, hogy a csoportunk által készített termékek és/vagy szolgáltatások minősége javul"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
@@ -1387,9 +1172,7 @@ msgstr "Eredmények"
 msgid ""
 "Results of the bottom-up survey and mitigation actions to face technical, "
 "organizational, structural and/or relational issues"
-msgstr ""
-"A lentről-felfelé felmérés eredménye és mérséklési műveletek a technikai, "
-"szervezési, felépítési és/vagy átgondolt ügyek szembesítésével"
+msgstr "A lentről-felfelé felmérés eredménye és mérséklési műveletek a technikai, szervezési, felépítési és/vagy átgondolt ügyek szembesítésével"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
@@ -1525,17 +1308,14 @@ msgstr "Felmérés kérése"
 #: model:survey.label,value:hr_evaluation.oprow_2_1_4
 msgid ""
 "Taking everything into account, how satisfied are you with your current job?"
-msgstr ""
-"Minden részletet megvizsgálva, mennyire elégedett a mostani munkahelyével?"
+msgstr "Minden részletet megvizsgálva, mennyire elégedett a mostani munkahelyével?"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_4
 msgid ""
 "Team spirit: ability to work efficiently with peers, manage the conflicts "
 "with diplomacy"
-msgstr ""
-"Csoportszellem: képes hatékonyan együttműködni párban, a konfliktusokat "
-"diplomatikusan oldja meg"
+msgstr "Csoportszellem: képes hatékonyan együttműködni párban, a konfliktusokat diplomatikusan oldja meg"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_10
@@ -1543,22 +1323,45 @@ msgid "Technical skills regarding to the job requirements"
 msgstr "Munkaköri követelményekhez műszaki érzék"
 
 #. module: hr_evaluation
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_4
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_5
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_3_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_3_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_5_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_1_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_1_2
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_2
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_3
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_4
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_5
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_6
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_7
+msgid "The answer you entered has an invalid format."
+msgstr "A beírt válasza nem megfelelő formátumú."
+
+#. module: hr_evaluation
 #: help:hr.employee,evaluation_date:0
 msgid ""
 "The date of the next appraisal is computed by the appraisal plan's dates "
 "(first appraisal + periodicity)."
-msgstr ""
-"A következő értékelés dátuma az értékelés tervek dátumából számított (első "
-"értékelés + időszak)."
+msgstr "A következő értékelés dátuma az értékelés tervek dátumából számított (első értékelés + időszak)."
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_next:0
 msgid ""
 "The number of month that depicts the delay between each evaluation of this "
 "plan (after the first one)."
-msgstr ""
-"A hónapok száma ami leírja az ehhez a tervhez tartozó értékelések közti  (az "
-"elsőt követő) időszakokat."
+msgstr "A hónapok száma ami leírja az ehhez a tervhez tartozó értékelések közti  (az elsőt követő) időszakokat."
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
@@ -1623,11 +1426,9 @@ msgstr "Olvasatlan üzenetek"
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_5_1
 msgid ""
-"Use the following space to make any comments regarding the above performance "
-"evaluation."
-msgstr ""
-"A következő helyet használja a fenti teljesítmény értékelés bármilyen "
-"megjegyzés írásához"
+"Use the following space to make any comments regarding the above performance"
+" evaluation."
+msgstr "A következő helyet használja a fenti teljesítmény értékelés bármilyen megjegyzés írásához"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
@@ -1668,9 +1469,7 @@ msgstr "Weboldal  kommunikáció történet"
 msgid ""
 "What I did several months ago is still of use to the company, the services "
 "or the products today"
-msgstr ""
-"Amit pár hónapja tettem az még mindíg a vállalkozás, szolgáltatások vagy a "
-"termékek hasznára válik"
+msgstr "Amit pár hónapja tettem az még mindíg a vállalkozás, szolgáltatások vagy a termékek hasznára válik"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_2
@@ -1683,21 +1482,10 @@ msgstr "Munka terv"
 msgid ""
 "You cannot change state, because some appraisal forms have not been "
 "completed."
-msgstr ""
-"Nem tudja megváltoztatni a szintet, mert egyes értékelési űrlapok nem lettek "
-"kitöltve."
+msgstr "Nem tudja megváltoztatni a szintet, mert egyes értékelési űrlapok nem lettek kitöltve."
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:339
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
 msgstr "Nem indíthat el elemézt értékelés nélkül."
-
-#~ msgid "Request_id"
-#~ msgstr "Request_id"
-
-#~ msgid "closed"
-#~ msgstr "lezárt"
-
-#~ msgid "Creation Date"
-#~ msgstr "Létrehozás dátuma"

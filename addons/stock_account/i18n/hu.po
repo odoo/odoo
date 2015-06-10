@@ -1,21 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-03-03 15:10+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-04 05:59+0000\n"
-"X-Generator: Launchpad (build 17361)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
@@ -52,9 +53,7 @@ msgstr "Aktiv azonosító ID nincs kijelölve a tartalomban."
 #: help:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
-"Lehetővé teszi a készletkönyvelés értékelést a termékeken és a termék "
-"kategóriákon."
+msgstr "Lehetővé teszi a készletkönyvelés értékelést a termékeken és a termék kategóriákon."
 
 #. module: stock_account
 #: selection:product.template,cost_method:0
@@ -64,9 +63,7 @@ msgstr "Mérlegelt átlagár"
 #. module: stock_account
 #: field:stock.config.settings,module_stock_landed_costs:0
 msgid "Calculate landed costs on products"
-msgstr ""
-"Teljes költség ár kiszámítása (termék+bizt +száll+...) a termékekre "
-"vonatkozólag"
+msgstr "Teljes költség ár kiszámítása (termék+bizt +száll+...) a termékekre vonatkozólag"
 
 #. module: stock_account
 #: view:stock.change.standard.price:stock_account.view_change_standard_price
@@ -95,31 +92,19 @@ msgstr "Válasszone egy egyéni dátumot"
 #. module: stock_account
 #: help:stock.inventory,period_id:0
 msgid ""
-"Choose the accounting period where you want to value the stock moves created "
-"by the inventory instead of the default one (chosen by the inventory end "
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
 "date)"
-msgstr ""
-"Válassza a készlet által létrehozott raktár tétel mozgások értékeléséhez a "
-"könyvelési időszakot az alapértelmezett helyett  (a készletezés végső "
-"dátumának kiválasztása helyett)"
+msgstr "Válassza a készlet által létrehozott raktár tétel mozgások értékeléséhez a könyvelési időszakot az alapértelmezett helyett  (a készletezés végső dátumának kiválasztása helyett)"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid ""
-"Choose the date for which you want to get the stock valuation of your "
-"products.\n"
+"Choose the date for which you want to get the stock valuation of your products.\n"
 "\n"
-"                        This will filter the stock operation that weren't "
-"done at the selected date, to retreive the quantity\n"
-"                        you had, and gives you the inventory value according "
-"to the standard price used at that time."
-msgstr ""
-"Válasszon dátumot, melyre a termékei készlet értékét szeretné.\n"
-"\n"
-"                        Ez kiszűri azokat a raktár műveleteket, melyeket nem "
-"végeztek el a megadott dátumig, visszaadja\n"
-"                        a készleten lévő mennyiséget,és megadja a készlet "
-"értékét az akkor használt alapáron számolva."
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
+msgstr "Válasszon dátumot, melyre a termékei készlet értékét szeretné.\n\n                        Ez kiszűri azokat a raktár műveleteket, melyeket nem végeztek el a megadott dátumig, visszaadja\n                        a készleten lévő mennyiséget,és megadja a készlet értékét az akkor használt alapáron számolva."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -171,9 +156,7 @@ msgstr "Beszállítói számla létrehozás"
 #. module: stock_account
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
-msgstr ""
-"Hozzon létre és nyissa meg a számlát ha a felhasználó befejezte a "
-"kiszolgálási jegyet/ szállító levelet"
+msgstr "Hozzon létre és nyissa meg a számlát ha a felhasználó befejezte a kiszolgálási jegyet/ szállító levelet"
 
 #. module: stock_account
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
@@ -239,27 +222,17 @@ msgid "Group by partner"
 msgstr "Csoportosítás partnerek szerint"
 
 #. module: stock_account
-#: field:stock.change.standard.price,id:0
-#: field:stock.history,id:0
-#: field:stock.invoice.onshipping,id:0
-#: field:wizard.valuation.history,id:0
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
 msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: stock_account
 #: help:stock.change.standard.price,new_price:0
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
-msgstr ""
-"Ha az elszámoló költség árat növelik, akkor a készletszámlát megterhelik és "
-"a készletcsökkenés számlát jóváírják az értékkel (= árváltozás összege * "
-"valós készlet mennyisége).\n"
-"Ha az elszámoló költség árat csökkentik, akkor a  készletszámlát jóváírják "
-"és a készletnövekedés számlát megterhelik."
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "Ha az elszámoló költség árat növelik, akkor a készletszámlát megterhelik és a készletcsökkenés számlát jóváírják az értékkel (= árváltozás összege * valós készlet mennyisége).\nHa az elszámoló költség árat csökkentik, akkor a  készletszámlát jóváírják és a készletnövekedés számlát megterhelik."
 
 #. module: stock_account
 #: help:product.template,valuation:0
@@ -270,22 +243,14 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
-"Ha a tényleges értékelés be van kapcsolva egy termékre, akkor a rendszer "
-"automatikusan naplót bejegyzést ír a készlet mozgások függvényében a "
-"'Költség mód' alapján meghatározott termék ár alapján. A termék kategórián "
-"beállított készletszámla képviseli a jelenlegi készlet értéket, és a "
-"készletnövekedési számla és készletcsökkenési számla hordozza a beérkezett "
-"és kiküldött termékek megfelelő mozgásait."
+msgstr "Ha a tényleges értékelés be van kapcsolva egy termékre, akkor a rendszer automatikusan naplót bejegyzést ír a készlet mozgások függvényében a 'Költség mód' alapján meghatározott termék ár alapján. A termék kategórián beállított készletszámla képviseli a jelenlegi készlet értéket, és a készletnövekedési számla és készletcsökkenési számla hordozza a beérkezett és kiküldött termékek megfelelő mozgásait."
 
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
-msgstr ""
-"Telepítse a modult, mely megengedi a kiválogatásokon a bekerülési "
-"összköltségeket, és szétosztja azokat a különböző termékekre."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
+msgstr "Telepítse a modult, mely megengedi a kiválogatásokon a bekerülési összköltségeket, és szétosztja azokat a különböző termékekre."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -309,8 +274,7 @@ msgid "Inventory Value"
 msgstr "Készlet érték"
 
 #. module: stock_account
-#: field:procurement.order,invoice_state:0
-#: field:stock.move,invoice_state:0
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
 msgstr "Számlaellenőrzés"
@@ -373,7 +337,7 @@ msgstr "Készlet könyvelés kezelése és Költség mód"
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
 msgid "Move"
-msgstr ""
+msgstr "Bizonylat, áthelyezés"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:116
@@ -411,24 +375,14 @@ msgstr "Nem alkalmazható"
 #: code:addons/stock_account/product.py:83
 #, python-format
 msgid ""
-"One of the following information is missing on the product or product "
-"category and prevents the accounting valuation entries to be created:\n"
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
 "    Product: %s\n"
 "    Stock Input Account: %s\n"
 "    Stock Output Account: %s\n"
 "    Stock Valuation Account: %s\n"
 "    Stock Journal: %s\n"
 "    "
-msgstr ""
-"A termékhez vagy termék kategóriához a következő információk közül az egyik "
-"hiányzik és ez megakadályozza a készletkönyvelés értékelését tételek "
-"létrehozását:\n"
-"    Termék: %s\n"
-"    Készletnövekedés számla: %s\n"
-"    Készletcsökkenés számla: %s\n"
-"    Készletkönyvelés érték számla: %s\n"
-"    Raktár készlet napló: %s\n"
-"    "
+msgstr "A termékhez vagy termék kategóriához a következő információk közül az egyik hiányzik és ez megakadályozza a készletkönyvelés értékelését tételek létrehozását:\n    Termék: %s\n    Készletnövekedés számla: %s\n    Készletcsökkenés számla: %s\n    Készletkönyvelés érték számla: %s\n    Raktár készlet napló: %s\n    "
 
 #. module: stock_account
 #: field:stock.history,date:0
@@ -548,19 +502,10 @@ msgstr "Alapár megváltozott"
 #. module: stock_account
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
-"Alapár: Az alapárat kézzel frissíti egy megadott időtartam végén (általában "
-"évenként).\n"
-"                    Átlagár: A bekerülési értéket újraszámolja mindegyik "
-"bejövő szállítmányhoz és ezt használja a termék értékelésnél.\n"
-"                    Tényleges ár: A kijelzett bekerülési érték  az utoljára "
-"kiküldött áru értéke (ezt használja, ha készlethiány van például)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr "Alapár: Az alapárat kézzel frissíti egy megadott időtartam végén (általában évenként).\n                    Átlagár: A bekerülési értéket újraszámolja mindegyik bejövő szállítmányhoz és ezt használja a termék értékelésnél.\n                    Tényleges ár: A kijelzett bekerülési érték  az utoljára kiküldött áru értéke (ezt használja, ha készlethiány van például)."
 
 #. module: stock_account
 #: field:product.category,property_stock_account_input_categ:0
@@ -623,13 +568,9 @@ msgstr "Készletkönyvelés ezen a dátumon"
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
-"This allows to automatically launch the invoicing wizard if the delivery is "
-"to be invoiced when you send or deliver goods.\n"
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
-msgstr ""
-"Ez lehetővé teszi az automatikus számlázási varázsló elindítását, ha egy "
-"szállítást számláznia kell áruk ki- illetve beszállításánál.\n"
-"-Ez a stock_invoice_directly modult telepíti.."
+msgstr "Ez lehetővé teszi az automatikus számlázási varázsló elindítását, ha egy szállítást számláznia kell áruk ki- illetve beszállításánál.\n-Ez a stock_invoice_directly modult telepíti.."
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
@@ -658,12 +599,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Valós idejű készletkönyvelés alkalmazott. Ha virtuális termékhelyre "
-"beállított (nem belső típus), akkor ezt a számlát fogja használni a termék "
-"értékeinek megtartásához az erre a termékhelyre és a belső termékhelyre való "
-"mozgatáskor, az Általános Kimenő Számla helyett ami a termékre be van "
-"állítva. Ez nem befolyásolja a belső termék helyeket."
+msgstr "Valós idejű készletkönyvelés alkalmazott. Ha virtuális termékhelyre beállított (nem belső típus), akkor ezt a számlát fogja használni a termék értékeinek megtartásához az erre a termékhelyre és a belső termékhelyre való mozgatáskor, az Általános Kimenő Számla helyett ami a termékre be van állítva. Ez nem befolyásolja a belső termék helyeket."
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -673,12 +609,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Valós idejű készletkönyvelés alkalmazott. Ha virtuális termékhelyre "
-"beállított (nem belső típus), akkor ezt a számlát fogja használni a termék "
-"értékeinek megtartásához az erre a termékhelyre és a belső termékhelyre való "
-"mozgatáskor, az Általános Kimenő Számla helyett ami a termékre be van "
-"állítva. Ez nem befolyásolja a belső termék helyeket."
+msgstr "Valós idejű készletkönyvelés alkalmazott. Ha virtuális termékhelyre beállított (nem belső típus), akkor ezt a számlát fogja használni a termék értékeinek megtartásához az erre a termékhelyre és a belső termékhelyre való mozgatáskor, az Általános Kimenő Számla helyett ami a termékre be van állítva. Ez nem befolyásolja a belső termék helyeket."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -697,14 +628,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
-msgstr ""
-"Ha valós-idejű készletkönyvelést végez, az összes készletnövelő mozgás "
-"ellenszámla napló tételei erre a számlára lesznek mozgatva, hacsak nem lett "
-"a forrás helyre jellemző készletkönyvelési számla beállítva. Ez az ebbe a "
-"kategóriába tartozó minden termék alapértéke. Ezt minden egyes termékre "
-"egyesével be lehet állítani."
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "Ha valós-idejű készletkönyvelést végez, az összes készletnövelő mozgás ellenszámla napló tételei erre a számlára lesznek mozgatva, hacsak nem lett a forrás helyre jellemző készletkönyvelési számla beállítva. Ez az ebbe a kategóriába tartozó minden termék alapértéke. Ezt minden egyes termékre egyesével be lehet állítani."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_input:0
@@ -713,12 +639,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
-"Ha valós-idejű készletkönyvelést végez, az összes készletnövelő mozgás "
-"ellenszámla napló tételei erre a számlára lesznek mozgatva, hacsak nem lett "
-"a forrás helyre jellemző készletkönyvelési számla beállítva. Ez az ebbe a "
-"kategóriába tartozó minden termék alapértéke. Ezt minden egyes termékre "
-"egyesével be lehet állítani."
+msgstr "Ha valós-idejű készletkönyvelést végez, az összes készletnövelő mozgás ellenszámla napló tételei erre a számlára lesznek mozgatva, hacsak nem lett a forrás helyre jellemző készletkönyvelési számla beállítva. Ez az ebbe a kategóriába tartozó minden termék alapértéke. Ezt minden egyes termékre egyesével be lehet állítani."
 
 #. module: stock_account
 #: help:product.category,property_stock_account_output_categ:0
@@ -726,14 +647,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
-msgstr ""
-"Ha valós-idejű készletkönyvelést végez, az összes kimenő mozgás ellenszámla "
-"napló tételei erre a számlára lesznek mozgatva, hacsak nem lett a forrás "
-"helyre jellemző készletmozgás számla beállítva. Ez az ebbe a kategóriába "
-"tartozó minden termék alapértéke. Ezt minden egyes termékre egyesével be "
-"lehet állítani."
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "Ha valós-idejű készletkönyvelést végez, az összes kimenő mozgás ellenszámla napló tételei erre a számlára lesznek mozgatva, hacsak nem lett a forrás helyre jellemző készletmozgás számla beállítva. Ez az ebbe a kategóriába tartozó minden termék alapértéke. Ezt minden egyes termékre egyesével be lehet állítani."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -742,30 +658,21 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
-"Valós idejű készletkönyvelés alkalmazása esetén minden készletcsökkenés az "
-"ellenszámla naplózott tételein ide lesznek könyvelve, hacsak nem egy erre a "
-"célra létrehozott könyvelési számla nincs beállítva a célállomás "
-"termékhelyen. Ha nincs beállítva a termékre, akkor a termék kategóriára "
-"vonatkozó lesz használva."
+msgstr "Valós idejű készletkönyvelés alkalmazása esetén minden készletcsökkenés az ellenszámla naplózott tételein ide lesznek könyvelve, hacsak nem egy erre a célra létrehozott könyvelési számla nincs beállítva a célállomás termékhelyen. Ha nincs beállítva a termékre, akkor a termék kategóriára vonatkozó lesz használva."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Ha valós idejű készletkönyvelést alkalmazunk, ebbe a könyvelési naplóba "
-"könyvelődnek automatikusan a készletmozgások feldolgozásakor a tételek."
+msgstr "Ha valós idejű készletkönyvelést alkalmazunk, ebbe a könyvelési naplóba könyvelődnek automatikusan a készletmozgások feldolgozásakor a tételek."
 
 #. module: stock_account
 #: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
-"Ha valós idejű készletkönyvelést alkalmazunk, ez a számla mutatja az "
-"aktuális készletértéket."
+msgstr "Ha valós idejű készletkönyvelést alkalmazunk, ez a számla mutatja az aktuális készletértéket."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history

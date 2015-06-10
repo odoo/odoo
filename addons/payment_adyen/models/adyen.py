@@ -27,7 +27,7 @@ class AcquirerAdyen(osv.Model):
          - yhpp: hosted payment page: pay.shtml for single, select.shtml for multiple
         """
         return {
-            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % environment,
+            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % 'live' if environment == 'prod' else environment,
         }
 
     def _get_providers(self, cr, uid, context=None):
@@ -171,7 +171,7 @@ class TxAdyen(osv.Model):
             })
             return True
         else:
-            error = 'Paypal: feedback error'
+            error = 'Adyen: feedback error'
             _logger.info(error)
             tx.write({
                 'state': 'error',

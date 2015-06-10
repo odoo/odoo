@@ -1,21 +1,22 @@
-# Indonesian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Indonesian <id@li.org>\n"
+"PO-Revision-Date: 2015-05-22 15:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Indonesian (http://www.transifex.com/projects/p/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:20+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
@@ -49,7 +50,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Cancel Order"
-msgstr ""
+msgstr "Batalkan order"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:160
@@ -72,7 +73,7 @@ msgstr "Perusahaan"
 #: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Konfigurasi error !"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
@@ -160,10 +161,7 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to "
-"the Timesheet line entries for particular date and particular user  with the "
-"effect of creating, editing and deleting either ways and to automatically "
-"creates project tasks from procurement lines.\n"
+"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
 msgstr ""
 
@@ -171,8 +169,8 @@ msgstr ""
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -227,12 +225,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produk"
 
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Produk Template"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -303,8 +301,7 @@ msgid "Selectable on Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Dikirimkan"
 
@@ -326,7 +323,7 @@ msgstr ""
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr ""
+msgstr "Pada Faktur"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -341,18 +338,14 @@ msgid "View Delivery Order"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Gudang"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
-"Dapat menghasilkan tagihan berdasarkan pesanan penjualan atau berdasarkan  "
-"pengiriman."
+msgid "You can generate invoices based on sales orders or based on shippings."
+msgstr "Dapat menghasilkan tagihan berdasarkan pesanan penjualan atau berdasarkan  pengiriman."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:161
@@ -367,10 +360,7 @@ msgstr ""
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"Anda berencana menjual %.2f %s tapi anda hanya mempunyai %.2f %s yang "
-"tersedia !\n"
-"Stok sebenarnya  %.2f %s. (tanpa pemesanan)"
+msgstr "Anda berencana menjual %.2f %s tapi anda hanya mempunyai %.2f %s yang tersedia !\nStok sebenarnya  %.2f %s. (tanpa pemesanan)"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -385,14 +375,9 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
-msgstr ""
+msgstr "hari"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""
-
-#~ msgid "Picked"
-#~ msgstr "Sudah Diambil"

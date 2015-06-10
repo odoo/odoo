@@ -285,7 +285,8 @@ class stock_move(osv.osv):
             average_valuation_price += q.qty * q.cost
         average_valuation_price = average_valuation_price / move.product_qty
         # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-        product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=context)
+        ctx = dict(context, force_company=move.company_id.id)
+        product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
         self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
@@ -310,7 +311,8 @@ class stock_move(osv.osv):
                     new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
                 tmpl_dict[prod_tmpl_id] += move.product_qty
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-                product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)
+                ctx = dict(context or {}, force_company=move.company_id.id)
+                product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=ctx)
 
     def product_price_update_after_done(self, cr, uid, ids, context=None):
         '''

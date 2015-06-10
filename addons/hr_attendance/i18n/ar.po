@@ -1,26 +1,28 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:44+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
+msgid "(*) A negative delay means that the employee worked more than encoded."
 msgstr "(*) يعني التأخير السلبي ان الموظف أكثر من الترميز."
 
 #. module: hr_attendance
@@ -35,8 +37,7 @@ msgid "Absent"
 msgstr "غائب"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
+#: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
 msgstr "إجراء"
 
@@ -54,7 +55,7 @@ msgstr "نوع الإجراء"
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
 msgid "Allocates attendance group to all users."
-msgstr ""
+msgstr "إضافة خاصية تسجيل الحضور لكافة المستخدمين."
 
 #. module: hr_attendance
 #: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
@@ -72,13 +73,13 @@ msgstr "حضور"
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
 msgid "Attendance Access"
-msgstr ""
+msgstr "وصول الحضور"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_graph
 msgid "Attendance Analysis"
-msgstr ""
+msgstr "تحليل الحضور"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
@@ -89,7 +90,7 @@ msgstr "تقرير خطأ الحضور"
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
 msgid "Attendance Errors:"
-msgstr ""
+msgstr "فرق الحضور:"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -127,23 +128,21 @@ msgid "Click to Sign In at %s."
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_uid:0
-#: field:hr.attendance,create_uid:0
+#: field:hr.action.reason,create_uid:0 field:hr.attendance,create_uid:0
 #: field:hr.attendance.error,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أُنشئ بواسطة"
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_date:0
-#: field:hr.attendance,create_date:0
+#: field:hr.action.reason,create_date:0 field:hr.attendance,create_date:0
 #: field:hr.attendance.error,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "إنشاؤه في"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "Current Month"
-msgstr ""
+msgstr "الشهر الجاري"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -197,7 +196,7 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "Group By"
-msgstr ""
+msgstr "تجميع حسب"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -205,12 +204,11 @@ msgid "Hr Attendance Search"
 msgstr "بحث حضور  الموارد البشرية"
 
 #. module: hr_attendance
-#: field:hr.action.reason,id:0
-#: field:hr.attendance,id:0
+#: field:hr.action.reason,id:0 field:hr.attendance,id:0
 #: field:hr.attendance.error,id:0
 #: field:report.hr_attendance.report_attendanceerrors,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرّف"
 
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
@@ -218,18 +216,16 @@ msgid "Last Sign"
 msgstr "آخر تسجيل دخول"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_uid:0
-#: field:hr.attendance,write_uid:0
+#: field:hr.action.reason,write_uid:0 field:hr.attendance,write_uid:0
 #: field:hr.attendance.error,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_date:0
-#: field:hr.attendance,write_date:0
+#: field:hr.action.reason,write_date:0 field:hr.attendance,write_date:0
 #: field:hr.attendance.error,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث فى"
 
 #. module: hr_attendance
 #. openerp-web
@@ -262,7 +258,7 @@ msgstr "حضوري"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
 #, python-format
 msgid "No Data Available!"
-msgstr ""
+msgstr "لا توجد بيانات متاحة!"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
@@ -363,7 +359,7 @@ msgstr "اليوم"
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
 msgid "Total period"
-msgstr ""
+msgstr "إجمالي الفترة"
 
 #. module: hr_attendance
 #: field:hr.config.settings,group_hr_attendance:0
@@ -379,7 +375,7 @@ msgstr "تحذير"
 #. module: hr_attendance
 #: field:hr.attendance,worked_hours:0
 msgid "Worked Hours"
-msgstr ""
+msgstr "ساعات العمل الفعلية"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:182

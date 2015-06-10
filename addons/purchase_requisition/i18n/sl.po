@@ -1,23 +1,23 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014, 2015.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase_requisition
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-03-24 16:24+0000\n"
-"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
-"Language-Team: Slovenian <translate@matmoz.si>\n"
+"PO-Revision-Date: 2015-06-04 05:30+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-25 06:09+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
 "Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -25,28 +25,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to start a new Call for Bids process. \n"
 "          </p><p>\n"
-"            A Call for Bids is a procedure for generating competing offers "
-"from\n"
+"            A Call for Bids is a procedure for generating competing offers from\n"
 "            different bidders. In the call for bids, you can record the\n"
 "            products you need to buy and generate the creation of RfQs to\n"
-"            suppliers. Once the bids have been registered, you can review "
-"and\n"
+"            suppliers. Once the bids have been registered, you can review and\n"
 "            compare them and you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Zaženi postopek razpisnega povpraševanja. \n"
-"          </p><p>\n"
-"            Razpis je procedura za ustvarjanje konkurenčnih ponudb "
-"različnih\n"
-"            ponudnikov. Pri razpisu lahko beležimo proizvode, ki jih\n"
-"            kupujemo in ustvarimo povpraševanja po predračunih\n"
-"            dobaviteljem. Ko so prispele ponudbe registrirane, jih lahko "
-"pregledujemo\n"
-"            in primerjamo ter nekatere overimo in prekličemo druge.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Zaženi postopek razpisnega povpraševanja. \n          </p><p>\n            Razpis je procedura za ustvarjanje konkurenčnih ponudb različnih\n            ponudnikov. Pri razpisu lahko beležimo proizvode, ki jih\n            kupujemo in ustvarimo povpraševanja po predračunih\n            dobaviteljem. Ko so prispele ponudbe registrirane, jih lahko pregledujemo\n            in primerjamo ter nekatere overimo in prekličemo druge.\n          </p>\n        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
@@ -103,7 +89,6 @@ msgstr "Sklic razpisa"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-#| msgid "Call for Bids in negociation"
 msgid "Call for Bids in negotiation"
 msgstr "Razpisna pogajanja"
 
@@ -154,8 +139,7 @@ msgstr "Preklicano"
 #, python-format
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
-msgstr ""
-"Preklic s strani razpisa povezanega s tem povpraševanjem po predračunu."
+msgstr "Preklic s strani razpisa povezanega s tem povpraševanjem po predračunu."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:85
@@ -179,9 +163,7 @@ msgstr "Spremeni količino"
 msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
-msgstr ""
-"Označite za ustvarjanje razpisov namesto ustvarjanja povpraševanj po "
-"predračunu iz nabave."
+msgstr "Označite za ustvarjanje razpisov namesto ustvarjanja povpraševanj po predračunu iz nabave."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -237,16 +219,14 @@ msgid "Create Request for Quotation"
 msgstr "Ustvari povpraševanje po predračunu"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,create_uid:0
-#: field:purchase.requisition,create_uid:0
+#: field:bid.line.qty,create_uid:0 field:purchase.requisition,create_uid:0
 #: field:purchase.requisition.line,create_uid:0
 #: field:purchase.requisition.partner,create_uid:0
 msgid "Created by"
 msgstr "Ustvaril"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,create_date:0
-#: field:purchase.requisition,create_date:0
+#: field:bid.line.qty,create_date:0 field:purchase.requisition,create_date:0
 #: field:purchase.requisition.line,create_date:0
 #: field:purchase.requisition.partner,create_date:0
 msgid "Created on"
@@ -310,13 +290,10 @@ msgstr "Združi po"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v "
-"html formatu, da se lahko vstavlja v poglede kanban."
+msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v poglede kanban."
 
 #. module: purchase_requisition
-#: field:bid.line.qty,id:0
-#: field:purchase.requisition,id:0
+#: field:bid.line.qty,id:0 field:purchase.requisition,id:0
 #: field:purchase.requisition.line,id:0
 #: field:purchase.requisition.partner,id:0
 msgid "ID"
@@ -338,16 +315,14 @@ msgid "Last Message Date"
 msgstr "Datum zadnjega sporočila"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_uid:0
-#: field:purchase.requisition,write_uid:0
+#: field:bid.line.qty,write_uid:0 field:purchase.requisition,write_uid:0
 #: field:purchase.requisition.line,write_uid:0
 #: field:purchase.requisition.partner,write_uid:0
 msgid "Last Updated by"
 msgstr "Zadnjič posodobil"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_date:0
-#: field:purchase.requisition,write_date:0
+#: field:bid.line.qty,write_date:0 field:purchase.requisition,write_date:0
 #: field:purchase.requisition.line,write_date:0
 #: field:purchase.requisition.partner,write_date:0
 msgid "Last Updated on"
@@ -400,7 +375,6 @@ msgstr "Datum naloga"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-#| msgid "Order Date"
 msgid "Ordering Date"
 msgstr "Datum naročila"
 
@@ -521,8 +495,7 @@ msgstr "Kol."
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
-#: field:bid.line.qty,qty:0
-#: field:purchase.requisition.line,product_qty:0
+#: field:bid.line.qty,qty:0 field:purchase.requisition.line,product_qty:0
 msgid "Quantity"
 msgstr "Količina"
 
@@ -609,15 +582,9 @@ msgstr "Izberi le eno povpraševanje po predračunu (ekskluzivno)"
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
-"it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On "
-"confirmation of a purchase order it does not cancel the remaining orders"
-msgstr ""
-"Izberi le eno povpraševanje po predračunu (ekskluzivno): ob potrditvi "
-"nabavnega naloga prekliče preostale nabavne naloge.\n"
-"Izbira več povpraševanj po predračunih: omogoča več nabavnih nalogov. Ob "
-"potrditvi nabavnega naloga ne prekliče preostalih nalogov."
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
+msgstr "Izberi le eno povpraševanje po predračunu (ekskluzivno): ob potrditvi nabavnega naloga prekliče preostale nabavne naloge.\nIzbira več povpraševanj po predračunih: omogoča več nabavnih nalogov. Ob potrditvi nabavnega naloga ne prekliče preostalih nalogov."
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -667,9 +634,7 @@ msgstr "Dobavitelj"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the bid"
-msgstr ""
-"Tehnično polje za ohranitev začetnih podatkov o količini predlagani v "
-"ponudbi."
+msgstr "Tehnično polje za ohranitev začetnih podatkov o količini predlagani v ponudbi."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -746,9 +711,7 @@ msgstr "Nabavni nalog ste že ustvarili."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr ""
-"Za tega partnerja že imate en %s nabavni nalog. Pred ustvarjanjem novega "
-"predračuna ga morate preklicati."
+msgstr "Za tega partnerja že imate en %s nabavni nalog. Pred ustvarjanjem novega predračuna ga morate preklicati."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:249

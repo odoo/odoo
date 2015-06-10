@@ -24,6 +24,12 @@
 
             <hr/>
 
+            {% if error %}
+                <p class="alert alert-danger">
+                    {{ error }}
+                </p>
+            {% endif %}
+
             <div class="form-group field-db">
                 <label for="db" class="control-label">Select database</label>
                 {% if databases %}

@@ -402,6 +402,10 @@ class Cursor(object):
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
+    @property
+    def closed(self):
+        return self._closed
+
 class TestCursor(Cursor):
     """ A cursor to be used for tests. It keeps the transaction open across
         several requests, and simulates committing, rolling back, and closing.

@@ -1,21 +1,23 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# hoxhe aits <hoxhe0@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:25+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,8 +25,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
@@ -130,9 +131,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"اختار خيار لامر الدفع:‘ثابت‘ وفقا لتاريخ مححد منك. ‘مباشرة‘ وفقًا للتنفيذ "
-"المباشر. ‘تاريخ مستحق‘ وفقًا لتاريخ مجدول للتنفيذ."
+msgstr "اختار خيار لامر الدفع:‘ثابت‘ وفقا لتاريخ مححد منك. ‘مباشرة‘ وفقًا للتنفيذ المباشر. ‘تاريخ مستحق‘ وفقًا لتاريخ مجدول للتنفيذ."
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -150,8 +149,7 @@ msgid "Communication Type"
 msgstr "نوع الاتصال"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "شركة"
@@ -185,21 +183,18 @@ msgstr "تمً انشاءه"
 #. module: account_payment
 #: field:account.payment.make.payment,create_uid:0
 #: field:account.payment.populate.statement,create_uid:0
-#: field:payment.line,create_uid:0
-#: field:payment.mode,create_uid:0
-#: field:payment.order,create_uid:0
-#: field:payment.order.create,create_uid:0
+#: field:payment.line,create_uid:0 field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0 field:payment.order.create,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أُنشئ بواسطة"
 
 #. module: account_payment
 #: field:account.payment.make.payment,create_date:0
 #: field:account.payment.populate.statement,create_date:0
-#: field:payment.mode,create_date:0
-#: field:payment.order,create_date:0
+#: field:payment.mode,create_date:0 field:payment.order,create_date:0
 #: field:payment.order.create,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "إنشاؤه في"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -250,8 +245,7 @@ msgid "Draft"
 msgstr "مسودة"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "تاريخ الإستحقاق"
 
@@ -281,7 +275,7 @@ msgstr "معلومات الادخال"
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr ""
+msgstr "سطور القيود"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -325,18 +319,16 @@ msgstr "معلومات عامة"
 #: view:payment.mode:account_payment.view_payment_mode_search
 #: view:payment.order:account_payment.view_payment_order_search
 msgid "Group By"
-msgstr ""
+msgstr "تجميع حسب"
 
 #. module: account_payment
 #: field:account.payment.make.payment,id:0
-#: field:account.payment.populate.statement,id:0
-#: field:payment.line,id:0
-#: field:payment.mode,id:0
-#: field:payment.order,id:0
+#: field:account.payment.populate.statement,id:0 field:payment.line,id:0
+#: field:payment.mode,id:0 field:payment.order,id:0
 #: field:payment.order.create,id:0
 #: field:report.account_payment.report_paymentorder,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرّف"
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -384,7 +376,7 @@ msgstr "مرجع للفاتورة"
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Invoices"
-msgstr ""
+msgstr "الفواتير"
 
 #. module: account_payment
 #: view:payment.mode:account_payment.view_payment_mode_search
@@ -400,22 +392,18 @@ msgstr "عناصر اليومية"
 #. module: account_payment
 #: field:account.payment.make.payment,write_uid:0
 #: field:account.payment.populate.statement,write_uid:0
-#: field:payment.line,write_uid:0
-#: field:payment.mode,write_uid:0
-#: field:payment.order,write_uid:0
-#: field:payment.order.create,write_uid:0
+#: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_date:0
 #: field:account.payment.populate.statement,write_date:0
-#: field:payment.line,write_date:0
-#: field:payment.mode,write_date:0
-#: field:payment.order,write_date:0
-#: field:payment.order.create,write_date:0
+#: field:payment.line,write_date:0 field:payment.mode,write_date:0
+#: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث فى"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -456,8 +444,7 @@ msgid "Owner Account"
 msgstr "حساب المالك"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: view:website:account_payment.report_paymentorder
 msgid "Partner"
 msgstr "الشريك"
@@ -585,7 +572,7 @@ msgstr "مسؤول"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "تاريخ مجدول"
 
 #. module: account_payment
 #: view:payment.order.create:account_payment.view_create_payment_order
@@ -689,9 +676,7 @@ msgstr ""
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"استخدم كرسالة بينت طلب العميل و الشركة الحالية. تصور‘ماذا تريد ان تقول "
-"للمتلقي عن هذا التقرير؟‘"
+msgstr "استخدم كرسالة بينت طلب العميل و الشركة الحالية. تصور‘ماذا تريد ان تقول للمتلقي عن هذا التقرير؟‘"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -735,4 +720,4 @@ msgstr "إ_ضافه الى أمر الدفع"
 #: view:payment.order.create:account_payment.view_create_payment_order
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "or"
-msgstr ""
+msgstr "أو"

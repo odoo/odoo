@@ -61,7 +61,10 @@
             var link = $('.js_language_selector a[data-default-lang]')[0];
             if (link) {
                 link.search += (link.search ? '&' : '?') + 'enable_editor=1';
-                window.location = link.attributes.href.value;
+                var url = link.pathname + link.search + window.location.hash;
+                link.pathname = '/website/lang/default';
+                link.search = '?' + $.param({r: url});
+                window.location = link.href;
             }
         },
         translate: function () {

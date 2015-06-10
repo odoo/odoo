@@ -1,39 +1,33 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-04-26 03:02+0000\n"
-"Last-Translator: user3 <Unknown>\n"
-"Language-Team: Russian <http://translate.starlight-"
-"biz.com//projects/odoo/hr_attendance/ru/>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-27 05:37+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
 "Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Отрицательное значение обозначает, что сотрудник работал больше, чем "
-"указано."
+msgid "(*) A negative delay means that the employee worked more than encoded."
+msgstr "(*) Отрицательное значение обозначает, что сотрудник работал больше, чем указано."
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Положительное значение означает, что сотрудник работал меньше, чем "
-"записано."
+msgstr "(*) Положительное значение означает, что сотрудник работал меньше, чем записано."
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -41,8 +35,7 @@ msgid "Absent"
 msgstr "Отсутствует"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
+#: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
 msgstr "Действие"
 
@@ -133,15 +126,13 @@ msgid "Click to Sign In at %s."
 msgstr "Нажмите чтобы Войти в %s."
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_uid:0
-#: field:hr.attendance,create_uid:0
+#: field:hr.action.reason,create_uid:0 field:hr.attendance,create_uid:0
 #: field:hr.attendance.error,create_uid:0
 msgid "Created by"
 msgstr "Создано"
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_date:0
-#: field:hr.attendance,create_date:0
+#: field:hr.action.reason,create_date:0 field:hr.attendance,create_date:0
 #: field:hr.attendance.error,create_date:0
 msgid "Created on"
 msgstr "Создан"
@@ -198,9 +189,7 @@ msgstr "Дата окончания"
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Ошибка! Вход (соответственно и Выход) должен следовать за Выходом (соотв. "
-"Входом)"
+msgstr "Ошибка! Вход (соответственно и Выход) должен следовать за Выходом (соотв. Входом)"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -213,8 +202,7 @@ msgid "Hr Attendance Search"
 msgstr "Поиск по посещаемости"
 
 #. module: hr_attendance
-#: field:hr.action.reason,id:0
-#: field:hr.attendance,id:0
+#: field:hr.action.reason,id:0 field:hr.attendance,id:0
 #: field:hr.attendance.error,id:0
 #: field:report.hr_attendance.report_attendanceerrors,id:0
 msgid "ID"
@@ -226,15 +214,13 @@ msgid "Last Sign"
 msgstr "Последняя подпись"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_uid:0
-#: field:hr.attendance,write_uid:0
+#: field:hr.action.reason,write_uid:0 field:hr.attendance,write_uid:0
 #: field:hr.attendance.error,write_uid:0
 msgid "Last Updated by"
 msgstr "Последний раз обновлено"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_date:0
-#: field:hr.attendance,write_date:0
+#: field:hr.action.reason,write_date:0 field:hr.attendance,write_date:0
 #: field:hr.attendance.error,write_date:0
 msgid "Last Updated on"
 msgstr "Последний раз обновлено"
@@ -356,10 +342,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr ""
-"Функция учета рабочего времени направлена на контроль за посещаемостью и "
-"Входом / Выходом сотрудников. Вы также можете соединить эту функцию с "
-"системой  посещаемости с помощью функции веб-служб Odoo."
+msgstr "Функция учета рабочего времени направлена на контроль за посещаемостью и Входом / Выходом сотрудников. Вы также можете соединить эту функцию с системой  посещаемости с помощью функции веб-служб Odoo."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -398,11 +381,9 @@ msgstr "Наработанные часы"
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
-"Вы пытались %s с предшествующей даты к другому событию!↵ \n"
-"Попробуйте связаться с HR-менеджер, чтобы исправить посещаемость."
+msgstr "Вы пытались %s с предшествующей даты к другому событию!↵ \nПопробуйте связаться с HR-менеджер, чтобы исправить посещаемость."
 
 #. module: hr_attendance
 #: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
 msgid "or"
-msgstr ""
+msgstr "или"
