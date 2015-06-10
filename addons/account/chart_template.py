@@ -83,6 +83,9 @@ class AccountChartTemplate(models.Model):
     property_account_income_categ = fields.Many2one('account.account.template', string='Income Category Account')
     property_account_expense = fields.Many2one('account.account.template', string='Expense Account on Product Template')
     property_account_income = fields.Many2one('account.account.template', string='Income Account on Product Template')
+    property_stock_account_input_categ = fields.Many2one('account.account.template')
+    property_stock_account_output_categ = fields.Many2one('account.account.template')
+    property_stock_valuation_account_id = fields.Many2one('account.account.template')
 
     @api.one
     def try_loading_for_current_company(self):
@@ -228,6 +231,16 @@ class AccountChartTemplate(models.Model):
                 else:
                     #create the property
                     PropertyObj.create(vals)
+        stock_properties = [
+            'property_stock_account_input_categ',
+            'property_stock_account_output_categ',
+            'property_stock_valuation_account_id',
+        ]
+        for stock_property in stock_properties:
+            account = getattr(self, stock_property)
+            value = account and acc_template_ref[account.id] or False
+            if value:
+                company.write({stock_property: value})
         return True
 
     @api.multi
