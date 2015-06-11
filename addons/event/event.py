@@ -80,6 +80,9 @@ class event_event(models.Model):
     seats_used = fields.Integer(
         oldname='register_attended', string='Number of Participations',
         store=True, readonly=True, compute='_compute_seats')
+    seats_expected = fields.Integer(
+        string='Number of Expected Attendees',
+        readonly=True, compute='_compute_seats')
 
     @api.multi
     @api.depends('seats_max', 'registration_ids.state')
@@ -108,6 +111,7 @@ class event_event(models.Model):
         for event in self:
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
+            event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
     # Registration fields
     registration_ids = fields.One2many(
