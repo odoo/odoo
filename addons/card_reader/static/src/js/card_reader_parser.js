@@ -261,39 +261,6 @@ ScreenWidget.include({
     }
 });
 
-// Normally, everything that is tendered is paid. This is not the case
-// anymore, because now we can have paymentlines that are waiting for
-// a swipe
-var _orderproto = pos_model.Order.prototype;
-pos_model.Order = pos_model.Order.extend({
-    get_due: function(paymentline) {
-        var due = 0;
-        if (!paymentline) {
-            due = this.get_total_with_tax() - this.get_total_paid();
-        } else {
-            due = this.get_total_with_tax();
-            var lines = this.paymentlines.models;
-            for (var i = 0; i < lines.length; i++) {
-                if (lines[i] === paymentline) {
-                    break;
-                } else if (! lines[i].swipe_pending) {
-                    due -= lines[i].get_amount();
-                }
-            }
-        }
-        return round_pr(Math.max(0,due), this.pos.currency.rounding);
-    },
-    get_total_paid: function() {
-        return this.paymentlines.reduce((function(sum, paymentLine) {
-            if (! paymentLine.swipe_pending) {
-                return sum + paymentLine.get_amount();
-            } else {
-                return sum;
-            }
-        }), 0);
-    },
-});
-
 // On Payment screen, allow electronic payments
 PaymentScreenWidget.include({
     _get_swipe_pending_line: function () {
@@ -366,15 +333,23 @@ PaymentScreenWidget.include({
 
         var self = this;
         var decodedMagtek = decodeMagtek(parsed_result.code);
+        var swipe_pending_line = self._get_swipe_pending_line();
 
-        // Construct a dictionary to store all data from the magnetic card
+        var purchase_amount = 0;
+
+        if (swipe_pending_line) {
+            purchase_amount = swipe_pending_line.get_amount();
+        } else {
+            purchase_amount = this.pos.get_order().get_due();
+        }
+
         var transaction = {
             'encrypted_key'     : decodedMagtek['encrypted_key'],
             'encrypted_block'   : decodedMagtek['encrypted_block'],
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'Sale',
             'invoice_no'        : self.pos.get_order().uid.replace(/-/g,''),
-            'purchase'          : parsed_result.total,
+            'purchase'          : purchase_amount,
             'journal_id'        : parsed_result.journal_id,
         };
 
@@ -417,7 +392,6 @@ PaymentScreenWidget.include({
                         } else {
                             // If the payment is approved, add a payment line
                             var order = self.pos.get_order();
-                            var swipe_pending_line = self._get_swipe_pending_line();
 
                             if (swipe_pending_line) {
                                 order.select_paymentline(swipe_pending_line);
@@ -426,7 +400,7 @@ PaymentScreenWidget.include({
                             }
 
                             order.selected_paymentline.swipe_pending = false;
-                            order.selected_paymentline.paid = true; // todo jov
+                            order.selected_paymentline.paid = true;
                             order.selected_paymentline.amount = response.authorize;
                             order.selected_paymentline.card_number = decodedMagtek['number'];
                             order.selected_paymentline.card_brand = response.card_type;
@@ -485,33 +459,19 @@ PaymentScreenWidget.include({
 
     credit_code_action: function (parsed_result) {
         self = this;
-        parsed_result.total = this.pos.get_order().get_due();
 
-        if (parsed_result.total) {
-            if (onlinePaymentJournal.length === 1) {
-                parsed_result.journal_id = onlinePaymentJournal[0].item;
-                self.credit_code_transaction(parsed_result);
-            } else { // this is for supporting another payment system like mercury
-                this.gui.show_popup('selection',{
-                    title:   'Pay ' + parsed_result.total.toFixed(2) + ' with : ',
-                    list:    onlinePaymentJournal,
-                    confirm: function (item) {
-                        parsed_result.journal_id = item;
-                        self.credit_code_transaction(parsed_result);
-                    },
-                    cancel:  self.credit_code_cancel,
-                });
-            }
-        }
-        else {
-            var def = new $.Deferred();
-
-            this.gui.show_popup('payment-transaction', {
-                transaction: def
-            });
-
-            def.resolve({
-                "message": "Order is already fully paid."
+        if (onlinePaymentJournal.length === 1) {
+            parsed_result.journal_id = onlinePaymentJournal[0].item;
+            self.credit_code_transaction(parsed_result);
+        } else { // this is for supporting another payment system like mercury
+            this.gui.show_popup('selection',{
+                title:   'Pay ' + this.pos.get_order().get_due().toFixed(2) + ' with : ',
+                list:    onlinePaymentJournal,
+                confirm: function (item) {
+                    parsed_result.journal_id = item;
+                    self.credit_code_transaction(parsed_result);
+                },
+                cancel:  self.credit_code_cancel,
             });
         }
     },
@@ -637,6 +597,23 @@ PaymentScreenWidget.include({
         if (allowOnlinePayment(this.pos)) {
             this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_code_action, this));
         }
+    },
+
+    // before validating, get rid of any paymentlines that are waiting
+    // on a swipe.
+    validate_order: function(force_validation) {
+        if (this.pos.get_order().is_paid() && ! this.invoicing) {
+            var lines = this.pos.get_order().get_paymentlines();
+
+            for (var i = 0; i < lines.length; i++) {
+                if (lines[i].swipe_pending) {
+                    this.pos.get_order().remove_paymentline(lines[i]);
+                    this.render_paymentlines();
+                }
+            }
+        }
+
+        this._super();
     }
 });
 

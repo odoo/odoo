@@ -33,7 +33,7 @@ class account_bank_statement_line(models.Model):
 
     card_number = fields.Char(string='Card Number', size=4, help='The last 4 numbers of the card used to pay')
     prefixed_card_number = fields.Char(string='Card Number', compute='_compute_prefixed_card_number')
-    card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, Maestro, ...)')
+    card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, AMEX, ...)')
     card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
     ref_no = fields.Char(string='Mercury reference number')
     record_no = fields.Char(string='Mercury record number')
@@ -72,17 +72,26 @@ class pos_order_card(models.Model):
     @api.model
     def add_payment(self, order_id, data):
         statement_id = super(pos_order_card, self).add_payment(order_id, data)
-        statement_line = self.env['account.bank.statement.line'].search([('statement_id', '=', statement_id),
+        statement_lines = self.env['account.bank.statement.line'].search([('statement_id', '=', statement_id),
                                                                          ('pos_statement_id', '=', order_id),
                                                                          ('journal_id', '=', data['journal']),
                                                                          ('amount', '=', data['amount'])])
-        statement_line.card_number = data.get('card_number')
-        statement_line.card_brand = data.get('card_brand')
-        statement_line.card_owner_name = data.get('card_owner_name')
 
-        statement_line.ref_no = data.get('ref_no')
-        statement_line.record_no = data.get('record_no')
-        statement_line.invoice_no = data.get('invoice_no')
+        # we can get multiple statement_lines when there are >1 credit
+        # card payments with the same amount. In that case it doesn't
+        # matter which statement line we pick, just pick one that
+        # isn't already used.
+        for line in statement_lines:
+            if not line.card_brand:
+                line.card_brand = data.get('card_brand')
+                line.card_number = data.get('card_number')
+                line.card_owner_name = data.get('card_owner_name')
+
+                line.ref_no = data.get('ref_no')
+                line.record_no = data.get('record_no')
+                line.invoice_no = data.get('invoice_no')
+
+                break
 
         return statement_id
 
