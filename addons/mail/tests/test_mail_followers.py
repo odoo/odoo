@@ -29,15 +29,15 @@ class TestMailFollowers(TestMail):
         self.assertEqual(self.group_pigs.message_follower_ids, self.partner_1)
 
         # Set followers through the (6, 0, IDs) command
-        self.group_pigs.write({'message_follower_ids': [(6, 0, [self.partner_2.id, self.user_employee_2.partner_id.id])]})
+        self.group_pigs.write({'message_follower_ids': [(6, 0, [self.partner_2.id, self.env.user.partner_id.id])]})
         self.assertEqual(self.group_pigs.message_follower_ids,
-                         self.partner_2 | self.user_employee_2.partner_id)
+                         self.partner_2 | self.env.user.partner_id)
 
         # Add 1 follower through the (0, 0, values) command
         self.group_pigs.write({'message_follower_ids': [(0, 0, {'name': 'Patrick Fiori'})]})
         partner_patrick = self.env['res.partner'].search([('name', '=', 'Patrick Fiori')], limit=1)
         self.assertEqual(self.group_pigs.message_follower_ids,
-                         self.partner_2 | self.user_employee_2.partner_id | partner_patrick)
+                         self.partner_2 | self.env.user.partner_id | partner_patrick)
 
         # Remove all followers through a (5, 0) command
         self.group_pigs.write({'message_follower_ids': [(5, 0)]})

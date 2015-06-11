@@ -176,6 +176,26 @@ Content-Type: text/html;
 
 class TestMailgateway(TestMail):
 
+    def setUp(self):
+        super(TestMailgateway, self).setUp()
+        # groups@.. will cause the creation of new mail.channels
+        self.mail_channel_model = self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1)
+        self.alias = self.env['mail.alias'].create({
+            'alias_name': 'groups',
+            'alias_user_id': False,
+            'alias_model_id': self.mail_channel_model.id,
+            'alias_contact': 'everyone'})
+
+        # Set a first message on public group to test update and hierarchy
+        self.fake_email = self.env['mail.message'].create({
+            'model': 'mail.channel',
+            'res_id': self.group_public.id,
+            'subject': 'Public Discussion',
+            'message_type': 'email',
+            'author_id': self.partner_1.id,
+            'message_id': '<123456-openerp-%s-mail.channel@%s>' % (self.group_public.id, socket.gethostname()),
+        })
+
     @mute_logger('openerp.addons.mail.models.mail_thread')
     def test_message_parse(self):
         """ Test parsing of various scenarios of incoming emails """
@@ -513,7 +533,7 @@ class TestMailgateway(TestMail):
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
     def test_private_discussion(self):
         """ Testing private discussion between partners. """
-        msg1_pids = [self.user_employee_2.partner_id.id, self.partner_1.id]
+        msg1_pids = [self.env.user.partner_id.id, self.partner_1.id]
 
         # Do: Raoul writes to Bert and Administrator, with a thread_model in context that should not be taken into account
         msg1 = self.env['mail.thread'].with_context({
@@ -522,9 +542,9 @@ class TestMailgateway(TestMail):
 
         # Test: message recipients
         msg = self.env['mail.message'].browse(msg1.id)
-        self.assertEqual(msg.partner_ids, self.user_employee_2.partner_id | self.partner_1,
+        self.assertEqual(msg.partner_ids, self.env.user.partner_id | self.partner_1,
                          'message_post: private discussion: incorrect recipients')
-        self.assertEqual(msg.notified_partner_ids, self.user_employee_2.partner_id | self.partner_1,
+        self.assertEqual(msg.notified_partner_ids, self.env.user.partner_id | self.partner_1,
                          'message_post: private discussion: incorrect notified recipients')
         self.assertEqual(msg.model, False,
                          'message_post: private discussion: context key "thread_model" not correctly ignored when having no res_id')
@@ -541,9 +561,9 @@ class TestMailgateway(TestMail):
         # Test: message recipients
         self.assertEqual(msg2.author_id, self.partner_1,
                          'message_post: private discussion: wrong author through mailgatewya based on email')
-        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
+        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg2.notified_partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
+        self.assertEqual(msg2.notified_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect notified recipients when replying')
 
         # Do: Bert replies through chatter (is a customer)
@@ -551,7 +571,7 @@ class TestMailgateway(TestMail):
 
         # Test: message recipients
         msg = self.env['mail.message'].browse(msg3.id)
-        self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
+        self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg.notified_partner_ids, self.user_employee.partner_id | self.user_employee_2.partner_id,
+        self.assertEqual(msg.notified_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect notified recipients when replying')

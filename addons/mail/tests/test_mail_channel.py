@@ -8,6 +8,17 @@ from openerp.tools import mute_logger
 
 class TestMailGroup(TestMail):
 
+    def setUp(self):
+        super(TestMailGroup, self).setUp()
+        # Private: private group
+        self.group_private = self.env['mail.channel'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True
+        }).create({
+            'name': 'Private',
+            'public': 'private'}
+        ).with_context({'mail_create_nosubscribe': False})
+
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_access_rights_public(self):
         # Read public group -> ok

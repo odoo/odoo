@@ -7,15 +7,16 @@ from openerp.tools.misc import mute_logger
 class test_portal(TestMail):
 
     def test_mail_compose_access_rights(self):
-        port_msg = self.group_portal.message_post(body='Message')
+        self.group_pigs.write({'group_public_id': self.env.ref('base.group_portal').id})
+        port_msg = self.group_pigs.message_post(body='Message')
 
         # Do: Chell comments Pigs, ok because can write on it (public group)
-        self.group_portal.sudo(self.user_portal).message_post(body='I love Pigs', message_type='comment', subtype='mail.mt_comment')
+        self.group_pigs.sudo(self.user_portal).message_post(body='I love Pigs', message_type='comment', subtype='mail.mt_comment')
         # Do: Chell creates a mail.compose.message record on Pigs, because he uses the wizard
         compose = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
             'default_model': 'mail.channel',
-            'default_res_id': self.group_portal.id
+            'default_res_id': self.group_pigs.id
         }).sudo(self.user_portal).create({
             'subject': 'Subject',
             'body': 'Body text',

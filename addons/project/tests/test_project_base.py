@@ -34,7 +34,7 @@ class TestProjectBase(TestMail):
             'name': 'Pigs',
             'privacy_visibility': 'public',
             'alias_name': 'project+pigs',
-            'partner_id': cls.user_employee_2.partner_id.id})
+            'partner_id': cls.partner_1.id})
         # Already-existing tasks in Pigs
         cls.task_1 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs UserTask',

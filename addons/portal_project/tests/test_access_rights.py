@@ -11,6 +11,14 @@ class TestPortalProjectBase(TestProjectBase):
 
     def setUp(self):
         super(TestPortalProjectBase, self).setUp()
+        self.user_noone = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
+            'name': 'Noemie NoOne',
+            'login': 'noemie',
+            'alias_name': 'noemie',
+            'email': 'n.n@example.com',
+            'signature': '--\nNoemie',
+            'notify_email': 'always',
+            'groups_id': [(6, 0, [])]})
 
         self.task_3 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Test3', 'user_id': self.user_portal.id, 'project_id': self.project_pigs.id})

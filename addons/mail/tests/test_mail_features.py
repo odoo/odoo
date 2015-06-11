@@ -141,12 +141,12 @@ class TestMailFeatures(TestMail):
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_needaction(self):
         na_emp1_base = self.env['mail.message'].sudo(self.user_employee)._needaction_count(domain=[])
-        na_emp2_base = self.env['mail.message'].sudo(self.user_employee_2)._needaction_count(domain=[])
+        na_emp2_base = self.env['mail.message'].sudo()._needaction_count(domain=[])
 
         self.group_pigs.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[self.user_employee.partner_id.id])
 
         na_emp1_new = self.env['mail.message'].sudo(self.user_employee)._needaction_count(domain=[])
-        na_emp2_new = self.env['mail.message'].sudo(self.user_employee_2)._needaction_count(domain=[])
+        na_emp2_new = self.env['mail.message'].sudo()._needaction_count(domain=[])
         self.assertEqual(na_emp1_new, na_emp1_base + 1)
         self.assertEqual(na_emp2_new, na_emp2_base)
 
@@ -157,22 +157,6 @@ class TestMailFeatures(TestMail):
 
 
 class TestMessagePost(TestMail):
-
-    def setUp(self):
-        super(TestMessagePost, self).setUp()
-        self._attach_1 = self.env['ir.attachment'].sudo(self.user_employee).create({
-            'name': 'Attach1', 'datas_fname': 'Attach1',
-            'datas': 'bWlncmF0aW9uIHRlc3Q=',
-            'res_model': 'mail.compose.message', 'res_id': 0})
-        self._attach_2 = self.env['ir.attachment'].sudo(self.user_employee).create({
-            'name': 'Attach2', 'datas_fname': 'Attach2',
-            'datas': 'bWlncmF0aW9uIHRlc3Q=',
-            'res_model': 'mail.compose.message', 'res_id': 0})
-        self._attach_3 = self.env['ir.attachment'].sudo(self.user_employee).create({
-            'name': 'Attach3', 'datas_fname': 'Attach3',
-            'datas': 'bWlncmF0aW9uIHRlc3Q=',
-            'res_model': 'mail.compose.message', 'res_id': 0})
-        self.group_pigs.message_subscribe_users(user_ids=self.user_employee.id)
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_no_subscribe_author(self):
@@ -217,10 +201,19 @@ class TestMessagePost(TestMail):
             ('List1', 'My first attachment'),
             ('List2', 'My second attachment')
         ]
+        _attach_1 = self.env['ir.attachment'].sudo(self.user_employee).create({
+            'name': 'Attach1', 'datas_fname': 'Attach1',
+            'datas': 'bWlncmF0aW9uIHRlc3Q=',
+            'res_model': 'mail.compose.message', 'res_id': 0})
+        _attach_2 = self.env['ir.attachment'].sudo(self.user_employee).create({
+            'name': 'Attach2', 'datas_fname': 'Attach2',
+            'datas': 'bWlncmF0aW9uIHRlc3Q=',
+            'res_model': 'mail.compose.message', 'res_id': 0})
         # partner_2 does not want to receive notification email
         self.partner_2.write({'notify_email': 'none'})
+        self.user_admin.write({'notify_email': 'always'})
         # subscribe second employee to the group to test notifications
-        self.group_pigs.message_subscribe_users(user_ids=self.user_employee_2.id)
+        self.group_pigs.message_subscribe_users(user_ids=[self.env.user.id])
 
         # use aliases
         _domain = 'schlouby.fr'
@@ -230,14 +223,14 @@ class TestMessagePost(TestMail):
 
         msg = self.group_pigs.sudo(self.user_employee).message_post(
             body=_body, subject=_subject, partner_ids=[self.partner_1.id, self.partner_2.id],
-            attachment_ids=[self._attach_1.id, self._attach_2.id], attachments=_attachments,
+            attachment_ids=[_attach_1.id, _attach_2.id], attachments=_attachments,
             message_type='comment', subtype='mt_comment')
 
         # message content
         self.assertEqual(msg.subject, _subject)
         self.assertEqual(msg.body, _body)
         self.assertEqual(msg.partner_ids, self.partner_1 | self.partner_2)
-        self.assertEqual(msg.notified_partner_ids, self.partner_1 | self.partner_2 | self.user_employee_2.partner_id)
+        self.assertEqual(msg.notified_partner_ids, self.partner_1 | self.partner_2 | self.env.user.partner_id)
         # attachments
         self.assertEqual(set(msg.attachment_ids.mapped('res_model')), set(['mail.channel']),
                          'message_post: all atttachments should be linked to the mail.channel model')
@@ -245,7 +238,7 @@ class TestMessagePost(TestMail):
                          'message_post: all atttachments should be linked to the pigs group')
         self.assertEqual(set([x.decode('base64') for x in msg.attachment_ids.mapped('datas')]),
                          set(['migration test', _attachments[0][1], _attachments[1][1]]))
-        self.assertTrue(set([self._attach_1.id, self._attach_2.id]).issubset(msg.attachment_ids.ids),
+        self.assertTrue(set([_attach_1.id, _attach_2.id]).issubset(msg.attachment_ids.ids),
                         'message_post: mail.message attachments duplicated')
         # notifications
         self.assertFalse(self.env['mail.mail'].search([('mail_message_id', '=', msg.message_id)]),
@@ -257,11 +250,11 @@ class TestMessagePost(TestMail):
                          'message_post: notification email wrong email_from: should use alias of sender')
         self.assertEqual(set(m['email_to'][0] for m in self._mails),
                          set(['%s <%s>' % (self.partner_1.name, self.partner_1.email),
-                              '%s <%s>' % (self.user_employee_2.name, self.user_employee_2.email)]))
+                              '%s <%s>' % (self.env.user.name, self.env.user.email)]))
         self.assertFalse(any(len(m['email_to']) != 1 for m in self._mails),
                          'message_post: notification email should be sent to one partner at a time')
         self.assertEqual(set(m['reply_to'] for m in self._mails),
-                         set(['%s %s <%s@%s>' % (self._company_name, self.group_pigs.name, self.group_pigs.alias_name, _domain)]),
+                         set(['%s %s <%s@%s>' % (self.env.user.company_id.name, self.group_pigs.name, self.group_pigs.alias_name, _domain)]),
                          'message_post: notification email should use group aliases and data for reply to')
         self.assertTrue(all(_subject in m['subject'] for m in self._mails))
         self.assertTrue(all(_body in m['body'] for m in self._mails))

@@ -10,15 +10,17 @@ class TestMailMessage(TestMail):
 
     def setUp(self):
         super(TestMailMessage, self).setUp()
-        self.attachment = self.env['ir.attachment'].create({
-            'datas': 'My attachment'.encode('base64'),
-            'name': 'doc.txt',
-            'datas_fname': 'doc.txt'})
+        self.group_private = self.env['mail.channel'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True
+        }).create({
+            'name': 'Private',
+            'public': 'private'}
+        ).with_context({'mail_create_nosubscribe': False})
         self.message = self.env['mail.message'].create({
             'body': 'My Body',
             'model': 'mail.channel',
             'res_id': self.group_private.id,
-            'attachment_ids': [(4, self.attachment.id)],
         })
 
     def test_mail_message_values_basic(self):
@@ -58,7 +60,7 @@ class TestMailMessage(TestMail):
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({})
         self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self._company_name, alias_catchall, alias_domain))
+        self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
 
     def test_mail_message_values_document_no_alias(self):
@@ -82,7 +84,7 @@ class TestMailMessage(TestMail):
             'res_id': self.group_pigs.id
         })
         self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self._company_name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
+        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
 
     def test_mail_message_values_document_alias_catchall(self):
@@ -96,7 +98,7 @@ class TestMailMessage(TestMail):
             'res_id': self.group_pigs.id
         })
         self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self._company_name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
+        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
 
     def test_mail_message_values_no_auto_thread(self):
@@ -180,10 +182,15 @@ class TestMailMessage(TestMail):
         self.message.sudo(self.user_portal).read(['body', 'message_type', 'subtype_id'])
 
     def test_mail_message_access_read_notification(self):
+        attachment = self.env['ir.attachment'].create({
+            'datas': 'My attachment'.encode('base64'),
+            'name': 'doc.txt',
+            'datas_fname': 'doc.txt'})
+        self.message.write({'attachment_ids': [(4, attachment.id)]})
         self.env['mail.notification'].create({'message_id': self.message.id, 'partner_id': self.user_employee.partner_id.id})
         self.message.sudo(self.user_employee).read()
         # Test: Bert downloads attachment, ok because he can read message
-        self.message.sudo(self.user_employee).download_attachment(self.attachment.id)
+        self.message.sudo(self.user_employee).download_attachment(attachment.id)
 
     def test_mail_message_access_read_author(self):
         self.message.write({'author_id': self.user_employee.partner_id.id})
