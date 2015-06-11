@@ -42,11 +42,27 @@
                             changed = true;
                         }
                     });
-                } while (changed && transitive)
+                } while (changed && transitive);
                 return deps;
             },
             get_dependents: function (name) {
-                return _.pluck(_.where(job_deps, {from: name}), 'to');            
+                return _.pluck(_.where(job_deps, {from: name}), 'to');
+            },
+            get_waited_jobs: function () {
+                return _.uniq(_.map(jobs, function(job) {return job.name;}));
+            },
+            get_missing_jobs: function () {
+                var self = this;
+                var waited = this.get_waited_jobs();
+                var missing = [];
+                _.each(waited, function(job) {
+                    _.each(self.get_dependencies(job), function(job) {
+                        if (!(job in self.services)) {
+                            missing.push(job);
+                        }
+                    });
+                });
+                return _.difference(_.uniq(missing), waited);
             },
             factories: factories,
             services: services,
