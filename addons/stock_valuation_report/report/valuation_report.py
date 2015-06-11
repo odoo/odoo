@@ -39,6 +39,28 @@ class valuation_report(report_sxw.rml_parse):
             res = [{'name': t[1], 'qty': t[2], 'value': t[3]} for t in self.cr.fetchall()]
         return res
 
+    def _get_location_queries(self, form):
+        method = form['method']
+        warehouse = form['warehouse_id']
+        location = form['location_id']
+        put_params = []
+        if method in ('internal', 'internal_transit'):
+            if method == 'internal':
+                type = "('internal')"
+            else:
+                type = "('internal', 'transit')"
+            str_in = "destination.usage in " + type + " and source.usage not in " + type
+            str_out = "destination.usage not in " + type + " and source.usage in " + type
+        else: # warehouse or location
+            if method == 'warehouse':
+                location = self.pool['stock.warehouse'].browse(self.cr, self.uid, warehouse).view_location_id.id
+
+            loc = self.pool['stock.location'].browse(self.cr, self.uid, location)
+            str_in = " destination.id < %s and destination.id >= %s and source.id >= %s and source.id < %s "
+            str_out = " des"
+            put_params = [loc.parent_left, loc.parent_right, loc.parent_left, loc.parent_right]
+
+
     def _get_standard_average(self, form):
         date = form['date']
         category = form['product_category_id'][0]

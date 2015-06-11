@@ -9,11 +9,17 @@ class wizard_valuation_report(osv.osv_memory):
         'date': fields.datetime('Date', required=True),
         'product_category_id': fields.many2one('product.category', 'Category', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
+        'warehouse_id': fields.many2one('stock.warehouse', string="Warehouse"),
+        'location_id': fields.many2one('stock.location', string="Location"),
+        'method': fields.selection([('internal', 'All Internal Locations'), ('internal_transit', 'All Internal and Transit Locations'),
+                                    ('location', 'Specific Location'), ('warehouse', 'Specific Warehouse')],
+                                   string="Which Locations?")
     }
 
     _defaults = {
         'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'method': 'internal',
     }
 
     def print_report(self, cr, uid, ids, context=None):
