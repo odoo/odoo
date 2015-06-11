@@ -1104,7 +1104,7 @@
         </ul>
     </div>
 </t>
-<t t-name="Priority">
+<t t-name="FormPriority">
     <ul style="list-style: none; padding-left: 2px; display: inline-block;">
         <t t-foreach="widget.priorities" t-as="rec" >
             <li t-att-data-value="rec.click_value" style="display: inline-block;">
@@ -1115,6 +1115,14 @@
             </li>
         </t>
     </ul>
+</t>
+<t t-name="Priority">
+    <div class="o_priority">
+        <t t-foreach="widget.priorities" t-as="rec" >
+            <a t-if="!widget.get('readonly')" href="#" t-att-data-value="rec.click_value" t-att-title="rec.name" t-att-class="widget.get('value') gte rec.value and 'fa fa-star o_star_on' or 'fa fa-star o_star_off'"/>
+            <span t-if="widget.get('readonly')" t-att-data-value="rec.click_value" t-att-title="rec.name" t-att-class="widget.get('value') gte rec.value and 'fa fa-star o_star_on' or 'fa fa-star o_star_off'"/>
+        </t>
+    </div>
 </t>
 <t t-name="FieldEmail">
     <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
@@ -1938,8 +1946,10 @@
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
 <t t-name="StatInfo">
-    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/>
+    <span class="o_stat_value"><t t-esc="value"/></span>
+    <span class="o_stat_text"><t t-esc="text"/></span>
 </t>
+
 <button t-name="toggle_button" type="button"
     t-att-title="widget.string"
     style="box-shadow: none; white-space:nowrap;">

@@ -285,7 +285,7 @@ var Priority = FieldChar.extend({
     },
     render_value: function() {
         this.priorities = this.prepare_priority();
-        this.$el.html(QWeb.render("Priority", {'widget': this}));
+        this.$el.html(QWeb.render("FormPriority", {'widget': this}));
         if (!this.get('readonly')){
             this.$el.find('li').on('click', this.set_priority.bind(this));
         }
@@ -1584,6 +1584,7 @@ var StatInfo = common.AbstractField.extend({
             }
         }
         this.$el.html(QWeb.render("StatInfo", options));
+        this.$el.addClass('o_stat_info');
     },
 
 });
