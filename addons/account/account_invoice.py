@@ -1351,7 +1351,12 @@ class account_invoice_line(models.Model):
         else:
             values['price_unit'] = product.lst_price
 
-        values['uos_id'] = uom_id or product.uom_id.id
+        values['uos_id'] = product.uom_id.id
+        if uom_id:
+            uom = self.env['product.uom'].browse(uom_id)
+            if product.uom_id.category_id.id == uom.category_id.id:
+                values['uos_id'] = uom_id
+
         domain = {'uos_id': [('category_id', '=', product.uom_id.category_id.id)]}
 
         company = self.env['res.company'].browse(company_id)

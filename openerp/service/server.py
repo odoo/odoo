@@ -613,7 +613,7 @@ class PreforkServer(CommonServer):
             _logger.info("Stopping gracefully")
             limit = time.time() + self.timeout
             for pid in self.workers.keys():
-                self.worker_kill(pid, signal.SIGTERM)
+                self.worker_kill(pid, signal.SIGINT)
             while self.workers and time.time() < limit:
                 self.process_zombie()
                 time.sleep(0.1)
