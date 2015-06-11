@@ -119,9 +119,18 @@ var _paylineproto = pos_model.Paymentline.prototype;
 pos_model.Paymentline = pos_model.Paymentline.extend({
     init_from_JSON: function (json) {
         _paylineproto.init_from_JSON.apply(this, arguments);
+
         this.paid = json.paid;
+        this.card_number = json.card_number;
+        this.card_brand = json.card_brand;
+        this.card_owner_name = json.card_owner_name;
+        this.ref_no = json.ref_no;
+        this.record_no = json.record_no;
+        this.invoice_no = json.invoice_no;
         this.mercury_data = json.mercury_data;
-        this.swipe_pending = json.swipe_pending;
+        this.swipe_pending = json.swipe_pendin;
+
+        this.set_credit_card_name();
     },
     export_as_JSON: function () {
         return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid,
@@ -133,6 +142,11 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
                                                                               invoice_no: this.invoice_no,
                                                                               mercury_data: this.mercury_data,
                                                                               swipe_pending: this.swipe_pending});
+    },
+    set_credit_card_name: function () {
+        if (this.card_number) {
+            this.name = this.card_brand + " (****" + this.card_number + ")";
+        }
     }
 });
 
@@ -409,10 +423,7 @@ PaymentScreenWidget.include({
                             order.selected_paymentline.record_no = response.record_no;
                             order.selected_paymentline.invoice_no = response.invoice_no;
                             order.selected_paymentline.mercury_data = response; // used to reverse transactions
-
-                            order.selected_paymentline.name =
-                                order.selected_paymentline.card_brand + " (****" +
-                                order.selected_paymentline.card_number + ")";
+                            order.selected_paymentline.set_credit_card_name();
 
                             self.order_changes();
                             self.reset_input();
