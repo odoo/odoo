@@ -1084,7 +1084,7 @@ var ComposeMessage = Attachment.extend ({
         var ev_stay = {};
         ev_stay.mouseup = ev_stay.keydown = ev_stay.focus = function () {self.stay_open = false;};
         this.$('textarea').on(ev_stay);
-        this.$('textarea').autosize();
+        autosize(this.$('textarea'));
     },
 
     on_cancel: function (event) {

@@ -561,7 +561,7 @@ var FieldText = common.AbstractField.extend(common.ReinitializeFieldMixin, {
             this.$textarea.val(show_value);
             if (! this.auto_sized) {
                 this.auto_sized = true;
-                this.$textarea.autosize();
+                autosize(this.$textarea);
             } else {
                 this.$textarea.trigger("autosize");
             }
