@@ -1082,11 +1082,11 @@ options.background = Option.extend({
         $image.attr("src", value);
         $image.appendTo(self.$bg);
 
-        var editor = new editor.MediaDialog(null, $image[0]);
-        editor.appendTo(document.body);
-        editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+        var _editor = new editor.MediaDialog(null, $image[0]);
+        _editor.appendTo(document.body);
+        _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
 
-        editor.on('saved', self, function () {
+        _editor.on('saved', self, function () {
             var value = $image.attr("src");
             $image.remove();
             self.$el.find('li[data-choose_image]').data("background", value).attr("data-background", value);
@@ -1095,7 +1095,7 @@ options.background = Option.extend({
             self.$bg.trigger("snippet-option-change", [self]);
             self.set_active();
         });
-        editor.on('cancel', self, function () {
+        _editor.on('cancel', self, function () {
             $image.remove();
         });
     },
