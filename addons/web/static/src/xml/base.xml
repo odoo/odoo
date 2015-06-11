@@ -1946,6 +1946,15 @@
     <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
     t-att-alt="widget.string"/>
 </button>
+
+<div t-name="Pager">
+    <span class="o-pager-value"></span>
+    <span class="btn-group btn-group-sm">
+        <button type="button" class="fa fa-chevron-left btn btn-icon o-pager-previous" accesskey="O"/>
+        <button type="button" class="fa fa-chevron-right btn btn-icon o-pager-next" accesskey="P"/>
+    </span>
+</div>
+
 <button t-name="FieldToggleBoolean" type="button"
     t-att-title="widget.string" class="oe_toggle_button">
     <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.icon}" t-att-alt="widget.string"/>
