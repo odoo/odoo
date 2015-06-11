@@ -1,13 +1,13 @@
 openerp.pad = function(instance) {
     var _t = instance.web._t;
-    
+
     instance.web.form.FieldPad = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeWidgetMixin, {
         template: 'FieldPad',
         content: "",
         init: function() {
             var self = this;
             this._super.apply(this, arguments);
-            this._configured_deferred = this.view.dataset.call('pad_is_configured').done(function(data) {
+            this._configured_deferred = this.view.dataset.call('pad_is_configured').then(function(data) {
                 self.set("configured", !!data);
             }).fail(function(data, event) {
                 event.preventDefault();
@@ -33,9 +33,9 @@ openerp.pad = function(instance) {
         render_value: function() {
             var self = this;
             $.when(this._configured_deferred, this.pad_loading_request).always(function() {
-                if (! self.get('configured')) {
+                if (!self.get('configured')){
                     return;
-                };
+                }
                 var value = self.get('value');
                 if (self.get('effective_readonly')) {
                     if (_.str.startsWith(value, 'http')) {
@@ -58,18 +58,18 @@ openerp.pad = function(instance) {
                                 field_name: self.name,
                                 object_id: self.view.datarecord.id
                             },
-                        }).done(function(data) {
+                        }).then(function(data) {
                             if (! data.url) {
                                 self.set("configured", false);
                             } else {
-                                self.set("value", data.url);
+                                self.internal_set_value(data.url);
                             }
                         });
                     }
                     def.then(function() {
                         value = self.get('value');
                         if (_.str.startsWith(value, 'http')) {
-                            var content = '<iframe width="100%" height="100%" frameborder="0" src="' + value + '?showChat=false&userName=' + self.session.username + '"></iframe>';
+                            var content = '<iframe width="100%" height="100%" frameborder="0" src="' + value + '?showChat=false&userName=' + encodeURIComponent(self.session.username) + '"></iframe>';
                             self.$('.oe_pad_content').html(content);
                             self._dirty_flag = true;
                         }
