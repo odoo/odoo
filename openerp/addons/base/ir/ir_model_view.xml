@@ -30,12 +30,13 @@
                   <sheet>
                     <group>
                         <group>
+                            <field name="id" invisible="1"/>
                             <field name="name"/>
-                            <field name="model"/>
-                            <field name="transient"/>
+                            <field name="model" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="transient" attrs="{'readonly': [('id', '!=', False)]}"/>
                         </group>
                         <group>
-                            <field name="state"/>
+                            <field name="state" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="modules"/>
                         </group>
                     </group>

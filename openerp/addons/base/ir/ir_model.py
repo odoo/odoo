@@ -158,6 +158,12 @@ class ir_model(osv.osv):
         if context:
             context = dict(context)
             context.pop('__last_update', None)
+        if 'model' in vals:
+            raise UserError(_('Field "Model" cannot be modified on models.'))
+        if 'state' in vals:
+            raise UserError(_('Field "Type" cannot be modified on models.'))
+        if 'transient' in vals:
+            raise UserError(_('Field "Transient Model" cannot be modified on models.'))
         # Filter out operations 4 link from field id, because openerp-web
         # always write (4,id,False) even for non dirty items
         if 'field_id' in vals:
