@@ -302,7 +302,7 @@ class Slide(models.Model):
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?theme=light" frameborder="0"></iframe>' % (record.document_id)
+                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?theme=light" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
                 else:
                     # embed google doc video
                     record.embed_code = '<embed src="https://video.google.com/get_player?ps=docs&partnerid=30&docid=%s" type="application/x-shockwave-flash"></embed>' % (record.document_id)
