@@ -75,15 +75,6 @@ class account_abstract_payment(models.AbstractModel):
             return {'domain': {'payment_method': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
         return {}
 
-    # FIXME : If you change the currency_id, invoice_ids is mysteriously obliterated 
-    @api.onchange('currency_id')
-    def _onchange_currency_id(self):
-        self._set_total_invoices_amount()
-
-    @api.onchange('payment_date')
-    def _onchange_date(self):
-        self._set_total_invoices_amount()
-
     def _get_invoices(self):
         """ Return the invoices of the payment. Must be overridden """
         raise NotImplementedError
@@ -97,11 +88,6 @@ class account_abstract_payment(models.AbstractModel):
         if self.company_id and self.company_id.currency_id != payment_currency:
             total = self.company_id.currency_id.with_context(date=self.payment_date).compute(total, payment_currency)
         return abs(total)
-
-    def _set_total_invoices_amount(self):
-        """ Set self.amount = total residual of invoices, do nothing if the payment does not refer to invoices """
-        if len(self._get_invoices()) != 0:
-            self.amount = self._compute_total_invoices_amount()
 
 
 class account_register_payments(models.TransientModel):
