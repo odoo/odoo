@@ -281,11 +281,11 @@ class AccountJournal(models.Model):
             if ('code' in vals and journal.code != vals['code']):
                 if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its short name.'))
-            new_prefix = self._get_sequence_prefix(vals['code'], refund=False)
-            journal.sequence_id.write({'prefix': new_prefix})
-            if journal.refund_sequence_id:
-                new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
-                journal.refund_sequence_id.write({'prefix': new_prefix})
+                new_prefix = self._get_sequence_prefix(vals['code'], refund=False)
+                journal.sequence_id.write({'prefix': new_prefix})
+                if journal.refund_sequence_id:
+                    new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
+                    journal.refund_sequence_id.write({'prefix': new_prefix})
         return super(AccountJournal, self).write(vals)
 
     @api.model
