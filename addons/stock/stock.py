@@ -2121,7 +2121,7 @@ class stock_move(osv.osv):
         if not pick:
             move = self.browse(cr, uid, move_ids, context=context)[0]
             values = {
-                'origin': move.origin,
+                'origin': move.origin or move.move_dest_id and move.move_dest_id.picking_id.origin,
                 'company_id': move.company_id and move.company_id.id or False,
                 'move_type': move.group_id and move.group_id.move_type or 'direct',
                 'partner_id': move.partner_id.id or False,
