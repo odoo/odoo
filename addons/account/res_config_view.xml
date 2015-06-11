@@ -159,7 +159,7 @@
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
                                 <label for="default_sale_tax"/>
                                 <field name="default_sale_tax"
-                                    domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
+                                    domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"
                                     class="oe_inline"/>
                             </div>
                             <div>
@@ -204,7 +204,7 @@
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
                                 <label for="default_purchase_tax"/>
                                 <field name="default_purchase_tax"
-                                    domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
+                                    domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"
                                     class="oe_inline"/>
                             </div>
                             <div>
