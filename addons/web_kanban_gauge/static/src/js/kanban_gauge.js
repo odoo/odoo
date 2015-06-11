@@ -2,10 +2,10 @@ odoo.define('web_kanban_gauge.widget', function (require) {
 "use strict";
 
 var core = require('web.core');
-var kanban_common = require('web_kanban.common');
+var kanban_widgets = require('web_kanban.widgets');
 
-var AbstractField = kanban_common.AbstractField;
-var fields_registry = kanban_common.registry;
+var AbstractField = kanban_widgets.AbstractField;
+var fields_registry = kanban_widgets.registry;
 var _t = core._t;
 
 /**
