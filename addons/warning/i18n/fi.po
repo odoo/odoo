@@ -1,29 +1,28 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * warning
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-09-10 12:31+0000\n"
-"Last-Translator: Miku Laitinen <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-22 15:18+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:28+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: warning
 #: selection:product.template,purchase_line_warn:0
 #: selection:product.template,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "Estoviesti"
 
@@ -66,10 +65,8 @@ msgstr "Varoitus varastokeräilylle"
 #. module: warning
 #: selection:product.template,purchase_line_warn:0
 #: selection:product.template,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "No Message"
 msgstr "Ei viestiä"
 
@@ -101,8 +98,7 @@ msgid "Purchase Order Line"
 msgstr "Ostotilausrivi"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
+#: model:ir.model,name:warning.model_sale_order field:res.partner,sale_warn:0
 msgid "Sales Order"
 msgstr "Myyntitilaus"
 
@@ -115,23 +111,15 @@ msgstr "Myyntitilauksen Rivi"
 #. module: warning
 #: code:addons/warning/warning.py:31
 #: help:product.template,purchase_line_warn:0
-#: help:product.template,sale_line_warn:0
-#: help:res.partner,invoice_warn:0
-#: help:res.partner,picking_warn:0
-#: help:res.partner,purchase_warn:0
+#: help:product.template,sale_line_warn:0 help:res.partner,invoice_warn:0
+#: help:res.partner,picking_warn:0 help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
 #, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr ""
-"Valittaessa vaihtoehto: \r\n"
-"                        \"Varoitusviesti\", käyttäjälle näytetään "
-"varoitusviesti\r\n"
-"                        \"Estoviesti, käyttäjälle näytetään poikkeusviesti "
-"ja toimenpide estetään.\r\n"
-"Kirjoita näytettävä viesti seuraavaan kenttään."
+msgstr "Valittaessa vaihtoehto: \r\n                        \"Varoitusviesti\", käyttäjälle näytetään varoitusviesti\r\n                        \"Estoviesti, käyttäjälle näytetään poikkeusviesti ja toimenpide estetään.\r\nKirjoita näytettävä viesti seuraavaan kenttään."
 
 #. module: warning
 #: field:res.partner,picking_warn:0
@@ -141,20 +129,15 @@ msgstr "Varatokeräily"
 #. module: warning
 #: selection:product.template,purchase_line_warn:0
 #: selection:product.template,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Warning"
 msgstr "Varoitus"
 
 #. module: warning
-#: code:addons/warning/warning.py:64
-#: code:addons/warning/warning.py:94
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:166
-#: code:addons/warning/warning.py:216
-#: code:addons/warning/warning.py:250
+#: code:addons/warning/warning.py:64 code:addons/warning/warning.py:94
+#: code:addons/warning/warning.py:132 code:addons/warning/warning.py:166
+#: code:addons/warning/warning.py:216 code:addons/warning/warning.py:250
 #, python-format
 msgid "Warning for %s"
 msgstr "Varoitus %s"

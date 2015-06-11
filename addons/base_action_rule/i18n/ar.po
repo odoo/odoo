@@ -1,21 +1,23 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# hoxhe aits <hoxhe0@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:29+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -24,11 +26,9 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
@@ -51,8 +51,7 @@ msgid "Actions"
 msgstr "الإجراءات"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "نشط"
 
@@ -80,12 +79,12 @@ msgstr ""
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ملغي"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Closed"
-msgstr ""
+msgstr "مغلق"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -101,12 +100,12 @@ msgstr "انشيء سجل"
 #: field:base.action.rule,create_uid:0
 #: field:base.action.rule.lead.test,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أُنشئ بواسطة"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "إنشاؤه في"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -170,10 +169,9 @@ msgid "Hours"
 msgstr "ساعات"
 
 #. module: base_action_rule
-#: field:base.action.rule,id:0
-#: field:base.action.rule.lead.test,id:0
+#: field:base.action.rule,id:0 field:base.action.rule.lead.test,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرّف"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_id:0
@@ -185,13 +183,14 @@ msgstr ""
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "قيد التقدم"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -201,15 +200,15 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
-"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "آخر إجراء"
 
 #. module: base_action_rule
 #: field:base.action.rule,last_run:0
@@ -220,13 +219,13 @@ msgstr "اخر تشغيل"
 #: field:base.action.rule,write_uid:0
 #: field:base.action.rule.lead.test,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: base_action_rule
 #: field:base.action.rule,write_date:0
 #: field:base.action.rule.lead.test,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث فى"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -236,7 +235,7 @@ msgstr "دقائق"
 #. module: base_action_rule
 #: field:base.action.rule,model:0
 msgid "Model"
-msgstr ""
+msgstr "النموذج"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -246,7 +245,7 @@ msgstr "شهور"
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "New"
-msgstr ""
+msgstr "جديد"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -271,7 +270,7 @@ msgstr "شريك"
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Pending"
-msgstr ""
+msgstr "معلّق"
 
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
@@ -291,7 +290,8 @@ msgstr "اسم القاعدة"
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid ""
-"Select when the action must be run, and add filters and/or timing conditions."
+"Select when the action must be run, and add filters and/or timing "
+"conditions."
 msgstr ""
 
 #. module: base_action_rule
@@ -323,7 +323,7 @@ msgstr "الحالة"
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0
 msgid "Subject"
-msgstr ""
+msgstr "الموضوع"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form

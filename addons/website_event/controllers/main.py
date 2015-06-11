@@ -230,8 +230,12 @@ class website_event(http.Controller):
         start_date = datetime.strptime(event.date_begin, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
         end_date = datetime.strptime(event.date_end, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
         month = babel.dates.get_month_names('abbreviated', locale=context.get('lang', 'en_US'))[start_date.month]
-        return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-"+end_date.strftime("%e")) or ""))
-    
+        return _('%(month)s %(start_day)s%(end_day)s') % {
+            'month': month,
+            'start_day': start_date.strftime("%e"),
+            'end_day': (end_date != start_date and ("-"+end_date.strftime("%e")) or "")
+        }
+
     @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
     def get_country_events(self ,**post):
         cr, uid, context, event_ids = request.cr, request.uid, request.context,[]

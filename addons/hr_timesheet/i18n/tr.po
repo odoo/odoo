@@ -1,22 +1,22 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-08 23:03+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-09 05:51+0000\n"
-"X-Generator: Launchpad (build 17474)\n"
+"Content-Transfer-Encoding: \n"
 "Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -35,26 +35,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record activities.\n"
 "              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
+"                You can register and track your workings hours by project every\n"
+"                day. Every time spent on a project will become a cost in the\n"
 "                analytic accounting/contract and can be re-invoiced to\n"
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kayıt etkinlikler için tıklayın.\n"
-"              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
-"                analytic accounting/contract and can be re-invoiced to\n"
-"                customers if required.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kayıt etkinlikler için tıklayın.\n              </p><p>\n                You can register and track your workings hours by project every\n                day. Every time spent on a project will become a cost in the\n                analytic accounting/contract and can be re-invoiced to\n                customers if required.\n              </p>\n            "
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -63,30 +50,24 @@ msgid ""
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
 "                In Odoo, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to "
-"analyse\n"
+"                analytic account. So, you can track costs and revenues to analyse\n"
 "                your margins easily.\n"
 "              </p><p>\n"
-"                Costs will be created automatically when you register "
-"supplier\n"
+"                Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets.\n"
 "              </p><p>\n"
-"                Revenues will be created automatically when you create "
-"customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.sign.in.project,state:0
-#: selection:hr.sign.out.project,state:0
+#: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
 msgid "Absent"
-msgstr "Devamsızlık"
+msgstr "Yok"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -133,8 +114,6 @@ msgid ""
 "Changing the date will let this entry appear in the timesheet of the new "
 "date."
 msgstr ""
-"Tarih değiştirme, yeni bir tarih çizelgesinde görüntülenen bu giriş izin "
-"verir."
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
@@ -160,7 +139,7 @@ msgstr "Maliyet"
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr "Maliyet/Ciro"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
@@ -179,7 +158,7 @@ msgstr "Oluşturan"
 #: field:hr.sign.in.project,create_date:0
 #: field:hr.sign.out.project,create_date:0
 msgid "Created on"
-msgstr "Oluşturma"
+msgstr "Oluşturulma"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -188,8 +167,7 @@ msgid "Current Date"
 msgstr "Şimdiki Tarih"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
+#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
 msgid "Current Status"
 msgstr "Şimdiki Durumu"
 
@@ -220,8 +198,7 @@ msgid "Employee"
 msgstr "Personel"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
+#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
 msgstr "Personel ID"
 
@@ -232,12 +209,9 @@ msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
 msgstr ""
-"Çalışan bu kullanıcı için oluşturulur. Lütfen yapılandırma panelinden "
-"oluşturun."
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
+#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
 msgid "Employee's Name"
 msgstr "Personel Adı"
 
@@ -248,24 +222,16 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr ""
-"Çalışanlar, üzerine atanan farklı projeler için harcanan zamanı "
-"kodlama.projen analitik bir hesaptır ve harcanan zaman Proje analitik "
-"maliyeti hesap oluşturur.Bu özellik, aynı zamanda katılım ve "
-"zamançizelgesine kaydetmenize olanak verir."
+msgstr "Çalışanlar, üzerine atanan farklı projeler için harcanan zamanı kodlama.projen analitik bir hesaptır ve harcanan zaman Proje analitik maliyeti hesap oluşturur.Bu özellik, aynı zamanda katılım ve zamançizelgesine kaydetmenize olanak verir."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
 msgid ""
 "Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the "
-"analytic account. This feature allows to record at the same time the "
+"is an analytic account and the time spent on a project generate costs on the"
+" analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
-"Çalışanlar farklı projelerde harcanan zaman kodlayabilirsiniz. Analitik "
-"hesap bir projedir ve bir proje üzerinde harcanan zaman maliyeti analitik "
-"hesap oluşturmak. Bu özellik aynı zamanda katılım ve zaman çizelgesini "
-"kaydetmenize olanak verir."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -292,20 +258,18 @@ msgstr "Yapılandırma paneline git"
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
-msgstr "Gruplandır"
+msgstr "Grupla İle"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group by month of date"
-msgstr "Tarihi aya göre grupla"
+msgstr "Ayın günlerine grupla"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,id:0
-#: field:hr.sign.in.project,id:0
-#: field:hr.sign.out.project,id:0
-#: field:hr.timesheet.report,id:0
+#: field:hr.analytic.timesheet,id:0 field:hr.sign.in.project,id:0
+#: field:hr.sign.out.project,id:0 field:hr.timesheet.report,id:0
 msgid "ID"
-msgstr "Kimlik"
+msgstr "ID"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -322,12 +286,11 @@ msgstr "Bilgisi"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr "Yevmiye"
+msgstr "Günlük"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_uid:0
-#: field:hr.sign.in.project,write_uid:0
-#: field:hr.sign.out.project,write_uid:0
+#: field:hr.sign.in.project,write_uid:0 field:hr.sign.out.project,write_uid:0
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
@@ -354,10 +317,7 @@ msgstr "Ay"
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr ""
-"personel için tanımlanan 'Analitik Yevmiye' yok %s \n"
-"Seçilen kullanıcı için bir personel tanımlayın ve bir 'Analitik Yevmiye' "
-"atayın!"
+msgstr "personel için tanımlanan 'Analitik Yevmiye' yok %s \nSeçilen kullanıcı için bir personel tanımlayın ve bir 'Analitik Yevmiye' atayın!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:191
@@ -365,9 +325,7 @@ msgstr ""
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr ""
-"proje üzerinde tanımlı analitik hesap yok.\n"
-"bir tane tanımlayın veya otomatik olarak zaman çizelgesi dolduramazsınız."
+msgstr "proje üzerinde tanımlı analitik hesap yok.\nbir tane tanımlayın veya otomatik olarak zaman çizelgesi dolduramazsınız."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
@@ -375,9 +333,7 @@ msgstr ""
 msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
-msgstr ""
-"'%s' Için tanımlanmış bir analitik yevmiye yok.\n"
-"Sen personel formundan bir analitik yevmiye atamalısın."
+msgstr "'%s' Için tanımlanmış bir analitik yevmiye yok.\nSen personel formundan bir analitik yevmiye atamalısın."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -397,16 +353,14 @@ msgid "Please define employee for your user."
 msgstr "Bu personel için bir kullanıcı tanımlayın."
 
 #. module: hr_timesheet
-#: selection:hr.sign.in.project,state:0
-#: selection:hr.sign.out.project,state:0
+#: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
 msgid "Present"
 msgstr "Mevcut"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-#: field:hr.employee,product_id:0
-#: field:hr.timesheet.report,product_id:0
+#: field:hr.employee,product_id:0 field:hr.timesheet.report,product_id:0
 msgid "Product"
 msgstr "Ürünler"
 
@@ -448,7 +402,7 @@ msgstr "Giriş / Çıkış"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr "Giriş/Çıkış Projeden"
+msgstr "Proje Girişi / Çıkışı"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -456,8 +410,7 @@ msgid "Start Working"
 msgstr "Çalışma Başlat"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
+#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
 msgstr "Başlama Tarihi"
 
@@ -469,7 +422,7 @@ msgstr "Çalışmayı Durdur"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "This Month"
-msgstr "Bu Ay"
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,quantity:0
@@ -489,7 +442,7 @@ msgstr "ZamanÇizelgesi"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr "Zaman çizelgesi hesapları"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -503,7 +456,7 @@ msgstr "ZamanÇizelge Etkinlikleri"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr "Zaman çizelgesi analizi"
+msgstr "ZamanÇizelge Analizi"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
@@ -513,12 +466,12 @@ msgstr "ZamanÇizelge Satırı"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr "Zaman çizelgesi ay"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr "Zaman çizelgesi ay"
+msgstr ""
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
@@ -551,7 +504,7 @@ msgstr "Kullanıcı"
 #: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
 msgid "User Alert!"
-msgstr "Kullanıcı uyarısı!"
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -590,9 +543,6 @@ msgid ""
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
-"Gereksinimlerinize bağlı olarak maliyetleri ve gelirleri analiz bir analitik "
-"hesap yapısı oluşturmanız gerekir. Odoo içinde analitik hesapları müşteri "
-"sözleşmelerinin izlemek için de kullanılır."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search

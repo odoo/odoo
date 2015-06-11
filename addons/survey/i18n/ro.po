@@ -1,34 +1,32 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * survey
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-14 05:45+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-15 05:51+0000\n"
-"X-Generator: Launchpad (build 17428)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: survey
 #: model:email.template,body_html:survey.email_template_survey
 msgid ""
 "\n"
 "                \n"
-"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-"Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
 "                    <p>Hello,</p>\n"
-"                    <p>We are conducting a survey, and your response would "
-"be appreciated.</p>\n"
-"                    <p><a href=\"__URL__\">Please, click here to start "
-"survey</a></p>\n"
+"                    <p>We are conducting a survey, and your response would be appreciated.</p>\n"
+"                    <p><a href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "                    <p>Thanks for your participation!</p>\n"
 "                </div>\n"
 "                \n"
@@ -41,8 +39,7 @@ msgid "#Questions"
 msgstr "#Întrebări"
 
 #. module: survey
-#: code:addons/survey/survey.py:246
-#: code:addons/survey/survey.py:543
+#: code:addons/survey/survey.py:246 code:addons/survey/survey.py:543
 #: code:addons/survey/survey.py:662
 #, python-format
 msgid "%s (copy)"
@@ -57,11 +54,8 @@ msgstr "&times;"
 #: model:ir.actions.act_window,help:survey.action_survey_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">Click to add a survey.</p>\n"
-"                <p>You can create surveys for different purposes: customer "
-"opinion, services feedback, recruitment interviews, employee's periodical "
-"evaluations, marketing campaigns, etc.</p>\n"
-"                <p>Design easily your survey, send invitations to answer by "
-"email and analyse answers.</p>\n"
+"                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>\n"
+"                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>\n"
 "            "
 msgstr ""
 
@@ -82,24 +76,19 @@ msgstr ""
 msgid ""
 "<p>Nobody has replied to your survey yet.</p>\n"
 "            "
-msgstr ""
-"<p>Nimeni nu a răspuns la sondaj dumneavoastră încă.</p>\n"
-"            "
+msgstr "<p>Nimeni nu a răspuns la sondaj dumneavoastră încă.</p>\n            "
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_user_input
 msgid ""
 "<p>Nobody has replied to your surveys yet.</p>\n"
 "            "
-msgstr ""
-"<p>Nimeni nu a răspuns la sondajele dumneavoastră încă.</p>\n"
-"            "
+msgstr "<p>Nimeni nu a răspuns la sondajele dumneavoastră încă.</p>\n            "
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
 msgid ""
-"<p>These questions relate to the ergonomy and ease of use of Odoo. Try to "
-"remind your firsts days on Odoo and\n"
+"<p>These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties.</p>"
 msgstr ""
 
@@ -111,8 +100,7 @@ msgstr "<p>Acest sondaj ar trebui să vă ia mai puțin de cinci minute.</p>"
 #. module: survey
 #: constraint:survey.label:0
 msgid "A label must be attached to one and only one question"
-msgstr ""
-"O etichetă trebuie să fie atașată la una și numai o singură întrebare"
+msgstr "O etichetă trebuie să fie atașată la una și numai o singură întrebare"
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -129,9 +117,7 @@ msgstr "O descriere lungă a scopului sondajului"
 msgid ""
 "A positive score indicates a correct answer; a negative or null score "
 "indicates a wrong answer"
-msgstr ""
-"Un scor pozitiv indică un răspuns corect; un scor negativ sau nul indică un "
-"răspuns greșit"
+msgstr "Un scor pozitiv indică un răspuns corect; un scor negativ sau nul indică un răspuns greșit"
 
 #. module: survey
 #: view:website:survey.page
@@ -214,8 +200,7 @@ msgid "Answer Choices"
 msgstr "Alege răspuns"
 
 #. module: survey
-#: field:survey.user_input,type:0
-#: field:survey.user_input_line,answer_type:0
+#: field:survey.user_input,type:0 field:survey.user_input_line,answer_type:0
 msgid "Answer Type"
 msgstr "Tip de raspuns"
 
@@ -238,9 +223,7 @@ msgstr "Raspunsuri"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
-"Răspunsurile nu merg în documentul origilal  pe firul inițial al discuție. "
-"Acest lucru are un impact asupra ID-ul mesajului generat."
+msgstr "Răspunsurile nu merg în documentul origilal  pe firul inițial al discuție. Acest lucru are un impact asupra ID-ul mesajului generat."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -260,11 +243,9 @@ msgstr "Autor"
 #. module: survey
 #: help:survey.mail.compose.message,author_id:0
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
-msgstr ""
-"Autorul mesajului. Dacă nu este selectat, email_from (expeditor_email) poate "
-"să conțină o adresa de email care nu s-a potrivit cu nici un partener."
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
+msgstr "Autorul mesajului. Dacă nu este selectat, email_from (expeditor_email) poate să conțină o adresa de email care nu s-a potrivit cu nici un partener."
 
 #. module: survey
 #: field:survey.mail.compose.message,author_avatar:0
@@ -331,8 +312,7 @@ msgid "Close"
 msgstr "Inchide"
 
 #. module: survey
-#: field:survey.stage,closed:0
-#: model:survey.stage,name:survey.stage_closed
+#: field:survey.stage,closed:0 model:survey.stage,name:survey.stage_closed
 msgid "Closed"
 msgstr "Inchis"
 
@@ -413,10 +393,8 @@ msgstr "Creeaza Data"
 #. module: survey
 #: field:survey.label,create_uid:0
 #: field:survey.mail.compose.message,create_uid:0
-#: field:survey.page,create_uid:0
-#: field:survey.question,create_uid:0
-#: field:survey.stage,create_uid:0
-#: field:survey.survey,create_uid:0
+#: field:survey.page,create_uid:0 field:survey.question,create_uid:0
+#: field:survey.stage,create_uid:0 field:survey.survey,create_uid:0
 #: field:survey.user_input,create_uid:0
 #: field:survey.user_input_line,create_uid:0
 msgid "Created by"
@@ -425,10 +403,8 @@ msgstr "Creat de"
 #. module: survey
 #: field:survey.label,create_date:0
 #: field:survey.mail.compose.message,create_date:0
-#: field:survey.page,create_date:0
-#: field:survey.question,create_date:0
-#: field:survey.stage,create_date:0
-#: field:survey.survey,create_date:0
+#: field:survey.page,create_date:0 field:survey.question,create_date:0
+#: field:survey.stage,create_date:0 field:survey.survey,create_date:0
 #: field:survey.user_input,create_date:0
 #: field:survey.user_input_line,create_date:0
 msgid "Created on"
@@ -442,9 +418,7 @@ msgstr "Data creării"
 #. module: survey
 #: help:survey.mail.compose.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
-"Utilizatorul actual are o notificare marcată cu asterisc atașată acestui "
-"mesaj"
+msgstr "Utilizatorul actual are o notificare marcată cu asterisc atașată acestui mesaj"
 
 #. module: survey
 #: help:survey.mail.compose.message,to_read:0
@@ -452,8 +426,7 @@ msgid "Current user has an unread notification linked to this message"
 msgstr "Utilizatorul actual are o notificare necitită atașată acestui mesaj"
 
 #. module: survey
-#: view:website:survey.result_choice
-#: view:website:survey.result_matrix
+#: view:website:survey.result_choice view:website:survey.result_matrix
 msgid "Data"
 msgstr "Data"
 
@@ -491,8 +464,8 @@ msgstr "Data scadentă"
 #. module: survey
 #: help:survey.mail.compose.message,date_deadline:0
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the "
-"field is empty, the invitation is still valid."
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty, the invitation is still valid."
 msgstr ""
 
 #. module: survey
@@ -506,8 +479,7 @@ msgid "Delete!"
 msgstr "Șterge!"
 
 #. module: survey
-#: field:survey.page,description:0
-#: field:survey.question,description:0
+#: field:survey.page,description:0 field:survey.question,description:0
 #: field:survey.survey,description:0
 msgid "Description"
 msgstr "Descriere"
@@ -582,14 +554,12 @@ msgstr "Șablon Email"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
-msgstr ""
-"Adresă de email a expeditorului. Acest câmp este setat atunci când nu este "
-"găsit nici un partener care să se potrivească email-urilor primite."
+msgstr "Adresă de email a expeditorului. Acest câmp este setat atunci când nu este găsit nici un partener care să se potrivească email-urilor primite."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Asistent compunere email pentru Sontaj"
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_2
@@ -664,14 +634,12 @@ msgid "From"
 msgstr "De la"
 
 #. module: survey
-#: view:website:survey.survey
-#: view:website:survey.survey_init
+#: view:website:survey.survey view:website:survey.survey_init
 msgid "Go back to surveys"
 msgstr "Înapoi la sondaje"
 
 #. module: survey
-#: view:website:survey.result_choice
-#: view:website:survey.result_matrix
+#: view:website:survey.result_choice view:website:survey.result_matrix
 msgid "Graph"
 msgstr "Grafic"
 
@@ -688,9 +656,7 @@ msgstr "Grupează după"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Conține rezumatul Chatter (număr de mesaje, ...). Acest rezumat este direct "
-"în format HTML, cu scopul de a se introduce în vizualizări kanban."
+msgstr "Conține rezumatul Chatter (număr de mesaje, ...). Acest rezumat este direct în format HTML, cu scopul de a se introduce în vizualizări kanban."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
@@ -753,13 +719,9 @@ msgid "I'd like to contribute but I don't know how?"
 msgstr ""
 
 #. module: survey
-#: field:survey.label,id:0
-#: field:survey.mail.compose.message,id:0
-#: field:survey.page,id:0
-#: field:survey.question,id:0
-#: field:survey.stage,id:0
-#: field:survey.survey,id:0
-#: field:survey.user_input,id:0
+#: field:survey.label,id:0 field:survey.mail.compose.message,id:0
+#: field:survey.page,id:0 field:survey.question,id:0 field:survey.stage,id:0
+#: field:survey.survey,id:0 field:survey.user_input,id:0
 #: field:survey.user_input_line,id:0
 msgid "ID"
 msgstr "ID"
@@ -886,12 +848,9 @@ msgstr "Data ultimului mesaj"
 
 #. module: survey
 #: field:survey.label,write_uid:0
-#: field:survey.mail.compose.message,write_uid:0
-#: field:survey.page,write_uid:0
-#: field:survey.question,write_uid:0
-#: field:survey.stage,write_uid:0
-#: field:survey.survey,write_uid:0
-#: field:survey.user_input,write_uid:0
+#: field:survey.mail.compose.message,write_uid:0 field:survey.page,write_uid:0
+#: field:survey.question,write_uid:0 field:survey.stage,write_uid:0
+#: field:survey.survey,write_uid:0 field:survey.user_input,write_uid:0
 #: field:survey.user_input_line,write_uid:0
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
@@ -899,10 +858,8 @@ msgstr "Ultima actualizare făcută de"
 #. module: survey
 #: field:survey.label,write_date:0
 #: field:survey.mail.compose.message,write_date:0
-#: field:survey.page,write_date:0
-#: field:survey.question,write_date:0
-#: field:survey.stage,write_date:0
-#: field:survey.survey,write_date:0
+#: field:survey.page,write_date:0 field:survey.question,write_date:0
+#: field:survey.stage,write_date:0 field:survey.survey,write_date:0
 #: field:survey.user_input,write_date:0
 #: field:survey.user_input_line,write_date:0
 msgid "Last Updated on"
@@ -929,8 +886,7 @@ msgid "Log an Internal Note"
 msgstr "Scrie o notă internă"
 
 #. module: survey
-#: field:survey.survey,auth_required:0
-#: view:website:survey.auth_required
+#: field:survey.survey,auth_required:0 view:website:survey.auth_required
 msgid "Login required"
 msgstr "Necesară autentificare"
 
@@ -1010,9 +966,7 @@ msgstr "Numele Înregistrării Mesajului"
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr ""
-"Tipul de mesaj: email pentru mesaj email, notificare pentru mesajul sistem, "
-"comentariu pentru alte mesaje, cum ar fi raspunsurile utilizatorului"
+msgstr "Tipul de mesaj: email pentru mesaj email, notificare pentru mesajul sistem, comentariu pentru alte mesaje, cum ar fi raspunsurile utilizatorului"
 
 #. module: survey
 #: help:survey.mail.compose.message,message_id:0
@@ -1204,8 +1158,7 @@ msgstr "Server trimitere e-mail-uri"
 #. module: survey
 #: view:survey.page:survey.survey_page_search
 #: view:survey.question:survey.survey_question_search
-#: field:survey.user_input_line,page_id:0
-#: view:website:survey.page
+#: field:survey.user_input_line,page_id:0 view:website:survey.page
 msgid "Page"
 msgstr "Pagina"
 
@@ -1340,11 +1293,9 @@ msgstr ""
 
 #. module: survey
 #: view:survey.label:survey.survey_label_search
-#: field:survey.label,question_id:0
-#: field:survey.label,question_id_2:0
+#: field:survey.label,question_id:0 field:survey.label,question_id_2:0
 #: view:survey.question:survey.survey_question_search
-#: field:survey.user_input_line,question_id:0
-#: view:website:survey.result
+#: field:survey.user_input_line,question_id:0 view:website:survey.result
 msgid "Question"
 msgstr "Întrebare"
 
@@ -1512,8 +1463,7 @@ msgid "Sent Invitation Again"
 msgstr ""
 
 #. module: survey
-#: field:survey.question,sequence:0
-#: field:survey.stage,sequence:0
+#: field:survey.question,sequence:0 field:survey.stage,sequence:0
 msgid "Sequence"
 msgstr "Secventa"
 
@@ -1548,8 +1498,7 @@ msgid "Show Comments Field"
 msgstr "Afișare câmp comentarii"
 
 #. module: survey
-#: field:survey.user_input_line,skipped:0
-#: view:website:survey.result
+#: field:survey.user_input_line,skipped:0 view:website:survey.result
 msgid "Skipped"
 msgstr "Omis"
 
@@ -1569,8 +1518,7 @@ msgid "Sorry, No one answered this survey yet"
 msgstr ""
 
 #. module: survey
-#: view:survey.stage:survey.survey_stage_form
-#: field:survey.survey,stage_id:0
+#: view:survey.stage:survey.survey_stage_form field:survey.survey,stage_id:0
 msgid "Stage"
 msgstr "Etapă"
 
@@ -1642,11 +1590,9 @@ msgstr "Rezumat"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_survey
 #: field:survey.mail.compose.message,survey_id:0
-#: view:survey.page:survey.survey_page_search
-#: field:survey.page,survey_id:0
+#: view:survey.page:survey.survey_page_search field:survey.page,survey_id:0
 #: view:survey.question:survey.survey_question_search
-#: field:survey.question,survey_id:0
-#: view:survey.survey:survey.survey_form
+#: field:survey.question,survey_id:0 view:survey.survey:survey.survey_form
 #: view:survey.survey:survey.survey_tree
 #: view:survey.user_input:survey.survey_user_input_search
 #: field:survey.user_input,survey_id:0
@@ -1739,9 +1685,7 @@ msgstr "Notificare sistem"
 msgid ""
 "Technical field holding the message notifications. Use notified_partner_ids "
 "to access notified partners."
-msgstr ""
-"Camp tehnic ce contine mesajele de notificare. Folositi notifice_partner_ids "
-"(id-uri_partener_instiintat) pentru a accesa partenerii instiintati."
+msgstr "Camp tehnic ce contine mesajele de notificare. Folositi notifice_partner_ids (id-uri_partener_instiintat) pentru a accesa partenerii instiintati."
 
 #. module: survey
 #: view:survey.survey:survey.survey_kanban
@@ -1822,8 +1766,8 @@ msgstr ""
 #: code:addons/survey/wizard/survey_email_compose_message.py:188
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__ "
-"is automaticaly converted into the special url of the survey."
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
 msgstr ""
 
 #. module: survey
@@ -2023,7 +1967,8 @@ msgstr "Utilizați șablon"
 #. module: survey
 #: help:survey.question,description:0
 msgid ""
-"Use this field to add             additional explanations about your question"
+"Use this field to add             additional explanations about your "
+"question"
 msgstr ""
 
 #. module: survey
@@ -2043,8 +1988,7 @@ msgid "User Input Lines"
 msgstr ""
 
 #. module: survey
-#: view:website:survey.result_choice
-#: view:website:survey.result_number
+#: view:website:survey.result_choice view:website:survey.result_number
 #: view:website:survey.result_text
 msgid "User Responses"
 msgstr ""
@@ -2107,8 +2051,7 @@ msgid "Votes"
 msgstr "Voturi"
 
 #. module: survey
-#: code:addons/survey/survey.py:444
-#: code:addons/survey/survey.py:898
+#: code:addons/survey/survey.py:444 code:addons/survey/survey.py:898
 #: code:addons/survey/survey.py:1030
 #: code:addons/survey/wizard/survey_email_compose_message.py:95
 #: code:addons/survey/wizard/survey_email_compose_message.py:188
@@ -2179,15 +2122,14 @@ msgstr ""
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to "
-"your audience. People can answer once per invitation, and whenever they want "
-"with the public web link (in this case, the \"Public in website\" setting "
-"must be enabled)."
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Public in website\" "
+"setting must be enabled)."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:898
-#: code:addons/survey/survey.py:1030
+#: code:addons/survey/survey.py:898 code:addons/survey/survey.py:1030
 #, python-format
 msgid "You cannot duplicate this             element!"
 msgstr ""

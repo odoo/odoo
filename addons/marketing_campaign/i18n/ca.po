@@ -1,21 +1,22 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Catalan (http://www.transifex.com/projects/p/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:54+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -29,14 +30,11 @@ msgid ""
 "            Click to create a marketing campaign.\n"
 "          </p><p>\n"
 "            Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) "
-"on\n"
+"            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fullfil the campaign.\n"
 "          </p><p>\n"
-"            A campaign can have many activities like sending an email, "
-"printing\n"
-"            a letter, assigning to a team, etc. These activities are "
-"triggered\n"
+"            A campaign can have many activities like sending an email, printing\n"
+"            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc.\n"
 "          </p>\n"
@@ -85,9 +83,7 @@ msgstr "Tots els registres (no duplicats)"
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr ""
-"Una activitat amb un senyal pot ser cridada mitjançant programació. Vés amb "
-"compte, l'element sempre es crea quan s'envia un senyal."
+msgstr "Una activitat amb un senyal pot ser cridada mitjançant programació. Vés amb compte, l'element sempre es crea quan s'envia un senyal."
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -115,10 +111,7 @@ msgstr "Transició automàtica"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr ""
-"En activar aquesta opció, els elements de treball que no s'executen pel fet "
-"que la condició no es compleix, es marquen com cancel·lats en lloc de ser "
-"eliminats."
+msgstr "En activar aquesta opció, els elements de treball que no s'executen pel fet que la condició no es compleix, es marquen com cancel·lats en lloc de ser eliminats."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -203,8 +196,7 @@ msgid "Cancel Workitem"
 msgstr ""
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -260,7 +252,7 @@ msgstr "País"
 #: field:marketing.campaign.transition,create_uid:0
 #: field:marketing.campaign.workitem,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creat per"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,create_date:0
@@ -269,7 +261,7 @@ msgstr ""
 #: field:marketing.campaign.transition,create_date:0
 #: field:marketing.campaign.workitem,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creat el"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -286,15 +278,12 @@ msgstr "Data"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr ""
-"Data en la qual aquest segment es va sincronitzar per última vegada (de "
-"forma automàtica o manualment)."
+msgstr "Data en la qual aquest segment es va sincronitzar per última vegada (de forma automàtica o manualment)."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
-"Data en la qual aquest segment va ser tancat o cancel·lat per última vegada"
+msgstr "Data en la qual aquest segment va ser tancat o cancel·lat per última vegada"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,day:0
@@ -318,8 +307,8 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that "
-"already entered the campaign."
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
 msgstr ""
 
 #. module: marketing_campaign
@@ -351,7 +340,7 @@ msgstr "Esborrany"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr ""
+msgstr "Correu electrònic"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:774
@@ -367,7 +356,7 @@ msgstr "Plantilla email"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates"
-msgstr ""
+msgstr "Plantilles de correu electrònic"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_done:0
@@ -427,12 +416,7 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr ""
-"Filtre per seleccionar els registres de recursos que pertanyen a aquest "
-"segment. Es poden crear i desar nous filtres amb la recerca avançada en la "
-"vista de llista dels recursos. Si no hi ha cap filtre establert, es "
-"seleccionen tots els registres sense filtrar. La manera de sincronització "
-"també podeu afegir un criteri per al filtre."
+msgstr "Filtre per seleccionar els registres de recursos que pertanyen a aquest segment. Es poden crear i desar nous filtres amb la recerca avançada en la vista de llista dels recursos. Si no hi ha cap filtre establert, es seleccionen tots els registres sense filtrar. La manera de sincronització també podeu afegir un criteri per al filtre."
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
@@ -442,18 +426,15 @@ msgstr "Cost fix"
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and "
-"revenue on each campaign activity. Cost and Revenue statistics are included "
-"in Campaign Reporting."
-msgstr ""
-"Cost fix per al funcionament d'aquesta campanya. També podeu especificar els "
-"costos variables i els ingressos de cada activitat de la campanya. "
-"Estadístiques de costos i ingressos s'inclouen en l'Informe de la campanya."
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
+msgstr "Cost fix per al funcionament d'aquesta campanya. També podeu especificar els costos variables i els ingressos de cada activitat de la campanya. Estadístiques de costos i ingressos s'inclouen en l'Informe de la campanya."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
 msgid "Follow-Up"
-msgstr ""
+msgstr "Seguiment"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -461,7 +442,7 @@ msgstr ""
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupa per"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
@@ -471,8 +452,8 @@ msgstr ""
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
 msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle "
-"of our Gold Partners"
+"Hi, we are delighted to let you know that you have entered the select circle"
+" of our Gold Partners"
 msgstr ""
 
 #. module: marketing_campaign
@@ -492,28 +473,25 @@ msgid "How is the destination workitem triggered"
 msgstr "Com es dispara l'element de treball en destinació."
 
 #. module: marketing_campaign
-#: field:campaign.analysis,id:0
-#: field:marketing.campaign,id:0
+#: field:campaign.analysis,id:0 field:marketing.campaign,id:0
 #: field:marketing.campaign.activity,id:0
 #: field:marketing.campaign.segment,id:0
 #: field:marketing.campaign.transition,id:0
 #: field:marketing.campaign.workitem,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
-msgstr ""
-"Si no s'indica la data, aquest element de treball ha de ser executat "
-"manualment."
+msgstr "Si no s'indica la data, aquest element de treball ha de ser executat manualment."
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to "
-"avoid selecting similar records twice. Similar records are records that have "
-"the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
@@ -647,9 +625,7 @@ msgstr "Mode"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
-msgstr ""
-"El model del filtre ha de ser el mateix que el model del recurs de la "
-"campanya "
+msgstr "El model del filtre ha de ser el mateix que el model del recurs de la campanya "
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -663,8 +639,7 @@ msgid "Month(s)"
 msgstr "Mes/os"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
@@ -674,7 +649,7 @@ msgstr "Nom"
 #: selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 msgid "New"
-msgstr ""
+msgstr "Nou"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
@@ -705,9 +680,7 @@ msgstr "Següent sincronització"
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr ""
-"Propera vegada que el treball de sincronització està programat per executar-"
-"se automàticament."
+msgstr "Propera vegada que el treball de sincronització està programat per executar-se automàticament."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:800
@@ -743,9 +716,7 @@ msgstr "Només registres creats després de l'última sincronització"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
-"Només registres actualitzats després de l'última sincronització (sense "
-"duplicats)"
+msgstr "Només registres actualitzats després de l'última sincronització (sense duplicats)"
 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
@@ -777,7 +748,7 @@ msgstr "Camp empresa"
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr ""
+msgstr "Empreses"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
@@ -805,24 +776,13 @@ msgstr "Procés"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr ""
-"Expressió de Python per decidir si l'activitat es pot executar, en cas "
-"contrari serà eliminada o cancel·lada . L'expressió pot utilitzar les "
-"següents variables [navegables]:\n"
-"   - activitat: l'activitat de la campanya\n"
-"   - treball: l'element de treball de la campanya\n"
-"   - recurs: el recurs que representa aquesta campanya\n"
-"   - transicions: llista de les transicions de la campanya sortints des "
-"d'aquesta activitat\n"
-"...- re: Expressió regular de Python"
+msgstr "Expressió de Python per decidir si l'activitat es pot executar, en cas contrari serà eliminada o cancel·lada . L'expressió pot utilitzar les següents variables [navegables]:\n   - activitat: l'activitat de la campanya\n   - treball: l'element de treball de la campanya\n   - recurs: el recurs que representa aquesta campanya\n   - transicions: llista de les transicions de la campanya sortints des d'aquesta activitat\n...- re: Expressió regular de Python"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -909,10 +869,7 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr ""
-"Indiqueu un cost variable si considereu que cada element de la campanya que "
-"ha arribat fins aquest punt ha suposat un cost determinat. Podeu obtenir "
-"estadístiques dels costos en la secció d'informes."
+msgstr "Indiqueu un cost variable si considereu que cada element de la campanya que ha arribat fins aquest punt ha suposat un cost determinat. Podeu obtenir estadístiques dels costos en la secció d'informes."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,revenue:0
@@ -920,10 +877,7 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr ""
-"Especifiqueu un ingrés previst si considereu que cada element de la campanya "
-"que ha aconseguit en aquest punt ha generat un cert ingrés. Podeu obtenir "
-"estadístiques sobre ingressos en la secció d'informes."
+msgstr "Especifiqueu un ingrés previst si considereu que cada element de la campanya que ha aconseguit en aquest punt ha generat un cert ingrés. Podeu obtenir estadístiques sobre ingressos en la secció d'informes."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
@@ -944,7 +898,7 @@ msgstr "Inicia"
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
 msgid "Statistics"
-msgstr ""
+msgstr "Estadístiques"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -956,7 +910,7 @@ msgstr ""
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
 #: field:marketing.campaign.workitem,state:0
 msgid "Status"
-msgstr ""
+msgstr "Estat"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
@@ -986,24 +940,11 @@ msgstr "Sincronitza manualment"
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
 msgid ""
-"Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but "
-"does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and "
-"reports (be very careful with this mode, you're live!)"
-msgstr ""
-"Test - Crea i processa totes les activitats directament (sense esperar pel "
-"retard de les transicions) però no s'envien correus ni es creen informes.\n"
-"Test en temps real - Crea i processa totes les activitats directament però "
-"no envien correus ni es creen informes.\n"
-"Confirmació manual - La campanya s'executa normalment, però l'usuari ha de "
-"validar tots els elements de treball manualment.\n"
-"Normal - La campanya s'executa amb normalitat i automàticament envia tots "
-"els correus correu-vos i informes (vagi amb compte amb aquesta manera, "
-"treballa \"en viu\"!)"
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+msgstr "Test - Crea i processa totes les activitats directament (sense esperar pel retard de les transicions) però no s'envien correus ni es creen informes.\nTest en temps real - Crea i processa totes les activitats directament però no envien correus ni es creen informes.\nConfirmació manual - La campanya s'executa normalment, però l'usuari ha de validar tots els elements de treball manualment.\nNormal - La campanya s'executa amb normalitat i automàticament envia tots els correus correu-vos i informes (vagi amb compte amb aquesta manera, treballa \"en viu\"!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1023,8 +964,7 @@ msgstr "Test en tiemps real"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr ""
-"L'activitat cap a / des de la transició ha de ser de la mateixa campanya "
+msgstr "L'activitat cap a / des de la transició ha de ser de la mateixa campanya "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
@@ -1055,8 +995,7 @@ msgstr ""
 #: code:addons/marketing_campaign/marketing_campaign.py:800
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr ""
-"L'etapa actual per a aquest element no té email o informe per previsualitzar"
+msgstr "L'etapa actual per a aquest element no té email o informe per previsualitzar"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
@@ -1066,8 +1005,8 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
 msgid ""
-"The generated workitems will be linked to the partner related to the record. "
-"If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
@@ -1087,21 +1026,10 @@ msgstr "L'informe a generar quan l'activitat és activada"
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
 "  "
-msgstr ""
-"El tipus d'acció a executar quan s'introdueix un registre en aquesta "
-"activitat, com:\n"
-"   - Correu: envia un correu utilitzant una plantilla predeterminada de "
-"correu\n"
-"   - Informe: imprimeix un informe existent definit en el recurs i ho guarda "
-"en el directori especificat\n"
-"   - Acció personalitzada: executa una acció predeterminada, per exemple per "
-"modificar els camps del recurs\n"
-"  "
+msgstr "El tipus d'acció a executar quan s'introdueix un registre en aquesta activitat, com:\n   - Correu: envia un correu utilitzant una plantilla predeterminada de correu\n   - Informe: imprimeix un informe existent definit en el recurs i ho guarda en el directori especificat\n   - Acció personalitzada: executa una acció predeterminada, per exemple per modificar els camps del recurs\n  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0

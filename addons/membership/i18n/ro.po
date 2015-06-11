@@ -1,21 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * membership
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:56+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: membership
 #: field:report.membership,num_invoiced:0
@@ -37,9 +38,7 @@ msgstr "# In asteptare"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr ""
-"Un membru cu care doriti sa va asociati calitatea de membru. Va lua in "
-"considerare starea apartenentei membrului asociat."
+msgstr "Un membru cu care doriti sa va asociati calitatea de membru. Va lua in considerare starea apartenentei membrului asociat."
 
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
@@ -136,13 +135,13 @@ msgstr "Contacte"
 #: field:membership.invoice,create_uid:0
 #: field:membership.membership_line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #. module: membership
 #: field:membership.invoice,create_date:0
 #: field:membership.membership_line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creat în"
 
 #. module: membership
 #: view:report.membership:membership.view_report_membership_search
@@ -205,7 +204,7 @@ msgstr "Data de incetare a calitatii de membru"
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "End Month"
-msgstr ""
+msgstr "Sfarsitul lunii"
 
 #. module: membership
 #: help:report.membership,date_to:0
@@ -220,8 +219,7 @@ msgstr ""
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-"Eroare ! Data de sfarsit nu poate fi setata inaintea Datei de inceput."
+msgstr "Eroare ! Data de sfarsit nu poate fi setata inaintea Datei de inceput."
 
 #. module: membership
 #: constraint:res.partner:0
@@ -248,8 +246,7 @@ msgstr "Estimare"
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
-#: field:res.partner,free_member:0
-#: selection:res.partner,membership_state:0
+#: field:res.partner,free_member:0 selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr "Membru necotizant"
 
@@ -272,7 +269,7 @@ msgstr ""
 #: view:report.membership:membership.view_report_membership_search
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "Group By"
-msgstr ""
+msgstr "Grupează după"
 
 #. module: membership
 #: view:product.template:membership.membership_product_search_form_view
@@ -280,11 +277,10 @@ msgid "Group by..."
 msgstr "Grupeaza dupa..."
 
 #. module: membership
-#: field:membership.invoice,id:0
-#: field:membership.membership_line,id:0
+#: field:membership.invoice,id:0 field:membership.membership_line,id:0
 #: field:report.membership,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: membership
 #: view:product.template:membership.membership_product_search_form_view
@@ -327,8 +323,7 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -337,32 +332,13 @@ msgstr ""
 #: help:membership.membership_line,state:0
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
-msgstr ""
-"Indica statusul calitatii de membru.\n"
-"                        -Non Membru: Un partner care nu a facut cerere "
-"pentru a deveni membru.\n"
-"                        -Membru Anulat: Un membru care si-a anulat calitatea "
-"de membru.\n"
-"                        -Membru Vechi: Un membru caruia i-a expirat data "
-"apartenentei ca membru.\n"
-"                        -Membru in Asteptare: Un membru care a aplicat "
-"pentru a deveni membru si a carui factura va fi creata.\n"
-"                        -Membru Facturat: Un membru a carui factura a fost "
-"creata.\n"
-"                        -Membru cotizant: Un membru care a platit taxa de "
-"membru."
+"                        -Non Member: A member who has not applied for any membership.\n"
+"                        -Cancelled Member: A member who has cancelled his membership.\n"
+"                        -Old Member: A member whose membership date has expired.\n"
+"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been created.\n"
+"                        -Paid Member: A member who has paid the membership amount."
+msgstr "Indica statusul calitatii de membru.\n                        -Non Membru: Un partner care nu a facut cerere pentru a deveni membru.\n                        -Membru Anulat: Un membru care si-a anulat calitatea de membru.\n                        -Membru Vechi: Un membru caruia i-a expirat data apartenentei ca membru.\n                        -Membru in Asteptare: Un membru care a aplicat pentru a deveni membru si a carui factura va fi creata.\n                        -Membru Facturat: Un membru a carui factura a fost creata.\n                        -Membru cotizant: Un membru care a platit taxa de membru."
 
 #. module: membership
 #: field:membership.membership_line,date:0
@@ -373,13 +349,13 @@ msgstr "Data aderarii"
 #: field:membership.invoice,write_uid:0
 #: field:membership.membership_line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizare făcută de"
 
 #. module: membership
 #: field:membership.invoice,write_date:0
 #: field:membership.membership_line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualizare în"
 
 #. module: membership
 #: field:report.membership,partner_id:0
@@ -563,7 +539,7 @@ msgstr "Sablon produs"
 #. module: membership
 #: field:report.membership,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Cantitate"
 
 #. module: membership
 #: view:report.membership:membership.view_report_membership_search
@@ -595,7 +571,7 @@ msgstr "Data de incepere"
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "Start Month"
-msgstr ""
+msgstr "Lună de start"
 
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter

@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * report
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-02-18 12:17+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:49+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-19 05:42+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report
 #: view:website:report.external_layout_footer
@@ -169,14 +170,12 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: report
-#: field:report,create_uid:0
-#: field:report.paperformat,create_uid:0
+#: field:report,create_uid:0 field:report.paperformat,create_uid:0
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: report
-#: field:report,create_date:0
-#: field:report.paperformat,create_date:0
+#: field:report,create_date:0 field:report.paperformat,create_date:0
 msgid "Created on"
 msgstr "Aangemaakt op"
 
@@ -208,9 +207,7 @@ msgstr "E-mail:"
 #. module: report
 #: constraint:report.paperformat:0
 msgid "Error ! You cannot select a format AND speficic page width/height."
-msgstr ""
-"Fout! Het is niet mogelijk een papier formaat te selecteren EN een "
-"specifieke papier breedte/hoogte."
+msgstr "Fout! Het is niet mogelijk een papier formaat te selecteren EN een specifieke papier breedte/hoogte."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -238,8 +235,7 @@ msgid "Header spacing"
 msgstr "Kop afstand"
 
 #. module: report
-#: field:report,id:0
-#: field:report.abstract_report,id:0
+#: field:report,id:0 field:report.abstract_report,id:0
 #: field:report.paperformat,id:0
 msgid "ID"
 msgstr "ID"
@@ -250,14 +246,12 @@ msgid "Landscape"
 msgstr "Liggend"
 
 #. module: report
-#: field:report,write_uid:0
-#: field:report.paperformat,write_uid:0
+#: field:report,write_uid:0 field:report.paperformat,write_uid:0
 msgid "Last Updated by"
 msgstr "Laatst aangepast door"
 
 #. module: report
-#: field:report,write_date:0
-#: field:report.paperformat,write_date:0
+#: field:report,write_date:0 field:report.paperformat,write_date:0
 msgid "Last Updated on"
 msgstr "Laatst aangepast op"
 
@@ -408,14 +402,9 @@ msgstr "Bovenmarge (mm)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a "
-"href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
-msgstr ""
-"Kan geen Wkhtmltopdf op dit systeem vinden \n"
-"Het rapport wordt getoond in html.<br><br><a "
-"href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
-"wkhtmltopdf.org</a>"
+msgstr "Kan geen Wkhtmltopdf op dit systeem vinden \nHet rapport wordt getoond in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\nwkhtmltopdf.org</a>"
 
 #. module: report
 #: view:website:report.external_layout_footer
@@ -435,9 +424,7 @@ msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr ""
-"You need to start Odoo met ten minste twee \n"
-"workers om een PDF versie te printen ban het rapport."
+msgstr "You need to start Odoo met ten minste twee \nworkers om een PDF versie te printen ban het rapport."
 
 #. module: report
 #. openerp-web
@@ -445,16 +432,10 @@ msgstr ""
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-" Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
-"and footers as well as\n"
-" support for table-breaking between pages.<br><br><a "
-"href=\"http://wkhtmltopdf.org/\" \n"
+" Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
+" support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 " target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
-"U moet uw versie van Wkhtmltopdf minimaal upgraden tot versie 0.12.0 \n"
-"om een goede weergave van kop- en voetteksten en ondersteuning voor tabellen "
-"over pagina's te krijgen. <br><br><a href=\"http://wkhtmltopdf.org/\" "
-"target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr "U moet uw versie van Wkhtmltopdf minimaal upgraden tot versie 0.12.0 \nom een goede weergave van kop- en voetteksten en ondersteuning voor tabellen over pagina's te krijgen. <br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: view:website:report.layout

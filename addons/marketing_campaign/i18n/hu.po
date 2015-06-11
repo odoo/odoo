@@ -1,21 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-31 12:54+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:55+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -29,36 +30,16 @@ msgid ""
 "            Click to create a marketing campaign.\n"
 "          </p><p>\n"
 "            Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) "
-"on\n"
+"            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fullfil the campaign.\n"
 "          </p><p>\n"
-"            A campaign can have many activities like sending an email, "
-"printing\n"
-"            a letter, assigning to a team, etc. These activities are "
-"triggered\n"
+"            A campaign can have many activities like sending an email, printing\n"
+"            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Kattintson egy marketing kampány létrehozásához.\n"
-"          </p><p>\n"
-"            Odoo rendszer marketing kampánya lehetővé teszi az üzlet \n"
-"            lehetőségeivel kapcsolatos automatikus hírközléseket.\n"
-"            Meghatározhat egy szelvényt az érdeklődők és \n"
-"            ügyfelek (feltételeinek beállításával) a kampány\n"
-"            teljesítéséhez.\n"
-"          </p><p>\n"
-"            Egy kampánynak több tevékenysége lehet, mint email kiküldése, "
-"levél\n"
-"            nyomtatása, csoporthoz rendelése, stb. Ezek a tevékenységek egy\n"
-"            jellegzetes körülmény által kapcsolhatóak; kapcsolati űrlap, 10 "
-"nappal\n"
-"            az első találkozótól, ha az érdeklődés még nincs lezárva, stb.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Kattintson egy marketing kampány létrehozásához.\n          </p><p>\n            Odoo rendszer marketing kampánya lehetővé teszi az üzlet \n            lehetőségeivel kapcsolatos automatikus hírközléseket.\n            Meghatározhat egy szelvényt az érdeklődők és \n            ügyfelek (feltételeinek beállításával) a kampány\n            teljesítéséhez.\n          </p><p>\n            Egy kampánynak több tevékenysége lehet, mint email kiküldése, levél\n            nyomtatása, csoporthoz rendelése, stb. Ezek a tevékenységek egy\n            jellegzetes körülmény által kapcsolhatóak; kapcsolati űrlap, 10 nappal\n            az első találkozótól, ha az érdeklődés még nincs lezárva, stb.\n          </p>\n        "
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,server_action_id:0
@@ -102,10 +83,7 @@ msgstr "Minden rekord (nincs sokszorozás)"
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr ""
-"Egy tevékenység jeladóval ellátva úgy is nevezhető mint programozott "
-"végrehajtó. Vigyázzon, a feladatelemet  mindig létrehozza, ha a jelet "
-"elküldik"
+msgstr "Egy tevékenység jeladóval ellátva úgy is nevezhető mint programozott végrehajtó. Vigyázzon, a feladatelemet  mindig létrehozza, ha a jelet elküldik"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -133,9 +111,7 @@ msgstr "Automatikus átállás"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr ""
-"Ennek a variációnak az aktiválásával, feladatelemek melyek a körülmények "
-"miatt nem végrehajthatóak, a törlésük helyett érvénytelenítésre kerülnek."
+msgstr "Ennek a variációnak az aktiválásával, feladatelemek melyek a körülmények miatt nem végrehajthatóak, a törlésük helyett érvénytelenítésre kerülnek."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -220,8 +196,7 @@ msgid "Cancel Workitem"
 msgstr "Munkaelem visszavonása"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -303,9 +278,7 @@ msgstr "Dátum"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr ""
-"Dátum amelyen a szakasz utoljára szinkronizálva lett (automatikusan vagy "
-"kézzel)"
+msgstr "Dátum amelyen a szakasz utoljára szinkronizálva lett (automatikusan vagy kézzel)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
@@ -334,16 +307,9 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that "
-"already entered the campaign."
-msgstr ""
-"Még egy kritérium meghatározásának hozzáadása a szűrőhöz, amikor egy új "
-"rekordot választ a kampányba való beillesztéshez \"Nincs többszörözés\" "
-"megakadályozva olyan rekord választását melyek már előzőleg be lettek "
-"illesztve a kampányba. Ha a kampányban van  \"Egyedi mező\" beállítva, "
-"\"nincs többszörözés\" akkor is megakadályozza olyan rekord kiválasztását, "
-"melynek ugyanaz az értéke az egyedi mezőre mint a másik rekordnak, mely már "
-"be lett írva a kampányba."
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
+msgstr "Még egy kritérium meghatározásának hozzáadása a szűrőhöz, amikor egy új rekordot választ a kampányba való beillesztéshez \"Nincs többszörözés\" megakadályozva olyan rekord választását melyek már előzőleg be lettek illesztve a kampányba. Ha a kampányban van  \"Egyedi mező\" beállítva, \"nincs többszörözés\" akkor is megakadályozza olyan rekord kiválasztását, melynek ugyanaz az értéke az egyedi mezőre mint a másik rekordnak, mely már be lett írva a kampányba."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_directory_id:0
@@ -450,12 +416,7 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr ""
-"Szűrő a szakaszhoz tartozó, egyező forrás rekordok kiválasztásához. Új szűrő "
-"is létrehozható és elmenthető a kiterjesztett keresővel a Források lista "
-"nézetében. Ha nincs szűrő kiválasztva, akkor szűrő nélkül lesznek "
-"leválogatva a rekordok. A szinkronizációs mód hozzáadhat kritériumokat a "
-"szűrőhöz."
+msgstr "Szűrő a szakaszhoz tartozó, egyező forrás rekordok kiválasztásához. Új szűrő is létrehozható és elmenthető a kiterjesztett keresővel a Források lista nézetében. Ha nincs szűrő kiválasztva, akkor szűrő nélkül lesznek leválogatva a rekordok. A szinkronizációs mód hozzáadhat kritériumokat a szűrőhöz."
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
@@ -465,13 +426,10 @@ msgstr "Állandó költség"
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and "
-"revenue on each campaign activity. Cost and Revenue statistics are included "
-"in Campaign Reporting."
-msgstr ""
-"fix költség a kampány futtatásához. Lehetősége van megadni változó költséget "
-"is és bevételt mindegyik kampány tevékenységhez. Költség és bevétel "
-"statisztikák a Kampány jelentéseknél."
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
+msgstr "fix költség a kampány futtatásához. Lehetősége van megadni változó költséget is és bevételt mindegyik kampány tevékenységhez. Költség és bevétel statisztikák a Kampány jelentéseknél."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
@@ -494,10 +452,9 @@ msgstr "Helló, nemsokára emailben megkapja az üdvözlő csomagot."
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
 msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle "
-"of our Gold Partners"
-msgstr ""
-"Helló, mi örömmel tudatjuk, hogy bekerül az arany kiválasztott tagok körébe"
+"Hi, we are delighted to let you know that you have entered the select circle"
+" of our Gold Partners"
+msgstr "Helló, mi örömmel tudatjuk, hogy bekerül az arany kiválasztott tagok körébe"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_2
@@ -516,8 +473,7 @@ msgid "How is the destination workitem triggered"
 msgstr "Ahogy a végső feladatelem kapcsolva lesz"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,id:0
-#: field:marketing.campaign,id:0
+#: field:campaign.analysis,id:0 field:marketing.campaign,id:0
 #: field:marketing.campaign.activity,id:0
 #: field:marketing.campaign.segment,id:0
 #: field:marketing.campaign.transition,id:0
@@ -533,25 +489,15 @@ msgstr "Ha nincs beállítva a dátum, ezt a feladatelemet kézzel kell futtatni
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to "
-"avoid selecting similar records twice. Similar records are records that have "
-"the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr ""
-"Ha be van állítva, ez a mező segítséget ad a szakaszokhoz, melyek a \"nincs "
-"sokszorozás\" módban működnek, elkerülve az egyedülálló rekordok kétszeri "
-"kiválasztását. Egyedülálló rekordok melyek ugyanazzal az értékkel "
-"rendelkeznek az egyedi mezőben. Például az \"e-mail ettől\" mező "
-"kiválasztásával a CMR Lehetőségek-et megakadályozza, hogy a kampányt még "
-"egyszer ugyanarra az e-mail címre elküldje. Ha nincs beállítva, a \"nincs "
-"sokszorozás\" csak attól fog megvédeni, hogy a már kiválasztott kampányt ne "
-"válassza ki még egyszer. Csak a könnyen összehasonlítható mezőket, mint "
-"szöveg mező, egész szám, kiválasztás vagy egyedülálló kapcsolat lehet "
-"használni."
+msgstr "Ha be van állítva, ez a mező segítséget ad a szakaszokhoz, melyek a \"nincs sokszorozás\" módban működnek, elkerülve az egyedülálló rekordok kétszeri kiválasztását. Egyedülálló rekordok melyek ugyanazzal az értékkel rendelkeznek az egyedi mezőben. Például az \"e-mail ettől\" mező kiválasztásával a CMR Lehetőségek-et megakadályozza, hogy a kampányt még egyszer ugyanarra az e-mail címre elküldje. Ha nincs beállítva, a \"nincs sokszorozás\" csak attól fog megvédeni, hogy a már kiválasztott kampányt ne válassza ki még egyszer. Csak a könnyen összehasonlítható mezőket, mint szöveg mező, egész szám, kiválasztás vagy egyedülálló kapcsolat lehet használni."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
@@ -679,8 +625,7 @@ msgstr "Mód"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
-msgstr ""
-"A szűrő modelljének ugyanannak kell lennie mint a kampány erőforrás modellje "
+msgstr "A szűrő modelljének ugyanannak kell lennie mint a kampány erőforrás modellje "
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -694,8 +639,7 @@ msgid "Month(s)"
 msgstr "Hónap(ok)"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
@@ -736,8 +680,7 @@ msgstr "Következő szinkronizáció"
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr ""
-"Következő időpont a munka szinkronizálására amikor az automatikusan futni fog"
+msgstr "Következő időpont a munka szinkronizálására amikor az automatikusan futni fog"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:800
@@ -773,8 +716,7 @@ msgstr "Csak az utolsó szinkronizáció után létrehozott rekordok"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
-"Csak az utolsó szinkronizálás óta módosult rekordok (nincs többszörözés)"
+msgstr "Csak az utolsó szinkronizálás óta módosult rekordok (nincs többszörözés)"
 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
@@ -834,24 +776,13 @@ msgstr "Folyamat"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr ""
-"Python kifejezés annak eldöntésére, hogy a tevékenység végrehajtható, egyéb "
-"esetben törölve vagy visszavonva lesz. A kifejezés a használhatja a "
-"következő [böngészhető] változókat:\n"
-"   - tevékenység: a vállalat tevékenysége\n"
-"   - feladatelemek: a kampány feladatelem\n"
-"   - forrás: ezt a kampányt képviselő forrás termék\n"
-"   - átmeneti időszakok: kampány átmeneti időszak listák amik ebből a "
-"tevékenységből származnak\n"
-"...- re: Python általános kifejező modul"
+msgstr "Python kifejezés annak eldöntésére, hogy a tevékenység végrehajtható, egyéb esetben törölve vagy visszavonva lesz. A kifejezés a használhatja a következő [böngészhető] változókat:\n   - tevékenység: a vállalat tevékenysége\n   - feladatelemek: a kampány feladatelem\n   - forrás: ezt a kampányt képviselő forrás termék\n   - átmeneti időszakok: kampány átmeneti időszak listák amik ebből a tevékenységből származnak\n...- re: Python általános kifejező modul"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -938,10 +869,7 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr ""
-"Változó költség beállítása ha úgy dönt, hogy mindegyik kampány tétel amikor "
-"eléri ezt a szintet akkor maga után von egy bizonyos költséget. Megkaphatja "
-"a költség statisztikát a Jelentés résznél"
+msgstr "Változó költség beállítása ha úgy dönt, hogy mindegyik kampány tétel amikor eléri ezt a szintet akkor maga után von egy bizonyos költséget. Megkaphatja a költség statisztikát a Jelentés résznél"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,revenue:0
@@ -949,10 +877,7 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr ""
-"Állítson be elvárt jövedelmet, ha figyelembe akarja venni amikor az egyes "
-"kampány termékek elérik ezt a szintet akkor azok bevételt generálnak. El "
-"tudja érni a bevétel statisztikát a Jelentések részen."
+msgstr "Állítson be elvárt jövedelmet, ha figyelembe akarja venni amikor az egyes kampány termékek elérik ezt a szintet akkor azok bevételt generálnak. El tudja érni a bevétel statisztikát a Jelentések részen."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
@@ -995,14 +920,12 @@ msgstr "Szinkronizációs mód: minden rekord"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr ""
-"Szinkronizációs mód: csak a legutóbbi szinkronizlás után létrehozott rekordok"
+msgstr "Szinkronizációs mód: csak a legutóbbi szinkronizlás után létrehozott rekordok"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr ""
-"Szinkronizálási mód: csak az utolsó szinkronizálás óta frissített rekordok"
+msgstr "Szinkronizálási mód: csak az utolsó szinkronizálás óta frissített rekordok"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
@@ -1017,24 +940,11 @@ msgstr "Manuális szinkronizálás"
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
 msgid ""
-"Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but "
-"does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and "
-"reports (be very careful with this mode, you're live!)"
-msgstr ""
-"Teszt - Ez közvetlenül, automatikusan létrehozza és futtatja az összes "
-"tevékenységet  (anélkül, hogy az átmenetek késésére várakozna) de nem küld e-"
-"maileket és nem készít jelentéseket.\n"
-"Valós idejű teszt - Ez közvetlenül létrehozza és futtatja tevékenységeket de "
-"nem küld e-maileket és nem készít jelentéseket.\n"
-"Kézi visszaigazolással - a kampány normál futása, de a felhasználónak kézzel "
-"kell érvényesítenie a feladatelemet.\n"
-"Normál - a kampány normál futása és automatikus email küldések és jelentés "
-"készítések (legyen nagyon óvatos ezzel a móddal, élőben tesz mindent!)"
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+msgstr "Teszt - Ez közvetlenül, automatikusan létrehozza és futtatja az összes tevékenységet  (anélkül, hogy az átmenetek késésére várakozna) de nem küld e-maileket és nem készít jelentéseket.\nValós idejű teszt - Ez közvetlenül létrehozza és futtatja tevékenységeket de nem küld e-maileket és nem készít jelentéseket.\nKézi visszaigazolással - a kampány normál futása, de a felhasználónak kézzel kell érvényesítenie a feladatelemet.\nNormál - a kampány normál futása és automatikus email küldések és jelentés készítések (legyen nagyon óvatos ezzel a móddal, élőben tesz mindent!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1054,8 +964,7 @@ msgstr "Valós idejű teszt"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr ""
-"A tól/hoz átvezetési tevékenységnek ugyanahhoz a kampányhoz kell tartoznia. "
+msgstr "A tól/hoz átvezetési tevékenységnek ugyanahhoz a kampányhoz kell tartoznia. "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
@@ -1066,8 +975,7 @@ msgstr "Az elvégzett művelet miután tevékenység aktiválásra került"
 #: code:addons/marketing_campaign/marketing_campaign.py:133
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr ""
-"Minden szakasz lezárása előtt a kampányt nem lehet elvégzettnek jelölni."
+msgstr "Minden szakasz lezárása előtt a kampányt nem lehet elvégzettnek jelölni."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:123
@@ -1075,9 +983,7 @@ msgstr ""
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr ""
-"A kampány nem indítható el. Nincs semmilyen elindítható tevékenysége. "
-"Módosítsa a kampány tevékenységet, legyen egy induló pontja."
+msgstr "A kampány nem indítható el. Nincs semmilyen elindítható tevékenysége. Módosítsa a kampány tevékenységet, legyen egy induló pontja."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:111
@@ -1089,8 +995,7 @@ msgstr "a kampány nem indítható el. Nincs tevékenység benne."
 #: code:addons/marketing_campaign/marketing_campaign.py:800
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr ""
-"Ennek a tételnek az aktuális lépéséhez nincs előnézeti e-mail vagy jelentés."
+msgstr "Ennek a tételnek az aktuális lépéséhez nincs előnézeti e-mail vagy jelentés."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
@@ -1100,15 +1005,11 @@ msgstr "A küldendő email a tevékenység aktiválása után"
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
 msgid ""
-"The generated workitems will be linked to the partner related to the record. "
-"If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr ""
-"A létrehozott feladatelemek a rekordhoz tartozó partnerhez lesznek csatlova. "
-"Ha a rekord a partnerrel megegyezik akkor a mezőt hagyja üresen. Ez hasznos "
-"jelentés céljából, a Kampány analízis elemzéshez vagy a Kampány nyomkövetés "
-"nézetben."
+msgstr "A létrehozott feladatelemek a rekordhoz tartozó partnerhez lesznek csatlova. Ha a rekord a partnerrel megegyezik akkor a mezőt hagyja üresen. Ez hasznos jelentés céljából, a Kampány analízis elemzéshez vagy a Kampány nyomkövetés nézetben."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1125,20 +1026,10 @@ msgstr "Jelentés generálódik, amikor ez a tevékenység aktiválódott"
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
 "  "
-msgstr ""
-"A művelet típusa melyet elvégez, amikor ehhez a tevékenységhez bevisz egy "
-"tételt, úgy mint:\n"
-"   - Email: email küldése az előre definiált sablonból\n"
-"   - Jelentés: a erőforrás tételnél meghatározott jelentés nyomtatása és "
-"elmentése egy konkrét könyvtárba\n"
-"   - Egyedi művelet: előre meghatározott művelet végrehajtása, pl.: "
-"erőforrás rekord mező módosítása\n"
-"  "
+msgstr "A művelet típusa melyet elvégez, amikor ehhez a tevékenységhez bevisz egy tételt, úgy mint:\n   - Email: email küldése az előre definiált sablonból\n   - Jelentés: a erőforrás tételnél meghatározott jelentés nyomtatása és elmentése egy konkrét könyvtárba\n   - Egyedi művelet: előre meghatározott művelet végrehajtása, pl.: erőforrás rekord mező módosítása\n  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0

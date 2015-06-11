@@ -1,23 +1,23 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-03-24 16:05+0000\n"
-"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
-"Language-Team: Slovenian <translations@matmoz.si>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
 "Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -26,27 +26,13 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Potrdite za nastavitev novega pravila samodejnihukrepov. \n"
-"              </p><p>\n"
-"                Uporabite samodejne ukrepe za samodejno sprožanje ukrepov\n"
-"                na različne zaslonih. Primer: indic, ki ga ustvari določen "
-"uporabnik, je lahko\n"
-"                samodejno dodeljen določeni prodajni ekipi. Ali pa: \n"
-"                priložnost, ki je še v statusu čakanje, lahko čez 14 "
-"dnisproži\n"
-"                samodejno e-sporočilo za opomnik.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Potrdite za nastavitev novega pravila samodejnihukrepov. \n              </p><p>\n                Uporabite samodejne ukrepe za samodejno sprožanje ukrepov\n                na različne zaslonih. Primer: indic, ki ga ustvari določen uporabnik, je lahko\n                samodejno dodeljen določeni prodajni ekipi. Ali pa: \n                priložnost, ki je še v statusu čakanje, lahko čez 14 dnisproži\n                samodejno e-sporočilo za opomnik.\n              </p>\n            "
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -65,8 +51,7 @@ msgid "Actions"
 msgstr "Ukrepi"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "Aktivno"
 
@@ -138,9 +123,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
-"Zamik po datumu izvedbe. Lahko vpišete negativno število, če potrebujete "
-"zamik pred datumom izvedbe, npr. pošiljanje opomnika 15 minut pred sestankom."
+msgstr "Zamik po datumu izvedbe. Lahko vpišete negativno število, če potrebujete zamik pred datumom izvedbe, npr. pošiljanje opomnika 15 minut pred sestankom."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -178,10 +161,7 @@ msgid ""
 "Go to your \"Related Document Model\" page and set the filter parameters in "
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
-msgstr ""
-"Pojdite na stran \"Model povezanega dokumenta\" in nastavite parametre "
-"filtra v pogledu \"Iskanje\" (Primer filtra na osnovi Indici/Priložnosti: "
-"Datum nastanka \"je enak\" 01/01/2012)"
+msgstr "Pojdite na stran \"Model povezanega dokumenta\" in nastavite parametre filtra v pogledu \"Iskanje\" (Primer filtra na osnovi Indici/Priložnosti: Datum nastanka \"je enak\" 01/01/2012)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -189,8 +169,7 @@ msgid "Hours"
 msgstr "Ure"
 
 #. module: base_action_rule
-#: field:base.action.rule,id:0
-#: field:base.action.rule.lead.test,id:0
+#: field:base.action.rule,id:0 field:base.action.rule.lead.test,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -199,15 +178,14 @@ msgstr "ID"
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr ""
-"Če je prisotno, mora biti ta pogoj izpolnjen pred izvršbo pravila ukrepa."
+msgstr "Če je prisotno, mora biti ta pogoj izpolnjen pred izvršbo pravila ukrepa."
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
-msgstr ""
-"Če je prisotno, mora biti ta pogoj izpolnjen pred posodobitvijo zapisa."
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "Če je prisotno, mora biti ta pogoj izpolnjen pred posodobitvijo zapisa."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -222,12 +200,10 @@ msgstr "Za ustvarjanje novega filtra:"
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
-"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
-msgstr ""
-"V tem pogledu \"Iskanje\" izberite meni \"Shrani trenutni filter\". vnesite "
-"ima (npr. ustvari 01/01/2012) in dodajte opcijo \"Skupna raba z uporabniki\""
+msgstr "V tem pogledu \"Iskanje\" izberite meni \"Shrani trenutni filter\". vnesite ima (npr. ustvari 01/01/2012) in dodajte opcijo \"Skupna raba z uporabniki\""
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
@@ -314,9 +290,9 @@ msgstr "Naziv pravila"
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid ""
-"Select when the action must be run, and add filters and/or timing conditions."
-msgstr ""
-"Določite kdaj naj se ukrep izvede in dodajte filtre in/ali časovne pogoje."
+"Select when the action must be run, and add filters and/or timing "
+"conditions."
+msgstr "Določite kdaj naj se ukrep izvede in dodajte filtre in/ali časovne pogoje."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -369,18 +345,14 @@ msgstr "Uporabi koledar"
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
-"Ob izračunu časovnega pogoja na osnovi dneva, je mogoče uporabiti koledar za "
-"izračun datuma na osnovi delovnih dni."
+msgstr "Ob izračunu časovnega pogoja na osnovi dneva, je mogoče uporabiti koledar za izračun datuma na osnovi delovnih dni."
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
-"Kdaj se naj izvede pogoj. Če je navedeno, ga bo razvrščevalnik preveril. Če "
-"je prazno, bo preverjeno ob nastanku in posodobitvi."
+msgstr "Kdaj se naj izvede pogoj. Če je navedeno, ga bo razvrščevalnik preveril. Če je prazno, bo preverjeno ob nastanku in posodobitvi."
 
 #. module: base_action_rule
 #: field:base.action.rule,kind:0

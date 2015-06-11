@@ -393,21 +393,21 @@ class BaseModel(object):
         ir_model_fields_obj = self.pool.get('ir.model.fields')
 
         # sparse field should be created at the end, as it depends on its serialized field already existing
-        model_fields = sorted(self._columns.items(), key=lambda x: 1 if x[1]._type == 'sparse' else 0)
+        model_fields = sorted(self._fields.items(), key=lambda x: 1 if x[1].type == 'sparse' else 0)
         for (k, f) in model_fields:
             vals = {
                 'model_id': model_id,
                 'model': self._name,
                 'name': k,
                 'field_description': f.string,
-                'ttype': f._type,
-                'relation': f._obj or '',
-                'select_level': tools.ustr(int(f.select)),
+                'ttype': f.type,
+                'relation': f.comodel_name or '',
+                'select_level': tools.ustr(int(f.index)),
                 'readonly': (f.readonly and 1) or 0,
                 'required': (f.required and 1) or 0,
-                'selectable': (f.selectable and 1) or 0,
-                'translate': (f.translate and 1) or 0,
-                'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
+                'selectable': (f.search or f.store and 1) or 0,
+                'translate': (f.translate if hasattr(f,'translate') else False and 1) or 0,
+                'relation_field': f.inverse_name if hasattr(f, 'inverse_name') else '',
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
