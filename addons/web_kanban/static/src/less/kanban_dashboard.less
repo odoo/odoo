@@ -1,7 +1,7 @@
-.oe_kanban_view {
+.o_kanban_view {
 
     &.o_kanban_mobile {
-        .oe_kanban_record {
+        .o_kanban_record {
             width: 400px;
         }
         span {
@@ -13,8 +13,6 @@
     }
 
     &.o_kanban_dashboard {
-
-        @odoo-brand-optional: #21b799;
 
         .o_visible {
             width: 100%;
@@ -43,8 +41,8 @@
                 margin-right: 0px !important;
             }
 
+
             .oe_kanban_colorpicker {
-                min-height: 21px;
 
                 li {
                     height: 0px;
@@ -52,45 +50,37 @@
             }
         }
 
-        .oe_kanban_record {
-            padding: 0;
-            position: relative;
-            margin: 10px;
-
-            // @media (max-width: @grid-float-breakpoint) {
-            //     margin: 10px !important;
-            // }
-        }
-
-        // if invisible, it will no take more than its original height
+        // If invisible, elem will no take more than its original height
         a, span {
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
             position: relative;
-            width: 100%;
             display: block;
         }
 
+        .o_kanban_record {
+            padding: 0;
+            position: relative;
+            margin: 4px 8px;
+        }
+
         a {
-            // color: @odoo-brand-optional;
+            color: @odoo-brand-optional;
         }
 
         .o_kanban_card_header {
-            display: flex;
-            display: -webkit-flex;
+            .o-flex-display();
             background-color: lightgrey;
             position: relative;
 
             .o_kanban_card_header_title {
-                -webkit-flex: 3 0 0;
-                flex: 3 0 0;
-                padding: 8px;
+                .o-flex(3, 0, 0);
+                padding: 8px 16px;
 
                 .o_primary {
-                    // color: @odoo-brand-optional;
-                    font-variant: small-caps;
-                    font-size: large;
+                    color: @odoo-brand-optional;
+                    font-weight: 700;
                 }
 
                 .o_secondary {
@@ -98,12 +88,11 @@
             }
 
             .o_kanban_manage_button_section {
-                -webkit-flex: 1 0 0;
-                flex: 1 0 0;
+                .o-flex(1, 0, 0);
                 padding: 16px;
 
                 .o_kanban_manage_toggle_button {
-                    text-align: center;
+                    text-align: right;
                 }
             }
         }
@@ -129,6 +118,7 @@
         .o_kanban_card_manage_pane {
             display: inline-block;
             vertical-align: top;
+            padding: 0 8px;
         }
 
         .o_kanban_card_manage_section {
@@ -145,6 +135,7 @@
         }
 
         .o_kanban_card_manage_settings {
+            text-align: right;
             padding: 8px;
 
             border-color: lightgrey;
