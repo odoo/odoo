@@ -368,7 +368,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        if (this.group_by || this.fields_keys.indexOf("sequence") !== -1) {
+        if ((this.group_by && this.group_by_field.type != "date") || this.fields_keys.indexOf("sequence") !== -1) {
             // Kanban cards drag'n'drop
             var prev_widget, is_folded, record, $columns;
             if (this.group_by) {
