@@ -1,45 +1,37 @@
-.oe_kanban_view.o_kanban_dashboard.o_project_kanban {
-
-    @odoo-brand-optional: #21b799;
+.o_kanban_view.o_kanban_dashboard.o_project_kanban {
 
     .o_kanban_flexbox {
-        display: flex;
+        .o-flex-display();
         position: relative;
     }
 
-    .oe_kanban_record {
+    .o_kanban_record {
         min-width: 300px;
-        max-width: 350px;
     }
-
-    /*
-    .oe_kanban_record:hover .o_project_kanban_manage {
-        visibility: visible;
-    }
-    */
 
     .o_project_kanban_main {
-        margin-bottom: 40px; // give space for manage section at the bottom
-        width: 75%;
+        // give space for manage section at the bottom
+        margin-bottom: 40px;
+        width: 70%;
 
-        .o_primary {
-            font-size: larger;
+        .o_kanban_card_content {
+            font-size: 12px;
+            .o_primary {
+                font-size: larger;
+            }
         }
 
         .o_project_kanban_manage {
             visibility: visible;
             position: absolute;
             bottom: 0;
-            margin-left: 10px;
+            margin-left: 16px;
             margin-bottom: 10px;
         }
         .o_project_kanban_colorpicker {
             padding: 8px;
         }
         .o_kanban_card_manage_pane {
-            border-color: lightgrey;
-            border-bottom-style: solid;
-            border-bottom-width: 1px;
 
             .o_kanban_card_manage_title {
                 margin: 0;
@@ -48,12 +40,16 @@
     }
 
     .o_project_kanban_boxes {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-content: stretch;
+        .o-flex-display();
+        .o-flex-flow(column, nowrap);
+        .o-justify-content(flex-end);
+        .o-align-content(stretch);
 
-        width: 25%;
+        width: 30%;
+
+        > a:hover {
+            text-decoration: none;
+        }
 
         .o_value {
             font-size: x-large;
@@ -67,11 +63,11 @@
         .o_project_kanban_box {
             text-align: center;
             padding: 15px 0 15px 0;
-            flex: 1 1 auto;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            justify-content: center;
+            .o-flex(1, 1, auto);
+            .o-flex-display();
+            .o-align-items(center);
+            .o-flex-flow(column, nowrap);
+            .o-justify-content(center);
         }
         .o_project_kanban_box:nth-child(even) {
             background-color: grey;

@@ -27,7 +27,7 @@
                                             <span><t t-esc="record.name.value"/></span>
                                         </div>
                                         <div t-if="record.alias_id.raw_value">
-                                            <span><i class="fa fa-envelope-o"></i> <t t-esc="record.alias_id.value"/></span>
+                                            <span><i class="fa fa-envelope"></i> <t t-esc="record.alias_id.value"/></span>
                                         </div>
                                     </div>
                                 </div><div class="o_kanban_card_manage_pane o_invisible">
@@ -41,16 +41,14 @@
                                         <div>
                                             <a name="%(action_view_task_history_cumulative_filter)d" type="action">Cumulative Flow</a>
                                         </div>
-                                    </div>
-                                    <div t-if="widget.editable" class="o_project_kanban_colorpicker">
-                                        <div class="col-xs-12">
-                                            <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                        <div t-if="widget.editable" class="o_project_kanban_colorpicker">
+                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="o_project_kanban_manage">
                                     <div class="text-left">
-                                        <a class="o_kanban_manage_toggle_button">More <i class="fa fa-caret-down"/></a>
+                                        <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
                                     </div>
                                 </div>
                             </div>

@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
+                <div name="button_box" position="inside">
                     <button name="action_view_task_rating"
                         attrs="{'invisible': ['|',  '|', ('is_visible_happy_customer', '=', False), ('use_tasks','=', False), ('percentage_satisfaction_task', '=', -1)]}"
                         class="oe_stat_button oe_percent"
@@ -16,7 +16,7 @@
                         icon="fa-smile-o">
                         <field string="On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
                     </button>
-                </xpath>
+                </div>
                 <xpath expr="//field[@name='privacy_visibility']" position="after">
                     <field name="is_visible_happy_customer"/>
                 </xpath>
