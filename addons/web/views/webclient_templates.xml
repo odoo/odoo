@@ -72,8 +72,19 @@
             <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
             <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
 
-            <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+            <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
+            <script src="/web/static/lib/bootstrap/js/affix.js"></script>
+            <script src="/web/static/lib/bootstrap/js/alert.js"></script>
+            <script src="/web/static/lib/bootstrap/js/button.js"></script>
+            <script src="/web/static/lib/bootstrap/js/carousel.js"></script>
+            <script src="/web/static/lib/bootstrap/js/collapse.js"></script>
+            <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
+            <script src="/web/static/lib/bootstrap/js/modal.js"></script>
+            <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
+            <script src="/web/static/lib/bootstrap/js/popover.js"></script>
+            <script src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
+            <script src="/web/static/lib/bootstrap/js/tab.js"></script>
+            <script src="/web/static/lib/bootstrap/js/transition.js"></script>
 
             <!-- jQuery ui -->
             <link rel="stylesheet" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
@@ -283,7 +294,7 @@
             <t t-call="web.layout">
                 <t t-set="head">
                     <link href="/web/static/src/css/base.css" rel="stylesheet"/>
-                    <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+                    <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
                 </t>
                 <t t-set="body_classname" t-value="'oe_single_form'"/>
                 <div class="oe_single_form_container modal-content">
