@@ -23,7 +23,7 @@ class valuation_report(report_sxw.rml_parse):
                             inner join stock_quant_move_rel sqmr on sm.id = sqmr.move_id
                             inner join stock_quant sq on sqmr.quant_id = sq.id
                             where sm.product_id in %s and sm.date <= %s and sm.company_id = %s
-                            and sq.qty>0 and """
+                             and """
             query_str += str_in
             query_str += """
                     and sm.state='done')
@@ -36,7 +36,7 @@ class valuation_report(report_sxw.rml_parse):
                     inner join stock_quant_move_rel sqmr on sm.id = sqmr.move_id
                     inner join stock_quant sq on sqmr.quant_id = sq.id
                     where sm.product_id in %s and sm.date <= %s and sm.company_id = %s
-                    and sq.qty>0 and """
+                     and """
             query_str += str_out
             query_str += """ and sm.state='done'))
                                 as foo
@@ -64,8 +64,8 @@ class valuation_report(report_sxw.rml_parse):
                 location = self.pool['stock.warehouse'].browse(self.cr, self.uid, warehouse).view_location_id.id
 
             loc = self.pool['stock.location'].browse(self.cr, self.uid, location)
-            str_in = " destination.parent_left > %s and destination.parent_right >= %s and not (source.parent_left >= %s and source.parent_left < %s) "
-            str_out = " not( destination.parent_left > %s and destination.parent_right >= %s) and (source.parent_left >= %s and source.parent_left < %s) "
+            str_in = " destination.parent_left >= %s and destination.parent_left < %s and not (source.parent_left >= %s and source.parent_left < %s) "
+            str_out = " not(destination.parent_left >= %s and destination.parent_left < %s) and (source.parent_left >= %s and source.parent_left < %s) "
             put_params = [loc.parent_left, loc.parent_right, loc.parent_left, loc.parent_right]
         return (str_in, str_out, put_params)
 
