@@ -1,73 +1,76 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_bank_statement_extensions
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Khaled Menof <kifcaliph@hotmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-15 11:18+0000\n"
-"Last-Translator: yosra yasser <y.yasser@diamondvision.me>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-16 05:54+0000\n"
-"X-Generator: Launchpad (build 17428)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,amount:0
 msgid "Amount"
-msgstr "المقدار"
+msgstr "المبلغ"
 
 #. module: account_bank_statement_extensions
 #: view:cancel.statement.line:account_bank_statement_extensions.view_cancel_statement_line
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
-msgstr "هل أنت متأكد من إلغاء سطور كشف الحساب المختارة؟"
+msgstr "هل ترغب حقاً في إلغاء بنود كشف الحساب البنكي المحددة؟"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
 msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
-msgstr "هل تريد تأكيد سطور كشف الحساب المختارة؟"
+msgstr "هل ترغب حقاً في تأكيد بنود كشف الحساب البنكي المحددة؟"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr "الحسابات المصرفية"
+msgstr "الحسابات البنكية"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
 msgid "Bank Statement"
-msgstr "كشف حساب بنك"
+msgstr "كشف الحساب"
 
 #. module: account_bank_statement_extensions
 #: model:ir.actions.report.xml,name:account_bank_statement_extensions.action_bank_statement_balance_report
 msgid "Bank Statement Balances"
-msgstr ""
+msgstr "أرصدة كشف الحساب"
 
 #. module: account_bank_statement_extensions
 #: view:website:account_bank_statement_extensions.report_bankstatementbalance
 msgid "Bank Statement Balances Report"
-msgstr "تقرير أرصدة الحساب البنكي"
+msgstr "تقرير أرصدة كشف الحساب"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "خط بيان المصرف"
+msgstr "بند كشف الحساب"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,bank_statement_line_ids:0
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_bank_statement_line
 #: model:ir.ui.menu,name:account_bank_statement_extensions.bank_statement_line
 msgid "Bank Statement Lines"
-msgstr "خطوط بيان المصرف"
+msgstr "بنود كشف الحساب"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Bank Transaction"
-msgstr "معاملة بنكية"
+msgstr "المعاملة البنكية"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:account_bank_statement_extensions.view_statement_line_global_form
@@ -78,7 +81,7 @@ msgstr "معلومات دفعة السداد"
 #. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "CODA"
-msgstr "المقطع الختامي"
+msgstr "CODA"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
@@ -88,75 +91,74 @@ msgstr "إلغاء"
 #. module: account_bank_statement_extensions
 #: view:cancel.statement.line:account_bank_statement_extensions.view_cancel_statement_line
 msgid "Cancel Lines"
-msgstr "الغى الأسطر"
+msgstr "إلغاء البنود"
 
 #. module: account_bank_statement_extensions
 #: view:cancel.statement.line:account_bank_statement_extensions.view_cancel_statement_line
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_cancel_statement_line
 #: model:ir.model,name:account_bank_statement_extensions.model_cancel_statement_line
 msgid "Cancel selected statement lines"
-msgstr "الغاء الاسطر المحددة في الكشف"
+msgstr "إلغاء بنود الكشف المحددة"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:account_bank_statement_extensions.view_statement_line_global_form
 msgid "Child Batch Payments"
-msgstr "أصغر دفعة سداد"
+msgstr "دفعات السداد التابعة"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,child_ids:0
 msgid "Child Codes"
-msgstr "رموز فرعية"
+msgstr "الأكواد التابعة"
 
 #. module: account_bank_statement_extensions
 #: view:website:account_bank_statement_extensions.report_bankstatementbalance
 msgid "Closing Balance"
-msgstr "رصيد الإغلاق"
+msgstr "رصيد الإقفال"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,code:0
 msgid "Code"
-msgstr "الرمز"
+msgstr "الكود"
 
 #. module: account_bank_statement_extensions
 #: help:account.bank.statement.line,globalisation_id:0
 msgid ""
 "Code to identify transactions belonging to the same globalisation level "
 "within a batch payment"
-msgstr ""
-"كود تعريف المعاملات التى تنتمى الى نفس مستوى العالمي من خلال دفعة السداد"
+msgstr "كود تعريف المعاملات التى تنتمى الى نفس مستوى العالمي من خلال دفعة السداد"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
 msgid "Confirm Lines"
-msgstr "تأكيد الأسطر"
+msgstr "تأكيد البنود"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_confirm_statement_line
 #: model:ir.model,name:account_bank_statement_extensions.model_confirm_statement_line
 msgid "Confirm selected statement lines"
-msgstr "تأكيد أسطر البيان المختار"
+msgstr "تأكيد بنود الكشف المحددة"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 #: selection:account.bank.statement.line,state:0
 msgid "Confirmed"
-msgstr "مصدق عليه"
+msgstr "مؤكد"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Confirmed Statement Lines."
-msgstr "سطور كشف الحساب المؤكدة."
+msgstr "بنود الكشف المؤكدة"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line
 msgid "Confirmed lines cannot be changed anymore."
-msgstr "الأسطر المؤكدة لايمكن تغييرها بعد الآن."
+msgstr "لا يمكن تغيير البنود المؤكدة."
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_bic:0
 msgid "Counterparty BIC"
-msgstr "رقم كود البنك (BIC) للطرف الآخر"
+msgstr "كود BIC للطرف الآخر"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_currency:0
@@ -178,24 +180,24 @@ msgstr "رقم الطرف الآخر"
 #: field:cancel.statement.line,create_uid:0
 #: field:confirm.statement.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أنشئ بواسطة"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,create_date:0
 #: field:cancel.statement.line,create_date:0
 #: field:confirm.statement.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "أنشئ في"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Credit"
-msgstr "دائن"
+msgstr "الدائن"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Credit Transactions."
-msgstr "العمليات الائتمانية."
+msgstr "عمليات دائنة."
 
 #. module: account_bank_statement_extensions
 #: view:website:account_bank_statement_extensions.report_bankstatementbalance
@@ -205,12 +207,12 @@ msgstr "التاريخ"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Debit"
-msgstr "مدين"
+msgstr "المدين"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Debit Transactions."
-msgstr "معاملات المدين"
+msgstr "عمليات مدينة."
 
 #. module: account_bank_statement_extensions
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:133
@@ -218,9 +220,7 @@ msgstr "معاملات المدين"
 msgid ""
 "Delete operation not allowed.             Please go to the associated bank "
 "statement in order to delete and/or modify bank statement line."
-msgstr ""
-"عملية الحذف غير مسموح بها. يرجى الدخول إلى كشف الحساب البنكى المرتبط من أجل "
-"حذف و / أو تعديل خط بيان البنك."
+msgstr "عملية الحذف غير مسموح بها. يرجى الدخول إلى كشف الحساب البنكى المرتبط من أجل حذف و / أو تعديل خط بيان البنك."
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
@@ -231,17 +231,17 @@ msgstr "مسودة"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Draft Statement Lines."
-msgstr "خطوط مسودة البيان."
+msgstr "مسودات بنود الكشف"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Extended Filters..."
-msgstr "مرشحات مفصلة..."
+msgstr "الفلاتر المتقدمة.."
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_list
 msgid "Glob. Am."
-msgstr "القيمة الإجمالية"
+msgstr "إجمالي المبلغ"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
@@ -254,7 +254,7 @@ msgstr "المبلغ الإجمالي"
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_list
 msgid "Glob. Id"
-msgstr "معرف عالمي"
+msgstr "المعرف العالمي"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,globalisation_id:0
@@ -264,15 +264,14 @@ msgstr "المعرف العالمي"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Group By"
-msgstr ""
+msgstr "تجميع حسب"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,id:0
-#: field:cancel.statement.line,id:0
-#: field:confirm.statement.line,id:0
+#: field:cancel.statement.line,id:0 field:confirm.statement.line,id:0
 #: field:report.account_bank_statement_extensions.report_bankstatementbalance,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرف"
 
 #. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
@@ -283,21 +282,21 @@ msgstr "ISO 20022"
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 #: view:website:account_bank_statement_extensions.report_bankstatementbalance
 msgid "Journal"
-msgstr "السجل اليومي"
+msgstr "دفتر اليومية"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,write_uid:0
 #: field:cancel.statement.line,write_uid:0
 #: field:confirm.statement.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,write_date:0
 #: field:cancel.statement.line,write_date:0
 #: field:confirm.statement.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث في"
 
 #. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
@@ -317,17 +316,17 @@ msgstr "ملاحظات"
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,name:0
 msgid "OBI"
-msgstr ""
+msgstr "OBI"
 
 #. module: account_bank_statement_extensions
 #: help:account.bank.statement.line.global,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "المنشئ لمعلومات المستفيد"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,parent_id:0
 msgid "Parent Code"
-msgstr "الكود الأم"
+msgstr "كود الأصل"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
@@ -337,17 +336,17 @@ msgstr "بحث عن المعاملات البنكية"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_filter
 msgid "Statement"
-msgstr "كشف حساب"
+msgstr "كشف الحساب"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_form
 msgid "Statement Line"
-msgstr "خط البيان"
+msgstr "بند الكشف"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_list
 msgid "Statement Lines"
-msgstr "خطوط البيان"
+msgstr "بنود الكشف"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,state:0
@@ -357,7 +356,7 @@ msgstr "الحالة"
 #. module: account_bank_statement_extensions
 #: sql_constraint:account.bank.statement.line.global:0
 msgid "The code must be unique !"
-msgstr "يجب أن يكون الكود مميزاً !"
+msgstr "يجب أن يكون الكود فريداً غير مكرراً!"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:account_bank_statement_extensions.view_bank_statement_line_list
@@ -367,12 +366,12 @@ msgstr "إجمالي المبلغ"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:account_bank_statement_extensions.view_statement_line_global_form
 msgid "Transactions"
-msgstr "المعاملات البنكية"
+msgstr "المعاملات"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
 msgid "Type"
-msgstr "نوع"
+msgstr "النوع"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,val_date:0
@@ -388,7 +387,7 @@ msgstr "تحذير!"
 #. module: account_bank_statement_extensions
 #: model:ir.actions.act_window,help:account_bank_statement_extensions.action_cancel_statement_line
 msgid "cancel selected statement lines."
-msgstr "إلغا أسطر كشف الحساب المختارة."
+msgstr "إلغاء بنود الكشف المحددة."
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:account_bank_statement_extensions.view_confirm_statement_line

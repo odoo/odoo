@@ -1,32 +1,34 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:31+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:20+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
 #, python-format
 msgid "(n/a)"
-msgstr "(غير ممكن)"
+msgstr "(لا ينطبق)"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "السماح بإضافة تكاليف الشحن"
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -34,163 +36,160 @@ msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
 "You can define your own carrier and delivery grids for prices.\n"
 "-This installs the module delivery."
-msgstr ""
+msgstr "يسمح لك بإضافة طرق الشحن إلى أوامر البيع وأوامر التسليم.\nيمكنك تعريف شركات الشحن وشبكاتها لحساب الأسعار آلياً.\n- سيقوم هذا بتثبيت الموديول delivery."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
-msgstr ""
+msgstr "يسمح لك باختيار طرق التسليم في بنود أوامر البيع."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "يسمح لك بإضافة خصائص المنتج في بنود أوامر البيع."
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Cancel Order"
-msgstr ""
+msgstr "إلغاء الأمر"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:160
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "لا يمكن إلغاء أمر البيع!"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_route_so_lines:0
 msgid "Choose MTO, drop shipping,... on sales order lines"
-msgstr ""
+msgstr "اختر طرق التوريد، الإنتاج، ... إلخ في بنود أوامر البيع."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "الشركات"
+msgstr "المؤسسات"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:277
 #: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "خطأ بالإعدادات!"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
 msgid "Contact Details"
-msgstr ""
+msgstr "تفاصيل جهة الاتصال"
 
 #. module: sale_stock
 #: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
 msgid "Default Options"
-msgstr ""
+msgstr "الخيارات الافتراضية"
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "تسليم الكل دفعة واحدة عند توافر كافة المنتجات."
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "تسليم كافة المنتجات دفعة واحدة."
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "تسليم كل منتج على حدة عند توافره"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
 msgid "Delivered"
-msgstr "تمّ التسليم"
+msgstr "تم التسليم"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "إصدار فواتير لأوامر التسليم"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "السماح بإصدار الفواتير من أوامر التسليم."
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "السماح باختيار المسارات في بند أمر البيع."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "إنشاء الفواتير عند إتمام التسليم وبناء على بياناتها."
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Ignore Exception"
-msgstr "تجاهل الخلل"
+msgstr "تجاهل التعليق"
 
 #. module: sale_stock
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr "مصطلحات تجارية مشتركة"
+msgstr "الشروط التجارية"
 
 #. module: sale_stock
 #: help:sale.order,incoterm:0
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "الشروط التجارية الدولية هي مجموعة من الشروط والأحكام مسبقة الإعداد، وتستخدم عادة في المعاملات الدولية."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "مسارات المخزون"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "إصدار الفواتير من أوامر التسليم"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "إصدار الفواتير من أوامر البيع"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to "
-"the Timesheet line entries for particular date and particular user  with the "
-"effect of creating, editing and deleting either ways and to automatically "
-"creates project tasks from procurement lines.\n"
+"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
-msgstr ""
+msgstr "يسمح لك بنقل القيود المسجلة تحت المشروع في تطبيق إدارة المشروعات إلى بنود سجلات الأنشطة لتاريخ محدد ومستخدم محدد، والتي ستقوم بإنشاء، تحرير وحذف بنود في أي من الجانبين اعتماداً على بنود التوريدات.\n- سيقوم هذا بتثبيت الموديولات project_timesheet و sale_service."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
-msgstr ""
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
+msgstr "أيام إضافية لضمان عدم التأخير عن الموعد المحدد للعميل. سيتم جدولة توريدات المنتجات وعمليات التسليم بهذا العدد من الأيام قبل تاريخ التسليم الفعلي المحدد مع العميل، لمواجهة أي تأخير غير محسوب في سلسلة التوريد."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:347
 #, python-format
 msgid "Not enough stock ! : "
-msgstr ""
+msgstr "لا يوجد مخزون كافٍ!: "
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr "عدد الطرود/عدد الحزم"
+msgstr "عدد الحزم"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:78
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "مديرو النظام فقط يمكنهم تغيير هذه الإعدادات."
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -201,83 +200,83 @@ msgstr "التعبئة"
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
+msgstr "اختر \"تسليم كل منتج عند توافره\" إذا كنت تسمح بالتسليم الجزئي."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:275
 #, python-format
 msgid "Picking Information ! : "
-msgstr ""
+msgstr "معلومات الاستلام!: "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr "قائمة الالتقاط"
+msgstr "قائمة الاستلام"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "عمليات الاستلام المقترنة بأمر البيع هذا"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "إصدار فواتير من الأعمال المنجزة في المهام"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "المنتج"
 
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "قالب المنتج"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "تحديد خصائص المنتج في بنود الأمر"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "سجل أنشطة المشروع"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "إعادة إنشاء أمر التسليم"
 
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "المسار"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "أمر البيع"
 
 #. module: sale_stock
 #: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "بنود أمر البيع"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_sale_service:0
 msgid "Sale Service"
-msgstr ""
+msgstr "مبيعات الخدمات"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "أمر المبيعات"
+msgstr "أمر البيع"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "سطر أمر المبيعات"
+msgstr "بند أمر البيع"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -290,7 +289,7 @@ msgid ""
 "Sales order by default will be configured to deliver all products at once "
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
-msgstr ""
+msgstr "الإعدادات الافتراضية لأوامر البيع تقوم بتسليم كافة المنتجات دفعة واحدة بدلاً من تسليم كل منتج عند توافره لديك. قد يكون لهذا الأمر تأثيراً على تكاليف الشحن."
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
@@ -300,11 +299,10 @@ msgstr "أيام الأمان"
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "قابل للاختيار في بند أمر البيع"
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "تمّ الشحن"
 
@@ -321,35 +319,33 @@ msgstr "نقل مخزون"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "طريقة إصدار الفواتير الافتراضية هي"
 
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr ""
+msgstr "في انتظار الفوترة"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
+msgstr "للسماح لمسئول المبيعات بإصدار فواتير من أوامر التسليم باستخدام القائمة \"إصدار فواتير لأوامر التسليم\""
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr ""
+msgstr "عرض أمر التسليم"
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "المخزن"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr "يمكنك إنشاء الفواتير بناءً على أوامر المبيعات أو بناءً على الشحنات."
 
 #. module: sale_stock
@@ -357,7 +353,7 @@ msgstr "يمكنك إنشاء الفواتير بناءً على أوامر ال
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
+msgstr "يتوجب عليك أولاً إلغاء (كافة) أوامر التسليم المقترنة بأمر البيع هذا."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:343
@@ -365,9 +361,7 @@ msgstr ""
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"تريد بيع %.2f %s ولكن لديك %.2f %s فقط!\n"
-"المخزون الحقيقي: %.2f %s. (دون حجز)"
+msgstr "تريد بيع %.2f %s ولكن لديك %.2f %s فقط!\nالمخزون الحقيقي: %.2f %s. (دون حجز)"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -382,14 +376,9 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
-msgstr ""
+msgstr "أيام"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
-msgstr ""
-
-#~ msgid "Picked"
-#~ msgstr "تمّ الالتقاط"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
+msgstr "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"

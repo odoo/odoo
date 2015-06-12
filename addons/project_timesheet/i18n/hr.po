@@ -1,21 +1,22 @@
-# Croatian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Croatian <hr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:13+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -27,45 +28,25 @@ msgid ""
 "                projects in order to track the invoicing progress.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Pritisnite za dodavanje ugovora klijenta.\n"
-"              </p><p>Ovdje se nalaze ugovori vezani uz projekte klijenata,sa "
-"svrhom lakšeg praćenja izdavanja računa.\n"
-"\n"
-"                You will find here the contracts related to your customer\n"
-"                projects in order to track the invoicing progress.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Pritisnite za dodavanje ugovora klijenta.\n              </p><p>Ovdje se nalaze ugovori vezani uz projekte klijenata,sa svrhom lakšeg praćenja izdavanja računa.\n\n                You will find here the contracts related to your customer\n                projects in order to track the invoicing progress.\n              </p>\n            "
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:56
 #, python-format
 msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">Ispunite evidenciju rada za projekt : "
-"'%s'.</p>"
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
+" '%s'.</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">Ispunite evidenciju rada za projekt : '%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
 msgid ""
 "<p>\n"
-"                You will find here timesheets and purchases you did for "
-"contracts that can be reinvoiced to the customer.\n"
-"                If you want to record new jobs to invoice, you should use "
-"the timesheet menu instead.\n"
+"                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use the timesheet menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Ovdje se nalaze kontrolne kartice i nabava robe po "
-"ugovorima, koji se mogu naplatiti klijentu.\n"
-"                Ako želite zabilježiti novi posao za naplatu, koristite "
-"izbornik kontrolne kartice.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Ovdje se nalaze kontrolne kartice i nabava robe po ugovorima, koji se mogu naplatiti klijentu.\n                Ako želite zabilježiti novi posao za naplatu, koristite izbornik kontrolne kartice.\n              </p>\n            "
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:59
@@ -73,9 +54,7 @@ msgstr ""
 msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
-msgstr ""
-"<p>Evidenciju rada na projektu naplatitit %s, prema ugovorom definiranim "
-"uvjetima.</p>"
+msgstr "<p>Evidenciju rada na projektu naplatitit %s, prema ugovorom definiranim uvjetima.</p>"
 
 #. module: project_timesheet
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
@@ -146,7 +125,7 @@ msgstr "Veljača"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupiraj po"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
@@ -166,7 +145,7 @@ msgstr "Sati"
 #. module: project_timesheet
 #: field:report.timesheet.task.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:294
@@ -241,9 +220,7 @@ msgstr "Partner"
 #: code:addons/project_timesheet/project_timesheet.py:83
 #, python-format
 msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
-"Korisničko ime \"%s\", nema dodijeljenog zaposlenika. Potrebno stvoriti "
-"novoga."
+msgstr "Korisničko ime \"%s\", nema dodijeljenog zaposlenika. Potrebno stvoriti novoga."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:91
@@ -251,32 +228,23 @@ msgstr ""
 msgid ""
 "Please define journal on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr ""
-"Definirajte dnevnik vezan uz zaposlenika\n"
-"Ispunite kontrolnu karticu(raspored) na formi zaposlenika"
+msgstr "Definirajte dnevnik vezan uz zaposlenika\nIspunite kontrolnu karticu(raspored) na formi zaposlenika"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:87
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the HR Settings tab of the employee form."
-msgstr ""
-"Definirajte proizvod i kategoriju proizvoda na računima vezanim uz "
-"zaposlenika.\n"
-"Ispunite obrazac o zaposleniku na HR postavkama."
+msgstr "Definirajte proizvod i kategoriju proizvoda na računima vezanim uz zaposlenika.\nIspunite obrazac o zaposleniku na HR postavkama."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:98
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr ""
-"Definirajte konto proizvoda i kategorije na povezanom zaposleniku.\n"
-"Ispunite karticu evidencije rada na  obrascu zaposlenika"
+msgstr "Definirajte konto proizvoda i kategorije na povezanom zaposleniku.\nIspunite karticu evidencije rada na  obrascu zaposlenika"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -355,14 +323,11 @@ msgstr "Godina"
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
-msgstr ""
-"Nedozvoljeno brisanje partnera koji je dodijeljen projektu. Moguće je "
-"micanje aktivnog statusa."
+msgstr "Nedozvoljeno brisanje partnera koji je dodijeljen projektu. Moguće je micanje aktivnog statusa."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:321
 #, python-format
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
-"Nedozvoljen odabir analitičkog računa sa statusom zatvoren ili otkazan."
+msgstr "Nedozvoljen odabir analitičkog računa sa statusom zatvoren ili otkazan."

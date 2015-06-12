@@ -1,21 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-04-09 13:10+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-10 05:30+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -26,33 +27,16 @@ msgstr "<="
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a delivery price list for a specific "
-"region.\n"
+"                Click to create a delivery price list for a specific region.\n"
 "              </p><p>\n"
 "                The delivery price list allows you to compute the cost and\n"
 "                sales price of the delivery according to the weight of the\n"
-"                products and other criteria. You can define several price "
-"lists\n"
-"                for each delivery method: per country or a zone in a "
-"specific\n"
+"                products and other criteria. You can define several price lists\n"
+"                for each delivery method: per country or a zone in a specific\n"
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Faceti click pentru a crea o lista de preturi pentru o "
-"anumita regiune.\n"
-"              </p><p>\n"
-"                Lista de preturi de livrare va permite sa calculati pretul "
-"de cost si de\n"
-"                vanzare a livrarii in functie de greutatea\n"
-"                produselor si alte criterii. Puteti defini mai multe liste "
-"de preturi\n"
-"                pentru fiecare metoda de livrare: pe tara sau pe o zona "
-"dintr-o anumita\n"
-"                tara definita printr-un cod postal.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Faceti click pentru a crea o lista de preturi pentru o anumita regiune.\n              </p><p>\n                Lista de preturi de livrare va permite sa calculati pretul de cost si de\n                vanzare a livrarii in functie de greutatea\n                produselor si alte criterii. Puteti defini mai multe liste de preturi\n                pentru fiecare metoda de livrare: pe tara sau pe o zona dintr-o anumita\n                tara definita printr-un cod postal.\n              </p>\n            "
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -60,16 +44,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new deliver method. \n"
 "              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
+"                Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method.\n"
 "              </p><p>\n"
-"                These methods allow to automatically compute the delivery "
-"price\n"
-"                according to your settings; on the sales order (based on "
-"the\n"
+"                These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
@@ -81,8 +61,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: field:delivery.carrier,active:0
-#: field:delivery.grid,active:0
+#: field:delivery.carrier,active:0 field:delivery.grid,active:0
 msgid "Active"
 msgstr "Activ(ă)"
 
@@ -111,9 +90,7 @@ msgstr "Valoarea"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr ""
-"Cantitatea comenzii pentru a beneficia de o livrare gratuita, exprimata in "
-"moneda companiei"
+msgstr "Cantitatea comenzii pentru a beneficia de o livrare gratuita, exprimata in moneda companiei"
 
 #. module: delivery
 #: field:delivery.carrier,available:0
@@ -125,8 +102,7 @@ msgstr "Disponibil"
 #: view:delivery.carrier:delivery.view_delivery_carrier_tree
 #: field:delivery.grid,carrier_id:0
 #: model:ir.model,name:delivery.model_delivery_carrier
-#: field:stock.picking,carrier_id:0
-#: view:website:stock.report_picking
+#: field:stock.picking,carrier_id:0 view:website:stock.report_picking
 msgid "Carrier"
 msgstr "Transportator"
 
@@ -145,16 +121,13 @@ msgstr "Ref urmărire transportator"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr ""
-"Bifati aceasta casuta daca doriti sa gestionati preturile de livrare care "
-"depind de destinatie, greutate, totalul comenzii, etc."
+msgstr "Bifati aceasta casuta daca doriti sa gestionati preturile de livrare care depind de destinatie, greutate, totalul comenzii, etc."
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
-"Completati acest camp daca planuiti sa facturati livrarea pe baza ridicarii."
+msgstr "Completati acest camp daca planuiti sa facturati livrarea pe baza ridicarii."
 
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
@@ -173,15 +146,13 @@ msgid "Countries"
 msgstr "Țări"
 
 #. module: delivery
-#: field:delivery.carrier,create_uid:0
-#: field:delivery.grid,create_uid:0
+#: field:delivery.carrier,create_uid:0 field:delivery.grid,create_uid:0
 #: field:delivery.grid.line,create_uid:0
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: delivery
-#: field:delivery.carrier,create_date:0
-#: field:delivery.grid,create_date:0
+#: field:delivery.carrier,create_date:0 field:delivery.grid,create_date:0
 #: field:delivery.grid.line,create_date:0
 msgid "Created on"
 msgstr "Creat la"
@@ -213,8 +184,7 @@ msgid "Delivery Grids"
 msgstr "Grile de livrare"
 
 #. module: delivery
-#: field:delivery.carrier,name:0
-#: field:res.partner,property_delivery_carrier:0
+#: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Metoda de livrare"
@@ -283,8 +253,7 @@ msgstr ""
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
-"Da ordinea secventei atunci cand afiseaza o lista a grilei de livrare"
+msgstr "Da ordinea secventei atunci cand afiseaza o lista a grilei de livrare"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -314,8 +283,7 @@ msgid "Grid definition"
 msgstr "Definiție grilă"
 
 #. module: delivery
-#: field:delivery.carrier,id:0
-#: field:delivery.grid,id:0
+#: field:delivery.carrier,id:0 field:delivery.grid,id:0
 #: field:delivery.grid.line,id:0
 msgid "ID"
 msgstr "ID"
@@ -325,36 +293,28 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr ""
-"Daca campul activ este setat pe Fals, va va permite sa ascundeti "
-"transportatorul fara a-l sterge."
+msgstr "Daca campul activ este setat pe Fals, va va permite sa ascundeti transportatorul fara a-l sterge."
 
 #. module: delivery
 #: help:delivery.grid,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr ""
-"Daca campul activ este setat pe Fals, va va permite sa ascundeti grila de "
-"livrare fara a o sterge."
+msgstr "Daca campul activ este setat pe Fals, va va permite sa ascundeti grila de livrare fara a o sterge."
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
-"Daca comanda este depaseste o anumita suma, clientul poate beneficia de "
-"transport gratuit"
+msgstr "Daca comanda este depaseste o anumita suma, clientul poate beneficia de transport gratuit"
 
 #. module: delivery
 #: view:sale.order:delivery.view_order_withcarrier_form
 msgid ""
-"If you don't 'Add in Quote', the exact price will be computed when invoicing "
-"based on delivery order(s)."
-msgstr ""
-"Daca nu 'Adaugati la Cotare', pretul exact va fi calculat atunci cand "
-"facturati pe baza comenzilor de livrare."
+"If you don't 'Add in Quote', the exact price will be computed when invoicing"
+" based on delivery order(s)."
+msgstr "Daca nu 'Adaugati la Cotare', pretul exact va fi calculat atunci cand facturati pe baza comenzilor de livrare."
 
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
@@ -370,20 +330,16 @@ msgstr ""
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
-"Lasati necompletat daca stabilirea pretului depinde de stabilirea avansata a "
-"pretului pe destinatie"
+msgstr "Lasati necompletat daca stabilirea pretului depinde de stabilirea avansata a pretului pe destinatie"
 
 #. module: delivery
-#: field:delivery.carrier,write_uid:0
-#: field:delivery.grid,write_uid:0
+#: field:delivery.carrier,write_uid:0 field:delivery.grid,write_uid:0
 #: field:delivery.grid.line,write_uid:0
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: delivery
-#: field:delivery.carrier,write_date:0
-#: field:delivery.grid,write_date:0
+#: field:delivery.carrier,write_date:0 field:delivery.grid,write_date:0
 #: field:delivery.grid.line,write_date:0
 msgid "Last Updated on"
 msgstr "Ultima actualizare la"
@@ -457,8 +413,7 @@ msgid "Picking to be invoiced"
 msgstr "Ridicarile care vor fi facturate"
 
 #. module: delivery
-#: field:delivery.carrier,price:0
-#: selection:delivery.grid.line,type:0
+#: field:delivery.carrier,price:0 selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Preț"
@@ -503,8 +458,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,sequence:0
-#: field:delivery.grid.line,sequence:0
+#: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
 msgid "Sequence"
 msgstr "Secvență"
 
@@ -534,8 +488,7 @@ msgstr "Transportatorul %s (id: %d) nu are nici o grila de livrari!"
 #: code:addons/delivery/sale.py:74
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
-"Starea comenzii trebuie sa fie ciorna pentru a putea adauga linii de livrare."
+msgstr "Starea comenzii trebuie sa fie ciorna pentru a putea adauga linii de livrare."
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
@@ -564,8 +517,7 @@ msgid "Unable to fetch delivery method!"
 msgstr ""
 
 #. module: delivery
-#: field:stock.move,weight_uom_id:0
-#: field:stock.picking,weight_uom_id:0
+#: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Unitatea de măsură"
 
@@ -573,9 +525,7 @@ msgstr "Unitatea de măsură"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
-"Unitatea de Masura (Unitatea de Masura) este unitatea de masura pentru "
-"Greutate"
+msgstr "Unitatea de Masura (Unitatea de Masura) este unitatea de masura pentru Greutate"
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
@@ -583,8 +533,7 @@ msgid "Unit of measurement for Weight"
 msgstr "Unitate de măsură pentru masă"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
+#: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
 msgid "Variable"
 msgstr "Variabil(a)"
 
@@ -595,8 +544,7 @@ msgstr "Factor variabil"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.picking,volume:0
 msgid "Volume"
 msgstr "Volum"
 
@@ -608,11 +556,9 @@ msgstr "Avertizare!"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.move,weight:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.move,weight:0
 #: view:stock.picking:delivery.view_picking_withcarrier_out_form
-#: field:stock.picking,weight:0
-#: view:website:stock.report_picking
+#: field:stock.picking,weight:0 view:website:stock.report_picking
 msgid "Weight"
 msgstr "Masă"
 
