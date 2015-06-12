@@ -105,7 +105,7 @@ class pos_order_card(models.Model):
                     response = self.env['card_reader.mercury_transaction'].do_return({'transaction_type': 'Credit', 'transaction_code': 'ReturnByRecordNo',
                                                                                       'ref_no': statement_line.ref_no, 'record_no': statement_line.record_no,
                                                                                       'invoice_no': statement_line.invoice_no, 'purchase': statement_line.amount,
-                                                                                      'journal_id': statement_line.journal_id.id}, self.user_id.id)
+                                                                                      'journal_id': statement_line.journal_id.id})
 
                     if "<TextResponse>AP</TextResponse>" in response:
                         order = self.env['pos.order'].browse(abs['res_id'])

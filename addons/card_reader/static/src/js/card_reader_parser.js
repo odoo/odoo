@@ -277,6 +277,14 @@ ScreenWidget.include({
 
 // On Payment screen, allow electronic payments
 PaymentScreenWidget.include({
+    // How long we wait for the odoo server to deliver the response of
+    // a Mercury transaction
+    server_timeout_in_ms: 30000,
+
+    // How many Mercury transactions we send without receiving a
+    // response
+    server_retries: 5,
+
     _get_swipe_pending_line: function () {
         var i = 0;
         var lines = this.pos.get_order().get_paymentlines();
@@ -306,31 +314,32 @@ PaymentScreenWidget.include({
         return false;
     },
 
-    retry_credit_code_transaction: function (parsed_result, def, response, retry_nr) {
+    retry_mercury_transaction: function (def, response, retry_nr, can_connect_to_server, callback, args) {
+        var self = this;
         var message = "";
 
-        if (! retry_nr) {
-            retry_nr = 1;
-        }
-
-        if (retry_nr <= 5) {
+        if (retry_nr < self.server_retries) {
             if (response) {
-                message = "Retry #" + retry_nr + "...<br/><br/>" + response.message;
+                message = "Retry #" + (retry_nr + 1) + "...<br/><br/>" + response.message;
             } else {
-                message = "Retry #" + retry_nr + "...";
+                message = "Retry #" + (retry_nr + 1) + "...";
             }
             def.notify({
                 message: message
             });
 
             setTimeout(function () {
-                self.credit_code_transaction(parsed_result, def, retry_nr + 1);
+                callback.apply(self, args);
             }, 1000);
         } else {
             if (response) {
-                message = "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + " (Mercury down?)<br/>" + response.message;
+                message = "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + "<br/>" + response.message;
             } else {
-                message = "No response from Mercury (Mercury down?)";
+                if (can_connect_to_server) {
+                    message = "No response from Mercury (Mercury down?)";
+                } else {
+                    message = "No response from server (connected to network?)";
+                }
             }
             def.resolve({
                 message: message,
@@ -348,13 +357,12 @@ PaymentScreenWidget.include({
         var self = this;
         var decodedMagtek = decodeMagtek(parsed_result.code);
         var swipe_pending_line = self._get_swipe_pending_line();
-
         var purchase_amount = 0;
 
         if (swipe_pending_line) {
             purchase_amount = swipe_pending_line.get_amount();
         } else {
-            purchase_amount = this.pos.get_order().get_due();
+            purchase_amount = self.pos.get_order().get_due();
         }
 
         var transaction = {
@@ -368,12 +376,13 @@ PaymentScreenWidget.include({
         };
 
         var def = old_deferred || new $.Deferred();
+        retry_nr = retry_nr || 0;
 
         // show the transaction popup.
         // the transaction deferred is used to update transaction status
         // if we have a previous deferred it indicates that this is a retry
         if (! old_deferred) {
-            this.gui.show_popup('payment-transaction', {
+            self.gui.show_popup('payment-transaction', {
                 transaction: def
             });
             def.notify({
@@ -382,13 +391,13 @@ PaymentScreenWidget.include({
             });
         }
 
-        var rpc_def = session.rpc("/pos/send_payment_transaction", transaction)
-                .done(function (data) {
+        var mercury_transaction = new Model('card_reader.mercury_transaction');
+        mercury_transaction.call('do_payment', [transaction], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
                     console.log(data); // todo jov
 
-                    // if not receiving a response, we should retry
+                    // if not receiving a response from Mercury, we should retry
                     if (data === "timeout") {
-                        self.retry_credit_code_transaction(parsed_result, def, null, retry_nr);
+                        self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
                         return;
                     }
 
@@ -447,7 +456,7 @@ PaymentScreenWidget.include({
                     // if an error related to timeout or connectivity issues arised, then retry the same transaction
                     else {
                         if (lookUpCodeTransaction["TimeoutError"][response.error]) { // recoverable error
-                            self.retry_credit_code_transaction(parsed_result, def, response, retry_nr);
+                            self.retry_mercury_transaction(def, response, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
                         } else { // not recoverable
                             def.resolve({
                                 message: "Error " + response.error + ":<br/>" + response.message,
@@ -456,11 +465,9 @@ PaymentScreenWidget.include({
                         }
                     }
 
-                }).fail(function (data) {
-                    def.reject({
-                        status: 'Error',
-                        error: '-1',
-                    });
+                }).fail(function (error, event) {
+                    event.preventDefault();
+                    self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
                 });
     },
 
@@ -487,9 +494,16 @@ PaymentScreenWidget.include({
         }
     },
 
-    do_reversal: function (mercury_data, is_voidsale) {
+    remove_paymentline_by_ref: function (line) {
+        this.pos.get_order().remove_paymentline(line);
+        this.reset_input();
+        this.render_paymentlines();
+    },
+
+    do_reversal: function (line, is_voidsale, retry_nr) {
         var def = new $.Deferred();
         var self = this;
+        retry_nr = retry_nr || 0;
 
         // show the transaction popup.
         // the transaction deferred is used to update transaction status
@@ -500,17 +514,17 @@ PaymentScreenWidget.include({
         var request_data = _.extend({
             'transaction_type'  : 'Credit',
             'transaction_code'  : 'VoidSaleByRecordNo',
-        }, mercury_data);
+        }, line.mercury_data);
 
         var message = "";
-        var rpc_url = "/pos/";
+        var rpc_method = "";
 
         if (is_voidsale) {
             message = "Reversal failed, sending VoidSale...";
-            rpc_url += "send_voidsale";
+            rpc_method = "do_voidsale";
         } else {
             message = "Sending reversal...";
-            rpc_url += "send_reversal";
+            rpc_method = "do_reversal";
         }
 
         def.notify({
@@ -519,48 +533,56 @@ PaymentScreenWidget.include({
             message: message,
         });
 
-        session.rpc(rpc_url, request_data)
-            .done(function (data) {
-                console.log(data); // todo
-                var response = decodeMercuryResponse(data);
+        var mercury_transaction = new Model('card_reader.mercury_transaction');
+        mercury_transaction.call(rpc_method, [request_data], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
+            console.log(data); // todo
 
-                if (! is_voidsale) {
-                    if (response.status != 'Approved' || response.message != 'REVERSED') {
-                        // reversal was not successful, send voidsale
-                        self.do_reversal(mercury_data, true);
-                    } else {
-                        // reversal was successful
-                        def.resolve({
-                            message: "Reversal succeeded",
-                        });
-                    }
-                } else { // voidsale ended, nothing more we can do
-                    if (response.status === 'Approved') {
-                        def.resolve({
-                            message: "VoidSale succeeded",
-                        });
-                    } else {
-                        def.resolve({
-                            message: "Error " + response.error + ":<br/>" + response.message,
-                        });
-                    }
+            if (data === "timeout") {
+                self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, retry_nr + 1]);
+                return;
+            }
+
+            var response = decodeMercuryResponse(data);
+
+            if (! is_voidsale) {
+                if (response.status != 'Approved' || response.message != 'REVERSED') {
+                    // reversal was not successful, send voidsale
+                    self.do_reversal(line, true);
+                } else {
+                    // reversal was successful
+                    def.resolve({
+                        message: "Reversal succeeded",
+                    });
+
+                    self.remove_paymentline_by_ref(line);
                 }
+            } else { // voidsale ended, nothing more we can do
+                if (response.status === 'Approved') {
+                    def.resolve({
+                        message: "VoidSale succeeded",
+                    });
 
-            })  .fail(function (data) {
-                def.reject({
-                    status: 'Odoo Error',
-                    error: '-1',
-                    message: 'Impossible to contact the proxy, please retry ...',
-                });
-            });
+                    self.remove_paymentline_by_ref(line);
+                } else {
+                    def.resolve({
+                        message: "Error " + response.error + ":<br/>" + response.message,
+                    });
+                }
+            }
+        }).fail(function (error, event) {
+            event.preventDefault();
+            self.retry_mercury_transaction(def, null, retry_nr, false, self.do_reversal, [line, is_voidsale, retry_nr + 1]);
+        });
     },
 
     click_delete_paymentline: function (cid) {
+        var self = this;
         var lines = this.pos.get_order().get_paymentlines();
 
         for (var i = 0; i < lines.length; i++) {
             if (lines[i].cid === cid && lines[i].mercury_data) {
-                this.do_reversal(lines[i].mercury_data, false);
+                this.do_reversal(lines[i], false);
+                return;
             }
         }
 

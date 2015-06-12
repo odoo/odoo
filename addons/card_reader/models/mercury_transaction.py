@@ -19,12 +19,8 @@ class MercuryTransaction(models.Model):
         s = s.replace("&amp;", "&")
         return s
 
-    def _get_pos_session(self, request_uid):
-        # if user not logged in exit fail
-        if not request_uid:
-            return 0
-
-        pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', request_uid)])
+    def _get_pos_session(self):
+        pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)])
         if not pos_session:
             return 0
 
@@ -40,8 +36,8 @@ class MercuryTransaction(models.Model):
         else:
             return 0
 
-    def _setup_request(self, data, request_uid):
-        pos_session = self._get_pos_session(request_uid)
+    def _setup_request(self, data):
+        pos_session = self._get_pos_session()
 
         if not pos_session:
             return 0
@@ -86,19 +82,28 @@ class MercuryTransaction(models.Model):
         print '--------------------------------'
         return response
 
-    def do_payment(self, data, request_uid):
-        self._setup_request(data, request_uid)
-        response = self._do_request('card_reader.mercury_transaction', data)
-        return response
-
-    def do_reversal(self, data, request_uid, is_voidsale):
-        self._setup_request(data, request_uid)
+    def _do_reversal_or_voidsale(self, data, is_voidsale):
+        self._setup_request(data)
         data['is_voidsale'] = is_voidsale
         response = self._do_request('card_reader.mercury_voidsale', data)
         return response
 
-    def do_return(self, data, request_uid):
-        self._setup_request(data, request_uid)
+    @api.model
+    def do_payment(self, data):
+        self._setup_request(data)
+        response = self._do_request('card_reader.mercury_transaction', data)
+        return response
+
+    @api.model
+    def do_reversal(self, data):
+        return self._do_reversal_or_voidsale(data, False)
+
+    @api.model
+    def do_voidsale(self, data):
+        return self._do_reversal_or_voidsale(data, True)
+
+    def do_return(self, data):
+        self._setup_request(data)
         response = self._do_request('card_reader.mercury_return', data)
         return response
 
