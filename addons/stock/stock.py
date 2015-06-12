@@ -2883,11 +2883,13 @@ class stock_inventory_line(osv.osv):
         uom_obj = self.pool["product.uom"]
         res = {'value': {}}
         # If no UoM already put the default UoM of the product
-        if product_id and not uom_id:
+        if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            res['value']['product_uom_id'] = product.uom_id.id
-            res['domain'] = {'product_uom_id': [('category_id','=',product.uom_id.category_id.id)]}
-            uom_id = product.uom_id.id
+            uom = self.pool['product.uom'].browse(cr, uid, uom_id, context=context)
+            if product.uom_id.category_id.id != uom.category_id.id:
+                res['value']['product_uom_id'] = product.uom_id.id
+                res['domain'] = {'product_uom_id': [('category_id','=',product.uom_id.category_id.id)]}
+                uom_id = product.uom_id.id
         # Calculate theoretical quantity by searching the quants as in quants_get
         if product_id and location_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
@@ -2897,9 +2899,12 @@ class stock_inventory_line(osv.osv):
                         ('product_id','=', product_id), ('owner_id', '=', partner_id), ('package_id', '=', package_id)]
             quants = quant_obj.search(cr, uid, dom, context=context)
             th_qty = sum([x.qty for x in quant_obj.browse(cr, uid, quants, context=context)])
+            qty = product.qty_available
             if product_id and uom_id and product.uom_id.id != uom_id:
                 th_qty = uom_obj._compute_qty(cr, uid, product.uom_id.id, th_qty, uom_id)
+                qty = uom_obj._compute_qty(cr, uid, product.uom_id.id, qty, uom_id)
             res['value']['theoretical_qty'] = th_qty
+            res['value']['product_qty'] = qty
         return res
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
