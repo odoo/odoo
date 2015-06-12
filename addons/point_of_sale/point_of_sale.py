@@ -591,17 +591,31 @@ class pos_order(osv.osv):
             session.refresh()
 
         if not float_is_zero(order['amount_return'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')):
-            cash_journal = session.cash_journal_id
-            if not cash_journal:
-                cash_journals = filter(lambda journal: journal.type=='cash', self.pool['account.journal'].browse(cr, uid, journal_ids, context=context))
-                if not len(cash_journals):
-                    raise osv.except_osv( _('error!'),
-                        _("No cash statement found for this session. Unable to record returned cash."))
+            cash_journal_ids = []
+            if session.cash_journal_id:
+                cash_journal_ids = [session.cash_journal_id.id]
+            jrnl_obj = self.pool['account.journal']
+            if not cash_journal_ids:
+                # Select for change one of the cash journals used in this payment
+                cash_journal_ids = jrnl_obj.search(cr, uid, [
+                    ('type', '=', 'cash'),
+                    ('id', 'in', journal_ids),
+                    ], context=context)
+                if not cash_journal_ids:
+                    # If none, select for change one of the cash journals of the POS
+                    # This is used for example when a customer pays by credit card
+                    # an amount higher than total amount of the order and gets cash back
+                    cash_journal_ids = [
+                        statement.journal_id.id for statement in session.statement_ids
+                        if statement.journal_id.type == 'cash']
+                    if not cash_journal_ids:
+                        raise osv.except_osv( _('error!'),
+                            _("No cash statement found for this session. Unable to record returned cash."))
             self.add_payment(cr, uid, order_id, {
                 'amount': -order['amount_return'],
                 'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'payment_name': _('return'),
-                'journal': cash_journals[0].id,
+                'journal': cash_journal_ids[0],
             }, context=context)
         return order_id
 
