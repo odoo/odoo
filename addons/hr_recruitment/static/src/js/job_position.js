@@ -1,11 +1,11 @@
 odoo.define('hr_recruitment.hr_recruitment', function(require) {
 "use strict";
 
-var common = require('web_kanban.common');
+var KanbanRecord = require('web_kanban.Record');
 
-common.KanbanRecord.include({
+KanbanRecord.include({
     on_card_clicked: function() {
-        if (this.view.dataset.model === 'hr.job') {
+        if (this.model === 'hr.job') {
             this.$('.oe_applications a').first().click();
         } else {
             this._super.apply(this, arguments);
