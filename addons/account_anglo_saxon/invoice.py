@@ -162,6 +162,7 @@ class account_invoice_line(osv.osv):
                             valuation_stock_move = stock_move_obj.search(cr, uid, [('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1, context=context)
                             if valuation_stock_move:
                                 valuation_price_unit = stock_move_obj.browse(cr, uid, valuation_stock_move[0], context=context).price_unit
+                                valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, valuation_price_unit, i_line.uos_id.id)
                         if inv.currency_id.id != company_currency:
                             valuation_price_unit = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, valuation_price_unit, context={'date': inv.date_invoice})
                         if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
