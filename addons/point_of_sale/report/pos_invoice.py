@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
@@ -33,4 +34,4 @@ class PosInvoiceReport(osv.AbstractModel):
             'doc_model': report.model,
             'docs': selected_orders,
         }
-        return report_obj.render(cr, uid, ids, 'account.report_invoice', docargs, context=context)
+        return report_obj.render(cr, SUPERUSER_ID, ids, 'account.report_invoice', docargs, context=context)
