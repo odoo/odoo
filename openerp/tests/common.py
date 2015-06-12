@@ -46,6 +46,11 @@ def get_db_name():
     return db
 
 
+# Leave this constant for backward compatibility, get_db_name() function should
+# be used instead.
+DB = get_db_name()
+
+
 def at_install(flag):
     """ Sets the at-install state of a test, the flag is a boolean specifying
     whether the test should (``True``) or should not (``False``) run during
