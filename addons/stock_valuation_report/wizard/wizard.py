@@ -26,7 +26,7 @@ class wizard_valuation_report(osv.osv_memory):
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['date', 'product_category_id', 'company_id'], context=context)
+        res = self.read(cr, uid, ids, ['date', 'product_category_id', 'company_id', 'method', 'location_id', 'warehouse_id'], context=context)
         res = res and res[0] or {}
         if res.get('id', False):
             datas['ids'] = [res['id']]
