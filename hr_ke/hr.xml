@@ -1,0 +1,460 @@
+<openerp>
+    <data>
+<!-- Benefits Type Action-->
+	<record id="ke_benefits_type_action" model="ir.actions.act_window">
+	 <field name="name">Types of Benefits (Non-Cash)</field>
+	 <field name="res_model">ke.benefit.type</field>
+	 <field name="view_mode">tree,form</field>
+	</record>
+
+<!-- Relief Type Action-->
+        <record id="ke_reliefs_type_action" model="ir.actions.act_window">
+         <field name="name">Types of Tax Relief</field>
+         <field name="res_model">ke.relief.type</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+
+<!-- Deduction Type Action-->
+        <record id="ke_deductions_type_action" model="ir.actions.act_window">
+         <field name="name">Types of Deduction</field>
+         <field name="res_model">ke.deductions.type</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+
+
+<!-- Earnings Type Action-->
+        <record id="ke_earnings_type_action" model="ir.actions.act_window">
+         <field name="name">Types of Earnings(Cash)</field>
+         <field name="res_model">ke.earnings.type</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+<menuitem id="menu_ke_earnings_type" parent="hr.menu_hr_configuration" name="Earnings (Cash)" sequence="101" action="ke_earnings_type_action"/>
+<menuitem id="menu_ke_benefits_type" parent="hr.menu_hr_configuration" name="Benefits (Non-Cash)" sequence="102" action="ke_benefits_type_action"/>
+<menuitem id="menu_ke_reliefs_type" parent="hr.menu_hr_configuration" name="Tax Relief" sequence="103" action="ke_reliefs_type_action"/>
+<menuitem id="menu_ke_deductionss_type" parent="hr.menu_hr_configuration" name="Deductions" sequence="104" action="ke_deductions_type_action"/>
+
+<!-- Benefits Type Form view-->
+	<record id="ke_benefits_type_form" model="ir.ui.view">
+         <field name="name">ke.hr.benefits.type.form</field>
+         <field name="model">ke.benefit.type</field>
+         <field name="view_type">form</field>
+	 <field name="arch" type="xml">
+	   <form>
+	    <sheet>
+		<group name="benefit_type" string="Types of Benefits (Non-Cash)">
+		  <group>
+			<field name="name"/>
+			<field name="code"/>
+		  </group>
+		  <group>
+		 	<field name="taxable"/>
+			<field name="frequency"/>
+                  </group>
+		</group>
+		<notebook>
+		 	<page name="formula" string="Formula">
+			  <field name="formula"/>
+			</page>
+		</notebook>
+	    </sheet>
+	   </form>
+	 </field>
+        </record>
+
+<!-- Benefits  Form view-->
+        <record id="ke_benefits_form" model="ir.ui.view">
+         <field name="name">ke.hr.benefits.form</field>
+         <field name="model">ke.benefits</field>
+         <field name="view_type">form</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+                <group name="benefit" string="Benefit (Non-Cash)">
+                  <group>
+                        <field name="benefit_id"/>
+                        <field name="actual_cost"/>
+                  </group>
+                  <group>
+                        <field name="contract_id"/>
+                        <field name="computation"/>
+			<field name="fixed" attrs="{'invisible': [('computation', '!=', 'fixed')], 'required': [('computation', '=', 'fixed')]}"/>
+                  </group>
+                </group>
+		<group>
+		   <field name="amount"/>
+		</group>
+            </sheet>
+           </form>
+         </field>
+        </record>
+
+<!-- Earnings  Form view-->
+        <record id="ke_earnings_form" model="ir.ui.view">
+         <field name="name">ke.hr.earnings.form</field>
+         <field name="model">ke.earnings</field>
+         <field name="view_type">form</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+                <group name="earnings" string="Earning (Cash)">
+                  <group>
+                        <field name="earning_id"/>
+                        <field name="code"/>
+                  </group>
+                  <group>
+                        <field name="contract_id"/>
+                        <field name="computation"/>
+                        <field name="fixed" attrs="{'invisible': [('computation', '!=', 'fixed')], 'required': [('computation', '=', 'fixed')]}"/>
+                  </group>
+                </group>
+                <group>
+                   <field name="amount"/>
+                </group>
+            </sheet>
+           </form>
+         </field>
+        </record>
+
+<!-- reliefs  Form view-->
+        <record id="ke_reliefs_form" model="ir.ui.view">
+         <field name="name">ke.hr.reliefs.form</field>
+         <field name="model">ke.reliefs</field>
+         <field name="view_type">form</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+                <group name="reliefs" string="Tax Relief">
+                  <group>
+                        <field name="relief_id"/>
+                        <field name="base"/>
+                  </group>
+                  <group>
+                        <field name="employee_id"/>
+                        <field name="computation"/>
+                        <field name="fixed" attrs="{'invisible': [('computation', '!=', 'fixed')], 'required': [('computation', '=', 'fixed')]}"/>
+                  </group>
+                </group>
+                <group>
+                   <field name="amount"/>
+                </group>
+            </sheet>
+           </form>
+         </field>
+        </record>
+
+<!-- Deductions  Form view-->
+        <record id="ke_deductions_form" model="ir.ui.view">
+         <field name="name">ke.hr.deductions.form</field>
+         <field name="model">ke.deductions</field>
+         <field name="view_type">form</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+                <group name="deductions" string="Employee Deduction">
+                  <group>
+                        <field name="deduction_id"/>
+                        <field name="base"/>
+                  </group>
+                  <group>
+                        <field name="employee_id"/>
+                        <field name="computation"/>
+                        <field name="fixed" attrs="{'invisible': [('computation', '!=', 'fixed')], 'required': [('computation', '=', 'fixed')]}"/>
+                  </group>
+                </group>
+                <group>
+                   <field name="amount"/>
+                </group>
+		<notebook attrs="{'invisible': [('computation', '!=', 'formula2')]}">
+		   <page name="ded_formula" string="Employee Formula">
+   			<field name="formula" attrs="{'required': [('computation', '=', 'formula2')]}"/>
+		   </page>
+		</notebook>
+            </sheet>
+           </form>
+         </field>
+        </record>
+
+
+
+<!-- Earnings Type Form view-->
+        <record id="ke_earnings_type_form" model="ir.ui.view">
+         <field name="name">ke.hr.earnings.type.form</field>
+         <field name="model">ke.earnings.type</field>
+         <field name="view_type">form</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+                <group name="earning_type" string="Other Earnings (cash)">
+                  <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                  </group>
+                  <group>
+                        <field name="taxable"/>
+                        <field name="frequency"/>
+                  </group>
+                </group>
+                <notebook>
+                        <page name="formula" string="Formula">
+                          <field name="formula"/>
+                        </page>
+                </notebook>
+            </sheet>
+           </form>
+         </field>
+        </record>
+
+<!-- reliefs Type Form view-->
+        <record id="ke_reliefs_type_form" model="ir.ui.view">
+         <field name="name">ke.hr.reliefs.type.form</field>
+         <field name="model">ke.relief.type</field>
+         <field name="view_type">form</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+                <group name="relief_type" string="Tax Relief">
+                  <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                  </group>
+                  <group>
+                        <field name="frequency"/>
+                  </group>
+                </group>
+                <notebook>
+                        <page name="formula" string="Formula">
+                          <field name="formula"/>
+                        </page>
+                </notebook>
+            </sheet>
+           </form>
+         </field>
+        </record>
+
+<!-- Deductions Type Form view-->
+        <record id="ke_deductions_type_form" model="ir.ui.view">
+         <field name="name">ke.hr.deductions.type.form</field>
+         <field name="model">ke.deductions.type</field>
+         <field name="view_type">form</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+                <group name="deduction_type" string="Deduction">
+                  <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                  </group>
+                  <group>
+                        <field name="pre_tax"/>
+			<field name="net_pay"/>
+			<field name="frequency"/>
+                  </group>
+                </group>
+                <notebook>
+                        <page name="formula" string="Formula">
+                          <field name="formula"/>
+                        </page>
+                </notebook>
+            </sheet>
+           </form>
+         </field>
+        </record>
+
+
+<!-- Earnings Type Tree view-->
+        <record id="ke_earnings_type_tree" model="ir.ui.view">
+         <field name="name">ke.hr.earnings.type.tree</field>
+         <field name="model">ke.earnings.type</field>
+         <field name="view_type">tree</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="code"/>
+                 <field name="taxable"/>
+                 <field name="frequency"/>
+           </tree>
+         </field>
+        </record>
+
+<!-- Benefitss Type Tree view-->
+        <record id="ke_benefits_type_tree" model="ir.ui.view">
+         <field name="name">ke.hr.benefits.type.tree</field>
+         <field name="model">ke.benefit.type</field>
+         <field name="view_type">tree</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="code"/>
+                 <field name="taxable"/>
+                 <field name="frequency"/>
+           </tree>
+         </field>
+        </record>
+
+<!-- Reliefs Type Tree view-->
+        <record id="ke_relief_type_tree" model="ir.ui.view">
+         <field name="name">ke.hr.relief.type.tree</field>
+         <field name="model">ke.relief.type</field>
+         <field name="view_type">tree</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="code"/>
+                 <field name="frequency"/>
+           </tree>
+         </field>
+        </record>
+
+<!-- Deduction Type Tree view-->
+        <record id="ke_deduction_type_tree" model="ir.ui.view">
+         <field name="name">ke.hr.deduction.type.tree</field>
+         <field name="model">ke.deductions.type</field>
+         <field name="view_type">tree</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="code"/>
+		 <field name="pre_tax"/>
+		 <field name="net_pay"/>
+                 <field name="frequency"/>
+           </tree>
+         </field>
+        </record>
+
+
+
+
+	<!-- Modifying Employeee Form to add kenya specific details -->
+	<record id="ke_view_employee_form_inherit01" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit_01</field>
+            <field name="model">hr.employee</field>
+	     <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+		<data>
+		 <xpath expr="//group[@name='active_group']" position="attributes">
+                         <attribute name="string"></attribute>
+                 </xpath>
+		 <xpath expr="//group[@name='active_group']" position="inside">
+			 <field name="deduct_nhif"/>
+                         <field name="nhif" attrs="{ 'invisible':[('deduct_nhif', '=', False)],'required':[('deduct_nhif', '=', True)]}"/>
+		         <field name="deduct_nssf"/>
+                         <field name="nssf" attrs="{'invisible':[('deduct_nssf', '=', False)],'required':[('deduct_nssf', '=', True)]}"/>
+                 </xpath>
+		 <xpath expr="//group[@name='active_group']" position="after">
+			<group>
+			 <field name="deduct_paye"/>
+			 <field name="tax_pin" attrs="{'invisible':[('deduct_paye', '=', False)],'required':[('deduct_paye', '=', True)]}"/>
+			 <field name="helb"/>
+			 <field name="helb_rate" attrs="{'invisible': [('helb', '=', False)], 'required': [('helb', '=', True)]}"/>
+			 <field name="disability"/>
+			 <field name="disability_rate" attrs="{'invisible': [('disability', '=', False)], 'required': [('disability', '=', True)]}"/>
+			 <field name="disability_cert" attrs="{'invisible': [('disability', '=', False)], 'required': [('disability', '=', True)]}"/>
+			</group>
+		 </xpath>
+		 <xpath expr="//page[@string='Personal Information']//group[@string='Contact Information']" position="inside">
+                         <field name="house"/>
+                         <field name="street"/>
+                         <field name="suburb"/>
+			 <field name="town"/>
+               		 <field name="box"/>
+			 <field name="box_code"/>
+			 <field name="box_town"/>
+                 </xpath>
+		 <xpath expr="//field[@name='address_home_id']" position="replace">
+                 </xpath>
+		 <xpath expr="//field[@name='otherid']" position="after">
+		  <field name="personal_email" widget="email"/>
+                 </xpath>
+		 <xpath expr="//label[@for='category_ids']" position="before">
+		  <group>
+		   <field name="id" invisible="1"/>
+		   <field name="employee_no" attrs="{'invisible': [('id', '=', False)]}"/>
+		  </group>
+                 </xpath>
+		 <xpath expr="//group[@string='Birth']" position="inside">
+
+			<field name="birth_country"/>
+                 </xpath>
+		 <xpath expr="//page[@string='Personal Information']" position="inside">
+		   <notebook>
+		   <page string="Dependants">
+		     <field name="kins">
+			<tree>
+			 <field name="name"/>
+			 <field name="relation"/>
+			 <field name="birthday"/>
+			 <field name="gender"/>
+			 <field name="kin"/>
+			 <field name="phone"/>
+			</tree>
+		     </field>
+		   </page>
+		  </notebook>
+                 </xpath>
+		 <xpath expr="//page[@string='HR Settings']" position="inside">
+		    <notebook>
+                        <page name="deductions" string="Deductions">
+
+                        <field name="deductions">
+                           <tree>
+                             <field name="name"/>
+                             <field name="code"/>
+                             <field name="computation"/>
+                             <field name="amount"/>
+                           </tree>
+                        </field>
+                        </page>
+			<page name="reliefs" string="Tax Relief">
+
+                        <field name="reliefs">
+                           <tree>
+                             <field name="relief_id"/>
+                             <field name="code"/>
+                             <field name="computation"/>
+                             <field name="amount"/>
+                           </tree>
+                        </field>
+                        </page>
+		    </notebook>
+                 </xpath>
+		</data>
+	    </field>
+	</record>
+
+<!-- Modifying Contracts Form to add kenyan specific details -->
+	<record id="ke_view_contract_form_inherit01" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit_01</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+		<data>
+		  <xpath expr="//page[@name='information']" position="after">
+			<page name="benefits" string="Benefits (Non-Cash)">
+			  <field name="benefits" context="{'default_contract_id': active_id}">
+				<tree>
+				 <field name="id" invisible="1"/>
+				 <field name="contract_id" invisible="1"/>
+				 <field name="benefit_id"/>
+				 <field name="actual_cost"/>
+				 <field name="computation"/>
+				 <field name="fixed" attrs="{'readonly': [('computation', '!=', 'fixed')]}"/>
+				 <field name="amount"/>
+				</tree>
+			  </field>
+			</page>
+		   	<page name="earnings" string="Other Earnings (Cash)">
+                          <field name="earnings" context="{'default_contract_id': active_id}">
+                                <tree >
+				 <field name="contract_id" invisible="1"/>
+                                 <field name="name"/>
+                                 <field name="computation"/>
+                                 <field name="amount"/>
+                                </tree>
+                          </field>
+                        </page> 
+		  </xpath>
+		</data>
+	    </field>
+	</record>
+    </data>
+</openerp>
