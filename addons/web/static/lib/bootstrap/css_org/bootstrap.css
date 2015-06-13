@@ -149,8 +149,6 @@ input[type="radio"] {
      -moz-box-sizing: border-box;
           box-sizing: border-box;
   padding: 0;
-background-image: linear-gradient(to bottom, #FAFFF5, #E6FFCE);
-
 }
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -184,8 +182,6 @@ optgroup {
 table {
   border-spacing: 0;
   border-collapse: collapse;
-/*background-image: linear-gradient(to bottom, #FAFFF5, #E6FFCE);*/
-
 }
 td,
 th {
@@ -902,7 +898,7 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #545454;
+  color: #333;
   background-color: #fff;
 }
 input,
@@ -3595,7 +3591,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav > li > a:hover,
 .nav > li > a:focus {
   text-decoration: none;
-  background-color: #fff;
+  background-color: #eee;
 }
 .nav > li.disabled > a {
   color: #777;
@@ -3774,7 +3770,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   position: relative;
   min-height: 50px;
   margin-bottom: 20px;
-/*  border: 1px solid transparent;*/
+  border: 1px solid transparent;
 }
 @media (min-width: 768px) {
   .navbar {
@@ -3929,7 +3925,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-nav {
   margin: 7.5px -15px;
-
 }
 .navbar-nav > li > a {
   padding-top: 10px;
@@ -4193,11 +4188,8 @@ fieldset[disabled] .navbar-default .btn-link:focus {
   color: #ccc;
 }
 .navbar-inverse {
-background-image: linear-gradient(to bottom, #CCFF00, #9ABE00);
-  /*background-color: #9ABE00;*/
-	font-weight: bold;
-  border-color: #9ABE00;
- color:#ffffff;
+  background-color: #222;
+  border-color: #080808;
 }
 .navbar-inverse .navbar-brand {
   color: #777;
@@ -4222,9 +4214,8 @@ background-image: linear-gradient(to bottom, #CCFF00, #9ABE00);
 .navbar-inverse .navbar-nav > .active > a:hover,
 .navbar-inverse .navbar-nav > .active > a:focus {
   color: #fff;
-  background-color: #545454;
-  border-radius: 13px;
-} 
+  background-color: #080808;
+}
 .navbar-inverse .navbar-nav > .disabled > a,
 .navbar-inverse .navbar-nav > .disabled > a:hover,
 .navbar-inverse .navbar-nav > .disabled > a:focus {
