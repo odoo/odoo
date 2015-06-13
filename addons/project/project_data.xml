@@ -62,17 +62,11 @@
     <data>
         <!-- Task-related subtypes for messaging / Chatter -->
         <record id="mt_task_new" model="mail.message.subtype">
-            <field name="name">Task Created</field>
+            <field name="name">Task Opened</field>
             <field name="res_model">project.task</field>
             <field name="default" eval="False"/>
-            <field name="hidden" eval="True"/>
-            <field name="description">Task created</field>
-        </record>
-        <record id="mt_task_assigned" model="mail.message.subtype">
-            <field name="name">Task Assigned</field>
-            <field name="res_model">project.task</field>
-            <field name="default" eval="False"/>
-            <field name="description">Task Assigned</field>
+            <field name="hidden" eval="False"/>
+            <field name="description">Task opened</field>
         </record>
         <record id="mt_task_blocked" model="mail.message.subtype">
             <field name="name">Task Blocked</field>
@@ -81,10 +75,10 @@
             <field name="description">Task blocked</field>
         </record>
         <record id="mt_task_ready" model="mail.message.subtype">
-            <field name="name">Task Ready for Next Stage</field>
+            <field name="name">Task Ready</field>
             <field name="res_model">project.task</field>
             <field name="default" eval="False"/>
-            <field name="description">Task Ready for Next Stage</field>
+            <field name="description">Task ready for Next Stage</field>
         </record>
         <record id="mt_task_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
@@ -94,42 +88,35 @@
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->
         <record id="mt_project_task_new" model="mail.message.subtype">
-            <field name="name">Task Created</field>
+            <field name="name">Task Opened</field>
             <field name="sequence">10</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_task_new')"/>
             <field name="relation_field">project_id</field>
         </record>
-        <record id="mt_project_task_assigned" model="mail.message.subtype">
-            <field name="name">Task Assigned</field>
+        <record id="mt_project_task_blocked" model="mail.message.subtype">
+            <field name="name">Task Blocked</field>
             <field name="sequence">11</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_task_assigned')"/>
+            <field name="parent_id" eval="ref('mt_task_blocked')"/>
             <field name="relation_field">project_id</field>
         </record>
-        <record id="mt_project_task_blocked" model="mail.message.subtype">
-            <field name="name">Task Blocked</field>
+        <record id="mt_project_task_ready" model="mail.message.subtype">
+            <field name="name">Task Ready</field>
             <field name="sequence">12</field>
             <field name="res_model">project.project</field>
-            <field name="parent_id" eval="ref('mt_task_blocked')"/>
+            <field name="parent_id" eval="ref('mt_task_ready')"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_task_stage" model="mail.message.subtype">
             <field name="name">Task Stage Changed</field>
             <field name="sequence">13</field>
             <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_task_stage')"/>
             <field name="relation_field">project_id</field>
-        </record>
-        <record id="mt_project_task_ready" model="mail.message.subtype">
-            <field name="name">Task Ready</field>
-            <field name="sequence">14</field>
-            <field name="res_model">project.project</field>
-            <field name="parent_id" eval="ref('mt_task_ready')"/>
-            <field name="relation_field">project_id</field>
-            <field name="default" eval="False" />
         </record>
 
         <!-- notify all employees of module installation -->

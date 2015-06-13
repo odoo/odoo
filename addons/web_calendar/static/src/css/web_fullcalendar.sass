@@ -39,12 +39,13 @@ $ecolor11: #dc2127
 $fontcolor: #0d0d0d 
 
 .openerp
-    .oe_view_manager_view_calendar
+    .oe_calendar_quick_create
+        margin: 12px
+
+    .oe-view-manager-view-calendar
         position: relative
-        
-    .oe_calendar_table
-        margin-top : 10px
-        margin-left: 5px
+        padding-top: 10px
+        padding-left: 5px
         
 .openerp
     .oe_searchview.oe_searchview_open_drawer
@@ -53,7 +54,12 @@ $fontcolor: #0d0d0d
 
 .openerp 
     td.oe_calendar_sidebar_container
-        padding: 10px         
+        padding: 10px
+
+.openerp
+    .o-dashboard
+        td.oe_calendar_sidebar_container
+            display: none
 
 img.attendee_head
     height: 18px
@@ -415,7 +421,3 @@ img.attendee_head
     
     .color_24
         color: $color24
-        
-    .oe_calendar_buttons_add_contact
-        .add_contacts_link_btn
-            margin-top: 10px    

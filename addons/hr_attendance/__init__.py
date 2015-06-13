@@ -22,4 +22,3 @@
 import hr_attendance
 import wizard
 import report
-import res_config

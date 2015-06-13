@@ -36,7 +36,7 @@ class account_bank_statement_import(osv.TransientModel):
 
     def _check_coda(self, cr, uid, data_file, context=None):
         # Matches the first 24 characters of a CODA file, as defined by the febelfin specifications
-        return re.match('0{5}\d{9}05[ D] {7}', data_file) != None
+        return re.match('0{5}\d{9}05[ D] +', data_file) != None
 
     def _parse_file(self, cr, uid, data_file, context=None):
         if not self._check_coda(cr, uid, data_file, context=context):
@@ -241,7 +241,7 @@ class account_bank_statement_import(osv.TransientModel):
                         'partner_name': line['counterpartyName'],
                         'ref': line['ref'],
                         'sequence': line['sequence'],
-                        'unique_import_id': line['ref'] + line['transactionRef'],
+                        'unique_import_id': str(statement['codaSeqNumber']) + '-' + str(statement['date']) + '-' + str(line['ref']),
                     }
                     statement_line.append(line_data)
             if statement['coda_note'] != '':

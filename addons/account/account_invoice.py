@@ -51,15 +51,6 @@ class account_invoice(models.Model):
     _inherit = ['mail.thread']
     _description = "Invoice"
     _order = "number desc, id desc"
-    _track = {
-        'type': {
-        },
-        'state': {
-            'account.mt_invoice_paid': lambda self, cr, uid, obj, ctx=None: obj.state == 'paid' and obj.type in ('out_invoice', 'out_refund'),
-            'account.mt_invoice_validated': lambda self, cr, uid, obj, ctx=None: obj.state == 'open' and obj.type in ('out_invoice', 'out_refund'),
-            'account.mt_invoice_created': lambda self, cr, uid, obj, ctx=None: obj.state == 'draft' and obj.type in ('out_invoice', 'out_refund'),
-        },
-    }
 
     @api.one
     @api.depends('invoice_line.price_subtotal', 'tax_line.amount')
@@ -271,7 +262,6 @@ class account_invoice(models.Model):
         store=True, readonly=True, compute='_compute_amount')
     amount_total = fields.Float(string='Total', digits=dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_amount')
-
     currency_id = fields.Many2one('res.currency', string='Currency',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=_default_currency, track_visibility='always')
@@ -809,7 +799,7 @@ class account_invoice(models.Model):
             # create the analytical lines, one move line per invoice line
             iml = inv._get_analytic_lines()
             # check if taxes are all computed
-            compute_taxes = account_invoice_tax.compute(inv)
+            compute_taxes = account_invoice_tax.compute(inv.with_context(lang=inv.partner_id.lang))
             inv.check_tax_lines(compute_taxes)
 
             # I disabled the check_total feature
@@ -840,7 +830,7 @@ class account_invoice(models.Model):
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
 
-            name = inv.name or inv.supplier_invoice_number or '/'
+            name = inv.supplier_invoice_number or inv.name or '/'
             totlines = []
             if inv.payment_term:
                 totlines = inv.with_context(ctx).payment_term.compute(total, date_invoice)[0]
@@ -1096,6 +1086,7 @@ class account_invoice(models.Model):
         values['date_invoice'] = date or fields.Date.context_today(invoice)
         values['state'] = 'draft'
         values['number'] = False
+        values['origin'] = invoice.number
 
         if period_id:
             values['period_id'] = period_id
@@ -1139,7 +1130,7 @@ class account_invoice(models.Model):
         else:
             ref = self.number
         partner = self.partner_id._find_accounting_partner(self.partner_id)
-        name = name or self.invoice_line.name or self.number
+        name = name or self.invoice_line[0].name or self.number
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'name': name,
@@ -1205,20 +1196,46 @@ class account_invoice(models.Model):
         return recs.pay_and_reconcile(pay_amount, pay_account_id, period_id, pay_journal_id,
                     writeoff_acc_id, writeoff_period_id, writeoff_journal_id, name=name)
 
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'state' in init_values and self.state == 'paid' and self.type in ('out_invoice', 'out_refund'):
+            return 'account.mt_invoice_paid'
+        elif 'state' in init_values and self.state == 'open' and self.type in ('out_invoice', 'out_refund'):
+            return 'account.mt_invoice_validated'
+        elif 'state' in init_values and self.state == 'draft' and self.type in ('out_invoice', 'out_refund'):
+            return 'account.mt_invoice_created'
+        return super(account_invoice, self)._track_subtype(init_values)
+
+
 class account_invoice_line(models.Model):
     _name = "account.invoice.line"
     _description = "Invoice Line"
     _order = "invoice_id,sequence,id"
 
     @api.one
-    @api.depends('price_unit', 'discount', 'invoice_line_tax_id', 'quantity',
-        'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id')
+    @api.depends('price_unit', 'discount', 'invoice_line_tax_id', 'quantity', 'product_id',
+                 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id')
     def _compute_price(self):
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
-        self.price_subtotal = taxes['total']
-        if self.invoice_id:
-            self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
+        taxes = self.invoice_line_tax_id.compute_all(price, self.quantity,
+                                                     product=self.product_id,
+                                                     partner=self.invoice_id.partner_id)
+        self.price_subtotal = price_subtotal_signed = taxes['total']
+
+        if not self.invoice_id:
+            self.price_subtotal_signed = price_subtotal_signed
+        else:
+            inv_cur = self.invoice_id.currency_id
+            comp_cur = self.invoice_id.company_id.currency_id
+
+            if inv_cur != comp_cur:
+                inv_cur = inv_cur.with_context(date=self.invoice_id.date_invoice)
+                price_subtotal_signed = inv_cur.compute(price_subtotal_signed, comp_cur)
+
+            sign = -1 if self.invoice_id.type in ['in_invoice', 'out_refund'] else 1
+            self.price_subtotal = inv_cur.round(self.price_subtotal)
+            self.price_subtotal_signed = inv_cur.round(self.price_subtotal_signed * sign)
 
     @api.model
     def _default_price_unit(self):
@@ -1269,6 +1286,9 @@ class account_invoice_line(models.Model):
         default=_default_price_unit)
     price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_price')
+    price_subtotal_signed = fields.Float(string='Amount Signed', digits=0,
+        store=True, readonly=True, compute='_compute_price',
+        help="Total amount in the currency of the company, negative for credit notes.")
     quantity = fields.Float(string='Quantity', digits= dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     discount = fields.Float(string='Discount (%)', digits= dp.get_precision('Discount'),
@@ -1300,7 +1320,7 @@ class account_invoice_line(models.Model):
     @api.multi
     def product_id_change(self, product, uom_id, qty=0, name='', type='out_invoice',
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
-            company_id=None):
+            company_id=None, date_invoice=None):
         context = self._context
         company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.with_context(company_id=company_id, force_company=company_id)
@@ -1346,7 +1366,7 @@ class account_invoice_line(models.Model):
         if type in ('in_invoice', 'in_refund'):
             values['price_unit'] = price_unit or product.standard_price
         else:
-            values['price_unit'] = product.list_price
+            values['price_unit'] = product.lst_price
 
         values['uos_id'] = uom_id or product.uom_id.id
         domain = {'uos_id': [('category_id', '=', product.uom_id.category_id.id)]}
@@ -1358,7 +1378,7 @@ class account_invoice_line(models.Model):
             if company.currency_id != currency:
                 if type in ('in_invoice', 'in_refund'):
                     values['price_unit'] = product.standard_price
-                values['price_unit'] = values['price_unit'] * currency.rate
+                values['price_unit'] = values['price_unit'] * currency.with_context(dict(context or {}, date=date_invoice)).rate
 
             if values['uos_id'] and values['uos_id'] != product.uom_id.id:
                 values['price_unit'] = self.env['product.uom']._compute_price(
@@ -1368,14 +1388,14 @@ class account_invoice_line(models.Model):
 
     @api.multi
     def uos_id_change(self, product, uom, qty=0, name='', type='out_invoice', partner_id=False,
-            fposition_id=False, price_unit=False, currency_id=False, company_id=None):
+            fposition_id=False, price_unit=False, currency_id=False, company_id=None, date_invoice=None):
         context = self._context
         company_id = company_id if company_id != None else context.get('company_id', False)
         self = self.with_context(company_id=company_id)
 
         result = self.product_id_change(
             product, uom, qty, name, type, partner_id, fposition_id, price_unit,
-            currency_id, company_id=company_id,
+            currency_id, company_id=company_id, date_invoice=date_invoice
         )
         warning = {}
         if not uom:
@@ -1450,7 +1470,7 @@ class account_invoice_line(models.Model):
     # Set the tax field according to the account and the fiscal position
     #
     @api.multi
-    def onchange_account_id(self, product_id, partner_id, inv_type, fposition_id, account_id):
+    def onchange_account_id(self, product_id, partner_id, inv_type, fposition_id, account_id, date_invoice=None):
         if not account_id:
             return {}
         unique_tax_ids = []
@@ -1460,7 +1480,7 @@ class account_invoice_line(models.Model):
             unique_tax_ids = fpos.map_tax(account.tax_ids).ids
         else:
             product_change_result = self.product_id_change(product_id, False, type=inv_type,
-                partner_id=partner_id, fposition_id=fposition_id, company_id=account.company_id.id)
+                partner_id=partner_id, fposition_id=fposition_id, company_id=account.company_id.id, date_invoice=date_invoice)
             if 'invoice_line_tax_id' in product_change_result.get('value', {}):
                 unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
         return {'value': {'invoice_line_tax_id': unique_tax_ids}}
@@ -1517,12 +1537,11 @@ class account_invoice_tax(models.Model):
 
     @api.multi
     def amount_change(self, amount, currency_id=False, company_id=False, date_invoice=False):
-        factor = self.factor_tax if self else 1
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
-            amount = currency.compute(amount * factor, company.currency_id, round=False)
+            amount = currency.compute(amount, company.currency_id, round=False)
         return {'value': {'tax_amount': amount}}
 
     @api.v8

@@ -38,7 +38,7 @@ class report_stock_forecast(models.Model):
             END AS date,
             SUM(sq.qty) AS product_qty
             FROM
-            (SELECT min(date) AS date FROM stock_move AS sm
+            (SELECT min(date_expected) AS date FROM stock_move AS sm
                 LEFT JOIN
                     stock_location source_location ON sm.location_id = source_location.id
                 LEFT JOIN
@@ -59,7 +59,7 @@ class report_stock_forecast(models.Model):
             SELECT
             max(sm.id) as id,
             sm.product_id,
-            to_date(to_char(sm.date, 'YYYY/MM/DD'), 'YYYY/MM/DD') AS date,
+            to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD') AS date,
             SUM(sm.product_qty) AS product_qty
             FROM
                stock_move as sm
@@ -72,12 +72,12 @@ class report_stock_forecast(models.Model):
             WHERE
             sm.state IN ('confirmed','assigned','waiting') and
             source_location.usage != 'internal' and dest_location.usage = 'internal'
-            GROUP BY sm.date,sm.product_id
+            GROUP BY sm.date_expected,sm.product_id
             UNION ALL
             SELECT
                 max(sm.id) as id,
                 sm.product_id,
-                to_date(to_char(sm.date, 'YYYY/MM/DD'), 'YYYY/MM/DD') AS date,
+                to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD') AS date,
                 SUM(-(sm.product_qty)) AS product_qty
             FROM
                stock_move as sm
@@ -90,7 +90,7 @@ class report_stock_forecast(models.Model):
             WHERE
                 sm.state IN ('confirmed','assigned','waiting') and
             source_location.usage = 'internal' and dest_location.usage != 'internal'
-            GROUP BY sm.date,sm.product_id)
+            GROUP BY sm.date_expected,sm.product_id)
          as MAIN
      LEFT JOIN
      (SELECT DISTINCT date
@@ -98,7 +98,7 @@ class report_stock_forecast(models.Model):
       (
              SELECT CURRENT_DATE AS DATE
              UNION ALL
-             SELECT to_date(to_char(sm.date, 'YYYY/MM/DD'), 'YYYY/MM/DD') AS date
+             SELECT to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD') AS date
              FROM stock_move sm
              LEFT JOIN
              stock_location source_location ON sm.location_id = source_location.id

@@ -33,7 +33,7 @@ class event_track(models.Model):
     speaker_ids = fields.Many2many('res.partner', string='Speakers')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     state = fields.Selection([
-        ('draft', 'Proposal'), ('confirmed', 'Confirmed'), ('announced', 'Announced'), ('published', 'Published')],
+        ('draft', 'Proposal'), ('confirmed', 'Confirmed'), ('announced', 'Announced'), ('published', 'Published'), ('refused', 'Refused')],
         'Status', default='draft', required=True, copy=False, track_visibility='onchange')
     description = fields.Html('Track Description', translate=True)
     date = fields.Datetime('Track Date')
@@ -130,8 +130,8 @@ class event_event(models.Model):
     def _get_tracks_tag_ids(self):
         self.tracks_tag_ids = self.track_ids.mapped('tag_ids').ids
 
-    track_ids = fields.One2many('event.track', 'event_id', 'Tracks', copy=True)
-    sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors', copy=True)
+    track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
+    sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
     blog_id = fields.Many2one('blog.blog', 'Event Blog')
     show_track_proposal = fields.Boolean('Talks Proposals')
     show_tracks = fields.Boolean('Multiple Tracks')

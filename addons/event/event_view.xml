@@ -3,8 +3,8 @@
     <data>
 
         <!-- Main menu items -->
-        <menuitem name="Events" id="event_main_menu" parent="base.marketing_menu" sequence="2"/>
-        <menuitem name="Events" id="event_configuration" parent="base.menu_marketing_config_root" sequence="1"/>
+        <menuitem name="Events" id="event_main_menu" parent="base.marketing_menu" sequence="2" groups="marketing.group_marketing_user"/>
+        <menuitem name="Events" id="event_configuration" parent="base.menu_marketing_config_root" sequence="1" groups="marketing.group_marketing_user"/>
 
         <!-- EVENT.TYPE VIEWS -->
         <record model="ir.ui.view" id="view_event_type_form">
@@ -46,7 +46,7 @@
             <field name="view_type">form</field>
             <field name="name">Attendees</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_not_cancelled': 1}</field>
         </record>
 
         <!-- EVENT.EVENT VIEWS -->
@@ -95,13 +95,13 @@
                                 <group>
                                     <group>
                                         <field name="auto_confirm" invisible="1"/>
-                                        <field name="seats_min" attrs="{'invisible':[('auto_confirm','=', True)]}"/>
+                                        <field name="seats_min"/>
                                         <field name="seats_availability" widget='radio'/>
-                                        <field name="seats_max" attrs="{'invisible':[('seats_availability','=','unlimited')]}"/>
+                                        <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
                                     </group>
                                 </group>
                             </page>
-                            <page string="Email Schedule">
+                            <page string="Email Schedule" groups="event.group_email_scheduling">
                                 <group>
                                     <field name="reply_to"/>
                                 </group>
@@ -233,7 +233,7 @@
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
-                    <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Upcoming events from today" />
+                    <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=',datetime.datetime.now().replace(hour=0, minute=0, second=0))]" help="Upcoming events from today" />
                     <field name="type"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
@@ -287,6 +287,9 @@
                     <field name="event_id" />
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
+                    <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
@@ -366,6 +369,7 @@
                     <field name="id" string="Registration ID"/>
                     <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Not Cancelled" name="not_cancelled" domain="[('state','!=','cancel')]"/>
                     <separator/>
                     <field name="event_id"/>
                     <field name="partner_id"/>

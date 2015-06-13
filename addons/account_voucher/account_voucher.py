@@ -287,12 +287,6 @@ class account_voucher(osv.osv):
     _description = 'Accounting Voucher'
     _inherit = ['mail.thread']
     _order = "date desc, id desc"
-#    _rec_name = 'number'
-    _track = {
-        'state': {
-            'account_voucher.mt_voucher_state_change': lambda self, cr, uid, obj, ctx=None: True,
-        },
-    }
 
     _columns = {
         'type':fields.selection([
@@ -1233,11 +1227,6 @@ class account_voucher(osv.osv):
                     'account_tax_id': voucher.tax_id.id,
                 })
 
-            if move_line.get('account_tax_id', False):
-                tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
-                if not (tax_data.base_code_id and tax_data.tax_code_id):
-                    raise UserError(_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
-
             # compute the amount in foreign currency
             foreign_currency_diff = 0.0
             amount_currency = False
@@ -1413,6 +1402,12 @@ class account_voucher(osv.osv):
                 if len(rec_ids) >= 2:
                     reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
         return True
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        if 'state' in init_values:
+            return 'account_voucher.mt_voucher_state_change'
+        return super(account_voucher, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
 
 class account_voucher_line(osv.osv):
     _name = 'account.voucher.line'

@@ -42,7 +42,7 @@ define([
 
       // air mode
       if ($editor.hasClass('note-air-editor')) {
-        var id = list.last($editor.attr('id').split('-'));
+        var id = list.last($editor.attr('data-note-id'));
         makeFinder = function (sIdPrefix) {
           return function () { return $(sIdPrefix + id); };
         };

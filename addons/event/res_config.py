@@ -11,8 +11,16 @@ class event_config_settings(osv.TransientModel):
             help='Install the event_sale module'),
         'module_website_event_track': fields.boolean(
             'Organize few days event with track, full agenda, own menu in website'),
+        'module_website_event_questions': fields.boolean(
+            'Ask questions to online subscribers',
+            help='Install the website_event_questions module',
+            implied_group='event.group_website_event_questions'),
         'auto_confirmation': fields.boolean(
             'Automate events and subscription confirmation', help='Unselect this option to manually manage draft event and draft subscription'),
+        'group_email_scheduling': fields.boolean(
+            'Schedule emails to attendees and subscribers', 
+            help='You will be able to configure emails, and to schedule them to be automatically sent to the attendees on subscription and/or attendance',
+            implied_group='event.group_email_scheduling'),            
     }
 
     def set_default_auto_confirmation(self, cr, uid, ids, context=None):

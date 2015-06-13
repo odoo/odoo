@@ -56,7 +56,6 @@ Main Features
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_config_view.xml',
-        'res_partner_view.xml',
         'data/mail_data.xml',
         'data/mail_group_data.xml',
         'security/mail_security.xml',
@@ -67,7 +66,8 @@ Main Features
         'wizard/email_template_preview_view.xml',
         'views/email_template_view.xml',
         'views/ir_actions_view.xml',
-        'views/res_partner_view.xml'
+        'views/res_partner_view.xml',
+        'contacts_view.xml'
     ],
     'demo': [
         'data/mail_demo.xml',

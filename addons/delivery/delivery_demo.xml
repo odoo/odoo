@@ -15,6 +15,7 @@
         <record id="delivery_carrier" model="delivery.carrier">
             <field name="name">The Poste</field>
             <field name="normal_price">20</field>
+            <field name="sequence">2</field>
             <field name="partner_id" ref="res_partner_delivery"/>
             <field name="product_id" ref="product_product_delivery"/>
             <field name="use_detailed_pricelist" eval="True"/>
@@ -23,6 +24,7 @@
         <record id="normal_delivery_carrier" model="delivery.carrier">
             <field name="name">Normal Delivery Charges</field>
             <field name="normal_price">10</field>
+            <field name="sequence">3</field>
             <field name="partner_id" ref="res_partner_delivery"/>
             <field name="product_id" ref="product_product_delivery"/>
         </record>

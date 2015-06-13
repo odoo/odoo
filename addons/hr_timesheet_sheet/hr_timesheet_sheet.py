@@ -37,13 +37,6 @@ class hr_timesheet_sheet(osv.osv):
     _order = "id desc"
     _description = "Timesheet"
 
-    _track = {
-        'state': {
-            'hr_timesheet_sheet.mt_timesheet_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
-            'hr_timesheet_sheet.mt_timesheet_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
-        },
-    }
-
     def _total(self, cr, uid, ids, name, args, context=None):
         """ Compute the attendances, analytic lines timesheets and differences between them
             for all the days of a timesheet and the current day
@@ -265,6 +258,14 @@ class hr_timesheet_sheet(osv.osv):
                 raise UserError(_('You cannot delete a timesheet which is already confirmed.'))
             elif sheet['total_attendance'] <> 0.00:
                 raise UserError(_('You cannot delete a timesheet which have attendance entries.'))
+
+        toremove = []
+        analytic_timesheet = self.pool.get('hr.analytic.timesheet')
+        for sheet in self.browse(cr, uid, ids, context=context):
+            for timesheet in sheet.timesheet_ids:
+                toremove.append(timesheet.id)
+        analytic_timesheet.unlink(cr, uid, toremove, context=context)
+
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
@@ -279,6 +280,14 @@ class hr_timesheet_sheet(osv.osv):
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'confirm':
+            return 'hr_timesheet_sheet.mt_timesheet_confirmed'
+        elif 'state' in init_values and record.state == 'done':
+            return 'hr_timesheet_sheet.mt_timesheet_approved'
+        return super(hr_timesheet_sheet, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def _needaction_domain_get(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
@@ -560,12 +569,13 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                         MAX(id) as id,
                         name,
                         sheet_id,
+                        timezone,
                         SUM(total_timesheet) as total_timesheet,
-                        CASE WHEN SUM(total_attendance) < 0
+                        CASE WHEN SUM(orphan_attendances) != 0
                             THEN (SUM(total_attendance) +
                                 CASE WHEN current_date <> name
                                     THEN 1440
-                                    ELSE (EXTRACT(hour FROM current_time AT TIME ZONE 'UTC') * 60) + EXTRACT(minute FROM current_time AT TIME ZONE 'UTC')
+                                    ELSE (EXTRACT(hour FROM current_time AT TIME ZONE 'UTC' AT TIME ZONE coalesce(timezone, 'UTC')) * 60) + EXTRACT(minute FROM current_time AT TIME ZONE 'UTC' AT TIME ZONE coalesce(timezone, 'UTC'))
                                 END
                                 )
                             ELSE SUM(total_attendance)
@@ -574,21 +584,29 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                         ((
                             select
                                 min(hrt.id) as id,
+                                p.tz as timezone,
                                 l.date::date as name,
                                 s.id as sheet_id,
                                 sum(l.unit_amount) as total_timesheet,
+                                0 as orphan_attendances,
                                 0.0 as total_attendance
                             from
                                 hr_analytic_timesheet hrt
                                 JOIN account_analytic_line l ON l.id = hrt.line_id
                                 LEFT JOIN hr_timesheet_sheet_sheet s ON s.id = hrt.sheet_id
-                            group by l.date::date, s.id
+                                JOIN hr_employee e ON s.employee_id = e.id
+                                JOIN resource_resource r ON e.resource_id = r.id
+                                LEFT JOIN res_users u ON r.user_id = u.id
+                                LEFT JOIN res_partner p ON u.partner_id = p.id
+                            group by l.date::date, s.id, timezone
                         ) union (
                             select
                                 -min(a.id) as id,
+                                p.tz as timezone,
                                 (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date as name,
                                 s.id as sheet_id,
                                 0.0 as total_timesheet,
+                                SUM(CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END) as orphan_attendances,
                                 SUM(((EXTRACT(hour FROM (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))) * 60) + EXTRACT(minute FROM (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC')))) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
                             from
                                 hr_attendance a
@@ -603,9 +621,9 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                 LEFT JOIN res_partner p
                                 ON u.partner_id = p.id
                             WHERE action in ('sign_in', 'sign_out')
-                            group by (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date, s.id
+                            group by (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date, s.id, timezone
                         )) AS foo
-                        GROUP BY name, sheet_id
+                        GROUP BY name, sheet_id, timezone
                 )) AS bar""")
 
 

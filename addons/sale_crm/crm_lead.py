@@ -1,16 +1,23 @@
-from openerp.osv import osv, fields
 
+from openerp import models, fields, api, _
+import openerp.addons.decimal_precision as dp
 
-class crm_lead(osv.Model):
-    _inherit = 'crm.lead'
+class crm_lead(models.Model):
+    _inherit = ['crm.lead']
 
-    def _get_sale_amount_total(self, cr, uid, ids, fields, args, context=None):
-        res = dict.fromkeys(ids, False)
-        sale_rec = self.pool['sale.order'].read_group(cr, uid, [('opportunity_id', 'in', ids), ('state', '!=', 'cancel')], ['opportunity_id', 'amount_total'], ['opportunity_id'], context=context)
-        for key, value in dict(map(lambda x: (x['opportunity_id'] and x['opportunity_id'][0], x['amount_total']), sale_rec)).items():
-            res[key] = value
-        return res
+    @api.one
+    @api.depends('order_ids')
+    def _get_sale_amount_total(self):
+        total = 0.0
+        nbr = 0
+        for order in self.order_ids:
+            if order.state == 'draft':
+                nbr += 1
+            if order.state not in ('draft', 'cancel'):
+                total += order.currency_id.compute(order.amount_untaxed, self.company_currency)
+        self.sale_amount_total = total
+        self.sale_number = nbr
 
-    _columns = {
-        'sale_amount_total': fields.function(_get_sale_amount_total, string="Total Amount Of Quotations", type="float")
-    }
+    sale_amount_total= fields.Float(compute='_get_sale_amount_total', string="Sum of Orders", readonly=True, digits_compute=dp.get_precision('Account'))
+    sale_number = fields.Integer(compute='_get_sale_amount_total', string="Number of Quotations", readonly=True)
+    order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')

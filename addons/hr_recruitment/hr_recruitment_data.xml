@@ -36,6 +36,23 @@
          ${object.user_id and object.user_id.signature | safe or ''}]]></field>
     </record>
 
+    <record id="hr_welcome_new_employee" model="mail.template">
+        <field name="name">Welcome New Employee</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="subject">Welcoming ${object.name} </field>
+        <field name="body_html"><![CDATA[
+            <p>
+                %if user.has_group('hr.group_multi_departments') and object.department_id:
+                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}
+                    in ${object.department_id.name}.
+                %else:
+                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}.
+                %endif
+            </p>
+            <p>Please welcome him/her and help him/her finding his/her marks.</p>
+            ]]></field>
+    </record>
+
     <record id="applicant_interest" model="mail.template">
         <field name="name">Application approved</field>
         <field name="subject">Application approved</field>
@@ -131,6 +148,12 @@
     </record>
 
     <!-- Job-related subtypes for messaging / Chatter -->
+    <record id="mt_job_new" model="mail.message.subtype">
+        <field name="name">Job Position created</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+    </record>
     <record id="mt_job_applicant_new" model="mail.message.subtype">
         <field name="name">Applicant Created</field>
         <field name="res_model">hr.job</field>
@@ -153,17 +176,26 @@
         <field name="relation_field">job_id</field>
     </record>
 
+    <!-- Department-related (parent) subtypes for messaging / Chatter -->
+    <record id="mt_department_new" model="mail.message.subtype">
+        <field name="name">Job Position Created</field>
+        <field name="res_model">hr.department</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" eval="ref('mt_job_new')"/>
+        <field name="relation_field">department_id</field>
+    </record>
+
     <!-- Applicant Categories(Tag) -->
-    <record id="tag_applicant_reserve" model="hr.applicant_category">
+    <record id="tag_applicant_reserve" model="hr.applicant.category">
         <field name="name">Reserve</field>
     </record>
-    <record id="tag_applicant_manager" model="hr.applicant_category">
+    <record id="tag_applicant_manager" model="hr.applicant.category">
         <field name="name">Manager</field>
     </record>
-    <record id="tag_applicant_it" model="hr.applicant_category">
+    <record id="tag_applicant_it" model="hr.applicant.category">
         <field name="name">IT</field>
     </record>
-    <record id="tag_applicant_sales" model="hr.applicant_category">
+    <record id="tag_applicant_sales" model="hr.applicant.category">
         <field name="name">Sales</field>
     </record>
     <record model="utm.campaign" id="utm_campaign_job">

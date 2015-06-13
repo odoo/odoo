@@ -20,7 +20,7 @@
                             <td class="text-right">
                                 <span t-field="l.price_unit"/>
                             </td>
-                            <td groups="sale.group_discount_per_so_line">
+                            <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
                                 <span t-field="l.discount"/>
                             </td>
                             <td>
@@ -53,8 +53,10 @@
                                     <th>Description</th>
                                     <th class="text-right">Quantity</th>
                                     <th class="text-right">Unit Price</th>
-                                    <th groups="sale.group_discount_per_so_line">Disc.(%)</th>
-                                    <th>Taxes</th>
+                                    <th t-if="display_discount" groups="sale.group_discount_per_so_line" class="text-right">
+                                        <span>Disc.(%)</span>
+                                    </th>
+                                    <th class="text-right">Taxes</th>
                                     <th class="text-right">Price</th>
                                 </tr>
                            </thead>

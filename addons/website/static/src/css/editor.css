@@ -85,7 +85,11 @@
 .editor_enable [data-oe-readonly]:hover {
   cursor: default;
 }
-
+/* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
+.o_editable[placeholder]:empty:not(:focus):before {
+    content: attr(placeholder);
+    opacity: 0.3;
+}
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable] {
   -moz-user-select: none;
@@ -648,6 +652,7 @@ ul.oe_menu_editor .disclose {
 
 #theme_customize_modal {
   overflow: visible;
+  overflow-y: auto;
   z-index: 1020;
   background: transparent;
   display: block;

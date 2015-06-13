@@ -187,7 +187,8 @@
 <!-- Channel main template -->
 <template id='home' name="Odoo Slides">
      <t t-set="head">
-        <t t-call-assets="website_slides.pdf_js_lib" t-css="false"/>
+        <t t-call-assets="website.pdf_js_lib" t-css="false"/>
+        <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
     </t>
     <t t-call="website.layout">
         <div class="wrap">

@@ -363,13 +363,13 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                         self.already_installed(cr, uid, context=context),
                         True))
 
-    def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
+    def fields_get(self, cr, uid, fields=None, context=None, write_access=True, attributes=None):
         """ If an addon is already installed, set it to readonly as
         res.config.installer doesn't handle uninstallations of already
         installed addons
         """
         fields = super(res_config_installer, self).fields_get(
-            cr, uid, fields, context, write_access)
+            cr, uid, fields, context, write_access, attributes)
 
         for name in self.already_installed(cr, uid, context=context):
             if name not in fields:
@@ -455,11 +455,15 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         ret_val['arch'] = etree.tostring(doc)
         return ret_val
 
-    def onchange_module(self, cr, uid, ids, field_value, module_name, context={}):
+    def onchange_module(self, cr, uid, ids, field_value, module_name, context=None):
         module_pool = self.pool.get('ir.module.module')
         module_ids = module_pool.search(
             cr, uid, [('name', '=', module_name.replace("module_", '')),
             ('state','in', ['to install', 'installed', 'to upgrade'])],
+            context=context)
+        installed_module_ids = module_pool.search(
+            cr, uid, [('name', '=', module_name.replace("module_", '')),
+            ('state', 'in', ['uninstalled'])],
             context=context)
 
         if module_ids and not field_value:
@@ -473,6 +477,18 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
                     'message': _('Disabling this option will also uninstall the following modules \n%s') % message,
                 }
             }
+        if installed_module_ids and field_value:
+            dep_ids = module_pool.upstream_dependencies(cr, uid, installed_module_ids, context=context)
+            dep_name = [x['display_name'] for x in module_pool.search_read(
+                cr, uid, ['|', ('id', 'in', installed_module_ids), ('id', 'in', dep_ids), ('application', '=', True)], context=context)]
+            if dep_name:
+                message = '\n'.join(dep_name)
+                return {
+                    'warning': {
+                        'title': _('Warning!'),
+                        'message': _('Enabling this feature you will install following paying application(s) \n%s') % message,
+                    }
+                }
         return {}
 
     def _get_classified_fields(self, cr, uid, context=None):

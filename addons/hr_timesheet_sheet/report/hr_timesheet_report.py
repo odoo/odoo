@@ -41,29 +41,39 @@ class hr_timesheet_report(osv.osv):
         }
 
     def _select(self):
-        return super(hr_timesheet_report, self)._select() + """,
+        return """
+        WITH
+            totals AS (
+                SELECT
+                    d.sheet_id,
+                    d.name as date,
+                    sum(total_difference) / coalesce(sum(j.count),1) as total_diff,
+                    sum(total_timesheet) / coalesce(sum(j.count),1) as total_timesheet,
+                    sum(total_attendance) / coalesce(sum(j.count),1) as total_attendance
+                FROM hr_timesheet_sheet_sheet_day d left join (
+                    SELECT
+                        h.sheet_id,
+                        a.date,
+                        count(*)
+                    FROM account_analytic_line a inner join  hr_analytic_timesheet h ON (h.line_id=a.id)
+                    GROUP BY h.sheet_id, a.date
+                ) j ON (d.sheet_id = j.sheet_id AND d.name = j.date)
+                GROUP BY d.sheet_id, d.name
+            )
+        """ + super(hr_timesheet_report, self)._select() + """,
                         htss.name,
                         htss.date_from,
                         htss.date_to,
                         count(*) as nbr,
-                        (SELECT   sum(day.total_difference)
-                            FROM hr_timesheet_sheet_sheet AS sheet
-                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day
-                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_diff,
-                        (SELECT sum(day.total_timesheet)
-                            FROM hr_timesheet_sheet_sheet AS sheet
-                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day
-                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_timesheet,
-                        (SELECT sum(day.total_attendance)
-                            FROM hr_timesheet_sheet_sheet AS sheet
-                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day
-                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_attendance,
+                        sum(t.total_diff) as total_diff,
+                        sum(t.total_timesheet) as total_timesheet,
+                        sum(t.total_attendance) as total_attendance,
                         aal.to_invoice,
                         htss.department_id,
                         htss.state"""
 
     def _from(self):
-        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id)"
+        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id) join totals as t on (t.sheet_id = hat.sheet_id and t.date = aal.date)"
 
     def _group_by(self):
         return super(hr_timesheet_report, self)._group_by() + """,

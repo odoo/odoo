@@ -5,4 +5,4 @@ import openerp.tests
 
 class TestUi(openerp.tests.HttpCase):
     def test_01_admin_bank_statement_reconciliation(self):
-        self.phantom_js("/", "openerp.Tour.run('bank_statement_reconciliation', 'test')", "openerp.Tour.tours.bank_statement_reconciliation", login="admin")
+        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('bank_statement_reconciliation', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.bank_statement_reconciliation", login="admin")

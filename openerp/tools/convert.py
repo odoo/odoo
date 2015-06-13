@@ -479,6 +479,11 @@ form: module.record_id""" % (xml_id,)
         # TODO add remove ir.model.data
 
     def _tag_ir_set(self, cr, rec, data_node=None, mode=None):
+        """
+            .. deprecated:: 9.0
+
+            Use the <record> notation with ``ir.values`` as model instead.
+        """
         if self.mode != 'init':
             return
         res = {}
@@ -559,6 +564,16 @@ form: module.record_id""" % (xml_id,)
                     group_id = self.id_get(cr, group)
                     groups_value.append((4, group_id))
             values['groups_id'] = groups_value
+
+        if not values.get('parent_id'):
+            if rec.get('icon'):
+                values['icon'] = rec.get('icon')
+            else:
+                default_icon = 'fa-cube' # default icon if not specified any for top-level menu
+                try:
+                    values['icon'] = self.pool.get('ir.ui.menu').read(cr,self.uid,res,['icon'])[0].get('icon')
+                except:
+                    values['icon'] = default_icon
 
         pid = self.pool['ir.model.data']._update(cr, self.uid, 'ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
@@ -841,7 +856,7 @@ form: module.record_id""" % (xml_id,)
             'template': self._tag_template,
             'workflow': self._tag_workflow,
             'report': self._tag_report,
-            'ir_set': self._tag_ir_set,
+            'ir_set': self._tag_ir_set, # deprecated:: 9.0
             'act_window': self._tag_act_window,
             'assert': self._tag_assert,
         }

@@ -711,7 +711,7 @@ define([
 
       $holder.addClass('note-air-editor note-editable');
       $holder.attr({
-        'id': 'note-editor-' + id,
+        'data-note-id': id,
         'contentEditable': true
       });
 

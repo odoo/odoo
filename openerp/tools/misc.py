@@ -103,15 +103,25 @@ def find_pg_tool(name):
         raise Exception('Command `%s` not found.' % name)
 
 def exec_pg_environ():
-    """ On systems where pg_restore/pg_dump require an explicit password (i.e.
-    on Windows where TCP sockets are used), it is necessary to pass the
+    """
+    Force the database PostgreSQL environment variables to the database
+    configuration of Odoo.
+
+    Note: On systems where pg_restore/pg_dump require an explicit password
+    (i.e.  on Windows where TCP sockets are used), it is necessary to pass the
     postgres user password in the PGPASSWORD environment variable or in a
     special .pgpass file.
 
     See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
     """
     env = os.environ.copy()
-    if not env.get('PGPASSWORD') and openerp.tools.config['db_password']:
+    if openerp.tools.config['db_host']:
+        env['PGHOST'] = openerp.tools.config['db_host']
+    if openerp.tools.config['db_port']:
+        env['PGPORT'] = str(openerp.tools.config['db_port'])
+    if openerp.tools.config['db_user']:
+        env['PGUSER'] = openerp.tools.config['db_user']
+    if openerp.tools.config['db_password']:
         env['PGPASSWORD'] = openerp.tools.config['db_password']
     return env
 
@@ -119,7 +129,8 @@ def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
     env = exec_pg_environ()
     with open(os.devnull) as dn:
-        rc = subprocess.call((prog,) + args, env=env, stdout=dn, stderr=subprocess.STDOUT)
+        args2 = (prog,) + args
+        rc = subprocess.call(args2, env=env, stdout=dn, stderr=subprocess.STDOUT)
         if rc:
             raise Exception('Postgres subprocess %s error %s' % (args2, rc))
 
@@ -532,7 +543,7 @@ ALL_LANGUAGES = {
         'mn_MN': u'Mongolian / монгол',
         'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
         'nl_NL': u'Dutch / Nederlands',
-        'nl_BE': u'Flemish (BE) / Vlaams (BE)',
+        'nl_BE': u'Dutch (BE) / Nederlands (BE)',
         'oc_FR': u'Occitan (FR, post 1500) / Occitan',
         'pl_PL': u'Polish / Język polski',
         'pt_BR': u'Portuguese (BR) / Português (BR)',

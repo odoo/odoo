@@ -80,7 +80,8 @@ def is_multilang_url(local_url, langs=None):
         router = request.httprequest.app.get_db_router(request.db).bind('')
         # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
         func = router.match(path, method='POST', query_args=query_string)[0]
-        return func.routing.get('website', False) and func.routing.get('multilang', True)
+        return (func.routing.get('website', False) and
+                func.routing.get('multilang', func.routing['type'] == 'http'))
     except Exception:
         return False
 
@@ -224,18 +225,42 @@ class website(osv.osv):
         })
         return page_xmlid
 
-    def delete_page(self, cr, uid, view_id, context=None):
-        if context is None:
-            context = {}
+    def key_to_view_id(self, cr, uid, view_id, context=None):
         View = self.pool.get('ir.ui.view')
-        view_find = View.search(cr, uid, [
+        return View.search(cr, uid, [
             ('id', '=', view_id),
             "|", ('website_id', '=', context.get('website_id')), ('website_id', '=', False),
             ('page', '=', True),
             ('type', '=', 'qweb')
         ], context=context)
+
+    def delete_page(self, cr, uid, view_id, context=None):
+        if context is None:
+            context = {}
+        View = self.pool.get('ir.ui.view')
+        view_find = self.key_to_view_id(cr, uid, view_id, context=context)
         if view_find:
             View.unlink(cr, uid, view_find, context=context)
+
+    def rename_page(self, cr, uid, view_id, new_name, context=None):
+        if context is None:
+            context = {}
+        View = self.pool.get('ir.ui.view')
+        view_find = self.key_to_view_id(cr, uid, view_id, context=context)
+        if view_find:
+            v = View.browse(cr, uid, view_find, context=context)
+
+            new_name = slugify(new_name, max_length=50)
+            # Prefix by module if not already done by end user
+            prefix = v.key.split('.')[0]
+            if not new_name.startswith(prefix):
+                new_name = "%s.%s" % (prefix, new_name)
+
+            View.write(cr, uid, view_find, {
+                'key': new_name,
+                'arch_db': v.arch_db.replace(v.key, new_name, 1)
+            })
+            return new_name
 
     def page_search_dependencies(self, cr, uid, view_id=False, context=None):
         dep = {}
@@ -309,7 +334,7 @@ class website(osv.osv):
             return False
 
     @openerp.tools.ormcache(skiparg=3)
-    def _get_languages(self, cr, uid, id, context=None):
+    def _get_languages(self, cr, uid, id):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
 
@@ -324,7 +349,7 @@ class website(osv.osv):
         return uri
 
     def get_languages(self, cr, uid, ids, context=None):
-        return self._get_languages(cr, uid, ids[0], context=context)
+        return self._get_languages(cr, uid, ids[0])
 
     def get_alternate_languages(self, cr, uid, ids, req=None, context=None):
         langs = []
@@ -350,17 +375,17 @@ class website(osv.osv):
                 lang['hreflang'] = lang['short']
         return langs
 
-    @openerp.tools.ormcache(skiparg=4)
-    def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
+    @openerp.tools.ormcache(skiparg=3)
+    def _get_current_website_id(self, cr, uid, domain_name):
+        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1)
         if ids:
             return ids[0]
         else:
-            return self.search(cr, uid, [], limit=1, context=context)[0]
+            return self.search(cr, uid, [], limit=1)[0]
 
     def get_current_website(self, cr, uid, context=None):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-        website_id = self._get_current_website_id(cr, uid, domain_name, context=context)
+        website_id = self._get_current_website_id(cr, uid, domain_name)
         request.context['website_id'] = website_id
         return self.browse(cr, uid, website_id, context=context)
 

@@ -249,7 +249,6 @@ class product_pricelist(osv.osv):
         for product, qty, partner in products_by_qty_by_partner:
             results[product.id] = 0.0
             rule_id = False
-            price = False
 
             # Final unit price is computed according to `qty` in the `qty_uom_id` UoM.
             # An intermediary unit price may be computed according to a different UoM, in
@@ -266,6 +265,9 @@ class product_pricelist(osv.osv):
                     # Ignored - incompatible UoM in context, use default product UoM
                     pass
 
+            price_type = 'standard_price' if pricelist.type == 'purchase' else 'list_price'
+            # if Public user try to access standard price from website sale, need to call _price_get.
+            price = product_obj._price_get(cr, uid, [product], price_type, context=context)[product.id] or False
             for rule in items:
                 if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
                     continue
@@ -280,44 +282,17 @@ class product_pricelist(osv.osv):
                     if rule.product_id and product.id != rule.product_id.id:
                         continue
 
-                if rule.categ_id:
-                    cat = product.categ_id
-                    while cat:
-                        if cat.id == rule.categ_id.id:
-                            break
-                        cat = cat.parent_id
-                    if not cat:
-                        continue
-
                 if rule.base == -1:
                     if rule.base_pricelist_id:
                         price_tmp = self._price_get_multi(cr, uid,
                                 rule.base_pricelist_id, [(product,
-                                qty, False)], context=context)[product.id]
+                                qty, partner)], context=context)[product.id]
                         ptype_src = rule.base_pricelist_id.currency_id.id
                         price_uom_id = qty_uom_id
                         price = currency_obj.compute(cr, uid,
                                 ptype_src, pricelist.currency_id.id,
                                 price_tmp, round=False,
                                 context=context)
-                elif rule.base == -2:
-                    seller = False
-                    for seller_id in product.seller_ids:
-                        if (not partner) or (seller_id.name.id != partner):
-                            continue
-                        seller = seller_id
-                    if not seller and product.seller_ids:
-                        seller = product.seller_ids[0]
-                    if seller:
-                        qty_in_seller_uom = qty
-                        seller_uom = seller.product_uom.id
-                        if qty_uom_id != seller_uom:
-                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, qty_uom_id, qty, to_uom_id=seller_uom)
-                        price_uom_id = seller_uom
-                        for line in seller.pricelist_ids:
-                            if line.min_quantity <= qty_in_seller_uom:
-                                price = line.price
-
                 else:
                     if rule.base not in price_types:
                         price_types[rule.base] = price_type_obj.browse(cr, uid, int(rule.base))
@@ -330,6 +305,16 @@ class product_pricelist(osv.osv):
                             price_type.currency_id.id, pricelist.currency_id.id,
                             product_obj._price_get(cr, uid, [product], price_type.field, context=context)[product.id],
                             round=False, context=context)
+                    for seller in product.seller_ids:
+                        partner = partner.id if partner and not isinstance(partner, int) else partner
+                        if seller.name.id == partner:
+                            qty_in_seller = qty
+                            seller_uom = seller.product_uom and seller.product_uom.id or False
+                            if qty_uom_id != seller_uom:
+                                qty_in_seller = product_uom_obj._compute_qty(cr, uid, qty_uom_id, qty, to_uom_id=seller_uom)
+                            for line in seller.pricelist_ids:
+                                if line.min_quantity <= qty_in_seller:
+                                    price = line.price
 
                 if price is not False:
                     price_limit = price
@@ -381,7 +366,7 @@ class product_pricelist_version(osv.osv):
         'active': fields.boolean('Active',
             help="When a version is duplicated it is set to non active, so that the " \
             "dates do not overlaps with original version. You should change the dates " \
-            "and reactivate the pricelist", copy=False),
+            "and reactivate the pricelist"),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True, copy=True),
         'date_start': fields.date('Start Date', help="First valid date for the version."),
@@ -420,6 +405,13 @@ class product_pricelist_version(osv.osv):
             ['date_start', 'date_end'])
     ]
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        # set active False to prevent overlapping active pricelist
+        # versions
+        if not default:
+            default = {}
+        default['active'] = False
+        return super(product_pricelist_version, self).copy(cr, uid, id, default, context=context)
 
 class product_pricelist_item(osv.osv):
     def _price_field_get(self, cr, uid, context=None):
@@ -430,7 +422,6 @@ class product_pricelist_item(osv.osv):
             result.append((line.id, line.name))
 
         result.append((-1, _('Other Pricelist')))
-        result.append((-2, _('Supplier Prices on the product form')))
         return result
 
 # Added default function to fetch the Price type Based on Pricelist type.
@@ -485,7 +476,9 @@ class product_pricelist_item(osv.osv):
               "Expressed in the default UoM of the product."
             ),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
-        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="Base price for computation."),
+        'base': fields.selection(_price_field_get, 'Based on', required=True, 
+                                    size=-1, # here use size=-1 to store the values as integers
+                                    help='Base price for computation. \n Public Price: The base price will be the Sale/public Price. \n Supplier Section on Product or Cost Price : The base price will be the supplier price if it is set, otherwise it will be the cost price. \n Other Pricelist : Computation of the base price based on another Pricelist.'),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',

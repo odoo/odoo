@@ -224,7 +224,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Website" id="website_menu" sequence="10" parent="base.marketing_menu"/>
+        <menuitem name="Website" id="website_menu" sequence="10" parent="base.marketing_menu" groups="marketing.group_marketing_user"/>
         <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
         <menuitem action="action_version" id="menu_action_version" parent="website_menu" groups="base.group_no_one"/>
         <menuitem action="action_experiment" id="menu_action_experiment" parent="website_menu"/>

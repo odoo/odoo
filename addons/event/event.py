@@ -53,20 +53,19 @@ class event_event(models.Model):
         return [(0, 0, {
             'interval_unit': 'now',
             'interval_type': 'after_sub',
-            'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')
+            'template_id': self.env.ref('event.event_subscription')
         })]
 
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Available Seats', oldname='register_max',
-        readonly=True, states={'draft': [('readonly', False)]},
+        readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
     seats_availability = fields.Selection(
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],
         'Available Seat', required=True, default='unlimited')
     seats_min = fields.Integer(
         string='Minimum Reserved Seats', oldname='register_min',
-        readonly=True, states={'draft': [('readonly', False)]},
         help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )")
     seats_reserved = fields.Integer(
         oldname='register_current', string='Reserved Seats',

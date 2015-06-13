@@ -333,8 +333,10 @@
                                         <field name="title_action"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <t t-raw="record.message_summary.raw_value"/>
                                         <field name="tag_ids"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_left">
+                                        <t t-raw="record.message_summary.raw_value"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
@@ -599,6 +601,10 @@
                             help="Opportunities that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <separator/>
+                    <filter string="Follow-up" name="follow_up"
+                            domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"
+                            help="Show all opportunities for which the next action date is today or before"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By" colspan="16">

@@ -177,7 +177,6 @@ class mail_template(osv.osv):
         """
         if context is None:
             context = {}
-        res_ids = filter(None, res_ids)         # to avoid browsing [None] below
         results = dict.fromkeys(res_ids, u"")
 
         # try to load the template
@@ -189,14 +188,16 @@ class mail_template(osv.osv):
 
         # prepare template variables
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        records = self.pool[model].browse(cr, uid, res_ids, context=context) or [None]
+        records = self.pool[model].browse(cr, uid, filter(None, res_ids), context=context)  # filter to avoid browsing [None]
+        res_to_rec = dict.fromkeys(res_ids, None)
+        for record in records:
+            res_to_rec[record.id] = record
         variables = {
             'format_tz': lambda dt, tz=False, format=False, context=context: format_tz(self.pool, cr, uid, dt, tz, format, context),
             'user': user,
             'ctx': context,  # context kw would clash with mako internals
         }
-        for record in records:
-            res_id = record.id if record else None
+        for res_id, record in res_to_rec.iteritems():
             variables['object'] = record
             try:
                 render_result = template.render(variables)
@@ -550,11 +551,12 @@ class mail_template(osv.osv):
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        if not values.get('email_from'):
-            raise UserError(_("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
         values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
+        # add a protection against void email_from
+        if 'email_from' in values and not values.get('email_from'):
+            values.pop('email_from')
         msg_id = mail_mail.create(cr, uid, values, context=context)
         mail = mail_mail.browse(cr, uid, msg_id, context=context)
 

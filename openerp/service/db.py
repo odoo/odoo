@@ -97,6 +97,7 @@ def exp_duplicate_database(db_original_name, db_name):
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         cr.autocommit(True)     # avoid transaction block
+        _drop_conn(cr, db_original_name)
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
 
     from_fs = openerp.tools.config.filestore(db_original_name)
@@ -154,8 +155,8 @@ def exp_dump(db_name, format):
 
 def dump_db_manifest(cr):
     pg_version = "%d.%d" % divmod(cr._obj.connection.server_version / 100, 100)
-    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
-    modules = dict([(i.name,i.latest_version) for i in env['ir.module.module'].search([('state','=','installed')])])
+    cr.execute("SELECT name, latest_version FROM ir_module_module WHERE state = 'installed'")
+    modules = dict(cr.fetchall())
     manifest = {
         'odoo_dump': '1',
         'db_name': cr.dbname,
@@ -174,31 +175,24 @@ def dump_db(db_name, stream, backup_format='zip'):
     _logger.info('DUMP DB: %s format %s', db_name, backup_format)
 
     cmd = ['pg_dump', '--no-owner']
-    if openerp.tools.config['db_user']:
-        cmd.append('--username=' + openerp.tools.config['db_user'])
-    if openerp.tools.config['db_host']:
-        cmd.append('--host=' + openerp.tools.config['db_host'])
-    if openerp.tools.config['db_port']:
-        cmd.append('--port=' + str(openerp.tools.config['db_port']))
     cmd.append(db_name)
 
     if backup_format == 'zip':
         with openerp.tools.osutil.tempdir() as dump_dir:
-            registry = openerp.modules.registry.RegistryManager.get(db_name)
-            with registry.cursor() as cr:
-                filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
-                if os.path.exists(filestore):
-                    shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
-                manifest = dump_db_manifest(cr)
-                with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
-                    json.dump(manifest, fh, indent=4)
+            filestore = openerp.tools.config.filestore(db_name)
+            if os.path.exists(filestore):
+                shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
+            with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
+                db = openerp.sql_db.db_connect(db_name)
+                with db.cursor() as cr:
+                    json.dump(dump_db_manifest(cr), fh, indent=4)
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
             openerp.tools.exec_pg_command(*cmd)
             if stream:
-                openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
+                openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
             else:
                 t=tempfile.TemporaryFile()
-                openerp.tools.osutil.zip_dir(dump_dir, t, include_dir=False)
+                openerp.tools.osutil.zip_dir(dump_dir, t, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
                 t.seek(0)
                 return t
     else:
@@ -248,12 +242,6 @@ def restore_db(db, dump_file, copy=False):
             pg_args = ['--no-owner', dump_file]
 
         args = []
-        if openerp.tools.config['db_user']:
-            args.append('--username=' + openerp.tools.config['db_user'])
-        if openerp.tools.config['db_host']:
-            args.append('--host=' + openerp.tools.config['db_host'])
-        if openerp.tools.config['db_port']:
-            args.append('--port=' + str(openerp.tools.config['db_port']))
         args.append('--dbname=' + db)
         pg_args = args + pg_args
 

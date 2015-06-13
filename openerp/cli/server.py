@@ -30,6 +30,7 @@ GNU Public Licence.
 """
 
 import atexit
+import csv
 import logging
 import os
 import signal
@@ -74,10 +75,10 @@ def report_configuration():
     config = openerp.tools.config
     _logger.info("OpenERP version %s", __version__)
     _logger.info('addons paths: %s', openerp.modules.module.ad_paths)
-    if config['db_host']:
-        _logger.info('database: %s@%s:%s', config['db_user'], config['db_host'], config['db_port'] or '5432')
-    else:
-        _logger.info('database: %s@unix-socket', config['db_user'])
+    host = config['db_host'] or os.environ.get('PGHOST', 'default')
+    port = config['db_port'] or os.environ.get('PGPORT', 'default')
+    user = config['db_user'] or os.environ.get('PGUSER', 'default')
+    _logger.info('database: %s@%s:%s', user, host, port)
 
 def rm_pid_file():
     config = openerp.tools.config
@@ -140,6 +141,11 @@ def main(args):
     report_configuration()
 
     config = openerp.tools.config
+
+    # the default limit for CSV fields in the module is 128KiB, which is not
+    # quite sufficient to import images to store in attachment. 500MiB is a
+    # bit overkill, but better safe than sorry I guess
+    csv.field_size_limit(500 * 1024 * 1024)
 
     if config["db_name"]:
         try:

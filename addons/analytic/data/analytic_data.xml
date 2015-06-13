@@ -7,19 +7,19 @@
             <field name="name">Contract to Renew</field>
             <field name="res_model">account.analytic.account</field>
             <field name="default" eval="False"/>
-            <field name="description">Contract pending</field>
+            <field name="description">Pending</field>
         </record>
         <record id="mt_account_closed" model="mail.message.subtype">
             <field name="name">Contract Finished</field>
             <field name="res_model">account.analytic.account</field>
             <field name="default" eval="False"/>
-            <field name="description">Contract closed</field>
+            <field name="description">Closed</field>
         </record>
         <record id="mt_account_opened" model="mail.message.subtype">
             <field name="name">Contract Opened</field>
             <field name="res_model">account.analytic.account</field>
             <field name="default" eval="False"/>
-            <field name="description">Contract opened</field>
+            <field name="description">Opened</field>
         </record>
 
     </data>

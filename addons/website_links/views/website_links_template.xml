@@ -12,23 +12,11 @@
         </template>
 
         <template id="share_page_menu" inherit_id="website.user_navbar">
-            <xpath expr="//li[@groups='base.group_website_designer']" position="replace">
-                <li groups="base.group_website_designer">
-                    <a id="promote-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        Promote <span class="caret"></span>
+            <xpath expr="//li[@groups='base.group_website_designer']//ul" position="inside">
+                <li>
+                    <a href="/r" id="o_website_links_share_page">
+                        <span title="Track this page to count clicks">Share this Page</span>
                     </a>
-                    <ul class="dropdown-menu oe_content_menu" role="menu">
-                        <li>
-                            <a data-action="promote-current-page" href="#">
-                                <span title="Promote page on the web">Optimise SEO...</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/r" id="o_website_links_share_page">
-                                <span title="Track this page to count clicks">Share this Page</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
             </xpath>
         </template>
