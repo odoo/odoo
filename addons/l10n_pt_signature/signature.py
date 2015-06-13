@@ -1,51 +1,29 @@
 #! -*- encoding: utf-8 -*-
 ##############################################################################
-#
-#    Digital signature module for OpenERP, signs with an RSA private key the invoices
-#    in complyance to the portuguese law - Decree nº 363/2010, of the 23rd June.
-#    Copyright (C) 2010 Paulino Ascenção <paulino1@sapo.pt>
-#    Modificações (C) Jorge A. Ferreira sysop.x0@gmail.com 9/2013
-#
-#    This file is a part of l10n_pt_digital_signature
-#
-#    l10n_pt_digital_sign is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    l10n_pt_digital_sign is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-##############################################################################
 
 import os, datetime
-# SysOp
 from openerp import models, api, fields, _
 #, fields
 # from tools.translate import _
 
 key = """-----BEGIN RSA PRIVATE KEY-----
-MIICWwIBAAKBgQCoPIVQxVZfH0hX6iVIoCLGtSWQilks11kfpArOYfHL++JKGHha
-KojFHFmJDjzxyLe+e946x1Y1WaN2HLjSIhnKFDfi5XVWaI93NDBG6dF8lqDIgir7
-EkDv1cLtxCnTBDkKTTjn4+NH6bjpT1Gi+UMV7WpOn9+SxMZbvlK9btlMzwIDAQAB
-AoGAZFx2S1DtzaEjzw5nX4PoOxIlbqyZth5hlHaP276iOEXzILCoW2G0ZaIb558O
-zE4pDwFl+TqhOwJWeUd5GiItr1/Dzwi1BMi3BU2H9ohOLAU8L3ZQCZOEF9txIPIP
-5KJ1kIbo1CtQlsjapupmHILsayIa49QN8TQZRoIlq7Hc1kECQQDX3uBQ88svknqr
-t4IHTU0Ql05wseBfM52CXJcTGDV78/q+nM/bW+sc4gaTN76fV3cwMOBCL86EZ6lB
-ZCzRUobLAkEAx4LElJWSJvF5mJJOSTXX6lnNjUJqj8K0cZ5pvQ8pbynanrwvXpB2
-qxhDI/II9fdDE7kaqddVmnQ1vVYxwE5NjQJAE5XbED0uQCCwFIhPuc3fohO4QC1D
-SB/suHkiE89setSF+WlMyoAqcrJnGlBCcT6ER9EHZ7niqMym5JHsJwmvxQJAEBX3
-C5PTqNgnWanSLgztT7PV4uHL/bNRISgIlnm2eYQCYHIDz7gOGVVndGp7VnmNKvXt
-tGvsNvvPqWhdsoedsQJAZvIC7FFVsYcVfM5CPRR7mzAA6TcmjoWec2A8Av7CxoG6
-3srl/IG8pLj4OheIXZPP5ZyDR5JsiCIwh92cW4jdDQ==
+MIICXAIBAAKBgQC3aFgWXwdt4OlLmWkwXBh/lRTSSZoyieKKELQKm1mwr7W24c11
+KQa+kFiWEzETrVm8zhJgbzczUNsUzEyKSGzgNTNzO3yIbJhGkUREUEpPG+n0nwm6
+NDETsXiUMwL7TPwRudy8QCXYa1q0dmDT0HF4Q0SLQOkfl3wPQpwf/cDp/QIDAQAB
+AoGACMBCy7Z3DUgY+ZF1UmhihtvfJXV7lQO9Omc3n/Xvnp2Tpwk5G2j8uGT8xRRf
+WBgCWx7eA5nq4VjvSxvAXyy7fRY4CuGNGqIVX7TqHZdABmU/BIIBpobxPa8G6oBC
+kqL+GW1+RK4mtA1WxQvGEe1fEEfrMTmozEH6GPPRGhq1FYUCQQD/P618VhgS7fkU
+JUfzdDiRCVE7X78lpFUVXz2i9G2tha1eR05DuqgF70r71AKq+gAvxKVQCLG2QtxQ
+RMnxgfOnAkEAt/KJR5/qUVBt4nzYuGVNsvVz53U22oA/21Vivx/q59rkGsT7AnIM
+nddIMitrRFTeFavZbWU5qqun3FB3OEZ5uwJAL8vMwKuedmz5ZzxT7NKmhQIpo+SZ
+9oJ/LDFZaVo773JItI7FqQkazYGxmNZqaXnG7yrzibkXDfoXJzC6X+7loQJAWVHl
+BSmKrydd5D95QLi4LPDw8fBBzYG/ADMK+wF1oFXys2j49awJok9aGDprIMgQ+vby
+YiNoCA7IOLu92E6oZwJBAI1GeKxf5Yg9allbxhU4PW856EM/pWWTd6M7PpY0AZ/e
+374e0apMgrootasdNl+LugkcQ/GYzYnVXw7sgNSH72Q=
 -----END RSA PRIVATE KEY-----"""
 
 
-priv_key = 'keys/privatekey.pem'
+priv_key = 'keys/demoprivatekey.pem'
 try:
     a=open(priv_key)
     a.close()
@@ -138,3 +116,59 @@ class account_invoice(models.Model):
         self.write(self.ids, {'state':'cancel', 'move_id':False})
         self._log_event(self.ids, -1.0, 'Cancel Invoice')
         return True
+
+
+class sale_order(models.Model):
+    _name = 'sale.order'
+    _inherit = 'sale.order'
+
+    so_hash = fields.Char(string="Assinatura", size=200, )
+    so_hash_control = fields.Char(string="Chave", size=40, default=lambda *a: hash_control, )
+    system_entry_date = fields.Datetime(string="Data de confirmação", required=False, )
+
+    def get_hash(self, cr, uid, sale_order_id, context=None):
+        res = {}
+        sale_order = self.browse(cr, uid, sale_order_id, context=context)
+        cr.execute("SELECT so_hash FROM sale_order inv WHERE id = (SELECT MAX(id) FROM sale_order)" )
+        res = cr.fetchone()
+        if res is None:
+            return ''
+        else :
+            return res[0]
+
+    @api.v7
+    def action_signature(self, cr, uid, ids, context=None):
+        """Write hash and system_entry_date """
+        # duvida: usar esta accao ou adicionar action_sign a incluir num workflow redesenhado, que substitua o original ????
+
+        for so in self.browse(cr, uid, ids, context=context):
+            # if so.state in ('open', 'paid', 'cancel') # not necessary, wkf determines properlly when this action is called
+            # continues when it is not necessary to sign the invoices
+            # if (so.type in ('out_refund','out_invoice') and so.journal_id.self_billing) or (so.type in ('in_refund','in_invoice') and not so.journal_id.self_billing ) :
+            #     continue
+            so_date = str(so.date_order)
+            now = so.system_entry_date or datetime.datetime.now()
+            # try:
+            #     invoiceNo = str(so.journal_id.saft_inv_type+' '+so.number)
+            # except TypeError:
+            #     raise osv.except_osv(_('Error !'), _("Please set the doc type at Journal's SAFT parameters!"))
+            #     return
+            # gross_total = self.grosstotal(so.id)
+            prev_hash = self.get_hash(cr, uid, so.id, context=context)
+
+            if not prev_hash:
+                message = so_date + ';' + str(now)[:19].replace(' ', 'T')
+            else:
+                message = so_date + ';' + str(now)[:19].replace(' ', 'T') + ';' + prev_hash
+
+            signature = os.popen('echo -n "' + message + '" | openssl dgst -sha1 -sign ' + priv_key + ' | openssl enc -base64 -A', "r").read()
+            cr.execute("UPDATE sale_order SET so_hash = '%s' WHERE id = %d" % (signature, so.id))
+
+            if not so.system_entry_date:
+                cr.execute("UPDATE sale_order SET system_entry_date = '%s' WHERE id = %d" %(now, so.id) )
+        return True
+
+    @api.v7
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        self.action_signature(cr, uid, ids, context)
+        return super(sale_order, self).action_button_confirm(cr, uid, ids, context)

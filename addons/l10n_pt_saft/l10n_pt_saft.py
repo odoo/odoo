@@ -1,30 +1,6 @@
 #! -*- encoding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    Autores:
-#	  Este software baseia-se no trabalho inicial de Paulino Ascenção <paulino1@sapo.pt> (l10n_pt_saft-6)
-#    Adaptado à versão 7 por João Figueira<jjnf@communities.pt> e Jorge A. Ferreira <sysop.x0@gmail.com>
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-# Sysop
 from __future__ import print_function
 
 import datetime
@@ -51,9 +27,9 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-##VALORES FIXO do cabecalho relativos ao OpenERP
-productCompanyTaxID = '507477758'
-productID =           'OpenERP/communities'
+##VALORES FIXO do cabecalho
+productCompanyTaxID = '999999990'
+productID =           'Odoo/communities'
 productVersion =      '8'
 headerComment =       u'Software criado para a comunidade OpenERP Portugal'
 softCertNr =          '0'
@@ -94,7 +70,24 @@ class account_tax(models.Model):
     saft_tax_type = fields.Selection(string="Imposto", selection=[('IVA', 'IVA'), ('IS', 'Imp do Selo')], required=True, default="IVA", )
     saft_tax_code = fields.Selection(string="Nível de Taxa", selection=[('RED', 'Reduzida'), ('NOR', 'Normal'),('INT', 'Intermédia'), ('ISE', 'Isenta'), ('OUT', 'Outra')], required=True, default="NOR", )
     expiration_date = fields.Date(string="Data Expiração", )
-    exemption_reason = fields.Char(string="Motivo da isenção", size=60, help="No caso de IVA isento, indique qual a norma do codigo do IVA que autribui a isenção")
+    #exemption_reason = fields.Char(string="Motivo da isenção", size=60, help="No caso de IVA isento, indique qual a norma do codigo do IVA que autribui a isenção")
+    exemption_reason = fields.Selection(string="Motivo da isenção", selection=[(u'M01-Artigo 16.º n.º 6 alínea c) do CIVA', u'M01-Artigo 16.º n.º 6 alínea c) do CIVA'), 
+(u'M02-Artigo 6.º do Decreto-Lei n.º 198/90, de 19 de Junho', u'M02-Artigo 6.º do Decreto-Lei n.º 198/90, de 19 de Junho'), 
+(u'M03-Exigibilidade de caixa', u'M03-Exigibilidade de caixa'), 
+(u'M04-Isento Artigo 13.º do CIVA', u'M04-Isento Artigo 13.º do CIVA'), 
+(u'M05-Isento Artigo 14.º do CIVA', u'M05-Isento Artigo 14.º do CIVA'), 
+(u'M06-Isento Artigo 15.º do CIVA', u'M06-Isento Artigo 15.º do CIVA'), 
+(u'M07-Isento Artigo 9.º do CIVA', u'M07-Isento Artigo 9.º do CIVA'), 
+(u'M08-IVA - autoliquidação', u'M08-IVA - autoliquidação'), 
+(u'M09-IVA - não confere direito a dedução', u'M09-IVA - não confere direito a dedução'), 
+(u'M10-IVA - Regime de isenção', u'M10-IVA - Regime de isenção'), 
+(u'M11-Não tributado', u'M11-Não tributado'), 
+(u'M12-Regime da margem de lucro - Agências de viagens', u'M12-Regime da margem de lucro - Agências de viagens'), 
+(u'M13-Regime da margem de lucro - Bens em segunda mão', u'M13-Regime da margem de lucro - Bens em segunda mão'), 
+(u'M14-Regime da margem de lucro - Objetos de arte', u'M14-Regime da margem de lucro - Objetos de arte'), 
+(u'M15-Regime da margem de lucro - Objetos de coleção e antiguidades', u'M15-Regime da margem de lucro - Objetos de coleção e antiguidades'), 
+(u'M16-Isento Artigo 14.º do RITI', u'M16-Isento Artigo 14.º do RITI'), 
+(u'M99-Não Sujeito, Não tributado', u'M99-Não Sujeito, Não tributado')], default="", )
 
 
 class account_invoice(models.Model):
@@ -335,8 +328,8 @@ class wizard_saft(models.TransientModel):
         fy = fy_obj.browse(cr, uid, self.this.year.id)
         #### gera o header propriamente
         tags = (    ('FiscalYear',      fy.code,),
-                    ('StartDate',       fy.date_start),
-                    ('EndDate',         fy.date_stop),
+                    ('StartDate',       self.this.date_start),
+                    ('EndDate',         self.this.date_end),
                     ('CurrencyCode',    'EUR'),
                     ('DateCreated',     '%s' %str(datetime.datetime.now().strftime('%Y-%m-%d')) ),
                     ('TaxEntity',       'Sede'),
@@ -730,6 +723,11 @@ class wizard_saft(models.TransientModel):
         else :  
             args.append( ('type', 'in',["out_invoice","out_refund"]) ) 
             #args.append( ('journal_id.self_billing', '=', "False") )
+
+        if self.this.filter_by == 'd':
+            args.append( ('date_invoice', '>=', self.this.date_start) )
+            args.append( ('date_invoice', '<=', self.this.date_end) )
+
         invoice_obj = self.pool.get('account.invoice')
         ids = invoice_obj.search(cr, uid, args, order='internal_number')
         invoices = invoice_obj.browse(cr, uid, ids)
@@ -776,6 +774,7 @@ class wizard_saft(models.TransientModel):
 
             # 4.1.4.14  Line
             line_no = 1
+            amount = 0
             for line in invoice.invoice_line:
                 eline = et.SubElement(einvoice, u"Line")
                 # 4.1.4.14.1  LineNumber
@@ -783,11 +782,13 @@ class wizard_saft(models.TransientModel):
                 line_no+= 1
 
                 # 4.1.4.14.2  OrderReferences  todo: (optional) referencia à encomenda do cliente
-                #eorder_references = et.SubElement(eline, u"OrderReferences")
+                eorder_references = et.SubElement(eline, u"OrderReferences")
                 #eoriginating_on = et.SubElement(eorder_references, u"OriginatingON")
                 #eorder_date = et.SubElement(eorder_references, u"OrderDate")
                 #eoriginating_on.text = ''
                 #eorder_date.text = ''
+                et.SubElement(eorder_references, u"OriginatingON").text = unicode(invoice.reference)
+                #et.SubElement(eorder_references, u"OrderDate")
 
                 # 4.1.4.14.3 ProductCode and 4.1.4.14.4 Description
                 if line.product_id:
@@ -800,21 +801,32 @@ class wizard_saft(models.TransientModel):
                 if line.uos_id : # unit of measure (optional)
                     et.SubElement(eline, u"UnitOfMeasure").text=line.uos_id.name
                 # 4.1.4.14.7  UnitPrice
+#                if line.price_unit:
+#                    et.SubElement(eline, u"UnitPrice").text = unicode(line.price_unit)
+#                if line.price_unit and line.quantity:
+#                    amount = line.price_unit * line.quantity
+
+
+                # 4.1.4.14.7  UnitPrice alterado para reflectir o desconto das linhas de factura nos totais de documentos emitidos
                 if line.price_unit:
-                    et.SubElement(eline, u"UnitPrice").text = unicode(line.price_unit)
+                    #et.SubElement(eline, u"UnitPrice").text = unicode(line.price_unit)
+                    et.SubElement(eline, u"UnitPrice").text = unicode(line.price_unit - line.price_unit * line.discount / 100)
                 if line.price_unit and line.quantity:
-                    amount = line.price_unit * line.quantity
+                    amount = line.price_unit * line.quantity - line.price_unit * line.quantity * line.discount / 100
+
 
                 # todo: TaxPointDate - data do acto gerador do imposto - da entrega ou prestação do serviço
                 # usar data da guia de remessa, igual à data usada em ShipTo/DeliveryDate
                 et.SubElement(eline, u"TaxPointDate").text = invoice.date_invoice
 
                 ## todo: 4.1.4.14.9 References (optional)
-                #ereferences = et.SubElement(eline, u"References")
+                #ereferences = et.SubElement(eline, u"References").text = unicode(invoice.origin)
+                #referência da Nota de crédito à factura 
+                ereferences = et.SubElement(eline, u"References").text = unicode(invoice.origin_invoices_ids.number)
                 ## todo: 4.1.4.14.9.1 CreditNote
                 #ecredit_note = et.SubElement(ereferences, u"CreditNote")
                 #et.SubElement(ecredit_note, u"Reference")
-                #et.SubElement(ecredit_note, u"Reason")
+                #et.SubElement(ecredit_note, u"Reason").text = unicode(invoice.name)
                 
                 # 4.1.4.14.10  Description
                 et.SubElement(eline, u"Description").text = line.name
@@ -848,7 +860,7 @@ class wizard_saft(models.TransientModel):
                 # 4.1.4.14.14**    ExemptionReason - obrigatorio se TaxPercent e TaxAmount ambos zero
                 if line.invoice_line_tax_id: 
                     if tax.saft_tax_type == 'IVA' and tax.amount == 0.0:
-                        et.SubElement(etax, u"TaxExemptionReason").text = unicode(tax.exemption_reason)
+                        et.SubElement(eline, u"TaxExemptionReason").text = unicode(tax.exemption_reason)
 
                 # 4.1.4.14.15  SettlementAmount (optional) - valor do desconto da linha
                 et.SubElement(eline, u"SettlementAmount").text = str(line.discount )
