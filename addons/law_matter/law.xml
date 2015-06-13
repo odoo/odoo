@@ -1,0 +1,600 @@
+<openerp>
+    <data>
+	<menuitem id="menu_law_matter_main" name="Matters"/>
+	<menuitem id="menu_law_matter_sec" name="Matters" parent="menu_law_matter_main"/>
+	<menuitem id="menu_law_config_sec" name="Configuration" parent="menu_law_matter_main"/>
+        <record id="law_matter_search_filter" model="ir.ui.view">
+         <field name="name">Law Matter - Search</field>
+         <field name="model">law.matter</field>
+         <field name="arch" type="xml">
+          <search string="Search Matters">
+           <field name="name" string="Matter" filter_domain="[('name', 'ilike', self)]"/>
+	   <field name="client_id" string="Client" filter_domain="[('client_id', 'ilike', self)]"/>
+	   <field name="law_type" string="Type of Law" filter_domain="[('law_type', 'ilike', self)]"/>
+	   <field name="matter_id" string="Matter ID" filter_domain="[('matter_id', 'ilike', self)]"/>
+	   <field name="assign_to"  filter_domain="[('assign_to', 'ilike', self)]"/>
+	   <field name="state"  filter_domain="[('state', 'ilike', self)]"/>
+	   <filter string="Open Matters" name="open" domain="[('state', '=', 'open')]"/>
+	   <filter string="Closed Matters" name="closed" domain="[('state', '=', 'closed')]"/>
+          </search>
+         </field>
+        </record>
+
+        <record id="law_fees_search_filter" model="ir.ui.view">
+         <field name="name">Law Time/Expenses - Search</field>
+         <field name="model">law.bill</field>
+         <field name="arch" type="xml">
+          <search string="Search Time/Expenses">
+           <field name="name" string="Name" filter_domain="[('name', 'ilike', self)]"/>
+           <field name="client_id" string="Client" filter_domain="[('client_id', 'ilike', self)]"/>
+           <field name="bill_type" string="Time/Expense" filter_domain="[('bill_type', 'ilike', self)]"/>
+           <field name="matter_id" string="Matter" filter_domain="[('matter_id', 'ilike', self)]"/>
+           <field name="lawyer_id"  string="Lawyer" filter_domain="[('lawyer_id', 'ilike', self)]"/>
+           <field name="billing_method"  filter_domain="[('billing_method', 'ilike', self)]"/>
+	   <field name="activity_id"  filter_domain="[('activity_id', 'ilike', self)]"/>
+	   <field name="description"  filter_domain="[('description', 'ilike', self)]"/>
+	   <field name="total_hours"  filter_domain="[('total_hours', 'ilike', self)]"/>
+	   
+           <filter string="Billed" name="billed" domain="[('state', '=', 'billed'), ('billable', '=', True)]"/>
+           <filter string="Unbilled" name="unbilled" domain="[('state', '=', 'unbilled'), ('billable', '=', True) ]"/>
+	   <filter string="Billable" name="billable" domain="[('billable', '=', True)]"/>
+	   <filter string="Unbillable" name="unbillable" domain="[('billable', '=', False)]"/>
+	   <filter string="Time" name="time" domain="[('bill_type', '=', 'activity')]"/>
+	   <filter string="Expense" name="expense" domain="[('bill_type', '=', 'expense')]"/>
+          </search>
+         </field>
+        </record>
+
+
+<!-- Matter  action -->
+
+	<record model="ir.actions.act_window" id="law_matter_act">	
+         <field name="name">Matters</field>
+	 <field name="res_model">law.matter</field>
+	 <field name="view_mode">tree,form</field>
+	 <field name="search_view_id" ref="law_matter_search_filter"/>
+	 <field name="help" type="html">
+		<p>
+                This section helps you to  keep track of your Client Matters and follow up
+                to closure
+            </p><p>
+		You will be able to plan meetings and phone calls from
+                for each matter, attach related documents, track all discussions, and much more.
+            </p>
+	 </field>
+	</record>
+
+<!-- Activity Type  action -->
+
+        <record model="ir.actions.act_window" id="law_activity_type_act">
+         <field name="name">Activity Type</field>
+         <field name="res_model">law.activity_type</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+                <p>
+                Here you can create a new Type of Actvity to be billed by your law Firm on hourly basis or at a flat rate
+            </p><p>
+                Once you have created a new activity type, it will be available to select when creating a new Time entry for billing
+            </p>
+         </field>
+        </record>
+
+<!-- Type of Law action -->
+
+        <record model="ir.actions.act_window" id="law_type_law_act">
+         <field name="name">Type of Law</field>
+         <field name="res_model">law.type</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+                <p>
+                Here you can create a new Type of Law that is practised in your firm
+            </p><p>
+                Once you have created a new type of law, it will be available to select when creating a new matter for your clients
+            </p>
+         </field>
+        </record>
+
+<!-- Type of Expense  action -->
+
+        <record model="ir.actions.act_window" id="law_expense_type_act">
+         <field name="name">Type of Expense</field>
+         <field name="res_model">law.expense_type</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+                <p>
+                Here you can create or edit a new type of expense that you bill against your clients
+            </p><p>
+                Once you have created a new type of expense, it will be available to select when creating a new expense bill for your clients
+            </p>
+         </field>
+        </record>
+
+<!-- Lawyers Rate  action -->
+
+        <record model="ir.actions.act_window" id="law_lawyer_rate_act">
+         <field name="name">Lawyers Rate</field>
+         <field name="res_model">law.lawyer_rate</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+                <p>
+                Here you can create or edit a new rate for billing your clients. The rate is created and applied to the bills depending on the lawyer who represented the client
+            </p><p>
+                This is a per lawyer rate and a lawyer can create more than one rate depending on his practice and nature of work.
+            </p>
+         </field>
+        </record>
+
+
+
+
+<!-- Matter Bills  action window -->
+        <record model="ir.actions.act_window" id="law_billable_act">
+         <field name="name">Time/Expenses</field>
+         <field name="res_model">law.bill</field>
+         <field name="view_mode">tree,form,graph</field>
+         <field name="search_view_id" ref="law_fees_search_filter"/> 
+         <field name="help" type="html">
+                <p>
+                This section helps you to  keep track of your billable Items  relating to the Law Matters
+            </p><p>
+                Click to add a new billable Item  for a specific matter
+            </p>
+         </field>
+        </record>
+
+<!-- Time/Expenses  graph -->
+        <record model="ir.ui.view" id="law_bill_graph">
+            <field name="name">law.bill.graph</field>
+            <field name="model">law.bill</field>
+            <field name="arch" type="xml">
+                <graph string="Time/Expense Graphs" type="pivot">
+                    <field name="bill_type"/>
+		    <field name="state" type="col"/>
+		    <field name="total_hours" type="measure" string="Billable Hours"/>
+		    <field name="sell_price" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+<!-- Matter  Tree View  -->
+        <record model="ir.ui.view" id="law_matter_tree_view">
+            <field name="name">Matters Tree</field>
+            <field name="model">law.matter</field>
+            <field name="arch" type="xml">
+                <tree string="Matters" colors="black: state =='open'">
+		 <field name="matter_id"/>
+                 <field name="client_id"/>
+                 <field name="name"/>
+		 <field name="assign_to"/>
+		 <field name="create_date"/>
+		 <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+<!-- Time activity  Tree View  -->
+        <record model="ir.ui.view" id="law_time_activity_tree_view">
+            <field name="name">Time Activity Tree</field>
+            <field name="model">law.activity_type</field>
+            <field name="arch" type="xml">
+                <tree string="Matters" colors="black: taxable == True">
+		 <field name="id"/>
+                 <field name="code"/>
+                 <field name="name"/>
+                 <field name="taxable"/>
+                </tree>
+            </field>
+        </record>
+
+<!-- Type of Law Tree view -->
+        <record model="ir.ui.view" id="law_type_tree_view">
+            <field name="name">Type of Law Tree</field>
+            <field name="model">law.type</field>
+            <field name="arch" type="xml">
+                <tree string="Type of Law">
+		 <field name="id"/>
+                 <field name="code"/>
+                 <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+<!-- Type of expense  Tree view -->
+        <record model="ir.ui.view" id="law_expense_type_tree_view">
+            <field name="name">Type of Expense</field>
+            <field name="model">law.expense_type</field>
+            <field name="arch" type="xml">
+                <tree colors="black: taxable == True">
+                 <field name="id"/>
+                 <field name="code"/>
+                 <field name="name"/>
+		 <field name="taxable"/>
+                </tree>
+            </field>
+        </record>
+
+<!-- Lawyers Rate  Tree view -->
+        <record model="ir.ui.view" id="law_lawyers_rate_tree_view">
+            <field name="name">Lawyers Rate</field>
+            <field name="model">law.lawyer_rate</field>
+            <field name="arch" type="xml">
+                <tree>
+                 <field name="id"/>
+                 <field name="name"/>
+                 <field name="lawyer"/>
+                 <field name="rate"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+
+<!-- Matter Billables  Tree View  -->
+        <record model="ir.ui.view" id="law_billable_tree_view">
+            <field name="name">Time/Expense Tree</field>
+            <field name="model">law.bill</field>
+            <field name="arch" type="xml">
+                <tree string="Time/Expense" colors="blue: state == 'unbilled'">
+		<field name="billable" invisible="1"/>
+                 <field name="name"/>
+		 <field name="bill_type"/>
+                 <field name="client_id"/>
+                 <field name="matter_id"/>
+                 <field name="lawyer_id"/>
+		 <field name="state"/>
+                 <field name="sell_price" sum="total Sell"/>
+                </tree>
+            </field>
+        </record>
+
+
+	<record model="ir.actions.act_window.view" id="law_action_matter_tree">
+         <field name="sequence" eval="1"/>
+         <field name="view_mode">tree</field>
+         <field name="view_id" ref="law_matter_tree_view"/>
+         <field name="act_window_id" ref="law_matter_act"/>
+	</record>
+
+        <!-- Law Time Activity Form -->
+        <record model="ir.ui.view" id="law_time_activity_form_view">
+         <field name="name">Time Activity Type</field>
+         <field name="model">law.activity_type</field>
+         <field name="priority">21</field>
+         <field name="arch" type="xml">
+          <form string="Time Activity">
+           <sheet>
+		<group name="activitiy" string="Time Activity">
+		   <group>
+			<field name="name"/>
+		   </group>
+		   <group>
+		     <field name="code"/>
+		   </group>
+	        </group>
+		<group>
+		<field name="taxable"/>
+		</group>
+           </sheet>
+            <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+            </div>
+          </form>
+         </field>
+        </record>
+
+        <!-- Law Type of law Form  -->
+        <record model="ir.ui.view" id="law_type_of_law_form_view">
+         <field name="name">Type of Law</field>
+         <field name="model">law.type</field>
+         <field name="priority">20</field>
+         <field name="arch" type="xml">
+          <form string="Type of Law">
+           <sheet>
+                <group name="law_type" string="Type of Law">
+                   <group>
+                        <field name="name"/>
+                   </group>
+                   <group>
+                     <field name="code"/>
+                   </group>
+                </group>
+           </sheet>
+            <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+            </div>
+          </form>
+         </field>
+        </record>
+
+        <!-- Law Type of Expense Form  -->
+        <record model="ir.ui.view" id="law_type_of_expense_form_view">
+         <field name="name">Expense Type</field>
+         <field name="model">law.expense_type</field>
+         <field name="priority">20</field>
+         <field name="arch" type="xml">
+          <form>
+           <sheet>
+                <group name="law_expense" string="Expense Type">
+                   <group>
+                        <field name="name"/>
+                   </group>
+                   <group>
+                     <field name="code"/>
+                   </group>
+                </group>
+		<group>
+		    <field name="taxable"/>
+		</group>
+           </sheet>
+            <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+            </div>
+          </form>
+         </field>
+        </record>
+
+
+        <!-- Lawyers Rate Form  -->
+        <record model="ir.ui.view" id="law_lawyer_rate_form_view">
+         <field name="name">Lawyers Rate</field>
+         <field name="model">law.lawyer_rate</field>
+         <field name="priority">20</field>
+         <field name="arch" type="xml">
+          <form>
+           <sheet>
+                <group name="law_lawyer" string="Lawyers Rate">
+                   <group>
+                        <field name="lawyer"/>
+			<field name="code"/>
+                   </group>
+                   <group>
+                     <field name="rate"/>
+                   </group>
+                </group>
+           </sheet>
+            <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+            </div>
+          </form>
+         </field>
+        </record>
+
+
+
+	<!-- Law Matter Form  -->	
+	<record model="ir.ui.view" id="law_matter_form_view">
+         <field name="name">Matters Form</field>
+         <field name="model">law.matter</field>
+         <field name="priority">20</field>
+         <field name="arch" type="xml">
+          <form string="Matters">
+		<header>
+                  <button name="close_matter" type="object" string="Close" states="open" class="oe_highlight" confirm="Are you sure you want to close this Matter?"/>
+		  <button name="reopen_matter"  type="object" string="Re-Open" states="closed" class="oe_highlight" confirm="Are you sure you want to re-open this Matter?"/>
+                  <field name="state" widget="statusbar" statusbar_visible="open,closed" statusbar_colors='{"open":"black"}'/>
+                 </header>
+	   <sheet>
+	    <div name="matter_buttons" class="oe_right oe_button_box">
+		<button class="oe_inline oe_stat_button" type="action"
+                        name="%(calendar.action_calendar_event)d"
+                        icon="fa-calendar"
+                        context="{'search_default_matter_id': active_id, 'search_default_unbilled':True}">
+                        <div><strong><field name="events"/></strong><br/>Events/Meetings</div>
+                </button>
+                <button class="oe_inline oe_stat_button" type="action"
+                        name="%(law_billable_act)d"
+                        icon="fa-exclamation"
+                        context="{'search_default_matter_id': active_id, 'search_default_unbilled':True}">
+                        <div><strong><field name="unbilled_fee" widget="monetary"/></strong><br/>Unbilled Fees</div>
+                </button>
+	    </div>
+            <div class="oe_title">
+	     <label for="name" class="oe_edit_only" string="Matter Title"/>
+             <h1><field name="name" default_focus="1"/></h1>
+             <group>
+	       <field name="id" invisible="1"/>
+               <field name="matter_id" string="Matter ID" attrs="{'invisible': [('id', '=',False)]}"/>
+             </group>
+            </div>
+	    <group>
+	     <group>
+	      <field name="client_id" options="{'no_quick_create':True}" string="Client Name"/>
+	      <field name="bill_method"/>
+	      <field name="conti" attrs="{'invisible': [('bill_method', '!=', 'contingency')], 'required':[('bill_method', '=', 'contingency')]}"/>
+	      <field name="flat_fee" attrs="{'invisible': [('bill_method', '!=', 'flat_one'), ('bill_method', '!=', 'flat_recurr')], 
+			'required':['|',('bill_method', '=', 'flat_one'), ('bill_method', '=', 'flat_recurr')]}" widget="monetary"/>
+	      <field name="law_type" options="{'no_quick_create':True}"/>
+	     </group>
+	     <group>
+	      <!--<field name="state" string="Matter Status"/> -->
+	      <field name="create_date" readonly="1"/>
+	      <field name="create_uid" readonly="1"/>
+              <field name="matter_age" readonly="1"/>
+	      <field name="assign_to" options="{'no_quick_create':True}"/>
+	     </group>
+	     </group>
+	     <notebook>
+
+	<!-- Matter Description Page -->
+	      <page string="Description">
+	       <field name="description"/>
+	      </page>
+	<!-- Matter Billable Items Page -->
+	      <page String="Time/Expenses">
+                <field name="bill_ids" context="{'default_client_id': client_id, 'default_matter_id': active_id}"/>
+              </page>
+	      <div id="matter_files">
+	      </div>
+	     </notebook>
+	   </sheet>
+	    <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+            </div>
+	  </form>
+	 </field>
+	</record>
+
+	<record model="ir.actions.act_window.view" id="law_action_matter_form">
+         <field name="sequence" eval="2"/>
+         <field name="view_mode">form</field>
+         <field name="view_id" ref="law_matter_form_view"/>
+         <field name="act_window_id" ref="law_matter_act"/>
+	</record>
+
+	<!--Matter Menus-->
+        <menuitem id="menu_law_matter_act" name="Matters List" parent="menu_law_matter_sec" action="law_matter_act"/>
+	<menuitem name="Clients" id="base.menu_base_partner" groups="base.group_sale_salesman" sequence="0"/>
+	<menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Clients" sequence="1" />
+        <menuitem id="base.menu_partner_form" parent="base.menu_sales" action="base.action_partner_form" sequence="2" name="Clients List"/>
+        <menuitem id="menu_law_time_expense_act" name="Time/Expenses" parent="menu_law_matter_sec" action="law_billable_act"/>
+	<menuitem id="menu_law_activities_act" name="Time Activity" parent="menu_law_config_sec" action="law_activity_type_act"/>
+	<menuitem id="menu_law_type_act" name="Type of Law" parent="menu_law_config_sec" action="law_type_law_act"/>
+	<menuitem id="menu_law_expense_type_act" name="Type of Expense" parent="menu_law_config_sec" action="law_expense_type_act"/>
+	<menuitem id="menu_law_lawyer_rate_act" name="Lawyers Rate" parent="menu_law_config_sec" action="law_lawyer_rate_act"/>
+
+        <!--Matter Modify the base client  Action name to be "client" and not "customer"-->
+        <record id="base.action_partner_form" model="ir.actions.act_window">
+            <field name="name">Clients</field>
+        </record>
+	<!-- Modify the base Search Filter for Clients-->
+	<record id="law_client_filter" model="ir.ui.view">
+         <field name="model">res.partner</field>
+	 <field name="inherit_id" ref="base.view_res_partner_filter"/>
+         <field name="arch" type="xml">
+	   <xpath expr="//filter[@name='customer']" position="replace">
+	    <filter string="Clients" name="customer" domain="[('customer','=',1)]" help="Law Firm Client Partners"/>
+	   </xpath>
+	   <xpath expr="//filter[@string='Salesperson']" position="attributes">
+	    <attribute name="string"> Intro-Lawyer</attribute>
+           </xpath>
+	   <xpath expr="//field[@name='user_id']" position="attributes">
+            <attribute name="string"> Intro-Lawyer</attribute>
+           </xpath>
+	   <xpath expr="//filter[@string='Country']" position="after">
+            <filter string="City" context="{'group_by': 'city'}"/>
+           </xpath>
+	 </field>
+	</record>
+
+
+        <!-- Form for Matter bills -->
+        <record model="ir.ui.view" id="law_matter_billable_form_view">
+         <field name="model">law.bill</field>
+         <field name="name"> Time/Expense  Form</field>
+         <field name="priority">22</field>
+         <field name="arch" type="xml">
+          <form><header>
+		<field name="state" widget="statusbar" statusbar_visible="unbilled,billed" statusbar_colors="{'unbilled':'black'}"/>
+		</header>
+           <sheet string="Time/Expense">
+		<h1>Time/Expense</h1> 
+		<div name="overrides" class="oe_right">
+		    <group>
+		     <group>
+			<field name="ride_rate" attrs="{'invisible': ['|','|',('bill_type', '!=', 'activity'),('billing_method', '=', 'flat'), ('billing_method', '=', False)]}"/>
+			<field name="override_rate" attrs="{'invisible': [('ride_rate', '=', False)], 'required': [('bill_type', '=', 'activity')]}">Per Hour</field>
+		     </group>
+		     <group>
+			<field name="ride_hours" attrs="{'invisible': ['|','|',('bill_type', '!=', 'activity'),('billing_method', '=', 'flat'), ('billing_method', '=', False)]}"/>
+			<field name="override_hours" attrs="{'invisible': [('ride_hours', '=', False)], 'required': [('bill_type', '=', 'activity')]}"/>
+		    </group>
+		  </group>
+                </div>
+                <group>
+                 <group>
+		  <field name="id" invisible="1"/>
+		  <field name="bill_type" options="{'no_quick_create':True}"/>
+                  <field name="client_id" options="{'no_quick_create':True}"/>
+                  <field name="matter_id" options="{'no_quick_create':True}"/>
+		 </group>
+		 <group>
+                  <field name="start_date" attrs="{'invisible': [('bill_type', '!=', 'activity')], 'required': [('bill_type', '=', 'activity')]}"/>
+		  <field name="expense_date" attrs="{'invisible': [('bill_type', '!=', 'expense')], 'required': [('bill_type', '=', 'expense')]}"/>
+		  <field name="cost_price" attrs="{'invisible': [('bill_type', '!=', 'expense')], 'required': [('bill_type', '=', 'expense')]}"/>
+		  <field name="markup" attrs="{'invisible': [('bill_type', '!=', 'expense')], 'required': [('bill_type', '=', 'expense')]}"/>
+		  <field name="end_date" attrs="{'invisible': [('bill_type', '!=', 'activity')], 'required': [('bill_type', '=', 'activity')]}"/>
+		  <field name="labour_hours" attrs="{'invisible': [('bill_type', '!=', 'activity')], 'required': [('bill_type', '=', 'activity')]}"/>
+                 </group>
+                 <group>
+                  <field name="create_date" readonly="1" attrs="{'invisible':[('id', '=',False)]}"/>
+		  <field name="expense_id" options="{'no_quick_create':True}" attrs="{'invisible':[('bill_type', '!=', 'expense')], 'required': [('bill_type', '=', 'expense')]}"/>
+		  <field name="activity_id" options="{'no_quick_create':True}" attrs="{'invisible':[('bill_type', '!=', 'activity')], 'required': [('bill_type', '=', 'activity')]}"/>
+		  <field name="lawyer_id" options="{'no_quick_create':True}"/>
+		  <field name="billing_method" attrs="{'invisible': [('bill_type', '!=', 'activity')], 'required': [('bill_type', '=', 'activity')]}"/>
+		  <field name="flat_fee" attrs="{'invisible':['|', ('billing_method', '!=', 'flat'), ('bill_type', '!=', 'activity')], 'required':[('billing_method', '=', 'flat')]}" widget="monetary"/>
+		  <field name="lawyer_rate" attrs="{'invisible':['|', ('billing_method', '!=', 'hour'), ('bill_type', '!=', 'activity')], 'required':[('billing_method', '=', 'hour')]}"/>
+                 </group>
+                 <group>
+                  <field name="travel_hours" attrs="{'invisible': [('bill_type', '!=', 'activity')], 'required': [('bill_type', '=', 'activity')]}"/>
+		  <field name="desc_exp" attrs="{'invisible': [('bill_type', '!=', 'expense')]}"/>
+                  <field name="total_hours" attrs="{'invisible': [('bill_type', '!=', 'activity')]}"/>
+	 	  <field name="sell_price" attrs="{'invisible': [('bill_type', '=', False)]}"/>
+                 </group>
+                </group>
+		<notebook><page string="Description" attrs="{'invisible': [('bill_type', '!=', 'activity')]}" ><field name="description"/></page></notebook>
+           </sheet>
+		 <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+          </form>
+         </field>
+        </record>
+
+<!--Modify Calendar Events  main form -->
+        <record id="law_matter_calendar_view" model="ir.ui.view">
+         <field name="model">calendar.event</field>
+         <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+         <field name="arch" type="xml">
+		<data>
+		<xpath expr="//field[@name='partner_ids']" position="replace">
+                </xpath>
+		<xpath expr="//label[@for='partner_ids']" position="replace">
+                </xpath>
+		 <xpath expr="//div[@class='oe_title']" position="after">
+	           <div name="event_matter">
+			<group>
+                      <field name="partner_ids" widget="many2many_tags" context="{'force_email':True}" on_change="onchange_partner_ids(partner_ids)"/>
+                        </group>
+			<group>
+		      <field name="matter_ids" widget="many2many_tags"/>
+			</group>
+		   </div>
+		 </xpath> 
+		</data>
+	 </field>
+	</record>
+
+<!--Modify Calendar Events Popoup form -->
+         <record id="law_matter_calendar_popup_view" model="ir.ui.view">
+         <field name="model">calendar.event</field>
+         <field name="inherit_id" ref="calendar.view_calendar_event_form_popup"/>
+         <field name="arch" type="xml">
+            <data>
+		<xpath expr="//label[@for='name']" position="replace">
+		</xpath>
+		<xpath expr="//field[@name='name']" position="replace">
+		  <group>
+			 <field name="name"/>
+		  </group>
+                </xpath>
+		<xpath expr="//form[@string='Meetings']" position="inside">
+                  <group>
+                         <field name="matter_ids" widget="many2many_tags"/>
+                  </group>
+                </xpath>
+	    </data>
+         </field>
+        </record>
+
+
+
+
+ </data>
+</openerp>
