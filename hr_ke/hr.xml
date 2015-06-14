@@ -7,6 +7,14 @@
 	 <field name="view_mode">tree,form</field>
 	</record>
 
+<!-- Relation type Action-->
+        <record id="ke_relation_type_action" model="ir.actions.act_window">
+         <field name="name">Type of Relation</field>
+         <field name="res_model">ke.relation.type</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+
+
 <!-- Relief Type Action-->
         <record id="ke_reliefs_type_action" model="ir.actions.act_window">
          <field name="name">Types of Tax Relief</field>
@@ -31,8 +39,8 @@
 <menuitem id="menu_ke_earnings_type" parent="hr.menu_hr_configuration" name="Earnings (Cash)" sequence="101" action="ke_earnings_type_action"/>
 <menuitem id="menu_ke_benefits_type" parent="hr.menu_hr_configuration" name="Benefits (Non-Cash)" sequence="102" action="ke_benefits_type_action"/>
 <menuitem id="menu_ke_reliefs_type" parent="hr.menu_hr_configuration" name="Tax Relief" sequence="103" action="ke_reliefs_type_action"/>
-<menuitem id="menu_ke_deductionss_type" parent="hr.menu_hr_configuration" name="Deductions" sequence="104" action="ke_deductions_type_action"/>
-
+<menuitem id="menu_ke_deductions_type" parent="hr.menu_hr_configuration" name="Deductions" sequence="104" action="ke_deductions_type_action"/>
+<menuitem id="menu_ke_relations_type" parent="hr.menu_hr_configuration"  sequence="105" action="ke_relation_type_action"/>
 <!-- Benefits Type Form view-->
 	<record id="ke_benefits_type_form" model="ir.ui.view">
          <field name="name">ke.hr.benefits.type.form</field>
@@ -169,8 +177,6 @@
          </field>
         </record>
 
-
-
 <!-- Earnings Type Form view-->
         <record id="ke_earnings_type_form" model="ir.ui.view">
          <field name="name">ke.hr.earnings.type.form</field>
@@ -193,6 +199,59 @@
                           <field name="formula"/>
                         </page>
                 </notebook>
+            </sheet>
+           </form>
+         </field>
+        </record>
+
+
+<!-- Dependant/Kin Form-->
+        <record id="ke_kins_form" model="ir.ui.view">
+         <field name="name">ke.hr.kins.form</field>
+         <field name="model">ke.employee.kin</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+		<group>
+		  <field name="employee_id"/>
+		</group>
+                <group name="kins" string="Depandant/Kin">
+		   <group>
+                        <field name="name"/>
+			<field name="gender"/>
+			<field name="relation"/>
+		   </group>
+		   <group>
+			
+                        <field name="birthday"/>
+			<field name="kin"/>
+			<field name="phone" attrs="{'required': [('kin', '=', True)]}"/>
+		   </group>
+                </group>
+		<notebook>
+		  <page name="address" string="Address">
+		    <field name="address"/>
+		  </page>
+		</notebook>
+            </sheet>
+           </form>
+         </field>
+        </record>
+<!-- Relations Type Form-->
+        <record id="ke_relations_type_form" model="ir.ui.view">
+         <field name="name">ke.hr.relations.type.form</field>
+         <field name="model">ke.relation.type</field>
+         <field name="arch" type="xml">
+           <form>
+            <sheet>
+                <group name="relation_type" string="Relation Type">
+		   <group>
+                        <field name="name"/>
+		   </group>
+		   <group>
+                        <field name="medical"/>
+		   </group>
+                </group>
             </sheet>
            </form>
          </field>
@@ -309,8 +368,17 @@
          </field>
         </record>
 
-
-
+<!-- Relations Type Tree View-->
+        <record id="ke_relations_type_tree" model="ir.ui.view">
+         <field name="name">ke.hr.relations.type.tree</field>
+         <field name="model">ke.relation.type</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="medical"/>
+           </tree>
+         </field>
+        </record>
 
 	<!-- Modifying Employeee Form to add kenya specific details -->
 	<record id="ke_view_employee_form_inherit01" model="ir.ui.view">
@@ -348,11 +416,35 @@
 			 <field name="box_code"/>
 			 <field name="box_town"/>
                  </xpath>
-		 <xpath expr="//field[@name='address_home_id']" position="replace">
+		 <xpath expr="//field[@name='address_home_id']" position="attributes">
+			<attribute name="invisible">True</attribute>
+                 </xpath> 
+		 <xpath expr="//field[@name='country_id']" position="replace">
+		  <field name="country_id" required="True"/>
+		 </xpath>
+		 <xpath expr="//field[@name='identification_id']" position="replace">
+		   <field name="identification_id" required="True"/> 
+		</xpath>
+		<xpath expr="//field[@name='gender']" position="replace">
+                  <field name="gender" required="True"/>
+                 </xpath>
+		 <xpath expr="//field[@name='job_id']" position="replace">
+                  <field name="job_id" required="True"/>
+                 </xpath>
+		 <xpath expr="//field[@name='marital']" position="replace">
+                  <field name="marital" required="True"/>
+                 </xpath>
+		 <xpath expr="//field[@name='birthday']" position="replace">
+                  <field name="birthday" required="True"/>
+                 </xpath>
+		 <xpath expr="//field[@name='department_id']" position="replace">
+                  <field name="department_id" on_change="onchange_department_id(department_id)" required="True"/>
                  </xpath>
 		 <xpath expr="//field[@name='otherid']" position="after">
 		  <field name="personal_email" widget="email"/>
                  </xpath>
+		 
+                
 		 <xpath expr="//label[@for='category_ids']" position="before">
 		  <group>
 		   <field name="id" invisible="1"/>
@@ -366,7 +458,7 @@
 		 <xpath expr="//page[@string='Personal Information']" position="inside">
 		   <notebook>
 		   <page string="Dependants">
-		     <field name="kins">
+		     <field name="kins" context="{'default_employee_id': active_id}">
 			<tree>
 			 <field name="name"/>
 			 <field name="relation"/>
@@ -383,7 +475,7 @@
 		    <notebook>
                         <page name="deductions" string="Deductions">
 
-                        <field name="deductions">
+                        <field name="deductions" context="{'default_employee_id': active_id}">
                            <tree>
                              <field name="name"/>
                              <field name="code"/>
@@ -394,7 +486,7 @@
                         </page>
 			<page name="reliefs" string="Tax Relief">
 
-                        <field name="reliefs">
+                        <field name="reliefs" context="{'default_employee_id': active_id}">
                            <tree>
                              <field name="relief_id"/>
                              <field name="code"/>

@@ -26,6 +26,7 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+	'data.xml',
         'hr.xml',
     ],
     # only loaded in demonstration mode

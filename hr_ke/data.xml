@@ -1,0 +1,141 @@
+<openerp>
+    <data>
+	<record id="benefit1" model="ke.benefit.type">
+	   <field name="name">Housing </field>
+	   <field name="code">HOUSE </field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# benefit: this benefit(housing)
+# Note: returned value have to be set in the variable 'result'
+#[BASIC SALARY + TOTAL BENEFITS+ TOTAL EARNINGS] * 0.15
+
+### INITIALIZE VARAIBLES###
+BASIC_SALARY = contract.wage
+PERCENTAGE = 0.15
+ACTUAL_RENT = benefit.actual_cost
+TOTAL_BENEFITS = 0
+TOTAL_EARNINGS = 0
+
+###Compute total benefits (non-cash) for employee ###
+for other_benefit in contract.benefits:
+     if benefit.id != other_benefit.id:
+         TOTAL_BENEFITS += other_benefit.amount
+
+### Compute total earnings for employee ###
+for other_earning in contract.earnings:
+     TOTAL_EARNINGS += other_earning.amount
+
+### Compute Taxable Value for Housing ###
+COMPUTED_TAXABLE_VALUE = (BASIC_SALARY + TOTAL_BENEFITS + TOTAL_EARNINGS) * PERCENTAGE
+
+### Check whichever is higher between Actual Rent and computed taxable value shall become taxable value of Housing###
+if ACTUAL_RENT > COMPUTED_TAXABLE_VALUE:
+    result = ACTUAL_RENT
+else:
+    result = COMPUTED_TAXABLE_VALUE
+	   </field>
+	</record>
+
+	<record id="benefit2" model="ke.benefit.type">
+	   <field name="name">Electricity </field>
+	   <field name="code">ELECTR </field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# benefit: this benefit(Electricity)
+# Note: returned value have to be set in the variable 'result'
+PRESCRIBED_RATE = 1500
+if benefit.actual_cost > PRESCRIBED_RATE:
+   result = benefit.actual_cost
+else:
+   result = PRESCRIBED_RATE
+	   </field>
+	</record>
+
+	<record id="benefit3" model="ke.benefit.type">
+	   <field name="name">Water</field>
+	   <field name="code">WATER</field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# benefit: this benefit(Water)
+# Note: returned value have to be set in the variable 'result'
+PRESCRIBED_RATE = 500
+if benefit.actual_cost > PRESCRIBED_RATE:
+   result = benefit.actual_cost
+else:
+   result = PRESCRIBED_RATE
+	   </field>
+	</record>
+
+	<record id="benefit4" model="ke.benefit.type">
+	   <field name="name">Furniture</field>
+	   <field name="code">FURNT</field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# benefit: this benefit(Furnitire)
+# Note: returned value have to be set in the variable 'result'
+result = 0.01 * benefit.actual_cost
+	   </field>
+	</record>
+
+	<record id="benefit5" model="ke.benefit.type">
+	   <field name="name">Telephone</field>
+	   <field name="code">TELEPHONE</field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# benefit: this benefit(Telephone)
+# Note: returned value have to be set in the variable 'result'
+result = 0.3 * benefit.actual_cost
+	   </field>
+	</record>
+
+	<record id="benefit6" model="ke.benefit.type">
+	   <field name="name">Company Vehicle</field>
+	   <field name="code">VEHICLE</field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# benefit: this benefit(company Vehicle)
+# Note: returned value have to be set in the variable 'result'
+result = 0.02 * benefit.actual_cost
+	   </field>
+	</record>
+
+	<record id="benefit7" model="ke.benefit.type">
+	   <field name="name">Servant</field>
+	   <field name="code">SERVANT</field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# benefit: this benefit(Servant)
+# Note: returned value have to be set in the variable 'result'
+result =  benefit.actual_cost
+	   </field>
+	</record>
+    </data>
+</openerp>

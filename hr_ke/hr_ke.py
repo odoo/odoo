@@ -89,6 +89,15 @@ class hr_ke_relief_type(models.Model):
 	formula = formula = fields.Text('Formula')
 	frequency = fields.Selection([('month', 'Monthly'),('day', 'Daily')], 'Frequency of Deduction', required=True)
 	
+        _defaults = {
+           'formula': '''
+# Available variables:
+#----------------------
+# contract: hr.contract object
+# Note: returned value have to be set in the variable 'result'
+result = 0.00
+'''
+	}
 
 class hr_ke_deductions_type(models.Model):
 	_name = "ke.deductions.type"
@@ -102,6 +111,16 @@ class hr_ke_deductions_type(models.Model):
 	net_pay = fields.Boolean('Deduct from Net-Pay ? ?', default=False)
 	frequency = fields.Selection([('month', 'Monthly'),('day', 'Daily')], 'Frequency of Deduction', required=True)
 	formula = formula = fields.Text('Formula')
+	
+        _defaults = {
+           'formula': '''
+# Available variables:
+#----------------------
+# contract: hr.contract object
+# Note: returned value have to be set in the variable 'result'
+result = 0.00
+'''
+        }
 
 class hr_ke_tax_relief(models.Model):
         _name = "ke.reliefs"
@@ -175,6 +194,17 @@ class hr_ke_deductions(models.Model):
 	base = fields.Float('Actual Value', digits=dp.get_precision('Account'), required=True,
                         help="This is the actual Cost/Contribution that the employee is making. E.g if its towards a defined pension scheme fund, then enter the actual monthly contribution. Depending on how the deductable amount is computed, this field my not be necessary and can be left out.")
 	formula = formula = fields.Text('Formula', help="You can define an employee specific formula for computing a deduction to be made on his/her salary. This is useful for voluntary deductions such as SACCO/CHAMA contributions")
+	
+	
+        _defaults = {
+           'formula': '''
+# Available variables:
+#----------------------
+# contract: hr.employee object
+# Note: returned value have to be set in the variable 'result'
+result = 0.00
+'''
+        }
 
 class hr_ke_benefits(models.Model):
 	_name = "ke.benefits"
@@ -269,8 +299,8 @@ class hr_ke_kins(models.Model):
 	birthday = fields.Date('Date of Birth')
 	gender= fields.Selection([('male', 'Male'), ('female', 'Female')], 'Gender', required=True)
 	phone = fields.Char('Phone Number')
-	kin = fields.Boolean('Is Next of Kin?')
-	relation = fields.Many2one('ke.relation.type', 'Type of Relation')
+	kin = fields.Boolean('Is Next of Kin?', default=False)
+	relation = fields.Many2one('ke.relation.type', 'Type of Relation', required=True)
 	address = fields.Text('Next of Kin Address')
 	employee_id = fields.Many2one('hr.employee', 'Employee', required=True)
 
