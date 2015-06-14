@@ -398,7 +398,7 @@ class Database(openerpweb.Controller):
         return req.make_response(db_dump,
             [('Content-Type', 'application/octet-stream; charset=binary'),
              ('Content-Disposition', 'attachment; filename="' + filename + '"')],
-            {'fileToken': int(token)}
+            {'fileToken': str(int(token))}
         )
 
     @openerpweb.httprequest
@@ -1473,7 +1473,7 @@ class Binary(openerpweb.Controller):
             return req.make_response(filecontent,
                 headers=[('Content-Type', 'application/octet-stream'),
                         ('Content-Disposition', self.content_disposition(filename, req))],
-                cookies={'fileToken': int(token)})
+                cookies={'fileToken': str(int(token))})
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
@@ -1743,7 +1743,7 @@ class Export(View):
         return req.make_response(self.from_data(columns_headers, import_data),
             headers=[('Content-Disposition', 'attachment; filename="%s"' % self.filename(model)),
                      ('Content-Type', self.content_type)],
-            cookies={'fileToken': int(token)})
+            cookies={'fileToken': str(int(token))})
 
 class CSVExport(Export):
     _cp_path = '/web/export/csv'
@@ -1873,7 +1873,7 @@ class Reports(View):
                  ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['report_name'], report_struct['format'])),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
-             cookies={'fileToken': int(token)})
+             cookies={'fileToken': str(int(token))})
 
 class Import(View):
     _cp_path = "/web/import"
