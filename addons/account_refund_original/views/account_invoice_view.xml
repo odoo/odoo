@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_customer_account_invoice_add_refunds_details_form" model="ir.ui.view">
+            <field name="name">Account invoice (customer) | add Refunds details (form)</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <page string="Payments" position="after">
+                    <page string="Refunds" attrs="{'invisible':[('type', 'not in', ['in_refund', 'out_refund'])]}">
+                        <separator string="Description" colspan="4"/>
+                        <field name="refund_invoices_description" colspan="4" nolabel="1"/>
+                        <separator string="Refunded invoices" colspan="4"/>
+                        <field name="origin_invoices_ids" colspan="4" nolabel="1"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_supplier_account_invoice_add_refunds_details_form" model="ir.ui.view">
+            <field name="name">Account invoice (supplier) | add Refunds details (form)</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <page string="Payments" position="after">
+                    <page string="Refunds" attrs="{'invisible':[('type', 'not in', ['in_refund', 'out_refund'])]}">
+                        <separator string="Description" colspan="4"/>
+                        <field name="refund_invoices_description" colspan="4" nolabel="1"/>
+                        <separator string="Refunded invoices" colspan="4"/>
+                        <field name="origin_invoices_ids" colspan="4" nolabel="1"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+    </data>
+</openerp>

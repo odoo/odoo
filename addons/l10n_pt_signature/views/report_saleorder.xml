@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="report_sale_pt_inherited" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//h2" position="after">
+<span t-if="o.state in ['draft','sent']">Emitido por program a certificado nº9999/AT</span>
+                <h6 t-if="o.so_hash">
+                    <span t-esc="o.so_hash[0]"/><span t-esc="o.so_hash[10]"/><span t-esc="o.so_hash[20]"/><span t-esc="o.so_hash[30]"/><span>-Processado por programa certificado nº9999/AT</span>
+                </h6>
+            </xpath>
+            <xpath expr="//span[@t-field='o.partner_id.vat']" position="replace">
+                <span t-if="o.partner_id.vat == 'PT999999990'">
+                    Consumidor final
+                </span>
+                <span t-if="o.partner_id.vat != 'PT999999990'">
+                     <span t-field="o.partner_id.vat"/>
+                </span>
+            </xpath>
+
+            <xpath expr="//span[@t-field='o.payment_term.note']" position="after">
+                <div class="col-xs-12 text-center">
+                <div style="border-bottom: 1px solid black;"/>
+                     <h4>Este documento não serve de fatura</h4>
+                <div style="border-bottom: 1px solid black;"/>
+                </div>
+            </xpath>
+
+        </template>
+
+    </data>
+
+    <data>
+
+        <template id="report_invoice_pt_inherited" inherit_id="account.report_invoice_document">
+            <xpath expr="//h2" position="after">
+                <h6 t-if="o.hash">
+                    <span t-esc="o.hash[0]"/><span t-esc="o.hash[10]"/><span t-esc="o.hash[20]"/><span t-esc="o.hash[30]"/><span>-Processado por programa certificado nº9999/AT</span>
+                </h6>
+            </xpath>
+            <xpath expr="//span[@t-field='o.number']" position="replace">
+                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">
+                    FT <span t-field="o.number"/>
+                </span>
+                <span t-if="o.type == 'out_refund'">
+                    NC <span t-field="o.number"/>
+                </span>
+            </xpath>
+            <xpath expr="//span[@t-field='o.partner_id.vat']" position="replace">
+                <h6 t-if="o.partner_id.vat == 'PT999999990'">
+                    <span>Consumidor final</span>
+                </h6>
+                <h6 t-if="o.partner_id.vat != 'PT999999990'">
+                     <span t-field="o.partner_id.vat"/>
+                </h6>
+            </xpath>
+            <xpath expr="//div[@t-if='o.name']" position="replace">
+                <div class="col-xs-2" t-if="o.name">
+                    <strong>Description:</strong>
+                    <p t-field="o.name"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@t-if='o.date_invoice']" position="replace">
+                <div class="col-xs-3" t-if="o.date_invoice">
+                    <strong>Data de Emissão:</strong>
+                    <p t-field="o.date_invoice"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@t-if='o.origin']" position="replace">
+                <div class="col-xs-3" t-if="o.origin">
+                    <strong>Documento de Origem:</strong>
+                    <p t-field="o.origin"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@t-if='o.partner_id.ref']" position="replace">
+                <div class="col-xs-3" t-if="o.partner_id.ref">
+                    <strong>Customer Code:</strong>
+                    <p t-field="o.partner_id.ref"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@t-if='o.reference']" position="replace">
+                <div class="col-xs-3" t-if="o.origin_invoices_ids.number">
+                    <strong>Referente a Factura</strong>
+                    <p t-field="o.origin_invoices_ids.number"/>
+                </div>
+            </xpath>
+            <xpath expr="//p[@t-if='o.comment']" position="before">
+                <span t-foreach="o.invoice_line" t-as="l">
+                <div class="col-xs-12 oe_dark mb16" t-if="l.invoice_line_tax_id.exemption_reason">
+                    <h4>Condições de Enquadramento de IVA:</h4>
+                     <div class="mb8">
+                     <td>[<span t-field="l.invoice_line_tax_id.name"/>]</td>
+                     <td><span t-field="l.invoice_line_tax_id.exemption_reason"/></td>
+                     </div>
+                </div>
+                </span>
+            </xpath>
+        </template>
+    </data>
+</openerp>
