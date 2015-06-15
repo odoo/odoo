@@ -106,6 +106,7 @@ class ir_model(osv.osv):
         'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
             fnct_search=_search_osv_memory,
             help="This field specifies whether the model is transient or not (i.e. if records are automatically deleted from the database or not)"),
+        'create_osv_memory': fields.boolean(string="Transient Model"),
         'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
@@ -195,7 +196,7 @@ class ir_model(osv.osv):
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             # add model in registry
-            self.instanciate(cr, user, vals['model'], context)
+            self.instanciate(cr, user, vals['model'], vals.get('create_osv_memory', False), context)
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             # update database schema
             model = self.pool[vals['model']]
@@ -209,11 +210,13 @@ class ir_model(osv.osv):
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
-    def instanciate(self, cr, user, model, context=None):
+    def instanciate(self, cr, user, model, transient=False, context=None):
         if isinstance(model, unicode):
             model = model.encode('utf-8')
 
-        class CustomModel(models.Model):
+        model_class = models.TransientModel if transient else models.Model
+
+        class CustomModel(model_class):
             _name = model
             _module = False
             _custom = True
