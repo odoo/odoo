@@ -2,13 +2,6 @@
 <openerp>
 <data>
 
-<!-- Deactivate default website options before adding the theme ones -->
-<template id="reset_default_options" inherit_id="website.default_options">
-  <xpath expr="//t[@id='default_options']" position="attributes">
-    <attribute name="t-if">False</attribute>
-  </xpath>
-</template>
-
 <template id="theme_customize" inherit_id="website.theme_customize" name="theme_customize Bootswatch">
     <xpath expr="div" position="replace">
 
