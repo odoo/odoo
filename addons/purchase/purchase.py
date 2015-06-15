@@ -480,7 +480,9 @@ class purchase_order(osv.osv):
         return True
 
     def wkf_bid_received(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'bid', 'bid_date': fields.date.context_today(self,cr,uid,context=context)})
+        bid_date = fields.date.context_today(self, cr, uid, context=context)
+        self.message_post(cr, uid, ids, body=_("Bid received on %s") % (bid_date), context=context)
+        return self.write(cr, uid, ids, {'state':'bid', 'bid_date': bid_date})
 
     def wkf_send_rfq(self, cr, uid, ids, context=None):
         '''
