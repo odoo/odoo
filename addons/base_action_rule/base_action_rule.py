@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime, timedelta
 import time
 import logging
 
 import openerp
 from openerp import SUPERUSER_ID
+from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
@@ -50,6 +52,8 @@ class base_action_rule(osv.osv):
             [('on_create', 'On Creation'),
              ('on_write', 'On Update'),
              ('on_create_or_write', 'On Creation & Update'),
+             ('on_unlink', 'On Deletion'),
+             ('on_change', 'Based on Form Modification'),
              ('on_time', 'Based on Timed Condition')],
             string='When to Run'),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
@@ -82,7 +86,12 @@ class base_action_rule(osv.osv):
             help="If present, this condition must be satisfied before executing the action rule."),
         'filter_domain': fields.char(string='Domain', help="If present, this condition must be satisfied before executing the action rule."),
         'last_run': fields.datetime('Last Run', readonly=1, copy=False),
+        'on_change_fields': fields.char(string="On Change Fields Trigger",
+            help="Comma-separated list of field names that triggers the onchange."),
     }
+
+    # which fields have an impact on the registry
+    CRITICAL_FIELDS = ['model_id', 'active', 'kind', 'on_change_fields']
 
     _defaults = {
         'active': True,
@@ -91,7 +100,7 @@ class base_action_rule(osv.osv):
 
     def onchange_kind(self, cr, uid, ids, kind, context=None):
         clear_fields = []
-        if kind in ['on_create', 'on_create_or_write']:
+        if kind in ['on_create', 'on_create_or_write', 'on_unlink']:
             clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
         elif kind in ['on_write', 'on_create_or_write']:
             clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_type']
@@ -147,21 +156,21 @@ class base_action_rule(osv.osv):
 
         return True
 
-    def _register_hook(self, cr, ids=None):
-        """ Wrap the methods `create` and `write` of the models specified by
-            the rules given by `ids` (or all existing rules if `ids` is `None`.)
+    def _register_hook(self, cr):
+        """ Patch models that should trigger action rules based on creation,
+        modification, deletion of records and form onchanges.
         """
         #
-        # Note: the patched methods create and write must be defined inside
-        # another function, otherwise their closure may be wrong. For instance,
-        # the function create refers to the outer variable 'create', which you
-        # expect to be bound to create itself. But that expectation is wrong if
-        # create is defined inside a loop; in that case, the variable 'create'
-        # is bound to the last function defined by the loop.
+        # Note: the patched methods must be defined inside another function,
+        # otherwise their closure may be wrong. For instance, the function
+        # create refers to the outer variable 'create', which you expect to be
+        # bound to create itself. But that expectation is wrong if create is
+        # defined inside a loop; in that case, the variable 'create' is bound to
+        # the last function defined by the loop.
         #
 
         def make_create():
-            """ instanciate a create method that processes action rules """
+            """ Instanciate a create method that processes action rules. """
             def create(self, cr, uid, vals, context=None, **kwargs):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
@@ -186,7 +195,7 @@ class base_action_rule(osv.osv):
             return create
 
         def make_write():
-            """ instanciate a write method that processes action rules """
+            """ Instanciate a write method that processes action rules. """
             def write(self, cr, uid, ids, vals, context=None, **kwargs):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
@@ -208,6 +217,11 @@ class base_action_rule(osv.osv):
                 for action in actions:
                     pre_ids[action] = action_model._filter(cr, uid, action, action.filter_pre_id, ids, domain=action.filter_pre_domain, context=context)
 
+                # read old values before the update
+                old_values = {}
+                for old_vals in self.read(cr, uid, ids, list(vals), context=context):
+                    old_values[old_vals.pop('id')] = old_vals
+
                 # call original method
                 write.origin(self, cr, uid, ids, vals, context=context, **kwargs)
 
@@ -215,27 +229,96 @@ class base_action_rule(osv.osv):
                 for action in actions:
                     post_ids = action_model._filter(cr, uid, action, action.filter_id, pre_ids[action], domain=action.filter_domain, context=context)
                     if post_ids:
-                        action_model._process(cr, uid, action, post_ids, context=context)
+                        action_model._process(cr, uid, action, post_ids, context=dict(context, old_values=old_values))
                 return True
 
             return write
 
-        updated = False
-        if ids is None:
-            ids = self.search(cr, SUPERUSER_ID, [])
+        def make_unlink():
+            """ Instanciate an unlink method that processes action rules. """
+            def unlink(self, cr, uid, ids, context=None, **kwargs):
+                if context and context.get('action'):
+                    return unlink.origin(self, cr, uid, ids, vals, context=context)
+
+                # modify context
+                context = dict(context or {}, action=True)
+                ids = [ids] if isinstance(ids, (int, long, str)) else ids
+
+                # retrieve the action rules to possibly execute
+                action_model = self.pool.get('base.action.rule')
+                action_dom = [('model', '=', self._name),
+                              ('kind', '=', 'on_unlink')]
+                action_ids = action_model.search(cr, uid, action_dom, context=context)
+                actions = action_model.browse(cr, uid, action_ids, context=context)
+
+                # check conditions, and execute actions on the records that satisfy them
+                for action in actions:
+                    pre_ids = action_model._filter(cr, uid, action, action.filter_id, ids, domain=action.filter_domain, context=context)
+                    if pre_ids:
+                        action_model._process(cr, uid, action, pre_ids, context=context)
+
+                # call original method
+                return unlink.origin(self, cr, uid, ids, context=context, **kwargs)
+
+            return unlink
+
+        def make_onchange(action_rule_id):
+            """ Instanciate an onchange method for the given action rule. """
+            def base_action_rule_onchange(self):
+                action_rule = self.env['base.action.rule'].browse(action_rule_id)
+                server_actions = action_rule.server_action_ids.with_context(active_model=self._name, onchange_self=self)
+                result = {}
+                for server_action in server_actions:
+                    res = server_action.run()
+                    if res and 'value' in res:
+                        res['value'].pop('id', None)
+                        self.update(self._convert_to_cache(res['value'], validate=False))
+                    if res and 'domain' in res:
+                        result.setdefault('domain', {}).update(res['domain'])
+                    if res and 'warning' in res:
+                        result['warning'] = res['warning']
+                return result
+
+            return base_action_rule_onchange
+
+        patched_models = defaultdict(set)
+        def patch(model, name, method):
+            """ Patch method `name` on `model`, unless it has been patched already. """
+            if model not in patched_models[name]:
+                patched_models[name].add(model)
+                model._patch_method(name, method)
+
+        # retrieve all actions, and patch their corresponding model
+        ids = self.search(cr, SUPERUSER_ID, [])
         for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
             model_obj = self.pool.get(model)
-            if model_obj and not hasattr(model_obj, 'base_action_ruled'):
-                # monkey-patch methods create and write
-                model_obj._patch_method('create', make_create())
-                model_obj._patch_method('write', make_write())
-                model_obj.base_action_ruled = True
-                updated = True
+            if not model_obj:
+                continue
 
-        return updated
+            if action_rule.kind == 'on_create':
+                patch(model_obj, 'create', make_create())
+
+            elif action_rule.kind == 'on_create_or_write':
+                patch(model_obj, 'create', make_create())
+                patch(model_obj, 'write', make_write())
+
+            elif action_rule.kind == 'on_write':
+                patch(model_obj, 'write', make_write())
+
+            elif action_rule.kind == 'on_unlink':
+                patch(model_obj, 'unlink', make_unlink())
+
+            elif action_rule.kind == 'on_change':
+                # register an onchange method for the action_rule
+                method = make_onchange(action_rule.id)
+                for field_name in action_rule.on_change_fields.split(","):
+                    field_name = field_name.strip()
+                    model_obj._onchange_methods[field_name].append(method)
 
     def _update_cron(self, cr, uid, context=None):
+        """ Activate the cron job depending on whether there exists action rules
+        based on time conditions. """
         try:
             cron = self.pool['ir.model.data'].get_object(
                 cr, uid, 'base_action_rule', 'ir_cron_crm_action', context=context)
@@ -244,25 +327,32 @@ class base_action_rule(osv.osv):
 
         return cron.toggle(model=self._name, domain=[('kind', '=', 'on_time')])
 
+    def _update_registry(self, cr, uid, context=None):
+        """ Update the registry after a modification on action rules. """
+        if self.pool.ready:
+            # for the sake of simplicity, simply force the registry to reload
+            cr.commit()
+            openerp.api.Environment.reset()
+            RegistryManager.new(cr.dbname)
+            RegistryManager.signal_registry_change(cr.dbname)
+
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
-        if self._register_hook(cr, [res_id]):
-            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         self._update_cron(cr, uid, context=context)
+        self._update_registry(cr, uid, context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
-        if self._register_hook(cr, ids):
-            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
-        self._update_cron(cr, uid, context=context)
+        if set(vals) & set(self.CRITICAL_FIELDS):
+            self._update_cron(cr, uid, context=context)
+            self._update_registry(cr, uid, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(base_action_rule, self).unlink(cr, uid, ids, context=context)
         self._update_cron(cr, uid, context=context)
+        self._update_registry(cr, uid, context=context)
         return res
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
