@@ -3,7 +3,7 @@ import urllib2
 import ssl
 from datetime import datetime, timedelta
 
-from openerp import models, api
+from openerp import models, api, service
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 soap_header = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com"><soapenv:Header/><soapenv:Body><mer:CreditTransaction><mer:tran>'
@@ -54,7 +54,7 @@ class MercuryTransaction(models.Model):
         data['operator_id'] = pos_session.user_id.login
         data['merchant_id'] = card_reader_config.merchant_id
         data['config_id'] = config.id
-        data['memo'] = card_reader_config.memo
+        data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
         xml_transaction = self.env.ref(template).render(data)

@@ -21,7 +21,6 @@ class card_reader_payment_data(models.Model):
     _name = 'card_reader.configuration'
 
     # FIELDS #
-    memo = fields.Char(string='Memo', size=40, required=True, help='A custom memo to identify transactions')
     merchant_id = fields.Char(string='Merchant ID', size=24, required=True, help='Id of the merchant to authentify him on the payment provider server')
     merchant_pwd = fields.Char(string='Merchant Password', required=True, help='Password of the merchant to authentify him on the payment provider server')
     payment_server = fields.Char(string='Payment Server', required=True, help='the URL the payment provider server')
