@@ -33,7 +33,7 @@
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary"><t t-esc="record.name.value"/></div>
                                     <div class="o_secondary">
-                                        <span groups="hr.group_multi_departments"><t t-esc="record.department_id.value"/></span>
+                                        <span><t t-esc="record.department_id.value"/></span>
                                         <span t-if="record.manager_id.value">(<t t-esc="record.manager_id.value"/>)</span>
                                         <small t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'"><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                                     </div>

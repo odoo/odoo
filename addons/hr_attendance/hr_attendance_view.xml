@@ -165,21 +165,5 @@
 
         <menuitem name="Configuration" parent="menu_hr_attendance_root" id="menu_hr_attendance_config" sequence="100" groups="base.group_configuration,base.group_hr_attendance" action="open_view_attendance_reason"/>
 
-        <record id="hr_attendance_employee" model="ir.ui.view">
-            <field name="name">hr.employee.form1</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="active" position="before">
-                    <label for="state" groups="base.group_hr_attendance"/>
-                    <div groups="base.group_hr_attendance">
-                        <field name="state" class="oe_inline"/> -
-                        <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
-                        <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
-                    </div>
-                </field>
-            </field>
-        </record>
-
     </data>
 </openerp>
