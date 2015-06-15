@@ -21,10 +21,10 @@ class card_reader_payment_data(models.Model):
     _name = 'card_reader.configuration'
 
     # FIELDS #
-    merchant_id = fields.Char(string='Merchant ID', size=24, required=True, help='Id of the merchant to authentify him on the payment provider server')
-    merchant_pwd = fields.Char(string='Merchant Password', required=True, help='Password of the merchant to authentify him on the payment provider server')
-    payment_server = fields.Char(string='Payment Server', required=True, help='the URL the payment provider server')
-    url_base_action = fields.Char(string='Base Action URL', required=True, help='the URL of the SOAP action')
+    merchant_id = fields.Char(string='Merchant ID', size=24, required=True, help='Id of the merchant to authenticate him on the payment provider server')
+    merchant_pwd = fields.Char(string='Merchant Password', required=True, help='Password of the merchant to authenticate him on the payment provider server')
+    payment_server = fields.Char(string='Payment Server', required=True, help='the URL the payment provider server')  # todo jov
+    url_base_action = fields.Char(string='Base Action URL', required=True, help='the URL of the SOAP action')  # todo jov
 
 
 class account_bank_statement_line(models.Model):
@@ -93,37 +93,3 @@ class pos_order_card(models.Model):
                 break
 
         return statement_id
-
-    @api.multi
-    def refund(self):
-        abs = super(pos_order_card, self).refund()
-
-        for order in self.browse(self.ids):
-            for statement_line in order.statement_ids:
-                if statement_line.card_brand:
-                    response = self.env['card_reader.mercury_transaction'].do_return({'transaction_type': 'Credit', 'transaction_code': 'ReturnByRecordNo',
-                                                                                      'ref_no': statement_line.ref_no, 'record_no': statement_line.record_no,
-                                                                                      'invoice_no': statement_line.invoice_no, 'purchase': statement_line.amount,
-                                                                                      'journal_id': statement_line.journal_id.id})
-
-                    if "<TextResponse>AP</TextResponse>" in response:
-                        order = self.env['pos.order'].browse(abs['res_id'])
-
-                        data = {
-                            'amount': -statement_line.amount,
-                            'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                            'journal': statement_line.journal_id.id,
-                            'card_number': statement_line.card_number,
-                            'card_brand': statement_line.card_brand,
-                            'card_owner_name': statement_line.card_owner_name
-                        }
-
-                        if data['amount'] != 0.0:
-                            order.add_payment(abs['res_id'], data)
-
-                        order.signal_workflow('paid')
-                    elif "<TextResponse>AP*</TextResponse>" in response:
-                        _logger.warning("Mercury credit card return was NOT approved because it was a duplicate return.")
-                    else:
-                        _logger.error("Mercury credit card return was NOT approved.")
-        return abs
