@@ -91,28 +91,32 @@ function decodeMagtek (magtekInput) {
     var magtek_generated = magtekInput.split('|');
 
     var to_return = {};
-    track1.shift(); // get rid of complete match
-    to_return['number'] = track1.shift().substr(-4);
-    to_return['name'] = track1.shift();
-    track1.shift(); // expiration date
-    track1.shift(); // service code
-    track1.shift(); // discretionary data
-    track1.shift(); // zero pad
+    try {
+        track1.shift(); // get rid of complete match
+        to_return['number'] = track1.shift().substr(-4);
+        to_return['name'] = track1.shift();
+        track1.shift(); // expiration date
+        track1.shift(); // service code
+        track1.shift(); // discretionary data
+        track1.shift(); // zero pad
 
-    magtek_generated.shift(); // track1 and track2
-    magtek_generated.shift(); // clear text crc
-    magtek_generated.shift(); // encryption counter
-    to_return['encrypted_block'] = magtek_generated.shift();
-    magtek_generated.shift(); // enc session id
-    magtek_generated.shift(); // device serial
-    magtek_generated.shift(); // magneprint data
-    magtek_generated.shift(); // magneprint status
-    magtek_generated.shift(); // enc track3
-    to_return['encrypted_key'] = magtek_generated.shift();
-    magtek_generated.shift(); // enc track1
-    magtek_generated.shift(); // reader enc status
+        magtek_generated.shift(); // track1 and track2
+        magtek_generated.shift(); // clear text crc
+        magtek_generated.shift(); // encryption counter
+        to_return['encrypted_block'] = magtek_generated.shift();
+        magtek_generated.shift(); // enc session id
+        magtek_generated.shift(); // device serial
+        magtek_generated.shift(); // magneprint data
+        magtek_generated.shift(); // magneprint status
+        magtek_generated.shift(); // enc track3
+        to_return['encrypted_key'] = magtek_generated.shift();
+        magtek_generated.shift(); // enc track1
+        magtek_generated.shift(); // reader enc status
 
-    return to_return;
+        return to_return;
+    } catch (e) {
+        return 0;
+    }
 }
 
 var _paylineproto = pos_model.Paymentline.prototype;
@@ -356,6 +360,15 @@ PaymentScreenWidget.include({
 
         var self = this;
         var decodedMagtek = decodeMagtek(parsed_result.code);
+
+        if (! decodedMagtek) {
+            this.gui.show_popup('error',{
+                'title': 'Error',
+                'body':  'Could not read card (bad swipe?)',
+            });
+            return;
+        }
+
         var swipe_pending_line = self._get_swipe_pending_line();
         var purchase_amount = 0;
 
