@@ -148,12 +148,6 @@ class sale_order(osv.osv):
             result[line.order_id.id] = True
         return result.keys()
 
-    def _get_default_company(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        if not company_id:
-            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
-        return company_id
-
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
         section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
@@ -249,7 +243,7 @@ class sale_order(osv.osv):
     _defaults = {
         'date_order': fields.datetime.now,
         'order_policy': 'manual',
-        'company_id': _get_default_company,
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=context),
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: '/',
@@ -317,7 +311,7 @@ class sale_order(osv.osv):
         r = {'value': {}}
         if not fiscal_position:
             if not company_id:
-                company_id = self._get_default_company(cr, uid, context=context)
+                company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=context)
             fiscal_position = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, delivery_id, context=context)
             if fiscal_position:
                 r['value']['fiscal_position'] = fiscal_position
