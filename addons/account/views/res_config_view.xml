@@ -169,15 +169,6 @@
                                     domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
                                     class="oe_inline"/>
                             </div>
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="sale_sequence_next"/>
-                                <field name="sale_sequence_prefix"
-                                    class="oe_inline"
-                                    help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
-                                <field name="sale_sequence_next"
-                                    class="oe_inline"
-                                    attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
-                            </div>
                             <div>
                                 <field name="group_proforma_invoices" class="oe_inline"/>
                                 <label for="group_proforma_invoices"/>
@@ -204,15 +195,6 @@
                                 <field name="default_purchase_tax"
                                     domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
                                     class="oe_inline"/>
-                            </div>
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="purchase_sequence_next"/>
-                                <field name="purchase_sequence_prefix"
-                                    class="oe_inline"
-                                    help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
-                                <field name="purchase_sequence_next"
-                                    class="oe_inline"
-                                    attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
                             </div>
                             <div>
                                 <field name="module_account_check_writing" class="oe_inline"/>
@@ -269,8 +251,6 @@
                         <label for="id" string="Purchase"/>
                         <div/>
                     </group>
-                    <field name="sale_journal_id" invisible="1"/>
-                    <field name="purchase_journal_id" invisible="1"/>
                 </form>
             </field>
         </record>

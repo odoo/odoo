@@ -67,15 +67,6 @@ class AccountConfigSettings(models.TransientModel):
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
     period_lock_date = fields.Date(related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
     fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
-    sale_journal_id = fields.Many2one('account.journal', string='Sale journal')
-    sale_sequence_prefix = fields.Char(related='sale_journal_id.sequence_id.prefix', string='Invoice sequence')
-    sale_sequence_next = fields.Integer(related='sale_journal_id.sequence_id.number_next',
-        string='Next invoice number')
-    purchase_journal_id = fields.Many2one('account.journal', string='Purchase journal')
-    purchase_sequence_prefix = fields.Char(related='purchase_journal_id.sequence_id.prefix',
-        string='Supplier bill sequence')
-    purchase_sequence_next = fields.Integer(related='purchase_journal_id.sequence_id.number_next',
-        string='Next supplier bill number')
 
     module_account_check_writing = fields.Boolean(string='Pay your suppliers by check',
         help='This allows you to check writing and printing.\n'
@@ -171,19 +162,6 @@ class AccountConfigSettings(models.TransientModel):
             self.bank_account_code_char = company.bank_account_code_char
             self.code_digits = company.accounts_code_digits
 
-            # update journals and sequences
-            self.purchase_journal_id = self.purchase_sequence_prefix = self.purchase_sequence_next = False
-            self.sale_journal_id = self.sale_sequence_prefix = self.sale_sequence_next = False
-            journals = self.env['account.journal'].search([('company_id', '=', self.company_id.id)])
-            for journal in journals:
-                if journal.type == 'purchase':
-                    self.purchase_journal_id = journal
-                    self.purchase_sequence_prefix = journal.sequence_id.prefix
-                    self.purchase_sequence_next = journal.sequence_id.number_next
-                elif journal.type == 'sale':
-                    self.sale_journal_id = journal
-                    self.sale_sequence_prefix = journal.sequence_id.prefix
-                    self.sale_sequence_next = journal.sequence_id.number_next
             # update taxes
             ir_values = self.env['ir.values']
             taxes_id = ir_values.get_default('product.template', 'taxes_id', company_id = self.company_id.id)
