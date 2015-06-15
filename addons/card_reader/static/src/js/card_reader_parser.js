@@ -279,11 +279,11 @@ ScreenWidget.include({
 PaymentScreenWidget.include({
     // How long we wait for the odoo server to deliver the response of
     // a Mercury transaction
-    server_timeout_in_ms: 30000,
+    server_timeout_in_ms: 95000,
 
     // How many Mercury transactions we send without receiving a
     // response
-    server_retries: 5,
+    server_retries: 3,
 
     _get_swipe_pending_line: function () {
         var i = 0;
