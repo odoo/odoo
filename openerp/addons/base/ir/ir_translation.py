@@ -269,7 +269,10 @@ class ir_translation(osv.osv):
                        FROM ir_translation 
                        WHERE lang=%s 
                         AND type in %s 
-                        AND src=%s"""
+                        AND src=%s
+                        AND value is not null
+                        AND value <> ''
+                        """
             params = (lang or '', types, tools.ustr(source))
             if name:
                 query += " AND name=%s"
@@ -280,7 +283,10 @@ class ir_translation(osv.osv):
                           FROM ir_translation
                           WHERE lang=%s
                            AND type in %s
-                           AND name=%s""",
+                           AND name=%s
+                           AND value is not null
+                           AND value <> ''
+                           """,
                     (lang or '', types, tools.ustr(name)))
         res = cr.fetchone()
         trad = res and res[0] or u''
