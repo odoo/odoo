@@ -386,7 +386,6 @@ PaymentScreenWidget.include({
                 transaction: def
             });
             def.notify({
-                status: 'Waiting',
                 message: 'Handling transaction...',
             });
         }
@@ -500,8 +499,8 @@ PaymentScreenWidget.include({
         this.render_paymentlines();
     },
 
-    do_reversal: function (line, is_voidsale, retry_nr) {
-        var def = new $.Deferred();
+    do_reversal: function (line, is_voidsale, old_deferred, retry_nr) {
+        var def = old_deferred || new $.Deferred();
         var self = this;
         retry_nr = retry_nr || 0;
 
@@ -512,8 +511,8 @@ PaymentScreenWidget.include({
         });
 
         var request_data = _.extend({
-            'transaction_type'  : 'Credit',
-            'transaction_code'  : 'VoidSaleByRecordNo',
+            'transaction_type': 'Credit',
+            'transaction_code': 'VoidSaleByRecordNo',
         }, line.mercury_data);
 
         var message = "";
@@ -527,18 +526,18 @@ PaymentScreenWidget.include({
             rpc_method = "do_reversal";
         }
 
-        def.notify({
-            error: 0,
-            status: 'Waiting',
-            message: message,
-        });
+        if (! old_deferred) {
+            def.notify({
+                message: message,
+            });
+        }
 
         var mercury_transaction = new Model('card_reader.mercury_transaction');
         mercury_transaction.call(rpc_method, [request_data], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
             console.log(data); // todo
 
             if (data === "timeout") {
-                self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, retry_nr + 1]);
+                self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
                 return;
             }
 
@@ -571,7 +570,7 @@ PaymentScreenWidget.include({
             }
         }).fail(function (error, event) {
             event.preventDefault();
-            self.retry_mercury_transaction(def, null, retry_nr, false, self.do_reversal, [line, is_voidsale, retry_nr + 1]);
+            self.retry_mercury_transaction(def, null, retry_nr, false, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
         });
     },
 
