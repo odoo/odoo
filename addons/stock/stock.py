@@ -396,7 +396,7 @@ class stock_quant(osv.osv):
             quants_reconcile.append(quant)
         if to_move_quants:
             to_recompute_move_ids = [x.reservation_id.id for x in to_move_quants if x.reservation_id and x.reservation_id.id != move.id]
-            self.move_quants_write(cr, uid, to_move_quants, move, location_to, dest_package_id, context=context)
+            self.move_quants_write(cr, uid, to_move_quants, move, location_to, dest_package_id, lot_id=lot_id, context=context)
             self.pool.get('stock.move').recalculate_move_state(cr, uid, to_recompute_move_ids, context=context)
         if location_to.usage == 'internal':
             # Do manual search for quant to avoid full table scan (order by id)
@@ -408,11 +408,13 @@ class stock_quant(osv.osv):
                 for quant in quants_reconcile:
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
-    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
+    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id = False, context=None):
         context=context or {}
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
                 'reservation_id': False}
+        if lot_id and any(x.id for x in quants if not x.lot_id.id):
+            vals['lot_id'] = lot_id
         if not context.get('entire_pack'):
             vals.update({'package_id': dest_package_id})
         self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
@@ -430,6 +432,19 @@ class stock_quant(osv.osv):
         if location.usage in ['inventory', 'production', 'supplier']:
             return quants
         res_qty = qty
+        if restrict_lot_id:
+            if not prefered_domain_list:
+                prefered_domain_list = [[('lot_id', '=', restrict_lot_id)],[('lot_id', '=', False)]]
+            else:
+                lot_list = []
+                no_lot_list = []
+                for pref_domain in prefered_domain_list:
+                    pref_lot_domain = pref_domain + [('lot_id', '=', restrict_lot_id)]
+                    pref_no_lot_domain = pref_domain + [('lot_id', '=', False)]
+                    lot_list.append(pref_lot_domain)
+                    no_lot_list.append(pref_no_lot_domain)
+                prefered_domain_list = lot_list + no_lot_list
+
         if not prefered_domain_list:
             return self.quants_get(cr, uid, location, product, qty, domain=domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
         for prefered_domain in prefered_domain_list:
@@ -458,7 +473,7 @@ class stock_quant(osv.osv):
         if restrict_partner_id:
             domain += [('owner_id', '=', restrict_partner_id)]
         if restrict_lot_id:
-            domain += [('lot_id', '=', restrict_lot_id)]
+            domain += ['|', ('lot_id', '=', restrict_lot_id), ('lot_id', '=', False)]
         if location:
             removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context)
             result += self.apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
@@ -507,6 +522,16 @@ class stock_quant(osv.osv):
             negative_quant_id = self.create(cr, SUPERUSER_ID, negative_vals, context=context)
             vals.update({'propagated_from_id': negative_quant_id})
 
+        # In case of serial tracking, check if the product does not exist somewhere internally already
+        picking_type = move.picking_id and move.picking_id.picking_type_id or False
+        if move.product_id.tracking == 'serial' and (not picking_type or (picking_type.use_create_lots or picking_type.use_existing_lots)):
+            if qty != 1.0:
+                raise UserError(_('You should only receive by the piece with the same serial number'))
+            other_quants = self.search(cr, uid, [('product_id', '=', move.product_id.id), ('lot_id', '=', lot_id),
+                                                 ('qty', '>', 0.0), ('location_id.usage', '=', 'internal')], context=context)
+            if other_quants:
+                raise UserError(_('The serial number %s is already in stock') % lot_id.name)
+
         #create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         quant_id = self.create(cr, SUPERUSER_ID, vals, context=context)
         return self.browse(cr, uid, quant_id, context=context)
@@ -547,12 +572,11 @@ class stock_quant(osv.osv):
         """
         solving_quant = quant
         dom = [('qty', '<', 0)]
-        if quant.lot_id:
-            dom += [('lot_id', '=', quant.lot_id.id)]
-        dom += [('owner_id', '=', quant.owner_id.id)]
-        dom += [('package_id', '=', quant.package_id.id)]
+        if quant.package_id.id:
+            dom += [('package_id', '=', quant.package_id.id)]
         dom += [('id', '!=', quant.propagated_from_id.id)]
-        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
+        quants = self.quants_get_prefered_domain(cr, uid, quant.location_id, quant.product_id, quant.qty, dom,
+                                                 restrict_lot_id=quant.lot_id.id, restrict_partner_id=quant.owner_id.id, context=context)
         product_uom_rounding = quant.product_id.uom_id.rounding
         for quant_neg, qty in quants:
             if not quant_neg or not solving_quant:
@@ -790,7 +814,8 @@ class stock_picking(models.Model):
         if picking_type_id:
             picking_type = self.pool['stock.picking.type'].browse(cr, uid, picking_type_id)
             res['value'] = {'location_id': picking_type.default_location_src_id.id,
-                            'location_dest_id': picking_type.default_location_dest_id.id}
+                            'location_dest_id': picking_type.default_location_dest_id.id,
+                            'lots_visible': picking_type.use_create_lots or picking_type.use_existing_lots,}
         return res
 
     def _default_location_destination(self):
@@ -1521,6 +1546,7 @@ class stock_picking(models.Model):
         stock_move_obj = self.pool["stock.move"]
         stock_operation_obj = self.pool["stock.pack.operation"]
         package_obj = self.pool["stock.quant.package"]
+        package_id = False
         for pick in self.browse(cr, uid, ids, context=context):
             operations = [x for x in pick.pack_operation_ids if x.qty_done > 0 and (not x.result_package_id)]
             pack_operation_ids = []
@@ -1532,11 +1558,13 @@ class stock_picking(models.Model):
                     stock_operation_obj.write(cr, uid, operation.id, {'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0, 'lot_id': False}, context=context)
                     op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
                 pack_operation_ids.append(op.id)
-                if op.product_id and op.location_id and op.location_dest_id:
-                    stock_move_obj.check_tracking_product(cr, uid, op.product_id, op.lot_id.id, op.location_id, op.location_dest_id, context=context)
             if operations:
+                stock_operation_obj.check_tracking(cr, uid, pack_operation_ids, context=context)
                 package_id = package_obj.create(cr, uid, {}, context=context)
                 stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
+            else:
+                raise UserError(_('Please process some quantities to put in the pack first!'))
+        return package_id
 
 
 class stock_production_lot(osv.osv):
@@ -2168,22 +2196,13 @@ class stock_move(osv.osv):
         self.check_recompute_pack_op(cr, uid, ids, context=context)
         return res
 
-    def check_tracking_product(self, cr, uid, product, lot_id, location, location_dest, context=None):
-        check = False
-        if product.track_all and not location_dest.usage == 'inventory':
-            check = True
-        elif product.track_incoming and location.usage in ('supplier', 'transit', 'inventory') and location_dest.usage == 'internal':
-            check = True
-        elif product.track_outgoing and location_dest.usage in ('customer', 'transit') and location.usage == 'internal':
-            check = True
-        if check and not lot_id:
-            raise UserError(_('You must assign a serial number for the product %s') % (product.name))
-
-
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
         """
-        self.check_tracking_product(cr, uid, move.product_id, lot_id, move.location_id, move.location_dest_id, context=context)
+        if move.picking_id and (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
+            move.product_id.tracking != 'none':
+            if not lot_id:
+                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
 
     def check_recompute_pack_op(self, cr, uid, ids, context=None):
         pickings = list(set([x.picking_id for x in self.browse(cr, uid, ids, context=context) if x.picking_id]))
@@ -2373,7 +2392,7 @@ class stock_move(osv.osv):
                 prefered_domain_list = [prefered_domain] + [fallback_domain] + [fallback_domain2]
                 dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain_list=prefered_domain_list,
-                                                          restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                                                          restrict_lot_id=ops.lot_id.id, restrict_partner_id=ops.owner_id.id, context=context)
                 if ops.product_id:
                     #If a product is given, the result is always put immediately in the result package (if it is False, they are without package)
                     quant_dest_package_id  = ops.result_package_id.id
@@ -3383,6 +3402,8 @@ class stock_warehouse(osv.osv):
             'name': _('Receipts'),
             'warehouse_id': warehouse.id,
             'code': 'incoming',
+            'use_create_lots': True,
+            'use_existing_lots': False,
             'sequence_id': in_seq_id,
             'default_location_src_id': supplier_loc.id,
             'default_location_dest_id': input_loc.id,
@@ -3392,6 +3413,8 @@ class stock_warehouse(osv.osv):
             'name': _('Delivery Orders'),
             'warehouse_id': warehouse.id,
             'code': 'outgoing',
+            'use_create_lots': False,
+            'use_existing_lots': True,
             'sequence_id': out_seq_id,
             'return_picking_type_id': in_type_id,
             'default_location_src_id': output_loc.id,
@@ -3403,6 +3426,8 @@ class stock_warehouse(osv.osv):
             'name': _('Internal Transfers'),
             'warehouse_id': warehouse.id,
             'code': 'internal',
+            'use_create_lots': False,
+            'use_existing_lots': True,
             'sequence_id': int_seq_id,
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_stock_loc.id,
@@ -3413,6 +3438,8 @@ class stock_warehouse(osv.osv):
             'name': _('Pack'),
             'warehouse_id': warehouse.id,
             'code': 'internal',
+            'use_create_lots': False,
+            'use_existing_lots': True,
             'sequence_id': pack_seq_id,
             'default_location_src_id': wh_pack_stock_loc.id,
             'default_location_dest_id': output_loc.id,
@@ -3423,6 +3450,8 @@ class stock_warehouse(osv.osv):
             'name': _('Pick'),
             'warehouse_id': warehouse.id,
             'code': 'internal',
+            'use_create_lots': False,
+            'use_existing_lots': True,
             'sequence_id': pick_seq_id,
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_pack_stock_loc.id,
@@ -4029,6 +4058,27 @@ class stock_pack_operation(osv.osv):
             self.write(cr, uid, [id], {'qty_done': 1.0}, context=context)
         return True
 
+    def _compute_lots_visible(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for pack in self.browse(cr, uid, ids, context=context):
+            pick = pack.picking_id
+            product_requires = (pack.product_id.tracking != 'none')
+            if pick.picking_type_id:
+                res[pack.id] = pick.picking_type_id.use_existing_lots or pick.picking_type_id.use_create_lots and product_requires
+            else:
+                res[pack.id] = product_requires
+        return res
+
+    def _get_default_from_loc(self, cr, uid, context=None):
+        default_loc = context.get('default_location_id')
+        if default_loc:
+            return self.pool['stock.location'].browse(cr, uid, default_loc, context=context).name
+
+    def _get_default_to_loc(self, cr, uid, context=None):
+        default_loc = context.get('default_location_dest_id')
+        if default_loc:
+            return self.pool['stock.location'].browse(cr, uid, default_loc, context=context).name
+
     _columns = {
         'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made', required=True),
         'product_id': fields.many2one('product.product', 'Product', ondelete="CASCADE"),  # 1
@@ -4051,6 +4101,7 @@ class stock_pack_operation(osv.osv):
         'from_loc': fields.function(_compute_location_description, type='char', string='From', multi='loc', readonly=True),
         'to_loc': fields.function(_compute_location_description, type='char', string='To', multi='loc', readonly=True),
         'fresh_record': fields.boolean('Newly created pack operation'),
+        'lots_visible': fields.function(_compute_lots_visible, type='boolean'),
         'state': fields.related('picking_id', 'state', type='selection', selection=[
                 ('draft', 'Draft'),
                 ('cancel', 'Cancelled'),
@@ -4068,6 +4119,8 @@ class stock_pack_operation(osv.osv):
         'product_qty': 0.0,
         'processed_boolean': lambda *a: False,
         'fresh_record': True,
+        'from_loc': _get_default_from_loc,
+        'to_loc': _get_default_to_loc,
     }
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -4093,97 +4146,59 @@ class stock_pack_operation(osv.osv):
             raise UserError(_('You can not delete pack operations of a done picking'))
         return super(stock_pack_operation, self).unlink(cr, uid, ids, context=context)
 
-    def action_drop_down(self, cr, uid, ids, context=None):
-        ''' Used by barcode interface to say that pack_operation has been moved from src location 
-            to destination location, if qty_done is less than product_qty than we have to split the
-            operation in two to process the one with the qty moved
-        '''
-        processed_ids = []
-        move_obj = self.pool.get("stock.move")
-        for pack_op in self.browse(cr, uid, ids, context=None):
-            if pack_op.product_id and pack_op.location_id and pack_op.location_dest_id:
-                move_obj.check_tracking_product(cr, uid, pack_op.product_id, pack_op.lot_id.id, pack_op.location_id, pack_op.location_dest_id, context=context)
-            op = pack_op.id
-            if pack_op.qty_done < pack_op.product_qty:
-                # we split the operation in two
-                op = self.copy(cr, uid, pack_op.id, {'product_qty': pack_op.qty_done, 'qty_done': pack_op.qty_done}, context=context)
-                self.write(cr, uid, [pack_op.id], {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0, 'lot_id': False}, context=context)
-            processed_ids.append(op)
-        self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
+    def check_tracking(self, cr, uid, ids, context=None):
+        """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
+        """
+        operations = self.browse(cr, uid, ids, context=context)
+        for ops in operations:
+            if ops.picking_id and (ops.picking_id.picking_type_id.use_existing_lots or ops.picking_id.picking_type_id.use_create_lots) and \
+                ops.product_id and ops.product_id.tracking != 'none':
+                if not ops.lot_id:
+                    raise UserError(_('You need to provide a Lot/Serial Number for product %s') % ops.product_id.name)
+                if ops.product_id.tracking == 'serial' and ops.qty_done != 1.0:
+                    raise UserError(_('You should provide a different Lot for each piece'))
 
-    def create_and_assign_lot(self, cr, uid, id, name, context=None):
-        ''' Used by barcode interface to create a new lot and assign it to the operation
-        '''
-        obj = self.browse(cr,uid,id,context)
-        product_id = obj.product_id.id
-        val = {'product_id': product_id}
-        new_lot_id = False
-        if name:
-            lots = self.pool.get('stock.production.lot').search(cr, uid, ['&', ('name', '=', name), ('product_id', '=', product_id)], context=context)
-            if lots:
-                new_lot_id = lots[0]
-            val.update({'name': name})
-
-        if not new_lot_id:
-            new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
-        self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
-
-    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, increment=1, context=None):
-        '''Search for an operation with given 'domain' in a picking, if it exists increment the qty by the value of increment otherwise create it
-
-        :param domain: list of tuple directly reusable as a domain
-        context can receive a key 'current_package_id' with the package to consider for this operation
-        returns True
-        '''
-        if context is None:
-            context = {}
-
-        #if current_package_id is given in the context, we increase the number of items in this package
-        package_clause = [('result_package_id', '=', context.get('current_package_id', False))]
-        existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id)] + domain + package_clause, context=context)
-        todo_operation_ids = []
-        if existing_operation_ids:
-            if filter_visible:
-                todo_operation_ids = [val for val in existing_operation_ids if val in visible_op_ids]
+    def split_lot(self, cr, uid, ids, context=None):
+        assert len(ids) > 0
+        data_obj = self.pool['ir.model.data']
+        pack = self.browse(cr, uid, ids[0], context=context)
+        picking_type = pack.picking_id.picking_type_id
+        serial = (pack.product_id.tracking == 'serial')
+        view = data_obj.xmlid_to_res_id(cr, uid, 'stock.view_lot_split')
+        only_create = picking_type.use_create_lots and not picking_type.use_existing_lots
+        line_ids = []
+        if pack.qty_done > 0 and pack.lot_id:
+            if pack.product_id.tracking == 'serial':
+                product_qty = 1.0
             else:
-                todo_operation_ids = existing_operation_ids
-        if todo_operation_ids:
-            #existing operation found for the given domain and picking => increment its quantity
-            operation_id = todo_operation_ids[0]
-            op_obj = self.browse(cr, uid, operation_id, context=context)
-            qty = op_obj.qty_done
-            if increment > 0:
-                qty += increment 
-            elif increment < 0:
-                if qty == 0 and op_obj.product_qty == 0:
-                    #we have a line with 0 qty set, so delete it
-                    self.unlink(cr, uid, [operation_id], context=context)
-                    return False
-                else:
-                    qty = max(0, qty-1)
-            self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
-        else:
-            #no existing operation found for the given domain and picking => create a new one
-            picking_obj = self.pool.get("stock.picking")
-            picking = picking_obj.browse(cr, uid, picking_id, context=context)
-            values = {
-                'picking_id': picking_id,
-                'product_qty': 0,
-                'location_id': picking.location_id.id, 
-                'location_dest_id': picking.location_dest_id.id,
-                'qty_done': increment,
-                }
-            for key in domain:
-                var_name, dummy, value = key
-                uom_id = False
-                if var_name == 'product_id':
-                    uom_id = self.pool.get('product.product').browse(cr, uid, value, context=context).uom_id.id
-                update_dict = {var_name: value}
-                if uom_id:
-                    update_dict['product_uom_id'] = uom_id
-                values.update(update_dict)
-            operation_id = self.create(cr, uid, values, context=context)
-        return operation_id
+                product_qty = pack.qty_done
+            line_ids = [(0, 0, {'lot_id': pack.lot_id.id,
+                                'lot_name': pack.lot_id.name if only_create else '',
+                                'product_qty': product_qty,
+                                })]
+        values = {
+            'pack_id': pack.id,
+            'product_id': pack.product_id.id,
+            'product_uom_id': pack.product_uom_id.id,
+            'product_qty': pack.product_qty,
+            'qty_done': pack.qty_done,
+            'only_create': only_create,
+            'line_ids': line_ids,
+        }
+        wiz_id = self.pool['stock.lot.split'].create(cr, uid, values, context=context)
+        return {
+             'name': _('Split Lot'),
+             'type': 'ir.actions.act_window',
+             'view_type': 'form',
+             'view_mode': 'form',
+             'res_model': 'stock.lot.split',
+             'views': [(view, 'form')],
+             'view_id': view,
+             'target': 'new',
+             'res_id': wiz_id,
+             'context': {'serial': serial,
+                         'only_create': only_create},
+         }
 
 
 class stock_move_operation_link(osv.osv):
@@ -4216,8 +4231,8 @@ class stock_move_operation_link(osv.osv):
             #if not given any information about package, we don't open boxes
             domain.append(('package_id', '=', False))
         #if lot info is given, we restrict choice to this lot otherwise we can take any
-        if op.lot_id:
-            domain.append(('lot_id', '=', op.lot_id.id))
+        #if op.lot_id:
+        #    domain.append(('lot_id', '=', op.lot_id.id))
         #if owner info is given, we restrict to this owner otherwise we restrict to no owner
         if op.owner_id:
             domain.append(('owner_id', '=', op.owner_id.id))
@@ -4471,9 +4486,11 @@ class stock_picking_type(osv.osv):
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
         'code': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Type of Operation', required=True),
         'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
-        'show_entire_packs': fields.boolean('Show entire packs to move'),
+        'show_entire_packs': fields.boolean('Allow moving packs'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', ondelete='cascade'),
         'active': fields.boolean('Active'),
+        'use_create_lots': fields.boolean('Create New Lots'),
+        'use_existing_lots': fields.boolean('Use Existing Lots'),
 
         # Statistics for the kanban view
         'last_done_picking': fields.function(_get_tristate_values,
@@ -4505,6 +4522,8 @@ class stock_picking_type(osv.osv):
     _defaults = {
         'warehouse_id': _default_warehouse,
         'active': True,
+        'use_existing_lots': True,
+        'use_create_lots': True,
     }
 
 class barcode_rule(models.Model):

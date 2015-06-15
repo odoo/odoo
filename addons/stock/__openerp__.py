@@ -58,6 +58,7 @@ Dashboard / Reports for Warehouse Management will include:
         'wizard/make_procurement_view.xml',
         'wizard/orderpoint_procurement_view.xml',
         'wizard/stock_pack_details.xml',
+        'wizard/stock_lot_split.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
         'stock_view.xml',
@@ -74,7 +75,7 @@ Dashboard / Reports for Warehouse Management will include:
         'report/report_stock_forecast.xml',
         'stock_dashboard.xml',
         'wizard/stock_immediate_transfer.xml',
-        'wizard/stock_backorder_confirmation.xml'
+        'wizard/stock_backorder_confirmation.xml',
     ],
     'test': [
         'test/inventory.yml',

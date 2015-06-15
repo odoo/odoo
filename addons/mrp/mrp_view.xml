@@ -555,9 +555,6 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="stock.view_template_property_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="//group[@name='lot']" position="inside">
-                    <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                </xpath>
                 <group name="sale_condition" position="inside">
                     <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
                     <div attrs="{'invisible':[('type','=','service')]}">

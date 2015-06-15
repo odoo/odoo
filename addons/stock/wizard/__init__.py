@@ -9,3 +9,4 @@ import orderpoint_procurement
 import stock_pack_details
 import stock_immediate_transfer
 import stock_backorder_confirmation
+import stock_lot_split

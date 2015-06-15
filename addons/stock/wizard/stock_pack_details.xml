@@ -6,13 +6,12 @@
         <field name="arch" type="xml">
             <form string="Enter Pack Details">
                 <group>
-                    <group string="#Products">
+                    <group string="Products">
                         <field name="pack_id" invisible="1"/>
                         <field name="picking_source_location_id" invisible="True"/>
                         <field name="picking_destination_location_id" invisible="True"/>
-
                         <field name="product_id" attrs="{'required': [('package_id', '=', False)]}"/>
-                        <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}"/>
+                        <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id','=', product_id)]" context="{'product_id': product_id}"/>
                     </group>
                     <group string="From">
                     <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]"/>
@@ -20,15 +19,15 @@
                     </group>
                 </group>
                 <group>
-                    <group string="Actions">
-                        <label for="qty_done" string="Done"/>
-                        <div class="oe_inline">
-                            <field name="qty_done"/>
-                            OF
+                    <group string="Quantities">
+                        <label for="qty_done"/>
+                        <span class="oe_inline">
+                            <field name="qty_done" nolabel="1"/>
+                            /
                             <field name="quantity"/>
                             <field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
-                            <button name="split_quantities" string="Split" type="object" icon="STOCK_PREFERENCES" attrs="{'invisible': ['|', ('quantity', '=', 1), ('qty_done', '=', 0.0)]}"/>
-                        </div>
+                        </span>
+                        <button name="split_quantities" class="oe_link" string="Split" type="object"/>
                     </group>
                     <group string="To">
                         <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]"/>
@@ -36,7 +35,7 @@
                     </group>
                 </group>
                 <footer>
-                    <button name="process" string="_Apply" type="object" class="oe_highlight"/>
+                    <button name="process" string="Save" type="object" class="oe_highlight"/>
                     or
                     <button string="_Cancel" class="oe_link" special="cancel" />
                 </footer>

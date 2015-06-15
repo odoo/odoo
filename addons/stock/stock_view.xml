@@ -729,13 +729,16 @@
                             <button name="do_prepare_partial" type="object" string="Recompute" attrs="{'invisible': [('recompute_pack_op','=', False)]}"/>
                             <field name="recompute_pack_op" invisible="1"/>
                             <field name="pack_operation_ids" invisible="1"/>
-                            <field name="pack_operation_product_ids" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="pack_operation_product_ids" options="{'reload_on_button': True}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree editable="bottom" colors="grey:result_package_id;red:qty_done&gt;product_qty;green:qty_done==product_qty and state!='done'">
                                     <field name="package_id" groups="stock.group_tracking_lot" invisible="1"/>
                                     <field name="product_id" on_change="product_id_change(product_id, product_uom_id, product_qty)" required="1" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
                                     <field name="fresh_record" invisible="1"/>
                                     <field name="product_uom_id" attrs="{'readonly': [('fresh_record', '=', False)]}" groups="product.group_uom"/>
-                                    <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
+                                    <field name="lot_id" domain="[('product_id','=', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
+                                    <button name="split_lot" string="Lot Split" type="object" icon="STOCK_INDENT" groups="stock.group_production_lot"
+                                            attrs="{'invisible': ['|', ('lots_visible', '=', False), ('state', 'not in', ['confirmed', 'assigned', 'waiting', 'partially_available'])]}"/>
+                                    <field name="lots_visible" invisible="1"/>
                                     <field name="picking_id" invisible="1"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
@@ -751,7 +754,7 @@
                                 </tree>
                             </field>
                             <field name="picking_type_entire_packs" invisible="1"/>
-                            <field name="pack_operation_pack_ids" attrs="{'invisible': [('pack_operation_pack_ids', '=', []), ('picking_type_entire_packs', '=', False)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_picking_id': id}" groups="stock.group_tracking_lot">
+                            <field name="pack_operation_pack_ids" options="{'reload_on_button': True}" attrs="{'invisible': [('pack_operation_pack_ids', '=', []), ('picking_type_entire_packs', '=', False)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_picking_id': id}" groups="stock.group_tracking_lot">
                                 <tree editable="bottom" colors="grey:qty_done&gt;0;">
                                     <field name="package_id" required="1" string="Package To Move"/>
                                     <field name="picking_id" invisible="1"/>
@@ -764,13 +767,13 @@
                                     <field name="qty_done" invisible="1"/>
                                     <field name="processed_boolean"/>
                                     <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
-                                            states="confirmed,assigned,waiting,partially_available"/>
+                                            states="confirmed,assigned,waiting,partially_available" groups="base.group_no_one"/>
                                 </tree>
                             </field>
                             <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Initial Demand" attrs="{'invisible': [('state', 'not in', ('draft', 'confirmed', 'waiting'))]}">
-                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="move_lines" options="{'reload_on_button': True}" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                     <kanban class="o_kanban_mobile o_kanban_one2many">
                                     <field name="product_id"/>
                                     <field name="availability"/>
@@ -1449,13 +1452,18 @@
                                 <field name="code" on_change="onchange_picking_code(code)"/>
                                 <field name="return_picking_type_id"/>
                                 <field name="barcode_nomenclature_id"/>
-                                <field name="show_entire_packs" groups="stock.group_tracking_lot"/>
                             </group>
                         </group>
-                        <separator string="Locations"/>
                         <group>
-                            <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
-                            <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
+                            <group string="Packs and Lots">
+                                <field name="show_entire_packs" groups="stock.group_tracking_lot"/>
+                                <field name="use_create_lots" groups="stock.group_production_lot"/>
+                                <field name="use_existing_lots" groups="stock.group_production_lot"/>
+                            </group>
+                            <group string="Locations">
+                                <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
+                                <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
