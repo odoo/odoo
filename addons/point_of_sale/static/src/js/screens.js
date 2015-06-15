@@ -1477,40 +1477,46 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.decimal_point = _t.database.parameters.decimal_point;
         
         // This is a keydown handler that prevents backspace from
-        // doing a back navigation
-        this.keyboard_no_backnav = function(event){
-            if (event.keyCode === 8) {  // Backspace
+        // doing a back navigation. It also makes sure that keys that
+        // do not generate a keypress in Chrom{e,ium} (eg. delete,
+        // backspace, ...) get passed to the keypress handler.
+        this.keyboard_keydown_handler = function(event){
+            if (event.keyCode === 8 || event.keyCode === 46) { // Backspace and Delete
                 event.preventDefault();
 
-                // Preventdefault on keydown will cancel the keypress
-                // event which normally follows. The handler listen
-                // for keypresses, so we need to call it explicitly to
-                // make sure that we can backspace eg. payment amounts
-                // on the paymentscreen.
+                // These do not generate keypress events in
+                // Chrom{e,ium}. Even if they did, we just called
+                // preventDefault which will cancel any keypress that
+                // would normally follow. So we call keyboard_handler
+                // explicitly with this keydown event.
                 self.keyboard_handler(event);
             }
         };
         
-        // This keyboard handler is on keyup to prevent keypress repeats
-        // but it thus cannot prevent the back navigation
+        // This keyboard handler listens for keypress events. It is
+        // also called explicitly to handle some keydown events that
+        // do not generate keypress events.
         this.keyboard_handler = function(event){
             var key = '';
-            if ( event.keyCode === 13 ) {         // Enter
-                self.validate_order();
-            } else if ( event.keyCode === 190 ) { // Dot
-                key = '.';
-            } else if ( event.keyCode === 46 ) {  // Delete
-                key = 'CLEAR';
-            } else if ( event.keyCode === 8 ) {   // Backspace 
-                key = 'BACKSPACE';
-            } else if ( event.keyCode >= 48 && event.keyCode <= 57 ){       // Numbers
-                key = '' + (event.keyCode - 48);
-            } else if ( event.keyCode >= 96 && event.keyCode <= 105 ){      // Numpad Numbers
-                key = '' + (event.keyCode - 96);
-            } else if ( event.keyCode === 189 || event.keyCode === 109 ) {  // Minus
-                key = '-';
-            } else if ( event.keyCode === 107 ) { // Plus
-                key = '+';
+
+            if (event.type === "keypress") {
+                if (event.keyCode === 13) { // Enter
+                    self.validate_order();
+                } else if (event.keyCode === 46) { // Period
+                    key = '.';
+                } else if (event.keyCode >= 48 && event.keyCode <= 57) { // Numbers
+                    key = '' + (event.keyCode - 48);
+                } else if (event.keyCode === 45) { // Minus
+                    key = '-';
+                } else if (event.keyCode === 43) { // Plus
+                    key = '+';
+                }
+            } else { // keyup/keydown
+                if (event.keyCode === 46) { // Delete
+                    key = 'CLEAR';
+                } else if (event.keyCode === 8) { // Backspace
+                    key = 'BACKSPACE';
+                }
             }
 
             self.payment_input(key);
@@ -1727,12 +1733,12 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.render_paymentlines();
         this.order_changes();
         window.document.body.addEventListener('keypress',this.keyboard_handler);
-        window.document.body.addEventListener('keydown',this.keyboard_no_backnav);
+        window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
         window.document.body.removeEventListener('keypress',this.keyboard_handler);
-        window.document.body.removeEventListener('keydown',this.keyboard_no_backnav);
+        window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     // sets up listeners to watch for order changes
