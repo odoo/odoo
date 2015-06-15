@@ -268,7 +268,7 @@ gui.define_popup({name:'payment-transaction', widget: PaymentTransactionPopupWid
 // On all screens, if a card is swipped, return a popup error.
 ScreenWidget.include({
     credit_error_action: function () {
-        this.gui.show_popup('error-barcode','Go to payment screen to use cards');
+        this.gui.show_popup('error-barcode',_t('Go to payment screen to use cards'));
     },
 
     show: function () {
@@ -340,9 +340,9 @@ PaymentScreenWidget.include({
                 message = "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + "<br/>" + response.message;
             } else {
                 if (can_connect_to_server) {
-                    message = "No response from Mercury (Mercury down?)";
+                    message = _t("No response from Mercury (Mercury down?)");
                 } else {
-                    message = "No response from server (connected to network?)";
+                    message = _t("No response from server (connected to network?)");
                 }
             }
             def.resolve({
@@ -364,7 +364,7 @@ PaymentScreenWidget.include({
         if (! decodedMagtek) {
             this.gui.show_popup('error',{
                 'title': 'Error',
-                'body':  'Could not read card (bad swipe?)',
+                'body':  _t('Could not read card (bad swipe?)'),
             });
             return;
         }
@@ -399,7 +399,7 @@ PaymentScreenWidget.include({
                 transaction: def
             });
             def.notify({
-                message: 'Handling transaction...',
+                message: _t('Handling transaction...'),
             });
         }
 
@@ -453,7 +453,7 @@ PaymentScreenWidget.include({
 
                             if (response.message === "PARTIAL AP") {
                                 def.resolve({
-                                    message: "Partially approved",
+                                    message: _t("Partially approved"),
                                     auto_close: false,
                                 });
                             } else {
@@ -532,10 +532,10 @@ PaymentScreenWidget.include({
         var rpc_method = "";
 
         if (is_voidsale) {
-            message = "Reversal failed, sending VoidSale...";
+            message = _t("Reversal failed, sending VoidSale...");
             rpc_method = "do_voidsale";
         } else {
-            message = "Sending reversal...";
+            message = _t("Sending reversal...");
             rpc_method = "do_reversal";
         }
 
@@ -563,7 +563,7 @@ PaymentScreenWidget.include({
                 } else {
                     // reversal was successful
                     def.resolve({
-                        message: "Reversal succeeded",
+                        message: _t("Reversal succeeded"),
                     });
 
                     self.remove_paymentline_by_ref(line);
@@ -571,7 +571,7 @@ PaymentScreenWidget.include({
             } else { // voidsale ended, nothing more we can do
                 if (response.status === 'Approved') {
                     def.resolve({
-                        message: "VoidSale succeeded",
+                        message: _t("VoidSale succeeded"),
                     });
 
                     self.remove_paymentline_by_ref(line);
@@ -626,7 +626,7 @@ PaymentScreenWidget.include({
             if (already_swipe_pending) {
                 this.gui.show_popup('error',{
                     'title': 'Error',
-                    'body':  'One credit card swipe already pending.',
+                    'body':  _t('One credit card swipe already pending.'),
                 });
             } else {
                 this._super(id);
