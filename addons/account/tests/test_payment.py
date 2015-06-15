@@ -138,8 +138,7 @@ class TestPayment(AccountingTestCase):
 
         self.check_journal_items(payment.move_line_ids, [
             {'account_id': self.account_eur.id, 'debit': 300.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
-            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 100.0, 'amount_currency': 00, 'currency_id': False},
-            {'account_id': inv_2.account_id.id, 'debit': 0.0, 'credit': 200.0, 'amount_currency': 00, 'currency_id': False},
+            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 300.0, 'amount_currency': 00, 'currency_id': False},
         ])
 
         liquidity_aml = payment.move_line_ids.filtered(lambda r: r.account_id == self.account_eur)

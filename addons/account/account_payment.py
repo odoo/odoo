@@ -146,7 +146,7 @@ class account_register_payments(models.TransientModel):
             'communication': self.communication,
             'invoice_ids': [(4, inv.id, None) for inv in self._get_invoices()],
             'payment_type': self.payment_type,
-            'amount': self._compute_total_invoices_amount(),
+            'amount': self.amount,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_type': self.partner_type,
@@ -175,11 +175,7 @@ class account_payment(models.Model):
     def _compute_payment_difference(self):
         if len(self.invoice_ids) == 0:
             return
-        # A payment on multiple invoices must pay them entirely (and amount be readonly of course)
-        if len(self.invoice_ids) != 1:
-            self.payment_difference = 0
-        else:
-            self.payment_difference = self._compute_total_invoices_amount() - self.amount
+        self.payment_difference = self._compute_total_invoices_amount() - self.amount
 
     company_id = fields.Many2one(store=True)
 
@@ -314,7 +310,7 @@ class account_payment(models.Model):
     @api.multi
     def unlink(self):
         if any(rec.state != 'draft' for rec in self):
-            raise UserError(_("In order to delete a payment, it must first be canceled."))
+            raise UserError(_("You can not delete a payment that is already posted"))
         return super(account_payment, self).unlink()
 
     @api.multi
@@ -367,42 +363,24 @@ class account_payment(models.Model):
             Return the journal entry.
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-        invoice_id = len(self.invoice_ids) == 1 and self.invoice_ids[0] or False
-        total_debit, total_credit, total_amount_currency = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
+        debit, credit, amount_currency = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
 
         move = self.env['account.move'].create(self._get_move_vals())
 
-        if len(self.invoice_ids) > 1:
-            total_amount = 0
-            for invoice_id in self.invoice_ids:
-                # Create a reconciliable journal item corresponding to the invoice
-                inv_amount = -invoice_id.residual * MAP_INVOICE_TYPE_PAYMENT_SIGN[invoice_id.type]
-                debit = inv_amount > 0 and inv_amount or 0
-                credit = inv_amount < 0 and -inv_amount or 0
-                amount_currency = self.currency_id != self.company_id.currency_id and self.company_id.currency_id.with_context(date=self.payment_date).compute(inv_amount, self.currency_id) or 0
-                # Avoid unbalanced journal entry due to rounding error
-                total_amount = total_amount + debit - credit
-                counterpart_aml_dict = self._get_shared_move_line_vals(debit, credit, amount_currency, move.id, invoice_id)
-                counterpart_aml_dict.update(self._get_counterpart_move_line_vals(invoice_id))
-                counterpart_aml_dict.update({'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False})
-                counterpart_aml = aml_obj.create(counterpart_aml_dict)
-                invoice_id.register_payment(counterpart_aml)
-            total_debit = total_amount > 0 and total_amount or 0
-            total_credit = total_amount < 0 and -total_amount or 0
+        #Write line corresponding to invoice payment
+        counterpart_aml_dict = self._get_shared_move_line_vals(debit, credit, amount_currency, move.id, False)
+        counterpart_aml_dict.update(self._get_counterpart_move_line_vals(self.invoice_ids))
+        counterpart_aml_dict.update({'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False})
+        counterpart_aml = aml_obj.create(counterpart_aml_dict)
+
+        #Reconcile with the invoices
+        if self.payment_difference_handling == 'reconcile':
+            self.invoice_ids.register_payment(counterpart_aml, self.writeoff_account, self.journal_id)
         else:
-            # Create reconciliable journal item
-            counterpart_aml_dict = self._get_shared_move_line_vals(total_debit, total_credit, total_amount_currency, move.id, invoice_id)
-            counterpart_aml_dict.update(self._get_counterpart_move_line_vals(invoice_id))
-            counterpart_aml = aml_obj.create(counterpart_aml_dict)
+            self.invoice_ids.register_payment(counterpart_aml)
 
-            # Reconcile it with the invoice if present
-            if invoice_id:
-                if self.payment_difference_handling == 'reconcile':
-                    invoice_id.register_payment(counterpart_aml, self.writeoff_account, self.journal_id)
-                else:
-                    invoice_id.register_payment(counterpart_aml)
-
-        liquidity_aml_dict = self._get_shared_move_line_vals(total_credit, total_debit, -total_amount_currency, move.id, invoice_id)
+        #Write counterpart lines
+        liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
         liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
         aml_obj.create(liquidity_aml_dict)
 
@@ -475,7 +453,7 @@ class account_payment(models.Model):
         if self.payment_type == 'transfer':
             name = self.name
         else:
-            name = invoice and invoice.number + ': ' or ''
+            name = ''
             if self.partner_type == 'customer':
                 if self.payment_type == 'inbound':
                     name += _("Customer Payment")
@@ -486,6 +464,11 @@ class account_payment(models.Model):
                     name += _("Supplier Refund")
                 elif self.payment_type == 'outbound':
                     name += _("Supplier Payment")
+            if invoice:
+                name += ': '
+                for inv in invoice:
+                    name += inv.number+', '
+                name = name[:len(name)-2] 
         return {
             'name': name,
             'account_id': self.destination_account_id.id,
