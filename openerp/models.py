@@ -1871,6 +1871,7 @@ class BaseModel(object):
                 r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
         return result
 
+    @api.model
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
@@ -1912,7 +1913,8 @@ class BaseModel(object):
                              self._name, order_part)
         return groupby_terms, orderby_terms
 
-    def _read_group_process_groupby(self, gb, query, context):
+    @api.model
+    def _read_group_process_groupby(self, gb, query):
         """
             Helper method to collect important information about groupbys: raw
             field name, type, time information, qualified name, ...
@@ -1921,7 +1923,7 @@ class BaseModel(object):
         field_type = self._fields[split[0]].type
         gb_function = split[1] if len(split) == 2 else None
         temporal = field_type in ('date', 'datetime')
-        tz_convert = field_type == 'datetime' and context.get('tz') in pytz.all_timezones
+        tz_convert = field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones
         qualified_field = self._inherits_join_calc(split[0], query)
         if temporal:
             display_formats = {
@@ -1948,7 +1950,7 @@ class BaseModel(object):
                 'year': dateutil.relativedelta.relativedelta(years=1)
             }
             if tz_convert:
-                qualified_field = "timezone('%s', timezone('UTC',%s))" % (context.get('tz', 'UTC'), qualified_field)
+                qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
             qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
@@ -2054,8 +2056,10 @@ class BaseModel(object):
 
         groupby = [groupby] if isinstance(groupby, basestring) else groupby
         groupby_list = groupby[:1] if lazy else groupby
-        annotated_groupbys = [self._read_group_process_groupby(gb, query, context) 
-                                    for gb in groupby_list]
+        annotated_groupbys = [
+            self._read_group_process_groupby(cr, uid, gb, query, context=context)
+            for gb in groupby_list
+        ]
         groupby_fields = [g['field'] for g in annotated_groupbys]
         order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
@@ -2078,13 +2082,17 @@ class BaseModel(object):
             if getattr(self._fields[f].base_field.column, '_classic_write', False)
         ]
 
-        field_formatter = lambda f: (self._fields[f].group_operator or 'sum', self._inherits_join_calc(f, query), f)
+        field_formatter = lambda f: (
+            self._fields[f].group_operator or 'sum',
+            self._inherits_join_calc(cr, uid, f, query, context=context),
+            f,
+        )
         select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
 
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
 
-        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
+        groupby_terms, orderby_terms = self._read_group_prepare(cr, uid, order, aggregated_fields, annotated_groupbys, query, context=context)
         from_clause, where_clause, where_clause_params = query.get_sql()
         if lazy and (len(groupby_fields) >= 2 or not context.get('group_by_no_leaf')):
             count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
@@ -2152,6 +2160,7 @@ class BaseModel(object):
         parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
         return parent_alias
 
+    @api.model
     def _inherits_join_calc(self, field, query):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
@@ -2166,7 +2175,7 @@ class BaseModel(object):
         while field in model._inherit_fields and field not in model._columns:
             # retrieve the parent model where field is inherited from
             parent_model_name = model._inherit_fields[field][0]
-            parent_model = self.pool[parent_model_name]
+            parent_model = self.env[parent_model_name]
             parent_field = model._inherits[parent_model_name]
             # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
             parent_alias, _ = query.add_join(
@@ -4516,6 +4525,7 @@ class BaseModel(object):
             apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
                         parent_model=inherited_model)
 
+    @api.model
     def _generate_m2o_order_by(self, order_field, query):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
@@ -4559,6 +4569,7 @@ class BaseModel(object):
         qualify = lambda field: '"%s"."%s"' % (dst_alias, field)
         return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
 
+    @api.model
     def _generate_order_by(self, order_spec, query):
         """
         Attempt to construct an appropriate ORDER BY clause based on order_spec, which must be
@@ -4631,7 +4642,7 @@ class BaseModel(object):
 
         query = self._where_calc(cr, user, args, context=context)
         self._apply_ir_rules(cr, user, query, 'read', context=context)
-        order_by = self._generate_order_by(order, query)
+        order_by = self._generate_order_by(cr, user, order, query, context=context)
         from_clause, where_clause, where_clause_params = query.get_sql()
 
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
