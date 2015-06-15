@@ -1426,6 +1426,7 @@ class stock_picking(osv.osv):
                 todo_move_ids = []
                 if not all_op_processed:
                     todo_move_ids += self._create_extra_moves(cr, uid, picking, context=context)
+                    need_rereserve, all_op_processed = self.recompute_remaining_qty(cr, uid, picking, context=context)
 
                 #split move lines if needed
                 toassign_move_ids = []
@@ -2124,6 +2125,7 @@ class stock_move(osv.osv):
                 'origin': move.origin,
                 'company_id': move.company_id and move.company_id.id or False,
                 'move_type': move.group_id and move.group_id.move_type or 'direct',
+                'group_id': procurement_group,
                 'partner_id': move.partner_id.id or False,
                 'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
             }

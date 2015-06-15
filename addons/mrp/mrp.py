@@ -590,6 +590,7 @@ class mrp_production(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'ready_production': fields.function(_moves_assigned, type='boolean', store={'stock.move': (_mrp_from_move, ['state'], 10)}),
+        'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False),
     }
 
     _defaults = {
@@ -1163,9 +1164,13 @@ class mrp_production(osv.osv):
         }, context=context)
         return move
 
+    def _prepare_procurement_group(self, cr, uid, production, context=None):
+        return {'name': production.name}
+
     def _make_consume_line_from_data(self, cr, uid, production, product, uom_id, qty, uos_id, uos_qty, context=None):
         stock_move = self.pool.get('stock.move')
         loc_obj = self.pool.get('stock.location')
+        group_obj = self.pool.get('procurement.group')
         # Internal shipment is created for Stockable and Consumer Products
         if product.type not in ('product', 'consu'):
             return False
@@ -1178,6 +1183,12 @@ class mrp_production(osv.osv):
             prev_move = True
 
         destination_location_id = production.product_id.property_stock_production.id
+        group_id = production.procurement_group_id.id
+        if not group_id and prev_move:
+            vals = self._prepare_procurement_group(cr, uid, production, context=context)
+            group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
+            production.write({'procurement_group_id': group_id}, context=context)
+
         move_id = stock_move.create(cr, uid, {
             'name': production.name,
             'date': production.date_planned,
@@ -1186,6 +1197,7 @@ class mrp_production(osv.osv):
             'product_uom': uom_id,
             'product_uos_qty': uos_id and uos_qty or False,
             'product_uos': uos_id or False,
+            'group_id': group_id,
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'company_id': production.company_id.id,
