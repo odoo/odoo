@@ -663,9 +663,7 @@
                         <button string="Set to Active" name="set_active" type="object" states="inactive,deprecated"/>
                         <button string="Set to Inactive" name="set_inactive" type="object" states="active" />
                         <button string="Set to Deprecated" name="set_deprecate" type="object" states="active,inactive" />
-                        <div class="oe_right">
-                            <field name="state" widget="statusbar" statusbar_visible="active,inactive,deprecated" statusbar_colors='{"deprecated" : "red"}' nolabel="1"/>
-                        </div>
+                        <field name="state" widget="statusbar" statusbar_visible="active,inactive,deprecated" statusbar_colors='{"deprecated" : "red"}' nolabel="1"/>
                     </header>
 
                     <sheet>

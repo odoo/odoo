@@ -8,11 +8,11 @@
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity">
                     <group name="name">
-                        <field name="name" class="oe_inline" widget="radio"/>
+                        <field name="name" widget="radio"/>
                     </group>
                     <group string="Assign these opportunities to">
-                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, team_id, context)"/>
-                        <field name="team_id" class="oe_inline" groups="base.group_multi_salesteams"/>
+                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)"/>
+                        <field name="team_id" groups="base.group_multi_salesteams"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                         <field name="opportunity_ids" nolabel="1">
@@ -31,15 +31,13 @@
                         </field>
                     </group>
                     <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
-                        <field name="action" class="oe_inline" nolabel="1" widget="radio" on_change="onchange_action(action, context)" />
+                        <field name="action" nolabel="1" widget="radio" on_change="onchange_action(action, context)" />
                         <group col="2">
-                            <field name="partner_id" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
-                                class="oe_inline"/>
+                            <field name="partner_id" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
                         </group>
                     </group>
                     <footer>
                         <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
-                        or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
