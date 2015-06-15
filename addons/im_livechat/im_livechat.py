@@ -162,9 +162,9 @@ class im_livechat_channel(osv.Model):
                 # don't return the initialization script, since its blocked (in the country)
                 return False
             rule_data = {
-                'action' : rule.action,
-                'auto_popup_timer' : rule.auto_popup_timer,
-                'regex_url' : rule.regex_url,
+                'action': rule.action,
+                'auto_popup_timer': rule.auto_popup_timer,
+                'regex_url': rule.regex_url,
             }
         info['rule'] = json.dumps(rule and rule_data or False)
         return info
@@ -209,10 +209,10 @@ class im_livechat_channel(osv.Model):
         chan = self.browse(cr, uid, channel, context=context)
         return {
             "url": url,
-            'buttonText': chan.button_text,
-            'inputPlaceholder': chan.input_placeholder,
-            'defaultMessage': chan.default_message,
-            "channelName": chan.name,
+            'button_text': chan.button_text,
+            'input_placeholder': chan.input_placeholder,
+            'default_message': chan.default_message,
+            "channel_name": chan.name,
         }
 
     def join(self, cr, uid, ids, context=None):

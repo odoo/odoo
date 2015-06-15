@@ -9,10 +9,27 @@
                 <head>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
                     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title><t t-esc="channel_name"/> Livechat Support Page</title>
+                    <title><t t-esc="channel.name"/> Livechat Support Page</title>
 
                     <!-- Call the external Bundle to render the css, js, and js loader tags -->
+                    <style type="text/css">
+                        .o_livechat_button {
+                            background-color: rgba(60, 60, 60, 0.6);
+                            font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+                            font-size: 14px;
+                            font-weight: bold;
+                            padding: 10px;
+                            color: white;
+                            text-shadow: rgb(59, 76, 88) 1px 1px 0px;
+                            border: 1px solid rgb(80, 80, 80);
+                            border-bottom: 0px;
+                            border-top-left-radius: 5px;
+                            border-top-right-radius: 5px;
+                            z-index: 500;
+                        }
+                    </style>
                     <t t-call="im_livechat.external_loader"/>
+
 
                     <style type="text/css">
                         body {
@@ -63,7 +80,7 @@
 
                 <body>
                      <div class="main" style="opacity: 1;">
-                        <h1 class="channel_name"><t t-esc="channel_name"/></h1>
+                        <h1 class="channel_name"><t t-esc="channel.name"/></h1>
                         <div>Live Chat Powered by <strong>Odoo</strong>.</div>
                     </div>
                 </body>
@@ -72,12 +89,14 @@
 
         <!-- Template rendering all the scripts required to execute the Livechat from an external page (which not contain Odoo) -->
         <template id="external_loader" name="All the scripts to launch the LiveSupport from an external Web Page">
-            <!-- css style -->
+            <!-- css style
             <link t-att-href="'%s/web/css/im_livechat.external_lib' % (url)" rel="stylesheet"/>
-            <!-- js of all the required lib (internal and external) -->
+
             <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript"/>
+        -->
+
             <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%i' % (url, channel)" type="text/javascript"/>
+            <script t-att-src="'%s/im_livechat/loader/%i' % (url, channel.id)" type="text/javascript"/>
         </template>
 
         <!-- Template registering all the assets required to execute the Livechat from a page containing Odoo -->
@@ -89,7 +108,7 @@
         </template>
 
         <!-- Bundle of External Librairies of the Livechat -->
-        <template id="external_lib" name="External Librairies of the Livechat, required to make it work">
+        <template id="external_lib" name="External Librairies of the Livechat">
             <!-- Momentjs -->
             <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
             <!-- OpenERP minimal lib -->
@@ -98,38 +117,48 @@
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <!-- Instant Messaging Assets -->
+            <t t-call="im_livechat.internal_lib"/>
 
-            <!-- IM module -->
-            <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
-            <script type="text/javascript" src="/im_chat/static/src/js/im_chat.js"></script>
-            <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
             <!-- CSS -->
             <link rel="stylesheet" href="/im_chat/static/src/css/im_common.css"></link>
             <link rel="stylesheet" href="/im_livechat/static/src/css/im_livechat.css"/>
         </template>
 
-        <!-- the js code to initialize the LiveSupport object -->
-        <template id="loader" name="Javascript initializing the LiveSupport">
-            <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, request.cr.dbname, channel)"/>
-            <t t-if="info" t-translate="off">
-                (function() {
-                    window.livesupport = new openerp.im_livechat.LiveSupport(
-                        "<t t-esc="info['url']"/>",
-                        "<t t-esc="info['dbname']"/>",
-                        <t t-esc="info['channel']"/>,
-                        {
-                            buttonText: "<t t-esc="info['buttonText']"/>",
-                            inputPlaceholder: "<t t-esc="info['inputPlaceholder']"/>",
-                            defaultMessage: "<t t-esc="info['defaultMessage']"/>",
-                            auto: window.oe_im_livechat_auto || false,
-                            defaultUsername: "<t t-esc="info['username']"/>",
-                        },
-                        <t t-raw="info['rule']"/>
-                    );
-                })();
-            </t>
+        <!-- Bundle of Librairies of the Bus, Chat, Livechat -->
+        <template id="internal_lib" name="Librairies of the Livechat">
+            <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
+            <script type="text/javascript" src="/im_chat/static/src/js/im_chat.js"></script>
+            <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
         </template>
 
+        <!--
+            The loader for external page. The code display the button and bind the action of
+            loading assets when clicking on it.
+        -->
+        <template id="loader" name="Javascript initializing the LiveSupport">
+            <t t-translate="off">
+               $(document).ready(function() {
+                    var $button = $("&lt;div&gt;").addClass('o_livechat_button hidden-print');
+                    $button.html('<t t-esc="info['button_text']"/>');
+                    $button.css({
+                        'position': 'fixed',
+                        'bottom': '0px',
+                        'right': '6px',
+                        'min-width': '100px',
+                        'cursor': 'pointer',
+                    });
+                    var t = $('body').append($button);
+                    console.log(t);
+                    $button.on('click', function(){
+                        console.log('clicked');
+                        var cssLink = $("&lt;link rel='stylesheet' type='text/css' href='<t t-esc="info['url']"/>/web/css/im_livechat.external_lib'&gt;");
+                        $("head").append(cssLink);
+                    });
+                    // TODO if cookie, simulate the click !
+                });
+            </t>
+        </template>
 
     </data>
 </openerp>

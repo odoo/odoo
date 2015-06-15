@@ -2,23 +2,39 @@
 import json
 import openerp
 import openerp.addons.im_chat.im_chat
+from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 
 from openerp import http
+from openerp import SUPERUSER_ID
 from openerp.http import request
 
 
 class LivechatController(http.Controller):
 
-    @http.route('/im_livechat/support/<im_livechat.channel:channel_id>', type='http', auth='none')
+    @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='none')
     def support_page(self, channel_id, **kwargs):
-        info["channel"] = channel_id
+        info = kwargs or {}
+        info["channel"] = request.env['im_livechat.channel'].sudo().browse(channel_id)
+        info['url'] = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return request.render('im_livechat.support_page', info)
 
-    @http.route('/im_livechat/loader/<im_livechat.channel:channel_id>', type='http', auth='none')
-    def loader(self, dbname, channel_id, **kwargs):
+    @http.route('/im_livechat/loader/<int:channel_id>', type='http', auth='none')
+    def loader(self, channel_id, **kwargs):
+        """ Return the js bundle 'im_livechat.external_lib' concatened with the 'im_livechat.loader' template.
+            This aims to fetch all the javascript code required by the livechat at once.
+            It returns False, if no rules match with the URL, or if the URL is blocked by a rule
+        """
         username = kwargs.get("username", "Visitor")
         info = request.env['im_livechat.channel'].match_rules(request, channel_id, username=username)
-        return request.render('im_livechat.loader', {'info': info}) if info else False
+        if info:
+            try:
+                bundle = AssetsBundle('im_livechat.external_lib', uid=SUPERUSER_ID)
+                bundle_js = bundle.js()
+                bundle_js += request.env.ref('im_livechat.loader').render({'info': info})
+                return bundle_js
+            except QWebTemplateNotFound:
+                return False
+        return False
 
     @http.route('/im_livechat/get_session', type="json", auth="none")
     def get_session(self, channel_id, anonymous_name, **kwargs):
@@ -34,5 +50,4 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/available', type='json', auth="none")
     def available(self, channel):
-        request.env['im_livechat.channel'].get_available_users(channel) > 0
-
+        return request.env['im_livechat.channel'].get_available_users(channel) > 0

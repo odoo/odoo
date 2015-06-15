@@ -126,7 +126,6 @@
     });
 
     im_livechat.ChatButton = openerp.Widget.extend({
-        className: "openerp_style oe_chat_button",
         events: {
             "click": "click"
         },
@@ -143,7 +142,7 @@
             this.$().append(this.text);
             // set up the manager
             this.manager = new openerp.im_chat.ConversationManager(this, this.options);
-            this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight());
+            this.manager.set("bottom_offset", $('.o_livechat_button').outerHeight());
             this.manager.notification = function(notif){ // override the notification default function
                 alert(notif);
             }
@@ -168,7 +167,7 @@
             }
         },
         load_template: function(){
-            console.log('loaded')
+            console.log('loaded');
             var self = this;
             // load the qweb templates
             var defs = [];
