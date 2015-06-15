@@ -43,7 +43,7 @@ Wizards provided by this module:
     ],
     'data': [
         'account_chart_template.xml',
-        'account_financial_report.xml',
+        #'account_financial_report.xml',
         'account_pcmn_belgium.xml',
         'account_tax_template.xml',
         #'wizard/l10n_be_account_vat_declaration_view.xml',
@@ -55,7 +55,7 @@ Wizards provided by this module:
         'account_chart_template.yml',
         'security/ir.model.access.csv',
         'views/report_vatintraprint.xml',
-        'report_vat_statement.xml',
+        #'report_vat_statement.xml',
     ],
     'demo': [
         'demo/l10n_be_demo.yml',
