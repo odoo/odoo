@@ -62,10 +62,12 @@
                 <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
             </header>
             <sheet>
-                <div class="oe_right oe_button_box">
+                <div class="oe_button_box" name="button_box">
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
                          help="Schedule interview with this applicant">
-                         <div>Meetings</div>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Meetings</span>
+                         </div>
                     </button>
                     <button name="action_start_survey"
                         class="oe_stat_button"
@@ -74,7 +76,10 @@
                         help="Answer related job question"
                         context="{'survey_id': survey}"
                         attrs="{'invisible':[('survey','=',False)]}">
-                        <div>Start<br/>Interview</div>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Start</span>
+                            <span class="o_stat_text">Interview</span>
+                        </div>
                     </button>
                     <button name="action_print_survey"
                         class="oe_stat_button"
@@ -82,7 +87,10 @@
                         type="object"
                         help="Print interview report"
                         attrs="{'invisible':[('survey','=',False)]}">
-                        <div>Print<br/>Interview</div>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Print</span>
+                            <span class="o_stat_text">Interview</span>
+                        </div>
                     </button>
                     <button name="action_get_attachment_tree_view"
                         class="oe_stat_button"
@@ -268,7 +276,7 @@
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <i class="fa fa-bars fa-lg"/>
                                 <ul class="oe_dropdown_menu">
-                                    <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                     <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
@@ -375,14 +383,11 @@
         <field name="arch" type="xml">
             <group name="employee_data" position="inside">
                 <label for="survey_id" groups="base.group_user"/>
-                <div groups="base.group_user">
-                    <field name="survey_id" class="oe_inline"/>
-                    <button string="Print Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_inline oe_link"/>
+                <div groups="base.group_user" class="o_row">
+                    <field name="survey_id"/>
+                    <button string="Print Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_link"/>
                 </div>
-                <label for="address_id"/>
-                <div>
-                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]"/>
-                </div>
+                <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]"/>
             </group>
             <group name="employee_data" position="after">
                 <notebook>
@@ -392,46 +397,45 @@
                 </notebook>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">
-                    <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help ="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
-                    <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <field name="alias_id" class="oe_read_only oe_inline"
-                                string="Email Alias" required="0"/>
-                        <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                        </div>
+                <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
+                    <div class="oe_edit_only" name="edit_alias">
+                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                     </div>
-            </xpath>
-            <xpath expr="//field[@name='department_id']" position="after">
-                <field name="user_id" class="oe_inline"/>
-            </xpath>
-            <xpath expr="//div[@name='buttons']" position="inside">
-                <div class="oe_button_box" >
-                    <button class="oe_stat_button"
-                        icon="fa-file-o"
-                        name="%(action_hr_job_applications)d"
-                        context="{'default_user_id': user_id}"
-                        type="action">
-                        <field name="application_count" widget="statinfo" string="Applications"/>
-                    </button>
-                    <button class="oe_stat_button"
-                        icon="fa-users"
-                        name="%(action_hr_job_no_employee)d"
-                        type="action">
-                        <field name="no_of_employee" widget="statinfo" string="Employees"/>
-                    </button>
-                    <button class="oe_stat_button"
-                        icon="fa-book"
-                        name="action_get_attachment_tree_view"
-                        type="object">
-                        <field name="documents_count" widget="statinfo" string="Documents"/>
-                    </button>
-                    <button class="oe_stat_button" type="action"
-                        name="%(action_hr_job_sources)d" icon="fa-share"
-                        context="{'default_job_id': active_id}">
-                        <div>Trackers</div>
-                    </button>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="user_id"/>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                    icon="fa-file-o"
+                    name="%(action_hr_job_applications)d"
+                    context="{'default_user_id': user_id}"
+                    type="action">
+                    <field name="application_count" widget="statinfo" string="Applications"/>
+                </button>
+                <button class="oe_stat_button"
+                    icon="fa-users"
+                    name="%(action_hr_job_no_employee)d"
+                    type="action">
+                    <field name="no_of_employee" widget="statinfo" string="Employees"/>
+                </button>
+                <button class="oe_stat_button"
+                    icon="fa-book"
+                    name="action_get_attachment_tree_view"
+                    type="object">
+                    <field name="documents_count" widget="statinfo" string="Documents"/>
+                </button>
+                <button class="oe_stat_button" type="action"
+                    name="%(action_hr_job_sources)d" icon="fa-share"
+                    context="{'default_job_id': active_id}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_text">Trackers</span>
+                    </div>
+                </button>
+            </div>
         </field>
     </record>
 
@@ -502,6 +506,7 @@
     <menuitem
         name="Recruitment"
         id="menu_hr_recruitment_root"
+        web_icon="hr_recruitment,static/description/icon.png"
         sequence="80"/>
 
     <menuitem id="menu_hr_recruitment_configuration" name="Configuration" parent="menu_hr_recruitment_root"

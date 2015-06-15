@@ -1,9 +1,9 @@
 odoo.define('journal_dashboard', function (require) {
 'use strict';
 
-var kanban_common = require('web_kanban.common');
+var kanban_widgets = require('web_kanban.widgets');
 
-var JournalDashboardGraph = kanban_common.AbstractField.extend({
+var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
     start: function() {
         var self = this;
         self.graph_type = self.$node.attr('graph_type')
@@ -86,6 +86,6 @@ var JournalDashboardGraph = kanban_common.AbstractField.extend({
 });
 
 
-kanban_common.registry.add('dashboard_graph', JournalDashboardGraph);
+kanban_widgets.registry.add('dashboard_graph', JournalDashboardGraph);
 
 });

@@ -589,7 +589,7 @@
                         </div>
                     </group>
                 </xpath>
-                <xpath expr="//div[@name='button_box']" position="inside">
+                <div name="button_box" position="inside">
                     <button name="%(act_hr_employee_holiday_request_approved)d"
                             icon="fa-calendar"
                             class="oe_stat_button"
@@ -604,7 +604,7 @@
                             groups="base.group_hr_user">
                         <field name="leaves_count" widget="statinfo"/>
                     </button>
-                </xpath>
+                </div>
             </field>
         </record>
 

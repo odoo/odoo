@@ -40,6 +40,19 @@
                         <field name="state" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
+                        <!-- action buttons -->
+                        <div class="oe_button_box" name="button_box">
+                            <button type="action" 
+                                name="%(goals_from_challenge_act)d" 
+                                class="oe_stat_button"
+                                icon="fa-gift"
+                                attrs="{'invisible': [('state','=','draft')]}">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">Related</span>
+                                    <span class="o_stat_text">Goals</span>
+                                </div>
+                            </button>
+                        </div>
 
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -53,16 +66,6 @@
                             </div>
                         </div>
 
-                        <!-- action buttons -->
-                        <div class="oe_right oe_button_box">
-                            <button type="action" 
-                                name="%(goals_from_challenge_act)d" 
-                                class="oe_stat_button"
-                                icon="fa-gift"
-                                attrs="{'invisible': [('state','=','draft')]}">
-                                <div>Related<br/>Goals</div>
-                            </button>
-                        </div>
                         <group>
                             <group>
                                 <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>

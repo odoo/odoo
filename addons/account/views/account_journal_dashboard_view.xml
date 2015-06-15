@@ -194,7 +194,7 @@
                                 <a type="object" name="toggle_favorite"><i t-att-class="(record.show_on_dashboard.raw_value ? 'oe_star_on' : 'oe_star_off') + ' fa fa-star o_dashboard_star'" title="Click to add/remove from favorite"></i></a>
                             </div>
                             <div class="col-xs-6 text-right">
-                                <a t-if="widget.view.is_action_enabled('edit')" type="edit">Settings</a>
+                                <a t-if="widget.editable" type="edit">Settings</a>
                             </div>
                         </div>
                     </t>

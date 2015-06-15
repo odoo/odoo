@@ -65,18 +65,18 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
-                        </div>
-                        <div class="oe_right oe_button_box" groups="base.group_user">
+                        <div class="oe_button_box" name="button_box" groups="base.group_user">
                             <button name="%(event.act_event_registration_from_event)d"
                                 type="action"
-                                class="oe_stat_button oe_inline oe_event_attendee_button"
+                                class="oe_stat_button oe_event_attendee_button"
                                 icon="fa-github"
                                 help="Register with this event">
                                 <field name="seats_reserved" widget="statinfo" string="Attendees"/>
                             </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
                         </div>
                         <group name="main_field_group">
                             <group>
@@ -165,7 +165,7 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                        <t t-if="widget.deletable">
                                             <li><a type="delete">Delete</a></li>
                                         </t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>

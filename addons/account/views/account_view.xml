@@ -442,8 +442,8 @@
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
                 <sheet>
-                    <div class="oe_right oe_button_box" name="import_buttons">
-                        <button class="oe_inline oe_stat_button" name="button_journal_entries"
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="button_journal_entries"
                                 string="Journal Items" type="object"
                                 attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                         <field name="move_line_ids" invisible="1"/>

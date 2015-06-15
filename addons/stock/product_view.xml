@@ -222,18 +222,18 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
+                <div name="button_box" position="inside">
                    <button class="oe_stat_button"
                            name="%(product_open_quants)d"
                            icon="fa-building-o"
                            type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
                         <field name="qty_available2" widget="statinfo"/>
                     </button>
-                   <button class="oe_inline oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
-                   <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
+                   <button class="oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                   <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
                         attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
-                   <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
-                </xpath>
+                   <button class="oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
+                </div>
             </field>
         </record>
         
@@ -242,18 +242,18 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
+                <div name="button_box" position="inside">
                    <button class="oe_stat_button"
                            name="action_open_quants"
                            icon="fa-building-o"
                            type="object"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
                         <field name="qty_available2" widget="statinfo"/>
                    </button>
-                   <button class="oe_inline oe_stat_button" string="Moves" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
-                   <button class="oe_inline oe_stat_button" name="action_view_orderpoints" type="object" 
+                   <button class="oe_stat_button" string="Moves" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                   <button class="oe_stat_button" name="action_view_orderpoints" type="object" 
                         attrs="{'invisible':[('type', 'in', ('service','consu'))]}" icon="fa-refresh" string="Reordering Rules"/>
-                   <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
-                </xpath>
+                   <button class="oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
+                </div>
             </field>
         </record>
     </data>

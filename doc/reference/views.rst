@@ -569,18 +569,18 @@ Button Box
 Many relevant actions or links can be displayed in the form. For example, in
 Opportunity form, the actions "Schedule a Call" and "Schedule a Meeting" take
 an important place in the use of the CRM. Instead of placing them in the
-"More" menu, put them directly in the sheet as buttons (on the top right) to
-make them more visible and more easily accessible.
+"More" menu, put them directly in the sheet as buttons (on the top) to make
+them more visible and more easily accessible.
 
 .. image:: forms/header3.png
    :class: img-responsive
 
 Technically, the buttons are placed inside a <div> to group them as a block on
-the right-hand side of the sheet.
+the top of the sheet.
 
 ::
 
-    <div class="oe_button_box oe_right">
+    <div class="oe_button_box" name="button_box">
         <button string="Schedule/Log Call" name="..." type="action"/>
         <button string="Schedule Meeting" name="action_makeMeeting" type="object"/>
     </div>

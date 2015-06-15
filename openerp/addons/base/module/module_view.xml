@@ -80,12 +80,12 @@
                             By <field name="author" class="oe_inline"/>
                         </h3>
                         <div>
-                            <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
-                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="oe_highlight"/>
-                        <button name="button_uninstall" states="installed" string="Uninstall" type="object"/>
-                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object"/>
-                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object"/>
-                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object"/>
+                            <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="btn btn-primary"/>
+                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary"/>
+                            <button name="button_uninstall" states="installed" string="Uninstall" type="object"  class="btn btn-default"/>
+                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-default"/>
+                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-default"/>
+                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-default"/>
                         </div>
                     </div>
                     <div class="oe_clear"/>
@@ -170,8 +170,8 @@
                              <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
                              <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
-                          <a class="btn btn-default btn-sm" type="object" name="button_immediate_install" states="uninstalled">Install</a>
-                          <a t-if="installed" class="btn btn-default btn-sm disabled" disabled="disabled">Installed</a>
+                          <button type="object" class="btn btn-primary pull-right btn-sm" name="button_immediate_install" states="uninstalled">Install</button>
+                          <button type="button" t-if="installed" class="btn btn-default pull-right btn-sm disabled" disabled="disabled">Installed</button>
                         </div>
                       </div>
                     </t>

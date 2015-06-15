@@ -259,11 +259,7 @@
             <field name="arch" type="xml">
                 <form string="Server Action">
                     <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
-                        </div>
-                        <div class="oe_right oe_button_box" name="buttons">
+                        <div class="oe_button_box" name="button_box">
                             <field name="menu_ir_values_id" invisible="1"/>
                             <button name="create_action" string="Add in the 'More' menu" type="object"
                                     attrs="{'invisible':[('menu_ir_values_id','!=',False)]}"
@@ -271,6 +267,10 @@
                             <button name="unlink_action" string="Remove from the 'More' menu" type="object" 
                                     attrs="{'invisible':[('menu_ir_values_id','=',False)]}"
                                     help="Remove the contextual action related to this server action"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
                         </div>
                         <group>
                             <group>

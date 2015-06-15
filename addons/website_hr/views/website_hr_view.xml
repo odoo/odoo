@@ -7,12 +7,12 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_inline oe_stat_button" name="open_website_url"
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="open_website_url"
                     type="object" icon="fa-globe">
                     <field name="website_published" widget="website_button"/>
                 </button>
-            </xpath>
+            </div>
         </field>
     </record>
 

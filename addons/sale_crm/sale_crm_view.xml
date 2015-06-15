@@ -29,21 +29,21 @@
                         <button attrs="{'invisible': [('probability', '>', 0)]}" string="New Quotation" name="%(sale_action_quotations_new)d" type="action"
                             context="{'search_default_partner_id': partner_id, 'default_partner_id': partner_id}"/>
                     </xpath>
-                    <xpath expr="//div[@name='buttons']" position="inside">
-                        <button class="oe_inline oe_stat_button" type="action"
+                    <div name="button_box" position="inside">
+                        <button class="oe_stat_button" type="action"
                                 name="%(sale_action_quotations)d" icon="stat_button_icon fa fa-usd"
                                 context="{'search_default_partner_id': partner_id, 'default_partner_id': partner_id}">
                             <field name="sale_number" widget="statinfo" string="Quotes"/>
                         </button>
-                        <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible': [('sale_amount_total', '=', 0)]}"
+                        <button class="oe_stat_button" type="action" attrs="{'invisible': [('sale_amount_total', '=', 0)]}"
                                 name="%(sale_action_quotations)d" icon="stat_button_icon fa fa-usd"
                                 context="{'search_default_partner_id': partner_id, 'default_partner_id': partner_id}">
-                            <div>
-                                <strong><field name="sale_amount_total" class="oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/></strong>
-                                <div><field name="sale_number" class="oe_inline"/> Orders</div>
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="sale_amount_total" widget="monetary" options="{'currency_field': 'company_currency'}"/></span>
+                                <span class="o_stat_text"> Orders</span>
                             </div>
                         </button>
-                    </xpath>
+                    </div>
                 </data>
             </field>
         </record>

@@ -79,12 +79,13 @@
                         <field name="state" widget="statusbar" statusbar_visible="posted,reconciled"/>
                     </header>
                     <sheet>
-                        <div class="oe_right oe_button_box">
-                            <button class="oe_inline oe_stat_button" name="button_journal_entries"
-                                    string="Journal Items" type="object" groups="account.group_account_manager"
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="button_journal_entries"
+                                    string="Journal Items" type="object"
+                                    groups="account.group_account_manager"
                                     attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                             <field name="move_line_ids" invisible="1"/>
-                            <button class="oe_inline oe_stat_button" name="button_invoices"
+                            <button class="oe_stat_button" name="button_invoices"
                                     string="Invoices" type="object"
                                     attrs="{'invisible':[('has_invoices','=',False)]}" icon="fa-bars"/>
                             <field name="has_invoices" invisible="1"/>

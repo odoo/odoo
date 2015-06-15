@@ -190,20 +190,7 @@
                         <field name="state_id"  widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
-                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
-                        <div class="oe_title">
-                            <label for="model_id" class="oe_edit_only"/>
-                            <h1>
-                                <field name="model_id" class="oe_inline" on_change="on_change_model(model_id)"/>
-                            </h1>
-                            <label for="license_plate" class="oe_edit_only"/>
-                            <h2>
-                                <field name="license_plate" class="oe_inline"/>
-                            </h2>
-                            <label for="tag_ids" class="oe_edit_only"/>
-                            <field name="tag_ids" widget="many2many_tags" />
-                        </div>
-                        <div class="oe_right oe_button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button name="return_action_to_open"
                                 type="object"
                                 class="oe_stat_button"
@@ -244,6 +231,19 @@
                                 help="show the odometer logs for this vehicle" >
                                 <field name="odometer_count" widget="statinfo" string="Odometer"/>
                             </button>
+                        </div>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="model_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="model_id" class="oe_inline" on_change="on_change_model(model_id)"/>
+                            </h1>
+                            <label for="license_plate" class="oe_edit_only"/>
+                            <h2>
+                                <field name="license_plate" class="oe_inline"/>
+                            </h2>
+                            <label for="tag_ids" class="oe_edit_only"/>
+                            <field name="tag_ids" widget="many2many_tags" />
                         </div>
                         <group col="2" string="General Properties">
                             <group >

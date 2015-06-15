@@ -1,11 +1,11 @@
 odoo.define('hr_gamification.hr_gamification', function(require) {
 "use strict";
 
-var common = require('web_kanban.common');
+var KanbanRecord = require('web_kanban.Record');
 
-common.KanbanRecord.include({
+KanbanRecord.include({
     on_card_clicked: function() {
-        if (this.view.dataset.model === 'gamification.badge.user') {
+        if (this.model === 'gamification.badge.user') {
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'gamification.badge',

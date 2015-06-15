@@ -1,10 +1,10 @@
 odoo.define('website_crm_score.filters', function (require) {
 "use strict";
 
-var common = require('web_kanban.common');
+var kanban_widgets = require('web_kanban.widgets');
 
 
-var Filters = common.AbstractField.extend({
+var Filters = kanban_widgets.AbstractField.extend({
     /**
         bnf grammar of a filter:
             <filter>    ::= <expr>
@@ -95,6 +95,6 @@ var Filters = common.AbstractField.extend({
     }
 });
 
-common.registry.add('filters', Filters);
+kanban_widgets.registry.add('filters', Filters);
 
 });

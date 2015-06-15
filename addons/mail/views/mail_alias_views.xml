@@ -9,8 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Alias">
                     <sheet>
-                        <h2><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
-                        <div class="oe_right oe_button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button name="open_document" string="Open Document"
                                     type="object" class="oe_link"
                                     attrs="{'invisible': ['|', ('alias_model_id', '=', False), ('alias_force_thread_id', '=', 0)]}"/>
@@ -18,6 +17,7 @@
                                     type="object" class="oe_link"
                                     attrs="{'invisible': ['|', ('alias_parent_model_id', '=', False), ('alias_parent_thread_id', '=', 0)]}"/>
                         </div>
+                        <h2><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
                         <group>
                             <field name="alias_model_id"/>
                             <field name="alias_force_thread_id"/>

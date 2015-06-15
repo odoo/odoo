@@ -147,14 +147,14 @@
                     <field name="evaluation_date"/>
                 </group>
             </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <div name="button_box" position="inside">
                 <button name="%(act_hr_employee_2_hr__evaluation_interview)d"
                     class="oe_stat_button"
                     icon="fa-sitemap"
                     type="action">
                     <field name="appraisal_count" widget="statinfo" string="Appraisals"/>
                 </button>
-            </xpath>
+            </div>
             </field>
         </record>
 
@@ -284,7 +284,7 @@
                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
                     </header>
                     <sheet>
-                        <div class="oe_right oe_button_box" name="button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" type="action"
                                 states="waiting_answer"
                                 context="{'default_body': 'Hello,\n\nKindly post your response for the survey interview.\n\nThanks',

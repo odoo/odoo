@@ -2,7 +2,7 @@ odoo.define('sales_team.update_kanban', function (require) {
 "use strict";
 
 var KanbanView = require('web_kanban.KanbanView');
-var kanban_common = require('web_kanban.common');
+var KanbanRecord = require('web_kanban.Record');
 var data = require('web.data');
 var session = require('web.session');
 
@@ -40,9 +40,9 @@ KanbanView.include({
     },
 });
 
-kanban_common.KanbanRecord.include({
+KanbanRecord.include({
     on_card_clicked: function() {
-        if (this.view.dataset.model === 'crm.team') {
+        if (this.model === 'crm.team') {
             this.$('.oe_kanban_crm_salesteams_list a').first().click();
         } else {
             this._super.apply(this, arguments);

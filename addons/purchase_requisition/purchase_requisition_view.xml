@@ -39,11 +39,14 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
-                <div class="oe_right oe_button_box" name="buttons">
+                <div class="oe_button_box" name="button_box">
                     <button name="open_product_line" type="object" string="Product Lines" class="oe_stat_button" icon="fa-list"
                         attrs="{'invisible': ['|', ('state', 'not in', ('open','done')), ('exclusive', '=', 'exclusive')]}" groups="purchase.group_advance_bidding"/>
                     <button name="open_rfq" type="object" string="RFQs/Bids" class="oe_stat_button" icon="fa-list-alt"
                         attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <button name="%(action_purchase_requisition_partner)d" type="action"
+                        string="Request a Quotation" icon="gtk-execute"
+                        attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
                 </div>
                 <div class="pull-left">
                     <label for="name" class="oe_edit_only oe_inline"/>
@@ -89,11 +92,6 @@
                                 </group>
                             </form>
                         </field>
-                        <div class="oe_right oe_button_box" style="margin-top: 10px">
-                            <button name="%(action_purchase_requisition_partner)d" type="action"
-                                string="Request a Quotation" icon="gtk-execute"
-                                attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
-                        </div>
                         <separator string="Requests for Quotation"/>
                         <field name="purchase_ids" options="{'reload_on_button': true}">
                             <tree string="Purchase Order">

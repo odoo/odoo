@@ -6,12 +6,12 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@class='oe_button_box']" position="inside">
-                <button class="oe_inline oe_stat_button" name="open_website_url"
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="open_website_url"
                     type="object" icon="fa-globe">
                     <field name="website_published" widget="website_button"/>
                 </button>
-            </xpath>
+            </div>
         </field>
     </record>
 </data>

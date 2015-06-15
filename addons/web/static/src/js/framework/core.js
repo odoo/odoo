@@ -186,6 +186,11 @@ return {
     list_widget_registry: new Registry(),
     search_widgets_registry: new Registry(),
     search_filters_registry: new Registry(),
+
+    // necessary to make the kanban view compatible between 
+    // community and enterprise edition
+    one2many_view_registry: new Registry(),
+
 };
 
 
