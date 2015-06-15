@@ -396,8 +396,6 @@ PaymentScreenWidget.include({
 
         var mercury_transaction = new Model('card_reader.mercury_transaction');
         mercury_transaction.call('do_payment', [transaction], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
-                    console.log(data); // todo jov
-
                     // if not receiving a response from Mercury, we should retry
                     if (data === "timeout") {
                         self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
@@ -538,8 +536,6 @@ PaymentScreenWidget.include({
 
         var mercury_transaction = new Model('card_reader.mercury_transaction');
         mercury_transaction.call(rpc_method, [request_data], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
-            console.log(data); // todo
-
             if (data === "timeout") {
                 self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
                 return;

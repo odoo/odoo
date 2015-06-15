@@ -57,9 +57,6 @@ class MercuryTransaction(models.Model):
 
     def _do_request(self, template, data):
         xml_transaction = self.env.ref(template).render(data)
-        print '------------SENDING-------------'
-        print xml_transaction
-        print '--------------------------------'
         xml_transaction = soap_header + cgi.escape(xml_transaction) + soap_footer
 
         response = ''
@@ -76,9 +73,6 @@ class MercuryTransaction(models.Model):
         except (urllib2.URLError, ssl.SSLError):
             response = "timeout"
 
-        print '--------------RECV--------------'
-        print response
-        print '--------------------------------'
         return response
 
     def _do_reversal_or_voidsale(self, data, is_voidsale):
