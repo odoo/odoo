@@ -520,10 +520,12 @@ class AccountInvoice(models.Model):
                     tax_grouped[key]['amount'] += val['amount']
         return tax_grouped
 
-    @api.one
+    @api.multi
     def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
         """ Reconcile payable/receivable lines from the invoice with payment_line """
-        line_to_reconcile = self.move_id.line_ids.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
+        line_to_reconcile = self.env['account.move.line']
+        for inv in self:
+            line_to_reconcile += inv.move_id.line_ids.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
         return (line_to_reconcile + payment_line).reconcile(writeoff_acc_id, writeoff_journal_id)
 
     @api.v7
