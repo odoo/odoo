@@ -248,6 +248,22 @@ class mrp_bom(osv.osv):
                     bom_empty_prop = bom.id
         return bom_empty_prop
 
+    def _skip_bom_line(self, cr, uid, line, product, context=None):
+        """ Control if a BoM line should be produce, can be inherited for add
+        custom control.
+        @param line: BoM line.
+        @param product: Selected product produced.
+        @return: True or False
+        """
+        if line.date_start and line.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT) or \
+            line.date_stop and line.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT):
+                return True
+        # all bom_line_id variant values must be in the product
+        if line.attribute_value_ids:
+            if not product or (set(map(int,line.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
+                return True
+        return False
+
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product template.
@@ -293,14 +309,8 @@ class mrp_bom(osv.osv):
                 })
 
         for bom_line_id in bom.bom_line_ids:
-            if bom_line_id.date_start and bom_line_id.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT) or \
-                bom_line_id.date_stop and bom_line_id.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT):
-                    continue
-            # all bom_line_id variant values must be in the product
-            if bom_line_id.attribute_value_ids:
-                if not product or (set(map(int,bom_line_id.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
-                    continue
-
+            if self._skip_bom_line(cr, uid, bom_line_id, product, context=context):
+                continue
             if set(map(int, bom_line_id.property_ids or [])) - set(properties or []):
                 continue
 
