@@ -1540,54 +1540,84 @@ class stock_picking(osv.osv):
         # Barcode Nomenclatures
         picking_type_id = self.browse(cr, uid, [picking_id], context=context).picking_type_id.id
         barcode_nom = self.pool.get('stock.picking.type').browse(cr, uid, [picking_type_id], context=context).barcode_nomenclature_id
-        parsed_result = barcode_nom.parse_barcode(barcode_str)
-        
-        #check if the barcode is a weighted barcode or simply a product
-        if parsed_result['type'] in ['weight', 'product', 'package']:
-            weight=1
-            if parsed_result['type'] == 'weight':
-                domain = ['|', ('barcode', '=', parsed_result['base_code']), ('default_code', '=', parsed_result['base_code'])]
-                weight=parsed_result['value']
-                obj = self.pool.get('product.product')
-                id_in_operation = 'product_id'
-            elif parsed_result['type'] == 'product':
-                domain = ['|', ('barcode', '=', parsed_result['code']), ('default_code', '=', parsed_result['code'])]
-                obj = self.pool.get('product.product')
-                id_in_operation = 'product_id'
-            else:
-                domain = [('name', '=', parsed_result['code'])]
-                obj = self.pool.get('stock.quant.package')
-                id_in_operation = 'package_id'
+        if barcode_nom:
+            parsed_result = barcode_nom.parse_barcode(barcode_str)
+            #check if the barcode is a weighted barcode or simply a product
+            if parsed_result['type'] in ['weight', 'product', 'package']:
+                weight=1
+                if parsed_result['type'] == 'weight':
+                    domain = ['|', ('barcode', '=', parsed_result['base_code']), ('default_code', '=', parsed_result['base_code'])]
+                    weight=parsed_result['value']
+                    obj = self.pool.get('product.product')
+                    id_in_operation = 'product_id'
+                elif parsed_result['type'] == 'product':
+                    domain = ['|', ('barcode', '=', parsed_result['code']), ('default_code', '=', parsed_result['code'])]
+                    obj = self.pool.get('product.product')
+                    id_in_operation = 'product_id'
+                else:
+                    domain = [('name', '=', parsed_result['code'])]
+                    obj = self.pool.get('stock.quant.package')
+                    id_in_operation = 'package_id'
 
-            matching_product_ids = obj.search(cr, uid, domain, context=context)
-            if matching_product_ids:
-                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [(id_in_operation, '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=weight, context=context)
-                answer['operation_id'] = op_id
-                return answer
-                  
-        #check if the barcode correspond to a lot
-        elif parsed_result['type'] == 'lot':
-            lot_obj = self.pool.get('stock.production.lot')
-            matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', parsed_result['code'])], context=context)
-            if matching_lot_ids:
-                lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
-                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=1, context=context)
-                answer['operation_id'] = op_id
-                return answer
-            
-        #check if the barcode correspond to a location
-        elif parsed_result['type'] == 'location':
-            stock_location_obj = self.pool.get('stock.location')
-            matching_location_ids = stock_location_obj.search(cr, uid, [('barcode', '=', parsed_result['code'])], context=context)
+                matching_product_ids = obj.search(cr, uid, domain, context=context)
+                if matching_product_ids:
+                    op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [(id_in_operation, '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=weight, context=context)
+                    answer['operation_id'] = op_id
+                    return answer
+                #check if the barcode correspond to a lot
+                elif parsed_result['type'] == 'lot':
+                    lot_obj = self.pool.get('stock.production.lot')
+                    matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', parsed_result['code'])], context=context)
+                    if matching_lot_ids:
+                        lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
+                        op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=1, context=context)
+                        answer['operation_id'] = op_id
+                        return answer
+
+                #check if the barcode correspond to a location
+                elif parsed_result['type'] == 'location':
+                    stock_location_obj = self.pool.get('stock.location')
+                    matching_location_ids = stock_location_obj.search(cr, uid, [('barcode', '=', parsed_result['code'])], context=context)
+                    if matching_location_ids:
+                        #if we have a location, return immediatly with the location name
+                        location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
+                        answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
+                        answer['filter_loc_id'] = matching_location_ids[0]
+                        return answer
+            return answer
+        else: #Fall back to old way (checking all objects) if no barcode nomenclature is defined
+            stock_location_obj = self.pool['stock.location']
+            product_obj = self.pool['product.product']
+            lot_obj = self.pool['stock.production.lot']
+            package_obj = self.pool['stock.quant.package']
+            #check if the barcode correspond to a location
+            matching_location_ids = stock_location_obj.search(cr, uid, [('barcode', '=', barcode_str)], context=context)
             if matching_location_ids:
                 #if we have a location, return immediatly with the location name
                 location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
                 answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
                 answer['filter_loc_id'] = matching_location_ids[0]
                 return answer
-            
-        return answer
-
+            #check if the barcode correspond to a product
+            matching_product_ids = product_obj.search(cr, uid, ['|', ('barcode', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
+            if matching_product_ids:
+                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
+                answer['operation_id'] = op_id
+                return answer
+            #check if the barcode correspond to a lot
+            matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
+            if matching_lot_ids:
+                lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
+                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
+                answer['operation_id'] = op_id
+                return answer
+            #check if the barcode correspond to a package
+            matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
+            if matching_package_ids:
+                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
+                answer['operation_id'] = op_id
+                return answer
+            return answer
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'
@@ -4487,18 +4517,12 @@ class stock_picking_type(osv.osv):
             type='integer', multi='_get_picking_count'),
 
         # Barcode nomenclature
-        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required=True),
+        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature'),
     }
-
-    def _get_default_nomenclature(self, cr, uid, context=None):
-        nom_obj = self.pool.get('barcode.nomenclature')
-        res = nom_obj.search(cr, uid, [], limit=1, context=context)
-        return res and res[0] or False
 
     _defaults = {
         'warehouse_id': _default_warehouse,
         'active': True,
-        'barcode_nomenclature_id': _get_default_nomenclature,
     }
 
 class barcode_rule(models.Model):
