@@ -35,14 +35,6 @@ var allowOnlinePayment = function (pos) {
     return onlinePaymentJournal.length;
 };
 
-// Popup declaration to ask for confirmation before an electronic payment
-var PaymentConfirmPopupWidget = PopupWidget.extend({
-    template: 'PaymentConfirmPopupWidget',
-    show: function (options) {
-        this._super(options);
-    }
-});
-
 function getCashRegisterByJournalID (cashRegisters, journal_id) {
     var cashRegisterReturn;
 
@@ -262,7 +254,6 @@ var PaymentTransactionPopupWidget = PopupWidget.extend({
     }
 });
 
-gui.define_popup({name:'payment-confirm', widget: PaymentConfirmPopupWidget});
 gui.define_popup({name:'payment-transaction', widget: PaymentTransactionPopupWidget});
 
 // On all screens, if a card is swipped, return a popup error.
