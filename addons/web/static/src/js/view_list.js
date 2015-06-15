@@ -1405,13 +1405,17 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
                 if (group_column) {
-                    try {
-                        group_label = group_column.format(row_data, {
-                            value_if_empty: _t("Undefined"),
-                            process_modifiers: false
-                        });
-                    } catch (e) {
-                        group_label = _.str.escapeHTML(row_data[group_column.id].value);
+                    if (_.find(self.columns, function (v) { return v.name == group.grouped_on;}).type == "date" && group.value.length > 1) {
+                        group_label = group.value[1];
+                    } else {
+                        try {
+                            group_label = group_column.format(row_data, {
+                                value_if_empty: _t("Undefined"),
+                                process_modifiers: false
+                            });
+                        } catch (e) {
+                            group_label = _.str.escapeHTML(row_data[group_column.id].value);
+                        }
                     }
                 } else {
                     group_label = group.value;

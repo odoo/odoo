@@ -368,7 +368,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        if ((this.group_by && this.group_by_field.type != "date") || this.fields_keys.indexOf("sequence") !== -1) {
+        if (this.group_by || this.fields_keys.indexOf("sequence") !== -1) {
             // Kanban cards drag'n'drop
             var prev_widget, is_folded, record, $columns;
             if (this.group_by) {
@@ -476,7 +476,30 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             new_group.records.splice(new_index, 0, record);
             record.group = new_group;
             var data = {};
-            data[this.group_by] = new_group.value;
+            if (this.group_by_field.type == "date"){
+                var old_date = new Date(record.values[this.group_by].value);
+                var category_date = new Date(new_group.value);
+                if (+old_date && +category_date) {
+                    // Loop in case new month has less days than current month
+                    for (var i = 0; i < 4; i++) {
+                        new_day = ("00" + (old_date.getDate() - i).toString()).slice(-2)
+                        new_month = ("00" + (category_date.getMonth() + 1).toString()).slice(-2)
+                        new_year = category_date.getFullYear().toString()
+                        new_date = new Date(new_year + "-" + new_month + "-" + new_day);
+                        if (+new_date) {
+                            break;
+                        }
+                    }
+                    data[this.group_by] = $.datepicker.formatDate('yy-mm-dd', new_date);
+                } 
+                else if (!+category_date) {
+                    data[this.group_by] = false;
+                } else {
+                    data[this.group_by] = new_group.value;
+                }
+            } else {
+                data[this.group_by] = new_group.value;
+            }
             this.dataset.write(record.id, data, {}).done(function() {
                 record.do_reload();
                 new_group.do_save_sequences();
@@ -597,7 +620,9 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             var field = this.view.group_by_field;
             if (!_.isEmpty(field)) {
                 try {
-                    this.title = instance.web.format_value(group.get('value'), field, false);
+                    if (this.group_by_field.type != "date") {
+                        this.title = instance.web.format_value(group.get('value'), field, false);
+                    }
                 } catch(e) {}
             }
             _.each(this.view.aggregates, function(value, key) {
