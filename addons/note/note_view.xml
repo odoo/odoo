@@ -54,32 +54,32 @@
           <templates>
             <t t-name="kanban-box">
 
-              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
-                <div class="oe_dropdown_kanban oe_dropdown_toggle">
-                  <!-- dropdown menu -->
-                  <i class="fa fa-bars fa-lg"/>
-                  <ul class="oe_dropdown_menu">
-                    <li><a type="delete">Delete</a></li>
-                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                  </ul>
+              <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+
+                <div class="o_dropdown_kanban dropdown">
+                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                        <span class="fa fa-bars fa-lg"/>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li><a type="delete">Delete</a></li>
+                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                    </ul>
                 </div>
-                  <div style="display: inline" class="oe_dropdown_kanban">
+                  <span class="oe_dropdown_kanban">
                     <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
                     <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-check"/></a>
-                  </div>
+                  </span>
                 <!-- kanban note -->
-                <div t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
+                <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
-                </div>
-                <div class="oe_clear"></div>
+                </span>
+                <div class="clearfix"></div>
                 <field name="tag_ids"/>
-                <div class="oe_right">
                   <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
-                    <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
+                    <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar pull-right" t-att-data-member_id="follower"/>
                   </t>
-                </div>
-                <div class="oe_clear"></div>
+                <div class="clearfix"></div>
               </div>
             </t>
           </templates>
@@ -106,12 +106,14 @@
         <field name="name">note.note.form</field>
         <field name="model">note.note</field>
         <field name="arch" type="xml">
-            <form string="Note" class="oe_form_nomargin">
+            <form string="Note" class="oe_form_nomargin o_note_form_view">
                 <header>
-                    <field name="tag_ids" widget="many2many_tags" class="oe_inline" placeholder="Tags"/>
+                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
                 </header>
-                <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
+                <sheet>
+                    <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
+                </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="message_ids" widget="mail_thread"/>
@@ -182,7 +184,7 @@
         </field>
     </record>
 
-    <menuitem name="Notes" id="menu_note_notes" sequence="3" action="note.action_note_note"/>
+    <menuitem name="Notes" id="menu_note_notes" sequence="3" action="note.action_note_note" web_icon="note,static/description/icon.png"/>
     <menuitem name="Configuration" id="menu_note_configuration" sequence="100" parent="menu_note_notes" groups="base.group_configuration"/>
     <menuitem name="Stages" id="menu_notes_stage" parent="menu_note_configuration" action="note.action_note_stage" sequence="21" />
 
