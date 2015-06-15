@@ -294,6 +294,8 @@ function ready() {
         all_ready = dom_ready.then(function () {
             return templates_def;
         }).then(function () {
+            odoo.init();
+            
             // display button if they are at least one editable zone in the page (check the branding)
             if ($('[data-oe-model]').size()) {
                 $("#oe_editzone").show();

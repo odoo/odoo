@@ -14,6 +14,7 @@
     var factories = Object.create(null);
     var job_names = [];
     var job_deps = [];
+    var failed = {};
 
     var services = Object.create({
         qweb: new QWeb2.Engine(),
@@ -63,6 +64,9 @@
                     });
                 });
                 return _.difference(_.uniq(missing), waited);
+            },
+            get_failed_jobs: function () {
+                return failed;
             },
             factories: factories,
             services: services,
@@ -118,23 +122,30 @@
             odoo.__DEBUG__.remaining_jobs = jobs;
             odoo.__DEBUG__.web_client = services['web.web_client'];
 
-            if (jobs.length) {
+            if (!_.isEmpty(failed) || jobs.length) {
+                var debug_jobs = {}, job;
+
                 for (var k=0; k<jobs.length; k++) {
-                    var deps = odoo.__DEBUG__.get_dependencies( jobs[k].name );
+                    debug_jobs[jobs[k].name] = job = {
+                        dependencies: jobs[k].deps,
+                        dependents: odoo.__DEBUG__.get_dependents(jobs[k].name),
+                        name: jobs[k].name
+                    };
+                    var deps = odoo.__DEBUG__.get_dependencies( job.name );
                     for (var i=0; i<deps.length; i++) {
-                        if (jobs[k].name !== deps[i] && !(deps[i] in services)) {
-                            if (!jobs[k].missing) {
-                                jobs[k].missing = [];
+                        if (job.name !== deps[i] && !(deps[i] in services)) {
+                            if (!job.missing) {
+                                job.missing = [];
                             }
-                            jobs[k].missing.push(deps[i]);
+                            job.missing.push(deps[i]);
                         }
                     }
                 }
-                console.warn('Warning: some modules could not be started, most likely because of missing dependencies.', jobs);
+                console.warn('Warning: Some modules could not be started !'+
+                    '\nMissing dependencies: ', !jobs.length ? null : odoo.__DEBUG__.get_missing_jobs(),
+                    '\nFailed modules:       ', _.isEmpty(failed) ? null : failed,
+                    '\nUnloaded modules:     ', _.isEmpty(debug_jobs) ? null : debug_jobs);
             }
-            // _.each(factories, function (value, key) {
-            //     delete factories[key];
-            // });
         },
         process_jobs: function (jobs, services) {
             var job, require;
@@ -143,7 +154,7 @@
                 try {
                     services[job.name] = job.factory.call(null, require);
                 } catch (e) {
-                    console.error("Error: at least one error are found in module '"+job.name+"'", e);
+                    failed[job.name] = e;
                 }
                 jobs.splice(jobs.indexOf(job), 1);
             }
