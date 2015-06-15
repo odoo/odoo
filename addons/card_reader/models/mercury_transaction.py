@@ -53,7 +53,6 @@ class MercuryTransaction(models.Model):
         data['merchant_pwd'] = card_reader_config.merchant_pwd
         data['operator_id'] = pos_session.user_id.login
         data['merchant_id'] = card_reader_config.merchant_id
-        data['config_id'] = config.id
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):

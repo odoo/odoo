@@ -3,7 +3,6 @@
   <data>
     <template id='mercury_common'>
       <MerchantID><t t-esc='merchant_id'/></MerchantID>
-      <LaneID><t t-esc='config_id'/></LaneID>
       <TranType><t t-esc='transaction_type'/></TranType>
       <TranCode><t t-esc='transaction_code'/></TranCode>
       <InvoiceNo><t t-esc='invoice_no'/></InvoiceNo>
@@ -14,8 +13,7 @@
       <TStream>
         <Transaction>
           <t t-call='card_reader.mercury_common'/>
-          <OperatorID>test</OperatorID> <!-- TODO -->
-          <TerminalID><t t-esc='config_id'/></TerminalID>
+          <OperatorID><t t-esc='operator_id'/></OperatorID>
           <RecordNo>RecordNumberRequested</RecordNo>
           <PartialAuth>Allow</PartialAuth>
           <Memo><t t-esc='memo'/></Memo>
@@ -57,7 +55,7 @@
       <TStream>
         <Transaction>
           <t t-call='card_reader.mercury_common'/>
-          <OperatorID>Test</OperatorID>
+          <OperatorID><t t-esc='operator_id'/></OperatorID>
           <PartialAuth>Allow</PartialAuth>
           <RefNo><t t-esc='ref_no'/></RefNo>
           <RecordNo><t t-esc='record_no'/></RecordNo>
