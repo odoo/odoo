@@ -2512,7 +2512,14 @@ var VideoDialog = Widget.extend({
         this.media = $iframe[0];
     },
     clear: function () {
-        delete this.media.dataset.src;
+        if (this.media.dataset.src) {
+            try {
+                delete this.media.dataset.src;
+            } catch(e) {
+                this.media.dataset.src = undefined;
+            }
+        }
+
         this.media.className = this.media.className.replace(/(^|\s)media_iframe_video(\s|$)/g, ' ');
     },
 });
