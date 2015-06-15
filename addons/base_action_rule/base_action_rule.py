@@ -266,15 +266,18 @@ class base_action_rule(osv.osv):
             """ Instanciate an onchange method for the given action rule. """
             def base_action_rule_onchange(self):
                 action_rule = self.env['base.action.rule'].browse(action_rule_id)
-                if not action_rule.active:
-                    return
                 server_actions = action_rule.server_action_ids.with_context(active_model=self._name, onchange_self=self)
-                vals = {}
+                result = {}
                 for server_action in server_actions:
                     res = server_action.run()
-                    vals.update(res and res.get('value') or {})
-                vals.pop('id', None)
-                self.update(self._convert_to_cache(vals, validate=False))
+                    if res and 'value' in res:
+                        res['value'].pop('id', None)
+                        self.update(self._convert_to_cache(res['value'], validate=False))
+                    if res and 'domain' in res:
+                        result.setdefault('domain', {}).update(res['domain'])
+                    if res and 'warning' in res:
+                        result['warning'] = res['warning']
+                return result
 
             return base_action_rule_onchange
 
