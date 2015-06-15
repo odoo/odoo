@@ -1035,7 +1035,7 @@ openerp.web_calendar = function(instance) {
         
         slow_add: function() {
             var val = this.$input.val();
-            this.slow_create({'name': val});
+            this.slow_create(_.isEmpty(val) ? {} : {'name': val});
         },
 
         /**

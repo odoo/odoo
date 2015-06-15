@@ -76,8 +76,9 @@ class product_template(osv.osv):
         for sbom in bom.bom_line_ids:
             my_qty = sbom.product_qty
             if not sbom.attribute_value_ids:
+                bom_product = sbom.product_id
                 # No attribute_value_ids means the bom line is not variant specific
-                price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty
+                price += uom_obj._compute_price(cr, uid, bom_product.uom_po_id and bom_product.uom_po_id.id or bom_product.uom_id.id, bom_product.standard_price, sbom.product_uom.id) * my_qty
 
         if bom.routing_id:
             for wline in bom.routing_id.workcenter_lines:

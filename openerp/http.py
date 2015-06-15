@@ -409,7 +409,7 @@ def route(route=None, **kw):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
-                response = response.get_response()
+                response = response.get_response(request.httprequest.environ)
             if isinstance(response, werkzeug.wrappers.BaseResponse):
                 response = Response.force_type(response)
                 response.set_default()
@@ -966,7 +966,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
-        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login

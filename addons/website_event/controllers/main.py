@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import babel.dates
 import time
 import werkzeug.urls
 from datetime import datetime, timedelta
@@ -202,9 +203,15 @@ class website_event(http.Controller):
         return request.redirect("/event/%s/register?enable_editor=1" % slug(event))
 
     def get_formated_date(self, event):
+        context = request.context
         start_date = datetime.strptime(event.date_begin, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
         end_date = datetime.strptime(event.date_end, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-        return ('%s %s%s') % (start_date.strftime("%b"), start_date.strftime("%e"), (end_date != start_date and ("-"+end_date.strftime("%e")) or ""))
+        month = babel.dates.get_month_names('abbreviated', locale=context.get('lang', 'en_US'))[start_date.month]
+        return _('%(month)s %(start_day)s%(end_day)s') % {
+            'month': month,
+            'start_day': start_date.strftime("%e"),
+            'end_day': (end_date != start_date and ("-"+end_date.strftime("%e")) or "")
+        }
 
     @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
     def get_country_events(self, **post):

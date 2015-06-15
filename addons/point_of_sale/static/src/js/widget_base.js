@@ -48,7 +48,7 @@ openerp.point_of_sale.load_basewidget = function load_basewidget(instance, modul
 
             if (typeof amount === 'number') {
                 amount = round_di(amount,decimals).toFixed(decimals);
-                amount = openerp.instances[this.session.name].web.format_value(parseFloat(amount), { type : 'float' });
+                amount = openerp.instances[this.session.name].web.format_value(round_di(amount, decimals), { type: 'float', digits: [69, decimals]});
             }
 
             return amount;
