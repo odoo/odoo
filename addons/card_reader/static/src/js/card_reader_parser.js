@@ -132,7 +132,7 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         this.record_no = json.record_no;
         this.invoice_no = json.invoice_no;
         this.mercury_data = json.mercury_data;
-        this.swipe_pending = json.swipe_pendin;
+        this.swipe_pending = json.swipe_pending;
 
         this.set_credit_card_name();
     },
@@ -604,6 +604,7 @@ PaymentScreenWidget.include({
     // make sure there is only one paymentline waiting for a swipe
     click_paymentmethods: function (id) {
         var i;
+        var order = this.pos.get_order();
         var cashregister = null;
         for (i = 0; i < this.pos.cashregisters.length; i++) {
             if (this.pos.cashregisters[i].journal_id[0] === id){
@@ -614,7 +615,7 @@ PaymentScreenWidget.include({
 
         if (cashregister.journal.type === 'bank') {
             var already_swipe_pending = false;
-            var lines = this.pos.get_order().get_paymentlines();
+            var lines = order.get_paymentlines();
 
             for (i = 0; i < lines.length; i++) {
                 if (lines[i].cashregister.journal.type === 'bank' && lines[i].swipe_pending) {
@@ -629,8 +630,9 @@ PaymentScreenWidget.include({
                 });
             } else {
                 this._super(id);
-                this.pos.get_order().selected_paymentline.swipe_pending = true;
+                order.selected_paymentline.swipe_pending = true;
                 this.render_paymentlines();
+                order.trigger('change', order); // needed so that export_to_JSON gets triggered
             }
         } else {
             this._super(id);
