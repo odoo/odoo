@@ -110,7 +110,7 @@ class pos_order_card(models.Model):
                         order = self.env['pos.order'].browse(abs['res_id'])
 
                         data = {
-                            'amount': order.amount_total - order.amount_paid,
+                            'amount': -statement_line.amount,
                             'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                             'journal': statement_line.journal_id.id,
                             'card_number': statement_line.card_number,
