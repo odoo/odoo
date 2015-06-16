@@ -14,7 +14,6 @@
     var factories = Object.create(null);
     var job_names = [];
     var job_deps = [];
-    var failed = {};
 
     var services = Object.create({
         qweb: new QWeb2.Engine(),
@@ -63,10 +62,10 @@
                         }
                     });
                 });
-                return _.difference(_.uniq(missing), waited);
+                return _.filter(_.difference(_.uniq(missing), waited), function (job) {return !job.error;});
             },
             get_failed_jobs: function () {
-                return failed;
+                return _.filter(jobs, function (job) {return !!job.error;});
             },
             factories: factories,
             services: services,
@@ -122,7 +121,7 @@
             odoo.__DEBUG__.remaining_jobs = jobs;
             odoo.__DEBUG__.web_client = services['web.web_client'];
 
-            if (!_.isEmpty(failed) || jobs.length) {
+            if (jobs.length) {
                 var debug_jobs = {}, job;
 
                 for (var k=0; k<jobs.length; k++) {
@@ -131,6 +130,9 @@
                         dependents: odoo.__DEBUG__.get_dependents(jobs[k].name),
                         name: jobs[k].name
                     };
+                    if (jobs[k].error) {
+                        job.error = jobs[k].error;
+                    }
                     var deps = odoo.__DEBUG__.get_dependencies( job.name );
                     for (var i=0; i<deps.length; i++) {
                         if (job.name !== deps[i] && !(deps[i] in services)) {
@@ -141,9 +143,11 @@
                         }
                     }
                 }
+                var missing = odoo.__DEBUG__.get_missing_jobs();
+                var failed = odoo.__DEBUG__.get_failed_jobs();
                 console.warn('Warning: Some modules could not be started !'+
-                    '\nMissing dependencies: ', !jobs.length ? null : odoo.__DEBUG__.get_missing_jobs(),
-                    '\nFailed modules:       ', _.isEmpty(failed) ? null : failed,
+                    '\nMissing dependencies: ', !missing.length ? null : missing,
+                    '\nFailed modules:       ', _.isEmpty(failed) ? null : _.map(failed, function (job) {return job.name;}),
                     '\nUnloaded modules:     ', _.isEmpty(debug_jobs) ? null : debug_jobs);
             }
         },
@@ -153,15 +157,15 @@
                 require = make_require(job);
                 try {
                     services[job.name] = job.factory.call(null, require);
+                    jobs.splice(jobs.indexOf(job), 1);
                 } catch (e) {
-                    failed[job.name] = e;
+                    job.error = e;
                 }
-                jobs.splice(jobs.indexOf(job), 1);
             }
             return services;
 
             function is_ready (job) {
-                return _.every(job.factory.deps, function (name) { return name in services; });
+                return !job.error && _.every(job.factory.deps, function (name) { return name in services; });
             }
 
             function make_require (job) {
