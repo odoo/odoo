@@ -39,7 +39,7 @@
                     <div>
                         <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id, pricelist_id)"/>
                         <button name="open_quotation" type="object" 
-                        class="oe_link" string="View Online Quotation"
+                        class="oe_link o_open_quotation" string="View Online Quotation"
                         attrs="{'invisible': [('template_id', '=', False)]}"/>
                     </div>
                 </xpath>
