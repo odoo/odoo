@@ -155,6 +155,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     _display_view: function (view_options) {
         var self = this;
         var view_controller = this.active_view.controller;
+        var view_control_elements = this.render_view_control_elements();
 
         // Show the view
         this.active_view.$container.show();
@@ -163,7 +164,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             var cp_status = {
                 active_view_selector: '.oe-cp-switch-' + self.active_view.type,
                 breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
-                cp_content: _.extend({}, self.control_elements, self.render_view_control_elements()),
+                cp_content: _.extend({}, self.control_elements, view_control_elements),
                 hidden: self.flags.headless,
                 searchview: self.searchview,
                 search_view_hidden: view_controller.searchable === false,
@@ -243,7 +244,11 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     /**
      * Renders the control elements (buttons, sidebar, pager) of the current view
      * This must be done when active_search is resolved (for KanbanViews)
-     * Fills this.active_view.control_elements dictionnary with the rendered elements
+     * Fills this.active_view.control_elements dictionnary with the rendered
+     * elements and the adequate view switcher, to send to the ControlPanel
+     * Warning: it should be called before calling do_show on the view as the
+     * sidebar is extended to listen on the load_record event triggered as soon
+     * as do_show is done (the sidebar should thus be instantiated before)
      */
     render_view_control_elements: function() {
         if (!this.active_view.control_elements) {
