@@ -228,6 +228,7 @@ var KanbanSelection = FieldChar.extend({
         var dd_fetched = this.prepare_dropdown_selection();
         return $.when(dd_fetched).then(function (states) {
             self.states = states;
+            self.$el.addClass('oe_right');
             self.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
             self.$el.find('li').on('click', self.set_kanban_selection.bind(self));
         });
