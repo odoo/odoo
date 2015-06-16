@@ -3260,7 +3260,8 @@ class BaseModel(object):
         cr, user, context = env.args
 
         # make a query object for selecting ids, and apply security rules to it
-        query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [])
+        param_ids = object()
+        query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [param_ids])
         self._apply_ir_rules(query, 'read')
         order_str = self._generate_order_by(None, query)
 
@@ -3289,7 +3290,7 @@ class BaseModel(object):
         qual_names = map(qualify, set(fields_pre + [self._fields['id']]))
 
         # determine the actual query to execute
-        from_clause, where_clause, where_params = query.get_sql()
+        from_clause, where_clause, params = query.get_sql()
         query_str = """ SELECT %(qual_names)s FROM %(from_clause)s
                         WHERE %(where_clause)s %(order_str)s
                     """ % {
@@ -3300,8 +3301,10 @@ class BaseModel(object):
                     }
 
         result = []
+        param_pos = params.index(param_ids)
         for sub_ids in cr.split_for_in_conditions(self.ids):
-            cr.execute(query_str, [tuple(sub_ids)] + where_params)
+            params[param_pos] = tuple(sub_ids)
+            cr.execute(query_str, params)
             result.extend(cr.dictfetchall())
 
         ids = [vals['id'] for vals in result]
