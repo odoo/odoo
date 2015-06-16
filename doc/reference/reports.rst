@@ -31,15 +31,15 @@ can take the following attributes:
 
 ``id``
     the generated record's :term:`external id`
-``name`` (mandatory)
-    only useful as a mnemonic/description of the report when looking for one
-    in a list of some sort
+``string`` (mandatory)
+    Will be the name of the PDF output and useful as a mnemonic/description of
+    the report when looking for one in a list of some sort
 ``model`` (mandatory)
     the model your report will be about
+``name`` (mandatory)
+    Name of the template used in the rendering.
 ``report_type`` (mandatory)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
-``report_name``
-    the name of your report (which will be the name of the PDF output)
 ``groups``
     :class:`~openerp.fields.Many2many` field to the groups allowed to view/use
     the current report
