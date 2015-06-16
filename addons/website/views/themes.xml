@@ -148,27 +148,15 @@
     </table>
 </template>
 
+<!-- Theme -->
+
 <!--
-     Theme
+  Group all option inside a t-if True named default_options, other theme will
+  set the t-if to False to disable all website options
+
 -->
 
-<template id="website.theme" name="Theme">
-    <!-- Boostrap Fallback if server can't compute less files -->
-    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
-    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
-</template>
-
-<!-- Bootstrap Less File layout -->
-
-<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="True" customize_show="False">
-    <xpath expr="//link[@id='bootstrap_css']" position="replace">
-        <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-        <link rel="stylesheet" href='/website/static/src/less/colors.less'/>
-    </xpath>
-</template>
-
-<!-- Default Options Toggle -->
-<template id="default_options" name="Default Customize Options" inherit_id="website.theme">
+<template id="default_options" name="Default Customize Options" inherit_id="website.assets_frontend">
   <xpath expr="//link[last()]" position="after">
     <!-- Default options inherit from this view so we can easily disable it to reset all options -->
     <t id="default_options" t-if="True"></t>

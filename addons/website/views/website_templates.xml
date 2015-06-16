@@ -71,7 +71,11 @@
 </template>
 
 <template id="assets_frontend" name="Website assets">
-    <t t-call="website.theme"/>
+    <!-- Boostrap Fallback if server can't compute less files -->
+    <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
+    <link rel="stylesheet" href='/website/static/src/less/colors.less'/>
+
+    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
 
     <script type="text/javascript" src="/website/static/src/js/website.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
