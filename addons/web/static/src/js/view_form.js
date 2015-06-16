@@ -613,6 +613,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 return $.when.apply(null, [mutex.def, self.onchanges_mutex.def]).then(function() {
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
+                        if($('.oe_dialog_warning:visible').length) {
+                            save_obj.error = true;
+                            return $.when();
+                        }
                         return self._process_save(save_obj).then(function() {
                             save_obj.ret = _.toArray(arguments);
                             return iterate();
