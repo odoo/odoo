@@ -853,7 +853,7 @@ var FormViewDialog = ViewDialog.extend({
             ];
 
             if(!readonly) {
-                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? _t(" & Close") : ""), classes: "btn-primary", click: function() {
+                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", click: function() { // o_formdialog_save class for web_tests!
                         $.when(self.view_form.save()).done(function() {
                             self.view_form.reload_mutex.exec(function() {
                                 self.trigger('record_saved');

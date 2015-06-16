@@ -40,7 +40,7 @@ Tour.register({
         {
             title:      "save new message a",
             waitFor:    '.modal textarea.field_text:propValue(a)',
-            element:    '.oe_abstractformpopup-form-save'
+            element:    '.o_formdialog_save'
         },
 
         // add message b
@@ -59,7 +59,7 @@ Tour.register({
         {
             title:      "save new message b",
             waitFor:    '.modal textarea.field_text:propValue(b)',
-            element:    '.oe_abstractformpopup-form-save'
+            element:    '.o_formdialog_save'
         },
 
         // change title to trigger on change
@@ -97,7 +97,7 @@ Tour.register({
         {
             title:      "save changes",
             waitFor:    '.modal textarea.field_text:propValue(bbb)',
-            element:    '.oe_abstractformpopup-form-save'
+            element:    '.o_formdialog_save'
         },
 
         // add message c
@@ -116,7 +116,7 @@ Tour.register({
         {
             title:      "save new message c",
             waitFor:    '.modal textarea.field_text:propValue(c)',
-            element:    '.oe_abstractformpopup-form-save'
+            element:    '.o_formdialog_save'
         },
 
         // add participants
@@ -143,7 +143,7 @@ Tour.register({
         {
             title:      "save selected participants",
             waitFor:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(1):propChecked',
-            element:    '.oe_selectcreatepopup-search-select'
+            element:    '.o_selectcreatepopup_search_select'
         },
 
         // save
@@ -199,7 +199,7 @@ Tour.register({
         {
             title:      "save new message d",
             waitFor:    '.modal textarea.field_text:propValue(d)',
-            element:    '.oe_abstractformpopup-form-save'
+            element:    '.o_formdialog_save'
         },
 
         // add message e
@@ -218,7 +218,7 @@ Tour.register({
         {
             title:      "save new message e",
             waitFor:    '.modal textarea.field_text:propValue(e)',
-            element:    '.oe_abstractformpopup-form-save'
+            element:    '.o_formdialog_save'
         },
 
         // change message a
@@ -237,7 +237,7 @@ Tour.register({
         {
             title:      "save changes",
             waitFor:    '.modal textarea.field_text:propValue(aaa)',
-            element:    '.oe_abstractformpopup-form-save'
+            element:    '.o_formdialog_save'
         },
 
         // remove
@@ -317,7 +317,7 @@ Tour.register({
         {
             title:      "save new message ddd",
             waitFor:    '.modal textarea.field_text:propValue(ddd)',
-            element:    '.oe_abstractformpopup-form-save'
+            element:    '.o_formdialog_save'
         },
 
         // trigger onchange
