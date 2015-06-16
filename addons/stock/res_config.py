@@ -43,6 +43,33 @@ class stock_config_settings(osv.osv_memory):
     _name = 'stock.config.settings'
     _inherit = 'res.config.settings'
 
+    def set_group_locations(self, cr, uid, ids, context=None):
+        """ This method is automatically called by res_config as it begins
+            with set. It is used to implement the 'one group or another'
+            behavior. We have to perform some group manipulation by hand
+            because in res_config.execute(), set_* methods are called
+            after group_*; therefore writing on an hidden res_config file
+            could not work.
+            If group_stock_multiple_locations is checked: remove group_stock_single_location
+            from group_user, remove the users. Otherwise, just add
+            group_stock_single_location in group_user.
+            The inverse logic about group_stock_multiple_locations is managed by the
+            normal behavior of 'group_stock_multiple_locations' field.
+        """
+        def ref(xml_id):
+            mod, xml = xml_id.split('.', 1)
+            return self.pool['ir.model.data'].get_object(cr, uid, mod, xml, context)
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            config_group = ref('stock.group_single_location')
+            base_group = ref('base.group_user')
+            if obj.group_stock_multiple_locations:
+                base_group.write({'implied_ids': [(3, config_group.id)]})
+                config_group.write({'users': [(3, u.id) for u in base_group.users]})
+            else:
+                base_group.write({'implied_ids': [(4, config_group.id)]})
+        return True
+
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'module_procurement_jit': fields.boolean("Generate procurement in real time",
@@ -80,10 +107,13 @@ This installs the module product_expiry."""),
         'group_stock_tracking_owner': fields.boolean("Manage owner on stock",
             implied_group='stock.group_tracking_owner',
             help="""This way you can receive products attributed to a certain owner. """),
-        'group_stock_multiple_locations': fields.boolean("Manage multiple locations and warehouses",
+        'group_stock_multiple_locations': fields.boolean("Manage multiple locations",
             implied_group='stock.group_locations',
             help="""This will show you the locations and allows you to define multiple picking types and warehouses."""),
-        'group_stock_adv_location': fields.boolean("Manage advanced routes for your warehouse",
+        'group_stock_single_location': fields.boolean("Manage only one location per warehouse",
+            implied_group='stock.group_single_location',
+            help="""This implies that you manage one location per warehouse, i.e. no internal transfer is possible."""),
+        'group_stock_adv_location': fields.boolean("Manage routes for your warehouse",
             implied_group='stock.group_adv_location',
             help="""This option supplements the warehouse application by effectively implementing Push and Pull inventory flows through Routes."""),
         'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
