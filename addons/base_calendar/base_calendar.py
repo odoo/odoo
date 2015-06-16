@@ -1826,7 +1826,7 @@ ir_model()
 
 class virtual_report_spool(web_services.report_spool):
 
-    def exp_report(self, db, uid, object, ids, data=None, context=None):
+    def exp_report(self, db, uid, object, ids, datas=None, context=None):
         """
         Export Report
         @param self: The object pointer
@@ -1837,13 +1837,13 @@ class virtual_report_spool(web_services.report_spool):
 
         if object == 'printscreen.list':
             return super(virtual_report_spool, self).exp_report(db, uid, \
-                            object, ids, data, context)
+                            object, ids, datas, context)
         new_ids = []
         for id in ids:
             new_ids.append(base_calendar_id2real_id(id))
-        if data.get('id', False):
-            data['id'] = base_calendar_id2real_id(data['id'])
-        return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, data, context)
+        if datas.get('id', False):
+            datas['id'] = base_calendar_id2real_id(datas['id'])
+        return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
 virtual_report_spool()
 
