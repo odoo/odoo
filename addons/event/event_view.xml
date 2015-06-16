@@ -151,7 +151,7 @@
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban class="o_event_kanban_view">
                     <field name="user_id"/>
                     <field name="country_id"/>
                     <field name="date_begin"/>
@@ -161,7 +161,7 @@
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_event_kanban_view" >
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
@@ -174,37 +174,30 @@
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
-                                <div class="oe_module_vignette row">
-                                    <div class="col-md-3">
-                                        <div class="oe_module_icon">
-                                            <div class="oe_event_date_thumb oe_event_date"><t t-esc="record.date_begin.raw_value.getDate()"/></div>
-                                            <div class="oe_event_date_thumb oe_event_month_year">
-                                                <t t-esc="moment(record.date_begin.raw_value).format('MMM')"/>
-                                                <t t-esc="record.date_begin.raw_value.getFullYear()"/>
-                                            </div>
-                                            <div class="oe_event_date_thumb oe_event_time"><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
-                                        </div>
+                                <div class="o_event_left">
+                                    <div class="o_day"><t t-esc="record.date_begin.raw_value.getDate()"/></div>
+                                    <div>
+                                        <t t-esc="moment(record.date_begin.raw_value).format('MMM')"/>
+                                        <t t-esc="record.date_begin.raw_value.getFullYear()"/>
                                     </div>
-                                    <div class="col-md-8">
-                                        <h4><field name="name"/></h4>
-                                        <div>
-                                            <small>
-                                                <t t-if="record.country_id.raw_value"> <b> <field name="country_id"/> </b> <br/> </t>
-                                                <i class="fa fa-clock-o" t-att-title="moment(record.date_begin.raw_value).format('LT')"/>
-                                                <b>From</b> <t t-esc="moment(record.date_begin.raw_value).format('L')"/>
-                                                <b>To</b> <t t-esc="moment(record.date_end.raw_value).format('LT')"/>
-                                            </small>
-                                        </div>
-                                        <h4>
-                                            <a name="%(act_event_registration_from_event)d" type="action">
-                                                <t t-esc="record.seats_reserved.raw_value" > Attendees</t>
-                                            </a>
-                                            <t t-if="(record.seats_reserved.raw_value + record.seats_unconfirmed.raw_value) > 0 ">&#47;
-                                                <t t-esc="record.seats_reserved.raw_value + record.seats_unconfirmed.raw_value"/> Expected
-                                                <a name="action_event_registration_report" type="object" >&#40;Report&#41;</a>
-                                            </t>
-                                        </h4>
+                                    <div><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
+                                </div>
+                                <div class="o_event_right">
+                                    <h4><field name="name"/></h4>
+                                    <div>
+                                        <t t-if="record.country_id.raw_value"> <b> <field name="country_id"/> </b> <br/> </t>
+                                        <i class="fa fa-clock-o"/>
+                                        <b>To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
                                     </div>
+                                    <h4>
+                                        <a name="%(act_event_registration_from_event)d" type="action">
+                                            <t t-esc="record.seats_reserved.raw_value" > Attendees</t>
+                                        </a>
+                                        <t t-if="(record.seats_reserved.raw_value + record.seats_unconfirmed.raw_value) > 0 ">&#47;
+                                            <t t-esc="record.seats_reserved.raw_value + record.seats_unconfirmed.raw_value"/> Expected
+                                            <a name="action_event_registration_report" type="object" >&#40;Report&#41;</a>
+                                        </t>
+                                    </h4>
                                 </div>
                             </div>
                         </t>
