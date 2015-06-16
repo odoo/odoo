@@ -26,6 +26,10 @@
                         <h1>
                             <field name="name" class="oe_inline"/>
                         </h1>
+                        <label for="rml_header1" class="oe_edit_only"/>
+                        <h3>
+                            <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
+                        </h3>
                     </div>
                     <div attrs="{'invisible' : [('logo','!=',False)]}" class="oe_view_nocontent oe_clear">
                         <p class="oe_view_nocontent_create oe_edit_only">
@@ -51,10 +55,6 @@
                                         </div>
                                         <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' on_change="on_change_country(country_id)"/>
                                     </div>
-                                    <label for="rml_header1"/>
-                                    <div>
-                                        <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
-                                    </div>
                                     <field name="website" widget="url" placeholder="e.g. www.odoo.com"
                                         on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
                                 </group>
@@ -68,7 +68,13 @@
                             </group>
                             <group string="Bank Accounts">
                                 <field name="bank_ids" nolabel="1" context="{'default_company_id': active_id, 'footer_hide': False}"
-                                    on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                                    on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)">
+                                    <tree>
+                                        <field name="acc_number"/>
+                                        <field name="bank_name"/>
+                                        <field name="footer"/>
+                                    </tree>
+                                </field>
                             </group>
                         </page>
                         <page string="Configuration">

@@ -14,7 +14,7 @@
                             <field name="warehouse_id" attrs="{'required': [('po_from_so', '=', True)], 'invisible': [('po_from_so', '=', False)]}" domain="[('company_id', '=', active_id)]"/>
                             <field name="auto_validation" attrs="{'invisible': [('auto_generate_invoices', '=', True)]}"/>
                             <field name="auto_generate_invoices" attrs="{'invisible': ['|', ('so_from_po', '=', True), ('po_from_so', '=', True)]}"/>
-                            <field name="intercompany_user_id" colspan="2" attrs="{'required': ['|','|',('so_from_po', '=', True), ('po_from_so', '=', True), ('auto_generate_invoices', '=', True)]}"/>
+                            <field name="intercompany_user_id" colspan="2" attrs="{'required': ['|','|',('so_from_po', '=', True), ('po_from_so', '=', True), ('auto_generate_invoices', '=', True)]}" groups="base.group_no_one"/>
                         </group>
                     </page>
                 </xpath>
