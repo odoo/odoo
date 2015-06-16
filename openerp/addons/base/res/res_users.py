@@ -1,24 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 import logging
 from functools import partial
@@ -28,6 +9,7 @@ from lxml import etree
 from lxml.builder import E
 
 import openerp
+from openerp import api
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
@@ -279,7 +261,7 @@ class res_users(osv.osv):
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
     # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update']
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
@@ -334,6 +316,8 @@ class res_users(osv.osv):
                 # if partner is global we keep it that way
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']: 
                     user.partner_id.write({'company_id': user.company_id.id})
+            # clear default ir values when company changes
+            self.pool['ir.values'].get_defaults_dict.clear_cache(self.pool['ir.values'])
         # clear caches linked to the users
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         clear = partial(self.pool['ir.rule'].clear_cache, cr)
@@ -343,7 +327,7 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-        self._context_get.clear_cache(self)
+        self.context_get.clear_cache(self)
         self.has_group.clear_cache(self)
         return res
 
@@ -378,9 +362,9 @@ class res_users(osv.osv):
             default['login'] = _("%s (copy)") % user2copy['login']
         return super(res_users, self).copy(cr, uid, id, default, context)
 
-    @tools.ormcache(skiparg=2)
-    def _context_get(self, cr, uid):
-        user = self.browse(cr, SUPERUSER_ID, uid)
+    @tools.ormcache('uid')
+    def context_get(self, cr, uid, context=None):
+        user = self.browse(cr, SUPERUSER_ID, uid, context)
         result = {}
         for k in self._fields:
             if k.startswith('context_'):
@@ -395,9 +379,6 @@ class res_users(osv.osv):
                     res = res.id
                 result[context_key] = res or False
         return result
-
-    def context_get(self, cr, uid, context=None):
-        return self._context_get(cr, uid)
 
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool['ir.model.data']
@@ -532,7 +513,7 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
-    @tools.ormcache(skiparg=2)
+    @tools.ormcache('uid', 'group_ext_id')
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 #
 # Please note that these reports are not multi-currency !!!
@@ -61,7 +43,7 @@ class purchase_report(osv.osv):
         'category_id': fields.many2one('product.category', 'Product Category', readonly=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
         'country_id': fields.many2one('res.country', 'Partner Country', readonly=True),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
+        'fiscal_position_id': fields.many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position', readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
     }
@@ -79,11 +61,11 @@ class purchase_report(osv.osv):
                     s.dest_address_id,
                     s.pricelist_id,
                     s.validator,
-                    s.picking_type_id as picking_type_id,
+                    spt.warehouse_id as picking_type_id,
                     s.partner_id as partner_id,
                     s.create_uid as user_id,
                     s.company_id as company_id,
-                    s.fiscal_position as fiscal_position,
+                    s.fiscal_position_id as fiscal_position_id,
                     l.product_id,
                     p.product_tmpl_id,
                     t.categ_id as category_id,
@@ -108,6 +90,7 @@ class purchase_report(osv.osv):
                             LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
+                    left join stock_picking_type spt on (spt.id=s.picking_type_id)
                     left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
                 group by
                     s.company_id,
@@ -123,13 +106,13 @@ class purchase_report(osv.osv):
                     s.pricelist_id,
                     s.validator,
                     s.dest_address_id,
-                    s.fiscal_position,
+                    s.fiscal_position_id,
                     l.product_id,
                     p.product_tmpl_id,
                     t.categ_id,
                     s.date_order,
                     s.state,
-                    s.picking_type_id,
+                    spt.warehouse_id,
                     u.uom_type,
                     u.category_id,
                     t.uom_id,

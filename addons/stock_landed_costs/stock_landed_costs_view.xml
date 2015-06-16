@@ -60,7 +60,7 @@
                             </group>
                         </group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="amount_total"/>
+                            <field name="amount_total" widget="monetary"/>
                         </group>
                         <group>
                             <group>
@@ -91,7 +91,7 @@
                                         <field name="weight" readonly="1"/>
                                         <field name="volume" readonly="1"/>
                                         <field name="quantity" readonly="1"/>
-                                        <field name="former_cost_per_unit" readonly="1"/>
+                                        <field name="former_cost_per_unit" readonly="1" widget="monetary"/>
                                         <field name="former_cost" readonly="1"/>
                                         <field name="additional_landed_cost"/>
                                     </tree>

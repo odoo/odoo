@@ -73,10 +73,6 @@
                                 <label for="group_advance_purchase_requisition"/>
                             </div>
                             <div>
-                                <field name="module_purchase_analytic_plans" on_change="onchange_purchase_analytic_plans(module_purchase_analytic_plans, context)" class="oe_inline"/>
-                                <label for="module_purchase_analytic_plans"/>
-                            </div>
-                            <div>
                                 <field name="group_analytic_account_for_purchases" class="oe_inline"/>
                                 <label for="group_analytic_account_for_purchases"/>
                             </div>
@@ -104,8 +100,8 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_purchase_config" name="Purchases" parent="base.menu_config"
-            sequence="4" action="action_purchase_configuration"/>
+        <menuitem id="menu_purchase_general_settings" name="Settings" parent="menu_purchase_config"
+            sequence="0" action="action_purchase_configuration"/>
 
         <record id="view_account_config" model="ir.ui.view">
             <field name="name">account settings</field>
@@ -123,10 +119,6 @@
                     <div>
                         <field name="group_analytic_account_for_purchases" class="oe_inline"/>
                         <label for="group_analytic_account_for_purchases"/>
-                    </div>
-                    <div>
-                        <field name="module_purchase_analytic_plans" on_change="onchange_purchase_analytic_plans(module_purchase_analytic_plans, context)" class="oe_inline"/>
-                        <label for="module_purchase_analytic_plans"/>
                     </div>
                 </xpath>
             </field>

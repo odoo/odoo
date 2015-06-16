@@ -5,7 +5,7 @@
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="type">notification</field>
+            <field name="message_type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Recruitment Process application installed!</field>
             <field name="body"><![CDATA[<p>Manage job positions and your company's recruitment process. This application is integrated with the Survey application to help you define interviews for different jobs.</p>
@@ -93,30 +93,36 @@
     <record model="hr.recruitment.stage" id="stage_job1">
         <field name="name">Initial Qualification</field>
         <field name="sequence">1</field>
+        <field name="case_default" eval="True"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
         <field name="template_id" ref="applicant_interest"/>
         <field name="sequence">2</field>
+        <field name="case_default" eval="True"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
         <field name="name">Second Interview</field>
         <field name="sequence">3</field>
+        <field name="case_default" eval="True"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job4">
-        <field name="name">Contract Proposed</field>
+        <field name="name">Contract Proposal</field>
         <field name="sequence">4</field>
+        <field name="case_default" eval="True"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
         <field name="sequence">5</field>
         <field name="fold" eval="True"/>
+        <field name="case_default" eval="True"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job6">
         <field name="name">Refused</field>
         <field name="sequence">6</field>
         <field name="template_id" ref="applicant_refuse"/>
         <field name="fold" eval="True"/>
+        <field name="case_default" eval="True"/>
     </record>
 
     <record id="mail_alias_jobs" model="mail.alias">

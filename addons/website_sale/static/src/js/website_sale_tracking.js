@@ -37,10 +37,10 @@ $(document).ready(function () {
         vpv("/stats/ecom/order_payment/" + method);
     });
 
-    if ($(".oe_website_sale div.oe_cart div.oe_website_sale_tx_status").length) {
+    if ($(".oe_website_sale div.oe_website_sale_tx_status").length) {
         track_ga('require', 'ecommerce');
 
-        var order_id = $(".oe_website_sale div.oe_cart div.oe_website_sale_tx_status").data("order-id");
+        var order_id = $(".oe_website_sale div.oe_website_sale_tx_status").data("order-id");
         vpv("/stats/ecom/order_confirmed/" + order_id);
 
         ajax.jsonRpc("/shop/tracking_last_order/").then(function(o) {

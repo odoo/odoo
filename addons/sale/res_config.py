@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 
@@ -103,15 +85,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
-        'module_sale_analytic_plans': fields.boolean('Use multiple analytic accounts on sales',
-            help="""This allows install module sale_analytic_plans."""),
         'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sales orders."),
     }
-
-    def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):
-        """ change group_analytic_account_for_sales following module_sale_analytic_plans """
-        if not module_sale_analytic_plans:
-            return {}
-        return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}

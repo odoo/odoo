@@ -1,24 +1,5 @@
 #openerp.loggers.handlers. -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ConfigParser
 import optparse
@@ -179,6 +160,7 @@ class configmanager(object):
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.http:DEBUG", help='shortcut for --log-handler=openerp.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
+        group.add_option('--log-db-level', dest='log_db_level', my_default='warning', help="Logging database level")
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
@@ -383,7 +365,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo',
                 'dbfilter', 'log_level', 'log_db',
-                'geoip_database',
+                'log_db_level', 'geoip_database',
         ]
 
         for arg in keys:

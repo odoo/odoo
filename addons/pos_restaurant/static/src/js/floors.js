@@ -301,6 +301,8 @@ var TableWidget = PosBaseWidget.extend({
             if (orders[i].hasChangesToPrint()) {
                 notifications.printing = true;
                 break;
+            } else if (orders[i].hasSkippedChanges()) {
+                notifications.skipped  = true;
             }
         }
         return notifications;
@@ -358,6 +360,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         for (var i = 0; i < this.table_widgets.length; i++) { 
             this.table_widgets[i].renderElement();
         }
+        this.check_empty_floor();
     },
     click_floor_button: function(event,$el){
         var floor = this.pos.floors_by_id[$el.data('id')];
@@ -368,6 +371,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
             this.floor = floor;
             this.selected_table = null;
             this.renderElement();
+            this.check_empty_floor();
         }
     },
     background_image_url: function(floor) { 
@@ -488,7 +492,9 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
             'shape': 'square',
             'seats': 1,
         });
+        tw.save_changes();
         this.select_table(tw);
+        this.check_empty_floor();
     },
     new_table_name: function(name){
         if (name) {
@@ -540,6 +546,16 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
 
         if (!this.editing) {
             this.deselect_tables();
+        }
+    },
+    check_empty_floor: function(){
+        if (!this.floor.tables.length) {
+            if (!this.editing) {
+                this.toggle_editing();
+            }
+            this.$('.empty-floor').removeClass('oe_hidden');
+        } else {
+            this.$('.empty-floor').addClass('oe_hidden');
         }
     },
     update_toolbar: function(){
@@ -676,13 +692,7 @@ models.Order = models.Order.extend({
         if (!this.table) {
             this.table = this.pos.table;
         }
-        if (!this.customer_count) {
-            if (this.table) {
-                this.customer_count = this.table.seats;
-            } else {
-                this.customer_count = 1;
-            }
-        }
+        this.customer_count = this.customer_count || 1;
         this.save_to_db();
     },
     export_as_JSON: function() {

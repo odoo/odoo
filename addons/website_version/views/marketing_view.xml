@@ -74,7 +74,7 @@
                     </header>
                     <sheet string="Exp">
                         <button icon="fa-line-chart" name="website_version.action_analytic" String="Statistics" action="action" 
-                            type="action" class="oe_stat_button pull-right" />
+                            type="action" class="pull-right" />
                         <div class="oe_title">
                             <field name="google_id" invisible="1"/>
                             <label for="name" class="oe_edit_only"/>
@@ -173,7 +173,7 @@
                 <form string="version Form">
                     <sheet string="Snap">
                         <group>
-                            <button icon="fa-pencil" name="action_publish" string="Publish" type="object" class="oe_stat_button pull-right"/>
+                            <button icon="fa-pencil" name="action_publish" string="Publish" type="object" class="pull-right"/>
                         </group>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -224,10 +224,10 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Website" id="website_menu" sequence="10" parent="base.marketing_menu" groups="marketing.group_marketing_user"/>
-        <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
-        <menuitem action="action_version" id="menu_action_version" parent="website_menu" groups="base.group_no_one"/>
-        <menuitem action="action_experiment" id="menu_action_experiment" parent="website_menu"/>
+        <menuitem name="Versionning" id="menu_website_version_root" sequence="30" groups="marketing.group_marketing_user" parent="website.menu_website_configuration"/>
+        <menuitem action="action_website_view" id="menu_website_view" parent="menu_website_version_root"/>
+        <menuitem action="action_version" id="menu_action_version" parent="menu_website_version_root" groups="base.group_no_one"/>
+        <menuitem action="action_experiment" id="menu_action_experiment" parent="menu_website_version_root"/>
 
         <record id="google_analytics_configuration" model="ir.actions.act_window">
             <field name="name">Google Analytics Configuration</field>

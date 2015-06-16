@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import urllib
 import urlparse
@@ -70,9 +52,11 @@ class MailMail(osv.Model):
         )
         return url
 
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+    def send_get_mail_body(self, cr, uid, ids, partner=None, context=None):
         """ Override to add the tracking URL to the body. """
-        body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+        # TDE: temporary addition (mail was parameter) due to semi-new-API
+        body = super(MailMail, self).send_get_mail_body(cr, uid, ids, partner=partner, context=context)
+        mail = self.browse(cr, uid, ids[0], context=context)
 
         # prepend <base> tag for images using absolute urls
         domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
@@ -86,8 +70,10 @@ class MailMail(osv.Model):
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
 
-    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
-        res = super(MailMail, self).send_get_email_dict(cr, uid, mail, partner, context=context)
+    def send_get_email_dict(self, cr, uid, ids, partner=None, context=None):
+        # TDE: temporary addition (mail was parameter) due to semi-new-API
+        res = super(MailMail, self).send_get_email_dict(cr, uid, ids, partner, context=context)
+        mail = self.browse(cr, uid, ids[0], context=context)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         if mail.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])

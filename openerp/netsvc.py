@@ -1,27 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2014 OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import logging.handlers
 import os
+import platform
 import pprint
 import release
 import sys
@@ -77,10 +60,11 @@ class PostgreSQLHandler(logging.Handler):
     def emit(self, record):
         ct = threading.current_thread()
         ct_db = getattr(ct, 'dbname', None)
-        dbname = tools.config['log_db'] or ct_db
+        dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
         if not dbname:
             return
         with tools.ignore(Exception), tools.mute_logger('openerp.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
+            cr.autocommit(True)
             msg = tools.ustr(record.msg)
             if record.args:
                 msg = msg % record.args
@@ -144,8 +128,10 @@ def init_logger():
         # SysLog Handler
         if os.name == 'nt':
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
+        elif platform.system() == 'Darwin':
+            handler = logging.handlers.SysLogHandler('/var/run/log')
         else:
-            handler = logging.handlers.SysLogHandler()
+            handler = logging.handlers.SysLogHandler('/dev/log')
         format = '%s %s' % (release.description, release.version) \
                 + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
@@ -182,8 +168,15 @@ def init_logger():
     logging.getLogger().addHandler(handler)
 
     if tools.config['log_db']:
+        db_levels = {
+            'debug': logging.DEBUG,
+            'info': logging.INFO,
+            'warning': logging.WARNING,
+            'error': logging.ERROR,
+            'critical': logging.CRITICAL,
+        }
         postgresqlHandler = PostgreSQLHandler()
-        postgresqlHandler.setLevel(25)
+        postgresqlHandler.setLevel(int(db_levels.get(tools.config['log_db_level'], tools.config['log_db_level'])))
         logging.getLogger().addHandler(postgresqlHandler)
 
     # Configure loggers levels

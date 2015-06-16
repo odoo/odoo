@@ -15,13 +15,6 @@ Track your opportunities pipeline with the revolutionary kanban view. Work
 inside your sales funnel and get instant visual information about next actions,
 new messages, top opportunities and expected revenues.
 
-Social Network Integration
---------------------------
-
-Bring social intelligence to your sales process. Gain insights from social
-media site LinkedIn to find prospects easily and load their data automatically
-into your address book.
-
 Lead Management Made Easy
 -------------------------
 

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-today OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 try:
     import cStringIO as StringIO
@@ -130,8 +112,15 @@ def image_save_for_web(image, fp=None, format=None):
     if image.format == 'PNG':
         opt.update(optimize=True)
         if image.mode != 'P':
+            # Get the alpha band
+            alpha = image.split()[-1]
             # Floyd Steinberg dithering by default
             image = image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
+            # Set all pixel values below 128 to 255 and the rest to 0
+            mask = Image.eval(alpha, lambda a: 255 if a <=128 else 0)
+            # Paste the color of index 255 and use alpha as a mask
+            image.paste(255, mask)
+            opt.update(transparency=255)
     elif image.format == 'JPEG':
         opt.update(optimize=True, quality=80)
     if fp:

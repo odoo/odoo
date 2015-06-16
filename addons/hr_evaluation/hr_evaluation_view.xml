@@ -71,9 +71,10 @@
             <field name="context">{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}</field>
         </record>
 
-        <menuitem name="Appraisal" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="25"/>
+        <menuitem name="Appraisal" id="menu_hr_evaluation_root" sequence="85"/>
         <menuitem name="Periodic Appraisal" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4" groups="base.group_hr_manager"/>
-        <menuitem parent="hr.menu_hr_configuration_employees" id="menu_open_view_hr_evaluation_plan_tree"
+        <menuitem name="Configuration" id="menu_hr_evaluation_configuration" sequence="100" parent="menu_hr_evaluation_root" groups="base.group_configuration"/>
+        <menuitem parent="menu_hr_evaluation_configuration" id="menu_open_view_hr_evaluation_plan_tree"
             action="open_view_hr_evaluation_plan_tree" sequence="5" groups="base.group_hr_manager"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
@@ -129,7 +130,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="action"/>
-                    <field name="survey_id" domain="[('res_model','=','hr_evaluation')]"/>
+                    <field name="survey_id"/>
                     <field name="wait"/>
                 </tree>
             </field>
@@ -146,14 +147,14 @@
                     <field name="evaluation_date"/>
                 </group>
             </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <div name="button_box" position="inside">
                 <button name="%(act_hr_employee_2_hr__evaluation_interview)d"
                     class="oe_stat_button"
                     icon="fa-sitemap"
                     type="action">
                     <field name="appraisal_count" widget="statinfo" string="Appraisals"/>
                 </button>
-            </xpath>
+            </div>
             </field>
         </record>
 
@@ -207,8 +208,8 @@
             <field name="name">hr_evaluation.evaluation.tree</field>
             <field name="model">hr_evaluation.evaluation</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" string="Appraisal"
-                        fonts="bold: message_unread == True">
+                <tree decoration-info="state == 'draft'" decoration-muted="state in('done','cancel')" string="Appraisal"
+                       decoration-bf="message_unread == True">
                     <field name="employee_id"/>
                     <field name="plan_id"/>
                     <field name="date"/>
@@ -263,7 +264,7 @@
             </field>
         </record>
 
-        <menuitem name="Appraisals" parent="menu_eval_hr" id="menu_open_view_hr_evaluation_tree"
+        <menuitem name="Appraisals" parent="menu_hr_evaluation_root" id="menu_open_view_hr_evaluation_tree"
             action="open_view_hr_evaluation_tree" groups="base.group_hr_user"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_interview_form">
@@ -283,7 +284,7 @@
                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
                     </header>
                     <sheet>
-                        <div class="oe_right oe_button_box" name="button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" type="action"
                                 states="waiting_answer"
                                 context="{'default_body': 'Hello,\n\nKindly post your response for the survey interview.\n\nThanks',
@@ -313,7 +314,7 @@
             <field name="name">hr_evaluation.interview.tree</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="arch" type="xml">
-                <tree string="Interview Appraisal" fonts="bold: message_unread == True">
+                <tree string="Interview Appraisal" decoration-bf="message_unread == True">
                     <field name="deadline" string="Deadline Date"/>
                     <field name="survey_id" domain="[('res_model','=','hr_evaluation')]"/>
                     <field name="user_id" string="Interviewer"/>
@@ -352,7 +353,7 @@
         </record>
 
         <record id="view_evaluation_calendar" model="ir.ui.view">
-            <field name="name">Interview Requests</field>
+            <field name="name">Interviews</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="arch" type="xml">
                 <calendar string="Interview Request" color="user_to_review_id" date_start="deadline">
@@ -362,7 +363,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_hr_evaluation_interview_tree">
-            <field name="name">Interview Requests</field>
+            <field name="name">Interviews</field>
             <field name="res_model">hr.evaluation.interview</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
@@ -400,7 +401,7 @@
             <field name="act_window_id" ref="action_hr_evaluation_interview_tree"/>
         </record>
 
-        <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
+        <menuitem name="Interviews" parent="menu_hr_evaluation_root" id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
 
       <!-- Email Compose message Action-->
@@ -433,36 +434,6 @@
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
             <field name="context">{'search_default_state': 'draft'}</field>
             <field name="domain">[('employee_id.department_id', '=', active_id)]</field>
-        </record>
-
-        <!--Hr Department Inherit Kanban view-->
-        <record id="hr_department_view_kanban" model="ir.ui.view">
-            <field name="name">hr.department.kanban.inherit</field>
-            <field name="model">hr.department</field>
-            <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//templates" position="before">
-                        <field name="appraisal_to_start_count"/>
-                        <field name="interview_request_count"/>
-                    </xpath>
-                    <xpath expr="//div[@name='to_do']" position="attributes">
-                        <attribute name="class">col-md-6 col-xs-6</attribute>
-                    </xpath>
-                    <xpath expr="//div[@name='to_do']" position="inside">
-                        <div>
-                            <a name="%(hr_evaluation_interview_action_from_department)d" type="action">
-                                <t t-esc="record.interview_request_count.raw_value or 0"/> Interview Requests
-                            </a>
-                        </div>
-                        <div>
-                            <a name="%(hr_appraisal_action_from_department)d" type="action">
-                                <t t-esc="record.appraisal_to_start_count.raw_value or 0"/> Appraisal to Start
-                            </a>
-                        </div>
-                    </xpath>
-                </data>
-            </field>
         </record>
 
     </data>

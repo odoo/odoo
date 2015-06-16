@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import time
 
@@ -295,8 +277,8 @@ class ir_sequence(models.Model):
             return False
         force_company = self.env.context.get('force_company')
         if not force_company:
-            force_company = self.env.user.company_id
-        preferred_sequences = [s for s in seq_ids if s.company_id and s.company_id == force_company]
+            force_company = self.env.user.company_id.id
+        preferred_sequences = [s for s in seq_ids if s.company_id and s.company_id.id == force_company]
         seq_id = preferred_sequences[0] if preferred_sequences else seq_ids[0]
         return seq_id._next()
 

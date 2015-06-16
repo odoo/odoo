@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields,osv
 from openerp.tools.sql import drop_view_if_exists
@@ -35,7 +17,7 @@ class report_timesheet_line(osv.osv):
         'cost': fields.float('Cost', readonly=True),
         'product_id': fields.many2one('product.product', 'Product',readonly=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'general_account_id': fields.many2one('account.account', 'Financial Account', readonly=True),
+        'general_account_id': fields.many2one('account.account', 'Financial Account', readonly=True, domain=[('deprecated', '=', False)]),
         'invoice_id': fields.many2one('account.invoice', 'Invoiced', readonly=True),
         'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),

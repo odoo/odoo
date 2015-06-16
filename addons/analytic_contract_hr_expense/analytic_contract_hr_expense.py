@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -111,11 +93,11 @@ class account_analytic_account(osv.osv):
         'est_expenses': fields.float('Estimation of Expenses to Invoice'),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
-            digits_compute=dp.get_precision('Account')),
+            digits=0),
     }
 
-    def on_change_template(self, cr, uid, id, template_id, date_start=False, context=None):
-        res = super(account_analytic_account, self).on_change_template(cr, uid, id, template_id, date_start=date_start, context=context)
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['charge_expenses'] = template.charge_expenses
@@ -123,13 +105,13 @@ class account_analytic_account(osv.osv):
         return res
 
     def open_hr_expense(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool['ir.model.data']
+        act_obj = self.pool['ir.actions.act_window']
 
         dummy, act_window_id = mod_obj.get_object_reference(cr, uid, 'hr_expense', 'expense_all')
         result = act_obj.read(cr, uid, [act_window_id], context=context)[0]
 
-        line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account', 'in', ids)])
+        line_ids = self.pool['hr.expense.line'].search(cr, uid, [('analytic_account', 'in', ids)], context=context)
         result['domain'] = [('line_ids', 'in', line_ids)]
         names = [account.name for account in self.browse(cr, uid, ids, context=context)]
         result['name'] = _('Expenses of %s') % ','.join(names)
@@ -148,5 +130,4 @@ class account_analytic_account(osv.osv):
             'view_mode': 'tree,form',
             'domain' : domain,
             'res_model': 'account.analytic.line',
-            'nodestroy': True,
         }

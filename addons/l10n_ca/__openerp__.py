@@ -1,23 +1,5 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Canada - Accounting',
     'version': '1.2',
@@ -57,22 +39,18 @@ position.
         'account',
         'base_iban',
         'base_vat',
-        'account_chart',
-        'account_anglo_saxon'
     ],
     'data': [
         'account_chart_en.xml',
-        'account_tax_code_en.xml',
         'account_chart_template_en.xml',
         'account_tax_en.xml',
         'fiscal_templates_en.xml',
         'account_chart_fr.xml',
-        'account_tax_code_fr.xml',
         'account_chart_template_fr.xml',
         'account_tax_fr.xml',
         'fiscal_templates_fr.xml',
         'l10n_ca_wizard.xml'
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

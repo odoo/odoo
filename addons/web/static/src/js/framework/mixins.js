@@ -114,6 +114,22 @@ var ParentedMixin = {
     },
 };
 
+function OdooEvent (target, name, data) {
+    this.target = target;
+    this.name = name;
+    this.data = Object.create(null);
+    _.extend(this.data, data);
+    this.stopped = false;
+}
+
+OdooEvent.prototype.stop_propagation = function () {
+    this.stopped = true;
+};
+
+OdooEvent.prototype.is_stopped = function () {
+    return this.stopped;
+};
+
 /**
  * Backbone's events. Do not ever use it directly, use EventDispatcherMixin instead.
  *
@@ -255,6 +271,16 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     trigger: function() {
         this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
         return this;
+    },
+    trigger_up: function(name, info) {
+        var event = new OdooEvent(this, name, info);
+        this._trigger_up(event);
+    },
+    _trigger_up: function(event) {
+        this.__edispatcherEvents.trigger(event.name, event);
+        if (!event.is_stopped() && (parent = this.getParent())) {
+            parent._trigger_up(event);
+        }
     },
     destroy: function() {
         var self = this;

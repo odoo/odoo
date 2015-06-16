@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -167,16 +149,25 @@ class procurement_order(osv.osv):
         old_proc = False
         key = tuple()
         key_routes = {}
+        proc = False
         for proc, route in product_routes:
-            key += (route,)
-            if old_proc != proc:
+            if not old_proc:
+                old_proc = proc
+            if old_proc == proc:
+                key += (route,)
+            else:
                 if key:
                     if key_routes.get(key):
-                        key_routes[key] += [proc]
+                        key_routes[key] += [old_proc]
                     else:
-                        key_routes[key] = [proc]
+                        key_routes[key] = [old_proc]
                 old_proc = proc
-                key = tuple()
+                key = (route,)
+        if proc: #do not forget last one as we passed through it
+            if key_routes.get(key):
+                key_routes[key] += [proc]
+            else:
+                key_routes[key] = [proc]
         return key_routes
 
 
@@ -210,7 +201,6 @@ class procurement_order(osv.osv):
                 res = pull_obj.search(cr, uid, loc_domain + [('route_id', 'in', procurement_route_ids)], order='route_sequence, sequence', context=context)
                 if res and res[0]:
                     results_dict[procurement.id] = res[0]
-
 
         procurements_to_check = [x for x in procurements if x.id not in results_dict.keys()]
         #group by warehouse_id:
@@ -510,7 +500,7 @@ class procurement_order(osv.osv):
                             qty -= subtract_qty[op.id]
 
                             qty_rounded = float_round(qty, precision_rounding=op.product_uom.rounding)
-                            if qty_rounded >= 0:
+                            if qty_rounded > 0:
                                 proc_id = procurement_obj.create(cr, uid,
                                                                  self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, context=context),
                                                                  context=context)

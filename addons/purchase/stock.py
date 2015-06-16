@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
@@ -116,7 +98,7 @@ class stock_move(osv.osv):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
-            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
+            res['invoice_line_tax_ids'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
         return res
 
@@ -157,6 +139,10 @@ class stock_move(osv.osv):
                     return self.write(cr, uid, [move.id], {'price_unit': price}, context=context)
         super(stock_move, self).attribute_price(cr, uid, move, context=context)
 
+    def _get_taxes(self, cr, uid, move, context=None):
+        if move.origin_returned_move_id.purchase_line_id.taxes_id:
+            return [tax.id for tax in move.origin_returned_move_id.purchase_line_id.taxes_id]
+        return super(stock_move, self)._get_taxes(cr, uid, move, context=context)
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
@@ -198,8 +184,8 @@ class stock_picking(osv.osv):
         if move.purchase_line_id and move.purchase_line_id.order_id:
             purchase = move.purchase_line_id.order_id
             inv_vals.update({
-                'fiscal_position': purchase.fiscal_position.id,
-                'payment_term': purchase.payment_term_id.id,
+                'fiscal_position_id': purchase.fiscal_position_id.id,
+                'payment_term_id': purchase.payment_term_id.id,
                 })
         return inv_vals
 

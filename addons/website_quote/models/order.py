@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import osv, fields
 import uuid
@@ -143,8 +125,7 @@ class sale_order(osv.osv):
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
-        'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
-            digits_compute=dp.get_precision('Account')),
+        'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float", digits=0),
         'quote_viewed': fields.boolean('Quotation Viewed')
     }
 
@@ -169,7 +150,7 @@ class sale_order(osv.osv):
             'url': '/quote/%s' % (quote.id)
         }
 
-    def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, context=None):
+    def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position_id=False, context=None):
         if not template_id:
             return True
 
@@ -183,7 +164,7 @@ class sale_order(osv.osv):
             res = self.pool.get('sale.order.line').product_id_change(cr, uid, False,
                 False, line.product_id.id, line.product_uom_qty, line.product_uom_id.id, line.product_uom_qty,
                 line.product_uom_id.id, line.name, partner, False, True, time.strftime('%Y-%m-%d'),
-                False, fiscal_position, True, context)
+                False, fiscal_position_id, True, context)
             data = res.get('value', {})
             if 'tax_id' in data:
                 data['tax_id'] = [(6, 0, data['tax_id'])]
@@ -279,6 +260,8 @@ class sale_quote_option(osv.osv):
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
+        if product_obj.description_sale:
+            vals['name'] += '\n'+product_obj.description_sale
         return {'value': vals}
 
 class sale_order_option(osv.osv):
@@ -311,6 +294,8 @@ class sale_order_option(osv.osv):
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
+        if product_obj.description_sale:
+            vals['name'] += '\n'+product_obj.description_sale
         return {'value': vals}
 
 class product_template(osv.Model):

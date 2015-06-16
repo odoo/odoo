@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import tools
 from openerp.osv import osv, fields
@@ -39,7 +21,7 @@ class product_pricelist(osv.Model):
 class product_public_category(osv.osv):
     _name = "product.public.category"
     _inherit = ["website.seo.metadata"]
-    _description = "Public Category"
+    _description = "Website Product Category"
     _order = "sequence, name"
 
     _constraints = [
@@ -118,7 +100,7 @@ class product_template(osv.Model):
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
-                '&', ('model', '=', self._name), ('type', '=', 'comment')
+                '&', ('model', '=', self._name), ('message_type', '=', 'comment')
             ],
             string='Website Comments',
         ),
@@ -129,7 +111,7 @@ class product_template(osv.Model):
         'website_size_y': fields.integer('Size Y'),
         'website_style_ids': fields.many2many('product.style', string='Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
-        'public_categ_ids': fields.many2many('product.public.category', string='Public Category', help="Those categories are used to group similar products for e-commerce."),
+        'public_categ_ids': fields.many2many('product.public.category', string='Website Product Category', help="Those categories are used to group similar products for e-commerce."),
     }
 
     def _defaults_website_sequence(self, cr, uid, *l, **kwargs):

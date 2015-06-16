@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ This module provides the elements for managing two different API styles,
     namely the "traditional" and "record" styles.
@@ -68,7 +50,7 @@ from pprint import pformat
 from weakref import WeakSet
 from werkzeug.local import Local, release_local
 
-from openerp.tools import frozendict
+from openerp.tools import frozendict, classproperty
 
 _logger = logging.getLogger(__name__)
 
@@ -674,6 +656,10 @@ class Environment(object):
     """
     _local = Local()
 
+    @classproperty
+    def envs(cls):
+        return cls._local.environments
+
     @classmethod
     @contextmanager
     def manage(cls):
@@ -699,7 +685,7 @@ class Environment(object):
         args = (cr, uid, context)
 
         # if env already exists, return it
-        env, envs = None, cls._local.environments
+        env, envs = None, cls.envs
         for env in envs:
             if env.args == args:
                 return env
@@ -903,6 +889,13 @@ class Environment(object):
         finally:
             self.all.recompute = tmp
 
+    @property
+    def recompute_old(self):
+        return self.all.recompute_old
+
+    def clear_recompute_old(self):
+        del self.all.recompute_old[:]
+
 
 class Environments(object):
     """ A common object for all environments in a request. """
@@ -911,6 +904,7 @@ class Environments(object):
         self.todo = {}                  # recomputations {field: [records]}
         self.mode = False               # flag for draft/onchange
         self.recompute = True
+        self.recompute_old = []        # list of old api compute fields to recompute
 
     def add(self, env):
         """ Add the environment `env`. """

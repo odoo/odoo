@@ -62,34 +62,29 @@
     .oe_form td .oe_no_padding
         margin-left: -6px
 
-
-    .oe_mail_wall
-        .oe_mail_wall_aside
-            margin-top: 15px
-            position: relative
-            display: inline-block
-            vertical-align: top
-            width: 280px
-            border-radius: 2px
-
-            .oe_gamification_challenge_list
-                background-color: #EDEDF6
+    .oe_timeline
+        .oe_tl_inbox_aside
             .oe_gamification_suggestion
-                background-color: rgb(211, 222, 241)
-                ul
+                background-color: #d3def1
+
+                ul 
                     padding-left: 15px
 
-            h4, .oe_goals_list .oe_thead
-                text-align: center
-                padding-bottom: 15px
-
-        .oe_mail_wall_aside > div
-            border-bottom: solid 5px white
-            border-radius: 2px
+                span
+                    background-color: #f0eeee
+                    display: inline-block
+                    height: 25px
+                    vertical-align: middle
+                    font-size: 14px
+                    font-weight: bold
+                    margin-top: -20px
+                    padding-left: 0 5px 0px 5px
 
         .oe_goal
-            border-bottom: solid 3px white
-            padding: 5px 10px
+            background-color: #f0eeee
+            border: solid 1px #CACACA
+            margin-top: 20px
+            padding-left: 10px
             .oe_update_challenge.fa, .oe_goal_action.fa
                 visibility: hidden
                 font-size: 16px
@@ -97,7 +92,6 @@
                 position: relative
             div:hover > .oe_update_challenge, div:hover > .oe_goal_action, th:hover > .oe_goal_action
                 visibility: visible
-
             .oe_goals_list
                 padding-left: 0
                 margin-top: 5px
@@ -170,13 +164,10 @@
                 padding: 0 5px
             .col2
                 width: auto
-        
+
         .oe_user_avatar
             width: 24px
             padding-right: 5px
-
-        .oe_mail
-            display: inline-block
 
         .oe_table
             display: table

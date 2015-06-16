@@ -6,7 +6,7 @@
         <field name="name">payment.advice.report.tree</field>
         <field name="model">payment.advice.report</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'confirm';gray:state == 'cancel' " create="false" string="Advices Analysis">
+            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" create="false" string="Advices Analysis">
                 <field name="nbr" sum="# Payment Lines"/>
                 <field name="name" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
@@ -78,7 +78,8 @@
         <field name="help">This report performs analysis on Payment Advices</field>
     </record>
 
-    <menuitem action="action_payment_advice_report_all" id="menu_reporting_payment_advice" parent="hr.menu_hr_reporting" sequence="5" groups="base.group_hr_manager"/>
+    <menuitem name="Reports" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="base.group_hr_manager"/>
+    <menuitem action="action_payment_advice_report_all" id="menu_reporting_payment_advice" parent="menu_l10n_in_hr_payroll_report" sequence="5" />
 
 </data>
 </openerp>

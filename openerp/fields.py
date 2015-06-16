@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ High-level objects for fields. """
 
@@ -33,6 +15,7 @@ import xmlrpclib
 from openerp.tools import float_round, frozendict, html_sanitize, ustr
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+from openerp.exceptions import UserError
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -494,12 +477,10 @@ class Field(object):
 
         # determine the chain of fields, and make sure they are all set up
         recs = env[self.model_name]
-        fields = []
         for name in self.related:
             field = recs._fields[name]
             field.setup(env)
             recs = recs[name]
-            fields.append(field)
 
         self.related_field = field
 
@@ -529,9 +510,9 @@ class Field(object):
         if not self.states and self.inherited:
             self.states = field.states
 
-        # special case for required: check if all fields are required
-        if not self.store and not self.required:
-            self.required = all(field.required for field in fields)
+        # special case for inherited required fields
+        if self.inherited and field.required:
+            self.required = True
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
@@ -885,7 +866,7 @@ class Field(object):
         """ Determine the value of `self` for `record`. """
         env = record.env
 
-        if self.column and not (self.depends and env.in_draft):
+        if self.column and not (self.depends and env.in_onchange):
             # this is a stored field or an old-style function field
             if self.depends:
                 # this is a stored computed field, check for recomputation
@@ -911,7 +892,7 @@ class Field(object):
 
         elif self.compute:
             # this is either a non-stored computed field, or a stored computed
-            # field in draft mode
+            # field in onchange mode
             if self.recursive:
                 self.compute_value(record)
             else:
@@ -1054,7 +1035,7 @@ class Float(Field):
     @property
     def digits(self):
         if callable(self._digits):
-            with registry().cursor() as cr:
+            with fields._get_cursor() as cr:
                 return self._digits(cr)
         else:
             return self._digits
@@ -1281,17 +1262,16 @@ class Datetime(Field):
         """
         assert isinstance(timestamp, datetime), 'Datetime instance expected'
         tz_name = record._context.get('tz') or record.env.user.tz
+        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False)  # UTC = no DST
         if tz_name:
             try:
-                utc = pytz.timezone('UTC')
                 context_tz = pytz.timezone(tz_name)
-                utc_timestamp = utc.localize(timestamp, is_dst=False)  # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
             except Exception:
                 _logger.debug("failed to compute context/client-specific timestamp, "
                               "using the UTC value",
                               exc_info=True)
-        return timestamp
+        return utc_timestamp
 
     @staticmethod
     def from_string(value):

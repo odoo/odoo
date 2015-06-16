@@ -60,6 +60,9 @@
             <div class="js_disconnected oe_icon oe_red oe_hidden">
                 <i class='fa fa-fw fa-wifi'></i>
             </div>
+            <div class="js_error oe_icon oe_red oe_hidden">
+                <i class='fa fa-fw fa-warning'></i>
+            </div>
         </div>
     </t>
 
@@ -99,8 +102,14 @@
 
     <t t-name="ActionpadWidget">
         <div class="actionpad">
-            <button class='button set-customer'>
-                <i class='fa fa-user' /> Customer
+            <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >
+                <i class='fa fa-user' /> 
+                <t t-if="widget.pos.get_client()">
+                    <t t-esc="widget.pos.get_client().name" />
+                </t>
+                <t t-if="!widget.pos.get_client()">
+                    Customer
+                </t>
             </button>
             <button class='button pay'>
                 <div class='pay-circle'>
@@ -159,8 +168,8 @@
         <header class='rightpane-header'>
             <div class="breadcrumbs">
                 <span class="breadcrumb">
-                    <span class=" breadcrumb-button js-category-switch">
-                        <img src="/point_of_sale/static/src/img/home.png" class="breadcrumb-homeimg" />
+                    <span class=" breadcrumb-button breadcrumb-home js-category-switch">
+                        <i class='fa fa-home'></i>
                     </span>
                 </span>
                 <t t-foreach="widget.breadcrumb" t-as="category">
@@ -314,7 +323,7 @@
                         <select class='detail client-address-country' name='country_id'>
                             <option value=''>None</option>
                             <t t-foreach='widget.pos.countries' t-as='country'>
-                                <option t-att-value='country.id' t-att-selected="partner_country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined"> 
+                                <option t-att-value='country.id' t-att-selected="partner.country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined"> 
                                     <t t-esc='country.name'/>
                                 </option>
                             </t>
@@ -592,7 +601,15 @@
 
                     <div class='payment-buttons'>
                         <div class='button js_set_customer'>
-                            <i class='fa fa-user' />Customer
+                            <i class='fa fa-user' /> 
+                            <span class='js_customer_name'> 
+                                <t t-if="widget.pos.get_client()">
+                                    <t t-esc="widget.pos.get_client().name" />
+                                </t>
+                                <t t-if="!widget.pos.get_client()">
+                                    Customer
+                                </t>
+                            </span>
                         </div>
                         <t t-if='widget.pos.config.iface_invoicing'>
                             <t t-if='widget.pos.get_order()'>
@@ -807,6 +824,20 @@
         </receipt>
     </t>
 
+    <t t-name="PopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-alert">
+                <p class="title"><t t-esc=" widget.options.title || 'Alert' " /></p>
+                <p class="body"><t t-esc=" widget.options.body || '' "/></p>
+                <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
@@ -830,19 +861,11 @@
                     <div class="button cancel">
                         Ok
                     </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorTracebackPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-error">
-                <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
-                <p class="body traceback"><t t-esc=" widget.options.body || '' "/></p>
-                <div class="footer">
-                    <div class="button cancel">
-                        Ok
+                    <div class="button icon download">
+                        <i class="fa fa-download"></i>
+                    </div>
+                    <div class="button icon email">
+                        <i class="fa fa-paper-plane"></i>
                     </div>
                 </div>
             </div>
@@ -920,52 +943,6 @@
         </div>
     </t>
 
-    <t t-name="UnsentOrdersPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-unsent-orders">
-                <p class="title">Unsent Orders</p>
-                <t t-if='widget.pos.db.get_orders().length === 0'>
-                    <p class='body'>
-                        There are no unsent orders
-                    </p>
-                </t>
-                <t t-if='widget.pos.db.get_orders().length > 0'>
-                    <p class='body traceback'>
-                        <t t-esc='JSON.stringify(widget.pos.db.get_orders(),null,2)' />
-                    </p>
-                </t>
-                <div class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="UnpaidOrdersPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-unpaid-orders">
-                <p class="title">Unpaid Orders</p>
-                <t t-if='widget.pos.db.get_unpaid_orders().length === 0'>
-                    <p class='body'>
-                        There are no unpaid orders
-                    </p>
-                </t>
-                <t t-if='widget.pos.db.get_unpaid_orders().length > 0'>
-                    <p class='body traceback'>
-                        <t t-esc='JSON.stringify(widget.pos.db.get_unpaid_orders(),null,2)' />
-                    </p>
-                </t>
-                <div class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="SelectionPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-selection">
@@ -1029,11 +1006,47 @@
                     </button>
                     <br />
                 </div>
-                <div class="footer">
+                <div class="footer centered">
                     <div class="button cancel">
                         Cancel 
                     </div>
                     <div class="button confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="OrderImportPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-import">
+                <p class="title">Finished Importing Orders</p>
+                <t t-if="widget.options and widget.options.report">
+                    <t t-set="report" t-value="widget.options.report" />
+                    <t t-set="unpaid_skipped" t-value="(report.unpaid_skipped_existing || 0) + (report.unpaid_skipped_session || 0)" />
+                    <ul class='body'>
+                        <li>Successfully imported <b><t t-esc='report.paid || 0'/></b> paid orders</li>
+                        <li>Successfully  imported <b><t t-esc='report.unpaid || 0'/></b> unpaid orders</li>
+                        <t t-if="unpaid_skipped">
+                            <li><b><t t-esc="unpaid_skipped"/></b> unpaid orders could not be imported
+                                <ul>
+                                    <li><b><t t-esc="report.unpaid_skipped_existing || 0" /></b> were duplicates of existing orders</li>
+                                    <li><b><t t-esc="report.unpaid_skipped_session || 0" /></b> belong to another session:
+                                        <t t-if="report.unpaid_skipped_sessions">
+                                            <ul>
+                                                <li>Session ids: <b><t t-esc="JSON.stringify(report.unpaid_skipped_sessions)" /></b></li> 
+                                            </ul>
+                                        </t>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                        </t>
+                    </ul>
+                </t>
+                <div class="footer">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -1143,15 +1156,17 @@
                     <li class="button custom_ean">Scan EAN-13</li>
                 </ul>
 
-                <p class="category">Unsent Orders</p>
+                <p class="category">Orders</p>
+
                 <ul>
-                    <li class="button show_orders">Show All Unsent Orders</li>
-                    <li class="button delete_orders">Delete All Unsent Orders</li>
-                </ul>
-                <p class="category">Unpaid Orders</p>
-                <ul>
-                    <li class="button show_unpaid_orders">Show All Unpaid Orders</li>
-                    <li class="button delete_unpaid_orders">Delete All Unpaid Orders</li>
+                    <li class="button delete_orders">Delete Paid Orders</li>
+                    <li class="button delete_unpaid_orders">Delete Unpaid Orders</li>
+                    <li class="button export_paid_orders">Export Paid Orders</li>
+                    <li class="button export_unpaid_orders">Export Unpaid Orders</li>
+                    <li class="button import_orders" style="position:relative">
+                        Import Orders
+                        <input type="file" style="opacity:0;position:absolute;top:0;left:0;right:0;bottom:0;margin:0;cursor:pointer"/>
+                    </li>
                 </ul>
 
                 <p class="category">Hardware Status</p>
@@ -1174,7 +1189,10 @@
             <div class='paymentline-name'>
                 <t t-esc="line.name"/>
             </div>
-            <input class='paymentline-input' type="number" step="0.01" t-att-value="line.get_amount_str()" />
+            <input class='paymentline-input'
+                t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
+                t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
+                step="0.01" t-att-value="line.get_amount_str()" />
             <span  class='paymentline-delete'>
                 <img src="/point_of_sale/static/src/img/search_reset.gif" />
             </span>
@@ -1203,10 +1221,7 @@
                             <span class='order-sequence'>
                                 <t t-esc='order.sequence_number' />
                             </span>
-                            <t t-if="order.get_client()">
-                                <i class='fa fa-user'/>
-                            </t>
-                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + moment(order.creation_date).format('hh:mm')"/>
+                            <t t-esc="moment(order.creation_date).format('hh:mm')"/>
                         </span>
                     </t>
                     <t t-if='order !== widget.pos.get_order()'>

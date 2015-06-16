@@ -29,12 +29,12 @@
                     <field name="website_sequence"/>
                 </group>
             </group>
-            <xpath expr="//div[@name='buttons']" position="inside">
-                <button class="oe_inline oe_stat_button" name="open_website_url"
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="open_website_url"
                     type="object" icon="fa-globe">
                     <field name="website_published" widget="website_button"/>
                 </button>
-            </xpath>
+            </div>
         </field>
     </record>
 
@@ -76,7 +76,7 @@
         <field name="name">product.public.category.form</field>
         <field name="model">product.public.category</field>
         <field name="arch" type="xml">
-            <form string="Public Categories">
+            <form string="Website Public Categories">
                 <sheet>
                     <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
                     <div class="oe_left">
@@ -102,7 +102,7 @@
         </field>
     </record>
     <record id="product_public_category_action" model="ir.actions.act_window">
-        <field name="name">Public Categories</field>
+        <field name="name">Website Product Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.public.category</field>
         <field name="view_type">form</field>
@@ -122,7 +122,55 @@
         </field>
     </record>
     <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="2" />
-    <!-- END -->
+
+    <record id="website_sale_pricelists_by_website" model="ir.actions.act_window">
+        <field name="name">Website Pricelist</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">website_pricelist</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+    </record>
+    <menuitem action="website_sale_pricelists_by_website" id="menu_website_sale_pricelists" parent="product.menu_product_pricelist_main" sequence="0" />
+
+     <!-- Product Public Categories -->
+    <record id="website_pricelist_form_view" model="ir.ui.view">
+        <field name="name">website_pricelist.form</field>
+        <field name="model">website_pricelist</field>
+        <field name="arch" type="xml">
+            <form string="Website PriceLists">
+                <group>
+                    <field name="website_id"/>
+                    <field name="selectable"/>
+                    <field name="pricelist_id"/>
+                    <field name="country_group_ids"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="website_pricelist_tree_view" model="ir.ui.view">
+        <field name="name">website_pricelist.tree</field>
+        <field name="model">website_pricelist</field>
+        <field name="arch" type="xml">
+            <tree string="Website PriceLists">
+                <field name="website_id"/>
+                <field name="selectable"/>
+                <field name="pricelist_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="inherits_website_sale_country_group_form">
+        <field name="name">website_sale.country_group.form</field>
+        <field name="model">res.country.group</field>
+        <field name="inherit_id" ref="base.view_country_group_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_ids']" position="after">
+                <field name="website_pricelist_ids"/>
+            </xpath>
+        </field>
+    </record>
 
  </data>
 

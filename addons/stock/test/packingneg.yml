@@ -31,7 +31,6 @@
 - 
   !python {model: stock.picking}: |
     self.action_confirm(cr, uid, [ref('pick_neg')], context=context)
-    self.do_prepare_partial(cr, uid, [ref('pick_neg')], context=context)
 - 
   Put 120 pieces on Palneg 1 (package), 120 pieces on Palneg 2 with lot A and 60 pieces on Palneg 3
 - 
@@ -79,7 +78,6 @@
 - 
   !python {model: stock.picking}: |
     stock_pack = self.pool.get('stock.pack.operation')
-    self.do_prepare_partial(cr, uid, [ref('delivery_order_neg')], context=context)
     delivery_id = self.browse(cr, uid, ref('delivery_order_neg'), context=context)
     for rec in delivery_id.pack_operation_ids:
       if rec.package_id.name == 'Palneg 2':
@@ -130,8 +128,6 @@
 - 
   !python {model: stock.picking}: |
     self.action_confirm(cr, uid, [ref("delivery_reconcile")])
-    self.action_confirm(cr, uid, [ref("delivery_reconcile")])
-    self.do_prepare_partial(cr, uid, [ref("delivery_reconcile")])
     pick = self.browse(cr, uid, ref("delivery_reconcile"))
     ops_obj = self.pool.get("stock.pack.operation")
     pack_obj = self.pool.get("stock.quant.package")
@@ -148,4 +144,3 @@
     pick = self.pool.get('stock.picking').browse(cr, uid, ref('delivery_reconcile'))
     customer_quant = self.search(cr, uid, [('product_id', '=', ref('product_neg')), ('location_id', '=', ref('stock_location_customers')), ('lot_id.name','=', 'Lot neg'), ('qty','=', 20)])
     assert pick.move_lines[0].id in [x.id for x in self.browse(cr, uid, customer_quant[0]).history_ids]
-    

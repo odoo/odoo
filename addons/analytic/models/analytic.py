@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from datetime import datetime
@@ -27,6 +9,15 @@ from openerp import tools
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
+
+ANALYTIC_ACCOUNT_STATE = [
+    ('template', 'Template'),
+    ('draft','New'),
+    ('open','In Progress'),
+    ('pending','To Renew'),
+    ('close','Closed'),
+    ('cancelled', 'Cancelled')
+]
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
@@ -180,9 +171,9 @@ class account_analytic_account(osv.osv):
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'child_complete_ids': fields.function(_child_compute, relation='account.analytic.account', string="Account Hierarchy", type='many2many'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
-        'balance': fields.function(_debit_credit_bal_qtty, type='float', string='Balance', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
-        'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
-        'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
+        'balance': fields.function(_debit_credit_bal_qtty, type='float', string='Balance', multi='debit_credit_bal_qtty', digits=0),
+        'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits=0),
+        'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits=0),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Prepaid Service Units', help='Sets the higher limit of time to work on the contract, based on the timesheet. (for instance, number of hours in a limited support contract.)'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
@@ -191,13 +182,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Start Date'),
         'date': fields.date('Expiration Date', select=True, track_visibility='onchange'),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),
-                                   ('draft','New'),
-                                   ('open','In Progress'),
-                                   ('pending','To Renew'),
-                                   ('close','Closed'),
-                                   ('cancelled', 'Cancelled')],
-                                  'Status', required=True,
+        'state': fields.selection(ANALYTIC_ACCOUNT_STATE, 'Status', required=True,
                                   track_visibility='onchange', copy=False),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
@@ -339,7 +324,7 @@ class account_analytic_line(osv.osv):
     _columns = {
         'name': fields.char('Description', required=True),
         'date': fields.date('Date', required=True, select=True),
-        'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits_compute=dp.get_precision('Account')),
+        'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits=0),
         'unit_amount': fields.float('Quantity', help='Specifies the amount of quantity to count.'),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='restrict', select=True, domain=[('type','<>','view')]),
         'user_id': fields.many2one('res.users', 'User'),
@@ -357,7 +342,8 @@ class account_analytic_line(osv.osv):
     _defaults = {
         'date': __get_default_date,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
-        'amount': 0.00
+        'amount': 0.00,
+        'user_id': lambda self, cr, uid, ctx: ctx.get('user_id') or uid,
     }
 
     _order = 'date desc'

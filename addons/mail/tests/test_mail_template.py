@@ -62,7 +62,7 @@ class TestMailTemplate(TestMail):
         self.assertEqual(set(attachments.mapped('res_model')), set(['res.partner']))
         self.assertEqual(set(attachments.mapped('res_id')), set([self.user_admin.partner_id.id]))
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_composer_template_send(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
@@ -83,7 +83,7 @@ class TestMailTemplate(TestMail):
         # self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
         #     'mail.message attachment name / data incorrect')
 
-    @mute_logger('openerp.addons.mail.mail_mail')
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_composer_template_mass_mailing(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
@@ -128,3 +128,15 @@ class TestMailTemplate(TestMail):
         last_template = self.env['mail.template'].search([('model', '=', 'mail.group'), ('subject', '=', 'Forget me subject')], limit=1)
         self.assertEqual(last_template.body_html, '<p>Dummy body</p>', 'email_template incorrect body_html')
 
+    def test_add_context_action(self):
+        self.email_template.create_action()
+
+        # check template act_window and ir_values has been updated
+        self.assertTrue(bool(self.email_template.ref_ir_act_window))
+        self.assertTrue(bool(self.email_template.ref_ir_value))
+
+        # check those records
+        action = self.email_template.ref_ir_act_window
+        self.assertEqual(action.name, 'Send Mail (%s)' % self.email_template.name)
+        value = self.email_template.ref_ir_value
+        self.assertEqual(value.name, 'Send Mail (%s)' % self.email_template.name)

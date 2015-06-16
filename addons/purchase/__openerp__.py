@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
@@ -25,7 +7,7 @@
     'version': '1.1',
     'category': 'Purchase Management',
     'sequence': 19,
-    'summary': 'Purchase Orders, Receipts, Supplier Invoices',
+    'summary': 'Purchase Orders, Receipts, Supplier Bills',
     'description': """
 Manage goods requirement by Purchase Orders easily
 ==================================================
@@ -61,7 +43,6 @@ Dashboard / Reports for Purchase Management will include:
         'stock_view.xml',
         'partner_view.xml',
         'report/purchase_report_view.xml',
-        'edi/purchase_order_action_data.xml',
         'res_config_view.xml',
         'purchase_tip_data.xml',
 
@@ -69,20 +50,23 @@ Dashboard / Reports for Purchase Management will include:
         'views/report_purchasequotation.xml',
     ],
     'test': [
+        '../account/test/account_minimal_test.xml',
+        'test/stock_valuation_account.xml',
         'test/ui/purchase_users.yml',
         'test/process/run_scheduler.yml',
         'test/fifo_price.yml',
         'test/fifo_returns.yml',
-        #'test/costmethodchange.yml',
+        # 'test/costmethodchange.yml',
         'test/process/cancel_order.yml',
         'test/process/rfq2order2done.yml',
         'test/process/generate_invoice_from_reception.yml',
         'test/process/merge_order.yml',
-        'test/process/edi_purchase_order.yml',
         'test/process/invoice_on_poline.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
         'test/average_price.yml',
+        'test/anglo_saxon.yml',
+        'test/anglo_saxon_avg_fifo.yml',
     ],
     'demo': [
         'purchase_order_demo.yml',

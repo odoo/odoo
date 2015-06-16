@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import controllers
-import im_livechat
+import models
 import report

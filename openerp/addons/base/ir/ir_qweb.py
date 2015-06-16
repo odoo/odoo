@@ -504,7 +504,6 @@ class QWeb(orm.AbstractModel):
 
         record, field_name = template_attributes["field"].rsplit('.', 1)
         record = self.eval_object(record, qwebcontext)
-
         field = record._fields[field_name]
         foptions = self.eval_format(template_attributes.get('field-options') or '{}', qwebcontext)
         options = json.loads(foptions)
@@ -877,9 +876,9 @@ class MonetaryConverter(osv.AbstractModel):
 
         pre = post = u''
         if display_currency.position == 'before':
-            pre = u'{symbol} '
+            pre = u'{symbol}\N{NO-BREAK SPACE}'
         else:
-            post = u' {symbol}'
+            post = u'\N{NO-BREAK SPACE}{symbol}'
 
         return HTMLSafe(u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(
             formatted_amount,
@@ -1038,9 +1037,9 @@ class QwebWidgetMonetary(osv.AbstractModel):
         )
         pre = post = u''
         if display.position == 'before':
-            pre = u'{symbol} '
+            pre = u'{symbol}\N{NO-BREAK SPACE}'
         else:
-            post = u' {symbol}'
+            post = u'\N{NO-BREAK SPACE}{symbol}'
 
         return u'{pre}{0}{post}'.format(
             formatted_amount, pre=pre, post=post

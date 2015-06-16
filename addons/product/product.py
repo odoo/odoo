@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
 import re
@@ -342,6 +324,7 @@ class product_attribute(osv.osv):
         'name': fields.char('Name', translate=True, required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
         'sequence': fields.integer('Sequence', help="Determine the display order"),
+        'attribute_line_ids': fields.one2many('product.attribute.line', 'attribute_id', 'Lines'),
     }
 
 class product_attribute_value(osv.osv):
@@ -522,7 +505,7 @@ class product_template(osv.osv):
             help="A precise description of the Product, used only for internal information purposes."),
         'description_purchase': fields.text('Purchase Description',translate=True,
             help="A description of the Product that you want to communicate to your suppliers. "
-                 "This description will be copied to every Purchase Order, Receipt and Supplier Invoice/Refund."),
+                 "This description will be copied to every Purchase Order, Receipt and Supplier Bill/Refund."),
         'description_sale': fields.text('Sale Description',translate=True,
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
@@ -536,9 +519,9 @@ class product_template(osv.osv):
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
                                                "Expressed in the default unit of measure of the product.",
                                           string="Cost Price"),
-        'volume': fields.float('Volume', help="The volume in m3."),
-        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
-        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
+        'volume': fields.float('Volume', help="Volume is the amount of space that an item you are measuring takes up."),
+        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The total weight, including contents, packaging, etc."),
+        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents, not including any packaging, etc."),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
@@ -654,6 +637,9 @@ class product_template(osv.osv):
         except ValueError:
             res = False
         return res
+
+    def onchange_type(self, cr, uid, ids, type):
+        return {}
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id:
@@ -1012,6 +998,9 @@ class product_product(osv.osv):
         # products due to ondelete='cascade'
         self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
         return res
+
+    def onchange_type(self, cr, uid, ids, type):
+        return {}
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:

@@ -27,11 +27,11 @@
             <field name="arch" type="xml">
                 <form string="Website Link">
                     <sheet>
-                        <div class="oe_button_box pull-right">
+                        <div class="oe_button_box" name="button_box">
                             <button type="object" icon="fa-sign-out" name="action_visit_page"
                                 string="Visit Page" class="oe_stat_button"/>
 
-                            <button type="object" class="oe_stat_button" name="action_view_statistics" icon="fa-bar-chart">
+                            <button type="object" class="oe_stat_button" name="action_view_statistics" icon="fa-bar-chart-o">
                                 <field name="count" string="Clicks" widget="statinfo"/>
                             </button>
 
@@ -163,7 +163,7 @@
             <field name="view_mode">graph,tree,form</field>
         </record>
 
-        <menuitem id="menu_url_shortener_main" name="Link Tracker" parent="base.marketing_menu" groups="base.group_no_one"/>
+        <menuitem id="menu_url_shortener_main" name="Link Tracker" parent="utm.menu_link_tracker_root" groups="base.group_no_one"/>
         <menuitem id="menu_url_shortener_links" name="Tracked Links" parent="menu_url_shortener_main" action="action_website_links"/>
     </data>
 </openerp>

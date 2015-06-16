@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import tools
 from openerp.osv import fields,osv
@@ -52,11 +34,11 @@ class hr_timesheet_report(osv.osv):
                     sum(total_attendance) / coalesce(sum(j.count),1) as total_attendance
                 FROM hr_timesheet_sheet_sheet_day d left join (
                     SELECT
-                        h.sheet_id,
+                        a.sheet_id,
                         a.date,
                         count(*)
-                    FROM account_analytic_line a inner join  hr_analytic_timesheet h ON (h.line_id=a.id)
-                    GROUP BY h.sheet_id, a.date
+                    FROM account_analytic_line a
+                    GROUP BY a.sheet_id, a.date
                 ) j ON (d.sheet_id = j.sheet_id AND d.name = j.date)
                 GROUP BY d.sheet_id, d.name
             )
@@ -73,7 +55,7 @@ class hr_timesheet_report(osv.osv):
                         htss.state"""
 
     def _from(self):
-        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id) join totals as t on (t.sheet_id = hat.sheet_id and t.date = aal.date)"
+        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (aal.sheet_id=htss.id) join totals as t on (t.sheet_id = aal.sheet_id and t.date = aal.date)"
 
     def _group_by(self):
         return super(hr_timesheet_report, self)._group_by() + """,

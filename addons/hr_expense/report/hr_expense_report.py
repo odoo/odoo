@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -43,11 +25,11 @@ class hr_expense_report(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Validation User', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'price_total':fields.float('Total Price', readonly=True, digits_compute=dp.get_precision('Account')),
+        'price_total':fields.float('Total Price', readonly=True, digits=0),
         'delay_valid':fields.float('Delay to Valid', readonly=True),
         'delay_confirm':fields.float('Delay to Confirm', readonly=True),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account',readonly=True),
-        'price_average':fields.float('Average Price', readonly=True, digits_compute=dp.get_precision('Account')),
+        'price_average':fields.float('Average Price', readonly=True, digits=0),
         'nbr':fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'no_of_products':fields.integer('# of Products', readonly=True),
         'no_of_account':fields.integer('# of Accounts', readonly=True),

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv, orm
 import openerp.addons.decimal_precision as dp
@@ -94,8 +76,15 @@ class stock_change_product_qty(osv.osv_memory):
             ctx = context.copy()
             ctx['location'] = data.location_id.id
             ctx['lot_id'] = data.lot_id.id
+            if data.product_id.id and data.lot_id.id:
+                filter = 'none'
+            elif data.product_id.id:
+                filter = 'product'
+            else:
+                filter = 'none'
             inventory_id = inventory_obj.create(cr, uid, {
                 'name': _('INV: %s') % tools.ustr(data.product_id.name),
+                'filter': filter,
                 'product_id': data.product_id.id,
                 'location_id': data.location_id.id,
                 'lot_id': data.lot_id.id}, context=context)
@@ -113,3 +102,11 @@ class stock_change_product_qty(osv.osv_memory):
             inventory_line_obj.create(cr , uid, line_data, context=context)
             inventory_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
+
+    def onchange_location_id(self, cr, uid, ids, location_id, product_id, context=None):
+        if location_id:
+            qty_wh = 0.0
+            qty = self.pool.get('product.product')._product_available(cr, uid, [product_id], context=dict(context or {}, location=location_id))
+            if product_id in qty:
+                qty_wh = qty[product_id]['qty_available']
+            return { 'value': { 'new_quantity': qty_wh } }

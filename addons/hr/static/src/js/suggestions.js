@@ -72,7 +72,7 @@ var Employees = Widget.extend({
     }
 });
 
-mail.WallSidebar.include({
+mail.Sidebar.include({
     start: function () {
         this._super.apply(this, arguments);
         var sug_employees = new Employees(this);

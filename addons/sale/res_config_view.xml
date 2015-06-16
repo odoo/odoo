@@ -108,8 +108,10 @@
             </field>
         </record>
 
-        <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
-            sequence="1" action="base_setup.action_sale_config"/>
+        <menuitem id="base.menu_sale_config" name="Configuration" parent="base.menu_base_partner"
+            sequence="100" groups="base.group_configuration"/>
+        <menuitem id="base.menu_sale_general_settings" name="Settings" parent="base.menu_sale_config"
+            sequence="0" action="base_setup.action_sale_config"/>
 
         <record id="view_account_config" model="ir.ui.view">
             <field name="name">account settings</field>
@@ -127,10 +129,6 @@
                     <div>
                         <field name="group_analytic_account_for_sales" class="oe_inline"/>
                         <label for="group_analytic_account_for_sales"/>
-                    </div>
-                    <div>
-                        <field name="module_sale_analytic_plans" on_change="onchange_sale_analytic_plans(module_sale_analytic_plans)" class="oe_inline"/>
-                        <label for="module_sale_analytic_plans"/>
                     </div>
                 </xpath>
             </field>

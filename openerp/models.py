@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 """
@@ -73,6 +55,7 @@ from .tools.translate import _
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
+_unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_order = re.compile('^( *([a-z0-9:_]+|"[a-z0-9:_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -370,7 +353,8 @@ class BaseModel(object):
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             model_id = cr.fetchone()[0]
-            cr.execute("INSERT INTO ir_model (id,model, name, info,state) VALUES (%s, %s, %s, %s, %s)", (model_id, self._name, self._description, self.__doc__, 'base'))
+            cr.execute("INSERT INTO ir_model (id, model, name, info, state, transient) VALUES (%s, %s, %s, %s, %s, %s)",
+                       (model_id, self._name, self._description, self.__doc__, 'base', self._transient))
         else:
             model_id = cr.fetchone()[0]
         if 'module' in context:
@@ -1088,6 +1072,13 @@ class BaseModel(object):
             ids = False
         return {'ids': ids, 'messages': messages}
 
+    def _add_fake_fields(self, cr, uid, fields, context=None):
+        from openerp.fields import Char, Integer
+        fields[None] = Char('rec_name')
+        fields['id'] = Char('External ID')
+        fields['.id'] = Integer('Database ID')
+        return fields
+
     def _extract_records(self, cr, uid, fields_, data,
                          context=None, log=lambda a: None):
         """ Generates record dicts from the data sequence.
@@ -1103,13 +1094,9 @@ class BaseModel(object):
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
         """
-        from openerp.fields import Char, Integer
         fields = dict(self._fields)
         # Fake fields to avoid special cases in extractor
-        fields[None] = Char('rec_name')
-        fields['id'] = Char('External ID')
-        fields['.id'] = Integer('Database ID')
-
+        fields = self._add_fake_fields(cr, uid, fields, context=context)
         # m2o fields can't be on multiple lines so exclude them from the
         # is_relational field rows filter, but special-case it later on to
         # be handled with relational fields (as it can have subfields)
@@ -1808,7 +1795,7 @@ class BaseModel(object):
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         try:
-            self.pool.cache.clear_prefix((self._name,))
+            self.pool.cache.clear()
             self.pool._any_cache_cleared = True
         except AttributeError:
             pass
@@ -2174,14 +2161,20 @@ class BaseModel(object):
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
-        current_table = self
-        parent_alias = '"%s"' % current_table._table
-        while field in current_table._inherit_fields and not field in current_table._columns:
-            parent_model_name = current_table._inherit_fields[field][0]
-            parent_table = self.pool[parent_model_name]
-            parent_alias = self._inherits_join_add(current_table, parent_model_name, query)
-            current_table = parent_table
-        return '%s."%s"' % (parent_alias, field)
+        # INVARIANT: alias is the SQL alias of model._table in query
+        model, alias = self, self._table
+        while field in model._inherit_fields and field not in model._columns:
+            # retrieve the parent model where field is inherited from
+            parent_model_name = model._inherit_fields[field][0]
+            parent_model = self.pool[parent_model_name]
+            parent_field = model._inherits[parent_model_name]
+            # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
+            parent_alias, _ = query.add_join(
+                (alias, parent_model._table, parent_field, 'id', parent_field),
+                implicit=True,
+            )
+            model, alias = parent_model, parent_alias
+        return '"%s"."%s"' % (alias, field)
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:
@@ -2427,6 +2420,11 @@ class BaseModel(object):
         # values) from prefetching a field for which the corresponding column
         # has not been added in database yet!
         context = dict(context or {}, prefetch_fields=False)
+
+        # Make sure an environment is available for get_pg_type(). This is
+        # because we access column.digits, which retrieves a cursor from
+        # existing environments.
+        env = api.Environment(cr, SUPERUSER_ID, context)
 
         store_compute = False
         stored_fields = []              # new-style stored fields with compute
@@ -3197,7 +3195,7 @@ class BaseModel(object):
             records = records[:PREFETCH_MAX] | self
 
         # determine which fields can be prefetched
-        if not self.env.in_draft and \
+        if not self.env.in_onchange and \
                 self._context.get('prefetch_fields', True) and \
                 self._columns[field.name]._prefetch:
             # prefetch all classic and many2one fields that the user can access
@@ -3652,6 +3650,9 @@ class BaseModel(object):
         # recompute new-style fields
         recs.recompute()
 
+        # auditing: deletions are infrequent and leave no trace in the database
+        _unlink.info('User #%s deleted %s records with IDs: %r', uid, self._name, ids)
+
         return True
 
     #
@@ -3993,10 +3994,10 @@ class BaseModel(object):
                     recs.invalidate_cache(['parent_left', 'parent_right'])
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
-        result.sort()
 
         done = {}
-        for order, model_name, ids_to_update, fields_to_recompute in result:
+        recs.env.recompute_old.extend(result)
+        for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
             key = (model_name, tuple(fields_to_recompute))
             done.setdefault(key, {})
             # avoid to do several times the same computation
@@ -4007,6 +4008,7 @@ class BaseModel(object):
                     if id not in deleted_related[model_name]:
                         todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
+        recs.env.clear_recompute_old()
 
         # recompute new-style fields
         if recs.env.recompute and context.get('recompute', True):
@@ -4060,7 +4062,7 @@ class BaseModel(object):
                 unknown.append(key)
 
         if unknown:
-            _logger.warning("%s.create() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
+            _logger.warning("%s.create() includes unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
@@ -4256,16 +4258,18 @@ class BaseModel(object):
         # check Python constraints
         recs._validate_fields(vals)
 
-        if recs.env.recompute and context.get('recompute', True):
-            result += self._store_get_values(cr, user, [id_new],
+        result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
-            result.sort()
+        recs.env.recompute_old.extend(result)
+
+        if recs.env.recompute and context.get('recompute', True):
             done = []
-            for order, model_name, ids, fields2 in result:
+            for order, model_name, ids, fields2 in sorted(recs.env.recompute_old):
                 if not (model_name, ids, fields2) in done:
                     self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
                     done.append((model_name, ids, fields2))
+            recs.env.clear_recompute_old()
             # recompute new-style fields
             recs.recompute()
 
@@ -5666,7 +5670,11 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
-            names = [f.name for f in field.computed_fields if f.store]
+            names = [
+                f.name
+                for f in field.computed_fields
+                if f.store and self.env.field_todo(f)
+            ]
             for rec in recs:
                 try:
                     values = rec._convert_to_write({

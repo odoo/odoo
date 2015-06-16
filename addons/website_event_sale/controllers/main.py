@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
@@ -42,7 +24,7 @@ class website_event(website_event):
     def _process_tickets_details(self, data):
         ticket_post = {}
         for key, value in data.iteritems():
-            if not key.startswith('nb_register') or not '-' in key:
+            if not key.startswith('nb_register') or '-' not in key:
                 continue
             items = key.split('-')
             if len(items) < 2:
@@ -61,7 +43,7 @@ class website_event(website_event):
         for registration in registrations:
             ticket = request.registry['event.event.ticket'].browse(cr, SUPERUSER_ID, int(registration['ticket_id']), context=context)
             cart_values = order.with_context(event_ticket_id=ticket.id)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[registration])
-            attendee_ids &= set(cart_values.get('attendees', []))
+            attendee_ids |= set(cart_values.get('attendee_ids', []))
 
         # free tickets -> order with amount = 0: auto-confirm, no checkout
         if not order.amount_total:

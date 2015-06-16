@@ -6,6 +6,7 @@ var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
 var core = require('web.core');
+var CrashManager = require('web.CrashManager');
 
 
 var _t = core._t;
@@ -254,21 +255,15 @@ var DebugWidget = PosBaseWidget.extend({
         this.$('.button.barcode').click(function(){
             self.pos.barcode_reader.scan(self.$('input.ean').val());
         });
-        this.$('.button.show_orders').click(function(){
-            self.gui.show_popup('unsent-orders');
-        });
         this.$('.button.delete_orders').click(function(){
             self.gui.show_popup('confirm',{
-                'title': _t('Delete Unsent Orders ?'),
-                'body':  _t('This operation will permanently destroy all unsent orders from the local storage. You will lose all the data. This operation cannot be undone.'),
+                'title': _t('Delete Paid Orders ?'),
+                'body':  _t('This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_orders();
                     self.pos.set({synch: { state:'connected', pending: 0 }});
                 },
             });
-        });
-        this.$('.button.show_unpaid_orders').click(function(){
-            self.gui.show_popup('unpaid-orders');
         });
         this.$('.button.delete_unpaid_orders').click(function(){
             self.gui.show_popup('confirm',{
@@ -280,6 +275,32 @@ var DebugWidget = PosBaseWidget.extend({
                 },
             });
         });
+
+        this.$('.button.export_unpaid_orders').click(function(){
+            self.gui.download_file(self.pos.export_unpaid_orders(),
+                "unpaid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+        });
+
+        this.$('.button.export_paid_orders').click(function() {
+            self.gui.download_file(self.pos.export_paid_orders(),
+                "paid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+        });
+
+        this.$('.button.import_orders input').on('change', function(event) {
+            var file = event.target.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    var report = self.pos.import_orders(event.target.result);
+                    self.gui.show_popup('orderimport',{report:report});
+                };
+                
+                reader.readAsText(file);
+            }
+        });
+
         _.each(this.events, function(name){
             self.pos.proxy.add_notification(name,function(){
                 self.$('.event.'+name).stop().clearQueue().css({'background-color':'#6CD11D'}); 
@@ -295,7 +316,7 @@ var DebugWidget = PosBaseWidget.extend({
 // status in the point of sale header.
 
 var StatusWidget = PosBaseWidget.extend({
-    status: ['connected','connecting','disconnected','warning'],
+    status: ['connected','connecting','disconnected','warning','error'],
     set_status: function(status,msg){
         for(var i = 0; i < this.status.length; i++){
             this.$('.js_'+this.status[i]).addClass('oe_hidden');
@@ -323,7 +344,7 @@ var SynchNotificationWidget = StatusWidget.extend({
             self.set_status(synch.state, synch.pending);
         });
         this.$el.click(function(){
-            self.pos.push_order();
+            self.pos.push_order(null,{'show_error':true});
         });
     },
 });
@@ -384,7 +405,6 @@ var ProxyStatusWidget = StatusWidget.extend({
     },
 });
 
-
 /*--------------------------------------*\
  |             THE CHROME               |
 \*======================================*/
@@ -431,8 +451,11 @@ var Chrome = PosBaseWidget.extend({
             self.build_chrome();
             self.build_widgets();
             self.disable_rubberbanding();
+            self.disable_backpace_back();
             self.ready.resolve();
             self.loading_hide();
+            self.replace_crashmanager();
+            self.pos.push_order();
         }).fail(function(err){   // error when loading models data from the backend
             self.loading_error(err);
         });
@@ -464,6 +487,31 @@ var Chrome = PosBaseWidget.extend({
         if(this.pos.config.iface_big_scrollbars){
             this.$el.addClass('big-scrollbars');
         }
+    },
+
+    // displays a system error with the error-traceback
+    // popup.
+    show_error: function(error) {
+        this.gui.show_popup('error-traceback',{
+            'title': error.message,
+            'body':  error.message + '\n' + error.data.debug + '\n',
+        });
+    },
+
+    // replaces the error handling of the existing crashmanager which
+    // uses jquery dialog to display the error, to use the pos popup
+    // instead
+    replace_crashmanager: function() {
+        var self = this;
+        CrashManager.include({
+            show_error: function(error) {
+                if (self.gui) {
+                    self.show_error(error);
+                } else {
+                    this._super(error);
+                }
+            },
+        });
     },
 
     click_logo: function() {
@@ -501,6 +549,15 @@ var Chrome = PosBaseWidget.extend({
             }
             event.preventDefault();
         });
+    },
+
+    // prevent backspace from performing a 'back' navigation
+    disable_backpace_back: function() {
+       $(document).on("keydown", function (e) {
+           if (e.which === 8 && !$(e.target).is("input, textarea")) {
+               e.preventDefault();
+           }
+       });
     },
 
     loading_error: function(err){

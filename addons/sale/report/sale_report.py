@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -44,11 +26,11 @@ class sale_report(osv.osv):
         'categ_id': fields.many2one('product.category','Product Category', readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'state': fields.selection([
-            ('draft', 'Quotation'),
+            ('draft', 'Draft Quotation'),
             ('sent', 'Quotation Sent'),
             ('waiting_date', 'Waiting Schedule'),
-            ('manual', 'Manual In Progress'),
-            ('progress', 'In Progress'),
+            ('manual', 'Sale to Invoice'),
+            ('progress', 'Sale Order'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
@@ -77,7 +59,7 @@ class sale_report(osv.osv):
                     s.user_id as user_id,
                     s.company_id as company_id,
                     extract(epoch from avg(date_trunc('day',s.date_confirm)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
-                    s.state,
+                    l.state,
                     t.categ_id as categ_id,
                     s.pricelist_id as pricelist_id,
                     s.project_id as analytic_account_id,
@@ -113,7 +95,7 @@ class sale_report(osv.osv):
                     s.partner_id,
                     s.user_id,
                     s.company_id,
-                    s.state,
+                    l.state,
                     s.pricelist_id,
                     s.project_id,
                     s.team_id,

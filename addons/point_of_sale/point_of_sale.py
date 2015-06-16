@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import time
@@ -27,7 +9,7 @@ import sets
 
 from functools import partial
 
-from openerp import tools, models
+from openerp import tools, models, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import float_is_zero
 from openerp.tools.translate import _
@@ -51,7 +33,7 @@ class pos_config(osv.osv):
         result = dict.fromkeys(ids, False)
         for pos_config in self.browse(cr, uid, ids, context=context):
             if pos_config.journal_id:
-                currency_id = pos_config.journal_id.currency.id or pos_config.journal_id.company_id.currency_id.id
+                currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.currency_id.id
             else:
                 currency_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
             result[pos_config.id] = currency_id
@@ -79,6 +61,7 @@ class pos_config(osv.osv):
         'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
         'iface_fullscreen':     fields.boolean('Fullscreen', help='Display the Point of Sale in full screen mode'),
         'iface_print_auto': fields.boolean('Automatic Receipt Printing', help='The receipt will automatically be printed at the end of each order'),
+        'iface_print_skip_screen': fields.boolean('Skip Receipt Screen', help='The receipt screen will be skipped if the receipt can be printed automatically.'),
         'iface_precompute_cash': fields.boolean('Prefill Cash Payment',  help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount'),
         'iface_tax_included':   fields.boolean('Include Taxes in Prices', help='The displayed prices will always include all taxes, even if the taxes have been setup differently'),
         'iface_start_categ_id': fields.many2one('pos.category','Start Category', help='The point of sale will display this product category by default. If no category is specified, all available products will be shown'),
@@ -100,12 +83,6 @@ class pos_config(osv.osv):
         'group_pos_user_id':    fields.many2one('res.groups','Point of Sale User Group', help='This field is there to pass the id of the pos user group to the point of sale client'),
         'tip_product_id':       fields.many2one('product.product','Tip Product', help="The product used to encode the customer tip. Leave empty if you do not accept tips."),
     }
-
-    def _check_cash_control(self, cr, uid, ids, context=None):
-        return all(
-            (sum(int(journal.cash_control) for journal in record.journal_ids) <= 1)
-            for record in self.browse(cr, uid, ids, context=context)
-        )
 
     def _check_company_location(self, cr, uid, ids, context=None):
         for config in self.browse(cr, uid, ids, context=context):
@@ -130,7 +107,6 @@ class pos_config(osv.osv):
         return True
 
     _constraints = [
-        (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
         (_check_company_location, "The company of the stock location is different than the one of point of sale", ['company_id', 'stock_location_id']),
         (_check_company_journal, "The company of the sale journal is different than the one of point of sale", ['company_id', 'journal_id']),
         (_check_company_payment, "The company of a payment method is different than the one of point of sale", ['company_id', 'journal_ids']),
@@ -201,6 +177,7 @@ class pos_config(osv.osv):
         'pricelist_id': _default_pricelist,
         'iface_invoicing': True,
         'iface_print_auto': True,
+        'iface_print_skip_screen': True,
         'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
         'barcode_nomenclature_id': _get_default_nomenclature,
@@ -227,7 +204,7 @@ class pos_config(osv.osv):
     def create(self, cr, uid, values, context=None):
         ir_sequence = self.pool.get('ir.sequence')
         # force sequence_id field to new pos.order sequence
-        values['sequence_id'] = ir_sequence.create(cr, uid, {
+        values['sequence_id'] = ir_sequence.create(cr, SUPERUSER_ID, {
             'name': 'POS Order %s' % values['name'],
             'padding': 4,
             'prefix': "%s/"  % values['name'],
@@ -237,7 +214,7 @@ class pos_config(osv.osv):
 
         # TODO master: add field sequence_line_id on model
         # this make sure we always have one available per company
-        ir_sequence.create(cr, uid, {
+        ir_sequence.create(cr, SUPERUSER_ID, {
             'name': 'POS order line %s' % values['name'],
             'padding': 4,
             'prefix': "%s/"  % values['name'],
@@ -273,11 +250,12 @@ class pos_session(osv.osv):
                 'cash_register_id' : False,
                 'cash_control' : False,
             }
-            for st in record.statement_ids:
-                if st.journal_id.cash_control == True:
-                    result[record.id]['cash_control'] = True
-                    result[record.id]['cash_journal_id'] = st.journal_id.id
-                    result[record.id]['cash_register_id'] = st.id
+            # TODO: cash_control field is removed.
+            # for st in record.statement_ids:
+            #     if st.journal_id.cash_control == True:
+            #         result[record.id]['cash_control'] = True
+            #         result[record.id]['cash_journal_id'] = st.journal_id.id
+            #         result[record.id]['cash_register_id'] = st.id
 
         return result
 
@@ -298,12 +276,13 @@ class pos_session(osv.osv):
                                    ),
         'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currency"),
         'start_at' : fields.datetime('Opening Date', readonly=True), 
-        'stop_at' : fields.datetime('Closing Date', readonly=True),
+        'stop_at' : fields.datetime('Closing Date', readonly=True, copy=False),
 
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1, copy=False),
-        
+        'rescue': fields.boolean('Rescue session', readonly=True,
+                                 help="Auto-generated session for orphan orders, ignored in constraints"),
         'sequence_number': fields.integer('Order Sequence Number', help='A sequence number that is incremented with each order'),
         'login_number':  fields.integer('Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session'),
 
@@ -319,22 +298,15 @@ class pos_session(osv.osv):
                                              type='many2one', relation='account.bank.statement',
                                              string='Cash Register', store=True),
 
-        'opening_details_ids' : fields.related('cash_register_id', 'opening_details_ids', 
-                type='one2many', relation='account.cashbox.line',
-                string='Opening Cash Control'),
-        'details_ids' : fields.related('cash_register_id', 'details_ids', 
-                type='one2many', relation='account.cashbox.line',
-                string='Cash Control'),
-
         'cash_register_balance_end_real' : fields.related('cash_register_id', 'balance_end_real',
                 type='float',
-                digits_compute=dp.get_precision('Account'),
+                digits=0,
                 string="Ending Balance",
                 help="Total of closing cash control lines.",
                 readonly=True),
         'cash_register_balance_start' : fields.related('cash_register_id', 'balance_start',
                 type='float',
-                digits_compute=dp.get_precision('Account'),
+                digits=0,
                 string="Starting Balance",
                 help="Total of opening cash control lines.",
                 readonly=True),
@@ -344,7 +316,7 @@ class pos_session(osv.osv):
                 help="Total of all paid sale orders"),
         'cash_register_balance_end' : fields.related('cash_register_id', 'balance_end',
                 type='float',
-                digits_compute=dp.get_precision('Account'),
+                digits=0,
                 string="Theoretical Closing Balance",
                 help="Sum of opening balance and transactions.",
                 readonly=True),
@@ -381,7 +353,8 @@ class pos_session(osv.osv):
             # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
             domain = [
                 ('state', 'not in', ('closed','closing_control')),
-                ('user_id', '=', session.user_id.id)
+                ('user_id', '=', session.user_id.id),
+                ('rescue', '=', False)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:
@@ -392,7 +365,8 @@ class pos_session(osv.osv):
         for session in self.browse(cr, uid, ids, context=None):
             domain = [
                 ('state', '!=', 'closed'),
-                ('config_id', '=', session.config_id.id)
+                ('config_id', '=', session.config_id.id),
+                ('rescue', '=', False)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:
@@ -420,7 +394,7 @@ class pos_session(osv.osv):
         if not pos_config.journal_id:
             jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
             if jid:
-                jobj.write(cr, openerp.SUPERUSER_ID, [pos_config.id], {'journal_id': jid}, context=context)
+                jobj.write(cr, SUPERUSER_ID, [pos_config.id], {'journal_id': jid}, context=context)
             else:
                 raise UserError(_("Unable to open the session. You have to assign a sale journal to your point of sale."))
 
@@ -433,24 +407,21 @@ class pos_session(osv.osv):
                 if not cashids:
                     cashids = journal_proxy.search(cr, uid, [('journal_user','=',True)], context=context)
 
-            journal_proxy.write(cr, openerp.SUPERUSER_ID, cashids, {'journal_user': True})
-            jobj.write(cr, openerp.SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
+            journal_proxy.write(cr, SUPERUSER_ID, cashids, {'journal_user': True})
+            jobj.write(cr, SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
 
         pos_config = jobj.browse(cr, uid, config_id, context=context)
-        bank_statement_ids = []
-        for journal in pos_config.journal_ids:
-            bank_values = {
-                'journal_id' : journal.id,
-                'user_id' : uid,
-                'company_id' : pos_config.company_id.id
-            }
-            statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
-            bank_statement_ids.append(statement_id)
+
+        statements = [(0, 0, {
+            'journal_id': journal.id,
+            'user_id': uid,
+            'company_id': pos_config.company_id.id
+        }) for journal in pos_config.journal_ids]
 
         values.update({
             'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session'),
-            'statement_ids' : [(6, 0, bank_statement_ids)],
+            'statement_ids': statements,
             'config_id': config_id
         })
 
@@ -514,7 +485,10 @@ class pos_session(osv.osv):
 
     def wkf_action_close(self, cr, uid, ids, context=None):
         # Close CashBox
+        local_context = dict(context)
         for record in self.browse(cr, uid, ids, context=context):
+            company_id = record.config_id.company_id.id
+            local_context.update({'force_company': company_id, 'company_id': company_id})
             for st in record.statement_ids:
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
@@ -522,9 +496,9 @@ class pos_session(osv.osv):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise UserError(_("The type of the journal for your payment method should be bank or cash "))
-                getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
-        self._confirm_orders(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
+                self.pool['account.bank.statement'].button_confirm_bank(cr, SUPERUSER_ID, [st.id], context=local_context)
+        self._confirm_orders(cr, uid, ids, context=local_context)
+        self.write(cr, uid, ids, {'state' : 'closed'}, context=local_context)
 
         obj = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'point_of_sale', 'menu_point_root')[1]
         return {
@@ -585,6 +559,7 @@ class pos_order(osv.osv):
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference':ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
+            'date_order':   ui_order['creation_date']
         }
 
     def _payment_fields(self, cr, uid, ui_paymentline, context=None):
@@ -596,13 +571,32 @@ class pos_order(osv.osv):
             'journal':      ui_paymentline['journal_id'],
         }
 
+    def _get_rescue_session(self, cr, uid, order, context=None):
+        """ Find or generate a rescue session """
+        pos_session = self.pool['pos.session']
+        date = order.get('creation_date', time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))
+        closed_session = pos_session.browse(cr, uid, order['pos_session_id'], context=context)
+        rescue_session_ids = pos_session.search(cr, uid, [
+            ('rescue', '=', True), ('config_id', '=', closed_session.config_id.id),
+            ('start_at', '<=', date), ('state', '=', 'opened')
+        ], limit=1, context=context)
+        if not rescue_session_ids:
+            return pos_session.copy(cr, uid, order['pos_session_id'], default={
+                'rescue': True,
+            }, context=context)
+        return rescue_session_ids[0]
+
     def _process_order(self, cr, uid, order, context=None):
+        session = self.pool['pos.session'].browse(cr, uid, order['pos_session_id'], context=context)
+        if session.state == 'closed':
+            rescue_session_id = self._get_rescue_session(cr, uid, order, context=context)
+            order['pos_session_id'] = rescue_session_id
+            session = self.pool['pos.session'].browse(cr, uid, rescue_session_id, context=context)
         order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
 
         for payments in order['statement_ids']:
             self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
 
-        session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
         if session.sequence_number <= order['sequence_number']:
             session.write({'sequence_number': order['sequence_number'] + 1})
             session.refresh()
@@ -646,7 +640,7 @@ class pos_order(osv.osv):
             if to_invoice:
                 self.action_invoice(cr, uid, [order_id], context)
                 order_obj = self.browse(cr, uid, order_id, context)
-                self.pool['account.invoice'].signal_workflow(cr, uid, [order_obj.invoice_id.id], 'invoice_open')
+                self.pool['account.invoice'].signal_workflow(cr, SUPERUSER_ID, [order_obj.invoice_id.id], 'invoice_open')
 
         return order_ids
 
@@ -705,11 +699,11 @@ class pos_order(osv.osv):
         'name': fields.char('Order Ref', required=True, readonly=True, copy=False),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
-        'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
-        'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Account'), multi='all'),
-        'amount_total': fields.function(_amount_all, string='Total', digits_compute=dp.get_precision('Account'),  multi='all'),
-        'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Account'), multi='all'),
-        'amount_return': fields.function(_amount_all, string='Returned', digits_compute=dp.get_precision('Account'), multi='all'),
+        'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the cash register. It can be a reliever, a student or an interim employee."),
+        'amount_tax': fields.function(_amount_all, string='Taxes', digits=0, multi='all'),
+        'amount_total': fields.function(_amount_all, string='Total', digits=0,  multi='all'),
+        'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0, multi='all'),
+        'amount_return': fields.function(_amount_all, string='Returned', digits=0, multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
@@ -717,7 +711,7 @@ class pos_order(osv.osv):
         'sequence_number': fields.integer('Sequence Number', help='A session-unique sequence number for the order'),
 
         'session_id' : fields.many2one('pos.session', 'Session', 
-                                        #required=True,
+                                        required=True,
                                         select=1,
                                         domain="[('state', '=', 'opened')]",
                                         states={'draft' : [('readonly', False)]},
@@ -774,6 +768,7 @@ class pos_order(osv.osv):
             # set name based on the sequence specified on the config
             session = self.pool['pos.session'].browse(cr, uid, values['session_id'], context=context)
             values['name'] = session.config_id.sequence_id._next()
+            values.setdefault('session_id', session.config_id.pricelist_id.id)
         else:
             # fallback on any pos.order sequence
             values['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order', context=context)
@@ -801,6 +796,15 @@ class pos_order(osv.osv):
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_type = order.picking_type_id
             picking_id = False
+            location_id = order.location_id.id
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            elif picking_type:
+                if not picking_type.default_location_dest_id:
+                    raise UserError(_('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
+                destination_id = picking_type.default_location_dest_id.id
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
             if picking_type:
                 picking_id = picking_obj.create(cr, uid, {
                     'origin': order.name,
@@ -811,17 +815,10 @@ class pos_order(osv.osv):
                     'move_type': 'direct',
                     'note': order.note or "",
                     'invoice_state': 'none',
+                    'location_id': location_id,
+                    'location_dest_id': destination_id,
                 }, context=context)
                 self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
-            location_id = order.location_id.id
-            if order.partner_id:
-                destination_id = order.partner_id.property_stock_customer.id
-            elif picking_type:
-                if not picking_type.default_location_dest_id:
-                    raise UserError(_('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
-                destination_id = picking_type.default_location_dest_id.id
-            else:
-                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
 
             move_list = []
             for line in order.lines:
@@ -953,7 +950,6 @@ class pos_order(osv.osv):
             'view_id': False,
             'context':context,
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
         }
         return abs
@@ -968,6 +964,9 @@ class pos_order(osv.osv):
         inv_ids = []
 
         for order in self.pool.get('pos.order').browse(cr, uid, ids, context=context):
+            # Force company for all SUPERUSER_ID action
+            company_id = order.company_id.id
+            local_context = dict(context or {}, force_company=company_id, company_id=company_id)
             if order.invoice_id:
                 inv_ids.append(order.invoice_id.id)
                 continue
@@ -986,36 +985,38 @@ class pos_order(osv.osv):
                 'partner_id': order.partner_id.id,
                 'comment': order.note or '',
                 'currency_id': order.pricelist_id.currency_id.id, # considering partner's sale pricelist's currency
+                'company_id': company_id,
             }
-            inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', order.partner_id.id)['value'])
+            invoice = inv_ref.new(cr, uid, inv)
+            invoice._onchange_partner_id()
+
+            inv = invoice._convert_to_write(invoice._cache)
             if not inv.get('account_id', None):
                 inv['account_id'] = acc
-            inv_id = inv_ref.create(cr, uid, inv, context=context)
+            inv_id = inv_ref.create(cr, SUPERUSER_ID, inv, context=local_context)
 
-            self.write(cr, uid, [order.id], {'invoice_id': inv_id, 'state': 'invoiced'}, context=context)
+            self.write(cr, uid, [order.id], {'invoice_id': inv_id, 'state': 'invoiced'}, context=local_context)
             inv_ids.append(inv_id)
             for line in order.lines:
+                inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=local_context)[0][1]
                 inv_line = {
                     'invoice_id': inv_id,
                     'product_id': line.product_id.id,
                     'quantity': line.qty,
-                    'account_analytic_id': self._prepare_analytic_account(cr, uid, line, context=context),
+                    'account_analytic_id': self._prepare_analytic_account(cr, uid, line, context=local_context),
+                    'name': inv_name,
                 }
-                inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=context)[0][1]
-                inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
-                                                               line.product_id.id,
-                                                               line.product_id.uom_id.id,
-                                                               line.qty, partner_id = order.partner_id.id,
-                                                               fposition_id=order.partner_id.property_account_position.id)['value'])
-                inv_line['price_unit'] = line.price_unit
-                inv_line['discount'] = line.discount
-                inv_line['name'] = inv_name
-                if inv_line['invoice_line_tax_id']:
-                    inv_line['invoice_line_tax_id'] = [(6, 0, inv_line['invoice_line_tax_id'])]
-                inv_line_ref.create(cr, uid, inv_line, context=context)
-            inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
+
+                #Oldlin trick
+                invoice_line = inv_line_ref.new(cr, SUPERUSER_ID, inv_line, context=local_context)
+                invoice_line._onchange_product_id()
+                invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids if tax.company_id.id == company_id]
+                # We convert a new id object back to a dictionary to write to bridge between old and new api
+                inv_line = invoice_line._convert_to_write(invoice_line._cache)
+                inv_line_ref.create(cr, SUPERUSER_ID, inv_line, context=local_context)
+            inv_ref.compute_taxes(cr, SUPERUSER_ID, [inv_id], context=local_context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')
-            inv_ref.signal_workflow(cr, uid, [inv_id], 'validate')
+            inv_ref.signal_workflow(cr, SUPERUSER_ID, [inv_id], 'validate')
 
         if not inv_ids: return {}
 
@@ -1030,7 +1031,6 @@ class pos_order(osv.osv):
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'res_id': inv_ids and inv_ids[0] or False,
         }
@@ -1043,18 +1043,15 @@ class pos_order(osv.osv):
         return False
 
     def _create_account_move(self, cr, uid, dt, ref, journal_id, company_id, context=None):
-        local_context = dict(context or {}, company_id=company_id)
         start_at_datetime = datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
         date_tz_user = fields.datetime.context_timestamp(cr, uid, start_at_datetime, context=context)
         date_tz_user = date_tz_user.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        period_id = self.pool['account.period'].find(cr, uid, dt=date_tz_user, context=local_context)
-        return self.pool['account.move'].create(cr, uid, {'ref': ref, 'journal_id': journal_id, 'period_id': period_id[0]}, context=context)
+        return self.pool['account.move'].create(cr, SUPERUSER_ID, {'ref': ref, 'journal_id': journal_id, 'date': date_tz_user}, context=context)
 
     def _create_account_move_line(self, cr, uid, ids, session=None, move_id=None, context=None):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
         account_move_obj = self.pool.get('account.move')
-        account_period_obj = self.pool.get('account.period')
         account_tax_obj = self.pool.get('account.tax')
         property_obj = self.pool.get('ir.property')
         cur_obj = self.pool.get('res.currency')
@@ -1066,16 +1063,6 @@ class pos_order(osv.osv):
 
         grouped_data = {}
         have_to_group_by = session and session.config_id.group_by or False
-
-        def compute_tax(amount, tax, line):
-            if amount > 0:
-                tax_code_id = tax['base_code_id']
-                tax_amount = line.price_subtotal * tax['base_sign']
-            else:
-                tax_code_id = tax['ref_base_code_id']
-                tax_amount = -line.price_subtotal * tax['ref_base_sign']
-
-            return (tax_code_id, tax_amount,)
 
         for order in self.browse(cr, uid, ids, context=context):
             if order.account_move:
@@ -1097,7 +1084,7 @@ class pos_order(osv.osv):
                 # Create an entry for the sale
                 move_id = self._create_account_move(cr, uid, order.session_id.start_at, order.name, order.sale_journal.id, order.company_id.id, context=context)
 
-            move = account_move_obj.browse(cr, uid, move_id, context=context)
+            move = account_move_obj.browse(cr, SUPERUSER_ID, move_id, context=context)
 
             def insert_data(data_type, values):
                 # if have_to_group_by:
@@ -1107,11 +1094,10 @@ class pos_order(osv.osv):
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
                 values.update({
-                    'date': order.date_order[:10],
                     'ref': order.name,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
                     'journal_id' : sale_journal_id,
-                    'period_id': move.period_id.id,
+                    'date' : fields.date.context_today(self, cr, uid, context=context),
                     'move_id' : move_id,
                     'company_id': current_company.id,
                 })
@@ -1119,7 +1105,7 @@ class pos_order(osv.osv):
                 if data_type == 'product':
                     key = ('product', values['partner_id'], (values['product_id'], values['name']), values['analytic_account_id'], values['debit'] > 0)
                 elif data_type == 'tax':
-                    key = ('tax', values['partner_id'], values['tax_code_id'], values['debit'] > 0)
+                    key = ('tax', values['partner_id'], values['tax_line_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':
                     key = ('counter_part', values['partner_id'], values['account_id'], values['debit'] > 0)
                 else:
@@ -1142,7 +1128,6 @@ class pos_order(osv.osv):
                                 current_value['quantity'] = current_value.get('quantity', 0.0) +  values.get('quantity', 0.0)
                                 current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
                                 current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
-                                current_value['tax_amount'] = current_value.get('tax_amount', 0.0) + values.get('tax_amount', 0.0)
                                 break
                         else:
                             grouped_data[key].append(values)
@@ -1158,19 +1143,6 @@ class pos_order(osv.osv):
 
             cur = order.pricelist_id.currency_id
             for line in order.lines:
-                tax_amount = 0
-                computed_taxes = account_tax_obj.compute_all(cr, uid, line.tax_ids, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
-
-                for tax in computed_taxes:
-                    tax_amount += cur_obj.round(cr, uid, cur, tax['amount'])
-                    if tax_amount < 0:
-                        group_key = (tax['ref_tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'])
-                    else:
-                        group_key = (tax['tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'])
-
-                    group_tax.setdefault(group_key, 0)
-                    group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount'])
-
                 amount = line.price_subtotal
 
                 # Search for the income account
@@ -1183,23 +1155,12 @@ class pos_order(osv.osv):
                         'account for this product: "%s" (id:%d).') \
                         % (line.product_id.name, line.product_id.id))
 
-                # Empty the tax list as long as there is no tax code:
-                tax_code_id = False
-                tax_amount = 0
-                while computed_taxes:
-                    tax = computed_taxes.pop(0)
-                    tax_code_id, tax_amount = compute_tax(amount, tax, line)
-
-                    # If there is one we stop
-                    if tax_code_id:
-                        break
-
                 name = line.product_id.name
                 if line.notice:
                     # add discount reason in move
                     name = name + ' (' + line.notice + ')'
 
-                # Create a move for the line
+                # Create a move for the line for the order line
                 insert_data('product', {
                     'name': name,
                     'quantity': line.qty,
@@ -1208,45 +1169,27 @@ class pos_order(osv.osv):
                     'analytic_account_id': self._prepare_analytic_account(cr, uid, line, context=context),
                     'credit': ((amount>0) and amount) or 0.0,
                     'debit': ((amount<0) and -amount) or 0.0,
-                    'tax_code_id': tax_code_id,
-                    'tax_amount': tax_amount,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                 })
 
-                # For each remaining tax with a code, whe create a move line
-                for tax in computed_taxes:
-                    tax_code_id, tax_amount = compute_tax(amount, tax, line)
-                    if not tax_code_id:
-                        continue
-
+                # Create the tax lines
+                taxes = []
+                for t in line.product_id.taxes_id:
+                    if t.company_id.id == current_company.id:
+                        taxes.append(t.id)
+                if not taxes:
+                    continue
+                for tax in account_tax_obj.browse(cr,uid, taxes, context=context).compute_all(line.price_unit * (100.0-line.discount) / 100.0, cur, line.qty)['taxes']:
                     insert_data('tax', {
-                        'name': _('Tax'),
-                        'product_id':line.product_id.id,
+                        'name': _('Tax') + ' ' + tax['name'],
+                        'product_id': line.product_id.id,
                         'quantity': line.qty,
-                        'account_id': income_account,
-                        'credit': 0.0,
-                        'debit': 0.0,
-                        'tax_code_id': tax_code_id,
-                        'tax_amount': tax_amount,
+                        'account_id': tax['account_id'] or income_account,
+                        'credit': ((tax['amount']>0) and tax['amount']) or 0.0,
+                        'debit': ((tax['amount']<0) and -tax['amount']) or 0.0,
+                        'tax_line_id': tax['id'],
                         'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                     })
-
-            # Create a move for each tax group
-            (tax_code_pos, base_code_pos, account_pos, tax_id)= (0, 1, 2, 3)
-
-            for key, tax_amount in group_tax.items():
-                tax = self.pool.get('account.tax').browse(cr, uid, key[tax_id], context=context)
-                insert_data('tax', {
-                    'name': _('Tax') + ' ' + tax.name,
-                    'quantity': line.qty,
-                    'product_id': line.product_id.id,
-                    'account_id': key[account_pos] or income_account,
-                    'credit': ((tax_amount>0) and tax_amount) or 0.0,
-                    'debit': ((tax_amount<0) and -tax_amount) or 0.0,
-                    'tax_code_id': key[tax_code_pos],
-                    'tax_amount': abs(tax_amount),
-                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
-                })
 
             # counterpart
             insert_data('counter_part', {
@@ -1264,7 +1207,8 @@ class pos_order(osv.osv):
             for value in group_data:
                 all_lines.append((0, 0, value),)
         if move_id: #In case no order was changed
-            self.pool.get("account.move").write(cr, uid, [move_id], {'line_id':all_lines}, context=context)
+            self.pool.get("account.move").write(cr, SUPERUSER_ID, [move_id], {'line_ids':all_lines}, context=context)
+            self.pool.get("account.move").post(cr, SUPERUSER_ID, [move_id], context=context)
 
         return True
 
@@ -1299,7 +1243,6 @@ class account_bank_statement_line(osv.osv):
         'pos_statement_id': fields.many2one('pos.order', string="POS statement", ondelete='cascade'),
     }
 
-
 class pos_order_line(osv.osv):
     _name = "pos.order.line"
     _description = "Lines of Point of Sale"
@@ -1314,47 +1257,51 @@ class pos_order_line(osv.osv):
     def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
         account_tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            taxes_ids = [ tax for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = account_tax_obj.compute_all(cr, uid, taxes_ids, price, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
-
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, taxes['total'])
-            res[line.id]['price_subtotal_incl'] = cur_obj.round(cr, uid, cur, taxes['total_included'])
+            taxes_ids = [ tax.id for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            res[line.id]['price_subtotal'] = res[line.id]['price_subtotal_incl'] = price * line.qty
+            if taxes_ids:
+                taxes = account_tax_obj.browse(cr, uid, taxes_ids, context).compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                res[line.id]['price_subtotal'] = taxes['total_excluded']
+                res[line.id]['price_subtotal_incl'] = taxes['total_included']
         return res
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
-       context = context or {}
-       if not product_id:
-            return {}
-       if not pricelist:
+        context = context or {}
+        if not product_id:
+           return {}
+        if not pricelist:
            raise UserError(
                _('You have to select a pricelist in the sale form !\n' \
                'Please set one before choosing a product.'))
 
-       price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                product_id, qty or 1.0, partner_id)[pricelist]
 
-       result = self.onchange_qty(cr, uid, ids, product_id, 0.0, qty, price, context=context)
-       result['value']['price_unit'] = price
-       return result
+        result = self.onchange_qty(cr, uid, ids, pricelist, product_id, 0.0, qty, price, context=context)
+        result['value']['price_unit'] = price
+        return result
 
-    def onchange_qty(self, cr, uid, ids, product, discount, qty, price_unit, context=None):
+    def onchange_qty(self, cr, uid, ids, pricelist, product, discount, qty, price_unit, context=None):
         result = {}
         if not product:
             return result
+        if not pricelist:
+           raise UserError(_('You have to select a pricelist in the sale form !'))
+
         account_tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
 
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
         price = price_unit * (1 - (discount or 0.0) / 100.0)
-        taxes = account_tax_obj.compute_all(cr, uid, prod.taxes_id, price, qty, product=prod, partner=False)
-
-        result['price_subtotal'] = taxes['total']
-        result['price_subtotal_incl'] = taxes['total_included']
+        result['price_subtotal'] = result['price_subtotal_incl'] = price * qty
+        cur = self.pool.get('product.pricelist').browse(cr, uid, [pricelist], context=context).currency_id
+        if (prod.taxes_id):
+            taxes = prod.taxes_id.compute_all(price, cur, qty, product=prod, partner=False)
+            result['price_subtotal'] = taxes['total_excluded']
+            result['price_subtotal_incl'] = taxes['total_included']
         return {'value': result}
 
     _columns = {
@@ -1362,11 +1309,11 @@ class pos_order_line(osv.osv):
         'name': fields.char('Line No', required=True, copy=False),
         'notice': fields.char('Discount Notice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
-        'price_unit': fields.float(string='Unit Price', digits_compute=dp.get_precision('Account')),
-        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoS')),
-        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits_compute=dp.get_precision('Account'), string='Subtotal w/o Tax', store=True),
-        'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits_compute=dp.get_precision('Account'), string='Subtotal', store=True),
-        'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Account')),
+        'price_unit': fields.float(string='Unit Price', digits=0),
+        'qty': fields.float('Quantity', digits=0),
+        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal w/o Tax', store=True),
+        'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal', store=True),
+        'discount': fields.float('Discount (%)', digits=0),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'tax_ids': fields.many2many('account.tax', string='Taxes', readonly=True),

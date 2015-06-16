@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2014 OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from functools import partial
 import logging
@@ -1007,6 +989,8 @@ class ir_actions_server(osv.osv):
         obj = None
         if context.get('active_model') == action.model_id.model and context.get('active_id'):
             obj = model.browse(context['active_id'])
+        if context.get('onchange_self'):
+            obj = context['onchange_self']
         eval_context.update({
             # orm
             'env': env,
@@ -1176,7 +1160,6 @@ Launch Manually Once: after having been launched manually, it sets automatically
         if act_type != 'ir.actions.act_window':
             return res
         res.setdefault('context','{}')
-        res['nodestroy'] = True
 
         # Open a specific record when res_id is provided in the context
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from lxml import etree
 import StringIO
 import cStringIO
@@ -39,6 +21,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
@@ -199,16 +182,11 @@ class rml_parse(object):
         return d
 
     def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False, currency_obj=False):
-        """
-            Assuming 'Account' decimal.precision=3:
-                formatLang(value) -> digits=2 (default)
-                formatLang(value, digits=4) -> digits=4
-                formatLang(value, dp='Account') -> digits=3
-                formatLang(value, digits=5, dp='Account') -> digits=5
-        """
         if digits is None:
             if dp:
                 digits = self.get_digits(dp=dp)
+            elif currency_obj:
+                digits = currency_obj.decimal_places
             else:
                 digits = self.get_digits(value)
 
@@ -247,9 +225,9 @@ class rml_parse(object):
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
         if currency_obj:
             if currency_obj.position == 'after':
-                res='%s %s'%(res,currency_obj.symbol)
+                res = u'%s\N{NO-BREAK SPACE}%s' % (res, currency_obj.symbol)
             elif currency_obj and currency_obj.position == 'before':
-                res='%s %s'%(currency_obj.symbol, res)
+                res = u'%s\N{NO-BREAK SPACE}%s' % (currency_obj.symbol, res)
         return res
 
     def display_address(self, address_record, without_company=False):

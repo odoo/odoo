@@ -10,7 +10,7 @@
             <field name="name">procurement.order.tree</field>
             <field name="model">procurement.order</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
+                <tree string="Procurement Lines" decoration-danger="date_planned&lt;current_date and state == 'exception'" decoration-success="state=='confirmed'" decoration-muted="state in ['done','cancel']" decoration-info="state == 'ready'">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
@@ -34,9 +34,9 @@
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,running,done" />
                     </header>
                     <sheet>
-                    <div class="oe_right oe_button_box" name="button_box">
-                        <button name="do_view_procurements" class="oe_stat_button" icon="fa-bars" string="Group's Procurements" type="object"/>
-                    </div>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="do_view_procurements" class="oe_stat_button" icon="fa-bars" string="Group's Procurements" type="object"/>
+                        </div>
                     <group>
                         <group>
                             <field name="product_id" on_change="onchange_product_id(product_id)"/>
@@ -98,7 +98,7 @@
             <field name="arch" type="xml">
                 <form string="Procurement group">
                     <sheet>
-                        <div class="oe_right oe_button_box" name="button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button name="%(do_view_procurements)d" string="Procurements" type="action"/>
                         </div>
                         <group>
@@ -242,4 +242,3 @@
         </record>
     </data>
 </openerp>
-

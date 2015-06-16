@@ -61,13 +61,16 @@
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
             <sheet string="Campaign">
-                <div class="oe_right oe_button_box" name="button_box">
+                <div class="oe_button_box" name="button_box">
                     <button type="action"
                         name="%(act_marketing_campaing_stat)d"
                         class="oe_stat_button"
                         icon="fa-keyboard-o"
                         help="Marketing Campaign Statistics">
-                        <div>Campaign<br/>Statistics</div>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Campaign</span>
+                            <span class="o_stat_text">Statistics</span>
+                        </div>
                     </button>
                     <button type="action"
                         name="%(act_marketing_campaing_segment_opened)d"
@@ -107,7 +110,7 @@
         <field name="name">marketing.campaign.tree</field>
         <field name="model">marketing.campaign</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Campaigns">
+            <tree decoration-info="state == 'draft'" decoration-muted="state in ('done','cancelled')" string="Campaigns">
                 <field name="name"/>
                 <field name="object_id"/>
                 <field name="mode"/>
@@ -184,9 +187,12 @@
         </field>
     </record>
 
-    <menuitem name="Lead Automation" id="menu_marketing_campaign" parent="base.marketing_menu" groups="marketing.group_marketing_user,marketing.group_marketing_manager" 
-    sequence="3"/>
-    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="30"/>
+    <menuitem name="Lead Automation" id="menu_marketing_campaign_root" groups="marketing.group_marketing_user,marketing.group_marketing_manager" 
+    sequence="10"/>
+    <menuitem id="menu_marketing_campaign_campaigns" sequence="1" name="Campaigns" parent="menu_marketing_campaign_root"/>
+    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign_campaigns" action="action_marketing_campaign_form" sequence="1"/>
+    <menuitem name="Reports" id="report_marketing_campaign" parent="menu_marketing_campaign_root" 
+        sequence="99"/>
 
     <!-- Marketing Segments -->
     <record model="ir.ui.view" id="view_marketing_campaign_segment_form">
@@ -230,7 +236,7 @@
         <field name="name">marketing.campaign.segment.tree</field>
         <field name="model">marketing.campaign.segment</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Segments">
+            <tree decoration-info="state == 'draft'" decoration-muted="state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
                 <field name="campaign_id"/>
                 <field name="date_run"/>
@@ -275,7 +281,7 @@
         <field name="context">{'group_by': []}</field>
     </record>
 
-    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign" action="action_marketing_campaign_segment_form" sequence="20"/>
+    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign_campaigns" action="action_marketing_campaign_segment_form" sequence="2"/>
 
     <!--
         Marketing Activities
@@ -296,7 +302,7 @@
                     </group>
                     <group>
                         <field name="variable_cost"/>
-                        <field name="revenue"/>
+                        <field name="revenue" widget="monetary"/>
                     </group>
                 </group>
                 <group >
@@ -370,7 +376,7 @@
         <field name="name">marketing.campaign.workitem.tree</field>
         <field name="model">marketing.campaign.workitem</field>
         <field name="arch" type="xml">
-            <tree colors="red:state == 'exception';black:state == 'todo';gray:state == 'cancelled'" string="Marketing Campaign Activities">
+            <tree decoration-danger="state == 'exception'" decoration-muted="state == 'cancelled'" string="Marketing Campaign Activities">
                 <field name="campaign_id"/>
                 <field name="segment_id"/>
                 <field name="activity_id"/>
@@ -460,7 +466,7 @@
         <field name="context">{'group_by': []}</field>
     </record>
 
-    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="10"/>
+    <menuitem id="menu_action_marketing_campaign_workitem" parent="report_marketing_campaign" action="action_marketing_campaign_workitem" sequence="3"/>
 
     </data>
 </openerp>

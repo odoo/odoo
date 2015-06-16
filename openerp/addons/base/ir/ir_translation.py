@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 
@@ -269,7 +251,7 @@ class ir_translation(osv.osv):
             return
         return super(ir_translation, self)._check_selection_field_value(cr, uid, field, value, context=context)
 
-    @tools.ormcache_multi(skiparg=3, multi=6)
+    @tools.ormcache_multi('name', 'tt', 'lang', multi='ids')
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
         if ids:
@@ -333,7 +315,7 @@ class ir_translation(osv.osv):
         
         return (query, params)
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('name', 'types', 'lang', 'source', 'res_id')
     def __get_source(self, cr, uid, name, types, lang, source, res_id):
         # res_id is a tuple or None, otherwise ormcache cannot cache it!
         query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)

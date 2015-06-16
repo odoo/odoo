@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -87,7 +69,7 @@ class procurement_order(osv.osv):
         else:
             properties = [x.id for x in procurement.property_ids]
             bom_id = bom_obj._bom_find(cr, uid, product_id=procurement.product_id.id,
-                                       properties=properties, context=context)
+                                       properties=properties, context=dict(context, company_id=procurement.company_id.id))
             bom = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom.routing_id.id
         return {
@@ -117,7 +99,7 @@ class procurement_order(osv.osv):
             if self.check_bom_exists(cr, uid, [procurement.id], context=context):
                 #create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
                 vals = self._prepare_mo_vals(cr, uid, procurement, context=context)
-                produce_id = production_obj.create(cr, SUPERUSER_ID, vals, context=context)
+                produce_id = production_obj.create(cr, SUPERUSER_ID, vals, context=dict(context, force_company=procurement.company_id.id))
                 res[procurement.id] = produce_id
                 self.write(cr, uid, [procurement.id], {'production_id': produce_id})
                 self.production_order_create_note(cr, uid, procurement, context=context)

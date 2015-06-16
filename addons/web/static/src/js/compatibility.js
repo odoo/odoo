@@ -183,6 +183,84 @@ function start_modules (modules) {
     return openerp;
 };
 
+// Monkey-patching of the ListView for backward compatibiliy of the colors and
+// fonts row's attributes, as they are deprecated in 9.0.
+ListView.include({
+    load_list: function(data) {
+        this._super(data);
+        if (this.fields_view.arch.attrs.colors) {
+            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
+                .compact()
+                .map(function(color_pair) {
+                    var pair = color_pair.split(':'),
+                        color = pair[0],
+                        expr = pair[1];
+                    return [color, py.parse(py.tokenize(expr)), expr];
+                }).value();
+        }
+
+        if (this.fields_view.arch.attrs.fonts) {
+            this.fonts = _(this.fields_view.arch.attrs.fonts.split(';')).chain().compact()
+                .map(function(font_pair) {
+                    var pair = font_pair.split(':'),
+                        font = pair[0],
+                        expr = pair[1];
+                    return [font, py.parse(py.tokenize(expr)), expr];
+                }).value();
+        }
+    },
+    /**
+     * Returns the style for the provided record in the current view (from the
+     * ``@colors`` and ``@fonts`` attributes)
+     *
+     * @param {Record} record record for the current row
+     * @returns {String} CSS style declaration
+     */
+    style_for: function (record) {
+        var len, style= '';
+
+        var context = _.extend({}, record.attributes, {
+            uid: session.uid,
+            current_date: moment().format('YYYY-MM-DD')
+            // TODO: time, datetime, relativedelta
+        });
+        var i;
+        var pair;
+        var expression;
+        if (this.fonts) {
+            for(i=0, len=this.fonts.length; i<len; ++i) {
+                pair = this.fonts[i];
+                var font = pair[0];
+                expression = pair[1];
+                if (py.PY_isTrue(py.evaluate(expression, context))) {
+                    switch(font) {
+                    case 'bold':
+                        style += 'font-weight: bold;';
+                        break;
+                    case 'italic':
+                        style += 'font-style: italic;';
+                        break;
+                    case 'underline':
+                        style += 'text-decoration: underline;';
+                        break;
+                    }
+                }
+            }
+        }
+ 
+        if (!this.colors) { return style; }
+        for(i=0, len=this.colors.length; i<len; ++i) {
+            pair = this.colors[i];
+            var color = pair[0];
+            expression = pair[1];
+            if (py.PY_isTrue(py.evaluate(expression, context))) {
+                return style += 'color: ' + color + ';';
+            }
+        }
+        return style;
+     },
+});
+
 
 });
 

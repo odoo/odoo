@@ -1,24 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import chain
 import time
 
 from openerp import tools
@@ -224,7 +207,9 @@ class product_pricelist(osv.osv):
         is_product_template = products[0]._name == "product.template"
         if is_product_template:
             prod_tmpl_ids = [tmpl.id for tmpl in products]
-            prod_ids = [product.id for product in tmpl.product_variant_ids for tmpl in products]
+            # all variants of all products
+            prod_ids = [p.id for p in
+                        list(chain.from_iterable([t.product_variant_ids for t in products]))]
         else:
             prod_ids = [product.id for product in products]
             prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
@@ -274,7 +259,9 @@ class product_pricelist(osv.osv):
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
                         continue
-                    if rule.product_id:
+                    if rule.product_id and \
+                            (product.product_variant_count > 1 or product.product_variant_ids[0].id != rule.product_id.id):
+                        # product rule acceptable on template if has only one variant
                         continue
                 else:
                     if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:

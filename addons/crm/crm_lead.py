@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import crm
 from datetime import datetime
@@ -25,9 +7,9 @@ from operator import itemgetter
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import tools
+from openerp import tools, api
 from openerp.addons.base.res.res_partner import format_address
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
 from openerp.exceptions import UserError, AccessError
@@ -82,30 +64,10 @@ class crm_lead(format_address, osv.osv):
         context['empty_list_help_document_name'] = _("leads")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
-    def _get_default_team_id(self, cr, uid, user_id=False, context=None):
-        """ Gives default team by checking if present in the context """
-        team_id = self._resolve_team_id_from_context(cr, uid, context=context) or False
-        return team_id
-
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        team_id = self._get_default_team_id(cr, uid, context=context)
+        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context)
         return self.stage_find(cr, uid, [], team_id, [('fold', '=', False)], context=context)
-
-    def _resolve_team_id_from_context(self, cr, uid, context=None):
-        """ Returns ID of team based on the value of 'team_id'
-            context key, or None if it cannot be resolved to a single
-            Sales Team.
-        """
-        if context is None:
-            context = {}
-        if type(context.get('default_team_id')) in (int, long):
-            return context.get('default_team_id')
-        if isinstance(context.get('default_team_id'), basestring):
-            team_ids = self.pool.get('crm.team').name_search(cr, uid, name=context['default_team_id'], context=context)
-            if len(team_ids) == 1:
-                return int(team_ids[0][0])
-        return None
 
     def _resolve_type_from_context(self, cr, uid, context=None):
         """ Returns the type (lead or opportunity) from the type context
@@ -127,7 +89,7 @@ class crm_lead(format_address, osv.osv):
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         search_domain = []
-        team_id = self._resolve_team_id_from_context(cr, uid, context=context)
+        team_id = self.pool['crm.team']._resolve_team_id_from_context(cr, uid, context=context)
         if team_id:
             search_domain += ['|', ('team_ids', '=', team_id)]
             search_domain += [('id', 'in', ids)]
@@ -282,7 +244,7 @@ class crm_lead(format_address, osv.osv):
         'type': 'lead',
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'team_id': lambda s, cr, uid, c: s._get_default_team_id(cr, uid, context=c),
+        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[0][0],
         'color': 0,
@@ -329,7 +291,7 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
-        team_id = self._get_default_team_id(cr, uid, context=context)
+        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, user_id=user_id, context=context)
         if user_id and not team_id and self.pool['res.users'].has_group(cr, uid, 'base.group_multi_salesteams'):
             team_ids = self.pool.get('crm.team').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if team_ids:
@@ -910,6 +872,7 @@ class crm_lead(format_address, osv.osv):
         if lead.partner_id:
             partner_ids.append(lead.partner_id.id)
         res['context'] = {
+            'search_default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
             'default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
             'default_partner_id': lead.partner_id and lead.partner_id.id or False,
             'default_partner_ids': partner_ids,
@@ -983,6 +946,7 @@ class crm_lead(format_address, osv.osv):
             return 'crm.mt_lead_stage'
         return super(crm_lead, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         leads = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -1003,9 +967,9 @@ class crm_lead(format_address, osv.osv):
         try:
             for lead in self.browse(cr, uid, ids, context=context):
                 if lead.partner_id:
-                    self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
+                    lead._message_add_suggested_recipient(recipients, partner=lead.partner_id, reason=_('Customer'))
                 elif lead.email_from:
-                    self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
+                    lead._message_add_suggested_recipient(recipients, email=lead.email_from, reason=_('Customer Email'))
         except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
@@ -1089,9 +1053,9 @@ class crm_lead(format_address, osv.osv):
             return {'value':{'country_id':country_id}}
         return {}
 
-    def message_partner_info_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):
-        res = super(crm_lead, self).message_partner_info_from_emails(cr, uid, id, emails, link_mail=link_mail, context=context)
-        lead = self.browse(cr, uid, id, context=context)
+    def message_partner_info_from_emails(self, cr, uid, ids, emails, link_mail=False, context=None):
+        res = super(crm_lead, self).message_partner_info_from_emails(cr, uid, ids, emails, link_mail=link_mail, context=context)
+        lead = self.browse(cr, uid, ids[0], context=context)
         for partner_info in res:
             if not partner_info.get('partner_id') and (lead.partner_name or lead.contact_name):
                 emails = email_re.findall(partner_info['full_name'] or '')

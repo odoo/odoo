@@ -1,29 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from lxml import etree
 
 from openerp.osv import fields, osv
-from openerp import tools
+from openerp import tools, api
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -233,7 +215,7 @@ class account_analytic_plan_instance(osv.osv):
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+    def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         this = self.browse(cr, uid, ids[0], context=context)
@@ -369,8 +351,8 @@ class account_invoice(osv.osv):
     _name = "account.invoice"
     _inherit = "account.invoice"
 
-    def line_get_convert(self, cr, uid, x, part, date, context=None):
-        res=super(account_invoice,self).line_get_convert(cr, uid, x, part, date, context=context)
+    def line_get_convert(self, cr, uid, x, part, context=None):
+        res=super(account_invoice,self).line_get_convert(cr, uid, x, part, context=context)
         res['analytics_id'] = x.get('analytics_id', False)
         return res
 
@@ -451,21 +433,16 @@ class sale_order_line(osv.osv):
                     inv_line_obj.write(cr, uid, [line.id], {'analytics_id': rec.analytics_id.id}, context=context)
         return create_ids
 
-
-
+# TODO : migrate module to new API
+from openerp import fields
 class account_bank_statement(osv.osv):
     _inherit = "account.bank.statement"
     _name = "account.bank.statement"
 
-    def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, context=None):
-        result = super(account_bank_statement,self)._prepare_bank_move_line(cr, uid, st_line, 
-            move_id, amount, company_currency_id, context=context)
-        result['analytics_id'] = st_line.analytics_id.id
-        return result
-
-    def button_confirm_bank(self, cr, uid, ids, context=None):
-        super(account_bank_statement,self).button_confirm_bank(cr, uid, ids, context=context)
-        for st in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def button_confirm_bank(self):
+        super(account_bank_statement, self).button_confirm_bank()
+        for st in self:
             for st_line in st.line_ids:
                 if st_line.analytics_id:
                     if not st.journal_id.analytic_journal_id:
@@ -475,10 +452,14 @@ class account_bank_statement(osv.osv):
         return True
 
 
-
 class account_bank_statement_line(osv.osv):
     _inherit = "account.bank.statement.line"
     _name = "account.bank.statement.line"
-    _columns = {
-        'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
-    }
+
+    analytics_id = fields.Many2one('account.analytic.plan.instance', string='Analytic Distribution')
+
+    def _prepare_move_line(self, move, amount):
+        result = super(account_bank_statement, self)._prepare_bank_move_line(move, amount)
+        result['analytics_id'] = self.analytics_id.id
+        return result
+

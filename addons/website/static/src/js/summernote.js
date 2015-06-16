@@ -888,7 +888,7 @@ range.WrappedRange.prototype.isContentEditable = function () {
 renderer.tplButtonInfo.fontsize = function (lang, options) {
     var items = options.fontSizes.reduce(function (memo, v) {
         return memo + '<li><a data-event="fontSize" href="#" data-value="' + v + '">' +
-                  '<i class="fa fa-check icon-ok"></i> ' + v +
+                  '<i class="fa fa-check"></i> ' + v +
                 '</a></li>';
     }, '');
 

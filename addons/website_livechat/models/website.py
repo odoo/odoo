@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import osv
-from openerp import api, fields, models, SUPERUSER_ID
+from openerp import api, fields, models
 from openerp.http import request
 
-class website(models.Model):
+class Website(models.Model):
 
     _inherit = "website"
 
     channel_id = fields.Many2one('im_livechat.channel', string='Live Chat Channel')
 
 
-class website_config_settings(models.TransientModel):
+class WebsiteConfigSettings(models.TransientModel):
 
     _inherit = 'website.config.settings'
 
@@ -18,15 +18,16 @@ class website_config_settings(models.TransientModel):
 
 
 
-class ir_ui_view(osv.Model):
+class IrUiView(models.Model):
 
     _inherit = "ir.ui.view"
 
-    def _prepare_qcontext(self, cr, uid, context=None):
-        qcontext = super(ir_ui_view, self)._prepare_qcontext(cr, uid, context=context)
+    @api.model
+    def _prepare_qcontext(self):
+        qcontext = super(IrUiView, self)._prepare_qcontext()
         if request and getattr(request, 'website_enabled', False):
             if request.website.channel_id:
-                qcontext['website_livechat_url'] = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'web.base.url')
-                qcontext['website_livechat_dbname'] = cr.dbname
+                qcontext['website_livechat_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                qcontext['website_livechat_dbname'] = self._cr.dbname
                 qcontext['website_livechat_channel'] = request.website.channel_id.id
         return qcontext

@@ -14,11 +14,11 @@
     name: Delivery order for procurement
     partner_id: base.res_partner_2
     picking_type_id: stock.picking_type_out
+    location_id: stock.stock_location_output
+    location_dest_id: stock.stock_location_customers
     move_lines:
         - product_id: product.product_product_3
           product_uom_qty: 10.00
-          location_id: stock.stock_location_output
-          location_dest_id: stock.stock_location_customers
           procure_method: make_to_order
 - 
   Confirm delivery order.

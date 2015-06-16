@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014 OpenERP S.A. (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Drop Shipping',
@@ -43,6 +25,8 @@ internal transfer document is needed.
     'depends': ['purchase', 'sale_stock'],
     'data': ['stock_dropshipping.xml'],
     'test': [
+        '../account/test/account_minimal_test.xml',
+        '../stock_account/test/stock_valuation_account.xml',
         'test/cancellation_propagated.yml',
         'test/crossdock.yml',
         'test/dropship.yml',

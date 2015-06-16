@@ -23,7 +23,7 @@
             <field name="name">Goal List</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached';grey:state == 'canceled'" create="false">
+                <tree string="Goal List" decoration-danger="state == 'failed'" decoration-success="state == 'reached'" decoration-muted="state == 'canceled'" create="false">
                     <field name="definition_id" invisible="1" />
                     <field name="user_id" invisible="1" />
                     <field name="start_date"/>
@@ -162,7 +162,7 @@
                                             <div class="oe_goal_state">
                                                 <t t-if="record.state.raw_value=='reached'"><i class="oe_green fa fa-check" title="Goal Reached"/></t>
                                                 <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o" title="Goal in Progress"/></t>
-                                                <t t-if="record.state.raw_value=='failed'"><i class="oe_red fa fa-remove" title="Goal Failed"/></t>
+                                                <t t-if="record.state.raw_value=='failed'"><i class="oe_red fa fa-times" title="Goal Failed"/></t>
                                             </div>
                                         </t>
                                         <t t-if="record.definition_display.raw_value == 'progress'">

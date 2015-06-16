@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
 import re
@@ -132,7 +114,6 @@ class res_company(osv.osv):
             'res.partner': (_get_companies_from_partner, ['image'], 10),
         }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
         'account_no':fields.char('Account No.'),
         'street': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'),
@@ -241,11 +222,11 @@ class res_company(osv.osv):
                 return rule.company_dest_id.id
         return user.company_id.id
 
-    @tools.ormcache()
+    @tools.ormcache('uid', 'company')
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []
-        ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
+        ids = self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context=None):

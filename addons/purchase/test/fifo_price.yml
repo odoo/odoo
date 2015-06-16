@@ -1,4 +1,12 @@
 -
+  Set the company currency as EURO for the sake of repeatibility
+-
+  !record {model: res.company, id: base.main_company}:
+    currency_id: base.EUR
+-
+  !record {model: product.pricelist, id: purchase.list0}:
+    currency_id: base.EUR
+-
   Set a product as using fifo price
 -
   !record {model: product.product, id: product_fifo_icecream}:
@@ -12,8 +20,8 @@
     uom_po_id: product.product_uom_kgm
     cost_method: real
     valuation: real_time
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
     description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
   I create a draft Purchase Order for first in move for 10 kg at 50 euro
@@ -21,7 +29,7 @@
   !record {model: purchase.order, id: purchase_order_fifo1}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_fifo_icecream
         product_qty: 10.0
@@ -54,7 +62,7 @@
   !record {model: purchase.order, id: purchase_order_fifo2}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_fifo_icecream
         product_qty: 30.0
@@ -241,7 +249,7 @@
     location_dest_id: stock.stock_location_customers
     picking_type_id: stock.picking_type_out
 - 
-  I assign this outgoing shipment 
+  I assign this outgoing shipment
 - 
   !python {model: stock.picking}: |
     self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_ret")])
@@ -272,8 +280,8 @@
     uom_po_id: product.product_uom_kgm
     cost_method: real
     valuation: real_time
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
     description: 
 - 
   Create outpicking.  We create delivery order of 100 kg.
@@ -332,7 +340,7 @@
   !record {model: purchase.order, id: purchase_order_fifo_neg}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_fifo_negative
         product_qty: 50.0
@@ -356,12 +364,12 @@
 
     assert self.browse(cr, uid, ref("product_fifo_negative")).standard_price == 70, 'The product price should not have been updated'
 - 
-  Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg   
+  Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg
 - 
   !record {model: purchase.order, id: purchase_order_fifo_neg2}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
-    pricelist_id: 1
+    pricelist_id: purchase.list0
     order_line:
       - product_id: product_fifo_negative
         product_qty: 60.0
@@ -379,7 +387,7 @@
     picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg2"), context=context).picking_ids[0]
     picking_obj.do_transfer()
 - 
-  The price of the product should have changed back to 65.0 
+  The price of the product should have changed back to 65.0
 - 
   !python {model: product.product}: |
     assert self.browse(cr, uid, ref("product_fifo_negative")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_negative")).standard_price,)

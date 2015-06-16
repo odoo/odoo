@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 
@@ -44,6 +26,7 @@ class StockMove(osv.osv):
         if move.raw_material_production_id and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.track_production and not move.consumed_for:
             raise UserError(_("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
 
+    # TODO master: remove me, no longer used
     def _check_phantom_bom(self, cr, uid, move, context=None):
         """check if product associated to move has a phantom bom
             return list of ids of mrp.bom for that product """
@@ -59,24 +42,28 @@ class StockMove(osv.osv):
             ('company_id', '=', user_company)]
         return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, domain, context=context)
 
+
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
         @return: True
         """
+        if context is None:
+            context = {}
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
         prod_obj = self.pool.get("product.product")
         proc_obj = self.pool.get("procurement.order")
         uom_obj = self.pool.get("product.uom")
         to_explode_again_ids = []
-        processed_ids = []
-        bis = self._check_phantom_bom(cr, uid, move, context=context)
-        if bis:
-            bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
+        property_ids = context.get('property_ids') or []
+        bis = bom_obj._bom_find(cr, SUPERUSER_ID, product_id=move.product_id.id, properties=property_ids)
+        bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis, context=context)
+        if bis and bom_point.type == 'phantom':
+            processed_ids = []
             factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
-            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [], context=context)
-            
+            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, property_ids, context=context)
+
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
                 if product.type != 'service':
@@ -115,7 +102,6 @@ class StockMove(osv.osv):
                         else:
                             proc = proc_obj.create(cr, uid, valdef, context=context)
                         proc_obj.run(cr, uid, [proc], context=context) #could be omitted
-
             
             #check if new moves needs to be exploded
             if to_explode_again_ids:
@@ -134,8 +120,10 @@ class StockMove(osv.osv):
                 
             #delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
-        #return list of newly created move or the move id otherwise, unless there is no move anymore
-        return processed_ids or (not bis and [move.id]) or []
+            #return list of newly created move
+            return processed_ids
+
+        return [move.id]
 
     def action_confirm(self, cr, uid, ids, context=None):
         move_ids = []

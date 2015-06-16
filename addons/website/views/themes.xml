@@ -34,8 +34,6 @@
   <div id="theme_customize_modal" class="modal fade">
       <div class="modal-dialog">
           <div class="modal-content">
-              <input id="less" type="checkbox" data-xmlid="website.option_bootstrap_less" style="display: none;"/>
-
               <div class="loading_backdrop"></div>
               <div class="modal-header text-center">
                   <button type="button" class="close">×</button>
@@ -56,7 +54,7 @@
                           <td class=" text-center">
                               <label class=" center-block">
                                  <div class="text-center" style="background-image: url(/website/static/src/img/theme/layout-boxed.gif); background-size: 100%; line-height: 40px;">BOXED</div>
-                                  <input name="layoutvar" type="radio" data-xmlid="website.option_layout_boxed" data-enable="less"/>
+                                  <input name="layoutvar" type="radio" data-xmlid="website.option_layout_boxed"/>
                               </label>
                           </td>
                       </tr>
@@ -68,37 +66,37 @@
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-stone.gif" alt="Stone" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="" data-disable="less"/>
+                                  <input name="colorvar" type="radio" data-xmlid=""/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-emerald.gif" alt="Emerald" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_emerald" data-enable="less"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_emerald"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-cobalt.gif" alt="Cobalt" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_cobalt" data-enable="less"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_cobalt"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-amethyst.gif" alt="Amethyst" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_amethyst" data-enable="less"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_amethyst"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-ruby.gif" alt="Blue" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_ruby" data-enable="less"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_ruby"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-gold.gif" alt="Gold" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_gold" data-enable="less"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_gold"/>
                               </label>
                           </td>
                       </tr>
@@ -121,7 +119,7 @@
                                   <div>
                                       <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >Georgia</span>
                                       <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">/ Helvetica</span>
-                                    <input name="theme" type="radio" data-xmlid="website.option_font" data-enable="less"/>
+                                    <input name="theme" type="radio" data-xmlid="website.option_font"/>
                                   </div>
                               </label>
                           </td>
@@ -154,17 +152,9 @@
 
 <template id="website.theme" name="Theme">
     <!-- Boostrap Fallback if server can't compute less files -->
-    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+    <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
+    <link rel="stylesheet" href='/website/static/src/less/colors.less'/>
     <link rel="stylesheet" href='/website/static/src/css/website.css'/>
-</template>
-
-<!-- Bootstrap Less File layout -->
-
-<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="True" customize_show="False">
-    <xpath expr="//link[@id='bootstrap_css']" position="replace">
-        <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-        <link rel="stylesheet" href='/website/static/src/less/colors.less'/>
-    </xpath>
 </template>
 
 <!-- Default Options Toggle -->

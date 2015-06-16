@@ -1,34 +1,17 @@
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position_id=False, flag=False, context=None):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position_id=fiscal_position_id, flag=flag, context=context)
         if not pricelist:
             return res
         if context is None:
@@ -48,17 +31,20 @@ class sale_order_line(osv.osv):
         return res
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
+        cur_obj = self.pool.get('res.currency')
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
+            cur = line.order_id.pricelist_id.currency_id
             res[line.id] = 0
             if line.product_id:
-                res[line.id] = round(line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uos_qty), 2)
+                tmp_margin = line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uos_qty)
+                res[line.id] = cur_obj.round(cr, uid, cur, tmp_margin)
         return res
 
     _columns = {
-        'margin': fields.function(_product_margin, string='Margin',
+        'margin': fields.function(_product_margin, string='Margin', digits_compute= dp.get_precision('Product Price'),
               store = True),
-        'purchase_price': fields.float('Cost Price', digits=(16,2))
+        'purchase_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'))
     }
 
 
@@ -70,6 +56,8 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             result[sale.id] = 0.0
             for line in sale.order_line:
+                if line.state == 'cancel':
+                    continue
                 result[sale.id] += line.margin or 0.0
         return result
 
@@ -83,5 +71,5 @@ class sale_order(osv.osv):
         'margin': fields.function(_product_margin, string='Margin', help="It gives profitability by calculating the difference between the Unit Price and the cost price.", store={
                 'sale.order.line': (_get_order, ['margin', 'purchase_price'], 20),
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
-                }),
+                }, digits_compute= dp.get_precision('Product Price')),
     }

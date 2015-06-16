@@ -500,17 +500,17 @@
         <ul>
             <li>Set a clear, explicit and concise question title
                 (check
-                <a href="#" data-placement="top" data-toggle="popover" data-content="Inventory Date Problem, Task remaining hours, Can you help solve solve my tax computation problem in Canada?" title="Click to get bad question samples">bad examples</a>
+                <a href="#" data-placement="top" data-trigger="focus" data-toggle="popover" data-content="Inventory Date Problem, Task remaining hours, Can you help solve solve my tax computation problem in Canada?" title="Click to get bad question samples">bad examples</a>
                 and
-                <a href="#" data-placement="bottom" data-toggle="popover" data-content="How to create a physical inventory at an anterior date?, How is the 'remaining hours' field computed on tasks?, How to configure TPS and TVQ's canadian taxes?" title="Click to get good question titles">good examples</a>
+                <a href="#" data-placement="bottom" data-trigger="focus" data-toggle="popover" data-content="How to create a physical inventory at an anterior date?, How is the 'remaining hours' field computed on tasks?, How to configure TPS and TVQ's canadian taxes?" title="Click to get good question titles">good examples</a>
                 ),
             </li>
             <li>Avoid unnecessary introductions (Hi,... Please... Thanks...),</li>
             <li>Provide enough details and, if possible, give an example.</li>
         </ul>
         <form t-attf-action="/forum/#{slug(forum)}/new?post_type=question" method="post" role="form" class="tag_text">
-            <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
-                class="form-control mb16" placeholder="Your Question Title..."/>
+            <input type="text" name="post_name" required="True" pattern=".*\S.*" t-attf-value="#{post_name}"
+                class="form-control mb16" placeholder="Your Question Title..." title="Title must not be empty"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
 
             <textarea name="content" required="True" id="content" class="form-control load_editor"
@@ -535,8 +535,8 @@
         <h3 t-if="is_answer">Edit reply</h3>
         <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text">
             <div t-if="not is_answer">
-                <input type="text" name="post_name" required="True"
-                    t-attf-value="#{post.name}" class="form-control mb8" placeholder="Edit your Post"/>
+                <input type="text" name="post_name" required="True" pattern=".*\S.*" t-attf-value="#{post.name}"
+                    class="form-control mb8" placeholder="Edit your Post" title="Title must not be empty"/>
                 <h5 t-if="post.post_type == 'question'" class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
             </div>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
@@ -731,7 +731,7 @@
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
                                 <t t-set="label" t-value="'Edit'"/>
-                                <t t-set="classes" t-value="'fa-edit'"/>
+                                <t t-set="classes" t-value="'fa-pencil-square-o'"/>
                                 <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
                             </t>
                         </li>
@@ -833,7 +833,7 @@
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
                             <t t-set="label" t-value="'Edit'"/>
-                            <t t-set="classes" t-value="'fa fa-edit'"/>
+                            <t t-set="classes" t-value="'fa fa-pencil-square-o'"/>
                             <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
                         </t>
                     </li>
@@ -1150,6 +1150,7 @@
             <small>profile</small>
             <t t-call="website.publish_management" groups="base.group_website_publisher">
                 <t t-set="object" t-value="user"/>
+                <t t-set="publish_edit" t-value="True"/>
             </t>
         </h1>
         <div class="row">

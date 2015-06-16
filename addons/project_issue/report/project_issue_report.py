@@ -1,24 +1,6 @@
 
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp import tools
@@ -46,7 +28,6 @@ class project_issue_report(osv.osv):
         'company_id' : fields.many2one('res.company', 'Company'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
-        'version_id': fields.many2one('project.issue.version', 'Version'),
         'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Contact'),
         'channel': fields.char('Channel', readonly=True, help="Communication Channel."),
@@ -72,7 +53,6 @@ class project_issue_report(osv.osv):
                     c.company_id as company_id,
                     c.priority as priority,
                     c.project_id as project_id,
-                    c.version_id as version_id,
                     1 as nbr,
                     c.partner_id,
                     c.channel,

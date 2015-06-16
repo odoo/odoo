@@ -1,31 +1,14 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class stock_invoice_onshipping(osv.osv_memory):
     _inherit = "stock.invoice.onshipping"
-    
-    def _get_journal_type(self, cr, uid, context=None):
+
+    def _get_invoice_type(self, cr, uid, context=None):
         if context is None:
             context = {}
         res_ids = context and context.get('active_ids', [])
@@ -37,13 +20,12 @@ class stock_invoice_onshipping(osv.osv_memory):
         if src_usage == 'supplier' and dest_usage == 'customer':
             pick_purchase = pick.move_lines and pick.move_lines[0].purchase_line_id and pick.move_lines[0].purchase_line_id.order_id.invoice_method == 'picking'
             if pick_purchase:
-                return 'purchase'
+                return 'in_invoice'
             else:
-                return 'sale'
+                return 'out_invoice'
         else:
-            return super(stock_invoice_onshipping, self)._get_journal_type(cr, uid, context=context)
-        
-        
+            return super(stock_invoice_onshipping, self)._get_invoice_type(cr, uid, context=context)
+
     _defaults = {
-        'journal_type': _get_journal_type,
+        'invoice_type': _get_invoice_type,
         }

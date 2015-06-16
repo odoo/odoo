@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="stock.view_inventory_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="period_id"/>
+                    <field name="date_account"/>
                 </xpath>
             </field>
         </record>
@@ -32,7 +32,7 @@
             <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='waiting']" position="after">
-                    <filter name="to_be_invoiced" string="To Be Invoiced" domain="[('invoice_state','=', '2binvoiced')]" help="To Be Invoiced Moves"/>
+                    <filter name="to_be_invoiced" string="To Be Invoiced" domain="[('invoice_state','=', '2binvoiced'), ('state', '=', 'done')]" help="To Be Invoiced Moves"/>
                 </xpath>
             </field>
         </record>
@@ -58,7 +58,7 @@
                     <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|',('state','&lt;&gt;','done'),('invoice_state','&lt;&gt;','2binvoiced')]}" type="action" class="oe_highlight" groups="base.group_user"/>
                 </xpath>
                 <field name="move_lines" position="attributes">
-                    <attribute name="context">{'default_invoice_state': invoice_state, 'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id}</attribute>
+                    <attribute name="context">{'default_invoice_state': invoice_state, 'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}</attribute>
                 </field>
                 <xpath expr="//field[@name='move_type']" position="after">
                     <field name="invoice_state" groups="account.group_account_invoice"/>
@@ -122,19 +122,6 @@
             }
             </field>
             <field name="search_view_id" ref="view_picking_search_inherit"/>
-        </record>
-
-        <record id="view_stock_picking_kanban_inherit" model="ir.ui.view">
-            <field name="name">stock.picking.type.kanban</field>
-            <field name="model">stock.picking.type</field>
-            <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
-            <field name="arch" type="xml">
-                <xpath expr="//a[@id='transfers']" position="before">
-                    <a name="%(action_picking_tree_invoice)d" type="action" class="col-md-12" t-if="record.count_picking_invoiced.raw_value &gt; 0">
-                       <field name="count_picking_invoiced"/> To Be Invoiced
-                    </a>
-                </xpath>
-            </field>
         </record>
 
     </data>

@@ -3,9 +3,9 @@
     <data>
         <!-- Root Menus -->
 
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_hr_manager" sequence="45"/>
-        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
-        <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
+        <menuitem id="menu_hr_payroll_root" name="Payroll" sequence="45"/>
+        <menuitem id="menu_hr_payroll_configuration" name="Configuration" parent="menu_hr_payroll_root"
+            sequence="100" groups="base.group_hr_manager,base.group_configuration"/>
 
         <!-- Contract View -->
         <record id="hr_contract_form_inherit" model="ir.ui.view">
@@ -99,7 +99,7 @@
         <menuitem
             id="menu_hr_payroll_structure_view"
             action="action_view_hr_payroll_structure_list_form"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="2"
         />
         <record id="action_view_hr_payroll_structure_tree" model="ir.actions.act_window">
@@ -112,7 +112,7 @@
         <menuitem
             id="menu_hr_payroll_structure_tree"
             action="action_view_hr_payroll_structure_tree"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="2"
             icon="STOCK_INDENT"
         />
@@ -123,7 +123,7 @@
             <field name="name">hr.payslip.line.tree</field>
             <field name="model">hr.payslip.line</field>
             <field name="arch" type="xml">
-                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
+                <tree string="Salary Structure" editable="bottom" decoration-info="total == 0">
                     <field name="category_id"/>
                     <field name="employee_id" invisible="1"/>
                     <field name="sequence"/>
@@ -188,7 +188,7 @@
             <field name="name">hr.payslip.tree</field>
             <field name="model">hr.payslip</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state == 'new';gray:state == 'cancel'" string="Payslips">
+                <tree decoration-info="state in ('confirm','hr_check','accont_check')" decoration-muted="state == 'cancel'" string="Payslips">
                     <field name="number"/>
                     <field name="employee_id"/>
                     <field name="name"/>
@@ -221,7 +221,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
-                    <div class="oe_right oe_button_box">
+                    <div class="oe_button_box" name="button_box">
                         <button name="%(act_payslip_lines)d" 
                             class="oe_stat_button" 
                             icon="fa-money" 
@@ -291,7 +291,7 @@
                         </page>
                         <page string="Salary Computation" >
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
+                                <tree string="Salary Structure" editable="bottom" decoration-info="total == 0">
                                     <field name="name"/>
                                     <field name="code"/>
                                     <field name="category_id"/>
@@ -318,7 +318,7 @@
                         </page>
                         <page string="Details By Salary Rule Category">
                             <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]">
-                                <tree string="Payslip Lines" colors="blue:total == 0">
+                                <tree string="Payslip Lines" decoration-info="total == 0">
                                     <field name="category_id"/>
                                     <field name="name"/>
                                     <field name="code"/>
@@ -374,7 +374,7 @@
             <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
 
-        <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll" groups="base.group_hr_user"/>        
+        <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_payroll_root" groups="base.group_hr_user"/>        
 
         <record id="act_hr_employee_payslip_list" model="ir.actions.act_window">
             <field name="res_model">hr.payslip</field>
@@ -391,7 +391,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//div[@name='button_box']" position="inside">
+                    <div name="button_box" position="inside">
                         <button name="%(act_hr_employee_payslip_list)d"  
                             class="oe_stat_button" 
                             icon="fa-money" 
@@ -399,7 +399,7 @@
                             groups="base.group_hr_user">
                             <field name="payslip_count" widget="statinfo" string="Payslips"/>
                         </button>
-                    </xpath>
+                    </div>
                 </data>
             </field>
         </record>
@@ -464,7 +464,7 @@
         <menuitem
             id="menu_hr_salary_rule_category"
             action="action_hr_salary_rule_category"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="11"
             groups="base.group_no_one"
         />
@@ -478,7 +478,7 @@
         <menuitem
             id="menu_hr_salary_rule_category_tree_view"
             action="action_hr_salary_rule_category_tree_view"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="12"
             icon="STOCK_INDENT"
             groups="base.group_no_one"
@@ -541,7 +541,7 @@
         <menuitem
             id="menu_action_hr_contribution_register_form"
             action="action_contribution_register_form"
-            parent="payroll_configure"
+            parent="menu_hr_payroll_configuration"
             sequence="14"
         />
 
@@ -657,7 +657,7 @@
             <field name="search_view_id" ref="view_hr_rule_filter"/>
         </record>
 
-        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
+        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="menu_hr_payroll_configuration" sequence="12"/>
 
 
         <act_window name="All Children Rules"
@@ -734,7 +734,7 @@
             <field name="view_id" ref="hr_payslip_run_tree"/>
             <field name="search_view_id" ref="hr_payslip_run_filter"/>
         </record>
-        <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_root_payroll"/>
+        <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_payroll_root"/>
 
         <!--  Shortcuts -->
 
@@ -747,4 +747,3 @@
 
     </data>
 </openerp>
-

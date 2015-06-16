@@ -611,7 +611,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 });
 
                 var args = _.toArray(arguments);
-                return $.when.apply(null, [mutex.def, self.onchanges_mutex.def]).then(function() {
+                return mutex.def.then(function () { return self.onchanges_mutex.def; }).then(function() {
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
                         return self._process_save(save_obj).then(function() {
@@ -637,7 +637,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             // If field is not defined in the view, just ignore it
             if (field) {
                 var value_ = values[f];
-                if (field.get_value() != value_) {
+                if (field.get_value() !== value_) {
                     field._inhibit_on_change_flag = true;
                     field.set_value(value_);
                     field._inhibit_on_change_flag = false;

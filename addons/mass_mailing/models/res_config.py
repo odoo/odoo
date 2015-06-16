@@ -4,8 +4,8 @@ from openerp.osv import fields, osv
 
 
 class MassMailingConfiguration(osv.TransientModel):
-    _name = 'marketing.config.settings'
-    _inherit = 'marketing.config.settings'
+    _name = 'mass.mailing.config.settings'
+    _inherit = 'res.config.settings'
 
     _columns = {
         'group_mass_mailing_campaign': fields.boolean(

@@ -20,7 +20,9 @@ class TestStockFlow(TestStockCommon):
 
         picking_in = self.PickingObj.create({
             'partner_id': self.partner_delta_id,
-            'picking_type_id': self.picking_type_in})
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -161,7 +163,9 @@ class TestStockFlow(TestStockCommon):
 
         picking_out = self.PickingObj.create({
             'partner_id': self.partner_agrolite_id,
-            'picking_type_id': self.picking_type_out})
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -432,7 +436,9 @@ class TestStockFlow(TestStockCommon):
 
         picking_in_A = self.PickingObj.create({
             'partner_id': self.partner_delta_id,
-            'picking_type_id': self.picking_type_in})
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.DozA.name,
             'product_id': self.DozA.id,
@@ -526,7 +532,9 @@ class TestStockFlow(TestStockCommon):
 
         picking_in_B = self.PickingObj.create({
             'partner_id': self.partner_delta_id,
-            'picking_type_id': self.picking_type_in})
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.DozA.name,
             'product_id': self.DozA.id,
@@ -711,7 +719,9 @@ class TestStockFlow(TestStockCommon):
         before_out_quantity = self.kgB.qty_available
         picking_out = self.PickingObj.create({
             'partner_id': self.partner_agrolite_id,
-            'picking_type_id': self.picking_type_out})
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': self.kgB.name,
             'product_id': self.kgB.id,
@@ -749,7 +759,9 @@ class TestStockFlow(TestStockCommon):
 
         picking_out = self.PickingObj.create({
             'partner_id': self.partner_agrolite_id,
-            'picking_type_id': self.picking_type_out})
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': self.DozA.name,
             'product_id': self.DozA.id,
@@ -867,7 +879,9 @@ class TestStockFlow(TestStockCommon):
         productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id})
         picking_in = self.PickingObj.create({
             'partner_id': self.partner_delta_id,
-            'picking_type_id': self.picking_type_in})
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': productKG.name,
             'product_id': productKG.id,
@@ -912,7 +926,9 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(productKG.qty_available, 1000, 'Wrong quantity available of product (%s found instead of 1000)' % (productKG.qty_available))
         picking_out = self.PickingObj.create({
             'partner_id': self.partner_agrolite_id,
-            'picking_type_id': self.picking_type_out})
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': productKG.name,
             'product_id': productKG.id,

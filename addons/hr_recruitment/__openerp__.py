@@ -1,24 +1,5 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Recruitment Process',
@@ -49,7 +30,6 @@ You can define the different phases of interviews and easily rate the applicant 
     'data': [
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
-        'hr_recruitment_menu.xml',
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
         'report/hr_recruitment_report_view.xml',
@@ -58,6 +38,8 @@ You can define the different phases of interviews and easily rate the applicant 
         'survey_data_recruitment.xml',
         'hr_recruitment_data.xml',
         'views/hr_recruitment.xml',
+        'hr_dashboard.xml',
+        'hr_recruitment_dashboard.xml',
     ],
     'demo': ['hr_recruitment_demo.xml'],
     'test': ['test/recruitment_process.yml'],

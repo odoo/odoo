@@ -55,7 +55,7 @@ class res_users(osv.Model):
         """ Redirect the posting of message on res.users to the related employee.
             This is done because when giving the context of Chatter on the
             various mailboxes, we do not have access to the current partner_id. """
-        if kwargs.get('type') == 'email':
+        if kwargs.get('message_type') == 'email':
             return super(res_users, self).message_post(cr, uid, thread_id, context=context, **kwargs)
         res = None
         employee_ids = self._message_post_get_eid(cr, uid, thread_id, context=context)

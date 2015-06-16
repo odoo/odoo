@@ -64,6 +64,7 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
     className: null,
     attributes: {},
     events: {},
+    custom_events: {},
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -94,6 +95,7 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         }
         // FIXME: this should not be
         this.setElement(this._make_descriptive());
+        this.delegateCustomEvents();
     },
     /**
      * Method called between init and start. Performs asynchronous calls required by start.
@@ -301,6 +303,21 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
             } else {
                 this.$el.on(event, selector, method);
             }
+        }
+    },
+    delegateCustomEvents: function () {
+        if (_.isEmpty(this.custom_events)) { return; }
+        for (var key in this.custom_events) {
+            if (!this.custom_events.hasOwnProperty(key)) { continue; }
+
+            var method = this.proxy(this.custom_events[key]);
+            this.on(key, this, wrap_handler(method));
+        }
+        function wrap_handler(callback) {
+            return function (event) {
+                event.stop_propagation();
+                callback(event);
+            };
         }
     },
     undelegateEvents: function () {

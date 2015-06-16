@@ -10,12 +10,12 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//div[@name='buttons']" position="inside">
-                        <button class="oe_inline oe_stat_button" name="open_website_url"
+                    <div name="button_box" position="inside">
+                        <button class="oe_stat_button" name="open_website_url"
                             type="object" icon="fa-globe">
                             <field name="website_published" widget="website_button"/>
                         </button>
-                    </xpath>
+                    </div>
                 </data>
             </field>
         </record>

@@ -27,8 +27,8 @@ var Action = core.Class.extend({
      * @return {Deferred} resolved when widget is enabled
      */
     restore: function() {
-        if (this.__on_reverse_breadcrumb) {
-            return this.__on_reverse_breadcrumb();
+        if (this.on_reverse_breadcrumb) {
+            return this.on_reverse_breadcrumb();
         }
     },
     /**
@@ -276,6 +276,11 @@ var ActionManager = Widget.extend({
         var action_index = this.action_stack.indexOf(action);
         this.clear_action_stack(this.action_stack.splice(action_index + 1));
 
+        // Hide the ControlPanel if the widget doesn't use it
+        if (!this.inner_widget.need_control_panel) {
+            this.main_control_panel.do_hide();
+        }
+
         return action.restore(index);
     },
     clear_action_stack: function(action_stack) {
@@ -502,7 +507,8 @@ var ActionManager = Widget.extend({
                 pager : (!popup || !form) && !inline,
                 display_title : !popup,
                 headless: (popup || inline) && form,
-                search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
+                search_disable_custom_filters: action.context && action.context.search_disable_custom_filters,
+                default_view: action.context && action.context.params && action.context.params.view_type,
             });
         }
 

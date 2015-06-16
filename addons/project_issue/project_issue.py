@@ -1,23 +1,5 @@
- #-*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import calendar
 from datetime import datetime,date
@@ -34,17 +16,6 @@ from openerp.tools.translate import _
 from openerp.exceptions import UserError, AccessError
 
 
-class project_issue_version(osv.Model):
-    _name = "project.issue.version"
-    _order = "name desc"
-    _columns = {
-        'name': fields.char('Version Number', required=True),
-        'active': fields.boolean('Active', required=False),
-    }
-    _defaults = {
-        'active': 1,
-    }
-
 class project_issue(osv.Model):
     _name = "project.issue"
     _description = "Project Issue"
@@ -53,39 +24,23 @@ class project_issue(osv.Model):
     _mail_post_access = 'read'
 
     def _get_default_partner(self, cr, uid, context=None):
-        project_id = self._get_default_project_id(cr, uid, context)
-        if project_id:
-            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+        if context is None:
+            context = {}
+        if 'default_project_id' in context:
+            project = self.pool.get('project.project').browse(cr, uid, context['default_project_id'], context=context)
             if project and project.partner_id:
                 return project.partner_id.id
         return False
 
-    def _get_default_project_id(self, cr, uid, context=None):
-        """ Gives default project by checking if present in the context """
-        return self._resolve_project_id_from_context(cr, uid, context=context)
-
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
-
-    def _resolve_project_id_from_context(self, cr, uid, context=None):
-        """ Returns ID of project based on the value of 'default_project_id'
-            context key, or None if it cannot be resolved to a single
-            project.
-        """
         if context is None:
             context = {}
-        if type(context.get('default_project_id')) in (int, long):
-            return context.get('default_project_id')
-        if isinstance(context.get('default_project_id'), basestring):
-            project_name = context['default_project_id']
-            project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name, context=context)
-            if len(project_ids) == 1:
-                return int(project_ids[0][0])
-        return None
+        return self.stage_find(cr, uid, [], context.get('default_project_id'), [('fold', '=', False)], context=context)
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        if context is None:
+            context = {}
         access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('project.task.type')
         order = stage_obj._order
@@ -97,9 +52,8 @@ class project_issue(osv.Model):
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
-        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
-        if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
+        if 'default_project_id' in context:
+            search_domain += ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
         else:
             search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # perform search
@@ -169,16 +123,6 @@ class project_issue(osv.Model):
 
         return res
 
-    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        task_pool = self.pool.get('project.task')
-        res = {}
-        for issue in self.browse(cr, uid, ids, context=context):
-            progress = 0.0
-            if issue.task_id:
-                progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
-            res[issue.id] = {'progress' : progress}
-        return res
-
     def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
@@ -192,22 +136,7 @@ class project_issue(osv.Model):
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
-        return {}
-
-    def _get_issue_task(self, cr, uid, ids, context=None):
-        issues = []
-        issue_pool = self.pool.get('project.issue')
-        for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
-            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])
-        return issues
-
-    def _get_issue_work(self, cr, uid, ids, context=None):
-        issues = []
-        issue_pool = self.pool.get('project.issue')
-        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
-            if work.task_id:
-                issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
-        return issues
+        return {'value': {'partner_id': False}}
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -239,9 +168,8 @@ class project_issue(osv.Model):
         'date': fields.datetime('Date'),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'channel': fields.char('Channel', help="Communication channel."),
-        'categ_ids': fields.many2many('project.category', string='Tags'),
+        'tag_ids': fields.many2many('project.tags', string='Tags'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
-        'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
@@ -269,16 +197,11 @@ class project_issue(osv.Model):
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
-        'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
-            store = {
-                'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
-                'project.task': (_get_issue_task, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
-                'project.task.work': (_get_issue_work, ['hours'], 10),
-            }),
     }
 
     _defaults = {
         'active': 1,
+        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': '0',
@@ -335,11 +258,10 @@ class project_issue(osv.Model):
         """ This function returns value of partner email address based on partner
             :param part: Partner's id
         """
-        result = {}
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context)
-            result['email_from'] = partner.email
-        return {'value': result}
+            return {'value': {'email_from': partner.email}}
+        return {'value': {'email_from': False}}
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         context = dict(context or {})
@@ -423,6 +345,7 @@ class project_issue(osv.Model):
             return 'project_issue.mt_issue_stage'
         return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
         issues = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -435,9 +358,9 @@ class project_issue(osv.Model):
         try:
             for issue in self.browse(cr, uid, ids, context=context):
                 if issue.partner_id:
-                    self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
+                    issue._message_add_suggested_recipient(recipients, partner=issue.partner_id, reason=_('Customer'))
                 elif issue.email_from:
-                    self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+                    issue._message_add_suggested_recipient(recipients, email=issue.email_from, reason=_('Customer Email'))
         except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
@@ -462,13 +385,13 @@ class project_issue(osv.Model):
         return res_id
 
     @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
+    def message_post(self, cr, uid, thread_id, subtype=None, context=None, **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
         """
         if context is None:
             context = {}
-        res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+        res = super(project_issue, self).message_post(cr, uid, thread_id, subtype=subtype, context=context, **kwargs)
         if thread_id and subtype:
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
         return res

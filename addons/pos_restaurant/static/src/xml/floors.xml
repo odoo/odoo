@@ -35,7 +35,7 @@
                     t-att-style='"height: " + Math.ceil(widget.fill * 100) + "%;"'
                     ></span>
                 <t t-if='widget.order_count'>
-                    <span t-att-class='"order-count " + (widget.notifications.printing ? "notify-printing":"")'><t t-esc='widget.order_count'/></span>
+                    <span t-att-class='"order-count " + (widget.notifications.printing ? "notify-printing":"") + (widget.notifications.skipped ? "notify-skipped" : "")'><t t-esc='widget.order_count'/></span>
                 </t>
                 <span class='label'>
                     <t t-esc='widget.table.name' />
@@ -87,6 +87,9 @@
                     </div>
                 </t>
                 <div class='floor-map' t-att-style='widget.get_floor_style()' >
+                    <div class='empty-floor oe_hidden'>
+                        This floor has no tables yet, use the <i class="fa fa-plus"></i> button in the editing toolbar to create new tables.
+                    </div>
                     <div class='tables'></div>
                     <span class='edit-button editing'><i class='fa fa-pencil'></i></span>
                     <div class='edit-bar oe_hidden'>
@@ -94,7 +97,7 @@
                             <i class='fa fa-plus'></i>
                         </span>
                         <span class='edit-button dup-table needs-selection'>
-                            <i class='fa fa-copy'></i>
+                            <i class='fa fa-files-o'></i>
                         </span>
                         <span class='edit-button rename needs-selection'>
                             <i class='fa fa-font'></i>

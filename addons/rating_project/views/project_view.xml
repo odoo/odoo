@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
+                <div name="button_box" position="inside">
                     <button name="action_view_task_rating"
                         attrs="{'invisible': ['|',  '|', ('is_visible_happy_customer', '=', False), ('use_tasks','=', False), ('percentage_satisfaction_task', '=', -1)]}"
                         class="oe_stat_button oe_percent"
@@ -16,7 +16,7 @@
                         icon="fa-smile-o">
                         <field string="On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
                     </button>
-                </xpath>
+                </div>
                 <xpath expr="//field[@name='privacy_visibility']" position="after">
                     <field name="is_visible_happy_customer"/>
                 </xpath>
@@ -33,27 +33,6 @@
                 <xpath expr="//field[@name='sequence']" position="after">
                     <field name="rating_template_id"/>
                     <field name="auto_validation_kanban_state" attrs="{'invisible': [('rating_template_id','=', False)]}"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_project_project_rating_kanban" model="ir.ui.view">
-            <field name="name">rating.project.project.kanban.inherit</field>
-            <field name="model">project.project</field>
-            <field name="inherit_id" ref="project.view_project_kanban"/>
-            <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
-                    <field name="percentage_satisfaction_project" invisible="1"/>
-                    <field name="is_visible_happy_customer" invisible="1"/>
-                </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
-                    <div class="col-md-12">
-                        <a t-if="record.is_visible_happy_customer.raw_value and record.percentage_satisfaction_project.raw_value &gt; -1" name="action_view_all_rating" type="object" title="Percentage of happy people about this project" class="pull-right">
-                            <h5 t-attf-class="label #{record.percentage_satisfaction_project.raw_value &gt;= 50 ? 'label-success' : 'label-warning'}">
-                                <i t-attf-class="fa #{record.percentage_satisfaction_project.raw_value &gt;= 50 ? 'fa-smile-o' : 'fa-frown-o'}"/> <t t-raw="record.percentage_satisfaction_project.raw_value"/> %
-                            </h5>
-                        </a>
-                    </div>
                 </xpath>
             </field>
         </record>

@@ -203,12 +203,13 @@ var ChatButton = Widget.extend({
         if(this.session.users.length > 0){
             if (self.options.defaultMessage) {
                 setTimeout(function(){
+                    var operator = _.last(_.filter(self.session.users, function(user){return user.is_operator}));
                     self.conv.message_receive({
                         id : 1,
                         type: "message",
                         message: self.options.defaultMessage,
                         create_date: time.datetime_to_str(new Date()),
-                        from_id: [self.session.users[0].id, self.session.users[0].name],
+                        from_id: [operator.id, operator.name],
                         to_id: [0, self.session.uuid]
                     });
                 }, 1000);
@@ -259,10 +260,10 @@ var Feedback = Widget.extend({
     _send_feedback: function(close){
         var self = this;
         var uuid = this.conversation.get('session').uuid;
-        return user_session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
+        return user_session.rpc('/rating/livechat/feedback', {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
             if(close){
                 self.trigger("feedback_sent"); // will close the conversation
-                    self.conversation.send_message(_.str.sprintf(_t("I rated you with :rating_%d"), self.rating), "message");
+                    self.conversation.message_send(_.str.sprintf(_t("I rated you with :rating_%d"), self.rating), "message");
             }
         });
     }

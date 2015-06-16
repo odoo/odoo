@@ -1,24 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 """
@@ -214,7 +195,7 @@ class Cursor(object):
                 msg += "Cursor was created at %s:%s" % self.__caller
             else:
                 msg += "Please enable sql debugging to trace the caller."
-            _logger.info(msg)
+            _logger.warning(msg)
             self._close(True)
 
     @check
@@ -265,7 +246,7 @@ class Cursor(object):
     def split_for_in_conditions(self, ids):
         """Split a list of identifiers into one or more smaller tuples
            safe for IN conditions, after uniquifying them."""
-        return tools.misc.split_every(self.IN_MAX, set(ids))
+        return tools.misc.split_every(self.IN_MAX, ids)
 
     def print_log(self):
         global sql_counter
@@ -401,6 +382,10 @@ class Cursor(object):
     @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
+
+    @property
+    def closed(self):
+        return self._closed
 
 class TestCursor(Cursor):
     """ A cursor to be used for tests. It keeps the transaction open across

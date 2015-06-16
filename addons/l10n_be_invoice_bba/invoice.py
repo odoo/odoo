@@ -1,24 +1,6 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
 
 import re, time, random
 from openerp import api
@@ -66,26 +48,22 @@ class account_invoice(osv.osv):
                 return self.check_bbacomm(inv.reference)
         return True
 
-    def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-                            date_invoice=False, payment_term=False,
-                            partner_bank_id=False, company_id=False,
-                            context=None):
-        result = super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
-            date_invoice, payment_term, partner_bank_id, company_id, context)
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        result = super(account_invoice, self)._onchange_partner_id()
 #        reference_type = self.default_get(cr, uid, ['reference_type'])['reference_type']
 #        _logger.warning('partner_id %s' % partner_id)
         reference = False
         reference_type = 'none'
-        if partner_id:
-            if (type == 'out_invoice'):
-                reference_type = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context).out_inv_comm_type
+        if self.partner_id:
+            if (self.type == 'out_invoice'):
+                reference_type = self.partner_id.out_inv_comm_type
                 if reference_type:
-                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, partner_id, '', context=context)['value']['reference']
-        res_update = {
-            'reference_type': reference_type or 'none',
-            'reference': reference,
-        }
-        result['value'].update(res_update)
+                    reference = self.generate_bbacomm(self.type, reference_type, self.partner_id.id, '')['value']['reference']
+        self.reference_type = reference_type or 'none'
+        self.reference = reference
+
         return result
 
     def generate_bbacomm(self, cr, uid, ids, type, reference_type, partner_id, reference, context=None):
@@ -216,7 +194,6 @@ class account_invoice(osv.osv):
         return super(account_invoice, self).copy(cr, uid, id, default, context=context)
 
     _columns = {
-        'reference': fields.char('Communication', help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Communication Type',
             required=True),
     }

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import pickle
 
 from openerp import tools
@@ -337,7 +319,7 @@ class ir_values(osv.osv):
         return defaults.values()
 
     # use ormcache: this is called a lot by BaseModel.default_get()!
-    @tools.ormcache(skiparg=2)
+    @tools.ormcache('uid', 'model', 'condition')
     def get_defaults_dict(self, cr, uid, model, condition=False):
         """ Returns a dictionary mapping field names with their corresponding
             default value. This method simply improves the returned value of
@@ -387,7 +369,7 @@ class ir_values(osv.osv):
             'value': action,
         })
 
-    @tools.ormcache_context(accepted_keys=('lang',))
+    @tools.ormcache_context('uid', 'action_slot', 'model', 'res_id', keys=('lang',))
     def get_actions(self, cr, uid, action_slot, model, res_id=False, context=None):
         """Retrieves the list of actions bound to the given model's action slot.
            See the class description for more details about the various action

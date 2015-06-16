@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import osv, fields
 from itertools import groupby
@@ -42,7 +24,7 @@ class SaleLayoutCategory(osv.Model):
     _name = 'sale_layout.category'
     _order = 'sequence, id'
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', required=True),
         'subtotal': fields.boolean('Add subtotal'),
         'separator': fields.boolean('Add separator'),
@@ -68,7 +50,7 @@ class AccountInvoice(osv.Model):
         :Parameters:
             -'invoice_id' (int): specify the concerned invoice.
         """
-        ordered_lines = self.browse(cr, uid, invoice_id, context=context).invoice_line
+        ordered_lines = self.browse(cr, uid, invoice_id, context=context).invoice_line_ids
         # We chose to group first by category model and, if not present, by invoice name
         sortkey = lambda x: x.sale_layout_cat_id if x.sale_layout_cat_id else ''
 

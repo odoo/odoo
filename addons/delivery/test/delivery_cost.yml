@@ -23,7 +23,6 @@
 -
   !python {model: sale.order}: |
     self.delivery_set(cr, uid, [ref("sale_normal_delivery_charges")], context=context)
-    
 -
   I check sale order after added delivery cost.
 -
@@ -44,7 +43,7 @@
     sale = self.pool.get('sale.order')
     sale_order = sale.browse(cr, uid, ref("sale_normal_delivery_charges"))
     ship_ids = [x.id for x in sale_order.picking_ids]
-    wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
+    wiz_id = self.create(cr, uid, {'journal_id': ref('sales_journal')},
       {'active_ids': ship_ids, 'active_model': 'stock.picking'})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
 -

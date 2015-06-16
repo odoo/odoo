@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -79,7 +61,7 @@ class stock_return_picking(osv.osv_memory):
                     if not quant.reservation_id or quant.reservation_id.origin_returned_move_id.id != move.id:
                         qty += quant.qty
                 qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
-                result1.append({'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id})
+                result1.append((0, 0, {'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id}))
 
             if len(result1) == 0:
                 raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
@@ -125,6 +107,8 @@ class stock_return_picking(osv.osv_memory):
             'picking_type_id': pick_type_id,
             'state': 'draft',
             'origin': pick.name,
+            'location_id': pick.location_dest_id.id,
+            'location_dest_id': pick.location_id.id,
         }, context=context)
 
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
@@ -157,8 +141,6 @@ class stock_return_picking(osv.osv_memory):
         if not returned_lines:
             raise UserError(_("Please specify at least one non-zero quantity."))
 
-        pick_obj.action_confirm(cr, uid, [new_picking], context=context)
-        pick_obj.action_assign(cr, uid, [new_picking], context)
         return new_picking, pick_type_id
 
     def create_returns(self, cr, uid, ids, context=None):

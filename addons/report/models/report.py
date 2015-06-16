@@ -1,28 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
-from openerp.osv import osv
+from openerp.osv import osv, fields
 from openerp.tools import config
 from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
@@ -140,6 +122,7 @@ class Report(osv.Model):
                 context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
         values.update(
             time=time,
+            context_timestamp=lambda t: fields.datetime.context_timestamp(cr, uid, t, context),
             translate_doc=translate_doc,
             editable=True,
             user=user,
@@ -360,7 +343,7 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
+    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment={}):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -440,7 +423,6 @@ class Report(osv.Model):
             try:
                 wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + local_command_args
                 wkhtmltopdf += [content_file_path] + [pdfreport_path]
-
                 process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, err = process.communicate()
 

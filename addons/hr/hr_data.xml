@@ -5,7 +5,7 @@
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="type">notification</field>
+            <field name="message_type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Employee Directory application installed!</field>
             <field name="body"><![CDATA[<p>Manage your human resources with Odoo: employees and their hierarchy, HR departments and job positions.</p>
@@ -19,6 +19,13 @@ Leave Management (keep track of employee leaves), Expense Management (manage emp
             <field name="address_id" ref="base.partner_root"/>
             <field name="address_home_id" ref="base.partner_root"/>
             <field name="image" type="base64" file="hr/static/img/employee-image.png"/>
+        </record>
+
+        <record id="dep_administration" model="hr.department">
+          <field name="name">Administration</field>
+        </record>
+        <record id="dep_sales" model="hr.department">
+          <field name="name">Sales</field>
         </record>
 
     </data>

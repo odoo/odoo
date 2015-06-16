@@ -1,18 +1,8 @@
-#    Author: Leonardo Pistone
-#    Copyright 2015 Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+# Author: Leonardo Pistone
+# Copyright 2015 Camptocamp SA
 
 from openerp.tests.common import TransactionCase
 
@@ -26,6 +16,18 @@ class TestCreateInvoice(TransactionCase):
         self.customer = self.env.ref('base.res_partner_3')
         product = self.env.ref('product.product_product_36')
         dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+
+        # Create Sale Journal
+        self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'DSTPJ', 'type': 'purchase', 'company_id': self.env.ref('base.main_company').id})
+
+        user_type_id = self.env.ref('account.data_account_type_payable')
+        account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type': user_type_id.id, 'reconcile': True})
+        user_type_id = self.env.ref('account.data_account_type_expenses')
+        account_exp_id = self.env['account.account'].create({'code': 'X1013', 'name': 'Purchase - Test Expense Account', 'user_type': user_type_id.id, 'reconcile': True})
+
+        self.customer.write({'property_account_payable': account_pay_id.id})
+
+        product.product_tmpl_id.write({'property_account_expense': account_exp_id.id})
 
         self.so = self.env['sale.order'].create({
             'partner_id': self.customer.id,

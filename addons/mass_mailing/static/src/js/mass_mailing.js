@@ -1,14 +1,14 @@
 odoo.define('mass_mailing.mass_mailing', function (require) {
 
 var core = require('web.core');
-var common = require('web_kanban.common');
+var KanbanRecord = require('web_kanban.Record');
 var KanbanView = require('web_kanban.KanbanView');
 
 var _t = core._t;
 
-common.KanbanRecord.include({
+KanbanRecord.include({
     on_card_clicked: function (event) {
-        if (this.view.dataset.model === 'mail.mass_mailing.campaign') {
+        if (this.model === 'mail.mass_mailing.campaign') {
             this.$('.oe_mailings').click();
         } else {
             this._super.apply(this, arguments);

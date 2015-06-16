@@ -251,6 +251,14 @@
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="colors"/></rng:optional>
             <rng:optional><rng:attribute name="fonts"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-info"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-muted"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-primary"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
             <rng:optional>
               <rng:attribute name="editable">
                 <rng:choice>
@@ -688,6 +696,20 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="timeline">
+        <rng:element name="timeline">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+            <rng:element name="templates">
+                <rng:oneOrMore>
+                    <rng:ref name="any"/>
+                </rng:oneOrMore>
+            </rng:element>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="button">
         <rng:element name="button">
             <rng:ref name="overload"/>
@@ -788,6 +810,7 @@
             <rng:ref name="notebook" />
             <rng:ref name="graph" />
             <rng:ref name="pivot" />
+            <rng:ref name="timeline" />
             <rng:ref name="calendar" />
             <rng:ref name="data" />
             <rng:ref name="gantt" />

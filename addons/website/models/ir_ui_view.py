@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: ascii -*-
 import copy
 import logging
 
@@ -43,7 +43,7 @@ class view(osv.osv):
                 # Try to fallback on key instead of xml_id
                 rec_id = self.search(cr, uid, [('key', '=', view_id)], context=context)
                 if rec_id:
-                    _logger.info("Could not find view with `xml_id´ '%s', fallback on `key´" % (view_id))
+                    _logger.info("Could not find view with `xml_id' '%s', fallback on `key'" % (view_id))
                     return self.browse(cr, uid, rec_id, context=context)[0]
                 else:
                     raise
@@ -152,7 +152,7 @@ class view(osv.osv):
 
         return arch
 
-    @tools.ormcache_context(accepted_keys=('website_id',))
+    @tools.ormcache_context('uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, cr, uid, xml_id, context=None):
         if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
             domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]

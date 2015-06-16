@@ -33,6 +33,7 @@ var models = require('point_of_sale.models');
 var core = require('web.core');
 var Model = require('web.Model');
 var utils = require('web.utils');
+var formats = require('web.formats');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -209,6 +210,14 @@ var DomCache = core.Class.extend({
         }
         return node;
     },
+    clear_node: function(key) {
+        var cached = this.cache[key];
+        if (cached) {
+            delete this.cache[key];
+            delete this.access_time[key];
+            this.size --;
+        }
+    },
     get_node: function(key){
         var cached = this.cache[key];
         if(cached){
@@ -373,6 +382,14 @@ var NumpadWidget = PosBaseWidget.extend({
 
 var ActionpadWidget = PosBaseWidget.extend({
     template: 'ActionpadWidget',
+    init: function(parent, options) {
+        var self = this;
+        this._super(parent, options);
+
+        this.pos.bind('change:selectedClient', function() {
+            self.renderElement();
+        });
+    },
     renderElement: function() {
         var self = this;
         this._super();
@@ -846,6 +863,10 @@ var ActionButtonWidget = PosBaseWidget.extend({
     button_click: function(){},
     highlight: function(highlight){
         this.$el.toggleClass('highlight',!!highlight);
+    },
+    // alternative highlight color
+    altlight: function(altlight){
+        this.$el.toggleClass('altlight',!!altlight);
     },
 });
 
@@ -1325,13 +1346,19 @@ var ReceiptScreenWidget = ScreenWidget.extend({
 
         if (this.should_auto_print()) {
             this.print();
+            if (this.should_close_immediately()){
+                this.click_next();
+            }
         } else {
             this.lock_screen(false);
         }
 
     },
-    should_auto_print: function(){
+    should_auto_print: function() {
         return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
+    },
+    should_close_immediately: function() {
+        return this.pos.config.iface_print_via_proxy && this.pos.config.iface_print_skip_screen;
     },
     lock_screen: function(locked) {
         this._locked = locked;
@@ -1454,6 +1481,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
         this.inputbuffer = "";
         this.firstinput  = true;
+        this.decimal_point = _t.database.parameters.decimal_point;
         
         // This is a keydown handler that prevents backspace from
         // doing a back navigation
@@ -1488,6 +1516,10 @@ var PaymentScreenWidget = ScreenWidget.extend({
             self.payment_input(key);
             event.preventDefault();
         };
+
+        this.pos.bind('change:selectedClient', function() {
+            self.customer_changed();
+        }, this);
     },
     // resets the current input buffer
     reset_input: function(){
@@ -1515,7 +1547,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
             this.inputbuffer = newbuf;
             var order = this.pos.get_order();
             if (order.selected_paymentline) {
-                order.selected_paymentline.set_amount(parseFloat(this.inputbuffer));
+                var amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                order.selected_paymentline.set_amount(amount);
                 this.order_changes();
                 this.render_paymentlines();
                 this.$('.paymentline.selected .edit').text(this.inputbuffer);
@@ -1641,6 +1674,10 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 self.render_paymentlines();
             }
         });
+    },
+    customer_changed: function() {
+        var client = this.pos.get_client();
+        this.$('.js_customer_name').text( client ? client.name : _t('Customer') ); 
     },
     click_set_customer: function(){
         this.gui.show_screen('clientlist');
@@ -1804,7 +1841,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.fail(function(error){
                 self.invoicing = false;
-                if (error === 'error-no-client') {
+                if (error.message === 'Missing Customer') {
                     self.gui.show_popup('confirm',{
                         'title': _t('Please select the Customer'),
                         'body': _t('You need to select the customer before you can invoice an order.'),
@@ -1812,10 +1849,20 @@ var PaymentScreenWidget = ScreenWidget.extend({
                             self.gui.show_screen('clientlist');
                         },
                     });
-                } else {
+                } else if (error.code < 0) {        // XmlHttpRequest Errors
                     self.gui.show_popup('error',{
                         'title': _t('The order could not be sent'),
                         'body': _t('Check your internet connection and try again.'),
+                    });
+                } else if (error.code === 200) {    // OpenERP Server Errors
+                    self.gui.show_popup('error-traceback',{
+                        'title': error.data.message || _t("Server Error"),
+                        'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
+                    });
+                } else {                            // ???
+                    self.gui.show_popup('error',{
+                        'title': _t("Unknown Error"),
+                        'body':  _t("The order could not be sent to the server due to an unknown error"),
                     });
                 }
             });

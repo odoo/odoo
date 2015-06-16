@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import errno
 import logging
@@ -115,8 +97,11 @@ class document_file(osv.osv):
             ids.extend(parents[parent_id])
 
         # sort result according to the original sort ordering
-        ids = [id for id in orig_ids if id in ids]
-        return len(ids) if count else ids
+        if count:
+            return len(ids)
+        else:
+            set_ids = set(ids)
+            return [id for id in orig_ids if id in set_ids]
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:

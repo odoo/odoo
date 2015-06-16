@@ -14,6 +14,7 @@ var SystrayMenu = require('web.SystrayMenu');
 var UserMenu = require('web.UserMenu');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var BarcodeEvents = require('web.BarcodeEvents');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -36,6 +37,7 @@ var WebClient = Widget.extend({
         this.menu_dm = new utils.DropMisordered();
         this.action_mutex = new utils.Mutex();
         this.set('title_part', {"zopenerp": "Odoo"});
+        this.barcode_events = new BarcodeEvents(this);
     },
     start: function() {
         var self = this;
@@ -117,11 +119,12 @@ var WebClient = Widget.extend({
         core.bus.on('display_notification_warning', this, function (title, message) {
             self.notification.warn(title, message);
         });
-        window.onerror = function (message, file, line) {
+        window.onerror = function (message, file, line, col, error) {
+            var traceback = error ? error.stack : '';
             crash_manager.show_error({
                 type: _t("Client Error"),
                 message: message,
-                data: {debug: file + ':' + line}
+                data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback}
             });
         };
 
@@ -191,7 +194,6 @@ var WebClient = Widget.extend({
 
         self.bind_hashchange();
         self.set_title();
-        self.check_timezone();
         if (self.client_options.action_post_login) {
             self.action_manager.do_action(self.client_options.action_post_login);
             delete(self.client_options.action_post_login);
@@ -225,35 +227,6 @@ var WebClient = Widget.extend({
             });
         });
         return false;
-    },
-    check_timezone: function() {
-        var self = this;
-        return self.alive(new Model('res.users').call('read', [[session.uid], ['tz_offset']])).then(function(result) {
-            var user_offset = result[0]['tz_offset'];
-            var offset = -(new Date().getTimezoneOffset());
-            // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
-            var browser_offset = (offset < 0) ? "-" : "+";
-            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
-            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-            if (browser_offset !== user_offset) {
-                var $icon = $(QWeb.render('WebClient.timezone_systray'));
-                $icon.on('click', function() {
-                    var notification = self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
-                        user_timezone: session.user_context.tz || 'UTC',
-                        user_offset: user_offset,
-                        browser_offset: browser_offset,
-                    }), true);
-                    notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
-                        notification.close();
-                    }).find('a').on('click', function() {
-                        notification.close();
-                        self.user_menu.on_menu_settings();
-                        return false;
-                    });
-                });
-                $icon.prependTo(window.$('.oe_systray'));
-            }
-        });
     },
     /**
      * When do_action is performed on the WebClient, forward it to the main ActionManager
@@ -368,6 +341,9 @@ var WebClient = Widget.extend({
         this.$('.oe_webclient').toggleClass(
             'oe_content_full_screen', fullscreen);
     },
+    get_barcode_events: function() {
+        return this.barcode_events;
+    }
 });
 
 return WebClient;

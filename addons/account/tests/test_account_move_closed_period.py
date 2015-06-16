@@ -1,9 +1,9 @@
-from datetime import date
-
-from openerp.tests.common import TransactionCase
+from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 from openerp.osv.orm import except_orm
+from datetime import datetime, timedelta
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
-class TestPeriodState(TransactionCase):
+class TestPeriodState(AccountingTestCase):
     """
     Forbid creation of Journal Entries for a closed period.
     """
@@ -11,31 +11,28 @@ class TestPeriodState(TransactionCase):
     def setUp(self):
         super(TestPeriodState, self).setUp()
         cr, uid = self.cr, self.uid
-        self.wizard_period_close = self.registry('account.period.close')
-        self.wizard_period_close_id = self.wizard_period_close.create(cr, uid, {'sure': 1})
-        _, self.sale_journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "sales_journal")
-        _, self.period_9_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "period_9")
+        self.day_before_yesterday = datetime.now() - timedelta(2)
+        self.yesterday = datetime.now() - timedelta(1)
+        self.user_id = self.env['res.users'].browse(self.uid)
+        self.user_id.company_id.write({'fiscalyear_lock_date': self.yesterday.strftime(DEFAULT_SERVER_DATE_FORMAT)})
+        self.sale_journal_id = self.env['account.journal'].search([('type', '=', 'sale')])[0]
+        self.account_id = self.env['account.account'].search([('internal_type', '=', 'receivable')])[0]
 
     def test_period_state(self):
         cr, uid = self.cr, self.uid
-        self.wizard_period_close.data_save(cr, uid, [self.wizard_period_close_id], {
-            'lang': 'en_US',
-            'active_model': 'account.period',
-            'active_ids': [self.period_9_id],
-            'tz': False,
-            'active_id': self.period_9_id
-        })
         with self.assertRaises(except_orm):
-            self.registry('account.move').create(cr, uid, {
+            move = self.env['account.move'].create({
                 'name': '/',
-                'period_id': self.period_9_id,
-                'journal_id': self.sale_journal_id,
-                'date': date.today(),
-                'line_id': [(0, 0, {
+                'journal_id': self.sale_journal_id.id,
+                'date': self.day_before_yesterday.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'line_ids': [(0, 0, {
                         'name': 'foo',
                         'debit': 10,
+                        'account_id': self.account_id.id,
                     }), (0, 0, {
                         'name': 'bar',
                         'credit': 10,
+                        'account_id': self.account_id.id,
                     })]
             })
+            move.post()

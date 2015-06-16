@@ -1,24 +1,6 @@
 # -*- coding: utf-8 -*-
 
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2014 OpenERP S.A. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 import logging
 import re
@@ -75,27 +57,6 @@ class ir_model(osv.osv):
     _description = "Models"
     _order = 'model'
 
-    def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
-        models = self.browse(cr, uid, ids, context=context)
-        res = dict.fromkeys(ids)
-        for model in models:
-            if model.model in self.pool:
-                res[model.id] = self.pool[model.model].is_transient()
-            else:
-                _logger.error('Missing model %s' % (model.model, ))
-        return res
-
-    def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
-        if not domain:
-            return []
-        __, operator, value = domain[0]
-        if operator not in ['=', '!=']:
-            raise UserError(_("Invalid Search Criteria") + ": " + _("The osv_memory field can only be compared with = and != operator."))
-        value = bool(value) if operator == '=' else not bool(value)
-        all_model_ids = self.search(cr, uid, [], context=context)
-        is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
-        return [('id', 'in', [id for id in is_osv_mem if bool(is_osv_mem[id]) == value])]
-
     def _view_ids(self, cr, uid, ids, field_name, arg, context=None):
         models = self.browse(cr, uid, ids)
         res = {}
@@ -121,9 +82,7 @@ class ir_model(osv.osv):
             help="The list of models that extends the current model."),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
-        'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
-            fnct_search=_search_osv_memory,
-            help="This field specifies whether the model is transient or not (i.e. if records are automatically deleted from the database or not)"),
+        'transient': fields.boolean(string="Transient Model"),
         'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
@@ -199,6 +158,12 @@ class ir_model(osv.osv):
         if context:
             context = dict(context)
             context.pop('__last_update', None)
+        if 'model' in vals:
+            raise UserError(_('Field "Model" cannot be modified on models.'))
+        if 'state' in vals:
+            raise UserError(_('Field "Type" cannot be modified on models.'))
+        if 'transient' in vals:
+            raise UserError(_('Field "Transient Model" cannot be modified on models.'))
         # Filter out operations 4 link from field id, because openerp-web
         # always write (4,id,False) even for non dirty items
         if 'field_id' in vals:
@@ -213,7 +178,7 @@ class ir_model(osv.osv):
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             # add model in registry
-            self.instanciate(cr, user, vals['model'], context)
+            self.instanciate(cr, user, vals['model'], vals.get('transient', False), context)
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             # update database schema
             model = self.pool[vals['model']]
@@ -227,7 +192,7 @@ class ir_model(osv.osv):
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
-    def instanciate(self, cr, user, model, context=None):
+    def instanciate(self, cr, user, model, transient, context=None):
         if isinstance(model, unicode):
             model = model.encode('utf-8')
 
@@ -235,6 +200,7 @@ class ir_model(osv.osv):
             _name = model
             _module = False
             _custom = True
+            _transient = bool(transient)
 
         CustomModel._build_model(self.pool, cr)
 
@@ -733,7 +699,7 @@ class ir_model_access(osv.osv):
     # But as the method raises an exception in that case,  the key 'lang' might
     # not be really necessary as a cache key, unless the `ormcache_context`
     # decorator catches the exception (it does not at the moment.)
-    @tools.ormcache_context(accepted_keys=('lang',))
+    @tools.ormcache_context('uid', 'model', 'mode', 'raise_exception', keys=('lang',))
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
@@ -913,7 +879,7 @@ class ir_model_data(osv.osv):
             cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
     # NEW V8 API
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('xmlid')
     def xmlid_lookup(self, cr, uid, xmlid):
         """Low level xmlid lookup
         Return (id, res_model, res_id) or raise ValueError if not found
@@ -1046,7 +1012,7 @@ class ir_model_data(osv.osv):
 
         if action_id and res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
-            self.write(cr, uid, [action_id], {
+            self.write(cr, SUPERUSER_ID, [action_id], {
                 'date_update': time.strftime('%Y-%m-%d %H:%M:%S'),
                 },context=context)
         elif res_id:
@@ -1056,14 +1022,14 @@ class ir_model_data(osv.osv):
                     for table in model_obj._inherits:
                         inherit_id = model_obj.browse(cr, uid,
                                 res_id,context=context)[model_obj._inherits[table]]
-                        self.create(cr, uid, {
+                        self.create(cr, SUPERUSER_ID, {
                             'name': xml_id + '_' + table.replace('.', '_'),
                             'model': table,
                             'module': module,
                             'res_id': inherit_id.id,
                             'noupdate': noupdate,
                             },context=context)
-                self.create(cr, uid, {
+                self.create(cr, SUPERUSER_ID, {
                     'name': xml_id,
                     'model': model,
                     'module':module,
@@ -1078,14 +1044,14 @@ class ir_model_data(osv.osv):
                         for table in model_obj._inherits:
                             inherit_id = model_obj.browse(cr, uid,
                                     res_id,context=context)[model_obj._inherits[table]]
-                            self.create(cr, uid, {
+                            self.create(cr, SUPERUSER_ID, {
                                 'name': xml_id + '_' + table.replace('.', '_'),
                                 'model': table,
                                 'module': module,
                                 'res_id': inherit_id.id,
                                 'noupdate': noupdate,
                                 },context=context)
-                    self.create(cr, uid, {
+                    self.create(cr, SUPERUSER_ID, {
                         'name': xml_id,
                         'model': model,
                         'module': module,

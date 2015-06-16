@@ -480,13 +480,13 @@ class calendar_alarm_manager(osv.AbstractModel):
 
     def get_next_notif(self, cr, uid, context=None):
         ajax_check_every_seconds = 300
-        partner = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id
+        partner = self.pool['res.users'].read(cr, SUPERUSER_ID, uid, ['partner_id', 'calendar_last_notif_ack'], context=context)
         all_notif = []
 
         if not partner:
             return []
 
-        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner.id, mail=False, context=context)
+        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner['partner_id'][0], mail=False, context=context)
 
         for event in all_events:  # .values()
             max_delta = all_events[event]['max_duration']
@@ -496,7 +496,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 LastFound = False
                 for one_date in self.pool.get("calendar.event").get_recurrent_date_by_event(cr, uid, curEvent, context=context):
                     in_date_format = one_date.replace(tzinfo=None)
-                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner.calendar_last_notif_ack, mail=False, context=context)
+                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
                     if LastFound:
                         for alert in LastFound:
                             all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
@@ -506,7 +506,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                         break
             else:
                 in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
-                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner.calendar_last_notif_ack, mail=False, context=context)
+                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
                 if LastFound:
                     for alert in LastFound:
                         all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
@@ -586,7 +586,7 @@ class calendar_alarm(osv.Model):
     def _update_cron(self, cr, uid, context=None):
         try:
             cron = self.pool['ir.model.data'].get_object(
-                cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
+                cr, SUPERUSER_ID, 'calendar', 'ir_cron_scheduler_alarm', context=context)
         except ValueError:
             return False
         return cron.toggle(model=self._name, domain=[('type', '=', 'email')])
@@ -701,6 +701,9 @@ class calendar_event(osv.Model):
             if not val.tzinfo:
                 val = pytz.UTC.localize(val)
             return val.astimezone(timezone)
+
+        if context is None:
+            context = {}
 
         timezone = pytz.timezone(context.get('tz') or 'UTC')
         startdate = pytz.UTC.localize(datetime.strptime(event.start, DEFAULT_SERVER_DATETIME_FORMAT))  # Add "+hh:mm" timezone
@@ -1106,6 +1109,17 @@ class calendar_event(osv.Model):
                         if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
                             self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
 
+            if current_user.partner_id.id not in new_att_partner_ids:
+                access_token = self.new_invitation_token(cr, uid, event, current_user.partner_id.id)
+                values = {
+                    'partner_id': current_user.partner_id.id,
+                    'event_id': event.id,
+                    'access_token': access_token,
+                    'email': current_user.partner_id.email,
+                }
+                current_user_att_id = self.pool['calendar.attendee'].create(cr, uid, values, context=context)
+                new_attendees.append(current_user_att_id)
+                new_att_partner_ids.append(current_user.partner_id.id)
             if new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]}, context=context)
             if new_att_partner_ids:
@@ -1410,12 +1424,12 @@ class calendar_event(osv.Model):
         ]
 
     @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         if isinstance(thread_id, basestring):
             thread_id = get_real_ids(thread_id)
         if context.get('default_date'):
             del context['default_date']
-        return super(calendar_event, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
+        return super(calendar_event, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         return super(calendar_event, self).message_subscribe(cr, uid, get_real_ids(ids), partner_ids, subtype_ids=subtype_ids, context=context)

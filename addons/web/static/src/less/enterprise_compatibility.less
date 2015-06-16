@@ -1,0 +1,195 @@
+// ------------------------------------------------------------------
+// Odoo
+// ------------------------------------------------------------------
+
+// This file is necessary to make the community edition of the Odoo web
+// client compatible with the enterprise edition.  
+
+// The problem is that we have two web clients in parallel, and every
+// addons should behave properly with both.
+
+@odoo-brand-optional-disabled: #6ED0BC; // Specifically used for status bar status arrows
+@odoo-brand-primary: #337ab7;
+@odoo-brand-optional: @odoo-brand-primary;
+@odoo-brand-secondary: #8f8f8f;
+@odoo-form-group-cols: 12;
+@odoo-horizontal-padding: 16px;
+@odoo-list-grey: #e2e2e0;  // FIXME: listview thead background color
+@odoo-main-color-muted: #a8a8a8;
+@odoo-main-text-color: #666666;
+@odoo-webclient-background-color: @odoo-brand-secondary;
+@odoo-view-background-color: red;
+@odoo-shadow-color: #303030;
+@brand-primary: @odoo-brand-primary;
+
+.oe-view-manager {
+    background-color: #f0eeee !important;
+}
+
+.o_kanban_view {
+    background-color: #f0eeee;
+    .o_kanban_header {
+        color: black !important;
+    }
+
+    .o_kanban_config i, .o_kanban_quick_add i {
+        color: #555 !important;
+        &:hover {
+            background-color: darken(#f0eeee, 10%) !important;
+        }
+    }
+
+    .o_column_folded {
+        background-color: #f0eeee !important;
+        border: none !important;
+        span.o_column_title, span.o_column_unfold {
+            // color: white !important;
+        }
+    }
+
+    .o_column_quick_create {
+        background-color: #f0eeee !important;
+        .o_kanban_add_column, .o_kanban_title {
+            color: black !important;
+        }
+
+    }
+}
+
+.oe_list {
+    background-color: white !important;
+}
+
+.btn-icon {
+    .btn-default;
+}
+
+.openerp .oe_avatar {
+    float: left;
+}
+
+.openerp .oe_button_box {
+    float: right;
+}
+
+@grid-gutter-width: 0;
+
+.oe-control-panel .row {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.oe_form_field_one2many {
+    .oe-view-manager {
+        background-color: white;
+
+        .o_kanban_view {
+            background-color: white;
+
+            .o_kanban_record {
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+// Buttons containing only an icon
+.o_icon_button {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    outline: none;
+}
+
+// Stars
+.o_priority {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    > a {
+        display: inline-block;
+    }
+    .o_star_on, .o_star_off {
+        color: @odoo-main-color-muted !important;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+    .o_star_on {
+        color: gold !important;
+    }
+}
+
+.o_text_overflow {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top; // To update display context changed by overflow:hidden
+}
+
+.oe-o2m-control-panel {
+    background-color: white;
+}
+
+.oe_formview {
+   .oe_button_box {
+        .oe_stat_button {
+
+            .stat_button_icon {
+                display: inline-block;
+            }
+
+            // padding: @odoo-statbutton-vpadding @odoo-statbutton-spacing @odoo-statbutton-vpadding 0px;
+            text-align: left;
+
+            .o_button_icon {
+                // margin-left: @odoo-statbutton-spacing; // To create the button padding left (firefox bug)
+                display: inline-block;
+                vertical-align: middle;
+                &:before {
+                    font-size: x-large;
+                    vertical-align: middle;
+                }
+
+                width: 30%;
+            }
+
+            // .o_form_field_percent_pie {
+            //     margin-left: @odoo-statbutton-spacing; // To create the button padding left (firefox bug)
+            // }
+
+            .o_stat_info { // contains the value and text
+                display: inline-block;
+                vertical-align: middle;
+
+                max-width: 70%;
+                // padding-right: @odoo-statbutton-spacing;
+                line-height: 1.2;
+
+                .o_stat_value {
+                    .o_text_overflow;
+                    font-weight: 700;
+                    color: @odoo-brand-primary;
+                }
+                .o_stat_text {
+                    .o_text_overflow;
+                    font-size: small;
+
+                    .o_stat_value {
+                        display: inline;
+                    }
+                }
+            }
+
+
+            // Some buttons only display text and directly use the WidgetButton template instead of StatInfo
+            > span {
+                .o_stat_info; // layout
+                font-size: small;
+                white-space: normal; // text on several lines if needed
+            }
+        }
+    }
+}

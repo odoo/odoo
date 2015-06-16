@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Fields:
       - simple
@@ -43,6 +25,7 @@ import pytz
 import re
 import xmlrpclib
 from operator import itemgetter
+from contextlib import contextmanager
 from psycopg2 import Binary
 
 import openerp
@@ -51,6 +34,23 @@ from openerp.tools.translate import _
 from openerp.tools import float_repr, float_round, frozendict, html_sanitize
 import simplejson
 from openerp import SUPERUSER_ID, registry
+
+@contextmanager
+def _get_cursor():
+    # yield a valid cursor from any environment or create a new one if none found
+    from openerp.api import Environment
+    from openerp.http import request
+    try:
+        request.env     # force request's env to be computed
+    except RuntimeError:
+        pass    # ignore if not in a request
+    for env in Environment.envs:
+        if not env.cr.closed:
+            yield env.cr
+            break
+    else:
+        with registry().cursor() as cr:
+            yield cr
 
 EMPTY_DICT = frozendict()
 
@@ -151,6 +151,8 @@ class _column(object):
 
     def __getattr__(self, name):
         """ Access a non-slot attribute. """
+        if name == '_args':
+            raise AttributeError(name)
         try:
             return self._args[name]
         except KeyError:
@@ -386,7 +388,7 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with registry().cursor() as cr:
+            with _get_cursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits
@@ -1316,7 +1318,7 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with registry().cursor() as cr:
+            with _get_cursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits

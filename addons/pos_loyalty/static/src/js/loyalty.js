@@ -19,7 +19,6 @@ models.load_models([
         domain: function(self){ return [['id','=',self.config.loyalty_id[0]]]; },
         loaded: function(self,loyalties){ 
             self.loyalty = loyalties[0]; 
-            console.log('loyalty',self.loyalty);
         },
     },{
         model: 'loyalty.rule',
@@ -234,7 +233,9 @@ models.Order = models.Order.extend({
                 continue;
             } else if(reward.type === 'gift' && reward.point_cost > this.get_spendable_points()) {
                 continue;
-            } 
+            } else if(reward.type === 'resale' && this.get_spendable_points() <= 0) {
+                continue;
+            }
             rewards.push(reward);
         }
         return rewards;
@@ -313,13 +314,17 @@ models.Order = models.Order.extend({
             });
         }
     },
-        
-    validate: function(){
+    
+    finalize: function(){
         var client = this.get_client();
         if ( client ) {
             client.loyalty_points = this.get_new_total_points();
+            // The client list screen has a cache to avoid re-rendering
+            // the client lines, and so the point updates may not be visible ...
+            // We need a better GUI framework !
+            this.pos.gui.screen_instances.clientlist.partner_cache.clear_node(client.id);
         }
-        _super.prototype.validate.apply(this,arguments);
+        _super.prototype.finalize.apply(this,arguments);
     },
 
     export_for_printing: function(){
@@ -356,7 +361,7 @@ var LoyaltyButton = screens.ActionButtonWidget.extend({
 
         var rewards = order.get_available_rewards();
         if (rewards.length === 0) {
-            this.gui.show_popup('error',{
+            this.gui.show_popup('alert',{
                 'title': 'No Rewards Available',
                 'body':  'There are no rewards available for this customer as part of the loyalty program',
             });
@@ -424,7 +429,6 @@ screens.OrderWidget.include({
         }
 
         if (this.pos.loyalty &&
-            order.get_client() &&
             this.getParent().action_buttons &&
             this.getParent().action_buttons.loyalty) {
 

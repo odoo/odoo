@@ -264,7 +264,7 @@ class WebsiteBlog(http.Controller):
         message_id = BlogPost.message_post(
             cr, uid, int(blog_post_id),
             body=message_content,
-            type='comment',
+            message_type='comment',
             subtype='mt_comment',
             author_id=partner_id,
             path=post.get('path', False),

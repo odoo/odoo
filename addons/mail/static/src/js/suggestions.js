@@ -48,7 +48,7 @@ var Groups = Widget.extend({
         if (this.groups.length === 0) {
             return this.$el.empty();
         }
-        return this.$el.empty().html(QWeb.render('mail.suggestions.groups', {'widget': this}));
+        return this.$el.empty().html(QWeb.render('TimelineSuggestionGroups', {'widget': this}));
     },
 
     join_group: function (event) {
@@ -72,7 +72,7 @@ var Groups = Widget.extend({
     }
 });
 
-mail.WallSidebar.include({
+mail.Sidebar.include({
     start: function () {
         this._super.apply(this, arguments);
         var sug_groups = new Groups(this);

@@ -13,6 +13,7 @@ OpenERP E-Commerce
     'depends': ['website', 'sale', 'payment'],
     'data': [
         'data/data.xml',
+        'data/web_planner_data.xml',
         'views/views.xml',
         'views/templates.xml',
         'views/payment.xml',

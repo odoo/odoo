@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from openerp.osv import fields, osv
@@ -66,6 +48,7 @@ class sale_order(osv.Model):
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
         self._delivery_unset(cr, uid, ids, context=context)
+        currency_obj = self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids, context=context):
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
@@ -77,8 +60,12 @@ class sale_order(osv.Model):
             grid = grid_obj.browse(cr, uid, grid_id, context=context)
 
             taxes = grid.carrier_id.product_id.taxes_id
-            fpos = order.fiscal_position or False
+            fpos = order.fiscal_position_id or False
             taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
+            price_unit = grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context)
+            if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
+                price_unit = currency_obj.compute(cr, uid, order.company_id.currency_id.id, order.pricelist_id.currency_id.id,
+                    price_unit, context=dict(context or {}, date=order.date_order))
             #create the sale order line
             line_obj.create(cr, uid, {
                 'order_id': order.id,
@@ -86,7 +73,7 @@ class sale_order(osv.Model):
                 'product_uom_qty': 1,
                 'product_uom': grid.carrier_id.product_id.uom_id.id,
                 'product_id': grid.carrier_id.product_id.id,
-                'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
+                'price_unit': price_unit,
                 'tax_id': [(6, 0, taxes_ids)],
                 'is_delivery': True
             }, context=context)

@@ -126,8 +126,8 @@ var ControlPanel = Widget.extend({
             // again in the ControlPanel will removed them from there they should be
             this._detach_content();
             this._attach_content(status.cp_content);
+            this.update_search_view(status.searchview, status.search_view_hidden);
             if (status.active_view_selector) this.update_switch_buttons(status.active_view_selector);
-            if (status.searchview) this.update_search_view(status.searchview, status.search_view_hidden);
             if (status.breadcrumbs) this.update_breadcrumbs(status.breadcrumbs);
         }
     },
@@ -175,11 +175,17 @@ var ControlPanel = Widget.extend({
      * @param {Boolean} [is_hidden] visibility of the searchview
      **/
     update_search_view: function(searchview, is_hidden) {
-        // Set the $buttons div (in the DOM) of the searchview as the $buttons
-        // have been appended to a jQuery node not in the DOM at SearchView initialization
-        searchview.$buttons = this.nodes.$searchview_buttons;
-        searchview.toggle_visibility(!is_hidden);
-        this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
+        if (searchview) {
+            // Set the $buttons div (in the DOM) of the searchview as the $buttons
+            // have been appended to a jQuery node not in the DOM at SearchView initialization
+            searchview.$buttons = this.nodes.$searchview_buttons;
+            searchview.toggle_visibility(!is_hidden);
+            this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
+        } else {
+            // Show the searchview buttons area, which might have been hidden by
+            // the searchview, as client actions may insert elements into it
+            this.nodes.$searchview_buttons.show();
+        }
     },
 });
 

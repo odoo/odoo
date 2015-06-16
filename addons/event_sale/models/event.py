@@ -13,10 +13,6 @@ class event_event(models.Model):
         'event.event.ticket', 'event_id', string='Event Ticket',
         default=lambda rec: rec._default_tickets(), copy=True)
 
-    badge_back = fields.Html('Badge Back', translate=True, states={'done': [('readonly', True)]})
-    badge_innerleft = fields.Html('Badge Innner Left', translate=True, states={'done': [('readonly', True)]})
-    badge_innerright = fields.Html('Badge Inner Right', translate=True, states={'done': [('readonly', True)]})
-
     @api.model
     def _default_tickets(self):
         try:

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import collections
 import copy
 import datetime
@@ -192,6 +174,7 @@ class view(osv.osv):
             ('form','Form'),
             ('graph', 'Graph'),
             ('pivot', 'Pivot'),
+            ('timeline', 'Timeline'),
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
@@ -320,7 +303,7 @@ class view(osv.osv):
         if not values.get('name'):
             values['name'] = "%s %s" % (values.get('model'), values['type'])
 
-        self.clear_cache()
+        self.clear_caches()
         return super(view, self).create(
             cr, uid,
             self._compute_defaults(cr, uid, values, context=context),
@@ -343,7 +326,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        self.clear_cache()
+        self.clear_caches()
         ret = super(view, self).write(
             cr, uid, ids,
             self._compute_defaults(cr, uid, vals, context=context),
@@ -925,11 +908,11 @@ class view(osv.osv):
     #------------------------------------------------------
     # QWeb template views
     #------------------------------------------------------
-    _read_template_cache = dict(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
-    if config['dev_mode']:
-        _read_template_cache['size'] = 0
 
-    @tools.conditional(not tools.config['dev_mode'], tools.ormcache_context(**_read_template_cache))
+    # apply ormcache_context decorator unless in dev mode...
+    @tools.conditional(not config['dev_mode'],
+        tools.ormcache_context('uid', 'view_id',
+            keys=('lang', 'inherit_branding', 'editable', 'translatable')))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
@@ -956,7 +939,9 @@ class view(osv.osv):
         return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
 
     def clear_cache(self):
-        self._read_template.clear_cache(self)
+        """ Deprecated, use `clear_caches` instead. """
+        if not config['dev_mode']:
+	    self.clear_caches()
 
     def _contains_branded(self, node):
         return node.tag == 't'\
@@ -1070,7 +1055,7 @@ class view(osv.osv):
         self._translate_qweb(cr, uid, arch, translate_func, context=context)
         return arch
 
-    @openerp.tools.ormcache()
+    @openerp.tools.ormcache('uid', 'id')
     def get_view_xmlid(self, cr, uid, id):
         imd = self.pool['ir.model.data']
         domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', id)]
@@ -1138,15 +1123,15 @@ class view(osv.osv):
                     if model_value._obj==node_obj:
                         _Node_Field=model_key
                         _Model_Field=model_value._fields_id
-                    flag=False
                     for node_key,node_value in _Node_Obj._columns.items():
                         if node_value._type=='one2many':
                              if node_value._obj==conn_obj:
-                                 if src_node in _Arrow_Obj._columns and flag:
+                                 # _Source_Field = "Incoming Arrows" (connected via des_node)
+                                 if node_value._fields_id == des_node:
                                     _Source_Field=node_key
-                                 if des_node in _Arrow_Obj._columns and not flag:
+                                 # _Destination_Field = "Outgoing Arrows" (connected via src_node)
+                                 if node_value._fields_id == src_node:
                                     _Destination_Field=node_key
-                                    flag = True
 
         datas = _Model_Obj.read(cr, uid, id, [],context)
         for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):

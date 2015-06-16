@@ -65,9 +65,8 @@ class stock_picking_wave(osv.osv):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def _track_subtype(self, cr, uid, ids, init_values, context=None):
-        record = self.browse(cr, uid, ids[0], context=context)
-        if 'state' in init_values and record.state != 'draft':
-            return 'stock_picking_wave.state'
+        if 'state' in init_values:
+            return 'stock_picking_wave.mt_wave_state'
         return super(stock_picking_wave, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
 

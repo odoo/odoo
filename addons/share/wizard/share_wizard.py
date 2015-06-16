@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import random
 import time
@@ -493,7 +475,7 @@ class share_wizard(osv.TransientModel):
         # already granted
         for dummy, model in fields_relations:
             # mail.message is transversal: it should not received directly the access rights
-            if model.model in ['mail.message', 'mail.notification']: continue
+            if model.model in ['mail.message', 'mail.notification', 'res.company']: continue
             values = {
                 'name': _('Copied access for sharing'),
                 'group_id': group_id,
@@ -600,8 +582,8 @@ class share_wizard(osv.TransientModel):
                     # other groups, so we duplicate if needed
                     rule = self._check_personal_rule_or_duplicate(cr, group_id, rule, context=context)
                     eval_ctx = rule_obj._eval_context_for_combinations()
-                    org_domain = expression.normalize_domain(eval(rule.domain_force, eval_ctx))
-                    new_clause = expression.normalize_domain(eval(domain, eval_ctx))
+                    org_domain = expression.normalize_domain(safe_eval(rule.domain_force, eval_ctx))
+                    new_clause = expression.normalize_domain(safe_eval(domain, eval_ctx))
                     combined_domain = expression.AND([new_clause, org_domain])
                     rule.write({'domain_force': combined_domain, 'name': rule.name + _('(Modified)')})
                     _logger.debug("Combining sharing rule %s on model %s with domain: %s", rule.id, model_id, domain)
@@ -625,7 +607,7 @@ class share_wizard(osv.TransientModel):
             if domain:
                 for rel_field, model in fields_relations:
                     # mail.message is transversal: it should not received directly the access rights
-                    if model.model in ['mail.message', 'mail.notification']: continue
+                    if model.model in ['mail.message', 'mail.notification', 'res.company']: continue
                     related_domain = []
                     if not rel_field: continue
                     for element in domain:

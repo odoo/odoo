@@ -1,22 +1,4 @@
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ldap
 import logging
@@ -140,8 +122,8 @@ class CompanyLDAP(osv.osv):
         results = []
         try:
             conn = self.connect(conf)
-            conn.simple_bind_s(conf['ldap_binddn'] or '',
-                               conf['ldap_password'].encode('utf-8') or '')
+            ldap_password = conf['ldap_password'] or ''
+            conn.simple_bind_s(conf['ldap_binddn'] or '', ldap_password.encode('utf-8'))
             results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
                                      filter, retrieve_attributes, timeout=60)
             conn.unbind()

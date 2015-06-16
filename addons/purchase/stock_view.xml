@@ -30,7 +30,7 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                  <xpath expr="//div[contains(@class, 'oe_title')]" position="before">
-                    <div class="oe_right oe_button_box" name="buttons">
+                    <div class="oe_button_box" name="button_box">
                         <button type="object"
                             name="view_picking"
                             class="oe_stat_button"
@@ -61,7 +61,7 @@
         </record>
 
         <record id="action_picking_tree_picking_to_invoice" model="ir.actions.act_window">
-            <field name="name">On Incoming Shipments</field>
+            <field name="name">Incoming Shipments</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -74,8 +74,8 @@
               </p><p> 
                 Here you can track all the product receipts of purchase
                 orders where the invoicing is "Based on Incoming Shipments",
-                and for which you have not received a supplier invoice yet.
-                You can generate a supplier invoice based on those receipts.
+                and for which you have not received a supplier bill yet.
+                You can generate a supplier bill based on those receipts.
               </p>
             </field>
        </record>

@@ -14,7 +14,7 @@ var DateTimeWidget = Widget.extend({
     events: {
         'dp.change .oe_datepicker_main': 'change_datetime',
         'dp.show .oe_datepicker_main': 'set_datetime_default',
-        'keypress .oe_datepicker_master': 'change_datetime',
+        'change .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
         this._super(parent);

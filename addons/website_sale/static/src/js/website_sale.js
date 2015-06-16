@@ -2,6 +2,9 @@ odoo.define('website_sale.website_sale', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
+var session = require('web.session');
+var core = require('web.core');
+var _t = core._t;
 
 $(document).ready(function () {
 
@@ -14,6 +17,49 @@ $('#o_shop_collapse_category').on('click', '.fa-chevron-right',function(){
 $('#o_shop_collapse_category').on('click', '.fa-chevron-down',function(){
     $(this).parent().find('ul:first').hide('normal');
     $(this).toggleClass('fa-chevron-down fa-chevron-right');
+});
+
+
+
+var shopping_cart_link = $('ul#top_menu li a[href^="/shop/cart"]');
+var shopping_cart_link_counter;
+shopping_cart_link.popover({
+    trigger: 'manual',
+    animation: true,
+    html: true,
+    title: function () {
+        return _t("My Cart");
+    },
+    container: 'body',
+    placement: 'auto',
+    template: '<div class="popover mycart-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+}).on("mouseenter",function () {
+    var self = this;
+    clearTimeout(shopping_cart_link_counter);
+    shopping_cart_link.not(self).popover('hide');
+    shopping_cart_link_counter = setTimeout(function(){
+        if($(self).is(':hover') && !$(".mycart-popover:visible").length)
+        {
+            $.get("/shop/cart", {'type': 'popover'})
+                .then(function (data) {
+                    $(self).data("bs.popover").options.content =  data;
+                    $(self).popover("show");
+                    $(".popover").on("mouseleave", function () {
+                        $(self).trigger('mouseleave');
+                    });
+                });
+        }
+    }, 100);
+}).on("mouseleave", function () {
+    var self = this;
+    setTimeout(function () {
+        if (!$(".popover:hover").length) {
+            if(!$(self).is(':hover'))
+            {
+               $(self).popover('hide');
+            }
+        }
+    }, 1000);
 });
 
 
@@ -38,7 +84,7 @@ $('.oe_website_sale').each(function () {
     });
 
     $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
-        product_ids = [];
+        var product_ids = [];
         var product_dom = $("ul.js_add_cart_variants[data-attribute_value_ids]").first();
         product_dom.data("attribute_value_ids").forEach(function(entry) {
             product_ids.push(entry[0]);});
@@ -59,34 +105,53 @@ $('.oe_website_sale').each(function () {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
     });
 
+    var clickwatch = (function(){
+          var timer = 0;
+          return function(callback, ms){
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+          };
+    })();
+
     $(oe_website_sale).on("change", ".oe_cart input.js_quantity", function (event) {
-        var $input = $(this);
-        var value = parseInt($input.val(), 10);
-        var $dom = $(event.target).closest('tr');
-        var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
-        var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
-        var line_id = parseInt($input.data('line-id'),10);
-        var product_id = parseInt($input.data('product-id'),10);
-        var product_ids = [product_id];
+      var $input = $(this);
+      var value = parseInt($input.val(), 10);
+      var $dom = $(event.target).closest('tr');
+      var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
+      var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
+      var line_id = parseInt($input.data('line-id'),10);
+      var product_id = parseInt($input.data('product-id'),10);
+      var product_ids = [product_id];
+      clickwatch(function(){
+
         $dom_optional.each(function(){
-            product_ids.push($(this).find('span[data-oe-model="product.product"]').data('oe-id'));
+            product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
         if (isNaN(value)) value = 0;
-        ajax.jsonRpc("/shop/get_unit_price", 'call', {
-            'product_ids': product_ids,
-            'add_qty': value})
-        .then(function (res) {
-            //basic case
-            $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
-            $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
-            //optional case
-            $dom_optional.each(function(){
-                var id = $(this).find('span[data-oe-model="product.product"]').data('oe-id');
-                var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
-                $(this).find("span.oe_currency_value").last().text(res[id].toFixed(2));
-                $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));
+
+        if ($(this).hasClass('js_no_gup')) { // if get_unit_price (gup) not needed
+            var gup = $.when();
+        }
+        else {
+            var gup = ajax.jsonRpc("/shop/get_unit_price", 'call', {
+                'product_ids': product_ids,
+                'add_qty': value,
+                'use_order_pricelist': true})
+            .then(function (res) {
+                //basic case
+                $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
+                $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
+                //optional case
+                $dom_optional.each(function(){
+                    var id = $(this).find('span[data-product-id]').data('product-id');
+                    var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
+                    $(this).find("span.oe_currency_value").last().text(res[id].toFixed(2));
+                    $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));
+                });
             });
-          ajax.jsonRpc("/shop/cart/update_json", 'call', {
+        }
+        gup.then(function(res) {
+            ajax.jsonRpc("/shop/cart/update_json", 'call', {
             'line_id': line_id,
             'product_id': parseInt($input.data('product-id'),10),
             'set_qty': value})
@@ -115,6 +180,7 @@ $('.oe_website_sale').each(function () {
                 }
             });
         });
+      }, 500);
     });
 
     // hack to add and rome from cart with json

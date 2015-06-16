@@ -6,10 +6,8 @@
 - 
   !record {model: account.tax, id: account_tax_10_incl}:
     name: VAT 10 perc Incl
-    type: percent
-    amount: 0.10
-    account_paid_id: account.iva
-    account_collected_id: account.iva
+    amount_type: percent
+    amount: 10.0
     price_include: 1
 -
   I assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product as a sale tax
@@ -21,10 +19,8 @@
 - 
   !record {model: account.tax, id: account_tax_05_incl}:
     name: VAT 05 perc Excl
-    type: percent
-    amount: 0.05
-    account_paid_id: account.iva
-    account_collected_id: account.iva
+    amount_type: percent
+    amount: 5.0
     price_include: 0
 -
   I will create a second VAT tax of 5% but this time for a child company, to
@@ -33,10 +29,8 @@
 -
   !record {model: account.tax, id: account_tax_05_incl_chicago}:
     name: VAT 05 perc Excl (US)
-    type: percent
-    amount: 0.05
-    account_paid_id: account.iva
-    account_collected_id: account.iva
+    amount_type: percent
+    amount: 5.0
     price_include: 0
     company_id: stock.res_company_1
 -

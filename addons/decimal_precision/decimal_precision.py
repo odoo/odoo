@@ -1,23 +1,5 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -39,30 +21,29 @@ class decimal_precision(orm.Model):
         ('name_uniq', 'unique (name)', """Only one value can be defined for each given usage!"""),
     ]
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('application')
     def precision_get(self, cr, uid, application):
         cr.execute('select digits from decimal_precision where name=%s', (application,))
         res = cr.fetchone()
         return res[0] if res else 2
 
     def clear_cache(self, cr):
-        """clear cache and update models. Notify other workers to restart their registry."""
-        self.precision_get.clear_cache(self)
-        RegistryManager.signal_registry_change(cr.dbname)
+        """ Deprecated, use `clear_caches` instead. """
+        self.clear_caches()
 
     def create(self, cr, uid, data, context=None):
         res = super(decimal_precision, self).create(cr, uid, data, context=context)
-        self.clear_cache(cr)
+        self.clear_caches()
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(decimal_precision, self).unlink(cr, uid, ids, context=context)
-        self.clear_cache(cr)
+        self.clear_caches()
         return res
 
     def write(self, cr, uid, ids, data, *args, **argv):
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
-        self.clear_cache(cr)
+        self.clear_caches()
         return res
 
 

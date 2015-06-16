@@ -391,35 +391,6 @@ class MassMailing(osv.Model):
 
     _inherit = ['utm.mixin']
 
-    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, date_begin, context=None):
-        """ Generic method to generate data for bar chart values using SparklineBarWidget.
-            This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
-
-            :param obj: the target model (i.e. crm_lead)
-            :param domain: the domain applied to the read_group
-            :param list read_fields: the list of fields to read in the read_group
-            :param str value_field: the field used to compute the value of the bar slice
-            :param str groupby_field: the fields used to group
-
-            :return list section_result: a list of dicts: [
-                                                {   'value': (int) bar_column_value,
-                                                    'tootip': (str) bar_column_tooltip,
-                                                }
-                                            ]
-        """
-        date_begin = date_begin.date()
-        section_result = [{'value': 0,
-                           'tooltip': ustr((date_begin + relativedelta.relativedelta(days=i)).strftime('%d %B %Y')),
-                           } for i in range(0, self._period_number)]
-        group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
-        field = obj._fields.get(groupby_field.split(':')[0])
-        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if field.type == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
-        for group in group_obj:
-            group_begin_date = datetime.strptime(group['__domain'][0][2], pattern).date()
-            timedelta = relativedelta.relativedelta(group_begin_date, date_begin)
-            section_result[timedelta.days] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field)}
-        return section_result
-
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing """
         results = {}
@@ -864,20 +835,19 @@ class MassMailing(osv.Model):
 class MailMail(models.Model):
     _inherit = ['mail.mail']
 
-    @api.model
-    def send_get_mail_body(self, mail, partner=None):
+    @api.multi
+    def send_get_mail_body(self, partner=None):
         """Override to add Statistic_id in shorted urls """
-
         links_blacklist = ['/unsubscribe_from_list']
 
-        if mail.mailing_id and mail.body_html and mail.statistics_ids:
-            for match in re.findall(URL_REGEX, mail.body_html):
+        if self.mailing_id and self.body_html and self.statistics_ids:
+            for match in re.findall(URL_REGEX, self.body_html):
 
                 href = match[0]
                 url = match[1]
-                
-                if not [s for s in links_blacklist if s in href]:
-                    new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
-                    mail.body_html = mail.body_html.replace(href, new_href)
 
-        return super(MailMail, self).send_get_mail_body(mail, partner=partner)
+                if not [s for s in links_blacklist if s in href]:
+                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
+                    self.body_html = self.body_html.replace(href, new_href)
+
+        return super(MailMail, self).send_get_mail_body(partner=partner)

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2013-TODAY OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.addons.project.tests.test_project_base import TestProjectBase
 from openerp.exceptions import AccessError
@@ -75,16 +57,16 @@ class TestProjectFlow(TestProjectBase):
 
     def test_project_process_project_manager_state(self):
         pigs = self.project_pigs.sudo(self.user_projectmanager)
-        pigs.set_pending()
+        pigs.state = 'pending'
         self.assertEqual(pigs.state, 'pending')
         # Re-open
-        pigs.set_open()
+        pigs.state = 'open'
         self.assertEqual(pigs.state, 'open')
         # Close project
-        pigs.set_done()
+        pigs.state = 'close'
         self.assertEqual(pigs.state, 'close')
         # Re-open
-        pigs.set_open()
+        pigs.state = 'open'
         # Re-convert into a template and schedule tasks
         pigs.set_template()
         pigs.schedule_tasks()
@@ -92,7 +74,7 @@ class TestProjectFlow(TestProjectBase):
         new_project = pigs.copy()
         self.assertEqual(len(new_project.tasks), 2, 'project: copied project should have copied task')
         # Cancel the project
-        pigs.set_cancel()
+        pigs.state = 'cancelled'
         self.assertEqual(pigs.state, 'cancelled', 'project: cancelled project should be in cancel state')
 
     @mute_logger('openerp.addons.mail.mail_thread')

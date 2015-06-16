@@ -1,6 +1,28 @@
 -
   In order to check account budget module in OpenERP I created a budget with few budget positions
 -
+  Checking if the budgetary positions have accounts or not
+-
+  !python {model: ir.model.data} : |
+    if not self.pool.get('account.budget.post').browse(cr, uid, ref('account_budget_post_sales0')).account_ids:
+      vals = {
+        'name': 'Product Sales - (test)',
+        'code': 'X2020',
+        'user_type': ref('account.data_account_type_revenue'),
+        'tag_ids': [(6,0,[ref('account.account_tag_operating')])],
+      }
+      self._update(cr, uid, 'account.account', 'account_budget', vals, 'a_sale')
+      self.pool.get('account.budget.post').write(cr, uid, [ref('account_budget_post_sales0')], {'account_ids': [(6,0,[ref('a_sale')])]})
+    if not self.pool.get('account.budget.post').browse(cr, uid, ref('account_budget_post_purchase0')).account_ids:
+      vals = {
+        'name': 'Expense - (test)',
+        'code': 'X2120',
+        'user_type': ref('account.data_account_type_expenses'),
+        'tag_ids': [(6,0,[ref('account.account_tag_operating')])],
+      }
+      self._update(cr, uid, 'account.account', 'account_budget', vals, 'a_expense')
+      self.pool.get('account.budget.post').write(cr, uid, [ref('account_budget_post_purchase0')], {'account_ids': [(6,0,[ref('a_expense')])]})
+-
   Creating a crossovered.budget record
 -
   !record {model: crossovered.budget, id: crossovered_budget_budget0}:
