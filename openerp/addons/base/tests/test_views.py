@@ -456,13 +456,12 @@ class TestTemplating(ViewCase):
     def setUp(self):
         import openerp.modules
         super(TestTemplating, self).setUp()
-        self._pool = openerp.modules.registry.RegistryManager.get(common.get_db_name())
-        self._init = self._pool._init
+        self._init = self.registry._init
         # fuck off
-        self._pool._init = False
+        self.registry._init = False
 
     def tearDown(self):
-        self._pool._init = self._init
+        self.registry._init = self._init
         super(TestTemplating, self).tearDown()
 
     def test_branding_inherit(self):
