@@ -26,16 +26,15 @@
                         <field name="state"/>
                         <t t-name="kanban-box">
                           <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
-                            <div class="oe_dropdown_kanban">
+                            <div class="o_dropdown_kanban dropdown">
 
-                              <!-- dropdown menu -->
-                              <span class="oe_dropdown_toggle">
-                                <span class="oe_e">í</span>
-                                <ul class="oe_dropdown_menu">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                   <li><a type="delete">Delete</a></li>
                                   <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
-                              </span>
                             </div>
                             <!-- kanban note -->
                             <div class="oe_kanban_content">

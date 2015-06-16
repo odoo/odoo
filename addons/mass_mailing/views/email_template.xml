@@ -46,9 +46,12 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_email_template">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <i class="fa fa-bars fa-lg"/>
-                                    <ul class="oe_dropdown_menu" t-if="widget.editable or widget.deletable">
+                                <div t-if="widget.editable or widget.deletable" class="o_dropdown_kanban dropdown">
+
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <t t-if="widget.editable">
                                             <li><a type="edit">Edit</a></li>
                                         </t>

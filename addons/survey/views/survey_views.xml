@@ -183,9 +183,12 @@
                     <field name="public_url" />
                     <templates>
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.editable">
-                                <i class="fa fa-bars fa-lg"/>
-                                <ul class="oe_dropdown_menu">
+                            <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <li><a type="edit">Edit Survey</a></li>
                                     <li t-if="widget.deletable"><a type="delete">Delete</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
