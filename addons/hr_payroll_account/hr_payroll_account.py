@@ -38,7 +38,7 @@ class hr_payslip_line(osv.osv):
             and adds the ability to inherit it
         """
         res = {}
-        payslip_line = self.browse(cr, uid, ids[0], context=context)
+        payslip_line = self.browse(cr, uid, ids, context=context)
         default_partner_id = payslip_line.slip_id.employee_id.\
             address_home_id and payslip_line.slip_id.employee_id.\
             address_home_id.id or False
@@ -147,7 +147,7 @@ class hr_payslip(osv.osv):
                     'name': line.name,
                     'date': timenow,
                     'partner_id': hr_payslip_line_pool._get_partner_id(
-                        cr, uid, [line.id],
+                        cr, uid, line.id,
                         credit_account=False, context=context).get(line.id),
                     'account_id': debit_account_id,
                     'journal_id': slip.journal_id.id,
@@ -167,7 +167,7 @@ class hr_payslip(osv.osv):
                     'name': line.name,
                     'date': timenow,
                     'partner_id': hr_payslip_line_pool._get_partner_id(
-                        cr, uid, [line.id],
+                        cr, uid, line.id,
                         credit_account=True, context=context).get(line.id),
                     'account_id': credit_account_id,
                     'journal_id': slip.journal_id.id,
