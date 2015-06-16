@@ -398,19 +398,19 @@
                     <field name="lst_price"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_vignette oe_semantic_html_override">
-                                <a type="open"><img t-att-src="kanban_image('product.product', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                            <div class="o_kanban_two_column_tags oe_kanban_global_click">
+                                <div class="o_kanban_tags_section">
+                                    <field name="attribute_value_ids"/>
+                                </div>
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('product.product', 'image_small', record.id.value)" class="oe_kanban_image"/>
+                                </div>
                                 <div class="oe_kanban_details">
-                                    <h4>
-                                        <a type="open">
-                                            <field name="name"/>
-                                            <field name="attribute_value_ids"/>
-                                        </a>
-                                    </h4>
-                                    <div name="tags"/>
+                                    <strong><field name="name"/></strong>
                                     <ul>
                                         <li>Price: <field name="lst_price"></field></li>
                                     </ul>
+                                    <div name="tags"/>
                                 </div>
                             </div>
                         </t>
