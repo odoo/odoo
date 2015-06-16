@@ -22,7 +22,19 @@ class MailMail(models.Model):
     _order = 'id desc'
     _rec_name = 'subject'
 
+    # content
     mail_message_id = fields.Many2one('mail.message', 'Message', required=True, ondelete='cascade', auto_join=True)
+    body_html = fields.Text('Rich-text Contents', help="Rich-text/HTML message")
+    references = fields.Text('References', help='Message references, such as identifiers of previous messages', readonly=1)
+    headers = fields.Text('Headers', copy=False)
+    # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
+    # and during unlink() we will not cascade delete the parent and its attachments
+    notification = fields.Boolean('Is Notification', help='Mail has been created to notify people of an existing mail.message')
+    # recipients
+    email_to = fields.Text('To', help='Message recipients (emails)')
+    email_cc = fields.Char('Cc', help='Carbon copy message recipients')
+    recipient_ids = fields.Many2many('res.partner', string='To (Partners)')
+    # process
     state = fields.Selection([
         ('outgoing', 'Outgoing'),
         ('sent', 'Sent'),
@@ -30,17 +42,12 @@ class MailMail(models.Model):
         ('exception', 'Delivery Failed'),
         ('cancel', 'Cancelled'),
     ], 'Status', readonly=True, copy=False, default='outgoing')
-    auto_delete = fields.Boolean('Auto Delete', help="Permanently delete this email after sending it, to save space")
-    references = fields.Text('References', help='Message references, such as identifiers of previous messages', readonly=1)
-    email_to = fields.Text('To', help='Message recipients (emails)')
-    recipient_ids = fields.Many2many('res.partner', string='To (Partners)')
-    email_cc = fields.Char('Cc', help='Carbon copy message recipients')
-    body_html = fields.Text('Rich-text Contents', help="Rich-text/HTML message")
-    headers = fields.Text('Headers', copy=False)
-    failure_reason = fields.Text('Failure Reason', help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.", readonly=1)
-    # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
-    # and during unlink() we will not cascade delete the parent and its attachments
-    notification = fields.Boolean('Is Notification', help='Mail has been created to notify people of an existing mail.message')
+    auto_delete = fields.Boolean(
+        'Auto Delete',
+        help="Permanently delete this email after sending it, to save space")
+    failure_reason = fields.Text(
+        'Failure Reason', readonly=1,
+        help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")
 
     @api.model
     def create(self, values):

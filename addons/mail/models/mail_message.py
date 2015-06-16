@@ -49,6 +49,25 @@ class Message(models.Model):
     def _get_default_author(self):
         return self.env.user.partner_id.id
 
+    # content
+    subject = fields.Char('Subject')
+    date = fields.Datetime('Date', default=fields.Datetime.now)
+    body = fields.Html('Contents', default='', help='Automatically sanitized HTML contents')
+    attachment_ids = fields.Many2many(
+        'ir.attachment', 'message_attachment_rel',
+        'message_id', 'attachment_id',
+        string='Attachments',
+        help='Attachments are linked to a document through model / res_id and to the message'
+             'through this field.')
+    parent_id = fields.Many2one(
+        'mail.message', 'Parent Message', select=True, ondelete='set null',
+        help="Initial thread message.")
+    child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
+    # related document
+    model = fields.Char('Related Document Model', select=1)
+    res_id = fields.Integer('Related Document ID', select=1)
+    record_name = fields.Char('Message Record Name', help="Name get of the related document.")
+    # characteristics
     message_type = fields.Selection([
         ('email', 'Email'),
         ('comment', 'Comment'),
@@ -57,50 +76,48 @@ class Message(models.Model):
         help="Message type: email for email message, notification for system "
              "message, comment for other messages such as user replies",
         oldname='type')
-    email_from = fields.Char('From', default=_get_default_from,
-                             help="Email address of the sender. This field is set when no matching partner is found for incoming emails.")
-    reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
-    no_auto_thread = fields.Boolean('No threading for answers', help='Answers do not go in the original document\' discussion thread. This has an impact on the generated message-id.')
+    subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', select=1)
+    # origin
+    email_from = fields.Char(
+        'From', default=_get_default_from,
+        help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
         'res.partner', 'Author', select=1,
         ondelete='set null', default=_get_default_author,
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     author_avatar = fields.Binary("Author's avatar", related='author_id.image_small')
+    # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     notified_partner_ids = fields.Many2many(
         'res.partner', 'mail_notification',
         'message_id', 'partner_id', 'Notified partners',
         help='Partners that have a notification pushing this message in their mailboxes')
-    attachment_ids = fields.Many2many(
-        'ir.attachment', 'message_attachment_rel',
-        'message_id', 'attachment_id', 'Attachments')
-    parent_id = fields.Many2one(
-        'mail.message', 'Parent Message', select=True,
-        ondelete='set null', help="Initial thread message.")
-    child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
-    model = fields.Char('Related Document Model', select=1)
-    res_id = fields.Integer('Related Document ID', select=1)
-    record_name = fields.Char('Message Record Name', help="Name get of the related document.")
     notification_ids = fields.One2many(
         'mail.notification', 'message_id',
         string='Notifications', auto_join=True,
         help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.')
-    subject = fields.Char('Subject')
-    date = fields.Datetime('Date', default=fields.Datetime.now)
-    message_id = fields.Char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False)
-    body = fields.Html('Contents', default='', help='Automatically sanitized HTML contents')
+    # chatter
     to_read = fields.Boolean(
         'To read', compute='_get_to_read', search='_search_to_read',
         help='Current user has an unread notification linked to this message')
     starred = fields.Boolean(
         'Starred', compute='_get_starred', search='_search_starred',
         help='Current user has a starred notification linked to this message')
-    subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', select=1)
     vote_user_ids = fields.Many2many(
         'res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
         help='Users that voted for this message')
+    tracking_value_ids = fields.One2many(
+        'mail.tracking.value', 'mail_message_id',
+        string='Tracking values',
+        help='Tracked values are stored in a separate model. This field allow to reconstruct'
+             'the tracking and to generate statistics on the model.')
+    # mail gateway
+    no_auto_thread = fields.Boolean(
+        'No threading for answers',
+        help='Answers do not go in the original document discussion thread. This has an impact on the generated message-id.')
+    message_id = fields.Char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False)
+    reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server', readonly=1)
-    tracking_value_ids = fields.One2many('mail.tracking.value', 'mail_message_id', string='Tracking values')
 
     @api.depends('notification_ids')
     def _get_to_read(self):
