@@ -6,7 +6,6 @@
   color: #4c4c4c;
   font-size: 13px;
   background: white;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 /* button */
@@ -39,15 +38,22 @@
     overflow: hidden;
     margin-bottom: 5px;
     margin-right: 6px;
-    background: rgba(60, 60, 60, 0.8);
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    -moz-box-shadow: 0 0 3px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.3);
-    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+    border: 1px solid #DEDEDE;
     width: 240px;
     z-index:500;
+}
+@media screen and (max-width:360px) {
+    .oe_im_chatview {
+        width: 100%;
+        margin-right: 0;
+    }
+    .oe_im_chatview .oe_im_chatview_content {
+        width: 100% !important;
+    }
+    .oe_im_chatview .oe_im_chatview_input {
+        width: 100% !important;
+    }
 }
 .oe_im_chatview .oe_im_chatview_disconnected {
     display:none;

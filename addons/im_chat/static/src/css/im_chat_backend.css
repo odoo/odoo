@@ -1,10 +1,12 @@
-
 .oe_im {
     position: fixed;
-    background-color: #E8EBEF;
-    width: 220px;
+    background-color: #eaeaea;
+    width: 250px;
     border-left: 1px solid #AEB9BD;
     z-index: 500;
+    -webkit-box-shadow: -2px 0px 5px 0px rgba(50, 50, 50, 0.25);
+    -moz-box-shadow:    -2px 0px 5px 0px rgba(50, 50, 50, 0.25);
+    box-shadow:         -2px 0px 5px 0px rgba(50, 50, 50, 0.25);
 }
 
 @media print {
@@ -24,25 +26,26 @@
 /* search stuff */
 .oe_im_frame_header {
     position: relative;
-    background: #dedede;
-    background: -moz-linear-gradient(#fcfcfc, #dedede);
-    background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
-    border-bottom: 1px solid border-color !important;
-    padding: 5px;
+    padding: 16px;
 }
 .oe_im_frame_header .oe_im_searchbox {
-    width: 168px;
+    width: 200px;
     padding: 1px 21px 1px 19px;
     font-size: 13px;
-    -moz-border-radius: 13px;
-    -webkit-border-radius: 13px;
-    border-radius: 13px;
+    border: none;
+    border-bottom: 1px solid #c6c6c6;
+    background: none;
+    margin-left: 20px;
+    height: 38px;
+}
+.oe_im_frame_header .oe_im_searchbox:focus {
+    outline: none;
 }
 .oe_im_frame_header .oe_im_search_icon {
     position: absolute;
     color: #888;
-    top: 9px;
-    left: 10px;
+    top: 28px;
+    left: 8px;
     font-size: 16px;    
     font-weight: 300 !important;
 }
@@ -68,10 +71,10 @@
 }
 .oe_im_user {
     position: relative;
-    padding: 2px 6px;
+    padding: 2px 8px;
     cursor: pointer;
     font-size: 13px;
-    margin-bottom: 3px;
+    margin-bottom: 10px;
 }
 .oe_im_user:hover {
   background: lightGrey;

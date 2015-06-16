@@ -32,30 +32,24 @@
                     <field name="nbr_session"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_card oe_kanban_global_click">
-                                <div class="oe_module_vignette row">
-                                    <div class="col-md-4">
-                                        <div class="oe_module_icon">
-                                            <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.value)" class="img-responsive"/>
-                                        </div>
+                            <div class="o_kanban_two_column oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.value)" class="img-responsive"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong><field name="name"/></strong>
+                                    <div>
+                                        <p>
+                                            <i class="fa fa-user"></i>
+                                            <t t-esc="(record.user_ids.raw_value || []).length"/> Operators
+                                            <br/>
+                                            <i class="fa fa-comments"></i>
+                                            <t t-esc="record.nbr_session.raw_value"/> Sessions
+                                        </p>
                                     </div>
-                                    <div class="col-md-7">
-                                        <h3><field name="name"/></h3>
-                                        <div>
-                                            <p>
-                                                <i class="fa fa-user">
-                                                    <t t-esc="(record.user_ids.raw_value || []).length"/> Operators
-                                                </i>
-                                                <br/>
-                                                <i class="fa fa-comments">
-                                                    <t t-esc="record.nbr_session.raw_value"/> Sessions
-                                                </i>
-                                            </p>
-                                            <div style="margin-top:5px;">
-                                                <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-default btn-xs">Quit</button>
-                                                <button t-if="! record.are_you_inside.raw_value" name="action_join" type="object" class="btn btn-info btn-xs">Join</button>
-                                            </div>
-                                        </div>
+                                    <div class="o_kanban_button">
+                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-sm btn-primary">Quit</button>
+                                        <button t-if="!record.are_you_inside.raw_value" name="action_join" type="object" class="btn btn-sm btn-primary">Join</button>
                                     </div>
                                 </div>
                             </div>
