@@ -1633,16 +1633,18 @@ class account_invoice_line(osv.osv):
         unique_tax_ids = []
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
         account = self.pool.get('account.account').browse(cr, uid, account_id)
+        domain = {}
         if not product_id:
             taxes = account.tax_ids
             unique_tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+            domain = {'uos_id':[]}
         else:
             product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
                 partner_id=partner_id, fposition_id=fposition_id,
                 company_id=account.company_id.id)
             if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
                 unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
-        return {'value':{'invoice_line_tax_id': unique_tax_ids}}
+        return {'value':{'invoice_line_tax_id': unique_tax_ids}, 'domain': domain}
 
 account_invoice_line()
 
