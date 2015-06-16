@@ -11,36 +11,37 @@ import os
 
 import config
 
-config_file_00 = os.path.join(os.path.dirname(__file__),'test-config-values-00.conf')
+if __name__ == '__main__':
+    config_file_00 = os.path.join(os.path.dirname(__file__),'test-config-values-00.conf')
 
-# 1. No config file, no command-line arguments (a.k.a. default values)
+    # 1. No config file, no command-line arguments (a.k.a. default values)
 
-conf = config.configmanager()
-conf.parse_config()
+    conf = config.configmanager()
+    conf.parse_config()
 
-assert conf['osv_memory_age_limit'] == 1.0
-assert os.path.join(conf['root_path'], 'addons') == conf['addons_path']
+    assert conf['osv_memory_age_limit'] == 1.0
+    assert os.path.join(conf['root_path'], 'addons') == conf['addons_path']
 
-# 2. No config file, some command-line arguments
+    # 2. No config file, some command-line arguments
 
-conf = config.configmanager()
-# mess with the optparse.Option definition to allow an invalid path
-conf.casts['addons_path'].action = 'store'
-conf.parse_config(['--addons-path=/xyz/dont-exist', '--osv-memory-age-limit=2.3'])
+    conf = config.configmanager()
+    # mess with the optparse.Option definition to allow an invalid path
+    conf.casts['addons_path'].action = 'store'
+    conf.parse_config(['--addons-path=/xyz/dont-exist', '--osv-memory-age-limit=2.3'])
 
-assert conf['osv_memory_age_limit'] == 2.3
-assert conf['addons_path'] == '/xyz/dont-exist'
+    assert conf['osv_memory_age_limit'] == 2.3
+    assert conf['addons_path'] == '/xyz/dont-exist'
 
-# 3. Config file, no command-line arguments
+    # 3. Config file, no command-line arguments
 
-conf = config.configmanager()
-conf.parse_config(['-c', config_file_00])
+    conf = config.configmanager()
+    conf.parse_config(['-c', config_file_00])
 
-assert conf['osv_memory_age_limit'] == 3.4
+    assert conf['osv_memory_age_limit'] == 3.4
 
-# 4. Config file, and command-line arguments
+    # 4. Config file, and command-line arguments
 
-conf = config.configmanager()
-conf.parse_config(['-c', config_file_00, '--osv-memory-age-limit=2.3'])
+    conf = config.configmanager()
+    conf.parse_config(['-c', config_file_00, '--osv-memory-age-limit=2.3'])
 
-assert conf['osv_memory_age_limit'] == 2.3
+    assert conf['osv_memory_age_limit'] == 2.3
