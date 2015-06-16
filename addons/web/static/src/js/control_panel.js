@@ -159,7 +159,7 @@ var ControlPanel = Widget.extend({
 
         function make_breadcrumb (bc, is_last) {
             var $bc = $('<li>')
-                    .append(is_last ? bc.title : $('<a>').text(bc.title))
+                    .append(is_last ? bc.title : $('<a>').html(bc.title))
                     .toggleClass('active', is_last);
             if (!is_last) {
                 $bc.click(function () {

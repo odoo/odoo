@@ -32,12 +32,6 @@ function get_fc_defaultOptions() {
     return {
         weekNumberTitle: _t("W"),
         allDayText: _t("All day"),
-        buttonText : {
-            today:    _t("Today"),
-            month:    _t("Month"),
-            week:     _t("Week"),
-            day:      _t("Day")
-        },
         monthNames: moment.months(),
         monthNamesShort: moment.monthsShort(),
         dayNames: moment.weekdays(),
@@ -53,7 +47,7 @@ function get_fc_defaultOptions() {
         },
         titleFormat: {
             month: 'MMMM yyyy',
-            week: dateFormat + "{ '&#8212;'"+ dateFormat,
+            week: "W",
             day: dateFormat,
         },
         columnFormat: {
@@ -94,6 +88,8 @@ var CalendarView = View.extend({
         this.range_stop = null;
         this.selected_filters = [];
 
+        this.title = (this.options.action)? this.options.action.name : '';
+
         this.shown = $.Deferred();
     },
 
@@ -117,7 +113,7 @@ var CalendarView = View.extend({
         var attrs = fv.arch.attrs,
             self = this;
         this.fields_view = fv;
-        this.$calendar = this.$el.find(".oe_calendar_widget");
+        this.$calendar = this.$(".o_calendar_widget");
 
         this.info_fields = [];
 
@@ -137,6 +133,10 @@ var CalendarView = View.extend({
         this.all_day = attrs.all_day;
         this.how_display_event = '';
         this.attendee_people = attrs.attendee;
+
+        // Check whether the date field is editable (i.e. if the events can be dragged and dropped)
+        var main_date_field = this.date_start || this.date_end || this.date_delay;
+        this.editable = !this.options.read_only_mode && !this.fields_view.fields[main_date_field].readonly;
 
         //if quick_add = False, we don't allow quick_add
         //if quick_add = not specified in view, we use the default quick_create_instance
@@ -249,15 +249,28 @@ var CalendarView = View.extend({
     render_buttons: function($node) {
         var self = this;
         this.$buttons = $(QWeb.render("CalendarView.buttons", {'widget': this}));
-        this.$buttons.on('click', 'button.oe_calendar_button_new', function () {
+        this.$buttons.on('click', 'button.o_calendar_button_new', function () {
             self.dataset.index = null;
             self.do_switch_view('form');
         });
+
+        var bindCalendarButton = function(selector, arg1, arg2) {
+            self.$buttons.on('click', selector, _.bind(self.$calendar.fullCalendar, self.$calendar, arg1, arg2));
+        }
+        bindCalendarButton('.o_calendar_button_prev', 'prev');
+        bindCalendarButton('.o_calendar_button_today', 'today');
+        bindCalendarButton('.o_calendar_button_next', 'next');
+        bindCalendarButton('.o_calendar_button_day', 'changeView', 'agendaDay');
+        bindCalendarButton('.o_calendar_button_week', 'changeView', 'agendaWeek');
+        bindCalendarButton('.o_calendar_button_month', 'changeView', 'month');
+
+        this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
+        
         $node = $node || this.options.$buttons;
         if ($node) {
             this.$buttons.appendTo($node);
         } else {
-            this.$('.oe_calendar_buttons').replaceWith(this.$buttons);
+            this.$('.o_calendar_buttons').replaceWith(this.$buttons);
         }
     },
     get_fc_init_options: function () {
@@ -265,21 +278,25 @@ var CalendarView = View.extend({
         var self = this;
         return  $.extend({}, get_fc_defaultOptions(), {
             
-            defaultView: (this.mode == "month")?"month":
-                (this.mode == "week"?"agendaWeek":
-                 (this.mode == "day"?"agendaDay":"month")),
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
+            defaultView: (this.mode == "month")? "month" : ((this.mode == "week")? "agendaWeek" : ((this.mode == "day")? "agendaDay" : "agendaWeek")),
+            header: false,
             selectable: !this.options.read_only_mode && this.create_right,
             selectHelper: true,
-            editable: !this.options.read_only_mode,
+            editable: this.editable,
             droppable: true,
 
             // callbacks
 
+            viewRender: function(view) {
+                var mode = (view.name == "month")? "month" : ((view.name == "agendaWeek") ? "week" : "day");
+                if(self.$buttons !== undefined) {
+                    self.$buttons.find('.active').removeClass('active');
+                    self.$buttons.find('.o_calendar_button_' + mode).addClass('active');
+                }
+
+                var title = self.title + ' (' + ((mode === "week")? _t("Week ") : "") + view.title + ")"; 
+                self.set({'title': title});
+            },
             eventDrop: function (event, _day_delta, _minute_delta, _all_day, _revertFunc) {
                 var data = self.get_event_data(event);
                 self.proxy('update_record')(event._id, data); // we don't revert the event, but update it.
@@ -307,18 +324,15 @@ var CalendarView = View.extend({
                     allDay: all_day,
                 });
                 self.open_quick_create(data_template);
-
             },
 
             unselectAuto: false,
-
-
         });
     },
 
     calendarMiniChanged: function (context) {
         return function(datum,obj) {
-            var curView = context.$calendar.fullCalendar( 'getView');
+            var curView = context.$calendar.fullCalendar('getView');
             var curDate = new Date(obj.currentYear , obj.currentMonth, obj.currentDay);
 
             if (curView.name == "agendaWeek") {
@@ -327,7 +341,7 @@ var CalendarView = View.extend({
                 }
             }
             else if (curView.name != "agendaDay" || (curView.name == "agendaDay" && moment(curDate).diff(moment(curView.start))===0)) {
-                    context.$calendar.fullCalendar('changeView','agendaWeek');
+                context.$calendar.fullCalendar('changeView','agendaWeek');
             }
             context.$calendar.fullCalendar('gotoDate', obj.currentYear , obj.currentMonth, obj.currentDay);
         };
@@ -339,9 +353,9 @@ var CalendarView = View.extend({
         if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
-            this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container'));
+            this.sidebar.appendTo(this.$('.o_calendar_sidebar_container'));
 
-            this.$small_calendar = self.$el.find(".oe_calendar_mini");
+            this.$small_calendar = self.$(".o_calendar_mini");
             this.$small_calendar.datepicker({ 
                 onSelect: self.calendarMiniChanged(self),
                 dayNamesMin : translate.dayNamesShort,
@@ -561,7 +575,7 @@ var CalendarView = View.extend({
                         attendee_showed += 1;
                         if (attendee_showed<= MAX_ATTENDEES) {
                             if (self.avatar_model !== null) {
-                                   the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head"  \
+                                   the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="o_attendee_head"  \
                                                         src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
                             }
                             else {
@@ -569,7 +583,7 @@ var CalendarView = View.extend({
                                         var tempColor = (self.all_filters[the_attendee_people] !== undefined) 
                                                     ? self.all_filters[the_attendee_people].color
                                                     : (self.all_filters[-1] ? self.all_filters[-1].color : 1);
-                                    the_title_avatar += '<i class="fa fa-user attendee_head color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>';
+                                    the_title_avatar += '<i class="fa fa-user o_attendee_head o_underline_color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>';
                                 }//else don't add myself
                             }
                         }
@@ -579,7 +593,7 @@ var CalendarView = View.extend({
                     }
                 );
                 if (attendee_other.length>2) {
-                    the_title_avatar += '<span class="attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';
+                    the_title_avatar += '<span class="o_attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';
                 }
                 the_title = the_title_avatar + the_title;
             }
@@ -603,11 +617,11 @@ var CalendarView = View.extend({
                 if (typeof color_key === "object") {
                     color_key = color_key[0];
                 }
-                r.className = 'cal_opacity calendar_color_'+ this.get_color(color_key);
+                r.className = 'o_calendar_color_'+ this.get_color(color_key);
             }
         }
         else  { // if form all, get color -1
-              r.className = 'cal_opacity calendar_color_'+ self.all_filters[-1].color;
+              r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
         }
         return r;
     },
@@ -665,7 +679,6 @@ var CalendarView = View.extend({
         }
 
         if (this.date_delay) {
-            
             data[this.date_delay] = diff_seconds / 3600;
         }
         return data;
