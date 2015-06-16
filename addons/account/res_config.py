@@ -86,12 +86,6 @@ class AccountConfigSettings(models.TransientModel):
              'Once the master budgets and the budgets are defined, '
              'the project managers can set the planned amount on each analytic account.\n'
              '-This installs the module account_budget.')
-    module_account_voucher = fields.Boolean(string='Manage customer payments',
-        help='This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.\n'
-             '-This installs the module account_voucher.')
-    module_account_followup = fields.Boolean(string='Manage customer payment follow-ups',
-        help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
-             '-This installs the module account_followup.')
     module_product_email_template = fields.Boolean(string='Send products tools and information at the invoice confirmation',
         help='With this module, link your products to a template to send complete information and tools to your customer.\n'
              'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.')
