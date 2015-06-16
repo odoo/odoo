@@ -375,9 +375,9 @@ var CalendarView = View.extend({
     get_quick_create_class: function () {
         return widgets.QuickCreate;
     },
-    open_quick_create: function(data_template) {
+    open_quick_create: function(data_template) { // FIXME
         if (!isNullOrUndef(this.quick)) {
-            return this.quick.trigger('close');
+            return this.quick.close();
         }
         var QuickCreate = this.get_quick_create_class();
 
@@ -385,14 +385,16 @@ var CalendarView = View.extend({
         this.quick = new QuickCreate(this, this.dataset, true, this.options, data_template);
         this.quick.on('added', this, this.quick_created)
                 .on('slowadded', this, this.slow_created)
-                .on('close', this, function() {
-                    this.quick.destroy();
+                .on('closed', this, function() {
                     delete this.quick;
                     this.$calendar.fullCalendar('unselect');
                 });
-        this.quick.replace(this.$el.find('.oe_calendar_qc_placeholder'));
-        if (!this.options.disable_quick_create) {
+
+        if(!this.options.disable_quick_create) {
+            this.quick.open();
             this.quick.focus();
+        } else {
+            this.quick.start();
         }
     },
 
@@ -874,38 +876,26 @@ var CalendarView = View.extend({
             }
         }
         else {
-            var pop = new form_common.FormOpenPopup(this);
-            var id_cast = parseInt(id).toString() == id ? parseInt(id) : id;
-            pop.show_element(this.dataset.model, id_cast, this.dataset.get_context(), {
-                title: _.str.sprintf(_t("View: %s"),title),
+            var dialog = new form_common.FormViewDialog(this, {
+                res_model: this.dataset.model,
+                res_id: parseInt(id).toString() == id ? parseInt(id) : id,
+                context: this.dataset.get_context(),
+                title: title,
                 view_id: +this.open_popup_action,
-                res_id: id_cast,
-                target: 'new',
-                readonly:true
-            });
-
-           var form_controller = pop.view_form;
-           form_controller.on("load_record", self, function(){
-                var button_delete = _.str.sprintf("<button class='oe_button oe_bold delme'><span> %s </span></button>",_t("Delete"));
-                var button_edit = _.str.sprintf("<button class='oe_button oe_bold editme oe_highlight'><span> %s </span></button>",_t("Edit Event"));
-                
-                pop.$el.closest(".modal").find(".modal-footer").prepend(button_delete);
-                pop.$el.closest(".modal").find(".modal-footer").prepend(button_edit);
-                
-                $('.delme').click(
-                    function() {
-                        $('.oe_form_button_cancel').trigger('click');
-                        self.remove_event(id);
-                    }
-                );
-                $('.editme').click(
-                    function() {
-                        $('.oe_form_button_cancel').trigger('click');
+                readonly: true,
+                buttons: [
+                    {text: _t("Edit"), classes: 'btn-primary', close: true, click: function() {
                         self.dataset.index = self.dataset.get_id_index(id);
                         self.do_switch_view('form', null, { mode: "edit" });
-                    }
-                );
-           });
+                    }},
+
+                    {text: _t("Delete"), close: true, click: function() {
+                        self.remove_event(id);
+                    }},
+
+                    {text: _t("Close"), close: true}
+                ]
+            }).open();
         }
         return false;
     },

@@ -1266,18 +1266,17 @@ var ComposeMessage = Attachment.extend ({
                 var partner_id = partner_info.partner_id;
                 var parsed_email = mail_utils.parse_email(partner_name);
 
-                var pop = new form_common.FormOpenPopup(this);                    
-                pop.show_element(
-                    'res.partner',
-                    partner_id,
-                    {   'force_email': true,
+                var pop = new form_common.FormViewDialog(this, {
+                    res_model: 'res.partner',
+                    res_id: partner_id,
+                    context: {
+                        'force_email': true,
                         'ref': "compound_context",
                         'default_name': parsed_email[0],
                         'default_email': parsed_email[1],
-                    }, {
-                        title: _t("Please complete partner's informations"),
-                    }
-                );
+                    },
+                    title: _t("Please complete partner's informations"),
+                }).open();
                 pop.on('closed', self, function () {
                     deferred.resolve();
                 });

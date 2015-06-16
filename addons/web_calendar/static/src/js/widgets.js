@@ -19,9 +19,8 @@ var QWeb = core.qweb;
  * @class
  * @type {*}
  */
-var QuickCreate = Widget.extend({
+var QuickCreate = Dialog.extend({
     init: function(parent, dataset, buttons, options, data_template) {
-        this._super(parent);
         this.dataset = dataset;
         this._buttons = buttons || false;
         this.options = options;
@@ -29,6 +28,23 @@ var QuickCreate = Widget.extend({
         // Can hold data pre-set from where you clicked on agenda
         this.data_template = data_template || {};
         this.$input = $();
+
+        var self = this;
+        this._super(parent, {
+            title: this.get_title(),
+            size: 'small',
+            buttons: this._buttons ? [
+                {text: _t("Create event"), classes: 'btn-primary', click: function (e) {
+                    if (!self.quick_add()) {
+                        self.focus();
+                    }
+                }},
+                {text: _t("Edit event"), click: function (e) {
+                    self.slow_add();
+                }}
+            ] : [],
+            $content: QWeb.render('CalendarView.quick_create', {widged: this})
+        });
     },
     get_title: function () {
         var parent = this.getParent();
@@ -47,38 +63,22 @@ var QuickCreate = Widget.extend({
             this.slow_create();
             return;
         }
-        self.on('added', self, function() {
-            self.trigger('close');
+        this.on('added', this, function() {
+            self.close();
         });
 
-        this.$dialog = new Dialog(this, {
-            title: this.get_title(),
-            size: 'small',
-            buttons: this._buttons ? [
-                {text: _t("Create event"), oe_link_class: 'oe_highlight', click: function (e) {
-                    if (!self.quick_add()) {
-                        self.focus();
-                    }
-                }},
-                {text: _t("Edit event"), oe_link_class: 'oe_link', click: function (e) {
-                    self.slow_add();
-                }}
-            ] : []
-        }, QWeb.render('CalendarView.quick_create', {widget: this}))
-        .on('closed', self, function() {
-            self.trigger('close');
-        })
-        .open();
-        this.$input = this.$dialog.$('input').keyup(function enterHandler (e) {
-            if(e.keyCode == $.ui.keyCode.ENTER){
+        this.$input = this.$('input').keyup(function enterHandler (e) {
+            if(e.keyCode == $.ui.keyCode.ENTER) {
                 self.$input.off('keyup', enterHandler);
                 if (!self.quick_add()){
                     self.$input.on('keyup', enterHandler);
                 }
             } else if (e.keyCode == $.ui.keyCode.ESCAPE && self._buttons) {
-                self.trigger('close');
+                self.close();
             }
         });
+
+        return this._super();
     },
     focus: function() {
         this.$input.focus();
@@ -140,9 +140,10 @@ var QuickCreate = Widget.extend({
         });
                     
         var pop_infos = self.get_form_popup_infos();
-        var pop = new form_common.FormOpenPopup(this);
         var context = new data.CompoundContext(this.dataset.context, defaults);
-        pop.show_element(this.dataset.model, null, this.dataset.get_context(defaults), {
+        var pop = new form_common.FormViewDialog(this, {
+            res_model: this.dataset.model,
+            context: this.dataset.get_context(defaults),
             title: this.get_title(),
             disable_multiple_selection: true,
             view_id: pop_infos.view_id,
@@ -162,12 +163,9 @@ var QuickCreate = Widget.extend({
                         throw new Error(r);
                     }
                 });
-            },
-        });
+            }
+        }).open();
         pop.on('closed', self, function() {
-            // ``self.trigger('close')`` would itself destroy all child element including
-            // the slow create popup, which would then re-trigger recursively the 'closed' signal.  
-            // Thus, here, we use a deferred and its state to cut the endless recurrence.
             if (def.state() === "pending") {
                 def.resolve();
             }
@@ -181,7 +179,8 @@ var QuickCreate = Widget.extend({
                 var parent = self.getParent();
                 parent.$calendar.fullCalendar('refetchEvents');
             }
-            self.trigger('close');
+            self.close();
+            self.trigger("closed");
         });
         return def;
     },

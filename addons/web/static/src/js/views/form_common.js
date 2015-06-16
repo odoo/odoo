@@ -115,7 +115,6 @@ var DefaultFieldManager = Widget.extend({
     },
 });
 
-
 /**
  * A mixin to apply on any FormWidget that has to completely re-render when its readonly state
  * switch.
@@ -273,22 +272,19 @@ var CompletionFieldMixin = {
     // all search/create popup handling
     _search_create_popup: function(view, ids, context) {
         var self = this;
-        var pop = new SelectCreatePopup(this);
-        pop.select_element(
-            self.field.relation,
-            {
-                title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
-                initial_ids: ids ? _.map(ids, function(x) {return x[0];}) : undefined,
-                initial_view: view,
-                disable_multiple_selection: true
-            },
-            self.build_domain(),
-            new data.CompoundContext(self.build_context(), context || {})
-        );
-        pop.on("elements_selected", self, function(element_ids) {
-            self.add_id(element_ids[0]);
-            self.focus();
-        });
+        new SelectCreateDialog(this, {
+            res_model: self.field.relation,
+            domain: self.build_domain(),
+            context: new data.CompoundContext(self.build_context(), context || {}),
+            title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
+            initial_ids: ids ? _.map(ids, function(x) {return x[0];}) : undefined,
+            initial_view: view,
+            disable_multiple_selection: true,
+            on_selected: function(element_ids) {
+                self.add_id(element_ids[0]);
+                self.focus();
+            }
+        }).open();
     },
     /**
      * To implement.
@@ -304,8 +300,6 @@ var CompletionFieldMixin = {
         return tmp;
     },
 };
-
-
 
 /**
  * Must be applied over an class already possessing the PropertiesMixin.
@@ -388,7 +382,6 @@ var NotebookInvisibilityChanger = InvisibilityChanger.extend({
         }
     },
 });
-
 
 /**
     Base class for all fields, custom widgets and buttons to be displayed in the form view.
@@ -779,10 +772,9 @@ var AbstractField = FormWidget.extend(FieldInterface, {
 });
 
 /**
- * Class with everything which is common between FormOpenPopup and SelectCreatePopup.
+ * Class with everything which is common between FormViewDialog and SelectCreateDialog.
  */
-var AbstractFormPopup = Widget.extend({
-    template: "AbstractFormPopup.render",
+var ViewDialog = Dialog.extend({ // FIXME should use ViewManager
     /**
      *  options:
      *  -readonly: only applicable when not in creation mode, default to false
@@ -795,18 +787,27 @@ var AbstractFormPopup = Widget.extend({
      * - child_name
      * - form_view_options
      */
-    init_popup: function(model, row_id, domain, context, options) {
-        this.row_id = row_id;
-        this.model = model;
-        this.domain = domain || [];
-        this.context = context || {};
-        this.options = options;
-        _.defaults(this.options, {});
+    init: function(parent, options) {
+        options = options || {};
+        options.dialogClass = options.dialogClass || '';
+        options.dialogClass += ' o_act_window';
+
+        this._super(parent, _.clone(options));
+
+        this.res_model = options.res_model || null;
+        this.res_id = options.res_id || null;
+        this.domain = options.domain || [];
+        this.context = options.context || {};
+        this.options = _.extend(this.options || {}, options || {});
+
+        this.on('closed', this, this.select);
+        this.on_selected = options.on_selected || (function() {});
     },
+
     init_dataset: function() {
         var self = this;
         this.created_elements = [];
-        this.dataset = new data.ProxyDataSet(this, this.model, this.context);
+        this.dataset = new data.ProxyDataSet(this, this.res_model, this.context);
         this.dataset.read_function = this.options.read_function;
         this.dataset.create_function = function(data, options, sup) {
             var fct = self.options.create_function || sup;
@@ -824,114 +825,102 @@ var AbstractFormPopup = Widget.extend({
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.child_name = this.options.child_name;
     },
-    display_popup: function() {
-        var self = this;
-        this.renderElement();
-        var dialog = new Dialog(this, {
-            dialogClass: 'oe_act_window',
-            title: this.options.title || "",
-        }, this.$el).open();
-        dialog.on('closing', this, function (e){
-            self.check_exit(true);
-        });
-        this.$buttonpane = dialog.$buttons;
-        this.start();
-    },
-    setup_form_view: function() {
-        var self = this;
-        if (this.row_id) {
-            this.dataset.ids = [this.row_id];
-            this.dataset.index = 0;
-        } else {
-            this.dataset.index = null;
-        }
-        var options = _.clone(self.options.form_view_options) || {};
-        if (this.row_id !== null) {
-            options.initial_mode = this.options.readonly ? "view" : "edit";
-        }
-        _.extend(options, {
-            $buttons: this.$buttonpane,
-        });
-        var FormView = core.view_registry.get('form');
-        this.view_form = new FormView(this, this.dataset, this.options.view_id || false, options);
-        if (this.options.alternative_form_view) {
-            this.view_form.set_embedded_view(this.options.alternative_form_view);
-        }
-        this.view_form.appendTo(this.$(".oe_popup_form").show());
-        this.view_form.on("form_view_loaded", self, function() {
-            var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
-            self.$buttonpane.html(QWeb.render("AbstractFormPopup.buttons", {
-                multi_select: multi_select,
-                readonly: self.row_id !== null && self.options.readonly,
-            }));
-            var $snbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save-new");
-            $snbutton.click(function() {
-                $.when(self.view_form.save()).done(function() {
-                    self.view_form.reload_mutex.exec(function() {
-                        self.view_form.on_button_new();
-                    });
-                });
-            });
-            var $sbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save");
-            $sbutton.click(function() {
-                $.when(self.view_form.save()).done(function() {
-                    self.view_form.reload_mutex.exec(function() {
-                        self.check_exit();
-                    });
-                });
-            });
-            var $cbutton = self.$buttonpane.find(".oe_abstractformpopup-form-close");
-            $cbutton.click(function() {
-                self.view_form.trigger('on_button_cancel');
-                self.check_exit();
-            });
-            self.view_form.do_show();
-        });
-    },
-    select_elements: function(element_ids) {
-        this.trigger("elements_selected", element_ids);
-    },
-    check_exit: function(no_destroy) {
+
+    select: function() {
         if (this.created_elements.length > 0) {
-            this.select_elements(this.created_elements);
+            this.on_selected(this.created_elements);
             this.created_elements = [];
         }
-        this.trigger('closed');
-        this.destroy();
-    },
-    destroy: function () {
-        this.trigger('closed');
-        if (this.$el.is(":data(bs.modal)")) {
-            this.$el.parents('.modal').modal('hide');
-        }
-        this._super();
-    },
+    }
 });
 
 /**
- * Class to display a popup containing a form view.
+ * Create and edit dialog (displays a form view record and leave once saved)
  */
-var FormOpenPopup = AbstractFormPopup.extend({
-    show_element: function(model, row_id, context, options) {
-        this.init_popup(model, row_id, [], context,  options);
-        _.defaults(this.options, {
-        });
-        this.display_popup();
+var FormViewDialog = ViewDialog.extend({
+    init: function(parent, options) {
+        var self = this;
+
+        var multi_select = options.res_id === null && ! options.disable_multiple_selection;
+        var readonly = options.res_id !== null && options.readonly;
+
+        if(!options || !options.buttons) {
+            options = options || {};
+            options.buttons = [
+                {text: (readonly ? _t("Close") : _t("Discard")), classes: "btn-default o_form_button_cancel", close: true, click: function() {
+                    self.view_form.trigger('on_button_cancel');
+                }}
+            ];
+
+            if(!readonly) {
+                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? _t(" & Close") : ""), classes: "btn-primary", click: function() {
+                        $.when(self.view_form.save()).done(function() {
+                            self.view_form.reload_mutex.exec(function() {
+                                self.trigger('record_saved');
+                                self.close();
+                            });
+                        });
+                    }
+                });
+
+                if(multi_select) {
+                    options.buttons.splice(1, 0, {text: _t("Save & New"), classes: "btn-primary", click: function() {
+                        $.when(self.view_form.save()).done(function() {
+                            self.view_form.reload_mutex.exec(function() {
+                                self.view_form.on_button_new();
+                            });
+                        });
+                    }});
+                }
+            }
+        }
+
+        this._super(parent, options);
     },
-    start: function() {
-        this._super();
-        this.init_dataset();
-        this.setup_form_view();
+
+    open: function() {
+        var self = this;
+        self._super();
+        self.init_dataset();
+        
+        if (self.res_id) {
+            self.dataset.ids = [self.res_id];
+            self.dataset.index = 0;
+        } else {
+            self.dataset.index = null;
+        }
+        var options = _.clone(self.options.form_view_options) || {};
+        if (self.res_id !== null) {
+            options.initial_mode = self.options.readonly ? "view" : "edit";
+        }
+        _.extend(options, {
+            $buttons: self.$buttons,
+        });
+        var FormView = core.view_registry.get('form');
+        self.view_form = new FormView(self, self.dataset, self.options.view_id || false, options);
+        if (self.options.alternative_form_view) {
+            self.view_form.set_embedded_view(self.options.alternative_form_view);
+        }
+
+        self.$el.hide();
+        self.view_form.appendTo(self.$el);
+        self.view_form.on("form_view_loaded", self, function() {
+            self.view_form.do_show().then(function() {
+                self.$el.show();
+            });
+        });
+
+        return this;
     },
 });
 
 var SelectCreateListView = ListView.extend({
     do_add_record: function () {
-        this.popup.new_object();
+        this.popup.create_edit_record();
     },
     select_record: function(index) {
-        this.popup.select_elements([this.dataset.ids[index]]);
-        this.popup.destroy();
+        this.popup.on_selected([this.dataset.ids[index]]);
+        this.popup.close();
     },
     do_select: function(ids, records) {
         this._super(ids, records);
@@ -940,10 +929,9 @@ var SelectCreateListView = ListView.extend({
 });
 
 /**
- * Class to display a popup to display a list to search a row. It also allows
- * to switch to a form view to create a new row.
+ * Search dialog (displays a list of records and permits to create a new one by switching to a form view)
  */
-var SelectCreatePopup = AbstractFormPopup.extend({
+var SelectCreateDialog = ViewDialog.extend({
     /**
      * options:
      * - initial_ids
@@ -951,15 +939,15 @@ var SelectCreatePopup = AbstractFormPopup.extend({
      * - disable_multiple_selection
      * - list_view_options
      */
-    select_element: function(model, options, domain, context) {
-        this.init_popup(model, null, domain, context, options);
-        _.defaults(this.options, {
-            initial_view: "search",
-        });
+    init: function(parent, options) {
+        this._super(parent, options);
+
+        _.defaults(this.options, { initial_view: "search" });
         this.initial_ids = this.options.initial_ids;
-        this.display_popup();
     },
-    start: function() {
+    
+    open: function() {
+        this._super();
         this.init_dataset();
         if (this.options.initial_view == "search") {
             var context = pyeval.sync_eval_domains_and_contexts({
@@ -973,19 +961,21 @@ var SelectCreatePopup = AbstractFormPopup.extend({
                     search_defaults[match[1]] = value_;
                 }
             });
-            this.setup_search_view(search_defaults);
+            this.setup(search_defaults);
         } else { // "form"
-            this.new_object();
+            this.create_edit_record();
         }
+        return this;
     },
-    setup_search_view: function(search_defaults) {
+
+    setup: function(search_defaults) {
         var self = this;
         if (this.searchview) {
             this.searchview.destroy();
         }
-        var $buttons = this.$('.o-search-options');
-        this.searchview = new SearchView(this,
-                this.dataset, false,  search_defaults, {$buttons: $buttons});
+        var $header = $('<div/>').addClass('o_modal_header').appendTo(this.$el);
+        var $buttons = $('<div/>').addClass('o_search_options').appendTo($header);
+        this.searchview = new SearchView(this, this.dataset, false,  search_defaults, {$buttons: $buttons});
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -995,22 +985,22 @@ var SelectCreatePopup = AbstractFormPopup.extend({
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
-        this.searchview.appendTo(this.$(".o-popup-search")).done(function() {
+        this.searchview.prependTo($header).done(function() {
             self.searchview.toggle_visibility(true);
             self.view_list = new SelectCreateListView(self,
-                    self.dataset, false,
-                    _.extend({'deletable': false,
-                        'selectable': !self.options.disable_multiple_selection,
-                        'import_enabled': false,
-                        '$buttons': self.$buttonpane,
-                        'disable_editable_mode': true,
-                        '$pager': self.$('.oe_popup_list_pager'),
-                    }, self.options.list_view_options || {}));
+                self.dataset, false,
+                _.extend({'deletable': false,
+                    'selectable': !self.options.disable_multiple_selection,
+                    'import_enabled': false,
+                    '$buttons': self.$footer,
+                    'disable_editable_mode': true,
+                    '$pager': self.$('.o_popup_list_pager'),
+                }, self.options.list_view_options || {}));
             self.view_list.on('edit:before', self, function (e) {
                 e.cancel = true;
             });
             self.view_list.popup = self;
-            self.view_list.appendTo(self.$(".oe_popup_list").show()).then(function() {
+            self.view_list.appendTo(self.$el).then(function() {
                 self.view_list.do_show();
             }).then(function() {
                 if (self.options.initial_facet) {
@@ -1020,23 +1010,22 @@ var SelectCreatePopup = AbstractFormPopup.extend({
                 }
                 self.searchview.do_search();
             });
-            self.view_list.on("list_view_loaded", self, function() {
-                self.$buttonpane.html(QWeb.render("SelectCreatePopup.search.buttons", {widget:self}));
-                var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-close");
-                $cbutton.click(function() {
-                    self.destroy();
-                });
-                var $sbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-select");
-                $sbutton.click(function() {
-                    self.select_elements(self.selected_ids);
-                    self.destroy();
-                });
-                $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-create");
-                $cbutton.click(function() {
-                    self.new_object();
-                });
-            });
-        });        
+
+            var buttons = [
+                {text: _t("Cancel"), classes: "btn-default o_form_button_cancel", close: true}
+            ];
+            if(!self.options.no_create) {
+                buttons.splice(0, 0, {text: _t("Create"), classes: "btn-primary", click: function() {
+                    self.create_edit_record();
+                }});
+            }
+            if(!self.options.disable_multiple_selection) {
+                buttons.splice(0, 0, {text: _t("Select"), classes: "btn-primary o_selectcreatepopup_search_select", disabled: true, close: true, click: function() {
+                    self.on_selected(self.selected_ids);
+                }});
+            }
+            self.set_buttons(buttons);
+        });
     },
     do_search: function(domains, contexts, groupbys) {
         var results = pyeval.sync_eval_domains_and_contexts({
@@ -1047,43 +1036,35 @@ var SelectCreatePopup = AbstractFormPopup.extend({
         this.view_list.do_search(results.domain, results.context, results.group_by);
     },
     on_click_element: function(ids) {
-        var self = this;
         this.selected_ids = ids || [];
-        if(this.selected_ids.length > 0) {
-            self.$buttonpane.find(".oe_selectcreatepopup-search-select").removeAttr('disabled');
-        } else {
-            self.$buttonpane.find(".oe_selectcreatepopup-search-select").attr('disabled', "disabled");
-        }
+        this.$footer.find(".o_selectcreatepopup_search_select").prop('disabled', this.selected_ids.length <= 0);
     },
-    new_object: function() {
-        if (this.searchview) {
-            this.searchview.toggle_visibility(false);
-        }
-        if (this.view_list) {
-            this.view_list.do_hide();
-            this.view_list.$el.parent().hide();
-        }
-        this.setup_form_view();
+    create_edit_record: function() {
+        new FormViewDialog(this.getParent(), this.options).open();
+        this.close();
     },
 });
 
-var DomainEditorPopup = SelectCreatePopup.extend({
-    select_element: function (model, options, domain, context) {
+var DomainEditorDialog = SelectCreateDialog.extend({
+    init: function(parent, options) {
         if (options.readonly) {
-            return this._super(model, options, domain, context);
+            this._super(parent, options);
+            return;
         }
-        options.initial_facet = {
+        options = _.defaults(options, {initial_facet: {
             category: _t("Custom Filter"),
             icon: 'fa-star',
             field: {
-                get_context: function () { return context; },
+                get_context: function () { return options.context; },
                 get_groupby: function () { return []; },
-                get_domain: function () { return domain; },
+                get_domain: function () { return options.default_domain; },
             },
             values: [{label: _t("Selected domain"), value: null}],            
-        };
-        this._super(model, options, [], context);
+        }});
+
+        this._super(parent, options);
     },
+
     get_domain: function (selected_ids) {
         var group_domain = [],
             domain;
@@ -1125,11 +1106,11 @@ return {
     commands: commands,
     AbstractField: AbstractField,
 
-    // popup dialogs
-    AbstractFormPopup: AbstractFormPopup,
-    FormOpenPopup: FormOpenPopup,
-    SelectCreatePopup: SelectCreatePopup,
-    DomainEditorPopup: DomainEditorPopup,
+    // Dialogs
+    ViewDialog: ViewDialog,
+    FormViewDialog: FormViewDialog,
+    SelectCreateDialog: SelectCreateDialog,
+    DomainEditorDialog: DomainEditorDialog,
 };
 
 });

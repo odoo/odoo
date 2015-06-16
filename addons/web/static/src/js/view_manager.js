@@ -180,7 +180,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
 
         if (view.type === "form" && ((this.action && (this.action.target === 'new' || this.action.target === 'inline')) ||
             (view_options && view_options.mode === 'edit'))) {
-            options.initial_mode = 'edit';
+            options.initial_mode = options.initial_mode || 'edit';
         }
         var controller = new View(this, this.dataset, view.view_id, options);
         var $container = view.$container;

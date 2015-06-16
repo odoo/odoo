@@ -954,21 +954,6 @@ $sheet-padding: 16px
             min-height: 30px
 
         // }}}
-    // FormPopup {{{
-    .o-modal-header
-        > div
-            margin-left: 45%
-    .oe_popup_form 
-        display: none
-        .oe_formview .oe_form_pager
-            display: none !important
-        // Customize label weight for popup wizard appear from another wizard according bootstrap3
-        table label
-            font-weight: normal
-        // End of customize
-    .oe_popup_list_pager
-        float: right
-    // }}}
     // SearchView {{{
     .oe_searchview
         cursor: text
@@ -2627,41 +2612,6 @@ body.oe_single_form
 .ui-state-error .ui-icon, .ui-state-error-text .ui-icon
     background-image: url("/web/static/lib/jquery.ui/images/ui-icons_ffffff_256x240.png")
 // End jquery-ui override}}}
-
-// Customized modal according bootstrap3
-.modal
-    .modal-header button.close
-        border: none
-        background: none
-        padding: 1px
-        height: 18px
-        font-size: 20px
-    .modal-body
-        overflow: auto
-        padding: 0
-        .oe_application
-            width: 100%
-        .oe_popup_list
-            display: none
-            min-height: 150px
-        .oe-view-manager
-            min-height: 150px
-        .oe_form_sheetbg
-            .oe_form_sheet
-                padding: 0
-    .modal-footer
-        text-align: left
-    .oe_button
-        margin: 0 4px 0 0
-    .oe_act_window.modal-body
-        padding: 0
-    .oe-view-manager-content
-        position: static !important
-
-@media (min-width: 768px)
-    .modal .modal-body
-        max-height: -webkit-calc(100vh - 170px)
-        max-height: calc(100vh - 170px)
 
 .ui-datepicker
     z-index: 1500 !important

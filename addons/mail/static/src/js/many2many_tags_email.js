@@ -61,15 +61,12 @@ var FieldMany2ManyTagsEmail = form_relational.FieldMany2ManyTags.extend({
 
                 // unvalid partner
                 _.each(record_ids, function (id) {
-                    var pop = new form_common.FormOpenPopup(self);
-                    pop.show_element(
-                        'res.partner',
-                        id,
-                        self.build_context(),
-                        {
-                            title: _t("Please complete partner's informations and Email"),
-                        }
-                    );
+                    var pop = new form_common.FormViewDialog(self, {
+                        res_model: 'res.partner',
+                        res_id: id,
+                        context: self.build_context(),
+                        title: _t("Please complete partner's informations and Email"),
+                    }).open();
                     pop.on('write_completed', self, function () {
                         this.values.push(id);
                         this.values_checking = _.without(this.values_checking, id);

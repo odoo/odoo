@@ -131,12 +131,9 @@ if (core.debug) {
                     });
                 });
                 new Dialog(self, {
-                    title: _.str.sprintf(_t("Model %s fields"),
-                                         self.dataset.model),
-                    buttons: {
-                        Ok: function() { this.parents('.modal').modal('hide');}
-                    },
-                }, $root).open();
+                    title: _.str.sprintf(_t("Model %s fields"), self.dataset.model),
+                    $content: $root
+                }).open();
             });
         },
         fvg: function() {

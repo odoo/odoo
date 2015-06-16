@@ -7,11 +7,11 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 
-var ChangePassword = Widget.extend({
+var ChangePassword = Widget.extend({ // FIXME
     template: "ChangePassword",
     start: function() {
         var self = this;
-        this.getParent().dialog_title = _t("Change Password");
+        this.getParent().set_title(_t("Change Password"));
         var $button = self.$el.find('.oe_form_button');
         $button.appendTo(this.getParent().$buttons);
         $button.eq(2).click(function(){
@@ -34,10 +34,8 @@ var ChangePassword = Widget.extend({
         return new Dialog(this, {
             size: 'medium',
             title: error.title,
-            buttons: [
-                {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
-            ]
-        }, $('<div>').html(error.error)).open();
+            $content: $('<div>').html(error.error)
+        }).open();
     },
 });
 

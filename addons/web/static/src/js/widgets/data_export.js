@@ -12,7 +12,6 @@ var _t = core._t;
 
 var DataExport = Dialog.extend({
     template: 'ExportTreeView',
-    dialog_title: {toString: function () { return _t("Export Data"); }},
     events: {
         'click #add_field': function () {
             var self = this;
@@ -48,6 +47,7 @@ var DataExport = Dialog.extend({
         this.dataset = dataset;
         this.exports = new data.DataSetSearch(
             this, 'ir.exports', this.dataset.get_context());
+        this.set_title(_t("Export Data"));
     },
     start: function() {
         var self = this;

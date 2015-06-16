@@ -237,28 +237,20 @@ var GanttView = View.extend({
         this.dataset.write(itask.id, data);
     },
     on_task_display: function(task) {
-        var self = this;
-        var pop = new form_common.FormOpenPopup(self);
-        pop.on('write_completed',self,self.reload);
-        pop.show_element(
-            self.dataset.model,
-            task.id,
-            null,
-            {}
-        );
+        var pop = new form_common.FormViewDialog(this, {
+            res_model: this.dataset.model,
+            res_id: task.id,
+        }).open();
+        pop.on('write_completed', this, this.reload);
     },
     on_task_create: function() {
         var self = this;
-        var pop = new form_common.SelectCreatePopup(this);
-        pop.on("elements_selected", self, function() {
-            self.reload();
-        });
-        pop.select_element(
-            self.dataset.model,
-            {
-                initial_view: "form",
+        new form_common.FormViewDialog(this, {
+            res_model: self.dataset.model,
+            on_selected: function() {
+                self.reload();
             }
-        );
+        }).open();
     },
 });
 

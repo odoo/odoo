@@ -25,38 +25,30 @@
 </t>
 <t t-name="Dialog">
     <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+        <div class="modal-dialog">
+            <div class="modal-content openerp">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 class="modal-title"><t t-raw="title"/><span class="text-muted"><t t-esc="subtitle"/></span></h3>
+                    <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted"><t t-esc="subtitle"/></span></h4>
                 </div>
-                <div class="modal-body">
-                </div>
+                <div class="modal-body"/>
+                <div class="modal-footer"/>
             </div>
         </div>
     </div>
 </t>
 <t t-name="CrashManager.warning">
-    <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
-    <tr>
-        <td>
-            <p>
-                <t t-js="d">
-                    var message = d.message ? d.message : d.error.data.message;
-                    d.html_error = context.engine.tools.html_escape(message)
-                        .replace(/\n/g, '<br/>');
-                </t>
-                <t t-raw="html_error"/>
-            </p>
-        </td>
-    </tr>
-    </table>
+    <div class="o_dialog_warning">
+        <t t-js="d">
+            var message = d.message ? d.message : d.error.data.message;
+            d.html_error = context.engine.tools.html_escape(message).replace(/\n/g, '<br/>');
+        </t>
+        <t t-raw="html_error"/>
+    </div>
 </t>
 <t t-name="CrashManager.error">
-    <div class="oe_error_detail">
+    <div class="o_error_detail">
         <pre><t t-esc="error.message"/></pre>
-        <hr/>
         <pre><t t-esc="error.data.debug"/></pre>
     </div>
 </t>
@@ -330,7 +322,6 @@
             <tr>
                 <td colspan="2" align="right">
                     <button class='oe_button oe_form_button'>Change Password</button>
-                    <span class="oe_fade oe_form_button"> or </span>
                     <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
                 </td>
             </tr>
@@ -815,7 +806,7 @@
     <span class="oe_form_pager_state"></span>
 </t>
 <form t-name="FormView.set_default">
-    <t t-set="args" t-value="widget.dialog_options.args"/>
+    <t t-set="args" t-value="widget.args"/>
     <table style="width: 100%">
         <tr>
             <td>
@@ -1497,8 +1488,7 @@
     </div>
 </t>
 <t t-name="WidgetButton">
-    <span t-if="widget.pre_text"> <t t-esc="widget.pre_text"/> </span>
-    <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button ' + (widget.node.attrs.class ? widget.node.attrs.class : '')"
+    <button type="button" t-attf-class="btn btn-sm #{widget.node.attrs.class or ''}"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
@@ -1508,7 +1498,6 @@
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
         <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
-    <span t-if="widget.post_text"> <t t-esc="widget.post_text"/> </span>
 </t>
 <t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
     <t t-jquery="div.oe_tooltip_string" t-operation="replace">
@@ -1542,51 +1531,13 @@
     </t>
 </t>
 
-<t t-name="AbstractFormPopup.render">
-    <div>
-        <div class="o-modal-header">
-            <div class="o-popup-search"/>
-            <div class="o-search-options oe-search-options"/>
-            <div class="oe_popup_list_pager"/>
-        </div>
-        <div class="oe_popup_list"/>
-        <div class="oe_popup_form"/>
-    </div>
-</t>
-<t t-name="SelectCreatePopup.search.buttons">
-    <t t-if="! widget.options.disable_multiple_selection">
-        <button type="button" class="oe_button oe_selectcreatepopup-search-select oe_highlight" disabled="disabled">Select</button>
-    </t>
-    <t t-if="!widget.options.no_create">
-    <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
-    or </t><a class="oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
-</t>
-<t t-name="AbstractFormPopup.buttons">
-    <t t-if="! readonly">
-        <t t-if="! multi_select">
-            <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
-        </t>
-        <t t-if="multi_select">
-            <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
-            <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
-        </t>
-        or
-    </t>
-    <a class="oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">
-        <t t-if="! readonly">
-            Discard
-        </t>
-        <t t-if="readonly">
-            Close
-        </t>
-    </a>
-</t>
 
 <t t-name="One2Many.formview" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
         <button type="button" class="oe_button oe_form_button_create">Add</button>
     </t>
 </t>
+
 <t t-name="One2Many.listview" t-extend="ListView">
     <t t-jquery="thead > tr:first">
         this.removeAttr('t-if');

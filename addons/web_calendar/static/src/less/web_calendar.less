@@ -1,0 +1,147 @@
+
+.o_calendar_container {
+    @nb-calendar-colors: 24;
+
+    .calendar_color_loop(@index) when (@index < @nb-calendar-colors+1) {
+        .o_calendar_color_@{index} {
+            color: #0D0D0D;
+            background-color: spin(rgb(255, 192, 192), 360/(@nb-calendar-colors+1) * @index);
+            border-color:  spin(rgb(255, 192, 192), 360/(@nb-calendar-colors+1) * @index);
+            opacity: 0.7;
+        }
+        .calendar_color_loop(@index + 1);
+    }
+    .calendar_color_loop(1);
+
+    .underline_color_loop(@index) when (@index < @nb-calendar-colors+1) {
+        .o_underline_color_@{index} {
+            border-bottom: 4px solid spin(rgba(255, 192, 192, 0.7), 360/(@nb-calendar-colors+1) * @index);
+        }
+        .underline_color_loop(@index + 1);
+    }
+    .underline_color_loop(1);
+
+    .o_calendar_view {
+        padding: 8px;
+
+        .o_calendar_widget {
+            background-color: @odoo-view-background-color;
+            * {
+                z-index: 0; // FIXME
+            }
+            .fc-week-number, .fc-widget-header {
+                background-color: lighten(@odoo-brand-secondary, 30%);
+            }
+            .o_attendee_head {
+                float: right;
+                margin-left: 1px;
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+
+    .o_calendar_sidebar_container {
+        padding: 8px;
+        padding-left: 0;
+
+        .ui-datepicker {
+            width: 100%;
+            font-size: 8pt;
+            font-family: Roboto, "Nimbus Sans L";
+
+            .ui-widget-header {
+                background: none;
+                background-color: lighten(@odoo-brand-secondary, 30%);
+
+                .ui-corner-all {
+                    position: static;
+                    cursor: pointer;
+                    text-align: center;
+                    &:hover {
+                        color: @odoo-view-background-color;
+                        background: none;
+                        background-color: @odoo-brand-secondary;
+                        border: none;
+                        text-decoration: none;
+                    }
+                    .ui-icon {
+                        display: none;
+                    }
+                }
+                .ui-datepicker-prev {
+                    float: left;
+                    &::after {
+                        font-family: FontAwesome;
+                        content: "";
+                    }
+                }
+                .ui-datepicker-next {
+                    float: right;
+                    &::before {
+                        font-family: FontAwesome;
+                        content: "";
+                    }
+                }
+            }
+            table {
+                td {
+                    padding: 0 2px 2px 0;
+                    background-color: @odoo-view-background-color;
+                    a {
+                        border: none;
+                        background: none;
+                        background-color: lighten(@odoo-brand-secondary, 40%);
+                    }
+                }
+                .ui-state-default {
+                    color: @odoo-brand-primary;
+                    &:hover {
+                        background: none;
+                        background-color: fade(@odoo-brand-primary, 50%);
+                        border-color: @odoo-brand-primary;
+                        color: @odoo-view-background-color;
+                    };
+                }
+                .ui-state-active {
+                    background: none;
+                    background-color: @odoo-brand-primary;
+                    color: @odoo-view-background-color;
+                }
+            }
+        }
+        .o_calendar_filter {
+            padding: 8px;
+            background: @odoo-view-background-color;
+        }
+        .o_cal_avatar {
+            height: 24px;
+            width: 24px;
+        }
+    }
+}
+
+.o_calendar_invitation {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+
+    &.accepted {
+        background-color: @brand-success; // FIXME brand-success in green badge ...
+    }
+
+    &.needsAction {
+        background-color: @odoo-brand-secondary;
+    }
+}
+
+.o-dashboard {
+    .o_calendar_container .o_calendar_sidebar_container {
+        display: none;
+    }
+
+    .o_calendar_container .o_calendar_view {
+        width: 100%;
+    }
+}
