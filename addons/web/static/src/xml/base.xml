@@ -1166,12 +1166,10 @@
 </t>
 <t t-name="FieldCharDomain">
     <div class="oe_form_field">
-        <span class="oe_domain_count"/>
-        <button class="oe_button oe_link select_records" type="button"
-            t-att-style="widget.node.attrs.style"
-            t-att-accesskey="widget.node.attrs.accesskey">
-            <span class="fa fa-arrow-right"/>
-        </button>
+        <span class="o_count"/>
+        <button class="btn btn-link" type="button"
+            t-att-accesskey="widget.node.attrs.accesskey"/>
+        <input t-if="widget.debug" type="text" class="o_form_input o_debug_input"/>
     </div>
 </t>
 <t t-name="web.datepicker">

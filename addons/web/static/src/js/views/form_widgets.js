@@ -412,42 +412,58 @@ var FieldFloat = FieldChar.extend({
 });
 
 var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+    template: "FieldCharDomain",
+    events: {
+        'click button': 'on_click',
+        'change .o_debug_input': function(e) {
+            this.set('value', $(e.target).val());
+        }
+    },
+    init: function() {
+        this._super.apply(this, arguments);
+        this.debug = session.debug;
+    },
     render_value: function() {
         var self = this;
-        this.$el.html(QWeb.render("FieldCharDomain", {widget: this}));
+
         if (this.get('value')) {
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
             var domain = pyeval.eval('domain', this.get('value'));
             var ds = new data.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
-                $('.oe_domain_count', self.$el).text(results + ' records selected');
+                self.$('.o_count').text(results + ' selected records');
                 if (self.get('effective_readonly')) {
-                    $('button span', self.$el).text(' See selection');
+                    self.$('button').text('See selection ');
                 }
                 else {
-                    $('button span', self.$el).text(' Change selection');
+                    self.$('button').text('Change selection ');
                 }
+                self.$('button').append($("<span/>").addClass('fa fa-arrow-right'));
             });
+
+            if(this.debug) {
+                this.$('.o_debug_input').val(this.get('value'));
+            }
         } else {
-            $('.oe_domain_count', this.$el).text('0 record selected');
-            $('button span', this.$el).text(' Select records');
+            this.$('.o_count').text('No selected record');
+            var $arrow = this.$('button span').detach();
+            this.$('button').text('Select records ').append($("<span/>").addClass('fa fa-arrow-right'));
         }
-        this.$('.select_records').on('click', self.on_click);
     },
     on_click: function(event) {
         event.preventDefault();
-        var self = this;
 
-        new common.DomainEditorDialog(this, {
-            model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
-            domain: this.get('value'),
+        var self = this;
+        var dialog = new common.DomainEditorDialog(this, {
+            res_model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
+            default_domain: this.get('value'),
             title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
             readonly: this.get('effective_readonly'),
             disable_multiple_selection: this.get('effective_readonly'),
             no_create: this.get('effective_readonly'),
             on_selected: function(selected_ids) {
                 if (!self.get('effective_readonly')) {
-                    self.set_value(popup.get_domain(selected_ids));
+                    self.set_value(dialog.get_domain(selected_ids));
                 }
             }
         }).open();
