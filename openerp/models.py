@@ -3266,26 +3266,21 @@ class BaseModel(object):
         order_str = self._generate_order_by(None, query)
 
         # determine the fields that are stored as columns in tables;
-        # for the sake of simplicity, discard inherited translated fields
         fields = map(self._fields.get, field_names + inherited_field_names)
         fields_pre = [
             field
             for field in fields
             if field.base_field.column._classic_write
-            if not (field.inherited and field.base_field.column.translate)
         ]
 
         # the query may involve several tables: we need fully-qualified names
         def qualify(field):
             col = field.name
-            if field.inherited:
-                res = self._inherits_join_calc(field.name, query)
-            else:
-                res = '"%s"."%s"' % (self._table, col)
+            res = self._inherits_join_calc(field.name, query)
             if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
                 # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
-                res = 'pg_size_pretty(length(%s)::bigint) as "%s"' % (res, col)
-            return res
+                res = 'pg_size_pretty(length(%s)::bigint)' % res
+            return '%s as "%s"' % (res, col)
 
         qual_names = map(qualify, set(fields_pre + [self._fields['id']]))
 
@@ -3310,18 +3305,6 @@ class BaseModel(object):
         ids = [vals['id'] for vals in result]
 
         if ids:
-            # translate the fields if necessary
-            if context.get('lang'):
-                ir_translation = env['ir.translation']
-                for field in fields_pre:
-                    if not field.inherited and field.column.translate:
-                        f = field.name
-                        #TODO: optimize out of this loop
-                        res_trans = ir_translation._get_ids(
-                            '%s,%s' % (self._name, f), 'model', context['lang'], ids)
-                        for vals in result:
-                            vals[f] = res_trans.get(vals['id'], False) or vals[f]
-
             # apply the symbol_get functions of the fields we just read
             for field in fields_pre:
                 symbol_get = field.base_field.column._symbol_get
