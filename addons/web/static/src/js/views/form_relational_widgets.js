@@ -600,6 +600,14 @@ var AbstractManyField = common.AbstractField.extend({
     },
 
     /*
+    *@value: id {int or string} id or virtual id of the record to removes relation (unlink or delete function of field type)
+    *@return deferred
+    */
+    data_forget: function (id) {
+        return this.send_commands([COMMANDS.forget(id)]);
+    },
+
+    /*
     *@value: ids {array} list of ids or virtual ids of the record who replace the previous list
     *        options {object} options sent to the dataset
     *@return deferred
@@ -646,6 +654,8 @@ var AbstractManyField = common.AbstractField.extend({
                         });
                     case COMMANDS.UPDATE:
                         return dataset.write(command[1], command[2], options);
+                    case COMMANDS.FORGET:
+                        return dataset.remove_ids([command[1]]);
                     case COMMANDS.DELETE:
                         return dataset.unlink(command[1]);
                     case COMMANDS.LINK_TO:
