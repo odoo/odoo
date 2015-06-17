@@ -22,7 +22,11 @@ class wizard_price(osv.osv):
             context = {}
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context.')
-        res['info_field'] = str(product_pool.compute_price(cr, uid, [], template_ids=[product_obj.id], test=True, context=context))
+        computed_price = product_pool.compute_price(cr, uid, [], template_ids=[product_obj.id], test=True, context=context)
+        if product_obj.id in computed_price:
+            res['info_field'] = "%s: %s" % (product_obj.name, computed_price[product_obj.id]) 
+        else:
+            res['info_field'] = ""
         return res
 
     def compute_from_bom(self, cr, uid, ids, context=None):

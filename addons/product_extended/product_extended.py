@@ -20,7 +20,7 @@ class product_template(osv.osv):
             ids = product_ids
             model = 'product.product'
         else:
-            ids = template_ids
+            ids = template_ids or []
             model = 'product.template'
         for prod_id in ids:
             bom_obj = self.pool.get('mrp.bom')
