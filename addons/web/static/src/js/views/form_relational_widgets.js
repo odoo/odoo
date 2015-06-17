@@ -715,6 +715,11 @@ var AbstractManyField = common.AbstractField.extend({
             }
         });
         if ((!is_one2many || self.dataset.delete_all) && (replace_with_ids.length || starting_ids.length)) {
+            _.each(command_list, function (command) {
+                if (command[0] === COMMANDS.UPDATE) {
+                    replace_with_ids.push(command[1]);
+                }
+            });
             command_list.unshift(COMMANDS.replace_with(replace_with_ids));
         }
 
