@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <template id="account_planner">
+        <t t-call="web_planner.pages">
+            <t t-call="web_planner.page">
+                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <i><p>
+                    This guide will accompany you through the initial configuration of Odoo Accounting.
+                </p></i>
+                <p>Once you're done, you'll benefit from:</p>
+                <p>
+                    <ul>
+                        <li><strong>Reduced data entry:</strong> no need to manually create every invoice, register bank statements, follow-up payments, etc.</li>
+                        <li><strong>Clean customer invoices:</strong> easy to create, beautiful and fully featured invoices (payment terms, multiple taxes, discounts, etc).</li>
+                        <li><strong>Automated documents sending:</strong> automatically print, send and deliver your invoices &amp; letters by regular mail or email.</li>
+                        <li><strong>On-the-fly payment reconciliation:</strong> automatic suggestion of outstanding payments when creating an invoice.</li>
+                        <li><strong>Bank interface:</strong> your bank statements are automatically synchronized with your bank.</li>
+                    </ul>
+                </p>
+                <p>If you'd like some help on any subject dont hesitate to contact our Accounting experts by using the <span class="fa fa-question-circle"/> icon on the top bar.</p>
+                <img src="/web_planner/static/src/img/fabien_pinckaers.jpg" class="pull-left mb32"/>
+                <div class="pull-left ml8">
+                    <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                    <address>
+                        For the Odoo Team,<br/>
+                        Fabien Pinckaers, Founder
+                    </address>
+                </div>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Get started'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa fa-flag'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Company'"/>
+                    <p class="text-muted">
+                        This information will appear on your invoices and legals statements.
+                    </p>
+                    <p><strong>What we have so far:</strong></p>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Legal Name
+                                    </div>
+                                    <div class="col-md-8 bg-success" >
+                                        <p><t t-esc="company_id.name"/></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Postal address
+                                    </div>
+                                    <div class="col-md-8 bg-success">
+                                        <p><t t-esc="company_id.street"/></p><p><t t-esc="company_id.street2"/></p><p><t t-esc="company_id.city"/></p><p><t t-esc="company_id.state_id.name"/></p><p><t t-esc="company_id.zip"/></p><p><t t-esc="company_id.country_id.name"/></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Tax ID (VAT)
+                                    </div>
+                                    <div class="col-md-8 bg-warning">
+                                        <p><t t-esc="company_id.vat or 'Not defined'"/></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Base currency
+                                    </div>
+                                    <div class="col-md-8 bg-success">
+                                        <p><t t-esc="company_id.currency_id.symbol"/>(<t t-esc="company_id.display_name"/>)</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <span t-if="is_module_installed('sale')">Terms &amp; Conditions</span>
+                                    </div>
+                                    <div class="col-md-8 bg-success">
+                                        <p t-if="is_module_installed('sale')">&#10003;</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-offset-4 col-md-8">
+                                        <a id="review_payment_terms" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">Edit Company Infomation</a>
+                                        <br/><br/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Payment Terms
+                                    </div>
+                                    <div class="col-md-8 bg-success">
+                                        <t t-foreach="payment_term" t-as="term">
+                                            <p><t t-esc="term.name"/></p>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-offset-4 col-md-8">
+                                        <a id="review_payment_terms" t-att-href="prepare_backend_url('account.action_payment_term_form')">Review Payment Terms</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <a t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">
+                                    <img width="150" height="90" t-attf-src="data:image/gif;base64, #{company_id.logo}"/>
+                                    <p>Your Company's Logo</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <p> Odoo can manage multiple companies, but we suggest to setup everything for your first company before configuring the other ones.</p>
+                    </div>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Bank Accounts'"/>
+                    <ol>
+                        <p><li>Start by creating each bank account manually:</li></p>
+                        <a class="btn btn-sm odoo_purple" t-att-href="prepare_backend_url('account.action_bank_tree')">Create Bank Accounts</a>
+                        <p><li>Then, register your statements:</li></p>
+                        <ul>
+                            <li>By <a t-att-href="prepare_backend_url('account_bank_statement_import.action_account_bank_statement_import')">importing a statement file </a>(QIF, OFX, CODA or CSV format)</li>
+                            <li>By <a>connecting to your Bank </a>(US, Canada, NZ only)</li>
+                            <li>Manually, using our <a t-att-href="prepare_backend_url('account.action_bank_statement_tree')">fast recording interface</a></li>
+                        </ul>
+                    </ol>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <p>Before proceeding further, check that <a t-att-href="prepare_backend_url('account.action_account_config')">the code of your main bank account</a> is correct.</p>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Chart of Accounts'"/>
+                    <t t-if="not is_coa_installed">
+                        <p>Before continuing, you should install the Chart of Account related to your country (or the generic one if your country is not listed).</p>
+                        <a class="btn btn-sm odoo_purple" t-att-href="prepare_backend_url('account.open_account_charts_modules', 'kanban')">Install Chart of Account</a>
+                    </t>
+                    <t t-if="is_coa_installed">
+                        <p>A Chart of Accounts related to your country has been installed. You should review it and create any additionnal accounts now. It's recommended to not delete any accounts even if you don't need them for now.
+                        </p>
+                        <a class="btn btn-sm odoo_purple" t-att-href="prepare_backend_url('account.action_account_form')">Review Chart of Accounts</a>
+                    </t>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Taxes'"/>
+                    <p class="text-muted">
+                        Odoo has already preconfigured a few taxes according to your country.<br/>Simply review them and check if you need more.
+                    </p>
+                    <p>
+                        <strong>Check the Taxes configuration:</strong>
+                        <ul>
+                            <li><a t-att-href="prepare_backend_url('account.action_tax_form')">Review existing Taxes</a></li>
+                            <li><a t-att-href="prepare_backend_url('account.action_account_config')">Set the default Sales and Purchase taxes</a></li>
+                        </ul>
+                    </p>
+                    <p>
+                        To manage the tax applied when invoicing a Company, Odoo uses the concept of Fiscal Position: they serve to automatically set the right tax and/or account according to the customer country and state.
+                        <ul>
+                            <li><a t-att-href="prepare_backend_url('account.action_account_fiscal_position_form')">Review Fiscal Positions</a></li>
+                        </ul>
+                    </p>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <p>If you use the Sales app, you can also force a specific fiscal position by changing it directly on the  Sales Order or Contract.</p>
+                    </div>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Configure'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-cog'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Multi Currency'"/>
+                    <p class="text-muted">
+                        The multi-currency option allows you to send or receive documents (excluding expense claims) in currencies other than your own, to set up bank accounts in other currencies and run reports on your foreign currency activities.<br/>Note: it's important to configure multi-currency before balancing your Accounts.
+                    </p>
+                    <p>To use the <strong>multi-currency option:</strong>
+                        <ol>
+                            <li> Activate the corresponding option in the <a t-att-href="prepare_backend_url('account.action_account_config')">Accounting Settings</a></li>
+                            <li>Review the list of available currencies (from the Accounting Configuration menu)</li>
+                        </ol>
+                    </p>
+                    <!-- <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <p>Exchange rates are updated every day from <strong>XE.com</strong>. You can also <a href="#">update rates now</a>.</p>
+                    </div> -->
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Customers'"/>
+                    <p class="text-muted">
+                        Unless you are starting a new business, you probably have a list of Customers and Vendors you'd like to import into Odoo.
+                    </p>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-edit" />
+                                            <strong> Create manually</strong><br/>
+                                            <span class="small">One by one</span>
+                                        </span>
+                                    </div>
+                                     <div class="panel-body">
+                                        <ul>
+                                            <li><a t-att-href="prepare_backend_url('base.action_partner_customer_form', 'kanban')">Create Customer</a></li>
+                                            <li><a t-attf-href="/web#view_type=kanban&amp;model=res.partner&amp;menu_id=#{supplier_menu_id}">Create Vendor</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-copy" />
+                                            <strong> Use Importation</strong><br/>
+                                            <span class="small">from a CSV file</span>
+                                        </span>
+                                    </div>
+                                     <div class="panel-body">
+                                        <p>We can handle the whole importation process for you: simply send your Odoo Project Manager a CSV file containing all your data.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <p>You can also use our API to load data automatically through scripts: read the <a href="https://www.odoo.com/documentation/8.0/" target="_blank">Technical Documentation</a>.</p>
+                    </div>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Products'"/>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-edit" />
+                                            <strong> Create manually</strong><br/>
+                                            <span class="small">Each product one by one</span>
+                                        </span>
+                                    </div>
+                                     <div class="panel-body">
+                                        <ul>
+                                            <li><a t-att-href="prepare_backend_url('product.product_template_action', 'from')">Create Products</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-copy" />
+                                            <strong> Use Importation</strong><br/>
+                                            <span class="small">from a CSV file</span>
+                                        </span>
+                                    </div>
+                                     <div class="panel-body">
+                                        <p>We can handle the whole importation process for you: simply send your Odoo Project Manager a CSV file containing all your data.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <p>You can also use our API to load data automatically through scripts: read the <a href="https://www.odoo.com/documentation/8.0/" target="_blank">Technical Documentation</a>.</p>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Accounts Balance'"/>
+                    <p class="text-muted">
+                        To get a correct starting point in Odoo, enter your debit / credit for every accounts.
+                    </p>
+                    <p>
+                        <strong>Enter your Accounts Balances</strong>
+                        <ul>
+                            <li>In your old accounting software, print a Trial Balance</li>
+                            <li>In Odoo, <a t-att-href="prepare_backend_url('account.action_move_journal_line')">create a journal entry</a> with a debit and a credit for every account of your new Chart of Account</li>
+                        </ul>
+                    </p>
+                    <p>If you have a just starting your business, your opening balances are likely to all be zero.</p>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <p>Record all your debits and credits in your company currency (Odoo will compute the amount automatically for accounts that are in another currency).</p>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Outstanding Transactions'"/>
+                    <p class="text-muted">
+                        Registering outstanding invoices and payments can be a huge work, so you can start using Odoo without it, by:
+                        <ul>
+                            <li>Sending customer statements (outstanding invoices) manually during the transition period</li>
+                            <li>Registering payments related to outstanding invoices separately in a different account (e.g. Account Receivables 2014)</li>
+                        </ul>
+                    </p>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <div class="panel-title">
+                                            <strong>1. Register Outstanding Invoices</strong>
+                                        </div>
+                                     </div>
+                                     <div class="panel-body">
+                                        <p>First, register any outstanding customer invoices and vendor bills:</p>
+                                        <ul>
+                                            <li><a t-att-href="prepare_backend_url('account.action_invoice_tree1')">Customer Invoices</a></li>
+                                            <li><a t-att-href="prepare_backend_url('account.action_invoice_tree2')">Vendor Bills</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <div class="panel-title">
+                                            <strong>2. Register Unmatched Payments</strong>
+                                        </div>
+                                     </div>
+                                     <div class="panel-body">
+                                        <p>
+                                            Next, register any unmatched payments:<br/>
+                                            <ul>
+                                                <li><a t-att-href="prepare_backend_url('account.action_account_payments')">Register Payments</a></li>
+                                            </ul>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Extra Features'"/>
+                    <p class="text-muted">
+                        Odoo Accounting has many free extra-features:
+                    </p>
+                    <div class="container-fluid">
+                        <div class="row o_planner_row_apps">
+                            <div class="text-center col-md-4">
+                                <span class="fa fa-building-o fa-4x"></span>
+                                <h3><strong>Assets Management</strong></h3>
+                                <p>Manage your properties like buildings, machinery, materials, cars etc. and calculate their depreciations over time.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_asset')" class="btn odoo_purple">
+                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                </a>
+                            </div>
+                            <div class="text-center col-md-4">
+                                <span class="fa fa-tasks fa-4x"></span>
+                                <h3><strong>Revenue Recognition</strong></h3>
+                                <p>Use in combination with Contracts to calculate monthly revenues for multi-months Contracts.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_asset')"
+                                    class="btn odoo_purple">
+                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                </a>
+                            </div>
+                            <div class="text-center col-md-4">
+                                <span class="fa fa-university fa-4x"></span>
+                                <h3><strong>Deposit Tickets</strong></h3>
+                                <p>Simplify your cash, checks, or credit cards deposits with an integrated batch payment function.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_batch_deposit')"
+                                    class="btn odoo_purple">
+                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                </a><br/><br/><br/>
+                            </div>
+                            <div class="text-center col-md-4">
+                                <span class="fa fa-money fa-4x"></span>
+                                <h3><strong>Expenses</strong></h3>
+                                <p>Manage your employees expenses, from encoding to payment and reporting.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_expense')"
+                                    class="btn odoo_purple">
+                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                </a>
+                            </div>
+                            <div class="text-center col-md-4">
+                                <span class="fa fa-shopping-cart fa-4x"></span>
+                                <h3><strong>Purchases</strong></h3>
+                                <p>Validate purchase orders and control vendor bills by departments.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'purchase')"
+                                    class="btn odoo_purple">
+                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                </a>
+                            </div>
+                            <div class="text-center col-md-4">
+                                <span class="fa fa-copy fa-4x"></span>
+                                <h3><strong>Contracts &amp; Subscriptions</strong></h3>
+                                <p>Manage time &amp; material contracts or fixed-price recurring subscriptions.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_analytic_analysis')"
+                                    class="btn odoo_purple">
+                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Use'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-hand-o-up'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Invite Users'"/>
+                    <p>When inviting users, you need to define which access and rights they are allowed.<br/>This is done by attributing a role to each users.</p>
+                    <p><strong>There are 3 different roles in Odoo:</strong></p>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Billing</strong> (Limited access)
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <p>Use this role to manage only billing.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Advisor</strong> (Full access)
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <p>The manager has full access to the application plus miscellaneous operations like salary, assets...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Accountant</strong> (Advanced access)
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <p>
+                                            This role is suited for the day-to-day work of an accountant:
+                                            <ul>
+                                                <li>record invoices</li>
+                                                <li>manage bank feeds</li>
+                                                <li>reconcile entries</li>
+                                            </ul>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Next action:</strong><br/>
+                                <a t-att-href="prepare_backend_url('base.action_res_users')" class="btn odoo_purple">
+                                    <span class="fa"/> Invite Your User
+                                </a>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="alert alert-info info_icon" role="alert">
+                                    <span class="fa fa-lightbulb-o fa-lg"/>
+                                    <p>Don't share login details: if you do, you won't be able to maintain a reliable audit trail of access and data changes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Customer Flow'"/>
+                    <p><strong>Test these 3 customer flows to get familiar with Odoo:</strong></p>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Invoice payment by Wire Transfer</strong>
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <ol>
+                                            <li><strong>Create a Customer Invoice</strong></li><span>Usually generated from Contracts, but can also come from Sales Orders or Deliveries.</span>
+                                            <li><strong>Record Bank Statement (or import file)</strong></li><span>Depending on your volume of transactions, you should do this from once a week to several times a day.</span>
+                                            <li><strong>Reconcile Bank Statement</strong></li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Invoice payment by Check</strong>
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <ol>
+                                            <li><strong> Create a Customer Invoice</strong></li>
+                                            <li><strong>Record Check payment on the Invoice</strong></li><span>Simply click on the 'Pay' button.</span>
+                                            <li><strong>Create a Deposit Ticket with the check</strong></li>
+                                            <span>This allows you to record the different payments that constitute your bank deposit.(You may need to <a t-att-href="prepare_backend_url('account.action_account_config')">activate the feature</a> first)</span>
+                                            <li><strong>Record Bank Statement</strong></li>
+                                            <li><strong>Reconcile with existing transaction</strong></li>
+                                            <span>In this case, Odoo should automatically match the bank statement with the previously recorded check transaction.</span>
+                                        </ol>
+                                        <div class="alert alert-info info_icon" role="alert">
+                                            <span class="fa fa-lightbulb-o fa-lg"/>
+                                            <p>The Deposit Ticket module can also be used to settle credit card batch made of multiple transactions.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Customer follow-up</strong>
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <ol>
+                                            <li><strong>Reconcile Bank Statements</strong></li>
+                                            <li><strong>Check unpaid invoices</strong></li><span>Run an <a t-att-href="prepare_backend_url('account_reports.action_account_report_ar')">Aged Receivable report</a> and check which customers still owe you money.</span>
+                                            <li><strong>Send follow-up letters</strong></li>
+                                        </ol>
+                                        <div class="alert alert-info info_icon" role="alert">
+                                            <span class="fa fa-lightbulb-o fa-lg"/>
+                                            <p>You can setup Odoo to automatically sent by regular mail an Aged Receivable report to you customers, thanks to <a t-att-href="prepare_backend_url('print.print_provider_action','form','Docsaway')">DocsAway integration</a>.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Vendor Flow'"/>
+                    <p><strong>Here's the proper way to manage your vendors:</strong></p>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Encode your Bills</strong>
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <ol>
+                                            <li><strong>Create the bill in Odoo</strong> with a proper due date, and create the vendor if it doesnt' exist yet.</li>
+                                            <li><strong>Cash transactions</strong> (for which there is no invoice or bill), should be entered directly into your Cash Registers bank account.</li>
+                                            <li><strong>Validate the bill</strong> after encoding the products and taxes.</li>
+                                        </ol>
+                                        <div class="alert alert-info info_icon" role="alert">
+                                            <span class="fa fa-lightbulb-o fa-lg"/>
+                                            <ul>
+                                                <li>Vendor bills can also be generated from a purchase order or an incoming shipment (activate in <a t-att-href="prepare_backend_url('account.action_account_config')">Accounting Settings</a>)</li>
+                                                <li>If you keep the payment term and the due date empty, it means it's a direct payment.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Pay your bills</strong>
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <ol>
+                                            <li><strong>Mark the bills to pay</strong> Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer.</li>
+                                            <li><strong>Print checks</strong> From the Vendor Payments list, select those you want to pay and click on Print Check (you may first need to activate the check feature in the <a t-att-href="prepare_backend_url('account.action_account_config')">Accounting Settings</a>)</li>
+                                            <li><strong>Or generate payment orders</strong> Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear).</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <strong>Reconcile Bank Statements</strong>
+                                        </span>
+                                     </div>
+                                     <div class="panel-body">
+                                        <ol>
+                                            <li>Odoo should do most of the reconciliation work automatically, so you'll only need to review a few of them when a <strong>'Reconcile Items'</strong> button appears on your Vendor Bills dash.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'End'"/>
+                    <t t-set="hide_title" t-value="True"/>
+                    <t t-set="hide_from_menu" t-value="True"/>
+                    <t t-set="hide_mark_as_done" t-value="True"/>
+                    <h1 class="text-center o_planner_trophy" data-icon="&#xe006;" />
+                    <div class="text-center">
+                        <h1>Congratulations, you're done !</h1>
+                        <h3>We hope this planner helped you implement our accounting application.</h3>
+                        <h4>Don't hesitate to <a href="mailto:info@odoo.com?subject=Accounting%20Planner" target="_blank">send us an email</a> to describe<br/> your experience or to suggest improvements !</h4>
+                        <p><strong>-The Odoo Team</strong></p>
+                        <img src="/web_planner/static/src/img/odoo_logo.png"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!--Planner Data-->
+    <record id="planner_account" model="web.planner">
+        <field name="name">Account strategy planner</field>
+        <field name="view_id" ref="account_planner"/>
+        <field name="menu_id" ref="menu_finance"/>
+        <field name="planner_application">planner_account</field>
+        <field name="tooltip_planner"><![CDATA[
+            Accounting Configuration: a step-by-step guide.]]>
+        </field>
+    </record>
+
+</odoo>
