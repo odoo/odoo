@@ -230,8 +230,8 @@ Possible children elements of the list view are:
         Possible attributes are ``invisible`` (hides the button) and
         ``readonly`` (disables the button but still shows it)
     ``states``
-        shorthand for ``invisible`` ``attrs``: a list of space, separated
-        states, requires that the model has a ``state`` field and that it is
+        shorthand for ``invisible`` ``attrs``: a list of states, comma separated,
+        requires that the model has a ``state`` field and that it is
         used in the view.
 
         Makes the button ``invisible`` if the record is *not* in one of the
