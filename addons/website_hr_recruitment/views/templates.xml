@@ -152,7 +152,7 @@
                 <div class="row">
                     <section id="forms">
                         <!-- TODO Multilingual form action support ? -->
-                        <form class="form-horizontal mt32" action="/jobs/thankyou" method="post" enctype="multipart/form-data">
+                        <form class="form-horizontal mt32 js_website_submit_form" action="/jobs/thankyou" method="post" enctype="multipart/form-data">
                             <input type="hidden" t-att-value="job and job.department_id.id or False" name="department_id"/>
                             <input type="hidden" t-att-value="job and job.id or False" name="job_id"/>
                             <div t-attf-class="form-group #{error.get('partner_name') and 'has-error' or ''}">

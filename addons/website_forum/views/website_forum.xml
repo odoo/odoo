@@ -429,7 +429,7 @@
             We keep a high level of quality in showcased posts, around 20% of the submited
             posts will be featured.
         </p>
-        <form t-att-action="action_url" method="post" role="form" class="tag_text form-horizontal">
+        <form t-att-action="action_url" method="post" role="form" class="tag_text form-horizontal js_website_submit_form">
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <div class="form-group">
@@ -455,7 +455,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-8">
-                    <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
+                    <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                         t-att-data-karma="forum.karma_ask"
                         disabled="True" data-hashtags="#link" data-social-target-type="other">Post</button>
                 </div>
@@ -471,7 +471,7 @@
         <p>
             <b>Share</b> Something Awesome.
         </p>
-        <form t-attf-action="/forum/#{slug(forum)}/new?post_type=discussion" method="post" role="form" class="tag_text">
+        <form t-attf-action="/forum/#{slug(forum)}/new?post_type=discussion" method="post" role="form" class="tag_text js_website_submit_form">
             <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
                 class="form-control mb16" placeholder="Your Discussion Title..."/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
@@ -483,7 +483,7 @@
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
-            <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
+            <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                 t-att-data-karma="forum.karma_ask"
                 data-hashtags="#discussion" data-social-target-type="default">Post Your Topic</button>
         </form>
@@ -508,7 +508,7 @@
             <li>Avoid unnecessary introductions (Hi,... Please... Thanks...),</li>
             <li>Provide enough details and, if possible, give an example.</li>
         </ul>
-        <form t-attf-action="/forum/#{slug(forum)}/new?post_type=question" method="post" role="form" class="tag_text">
+        <form t-attf-action="/forum/#{slug(forum)}/new?post_type=question" method="post" role="form" class="tag_text js_website_submit_form">
             <input type="text" name="post_name" required="True" pattern=".*\S.*" t-attf-value="#{post_name}"
                 class="form-control mb16" placeholder="Your Question Title..." title="Title must not be empty"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
@@ -521,7 +521,7 @@
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
-            <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
+            <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                 t-att-data-karma="forum.karma_ask"
                 data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
         </form>
@@ -533,7 +533,7 @@
     <t t-call="website_forum.header">
         <h3 t-if="not is_answer">Edit <span t-field="post.post_type"/></h3>
         <h3 t-if="is_answer">Edit reply</h3>
-        <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text">
+        <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form">
             <div t-if="not is_answer">
                 <input type="text" name="post_name" required="True" pattern=".*\S.*" t-attf-value="#{post.name}"
                     class="form-control mb8" placeholder="Edit your Post" title="Title must not be empty"/>
@@ -551,7 +551,7 @@
                 <input type="text" name="post_tags" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags"/>
                 <br/>
             </div>
-            <button class="btn btn-primary btn-lg">Save</button>
+            <button type="submit" class="btn btn-primary btn-lg">Save</button>
         </form>
     </t>
 </template>
@@ -565,7 +565,7 @@
             users having a high karma can see closed posts to moderate
             them.
         </p>
-        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(question)}/close" method="post" role="form" class="form-horizontal mt32 mb64">
+        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(question)}/close" method="post" role="form" class="form-horizontal mt32 mb64 js_website_submit_form">
             <input name="post_id" t-att-value="question.id" type="hidden"/>
             <div class="form-group">
                 <label class="col-md-3 control-label" for="reason">Post:</label>
@@ -585,7 +585,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-8">
-                    <button class="btn btn-primary">Close post</button>
+                    <button type="submit" class="btn btn-primary">Close post</button>
                     <span class="text-muted">or</span>
                     <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">back to post</a>
                 </div>
@@ -597,13 +597,13 @@
 <!-- Edition: post a reply -->
 <template id="post_reply">
     <div class="css_editable_mode_hidden" groups="base.group_user">
-        <form t-attf-id="reply#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse"
+        <form t-attf-id="reply#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse js_website_submit_form"
             t-attf-action="/forum/#{ slug(forum) }/#{slug(object)}/reply" method="post" role="form">
             <h3 class="mt8">Your Reply</h3>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" t-attf-id="content-#{str(object.id)}" class="form-control load_editor" required="True"
                 t-att-data-karma="forum.karma_editor"/>
-            <button class="btn btn-primary mb16">Post Comment</button>
+            <button type="submit" class="btn btn-primary mb16">Post Comment</button>
         </form>
     </div>
 </template>
@@ -618,11 +618,11 @@
         - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
         - it really helps to select the best questions and answers!
     </p>
-    <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" role="form">
+    <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form" role="form">
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
         <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control load_editor" required="True"
                 t-att-data-karma="forum.karma_editor"/>
-        <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} mt16 #{not question.can_answer and 'karma_required' or ''}"
+        <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} mt16 #{not question.can_answer and 'karma_required' or ''}"
                 t-att-data-karma="question.forum_id.karma_answer"
                 data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
     </form>
@@ -923,7 +923,7 @@
                 </small>
             </div>
             <div class="css_editable_mode_hidden">
-                <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey"
+                <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey js_website_submit_form"
                         t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
                     <input name="post_id" t-att-value="object.id" type="hidden" class="mt8"/>
                     <textarea name="comment" class="form-control" placeholder="Comment this post..."/>
@@ -1077,7 +1077,7 @@
                 <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
             </div>
             <div class="col-md-10">
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
+            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form">
                 <input name="user_id" t-att-value="user.id" type="hidden"/>
                 <div class="form-group">
                     <label class="col-md-2 control-label mb16" for="user_name">Real name</label>
@@ -1134,7 +1134,7 @@
                     </div>
                 </div>
                 <div class="col-sm-offset-2 col-md-2 mb16">
-                    <button class="btn btn-primary btn-lg">Update</button>
+                    <button type="submit" class="btn btn-primary btn-lg">Update</button>
                 </div>
             </form>
             </div>
