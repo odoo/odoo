@@ -292,6 +292,7 @@ var KanbanView = View.extend({
         this.pager = new Pager(this, this.dataset.size(), 1, this.limit, options);
         this.pager.appendTo($node);
         this.pager.on('pager_changed', this, function (state) {
+            self.limit = state.limit;
             self.load_records(state.current_min - 1)
                 .then(function (data) {
                     self.data = data;
@@ -306,7 +307,7 @@ var KanbanView = View.extend({
             if (this.grouped) {
                 this.pager.do_hide();
             } else {
-                this.pager.set_state({size: this.dataset.size(), current_min: 1});
+                this.pager.update_state({size: this.dataset.size(), current_min: 1});
             }
         }
     },
