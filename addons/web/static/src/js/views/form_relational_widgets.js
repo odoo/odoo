@@ -1444,9 +1444,12 @@ var FieldMany2Many = AbstractManyField.extend(common.ReinitializeFieldMixin, {
     },
     render_value: function() {
         var self = this;
-        //this.dataset.set_ids(this.get('value') || []);
+        var time;
         this.render_value_dm.add(this.is_loaded).then(function() {
-            return self.list_view.reload_content();
+            clearTimeout(time);
+            time = setTimeout(function () {
+                self.list_view.reload_content();
+            }, 0);
         });
     }
 });

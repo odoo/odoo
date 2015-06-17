@@ -773,7 +773,7 @@ var BufferedDataSet = DataSetStatic.extend({
         $.extend(cached.values, _.extend({}, record.values, (options || {}).readonly_fields || {}));
         if (dirty)
             this.trigger("dataset_changed", id, data, options);
-        return $.Deferred().resolve(true).promise();
+        return $.Deferred().resolve(data).promise();
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
