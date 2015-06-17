@@ -172,6 +172,7 @@
               </p>
             </field>
         </record>
+
         <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="lunch_cashmove_menu_form" action="lunch_cashmove_action_account" sequence="3"/>
 
         <!--Action for Administrate Orders group by supplier-->
@@ -367,13 +368,29 @@
                         <field name='state' widget='statusbar' statusbar_visible='new,confirmed'/>
                     </header>
                     <sheet>
+                        <field name="balance_visible" invisible="1"/>
+                        <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|',('cash_move_balance', '&gt;', 0),('balance_visible', '=', False)]}">
+                            Warning : Your balance is insufficient.
+                        </div>
                         <group>
                             <group>
                                 <field name='user_id'
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'lunch.group_lunch_user']}"/>
+                                <field name='date'/>
                             </group>
                             <group>
-                                <field name='date'/>
+                                <div class="oe_button_box" name="button_box">
+                                    <button class="oe_stat_button"
+                                        attrs="{'invisible': [('balance_visible', '=', False)]}"
+                                        name="%(lunch_cashmove_action_account)d"
+                                        icon="fa-money"
+                                        type="action">
+                                        <div class="o_form_field o_stat_info">
+                                            <span class="o_stat_value"><field name="cash_move_balance" widget="monetary"/></span>
+                                            <span class="o_stat_text">Balance</span>
+                                        </div>
+                                    </button>
+                                </div>
                             </group>
                         </group>
                         <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger"/>
