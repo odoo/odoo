@@ -525,7 +525,11 @@ var AbstractManyField = common.AbstractField.extend({
     },
 
     _on_load_record: function (record) {
-        this.starting_ids =  record.id ? record[this.name].slice() : [];
+        this.starting_ids = [];
+        // don't set starting_ids for the new record
+        if (record.id && (!isNaN(record.id) || record.id.indexOf(this.dataset.virtual_id_prefix) === -1)) {
+            this.starting_ids =  record[this.name].slice();
+        }
     },
 
     set_value: function(ids) {
