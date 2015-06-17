@@ -802,11 +802,8 @@ class task(osv.osv):
         }
         defaults.update(custom_values)
         res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
-        new_task = self.browse(cr, uid, res, context=context)
-        if new_task.project_id and new_task.project_id.alias_name:  # check left-part is not already an alias
-            email_list = filter(lambda x: x.split('@')[0] != new_task.project_id.alias_name, email_list)
-        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, [], email_list, check_followers=False))
+        alias = self.browse(cr, uid, res, context=context).project_id.alias_name or False
+        partner_ids = self.pool['res.partner']._find_create_partner_from_mail(cr, uid, msg, alias, context=context)
         self.message_subscribe(cr, uid, [res], partner_ids, context=context)
         return res
 
@@ -828,6 +825,9 @@ class task(osv.osv):
                         update_vals[field] = float(res.group(2).lower())
                     except (ValueError, TypeError):
                         pass
+        alias = self.browse(cr, uid, ids, context=context).project_id.alias_name or False
+        partner_ids = self.pool['res.partner']._find_create_partner_from_mail(cr, uid, msg, alias, context=context)
+        self.message_subscribe(cr, uid, ids, partner_ids, context=context)
         return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):

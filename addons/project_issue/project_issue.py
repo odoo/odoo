@@ -385,7 +385,17 @@ class project_issue(osv.Model):
         }
         defaults.update(custom_values)
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        alias = self.browse(cr, uid, res_id, context=context).project_id.alias_name or False
+        partner_ids = self.pool['res.partner']._find_create_partner_from_mail(cr, uid, msg, alias, context=context)
+        self.message_subscribe(cr, uid, [res_id], partner_ids, context=context)
         return res_id
+
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Override to update the issue according to the email. """
+        alias = self.browse(cr, uid, ids, context=context).project_id.alias_name or False
+        partner_ids = self.pool['res.partner']._find_create_partner_from_mail(cr, uid, msg, alias, context=context)
+        self.message_subscribe(cr, uid, ids, partner_ids, context=context)
+        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     @api.cr_uid_ids_context
     @api.returns('mail.message', lambda value: value.id)

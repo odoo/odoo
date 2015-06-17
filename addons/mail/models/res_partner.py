@@ -172,3 +172,18 @@ class Partner(models.Model):
             emails.send()
 
         return True
+
+    def _find_create_partner_from_mail(self, cr, uid, msg_dict, alias=False, context=None):
+        """ Find partner from mail message and if partner is not available then create a new partner of email
+            :param dict msg_dict: a map containing the email details and attachments
+            :param string alias: The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>"""
+        email_data = msg_dict.get('from', '')
+        if msg_dict.get('cc'):
+            email_data += ',' + msg_dict.get('cc', '')
+        email_list = filter(lambda x: x.split('@')[0] != alias, tools.email_split(email_data))
+        name_email = dict(zip(email_list, email_data.split(',')))
+        partner_ids = self.search(cr, uid, [('email', 'in', email_list)], context=context)
+        emails = filter(lambda x: x not in map(lambda p: p.email, self.browse(cr, uid, partner_ids, context=context)), email_list)
+        for email in emails:
+            partner_ids += [self.name_create(cr, uid, name_email[email], context=context)[0]]
+        return partner_ids
