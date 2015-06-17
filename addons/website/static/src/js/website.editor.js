@@ -1863,6 +1863,9 @@ define(['summernote/summernote'], function () {
             $(document.body).trigger("media-saved", [self.active.media, self.old_media]);
             self.trigger("saved", [self.active.media, self.old_media]);
             setTimeout(function () {
+                if (!self.active.media.parentNode) {
+                    return;
+                }
                 range.createFromNode(self.active.media).select();
                 click_event(self.active.media, "mousedown");
                 if (!this.only_images) {
