@@ -594,7 +594,7 @@
                     </li>
                 </ul>
                 <div class="css_editable_mode_hidden">
-                    <form id="comment" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
+                    <form id="comment" class="js_website_submit_form" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
                         <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>

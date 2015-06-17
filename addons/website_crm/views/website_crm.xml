@@ -4,7 +4,7 @@
 
 <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
     <xpath expr="//div[@name='mail_button']" position="replace">
-        <form action="/crm/contactus" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+        <form action="/crm/contactus" method="post" class="form-horizontal mt32 js_website_submit_form" enctype="multipart/form-data">
             <div t-attf-class="form-group #{error and 'contact_name' in error and 'has-error' or ''}">
                 <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
                 <div class="col-md-7 col-sm-8">
@@ -41,7 +41,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                    <button class="btn btn-primary btn-lg">Send</button>
+                    <button type="submit" class="btn btn-primary btn-lg">Send</button>
                 </div>
             </div>
         </form>
