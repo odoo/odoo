@@ -207,15 +207,24 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     load_currencies: function() {
         this.currencies = {};
         var self = this;
-        return new openerp.web.Model("res.currency").query(["symbol", "position", "decimal_places"]).all()
+        return new openerp.web.Model("res.currency").query(["symbol", "decimal_places"]).all()
                 .then(function(value) {
-                    _.each(value, function(k){
-                        self.currencies[k.id] = {'symbol': k.symbol, 'position': k.position, 'digits': [69,k.decimal_places]};
+                    self.load_position().then(function(res) {
+                        _.each(value, function(k){
+                            self.currencies[k.id] = {'symbol': k.symbol, 'position': res[0]['position'], 'digits': [69,k.decimal_places]};
+                        });
                     });
                 });
     },
     load_translations: function() {
         return _t.database.load_translations(this, this.module_list, this.user_context.lang);
+    },
+    load_position: function() {
+        var self = this;
+        return new openerp.web.Model("res.lang").query(["position"]).filter([["code", "=", self.user_context.lang]]).all()
+            .then(function(res) {
+                return res;
+            });
     },
     load_css: function (files) {
         var self = this;

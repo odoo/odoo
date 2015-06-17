@@ -64,11 +64,9 @@ class res_currency(osv.osv):
         'rounding': fields.float('Rounding Factor', digits=(12,6)),
         'decimal_places': fields.function(_decimal_places, string='Decimal Places', type='integer'),
         'active': fields.boolean('Active'),
-        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': 1,
-        'position' : 'after',
         'rounding': 0.01,
     }
     _sql_constraints = [

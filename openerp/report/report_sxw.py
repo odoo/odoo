@@ -224,9 +224,9 @@ class rml_parse(object):
 
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
         if currency_obj:
-            if currency_obj.position == 'after':
+            if self.lang_dict['lang_obj'].position == 'after':
                 res = u'%s\N{NO-BREAK SPACE}%s' % (res, currency_obj.symbol)
-            elif currency_obj and currency_obj.position == 'before':
+            elif currency_obj and self.lang_dict['lang_obj'].position == 'before':
                 res = u'%s\N{NO-BREAK SPACE}%s' % (currency_obj.symbol, res)
         return res
 

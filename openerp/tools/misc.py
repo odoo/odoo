@@ -1154,7 +1154,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, (str, unicode)) and not value:
         return ''
 
-    lang = env.user.company_id.partner_id.lang or 'en_US'
+    lang = env.user.company_id.partner_id.lang or env.user.lang or 'en_US'
     lang_objs = env['res.lang'].search([('code', '=', lang)])
     if not lang_objs:
         lang_objs = env['res.lang'].search([('code', '=', 'en_US')])
@@ -1163,8 +1163,8 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
     if currency_obj:
-        if currency_obj.position == 'after':
+        if lang_objs.position == 'after':
             res = '%s %s' % (res, currency_obj.symbol)
-        elif currency_obj and currency_obj.position == 'before':
+        elif currency_obj and lang_objs.position == 'before':
             res = '%s %s' % (currency_obj.symbol, res)
     return res

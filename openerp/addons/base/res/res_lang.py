@@ -125,6 +125,21 @@ class lang(osv.osv):
     def _get_default_time_format(self, cursor, user, context=None):
         return '%H:%M:%S'
 
+    def _compute_position(self, cr, uid, ids, name, arg, context=None):
+        current_user_id = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        lang_code = current_user_id.lang
+        current_lang_id = self.search(cr, uid, [('code', '=', current_user_id.lang)], context=context)
+        current_lang_obj = self.browse(cr, uid, current_lang_id, context=context)
+        if current_lang_obj.translatable:
+            lang_code = lang_code + '.utf8'
+        locale.setlocale(locale.LC_ALL, str(lang_code))
+        result = {}
+        if (locale.nl_langinfo(locale.CRNCYSTR)[0] == '-'):
+            result[current_lang_id[0]] = 'before'
+        else:
+            result[current_lang_id[0]] = 'after'
+        return result
+
     _columns = {
         'name': fields.char('Name', required=True),
         'code': fields.char('Locale Code', size=16, required=True, help='This field is used to set/get locales for user'),
@@ -137,6 +152,8 @@ class lang(osv.osv):
         'grouping':fields.char('Separator Format', required=True,help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),
         'decimal_point':fields.char('Decimal Separator', required=True),
         'thousands_sep':fields.char('Thousands Separator'),
+        'position': fields.function(_compute_position, type='char', string='Symbol Position', store={'res.users': (lambda self, cr, uid, ids, c={}: ids, ['lang'], 10)}, help="Determines where the currency symbol should be placed after or before the amount.")
+
     }
     _defaults = {
         'active': 1,
@@ -147,6 +164,7 @@ class lang(osv.osv):
         'grouping': '[]',
         'decimal_point': '.',
         'thousands_sep': ',',
+        'position': 'before',
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),
