@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Carriers & Shipping Providers',
-    'version': '2.0',
-    'category': 'Sales Management',
+    'name': 'Carrier Grid',
+    'version': '1.0',
+    'category': 'Technical Features',
     'description': """
 Allows you to add delivery methods in sale orders and picking
 =============================================================
@@ -18,18 +18,12 @@ Send your packages through the main shipping providers, get the price,
 the shipping slip and the tracking number of your packages.
 """,
     'author': 'Odoo SA',
-    'depends': ['sale_stock'],
+    'depends': ['delivery'],
     'data': [
-        'security/ir.model.access.csv',
-        'delivery_view.xml',
-        'views/res_partner_view.xml',
-        'delivery_data.xml',
-        'views/report_shipping.xml',
     ],
-    'demo': ['delivery_demo.xml',
-             'demo/delivery_carrier_demo.xml'],
-    'test': ['test/delivery_cost.yml',
-             'test/stock_move_values_with_invoice_before_delivery.yml',
-             ],
+    'demo': [
+    ],
+    'test': [
+    ],
     'installable': True,
 }

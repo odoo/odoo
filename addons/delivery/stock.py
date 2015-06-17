@@ -86,12 +86,11 @@ class stock_picking(osv.osv):
             any(inv_line.product_id.id == picking.carrier_id.product_id.id
                 for inv_line in invoice.invoice_line):
             return None
-        grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
-                picking.partner_id.id, context=context)
-        if not grid_id:
+        grid = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id], picking.partner_id, context=context)
+        if not grid:
             raise UserError(_('The carrier %s (id: %d) has no delivery grid!') % (picking.carrier_id.name,picking.carrier_id.id))
         quantity = sum([line.product_uom_qty for line in picking.move_lines])
-        price = grid_obj.get_price_from_picking(cr, uid, grid_id,
+        price = grid_obj.get_price_from_picking(cr, uid, grid_id.id,
                 invoice.amount_untaxed, picking.weight, picking.volume,
                 quantity, context=context)
         account_id = picking.carrier_id.product_id.property_account_income.id

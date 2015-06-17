@@ -30,6 +30,7 @@
             <field name="product_id" ref="product_product_delivery"/>
         </record>
 
+        <!-- TODO remove this crap?  -->
         <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
             <field name="name">property_delivery_carrier</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier')]"/>

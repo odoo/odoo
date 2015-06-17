@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="delivery.carrier" id="delivery_carrier_dummy">
+        <field name="name">Dummy Provider</field>
+        <field name="normal_price">0.0</field>
+        <field name="partner_id" ref="delivery.res_partner_delivery"/>
+        <field name="product_id" ref="delivery.product_product_delivery"/>
+        <field name="delivery_type">dummy</field>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

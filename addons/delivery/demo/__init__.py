@@ -1,7 +1,3 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import delivery
-import sale
-import stock
-import models
-import demo
+import delivery_carrier_demo
