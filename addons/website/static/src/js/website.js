@@ -380,6 +380,13 @@ dom_ready.then(function () {
         init_kanban(this);
     });
 
+    $('.js_website_submit_form').on('submit', function() {
+        var $buttons = $(this).find('button[type="submit"], a.a-submit');
+        _.each($buttons, function(btn) {
+            $(btn).attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text()).button('loading');
+        });
+    });
+
     setTimeout(function () {
         if (window.location.hash.indexOf("scrollTop=") > -1) {
             window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];

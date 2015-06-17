@@ -205,7 +205,7 @@
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
                       <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
-                          <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content">
+                          <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content js_website_submit_form">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                               <h4 class="modal-title">Validate Order</h4>
@@ -281,7 +281,7 @@
               <h1 class="page-header">History</h1>
               <!-- Options:Quotation Chatter: user can reply -->
               <section class="mb32 css_editable_mode_hidden hidden-print">
-                  <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
+                  <form id="comment" class="js_website_submit_form" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
                       <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                       <div class="pull-left mb32" style="width: 75%%">
                           <textarea rows="4" name="comment" class="form-control" placeholder="Send us a note..."></textarea>
