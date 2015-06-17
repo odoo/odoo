@@ -414,31 +414,26 @@ class module(osv.osv):
 
         return demo
 
-    def button_install(self, cr, uid, ids, context=None):
+    @api.multi
+    def button_install(self):
+        # domain to select auto-installable (but not yet installed) modules
+        auto_domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
 
-        # Mark the given modules to be installed.
-        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context=context)
+        # determine whether an auto-install module must be installed:
+        #  - all its dependencies are installed or to be installed,
+        #  - at least one dependency is 'to install'
+        install_states = frozenset(('installed', 'to install', 'to upgrade'))
+        def must_install(module):
+            states = set(dep.state for dep in module.dependencies_id)
+            return states <= install_states and 'to install' in states
 
-        # Mark (recursively) the newly satisfied modules to also be installed
+        modules = self
+        while modules:
+            # Mark the given modules and their dependencies to be installed.
+            modules.state_update('to install', ['uninstalled'])
 
-        # Select all auto-installable (but not yet installed) modules.
-        domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
-        uninstalled_ids = self.search(cr, uid, domain, context=context)
-        uninstalled_modules = self.browse(cr, uid, uninstalled_ids, context=context)
-
-        # Keep those with:
-        #  - all dependencies satisfied (installed or to be installed),
-        #  - at least one dependency being 'to install'
-        satisfied_states = frozenset(('installed', 'to install', 'to upgrade'))
-        def all_depencies_satisfied(m):
-            states = set(d.state for d in m.dependencies_id)
-            return states.issubset(satisfied_states) and ('to install' in states)
-        to_install_modules = filter(all_depencies_satisfied, uninstalled_modules)
-        to_install_ids = map(lambda m: m.id, to_install_modules)
-
-        # Mark them to be installed.
-        if to_install_ids:
-            self.button_install(cr, uid, to_install_ids, context=context)
+            # Determine which auto-installable modules must be installed.
+            modules = self.search(auto_domain).filtered(must_install)
 
         return dict(ACTION_DICT, name=_('Install'))
 
