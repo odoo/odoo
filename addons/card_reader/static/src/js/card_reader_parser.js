@@ -396,80 +396,87 @@ PaymentScreenWidget.include({
 
         var mercury_transaction = new Model('card_reader.mercury_transaction');
         mercury_transaction.call('do_payment', [transaction], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
-                    // if not receiving a response from Mercury, we should retry
-                    if (data === "timeout") {
-                        self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
-                        return;
-                    }
+            // if not receiving a response from Mercury, we should retry
+            if (data === "timeout") {
+                self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+                return;
+            }
 
-                    var response = decodeMercuryResponse(data);
-                    response.journal_id = parsed_result.journal_id;
-
-                    if (response.status === 'Approved') {
-                        // AP* indicates a duplicate request, so don't add anything for those
-                        if (response.message === "AP*" && self._does_credit_payment_line_exist(response.authorize, decodedMagtek['number'],
-                                                                                               response.card_type, decodedMagtek['name'])) {
-                            def.resolve({
-                                message: lookUpCodeTransaction["Approved"][response.error],
-                                auto_close: true,
-                            });
-                        } else {
-                            // If the payment is approved, add a payment line
-                            var order = self.pos.get_order();
-
-                            if (swipe_pending_line) {
-                                order.select_paymentline(swipe_pending_line);
-                            } else {
-                                order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
-                            }
-
-                            order.selected_paymentline.swipe_pending = false;
-                            order.selected_paymentline.paid = true;
-                            order.selected_paymentline.amount = response.authorize;
-                            order.selected_paymentline.card_number = decodedMagtek['number'];
-                            order.selected_paymentline.card_brand = response.card_type;
-                            order.selected_paymentline.card_owner_name = decodedMagtek['name'];
-                            order.selected_paymentline.ref_no = response.ref_no;
-                            order.selected_paymentline.record_no = response.record_no;
-                            order.selected_paymentline.invoice_no = response.invoice_no;
-                            order.selected_paymentline.mercury_data = response; // used to reverse transactions
-                            order.selected_paymentline.set_credit_card_name();
-
-                            self.order_changes();
-                            self.reset_input();
-                            self.render_paymentlines();
-                            order.trigger('change', order); // needed so that export_to_JSON gets triggered
-
-                            if (response.message === "PARTIAL AP") {
-                                def.resolve({
-                                    message: _t("Partially approved"),
-                                    auto_close: false,
-                                });
-                            } else {
-                                def.resolve({
-                                    message: lookUpCodeTransaction["Approved"][response.error],
-                                    auto_close: true,
-                                });
-                            }
-                        }
-                    }
-
-                    // if an error related to timeout or connectivity issues arised, then retry the same transaction
-                    else {
-                        if (lookUpCodeTransaction["TimeoutError"][response.error]) { // recoverable error
-                            self.retry_mercury_transaction(def, response, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
-                        } else { // not recoverable
-                            def.resolve({
-                                message: "Error " + response.error + ":<br/>" + response.message,
-                                auto_close: false
-                            });
-                        }
-                    }
-
-                }).fail(function (error, event) {
-                    event.preventDefault();
-                    self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+            if (data === "not setup") {
+                def.resolve({
+                    message: _t("Please setup your Mercury merchant account.")
                 });
+                return;
+            }
+
+            var response = decodeMercuryResponse(data);
+            response.journal_id = parsed_result.journal_id;
+
+            if (response.status === 'Approved') {
+                // AP* indicates a duplicate request, so don't add anything for those
+                if (response.message === "AP*" && self._does_credit_payment_line_exist(response.authorize, decodedMagtek['number'],
+                                                                                       response.card_type, decodedMagtek['name'])) {
+                    def.resolve({
+                        message: lookUpCodeTransaction["Approved"][response.error],
+                        auto_close: true,
+                    });
+                } else {
+                    // If the payment is approved, add a payment line
+                    var order = self.pos.get_order();
+
+                    if (swipe_pending_line) {
+                        order.select_paymentline(swipe_pending_line);
+                    } else {
+                        order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
+                    }
+
+                    order.selected_paymentline.swipe_pending = false;
+                    order.selected_paymentline.paid = true;
+                    order.selected_paymentline.amount = response.authorize;
+                    order.selected_paymentline.card_number = decodedMagtek['number'];
+                    order.selected_paymentline.card_brand = response.card_type;
+                    order.selected_paymentline.card_owner_name = decodedMagtek['name'];
+                    order.selected_paymentline.ref_no = response.ref_no;
+                    order.selected_paymentline.record_no = response.record_no;
+                    order.selected_paymentline.invoice_no = response.invoice_no;
+                    order.selected_paymentline.mercury_data = response; // used to reverse transactions
+                    order.selected_paymentline.set_credit_card_name();
+
+                    self.order_changes();
+                    self.reset_input();
+                    self.render_paymentlines();
+                    order.trigger('change', order); // needed so that export_to_JSON gets triggered
+
+                    if (response.message === "PARTIAL AP") {
+                        def.resolve({
+                            message: _t("Partially approved"),
+                            auto_close: false,
+                        });
+                    } else {
+                        def.resolve({
+                            message: lookUpCodeTransaction["Approved"][response.error],
+                            auto_close: true,
+                        });
+                    }
+                }
+            }
+
+            // if an error related to timeout or connectivity issues arised, then retry the same transaction
+            else {
+                if (lookUpCodeTransaction["TimeoutError"][response.error]) { // recoverable error
+                    self.retry_mercury_transaction(def, response, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+                } else { // not recoverable
+                    def.resolve({
+                        message: "Error " + response.error + ":<br/>" + response.message,
+                        auto_close: false
+                    });
+                }
+            }
+
+        }).fail(function (error, event) {
+            event.preventDefault();
+            self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+        });
     },
 
     credit_code_cancel: function () {

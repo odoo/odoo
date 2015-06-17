@@ -1,6 +1,5 @@
 import logging
 import sets
-import time
 
 from openerp import models, fields, api
 
@@ -23,9 +22,6 @@ class card_reader_payment_data(models.Model):
     # FIELDS #
     merchant_id = fields.Char(string='Merchant ID', size=24, required=True, help='Id of the merchant to authenticate him on the payment provider server')
     merchant_pwd = fields.Char(string='Merchant Password', required=True, help='Password of the merchant to authenticate him on the payment provider server')
-    payment_server = fields.Char(string='Payment Server', required=True, help='the URL the payment provider server')  # todo jov
-    url_base_action = fields.Char(string='Base Action URL', required=True, help='the URL of the SOAP action')  # todo jov
-
 
 class account_bank_statement_line(models.Model):
     _inherit = "account.bank.statement.line"

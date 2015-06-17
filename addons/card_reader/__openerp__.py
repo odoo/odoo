@@ -28,6 +28,9 @@ following:
         'views/mercury_transactions.xml',
         'views/card_reader_config.xml',
     ],
+    'demo': [
+        'data/card_reader_demo.xml',
+    ],
     'qweb': [
         'static/src/xml/templates.xml',
     ],

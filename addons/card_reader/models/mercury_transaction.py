@@ -6,9 +6,6 @@ from datetime import datetime, timedelta
 from openerp import models, api, service
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
-soap_header = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com"><soapenv:Header/><soapenv:Body><mer:CreditTransaction><mer:tran>'
-soap_footer = '</mer:tran><mer:pw>xyz</mer:pw></mer:CreditTransaction></soapenv:Body></soapenv:Envelope>'
-
 class MercuryTransaction(models.Model):
     _name = 'card_reader.mercury_transaction'
 
@@ -48,25 +45,29 @@ class MercuryTransaction(models.Model):
         if not card_reader_config:
             return 0
 
-        data['url_base_action'] = card_reader_config.url_base_action
-        data['payment_server'] = card_reader_config.payment_server
-        data['merchant_pwd'] = card_reader_config.merchant_pwd
         data['operator_id'] = pos_session.user_id.login
         data['merchant_id'] = card_reader_config.merchant_id
+        data['merchant_pwd'] = card_reader_config.merchant_pwd
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
         xml_transaction = self.env.ref(template).render(data)
+
+        if not data['merchant_id'] or not data['merchant_pwd']:
+            return "not setup"
+
+        soap_header = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com"><soapenv:Header/><soapenv:Body><mer:CreditTransaction><mer:tran>'
+        soap_footer = '</mer:tran><mer:pw>' + data['merchant_pwd'] + '</mer:pw></mer:CreditTransaction></soapenv:Body></soapenv:Envelope>'
         xml_transaction = soap_header + cgi.escape(xml_transaction) + soap_footer
 
         response = ''
 
         headers = {
             'Content-Type': 'text/xml',
-            'SOAPAction': data['url_base_action'] + '/CreditTransaction',
+            'SOAPAction': 'http://www.mercurypay.com/CreditTransaction',
         }
 
-        r = urllib2.Request(data['payment_server'], data=xml_transaction, headers=headers)
+        r = urllib2.Request('https://w1.mercurypay.com/ws/ws.asmx', data=xml_transaction, headers=headers)
         try:
             u = urllib2.urlopen(r, timeout=65)
             response = self._unescape_html(u.read())

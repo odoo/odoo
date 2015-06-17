@@ -11,10 +11,7 @@
                         <group col="2">
                             <field name="merchant_id" />
                             <field name="merchant_pwd" />
-                            <field name="payment_server" />
-                            <field name="url_base_action" />
                         </group>
-
                     </sheet>
                 </form>
             </field>
@@ -24,8 +21,7 @@
             <field name="name">Card Readers</field>
             <field name="model">card_reader.configuration</field>
             <field name="arch" type="xml">
-                <tree string="Barcode Nomenclatures">
-                    <field name="payment_server" />
+                <tree string="Card Reader">
                     <field name="merchant_id" />
                 </tree>
             </field>
