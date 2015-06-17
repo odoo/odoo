@@ -220,6 +220,16 @@
             </field>
         </record>
 
+        <record id='payment_method_search_view' model='ir.ui.view'>
+            <field name='name'>payment.method.search</field>
+            <field name='model'>payment.method</field>
+            <field name='arch' type='xml'>
+                <search string='Payment Methods'>
+                    <field name='partner_id'/>
+                </search>
+            </field>
+        </record>
+
         <record model='ir.actions.act_window' id='payment_method_act'>
             <field name='name'>Saved Payment Data</field>
             <field name='res_model'>payment.method</field>

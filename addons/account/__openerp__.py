@@ -32,7 +32,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_invoice_refund_view.xml',
         'wizard/account_validate_move_view.xml',
         'wizard/account_invoice_state_view.xml',
-        'wizard/account_log_followup_note_view.xml',
         'wizard/pos_box.xml',
         'views/account_end_fy.xml',
         'views/account_invoice_view.xml',

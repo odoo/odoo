@@ -8,17 +8,19 @@
                 <field name="model">res.partner</field>
                 <field name="inherit_id" ref="base.view_partner_form"/>
                 <field name="arch" type="xml">
-                    <xpath expr='//group[@name="purchase"]' position="after">
-                        <group string="Payment Methods" colspan="2">
-                            <field name="payment_method_ids" groups="base.group_sale_salesman" nolabel="1">
-                                <tree editable="bottom" create="false">
-                                    <field name="name"/>
-                                    <field name="acquirer_id" readonly="1"/>
-                                    <field name="acquirer_ref" readonly="1"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </xpath>
+                    <div name="button_box" position="inside">
+                        <button type="action"
+                            class="oe_stat_button"
+                            name="%(payment.payment_method_act)d"
+                            groups="base.group_sale_salesman"
+                            icon="fa-credit-card"
+                            context="{'search_default_partner_id': active_id}">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="payment_method_count"/></span>
+                                <span class="o_stat_text">Payment Method</span>
+                            </div>
+                        </button>
+                    </div>
                 </field>
         </record>
     </data>

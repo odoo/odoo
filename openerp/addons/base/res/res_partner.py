@@ -548,12 +548,16 @@ class res_partner(osv.Model, format_address):
     def open_parent(self, cr, uid, ids, context=None):
         """ Utility method used to add an "Open Parent" button in partner views """
         partner = self.browse(cr, uid, ids[0], context=context)
-        return {'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'form',
-                'res_id': partner.parent_id.id,
-                'target': 'new',
-                'flags': {'form': {'action_buttons': True}}}
+        address_form_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.view_partner_address_form')
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'res.partner',
+            'views': [(address_form_id or False, 'form')],
+            'res_id': partner.parent_id.id,
+            'target': 'new',
+            'flags': {'form': {'action_buttons': True},}
+        }
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:

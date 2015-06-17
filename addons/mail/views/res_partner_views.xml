@@ -7,14 +7,9 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='container_row_2']" position="after">
-                    <group name="container_row_communication">
-                        <group string="Mailing" name="mailing">
-                            <field name='notify_email' widget="radio"/>
-                            <field name="opt_out"/>
-                        </group>
-                    </group>
-                </xpath>
+                <field name="user_id" position="after">
+                    <field name="opt_out" string="Mailing Opt-Out"/>
+                </field>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

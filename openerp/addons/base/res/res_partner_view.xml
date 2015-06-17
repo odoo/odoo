@@ -121,6 +121,44 @@
             </field>
         </record>
 
+        <!-- Open partner address -->
+        <record id="view_partner_address_form" model="ir.ui.view">
+            <field name="name">res.partner.address.form</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Partners">
+                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium", "size": [90, 90]}' readonly="1"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" style="width:70%%"/>
+                        </h1>
+                    </div>
+                    <field name="parent_id" invisible="1"/>
+                    <group>
+                        <group>
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type" groups="base.group_no_one">
+                                <field class="oe_inline"
+                                    name="type"/>
+                            </div>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                            </div>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="view_partner_form" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
@@ -185,6 +223,7 @@
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="title" options='{"no_open": True}'/>
+                            <field name="lang"/>
                         </group>
                     </group>
 
@@ -252,32 +291,32 @@
                                         <div class="oe_title">
                                             <label for="name" class="oe_edit_only"/>
                                             <h1><field name="name" style="width: 70%%"/></h1>
-                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..." style="width: 70%%"/>
+                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..." class="oe_inline"/>
                                         </div>
                                         <group>
-                                            <field name="function" placeholder="e.g. Sales Director"/>
-                                            <field name="email"/>
-                                            <field name="phone" widget="phone"/>
-                                            <field name="mobile" widget="phone"/>
-                                            <field name="title"/>
-                                        </group>
-                                        <div>
-                                            <field name="use_parent_address"/><label for="use_parent_address"/>
-                                        </div>
-                                        <group>
-                                            <label for="type" groups="base.group_no_one"/>
-                                            <div name="contact_div_type" groups="base.group_no_one">
-                                                <field class="oe_inline" name="type"/>
-                                            </div>
-                                            <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
-                                            <div class="o_address_format" attrs="{'invisible': [('use_parent_address','=', True)]}" name="div_address">
-                                                <field name="street" placeholder="Street..." class="o_address_street"/>
-                                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                                <field name="city" placeholder="City" class="o_address_city"/>
-                                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
-                                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                                            </div>
+                                            <group>
+                                                <field name="function" placeholder="e.g. Sales Director"/>
+                                                <field name="email"/>
+                                                <field name="phone" widget="phone"/>
+                                                <field name="mobile" widget="phone"/>
+                                                <field name="title"/>
+                                                <label for="type" groups="base.group_no_one"/>
+                                                <div name="contact_div_type" groups="base.group_no_one">
+                                                    <field class="oe_inline" name="type"/>
+                                                </div>
+                                            </group>
+                                            <group>
+                                                <field name="use_parent_address"/>
+                                                <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
+                                                <div class="o_address_format" attrs="{'invisible': [('use_parent_address','=', True)]}" name="div_address">
+                                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                                    <field name="city" placeholder="City" class="o_address_city"/>
+                                                    <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                                </div>
+                                            </group>
                                         </group>
                                         <field name="supplier" invisible="True"/>
                                         <field name="customer" invisible="True"/>
@@ -292,7 +331,6 @@
                             <group name="container_row_1">
                                 <group>
                                     <field name="ref"/>
-                                    <field name="lang"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
