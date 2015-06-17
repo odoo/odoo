@@ -638,6 +638,7 @@
                                     }
                                 });
                             }
+                            $target.closest(".o_editable").trigger("content_changed");
                             // end
 
                             self.make_active($target);
@@ -1059,7 +1060,7 @@
         },
         background: function(type, value, $li) {
             if (value && value.length) {
-                this.$bg.attr("style", 'background-image: url(' + value + ')' + this.$bg.attr("style").replace(/background-image:[^;]+/, '') );
+                this.$bg.attr("style", 'background-image: url(' + value + ')' + (this.$bg.attr("style") || '').replace(/background-image:[^;]+/, '') );
                 this.$bg.addClass("oe_img_bg");
             } else {
                 this.$bg.css("background-image", "");
@@ -1451,6 +1452,7 @@
                         self.BuildingBlock.editor_busy = false;
                     },0);
                     self.$target.removeClass("resize_editor_busy");
+                    self.$target.closest(".o_editable").trigger("content_changed");
                 };
                 $body.mousemove(body_mousemove);
                 $body.mouseup(body_mouseup);
@@ -1459,6 +1461,7 @@
                 self.$target.css("height", "");
                 self.$target.css("overflow", "");
                 self.BuildingBlock.cover_target(self.$overlay, self.$target);
+                self.$target.closest(".o_editable").trigger("content_changed");
                 return false;
             });
         },
