@@ -223,12 +223,16 @@ class sale_order(osv.osv):
             lines.append((0, 0, data))
         options = []
         for option in quote_template.options:
+            if pricelist_id:
+                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=context)[pricelist_id]
+            else:
+                price = option.price_unit
             options.append((0, 0, {
                 'product_id': option.product_id.id,
                 'name': option.name,
                 'quantity': option.quantity,
                 'uom_id': option.uom_id.id,
-                'price_unit': option.price_unit,
+                'price_unit': price,
                 'discount': option.discount,
                 'website_description': option.website_description,
             }))
