@@ -261,6 +261,7 @@ class module(osv.osv):
         #   latest_version refers the installed version (the one in database)
         #   published_version refers the version available on the repository
         'installed_version': fields.function(_get_latest_version, string='Latest Version', type='char'),
+        'installed_date': fields.datetime(string='Installation Date'),
         'latest_version': fields.char('Installed Version', readonly=True),
         'published_version': fields.char('Published Version', readonly=True),
 
@@ -446,6 +447,7 @@ class module(osv.osv):
                     "Warning: switching themes may significantly alter the look of your current website pages!"
                 ) % ("\n".join(themes_list)))
 
+        self.write({'installed_date': fields.datetime.now()})
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):

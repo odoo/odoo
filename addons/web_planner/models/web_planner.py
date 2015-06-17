@@ -70,3 +70,7 @@ class Planner(models.Model):
     @api.model
     def is_module_installed(self, module_name=None):
         return module_name in self.env['ir.module.module']._installed()
+
+    @api.model
+    def get_planner_progress(self, planner_application):
+        return self.search([('planner_application', '=', planner_application)]).progress

@@ -8,5 +8,126 @@
             <field name="description">Public Discussion Group</field>
         </record>
 
+        <!-- notify to admin of module installation -->
+        <record id="website_module_install_send_email_template" model="mail.template">
+            <field name="name">website module install then send email</field>
+            <field name="subject">Your business is reachable from anywhere, anytime !</field>
+            <field name="email_from">help@odoo.com</field>
+            <field name="email_to">${user.email|safe}</field>
+            <field name="lang">${user.lang}</field>
+            <field name="model_id" ref="base.model_ir_module_module"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" ><![CDATA[<div style="border: 1px solid rgba(0, 0, 0, .2);width: 600px; margin: 10px auto;">
+            <table cellspacing="0" cellpadding="0" style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td style="padding:2px;width:30%;">
+                            <img src="web/static/src/img/logo.png"/>
+                        </td>
+                        <td style="vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;">
+                            <a href="web/login" style="float:right ;margin:15px auto;background: #a24689;border-radius: 5px;color: #ffffff;font-size: 10px;padding: 10px 20px 10px 20px;text-decoration: none;">Auto Login</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="padding:0px;width:600px;margin:auto;">
+                <hr width="100%" style="background-color: black;border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:15px;padding:0;width: 580px;">
+            </div>
+            <table style="width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;">
+                <tbody>
+                    <tr>
+                        <td style="padding:15px 10px;font-size:20px">
+                            <p style="color:#a24689;margin:0" >Awesome !</p><br>
+                            <p dir="ltr" style="font-size:15px;margin-top:0pt;margin-bottom:0pt;">
+                                <span>Your website is now online !</span></p><br>
+                            <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
+                                <span style="font-size:13px;font-weight:bold; ">Did you know ?</span></p>
+                            <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Enhance your online business with astonishing apps like : Forum, Blog, e-Commerce, Events, online jobs...</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
+                                        <span>Customize the look of your website with our </span>
+                                        <span style="font-weight:bold;text-decoration:underline;"><a href="https://www.odoo.com/apps/themes">magnificent themes</a></span>
+                                        <span>to easily create a unique website.</span>
+                                    </p>
+                                </li>
+                            </ul> <br>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;">
+                                <span style="font-weight:bold;">Discover the </span>
+                                <a href="#">
+                                    <span style="font-weight:bold; text-decoration:underline;">Website planner</span>
+                                </a>
+                                <span> to activate extra features (${user.env['web.planner'].get_planner_progress('planner_website')}% done)</span>
+                            </p>
+                            <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Grow your traffic by optimizing your referencing with our SEO tool,</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Test different versions of a page to perform better in reaching your business objectives,</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Improve your conversion from visitor to customer with the Website Live support,</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Broaden your audience by translating your website automatically with Gengo,</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>Go further into the customizing with our advanced HTML editor,</span>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
+                                        <span>And much more...</span>
+                                    </p>
+                                </li>
+                            </ul>
+                            <br>
+                            <p dir="ltr" style="font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;">
+                                <span style="font-weight:bold;">Need Help?</span>
+                                <span style="font-style:italic;">You’re not alone</span>
+                            </p>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;">
+                                <span>We would be delighted to assist you along the way. Contact us and we will be happy to help you:</span>
+                            </p>
+                            <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                        <span>By Mail: </span><a href="mailto:support@odoo.com" >
+                                        <span style="text-decoration:underline;">help@odoo.com</span></a>
+                                    </p>
+                                </li>
+                                <li dir="ltr">
+                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
+                                        <span>Reach us through the </span>
+                                        <a href="https://www.odoo.com"><span style="text-decoration:underline;">Website Chat in Odoo</span></a>
+                                    </p>
+                                </li>
+                            </ul>
+                            <br>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;"><span>Enjoy your Odoo experience,</span></p>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;"><span>--</span></p>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;"><span>The Odoo Team</span></p>
+                            <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;"><span>PS: people love Odoo, check </span><a href="https://twitter.com/odoo/favorites"><span style="text-decoration:underline;">what they say about it</span></a><span>.</span></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>]]></field>
+        </record>
+
     </data>
 </openerp>

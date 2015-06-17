@@ -163,5 +163,31 @@
 ]]></field>
         </record>
 
+        <record id="action_server_module_install_mail_send" model="ir.actions.server">
+            <field name="name">Module Immediate Install Mail Send</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="base.model_ir_module_module" />
+            <field name="state">code</field>
+            <field name="code">module_id = context.get('active_id')
+if module_id:
+    module = self.pool['ir.module.module'].browse(cr, uid, module_id, context=context)
+    template_name = '%s.%s_module_install_send_email_template' % (module.name, module.name)
+    mail_template = self.pool['ir.model.data'].xmlid_to_object(cr, uid, template_name, context=context)
+    if mail_template:
+        mail_template.send_mail(False, force_send=True)</field>
+        </record>
+
+        <record id="rule_send_module_install_mail" model="base.action.rule">
+            <field name="name">Send Auto Mail on module installation after 1 day.</field>
+            <field name="model_id" ref="base.model_ir_module_module"/>
+            <field name="sequence">1</field>
+            <field name="kind">on_time</field>
+            <field name="filter_domain">[('installed_date', '!=', False),('state', '=', 'installed')]</field>
+            <field name="trg_date_id" ref="base.field_ir_module_module_installed_date"/>
+            <field name="trg_date_range">1</field>
+            <field name="trg_date_range_type">day</field>
+            <field name="server_action_ids" eval="[(6,0,[ref('action_server_module_install_mail_send')])]"/>
+        </record>
     </data>
 </openerp>
