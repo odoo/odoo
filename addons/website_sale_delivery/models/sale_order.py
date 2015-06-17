@@ -19,34 +19,101 @@ class delivery_carrier(orm.Model):
 class SaleOrder(orm.Model):
     _inherit = 'sale.order'
 
-    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):        
+    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):
         """ Wrapper because of direct method passing as parameter for function fields """
         return self._amount_all(cr, uid, ids, field_name, arg, context=context)
 
+    def _calculate_line_amount(self, cr, uid, order):
+        tax_ob = self.pool['account.tax']
+        precision_ob = self.pool['decimal.precision']
+        precision = precision_ob.precision_get(cr, uid, 'Account')
+        total = 0.0
+
+        for line in order.order_line:
+            if not line.is_delivery:
+                continue
+            price = line.price_unit
+            product = line.product_id.id
+            quantity = line.product_uom_qty
+
+            tax_compute_precision = precision
+            if line.tax_id and \
+                    line.tax_id[0].company_id.tax_calculation_rounding_method \
+                    == 'round_globally':
+                tax_compute_precision += 5
+
+            # *ex =  tax excluded
+            # *in = tax included
+            totalin = totalex = round(price * quantity, precision)
+            tax_in = []
+            tax_ex = []
+            for tax in line.tax_id:
+                if not tax.price_include:
+                    tax_ex.append(tax)
+                else:
+                    tax_in.append(tax)
+            tin = tax_ob.compute_inv(cr, uid,
+                                     tax_in, price, quantity,
+                                     product=product,
+                                     precision=tax_compute_precision)
+            for r in tin:
+                totalex -= r.get('amount', 0.0)
+            totlex_qty = 0.0
+            try:
+                totlex_qty = totalex / quantity
+            except:
+                pass
+            tex = tax_ob._compute(cr, uid,
+                                  tax_ex, totlex_qty, quantity,
+                                  product=product,
+                                  precision=tax_compute_precision)
+            for r in tex:
+                totalin += r.get('amount', 0.0)
+            if tax_in:
+                total += totalin
+            if tax_ex:
+                total += totalex
+        return total
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(SaleOrder, self)._amount_all(cr, uid, ids, field_name, arg, context=context)
+        res = super(SaleOrder, self)._amount_all(
+            cr, uid, ids, field_name, arg, context=context)
         currency_pool = self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids, context=context):
-            line_amount = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
+            line_amount = self._calculate_line_amount(cr, uid, order)
+            # line_amount = sum([line.price_subtotal
+            #                    for line in order.order_line
+            #                    if line.is_delivery])
             currency = order.pricelist_id.currency_id
-            res[order.id]['amount_delivery'] = currency_pool.round(cr, uid, currency, line_amount)
+            res[order.id]['amount_delivery'] = currency_pool.round(
+                cr, uid, currency, line_amount)
         return res
 
     def _get_order(self, cr, uid, ids, context=None):
         result = {}
-        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
+        for line in self.pool.get('sale.order.line').browse(cr, uid, ids,
+                                                            context=context):
             result[line.order_id.id] = True
         return result.keys()
 
     _columns = {
         'amount_delivery': fields.function(
-            _amount_all_wrapper, type='float', digits_compute=decimal_precision.get_precision('Account'),
+            _amount_all_wrapper, type='float',
+            digits_compute=decimal_precision.get_precision('Account'),
             string='Delivery Amount',
             store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
-                'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                'sale.order': (
+                    lambda self, cr, uid, ids, c={}: ids,
+                    ['order_line'],
+                    10),
+                'sale.order.line': (
+                    _get_order,
+                    ['price_unit', 'tax_id', 'discount', 'product_uom_qty'],
+                    10),
             },
-            multi='sums', help="The amount without tax.", track_visibility='always'
+            multi='sums',
+            help="The amount without tax.",
+            track_visibility='always'
         ),
         'website_order_line': fields.one2many(
             'sale.order.line', 'order_id',
@@ -66,7 +133,7 @@ class SaleOrder(orm.Model):
             order.write({'carrier_id': None})
             self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, [order.id], context=context)
             return True
-        else: 
+        else:
             carrier_id = force_carrier_id or order.carrier_id.id
             carrier_ids = self._get_delivery_methods(cr, uid, order, context=context)
             if carrier_id:
@@ -85,7 +152,7 @@ class SaleOrder(orm.Model):
             if carrier_id:
                 order.delivery_set()
             else:
-                order._delivery_unset()                    
+                order._delivery_unset()
 
         return bool(carrier_id)
 
@@ -103,7 +170,7 @@ class SaleOrder(orm.Model):
     def _get_errors(self, cr, uid, order, context=None):
         errors = super(SaleOrder, self)._get_errors(cr, uid, order, context=context)
         if not self._get_delivery_methods(cr, uid, order, context=context):
-            errors.append(('No delivery method available', 'There is no available delivery method for your order'))            
+            errors.append(('No delivery method available', 'There is no available delivery method for your order'))
         return errors
 
     def _get_website_data(self, cr, uid, order, context=None):
