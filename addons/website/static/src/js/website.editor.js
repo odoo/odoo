@@ -2185,7 +2185,11 @@ define(['summernote/summernote'], function () {
         }
         var sheets = document.styleSheets;
         for(var i = 0; i < sheets.length; i++) {
-            var rules = sheets[i].rules || sheets[i].cssRules;
+            try {
+                var rules = sheets[i].rules || sheets[i].cssRules;
+            } catch(e) {
+                continue;
+            }
             if (rules) {
                 for(var r = 0; r < rules.length; r++) {
                     var selectorText = rules[r].selectorText;
