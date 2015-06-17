@@ -12,7 +12,7 @@ class hr_applicant_settings(osv.TransientModel):
     _columns = {
         'module_document': fields.boolean('Allow the automatic indexation of resumes',
             help='Manage your CV\'s and motivation letter related to all applicants.\n'
-                 '-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)'),
+                 '-This will install the knowledge module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)'),
         'alias_prefix': fields.char('Default Alias Name for Jobs'),
         'alias_domain': fields.char('Alias Domain'),
     }

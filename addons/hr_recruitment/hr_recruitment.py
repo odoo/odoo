@@ -242,6 +242,7 @@ class hr_applicant(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_number': fields.function(_get_attachment_number, string='Number of Attachments', type="integer"),
         'employee_name': fields.related('emp_id', 'name', type='char', string='Employee Name'),
+        'attachment_ids' : fields.one2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments')
     }
 
     _defaults = {

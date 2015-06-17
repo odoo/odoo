@@ -246,11 +246,13 @@ class ir_attachment(osv.osv):
             :param values : dict of values to create or write an ir_attachment
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
-        mimetype = 'application/octet-stream'
+        mimetype = False
         if values.get('datas_fname'):
             mimetype = mimetypes.guess_type(values['datas_fname'])[0]
-        if values.get('datas'):
+        if not mimetype and values.get('datas'):
             mimetype = guess_mimetype(values['datas'].decode('base64'))
+        if not mimetype:
+            mimetype = 'application/octet-stream'
         return mimetype
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
@@ -415,6 +417,9 @@ class ir_attachment(osv.osv):
         # remove computed field depending of datas
         for field in ['file_size', 'checksum']:
             vals.pop(field, False)
+        # if mimetype not given, compute it !
+        if 'mimetype' not in vals:
+            vals['mimetype'] = self._compute_mimetype(vals)
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
