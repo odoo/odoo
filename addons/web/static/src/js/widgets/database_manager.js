@@ -99,10 +99,8 @@ var DataBaseManager = Widget.extend({
         return new Dialog(this, {
             size: 'medium',
             title: error.title,
-            buttons: [
-                {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
-            ]
-        }, $('<div>').html(error.error)).open();
+            $content: $('<div>').html(error.error)
+        }).open();
     },
     do_create: function(form) {
         var fields = $(form).serializeArray();

@@ -241,54 +241,45 @@ var DiagramView = View.extend({
     edit_node: function(node_id){
         var self = this;
         var title = _t('Activity');
-        var pop = new form_common.FormOpenPopup(self);
-
-        pop.show_element(
-                self.node,
-                node_id,
-                self.context || self.dataset.context,
-                {
-                    title: _t("Open: ") + title
-                }
-            );
+        var pop = new form_common.FormViewDialog(self, {
+            res_model: self.node,
+            res_id: node_id,
+            context: self.context || self.dataset.context,
+            title: _t("Open: ") + title
+        }).open();
 
         pop.on('write_completed', self, function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
-            });
+        });
         
         var form_fields = [self.parent_field];
         var form_controller = pop.view_form;
 
-       form_controller.on("load_record", self, function(){
+        form_controller.on("load_record", self, function(){
             _.each(form_fields, function(fld) {
                 if (!(fld in form_controller.fields)) { return; }
                 var field = form_controller.fields[fld];
                 field.$input.prop('disabled', true);
                 field.$drop_down.unbind();
             });
-         });
-
-       
+        });
     },
 
     // Creates a popup to add a node to the diagram
     add_node: function(){
         var self = this;
         var title = _t('Activity');
-        var pop = new form_common.SelectCreatePopup(self);
-        pop.select_element(
-            self.node,
-            {
-                title: _t("Create:") + title,
-                initial_view: 'form',
-                disable_multiple_selection: true
-            },
-            self.dataset.domain,
-            self.context || self.dataset.context
-        );
-        pop.on("elements_selected", self, function(element_ids) {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
-        });
+        var pop = new form_common.SelectCreateDialog(self, {
+            res_model: self.node,
+            domain: self.dataset.domain,
+            context: self.context || self.dataset.context,
+            title: _t("Create:") + title,
+            initial_view: 'form',
+            disable_multiple_selection: true,
+            on_selected: function(element_ids) {
+                self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
+            }
+        }).open();
 
         var form_controller = pop.view_form;
         var form_fields = [this.parent_field];
@@ -307,15 +298,12 @@ var DiagramView = View.extend({
     edit_connector: function(connector_id){
         var self = this;
         var title = _t('Transition');
-        var pop = new form_common.FormOpenPopup(self);
-        pop.show_element(
-            self.connector,
-            parseInt(connector_id,10),      //FIXME Isn't connector_id supposed to be an int ?
-            self.context || self.dataset.context,
-            {
-                title: _t("Open: ") + title
-            }
-        );
+        var pop = new form_common.FormViewDialog(self, {
+            res_model: self.connector,
+            res_id: parseInt(connector_id, 10),      //FIXME Isn't connector_id supposed to be an int ?
+            context: self.context || self.dataset.context,
+            title: _t("Open: ") + title
+        }).open();
         pop.on('write_completed', self, function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
@@ -326,21 +314,18 @@ var DiagramView = View.extend({
     add_connector: function(node_source_id, node_dest_id, dummy_cuteedge){
         var self = this;
         var title = _t('Transition');
-        var pop = new form_common.SelectCreatePopup(self);
+        var pop = new form_common.SelectCreateDialog(self, {
+            res_model: self.connector,
+            domain: this.dataset.domain,
+            context: this.context || this.dataset.context,
+            title: _t("Create:") + title,
+            initial_view: 'form',
+            disable_multiple_selection: true,
+            on_selected: function(element_ids) {
+                self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
+            }
+        }).open();
 
-        pop.select_element(
-            self.connector,
-            {
-                title: _t("Create:") + title,
-                initial_view: 'form',
-                disable_multiple_selection: true
-            },
-            this.dataset.domain,
-            this.context || this.dataset.context
-        );
-        pop.on("elements_selected", self, function(element_ids) {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
-        });
         // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
         // This is not a problem since the diagram is completely redrawn on saved changes.
         pop.$el.parents('.modal').on('hidden.bs.modal', function (e){
@@ -350,14 +335,12 @@ var DiagramView = View.extend({
         });
 
         var form_controller = pop.view_form;
-
-
-       form_controller.on("load_record", self, function(){
+        form_controller.on("load_record", self, function(){
             form_controller.fields[self.connectors.attrs.source].set_value(node_source_id);
             form_controller.fields[self.connectors.attrs.source].dirty = true;
             form_controller.fields[self.connectors.attrs.destination].set_value(node_dest_id);
             form_controller.fields[self.connectors.attrs.destination].dirty = true;
-       });
+        });
     },
 
     /**

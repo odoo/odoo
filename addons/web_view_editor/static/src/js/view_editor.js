@@ -72,10 +72,10 @@ var ViewEditor = Widget.extend({
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
                 {text: _t("Edit"), click: function() { self.xml_element_id = 0; self.get_arch(); }},
                 {text: _t("Remove"), click: function() { self.do_delete_view(); }},
-                {text: _t("Close"), click: function() { self.view_edit_dialog.close(); window.location.reload(); }}
+                {text: _t("Close"), click: function() { window.location.reload(); }, close: true}
             ]
         }).open();
-        this.view_edit_dialog.on("closing", this, function(){window.location.reload();});
+        this.view_edit_dialog.on("closed", this, function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog.$el);

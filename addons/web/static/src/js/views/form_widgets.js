@@ -62,10 +62,7 @@ var WidgetButton = common.FormWidget.extend({
                 var dialog = new Dialog(this, {
                     title: _t('Confirm'),
                     buttons: [
-                        {text: _t("Cancel"), click: function() {
-                                this.parents('.modal').modal('hide');
-                            }
-                        },
+                        {text: _t("Cancel"), close: true},
                         {text: _t("Ok"), click: function() {
                                 var self2 = this;
                                 self.on_confirmed().always(function() {
@@ -74,8 +71,9 @@ var WidgetButton = common.FormWidget.extend({
                             }
                         }
                     ],
-                }, $('<div/>').text(self.node.attrs.confirm)).open();
-                dialog.on("closing", null, function() {def.resolve();});
+                    $content: $('<div/>').text(self.node.attrs.confirm)
+                }).open();
+                dialog.on("closed", null, function() {def.resolve();});
                 return def.promise();
             } else {
                 return self.on_confirmed();
@@ -414,47 +412,61 @@ var FieldFloat = FieldChar.extend({
 });
 
 var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+    template: "FieldCharDomain",
+    events: {
+        'click button': 'on_click',
+        'change .o_debug_input': function(e) {
+            this.set('value', $(e.target).val());
+        }
+    },
+    init: function() {
+        this._super.apply(this, arguments);
+        this.debug = session.debug;
+    },
     render_value: function() {
         var self = this;
-        this.$el.html(QWeb.render("FieldCharDomain", {widget: this}));
+
         if (this.get('value')) {
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
             var domain = pyeval.eval('domain', this.get('value'));
             var ds = new data.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
-                $('.oe_domain_count', self.$el).text(results + ' records selected');
+                self.$('.o_count').text(results + ' selected records');
                 if (self.get('effective_readonly')) {
-                    $('button span', self.$el).text(' See selection');
+                    self.$('button').text('See selection ');
                 }
                 else {
-                    $('button span', self.$el).text(' Change selection');
+                    self.$('button').text('Change selection ');
                 }
+                self.$('button').append($("<span/>").addClass('fa fa-arrow-right'));
             });
+
+            if(this.debug) {
+                this.$('.o_debug_input').val(this.get('value'));
+            }
         } else {
-            $('.oe_domain_count', this.$el).text('0 record selected');
-            $('button span', this.$el).text(' Select records');
+            this.$('.o_count').text('No selected record');
+            var $arrow = this.$('button span').detach();
+            this.$('button').text('Select records ').append($("<span/>").addClass('fa fa-arrow-right'));
         }
-        this.$('.select_records').on('click', self.on_click);
     },
     on_click: function(event) {
         event.preventDefault();
-        var self = this;
-        var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
 
-        var options = {
-                title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
-                readonly: this.get('effective_readonly'),
-                disable_multiple_selection: this.get('effective_readonly'),
-                no_create: this.get('effective_readonly'),
-            };
-        var domain = this.get('value');
-        var popup = new common.DomainEditorPopup(this);
-        popup.select_element(model, options, domain, {});
-        popup.on("elements_selected", self, function(selected_ids) {
-            if (!self.get('effective_readonly')) {
-                self.set_value(popup.get_domain(selected_ids));
+        var self = this;
+        var dialog = new common.DomainEditorDialog(this, {
+            res_model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
+            default_domain: this.get('value'),
+            title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
+            readonly: this.get('effective_readonly'),
+            disable_multiple_selection: this.get('effective_readonly'),
+            no_create: this.get('effective_readonly'),
+            on_selected: function(selected_ids) {
+                if (!self.get('effective_readonly')) {
+                    self.set_value(dialog.get_domain(selected_ids));
+                }
             }
-        });
+        }).open();
     },
 });
 

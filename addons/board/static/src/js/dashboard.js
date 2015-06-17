@@ -90,13 +90,14 @@ var DashBoard = form_common.FormWidget.extend({
         var qdict = {
             current_layout : this.$el.find('.oe_dashboard').attr('data-layout')
         };
-        var $dialog = new Dialog(this, {
-                            title: _t("Edit Layout"),
-                        }, QWeb.render('DashBoard.layouts', qdict)).open();
-        $dialog.$el.find('li').click(function() {
+        var dialog = new Dialog(this, {
+            title: _t("Edit Layout"),
+            $content: QWeb.render('DashBoard.layouts', qdict)
+        }).open();
+        dialog.$el.find('li').click(function() {
             var layout = $(this).attr('data-layout');
             self.do_change_layout(layout);
-            $dialog.$dialog_box.modal('hide'); 
+            dialog.close();
         });
     },
     do_change_layout: function(new_layout) {

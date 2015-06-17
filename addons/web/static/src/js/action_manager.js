@@ -529,14 +529,13 @@ var ActionManager = Widget.extend({
      * @return {*}
      */
     ir_actions_common: function(executor, options) {
-        var widget;
         if (executor.action.target === 'new') {
             var pre_dialog = (this.dialog && !this.dialog.isDestroyed()) ? this.dialog : null;
             if (pre_dialog){
                 // prevent previous dialog to consider itself closed,
                 // right now, as we're opening a new one (prevents
                 // reload of original form view)
-                pre_dialog.off('closing', null, pre_dialog.on_close);
+                pre_dialog.off('closed', null, pre_dialog.on_close);
             }
             if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
                 this.dialog_widget.destroy();
@@ -547,6 +546,7 @@ var ActionManager = Widget.extend({
             this.dialog = new Dialog(this, {
                 title: executor.action.name,
                 dialogClass: executor.klass,
+                buttons: []
             });
 
             // chain on_close triggers with previous dialog, if any
@@ -560,34 +560,32 @@ var ActionManager = Widget.extend({
                     pre_dialog.on_close();
                 }
             };
-            this.dialog.on("closing", null, this.dialog.on_close);
-            widget = executor.widget();
-            if (widget instanceof ViewManager) {
-                _.extend(widget.flags, {
-                    $buttons: this.dialog.$buttons,
+            this.dialog.on("closed", null, this.dialog.on_close);
+            this.dialog_widget = executor.widget();
+            if (this.dialog_widget instanceof ViewManager) {
+                _.extend(this.dialog_widget.flags, {
+                    $buttons: this.dialog.$footer,
                     footer_to_buttons: true,
                 });
-                if (widget.action.view_mode === 'form') {
-                    widget.flags.headless = true;
+                if (this.dialog_widget.action.view_mode === 'form') {
+                    this.dialog_widget.flags.headless = true;
                 }
             }
-            if (widget.need_control_panel) {
+            if (this.dialog_widget.need_control_panel) {
                 // Set a fake bus to Dialogs needing a ControlPanel as they should not
                 // communicate with the main ControlPanel
-                widget.set_cp_bus(new core.Bus());
+                this.dialog_widget.set_cp_bus(new core.Bus());
             }
-            this.dialog_widget = widget;
             this.dialog_widget.setParent(this.dialog);
-            var initialized = this.dialog_widget.appendTo(this.dialog.$el);
             this.dialog.open();
-            return $.when(initialized);
+            
+            return this.dialog_widget.appendTo(this.dialog.$el);
         }
         if (this.inner_widget && this.webclient.has_uncommitted_changes()) {
             return $.Deferred().reject();
         }
-        widget = executor.widget();
         this.dialog_stop(executor.action);
-        return this.push_action(widget, executor.action, options);
+        return this.push_action(executor.widget(), executor.action, options);
     },
     ir_actions_act_window: function (action, options) {
         var self = this;
@@ -596,7 +594,7 @@ var ActionManager = Widget.extend({
                 return new ViewManager(self, null, null, null, action);
             },
             action: action,
-            klass: 'oe_act_window',
+            klass: 'o_act_window',
         }, options);
     },
     ir_actions_client: function (action, options) {

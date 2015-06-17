@@ -542,8 +542,8 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     /**
      * @param name
      */
-    name_create: function(name) {
-        return this._model.call('name_create', [name], {context: this.get_context()});
+    name_create: function(name, context) {
+        return this._model.call('name_create', [name], {context: this.get_context(context)});
     },
     exec_workflow: function (id, signal) {
         return this._model.exec_workflow(id, signal);

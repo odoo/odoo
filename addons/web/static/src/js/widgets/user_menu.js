@@ -101,9 +101,10 @@ var SystrayMenu = Widget.extend({
             });
             new Dialog(this, {
                 size: 'medium',
-                dialogClass: 'oe_act_window',
+                dialogClass: 'o_act_window',
                 title: _t("About"),
-            }, $help).open();
+                $content: $help
+            }).open();
         });
     },
 });

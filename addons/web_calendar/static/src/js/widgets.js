@@ -19,9 +19,8 @@ var QWeb = core.qweb;
  * @class
  * @type {*}
  */
-var QuickCreate = Widget.extend({
+var QuickCreate = Dialog.extend({
     init: function(parent, dataset, buttons, options, data_template) {
-        this._super(parent);
         this.dataset = dataset;
         this._buttons = buttons || false;
         this.options = options;
@@ -29,6 +28,23 @@ var QuickCreate = Widget.extend({
         // Can hold data pre-set from where you clicked on agenda
         this.data_template = data_template || {};
         this.$input = $();
+
+        var self = this;
+        this._super(parent, {
+            title: this.get_title(),
+            size: 'small',
+            buttons: this._buttons ? [
+                {text: _t("Create event"), classes: 'btn-primary', click: function (e) {
+                    if (!self.quick_add()) {
+                        self.focus();
+                    }
+                }},
+                {text: _t("Edit event"), click: function (e) {
+                    self.slow_add();
+                }}
+            ] : [],
+            $content: QWeb.render('CalendarView.quick_create', {widged: this})
+        });
     },
     get_title: function () {
         var parent = this.getParent();
@@ -37,7 +53,7 @@ var QuickCreate = Widget.extend({
         }
         var title = (_.isUndefined(parent.field_widget)) ?
                 (parent.string || parent.name) :
-                parent.field_widget.string || parent.field_widget.name || '';
+                (parent.field_widget.string || parent.field_widget.name || '');
         return _t("Create: ") + title;
     },
     start: function () {
@@ -47,38 +63,22 @@ var QuickCreate = Widget.extend({
             this.slow_create();
             return;
         }
-        self.on('added', self, function() {
-            self.trigger('close');
+        this.on('added', this, function() {
+            self.close();
         });
 
-        this.$dialog = new Dialog(this, {
-            title: this.get_title(),
-            size: 'small',
-            buttons: this._buttons ? [
-                {text: _t("Create event"), oe_link_class: 'oe_highlight', click: function (e) {
-                    if (!self.quick_add()) {
-                        self.focus();
-                    }
-                }},
-                {text: _t("Edit event"), oe_link_class: 'oe_link', click: function (e) {
-                    self.slow_add();
-                }}
-            ] : []
-        }, QWeb.render('CalendarView.quick_create', {widged: this}))
-        .on('closed', self, function() {
-            self.trigger('close');
-        })
-        .open();
-        this.$input = this.$dialog.$('input').keyup(function enterHandler (e) {
-            if(e.keyCode == 13){
+        this.$input = this.$('input').keyup(function enterHandler (e) {
+            if(e.keyCode == $.ui.keyCode.ENTER) {
                 self.$input.off('keyup', enterHandler);
                 if (!self.quick_add()){
                     self.$input.on('keyup', enterHandler);
                 }
-            } else if (e.keyCode == 27 && self._buttons) {
-                self.trigger('close');
+            } else if (e.keyCode == $.ui.keyCode.ESCAPE && self._buttons) {
+                self.close();
             }
         });
+
+        return this._super();
     },
     focus: function() {
         this.$input.focus();
@@ -88,15 +88,12 @@ var QuickCreate = Widget.extend({
      * Gathers data from the quick create dialog a launch quick_create(data) method
      */
     quick_add: function() {
-        var val = this.$input.val();
-        if (/^\s*$/.test(val)) {
-            return false;
-        }
-        return this.quick_create({'name': val}).always(function() { return true; });
+        var val = this.$input.val().trim();
+        return (val)? this.quick_create({'name': val}) : false;
     },
     
     slow_add: function() {
-        var val = this.$input.val();
+        var val = this.$input.val().trim();
         this.slow_create({'name': val});
     },
 
@@ -109,7 +106,7 @@ var QuickCreate = Widget.extend({
             .then(function(id) {
                 self.trigger('added', id);
                 self.$input.val("");
-            }).fail(function(r, event) {
+            }, function(r, event) {
                 event.preventDefault();
                 // This will occurs if there are some more fields required
                 self.slow_create(data);
@@ -143,9 +140,10 @@ var QuickCreate = Widget.extend({
         });
                     
         var pop_infos = self.get_form_popup_infos();
-        var pop = new form_common.FormOpenPopup(this);
         var context = new data.CompoundContext(this.dataset.context, defaults);
-        pop.show_element(this.dataset.model, null, this.dataset.get_context(defaults), {
+        var pop = new form_common.FormViewDialog(this, {
+            res_model: this.dataset.model,
+            context: this.dataset.get_context(defaults),
             title: this.get_title(),
             disable_multiple_selection: true,
             view_id: pop_infos.view_id,
@@ -165,12 +163,9 @@ var QuickCreate = Widget.extend({
                         throw new Error(r);
                     }
                 });
-            },
-        });
+            }
+        }).open();
         pop.on('closed', self, function() {
-            // ``self.trigger('close')`` would itself destroy all child element including
-            // the slow create popup, which would then re-trigger recursively the 'closed' signal.  
-            // Thus, here, we use a deferred and its state to cut the endless recurrence.
             if (def.state() === "pending") {
                 def.resolve();
             }
@@ -184,7 +179,8 @@ var QuickCreate = Widget.extend({
                 var parent = self.getParent();
                 parent.$calendar.fullCalendar('refetchEvents');
             }
-            self.trigger('close');
+            self.close();
+            self.trigger("closed");
         });
         return def;
     },
@@ -199,7 +195,7 @@ var Sidebar = Widget.extend({
     start: function() {
         this._super();
         this.filter = new SidebarFilter(this, this.getParent());
-        this.filter.appendTo(this.$el.find('.oe_calendar_filter'));
+        this.filter.appendTo(this.$('.o_calendar_filter'));
     }
 });
 var SidebarFilter = Widget.extend({
@@ -216,7 +212,7 @@ var SidebarFilter = Widget.extend({
         var self = this;
         _.forEach(self.view.all_filters, function(o) {
             if (_.contains(self.view.now_filter_ids, o.value)) {
-                self.$('div.oe_calendar_responsible input[value=' + o.value + ']').prop('checked',o.is_checked);
+                self.$('div.o_calendar_responsible input[value=' + o.value + ']').prop('checked',o.is_checked);
             }
         });
     },

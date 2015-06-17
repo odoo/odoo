@@ -249,10 +249,10 @@ Tour.register({
         {
             title:    "Select next action",
             onload: function () {
-                if ($(".oe_error_detail").size()) {
+                if ($(".o_error_detail").size()) {
                     console.log("Tour 'test_menu' has detected an error.");
                 }
-                if ($(".oe_dialog_warning").size()) {
+                if ($(".o_dialog_warning").size()) {
                     console.log("Tour 'test_menu' has detected a warning.");
                 }
 

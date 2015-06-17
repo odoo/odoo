@@ -583,10 +583,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
             new Dialog(this, {
                 size: 'medium',
                 title:result.warning.title,
-                buttons: [
-                    {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
-                ]
-            }, QWeb.render("CrashManager.warning", result.warning)).open();
+                $content: QWeb.render("CrashManager.warning", result.warning)
+            }).open();
         }
 
         return $.Deferred().resolve();
@@ -1081,12 +1079,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
             .value();
         var d = new Dialog(this, {
             title: _t("Set Default"),
-            args: {
-                fields: fields,
-                conditions: conditions
-            },
             buttons: [
-                {text: _t("Close"), click: function () { d.close(); }},
+                {text: _t("Close"), close: true},
                 {text: _t("Save default"), click: function () {
                     var $defaults = d.$el.find('#formview_default_fields');
                     var field_to_set = $defaults.val();
@@ -1108,6 +1102,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 }}
             ]
         });
+        d.args = {
+            fields: fields,
+            conditions: conditions
+        };
         d.template = 'FormView.set_default';
         d.open();
     },
