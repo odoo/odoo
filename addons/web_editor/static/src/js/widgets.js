@@ -8,6 +8,7 @@ var base = require('web_editor.base');
 var rte = require('web_editor.rte');
 
 var QWeb = core.qweb;
+var _t = core._t;
 var range = $.summernote.core.range;
 var dom = $.summernote.core.dom;
 
@@ -387,14 +388,9 @@ var ImageDialog = Widget.extend({
                 return false;
             }
         }
-        $form.find('.well > div').hide().last().after('<span class="fa fa-spin fa-3x fa-refresh"/>');
 
-        var callback = _.uniqueId('func_');
-        this.$('input[name=func]').val(callback);
-        window[callback] = function (attachments, error) {
-            delete window[callback];
-            $form.find('.well > span').remove();
-            $form.find('.well > div').show();
+        var callback_function = function(attachments, error) {
+            $form.find('.well > div').toggle();
             _.each(attachments, function (record) {
                 record.src = record.url || '/web/image/' + record.id;
                 record.is_document = !(/gif|jpe|jpg|png/.test(record.mimetype));
@@ -407,6 +403,46 @@ var ImageDialog = Widget.extend({
                 self.file_selected(attachments[i], error);
             }
         };
+
+        if(!window.FormData) {
+            $form.find('.well > div').toggle();
+            $form.find('.well .progress .progress-bar')
+                .append(_t(' Image Upload Processing...'))
+                .addClass('progress-bar-striped active')
+                .css('width', '100%');
+            var callback = _.uniqueId('func_');
+            this.$('input[name=func]').val(callback);
+            window[callback] = function (attachments, error) {
+                delete window[callback];
+                callback_function(attachments, error);
+            };
+        } else {
+            $form.find('.well > div').toggle();
+            $form.find('.well .progress .progress-bar').addClass('progress-bar-success');
+            event.preventDefault();
+            var formData = new FormData($form[0]);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/web_editor/attachment/add', true);
+            xhr.upload.onprogress = function(e) {
+                var percentage;
+                if (e.lengthComputable) {
+                    percentage = Math.ceil((e.loaded / e .total) * 100);
+                    $form.find('.progress-bar').empty().append(_.str.sprintf(_t('%s %% Upload Completed '), percentage)).css('width', percentage + '%');
+
+                }
+                if (percentage === 100) {
+                    $form.find('.progress-bar').empty().removeClass('progress-bar-success').addClass('progress-bar-striped active').append(_t(' Image Processing...'));
+
+                }
+            }
+            xhr.onload = function(e) {
+                var response = JSON.parse(e.target.response);
+                var attachments = response.uploads;
+                var error = response.message;
+                callback_function(attachments, error);
+            };
+            xhr.send(formData);
+        }
     },
     file_selection: function () {
         this.$el.addClass('nosave');

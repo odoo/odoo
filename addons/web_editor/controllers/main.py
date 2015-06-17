@@ -179,9 +179,12 @@ class Web_Editor(http.Controller):
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
 
+        if not func:
+            return json.dumps({'uploads':uploads, 'message':message})
+
         return """<script type='text/javascript'>
-            window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(uploads), json.dumps(message))
+                window.parent['%s'](%s, %s);
+            </script>""" % (func, json.dumps(uploads), json.dumps(message))
 
     #------------------------------------------------------
     # remove attachment (images or link)
