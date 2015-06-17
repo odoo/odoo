@@ -352,12 +352,8 @@ var MailThread = Attachment.extend ({
             this.partner_ids.push(this.parent_message.author_id);
         }
 
-        if (!this.root) {
-            this.context = _.extend(this.context, {
-                'default_model': this.parent_message.model,
-                'default_res_id': this.parent_message.res_id,
-            });
-        }
+        this.context.default_model = this.parent_message.model || this.context.default_model;
+        this.context.default_res_id = this.parent_message.res_id || this.context.default_res_id;
 
         this.options.root_thread = this.options.root_thread != undefined ? this.options.root_thread : this;
         this.options.show_compose_message = this.root ? false : this.options.root_thread.view.options.show_compose_message;
