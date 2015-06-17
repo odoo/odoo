@@ -557,6 +557,16 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
+    def _amount_line_tax(self, cr, uid, line, context=None):
+        account_tax_obj = self.pool['account.tax']
+        taxes_ids = [tax for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id]
+        price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+        taxes = account_tax_obj.compute_all(cr, uid, taxes_ids, price, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
+        val = 0.0
+        for c in taxes:
+            val += c.get('amount', 0.0)
+        return val
+
     def _order_fields(self, cr, uid, ui_order, context=None):
         return {
             'name':         ui_order['name'],
@@ -676,10 +686,10 @@ class pos_order(osv.osv):
                 res[order.id]['amount_paid'] +=  payment.amount
                 res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
             for line in order.lines:
-                val1 += line.price_subtotal_incl
+                val1 += self._amount_line_tax(cr, uid, line, context=context)
                 val2 += line.price_subtotal
-            res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1-val2)
-            res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1+val2)
         return res
 
     _columns = {
@@ -1294,8 +1304,8 @@ class pos_order_line(osv.osv):
             taxes = account_tax_obj.compute_all(cr, uid, taxes_ids, price, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
 
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, taxes['total'])
-            res[line.id]['price_subtotal_incl'] = cur_obj.round(cr, uid, cur, taxes['total_included'])
+            res[line.id]['price_subtotal'] = taxes['total']
+            res[line.id]['price_subtotal_incl'] = taxes['total_included']
         return res
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
