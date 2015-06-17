@@ -368,6 +368,13 @@ class project_issue(osv.Model):
             pass
         return recipients
 
+    def email_split(self, cr, uid, ids, msg, context=None):
+        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
+        # check left-part is not already an alias
+        issue_ids = self.browse(cr, uid, ids, context=context)
+        aliases = [issue.project_id.alias_name for issue in issue_ids if issue.project_id]
+        return filter(lambda x: x.split('@')[0] not in aliases, email_list)
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
@@ -384,8 +391,20 @@ class project_issue(osv.Model):
             'user_id': False,
         }
         defaults.update(custom_values)
+
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        email_list = self.email_split(cr, uid, [res_id], msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, [res_id], email_list, force_create=True, context=context)
+        self.message_subscribe(cr, uid, [res_id], partner_ids, context=context)
         return res_id
+
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Override to update the issue according to the email. """
+
+        email_list = self.email_split(cr, uid, ids, msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, ids, email_list, force_create=True, context=context)
+        self.message_subscribe(cr, uid, ids, partner_ids, context=context)
+        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     @api.cr_uid_ids_context
     @api.returns('mail.message', lambda value: value.id)

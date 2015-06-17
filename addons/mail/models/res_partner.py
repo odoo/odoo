@@ -40,6 +40,7 @@ class Partner(models.Model):
     @api.model
     def _notify_prepare_template_context(self, message):
         # compute signature
+        signature = ""
         if message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
             signature = message.author_id.user_ids[0].signature
         elif message.author_id:

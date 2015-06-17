@@ -791,6 +791,13 @@ class task(osv.osv):
         aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(project_ids), default=default, context=context)
         return dict((task.id, aliases.get(task.project_id and task.project_id.id or 0, False)) for task in tasks)
 
+    def email_split(self, cr, uid, ids, msg, context=None):
+        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
+        # check left-part is not already an alias
+        task_ids = self.browse(cr, uid, ids, context=context)
+        aliases = [task.project_id.alias_name for task in task_ids if task.project_id]
+        return filter(lambda x: x.split('@')[0] not in aliases, email_list)
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
         if custom_values is None:
@@ -801,12 +808,10 @@ class task(osv.osv):
             'partner_id': msg.get('author_id', False)
         }
         defaults.update(custom_values)
+
         res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
-        new_task = self.browse(cr, uid, res, context=context)
-        if new_task.project_id and new_task.project_id.alias_name:  # check left-part is not already an alias
-            email_list = filter(lambda x: x.split('@')[0] != new_task.project_id.alias_name, email_list)
-        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, [], email_list, check_followers=False))
+        email_list = self.email_split(cr, uid, [res], msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, [res], email_list, force_create=True, context=context)
         self.message_subscribe(cr, uid, [res], partner_ids, context=context)
         return res
 
@@ -828,6 +833,10 @@ class task(osv.osv):
                         update_vals[field] = float(res.group(2).lower())
                     except (ValueError, TypeError):
                         pass
+
+        email_list = self.email_split(cr, uid, ids, msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, ids, email_list, force_create=True, context=context)
+        self.message_subscribe(cr, uid, ids, partner_ids, context=context)
         return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
