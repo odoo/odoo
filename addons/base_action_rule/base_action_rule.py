@@ -41,7 +41,7 @@ class base_action_rule(osv.osv):
     _columns = {
         'name':  fields.char('Rule Name', required=True),
         'model_id': fields.many2one('ir.model', 'Related Document Model',
-            required=True, domain=[('osv_memory', '=', False)]),
+            required=True, domain=[('transient', '=', False)]),
         'model': fields.related('model_id', 'model', type="char", string='Model'),
         'create_date': fields.datetime('Create Date', readonly=1),
         'active': fields.boolean('Active',
