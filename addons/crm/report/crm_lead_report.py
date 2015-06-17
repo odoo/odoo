@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.crm import crm
+from openerp.addons.crm.models import crm
 from openerp.osv import fields, osv
 from openerp import tools
 
