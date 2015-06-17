@@ -1280,14 +1280,15 @@ openerp.account = function (instance) {
 
             // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
             var balance_type = undefined;
-            if (Math.abs(self.get("balance")).toFixed(3) === "0.000") balance_type = "equal";
+            if (self.st_line.amount === 0 && ! self.$("line_open_balance")) balance_type = "zero";
+            else if (Math.abs(self.get("balance")).toFixed(3) === "0.000") balance_type = "equal";
             else if (self.get("balance") * self.st_line.amount > 0) balance_type = "greater";
             else if (self.get("balance") * self.st_line.amount < 0) balance_type = "lower";
 
             // Adjust to different cases
             if (balance_type === "equal") {
                 displayValidState(true);
-            } else if (balance_type === "greater") {
+            } else if (balance_type === "greater" || balance_type === "zero") {
                 createOpenBalance(_t("Create Write-off"));
             } else if (balance_type === "lower") {
                 if (self.st_line.has_no_partner) {
