@@ -1074,7 +1074,7 @@ predefined searches. Filters must have one of the following attributes:
                 domain="[('inventor_id', '=', uid)]"/>
         <group string="Group By">
             <filter name="group_by_inventor" string="Inventor"
-                    context="{'group_by': 'inventor'}"/>
+                    context="{'group_by': 'inventor_id'}"/>
         </group>
     </search>
 
