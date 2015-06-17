@@ -517,20 +517,24 @@ class website(osv.osv):
                 continue
             values = [{}]
             convitems = converters.items()
+
+            #Remove common terms in rule string and querystring to assume remaining terms are for converters
+            query_splitted = filter(lambda x: len(x) > 0, query_string.split("/"))
+            rule_splitted = filter(lambda x: len(x) > 0, str(rule).split("/"))
+            query_splitted = filter(lambda x: x not in rule_splitted, query_splitted)
             # converters with a domain are processed after the other ones
             gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain <> '[]')
             convitems.sort(lambda x, y: cmp(gd(x), gd(y)))
             for (i,(name, converter)) in enumerate(convitems):
                 newval = []
                 for val in values:
-                    query = i==(len(convitems)-1) and query_string
+                    query = query_splitted and len(query_splitted) > i and query_splitted[i]
                     for v in converter.generate(request.cr, uid, query=query, args=val, context=context):
                         newval.append( val.copy() )
                         v[name] = v['loc']
                         del v['loc']
                         newval[-1].update(v)
                 values = newval
-
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
                 page = {'loc': url}
@@ -549,6 +553,7 @@ class website(osv.osv):
         name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
+            needle = needle.replace(' ', '-')
             if needle in page['loc']:
                 res.append(page)
                 if len(res) == limit:

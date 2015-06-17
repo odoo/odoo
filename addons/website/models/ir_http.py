@@ -315,7 +315,16 @@ class ModelConverter(ir.ir_http.ModelConverter):
         obj = request.registry[self.model]
         domain = eval( self.domain, (args or {}).copy())
         if query:
-            domain.append((obj._rec_name, 'ilike', '%'+query+'%'))
+            #For removing integer values, something like blog/our-blog-1 or blog/our-blog 1,do not add search term like "our blog 1" instead only search for "our blog, hyphens should be replaced with space and integer value which is actually stand for record ID should be removed"
+            split_by_space = query.split(" ")
+            if (split_by_space[-1]).isdigit():
+                split_by_space = split_by_space[:-1]
+            query = " ".join(split_by_space)
+            splitted_by_hyphen = query.split("-")
+            if (splitted_by_hyphen[-1]).isdigit():
+                splitted_by_hyphen = splitted_by_hyphen[:-1]
+            query = " ".join(splitted_by_hyphen)
+            domain.append((obj._rec_name, 'ilike', '%'+query.strip()+'%'))
         for record in obj.search_read(cr, uid, domain=domain, fields=['write_date',obj._rec_name], context=context):
             if record.get(obj._rec_name, False):
                 yield {'loc': (record['id'], record[obj._rec_name])}
@@ -323,6 +332,9 @@ class ModelConverter(ir.ir_http.ModelConverter):
 class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """
     def generate(self, cr, uid, query=None, args={}, context=None):
+        #TODO: Remove all special characters or either change the logic of save menu, because save menu removes special characters from menu key
+        if query:
+            query = query.replace(' ', '-')
         View = request.registry['ir.ui.view']
         domain = [('page', '=', True)]
         query = query and query.startswith('website.') and query[8:] or query
