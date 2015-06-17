@@ -135,7 +135,7 @@ class Category(models.Model):
     _order = "sequence, id"
 
     name = fields.Char('Name', translate=True, required=True)
-    channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
+    channel_id = fields.Many2one('slide.channel', string="Channel", required=True, ondelete='cascade')
     sequence = fields.Integer(default=10, help='Display order')
     slide_ids = fields.One2many('slide.slide', 'category_id', string="Slides")
     nbr_presentations = fields.Integer("Number of Presentations", compute='_count_presentations', store=True)
@@ -239,8 +239,8 @@ class Slide(models.Model):
     def _get_image(self):
         for record in self:
             if record.image:
-                record.image_medium = image.crop_image(record.image, thumbnail_ratio=3)
-                record.image_thumb = image.crop_image(record.image, thumbnail_ratio=4)
+                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), thumbnail_ratio=4)
+                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), thumbnail_ratio=6)
             else:
                 record.image_medium = False
                 record.iamge_thumb = False
@@ -314,7 +314,12 @@ class Slide(models.Model):
     def _website_url(self, name, arg):
         res = super(Slide, self)._website_url(name, arg)
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
+        #link_tracker is not in dependencies, so use it to shorten url only if installed.
+        if self.env.registry.get('link.tracker'):
+            LinkTracker = self.env['link.tracker']
+            res.update({(slide.id, LinkTracker.sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url) for slide in self})
+        else:
+            res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
         return res
 
 

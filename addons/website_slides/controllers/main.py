@@ -4,7 +4,7 @@ import logging
 import werkzeug
 
 from openerp.addons.web import http
-from openerp.exceptions import AccessError
+from openerp.exceptions import AccessError, UserError
 from openerp.http import request
 from openerp.tools.translate import _
 
@@ -127,6 +127,7 @@ class website_slides(http.Controller):
             'user': user,
             'pager': pager,
             'is_public_user': user == request.website.user_id,
+            'display_channel_settings': not request.httprequest.cookies.get('slides_channel_%s' % (channel.id), False) and channel.can_see_full,
         }
         if search:
             values['search'] = search
@@ -312,7 +313,7 @@ class website_slides(http.Controller):
         # otherwise client slide create dialog box continue processing even server fail to create a slide.
         try:
             slide_id = request.env['slide.slide'].create(values)
-        except AccessError as e:
+        except (UserError, AccessError) as e:
             _logger.error(e)
             return {'error': e.name}
         except Exception as e:
