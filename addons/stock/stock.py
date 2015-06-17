@@ -1890,7 +1890,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
-        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or "/")
+        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/")
         group_id = move.group_id and move.group_id.id or False
         if move.rule_id:
             if move.rule_id.group_propagation_option == 'fixed' and move.rule_id.group_id:
@@ -2099,7 +2099,7 @@ class stock_move(osv.osv):
         another picking. This method is designed to be inherited.
         """
         values = {
-            'origin': move.origin or move.move_dest_id and move.move_dest_id.picking_id.origin,
+            'origin': move.origin,
             'company_id': move.company_id and move.company_id.id or False,
             'move_type': move.group_id and move.group_id.move_type or 'direct',
             'partner_id': move.partner_id.id or False,
