@@ -36,6 +36,8 @@ class LunchOrder(models.Model):
                                          compute='_compute_get_previous_order_ids')
     company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
+    cash_move_balance = fields.Monetary(compute='_compute_cash_balance_count')
+    logged_user = fields.Boolean(compute='_compute_logged_user')
 
     @api.one
     @api.depends('order_line_ids')
@@ -89,6 +91,19 @@ class LunchOrder(models.Model):
             }
 
     @api.one
+    @api.depends('user_id')
+    def _compute_cash_balance_count(self):
+        lunch_cash = self.env['lunch.cashmove'].search([('user_id', '=', self.user_id.id)])
+        self.cash_move_balance = sum(cash_balance.amount for cash_balance in lunch_cash)
+
+    @api.one
+    @api.depends('user_id')
+    def _compute_logged_user(self):
+        group_lunch_manager = self.env.ref('lunch.group_lunch_manager')
+        if group_lunch_manager in self.env.user.groups_id or self.env.uid == self.user_id.id:
+            self.logged_user = True
+
+    @api.one
     @api.constrains('date')
     def _check_date(self):
         """
@@ -126,6 +141,13 @@ class LunchOrder(models.Model):
             else:
                 self.state = 'new'
         return
+
+    @api.multi
+    def action_lunch_cashmove(self):
+        self.ensure_one()
+        result = self.env.ref('lunch.lunch_cashmove_action_account1').read()[0]
+        result['domain'] = [('user_id', '=', self.user_id.id)]
+        return result
 
 
 class LunchOrderLine(models.Model):

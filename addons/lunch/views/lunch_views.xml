@@ -172,6 +172,13 @@
               </p>
             </field>
         </record>
+
+        <record id="lunch_cashmove_action_account1" model="ir.actions.act_window">
+            <field name="name">Your Account</field>
+            <field name="res_model">lunch.cashmove</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="lunch_cashmove_view_tree_2"/>
+        </record>
         <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="lunch_cashmove_menu_form" action="lunch_cashmove_action_account" sequence="3"/>
 
         <!--Action for Administrate Orders group by supplier-->
@@ -371,9 +378,17 @@
                             <group>
                                 <field name='user_id'
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'lunch.group_lunch_user']}"/>
+                                <field name='date'/>
                             </group>
                             <group>
-                                <field name='date'/>
+                                <field name='logged_user' invisible="1"/>
+                                <button class="oe_right oe_stat_button"
+                                    attrs="{'invisible': [('logged_user','=',False)]}"
+                                    name="action_lunch_cashmove"
+                                    icon="fa-money"
+                                    type="object">
+                                    <field name="cash_move_balance" widget="statinfo" string="Balance"/>
+                                </button>
                             </group>
                         </group>
                         <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger"/>
