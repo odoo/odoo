@@ -1339,8 +1339,17 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
-                   for group_ext_id in groups.split(','))
+        from openerp.http import request
+        Users = self.pool['res.users']
+        for group_ext_id in groups.split(','):
+            if group_ext_id == 'base.group_no_one':
+                # check: the group_no_one is effective in debug mode only
+                if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
+                    return True
+            else:
+                if Users.has_group(cr, uid, group_ext_id):
+                    return True
+        return False
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields

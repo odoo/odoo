@@ -23,17 +23,6 @@
             <field name="perm_read" eval="False"/>
         </record>
 
-        <!-- If technical rights then read and write others subscriptions -->
-        <record id="mail_followers_rule_write_admin" model="ir.rule">
-            <field name="name">mail.followers: read and write others entries</field>
-            <field name="model_id" ref="model_mail_followers"/>
-            <field name="groups" eval="[(4, ref('base.group_no_one'))]"/>
-            <field name="domain_force">[]</field>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-            <field name="perm_read" eval="False"/>
-        </record>
-
         <record id="mail_message_subtype_rule_public" model="ir.rule">
             <field name="name">mail.message.subtype: portal/public: read public subtypes</field>
             <field name="model_id" ref="model_mail_message_subtype"/>

@@ -314,7 +314,10 @@ class WebRequest(object):
     def debug(self):
         """ Indicates whether the current request is in "debug" mode
         """
-        return 'debug' in self.httprequest.args
+        debug = 'debug' in self.httprequest.args
+        if not debug and self.httprequest.referrer:
+            debug = bool(urlparse.parse_qs(urlparse.urlparse(self.httprequest.referrer).query, keep_blank_values=True).get('debug'))
+        return debug
 
     @contextlib.contextmanager
     def registry_cr(self):
