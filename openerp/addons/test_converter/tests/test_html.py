@@ -157,7 +157,7 @@ class TestCurrencyExport(TestExport):
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
         """
-        currency = self.create(self.Currency, name="Test", symbol=u"test",)
+        currency = self.create(self.Currency, name="Test", symbol=u"test")
         obj = self.create(self.Model, value=0.1234567)
 
         converted = self.convert(obj, dest=currency)
