@@ -1262,19 +1262,12 @@
 <t t-name="Many2OneButton.cell"
     ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string" width="16" height="16"/>
 </t>
-<t t-name="FieldMany2ManyTags">
-    <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
-        <t t-if="! widget.get('effective_readonly')">
-            <textarea rows="1" style="width: 100%"
-                t-att-placeholder="widget.node.attrs.placeholder"></textarea>
-        </t>
-    </div>
-</t>
 <t t-name="FieldMany2ManyTag">
     <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
-        <span class="oe_tag" t-att-data-index="i">
+        <span class="badge" t-att-data-index="i" t-att-data-id="el[0]">
             <t t-esc="el[1]"/>
+            <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
         <t t-set="i" t-value="i + 1"/>
     </t>

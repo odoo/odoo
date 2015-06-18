@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
-    <t t-name="many2manyattendee">
-        <t t-set="i" t-value="0"/>
-            <t t-foreach="elements" t-as="el">
-                <span class="oe_tag no-wrap" t-att-data-index="i">
-                    <a t-attf-class="oe_invitation #{el[2]}"/>
-                    <t t-esc="el[1]"/>
-                </span>
-            <t t-set="i" t-value="i + 1"/>
+    <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTag">
+        <t t-jquery="span:first" t-operation="prepend">
+            <span t-attf-class="o_calendar_invitation #{el[2]}"/>
         </t>
     </t>
     <t t-name='notify_title'>
@@ -21,16 +16,7 @@
         <button class='link2event '>Details</button>
         <button class='link2recall '>Snooze</button> 
     </t>
-    <t t-name='m2mattendee_tag'>
-        <div class="text-tag">
-            <div class="text-button">
-                <a class="oe_invitation custom-edit"/>
-                <span class="text-label"/>
-                <a class="text-remove"/>
-            </div>
-        </div>         
-    </t>
-    
+
     <t t-name="invitation_view">
         <div class='invitation_block well' style='width:50%; margin:auto; margin-top : 30px;'>
             <div class="oe_right" style="margin-left:0px"><b><t t-esc="invitation['current_attendee'].cn"/> (<t t-esc="invitation['current_attendee'].email"/>)</b></div>

@@ -224,6 +224,38 @@
         }
     }
 
+    .o_form_field_many2manytags {
+        .o-flex-display();
+        .o-flex-flow(row, wrap);
+        .o-align-items(flex-start);
+
+        .badge {
+            .o-flex(0, 0, auto);
+            margin: 0 3px 3px 0;
+            .o_delete {
+                cursor: pointer;
+            }
+        }
+
+        padding: 0;
+        > .oe_form_field_many2one {
+            padding: 0;
+        }
+    }
+
+    &.oe_form_editable .o_form_field_many2manytags {
+        border: 1px solid #CCC;
+        border-radius: 3px;
+
+        > .oe_form_field {
+            .o-flex(1, 0, 100px);
+
+            input {
+                border: none;
+            }
+        }
+    }
+
     .o_address_format {
         width: 100%;
 

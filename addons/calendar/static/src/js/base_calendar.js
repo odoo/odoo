@@ -221,31 +221,10 @@ WebClient.include({
 });
 
 var Many2ManyAttendee = FieldMany2ManyTags.extend({
-    tag_template: "many2manyattendee",
-    initialize_texttext: function() {
-        return _.extend(this._super(),{
-            html : {
-                    tag: QWeb.render('m2mattendee_tag')
-            }
-        });
-    },
-    map_tag: function(value){
-        return _.map(value, function(el) {return {name: el[1], id:el[0], state: el[2]};});
-    },
+    tag_template: "Many2ManyAttendeeTag",
     get_render_data: function(ids){
-        var self = this;
-        var dataset = new data.DataSetStatic(this, this.field.relation, self.build_context());
-        return dataset.call('get_attendee_detail',[ids, self.getParent().datarecord.id || false]);
-    },
-    render_tag: function(data){
-        this._super(data);
-        var self = this;
-        if (! self.get("effective_readonly")) {
-            var tag_element = self.tags.tagElements();
-            _.each(data,function(value, key){
-                $(tag_element[key]).find(".custom-edit").addClass(data[key][2]);
-            });
-        }
+        var dataset = new data.DataSetStatic(this, this.field.relation, this.build_context());
+        return dataset.call('get_attendee_detail',[ids, this.getParent().datarecord.id || false]);
     }
 });
 

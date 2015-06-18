@@ -1236,125 +1236,61 @@ var One2ManyViewManager = ViewManager.extend({
 });
 
 var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, common.ReinitializeFieldMixin, {
-    template: "FieldMany2ManyTags",
+    className: "oe_form_field o_form_field_many2manytags",
     tag_template: "FieldMany2ManyTag",
-    init: function() {
-        this._super.apply(this, arguments);
+
+    events: {
+        'click .o_delete': function(e) {
+            this.remove_id($(e.target).parent().data('id'));
+        }
+    },
+
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         common.CompletionFieldMixin.init.call(this);
         this.set({"value": []});
         this._display_orderer = new utils.DropMisordered();
-        this._drop_shown = false;
-    },
-    initialize_texttext: function(){
-        var self = this;
-        return {
-            plugins : 'tags arrow autocomplete',
-            autocomplete: {
-                render: function(suggestion) {
-                    return $('<span class="text-label"/>').
-                             data('index', suggestion.index).html(suggestion.label);
-                }
-            },
-            ext: {
-                autocomplete: {
-                    selectFromDropdown: function() {
-                        this.trigger('hideDropdown');
-                        var index = Number(this.selectedSuggestionElement().children().children().data('index'));
-                        var data = self.search_result[index];
-                        if (data.id) {
-                            self.add_id(data.id);
-                        } else {
-                            self.ignore_blur = true;
-                            data.action();
-                        }
-                        this.trigger('setSuggestions', {result : []});
-                    },
-                },
-                tags: {
-                    isTagAllowed: function(tag) {
-                        return !!tag.name;
-
-                    },
-                    removeTag: function(tag) {
-                        var id = tag.data("id");
-                        self.set({"value": _.without(self.get("value"), id)});
-                    },
-                    renderTag: function(stuff) {
-                        return $.fn.textext.TextExtTags.prototype.renderTag.
-                            call(this, stuff).data("id", stuff.id);
-                    },
-                },
-                itemManager: {
-                    itemToString: function(item) {
-                        return item.name;
-                    },
-                },
-                core: {
-                    onSetInputData: function(e, data) {
-                        if (data === '') {
-                            this._plugins.autocomplete._suggestions = null;
-                        }
-                        this.input().val(data);
-                    },
-                },
-            },
-        };
     },
     initialize_content: function() {
-        if (this.get("effective_readonly"))
-            return;
-        var self = this;
-        self.ignore_blur = false;
-        self.$text = this.$("textarea");
-        self.$text.textext(self.initialize_texttext()).bind('getSuggestions', function(e, data) {
-            var _this = this;
-            var str = !!data ? data.query || '' : '';
-            self.get_search_result(str).done(function(result) {
-                self.search_result = result;
-                $(_this).trigger('setSuggestions', {result : _.map(result, function(el, i) {
-                    return _.extend(el, {index:i});
-                })});
-            });
-        }).bind('hideDropdown', function() {
-            self._drop_shown = false;
-        }).bind('showDropdown', function() {
-            self._drop_shown = true;
-        });
-        self.tags = self.$text.textext()[0].tags();
-        self.$text
-            .focusin(function () {
-                self.trigger('focused');
-                self.ignore_blur = false;
-            })
-            .focusout(function() {
-                self.$text.trigger("setInputData", "");
-                if (!self.ignore_blur) {
-                    self.trigger('blurred');
-                }
-            }).keydown(function(e) {
-                if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
-                    self.$text.textext()[0].autocomplete().selectFromDropdown();
+        if(!this.get("effective_readonly")) {
+            this.many2one = new FieldMany2One(this.field_manager, this.node);
+            this.many2one.options.no_open = true;
+            this.many2one.on('changed_value', this, function() {
+                var newValue = this.many2one.get('value');
+                if(newValue) {
+                    this.add_id(newValue);
+                    var self = this;
+                    setTimeout(function() {
+                        self.many2one.$input.val('');
+                    }, 0);
                 }
             });
+
+            this.many2one.prependTo(this.$el);
+
+            var self = this;
+            this.many2one.$('input').on('keydown', function(e) {
+                if(!$(e.target).val() && e.which === 8) {
+                    var $badges = self.$('.badge');
+                    if($badges.length) {
+                        self.remove_id($badges.last().data('id'));
+                    }
+                }
+            });
+        }
     },
-    get_search_blacklist: function() {
-        return this.get("value");
-    },
-    map_tag: function(data){
-        return _.map(data, function(el) {return {name: el[1], id:el[0]};});
+    destroy_content: function() {
+        if(this.many2one) {
+            this.many2one.destroy();
+            this.many2one = undefined;
+        }
     },
     get_render_data: function(ids){
         return this.dataset.name_get(ids);
     },
     render_tag: function(data) {
-        var self = this;
-        if (! self.get("effective_readonly")) {
-            self.tags.containerElement().children().remove();
-            self.$('textarea').css("padding-left", "3px");
-            self.tags.addTags(self.map_tag(data));
-        } else {
-            self.$el.html(QWeb.render(self.tag_template, {elements: data}));
-        }
+        this.$('.badge').remove();
+        this.$el.prepend(QWeb.render(this.tag_template, {elements: data, readonly: this.get('effective_readonly')}));
     },
     render_value: function() {
         var self = this;
@@ -1369,7 +1305,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             data = _.map(values, function(el) { return indexed[el]; });
             self.render_tag(data);
         };
-        if (! values || values.length > 0) {
+        if (!values || values.length > 0) {
             return this._display_orderer.add(self.get_render_data(values)).done(handle_names);
         } else {
             handle_names([]);
@@ -1378,21 +1314,22 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     add_id: function(id) {
         this.set({'value': _.uniq(this.get('value').concat([id]))});
     },
+    remove_id: function(id) {
+        this.set({'value': _.without(this.get("value"), id)});
+    },
     focus: function () {
-        var input = this.$text && this.$text[0];
-        return input ? input.focus() : false;
+        if(!this.get("effective_readonly")) {
+            return this.many2one.focus();
+        }
+        return false;
     },
     set_dimensions: function (height, width) {
-        this._super(height, width);        
-        this.$("textarea").css({
-            width: width,
-            minHeight: height
-        });
-    },
-    _search_create_popup: function() {
-        this.ignore_blur = true;
-        return common.CompletionFieldMixin._search_create_popup.apply(this, arguments);
-    },
+        this._super(height, width);
+        var $input = this.$('input');
+        if (!this.get("effective_readonly") && $input) {
+            $input.css('height', height);
+        }
+    }
 });
 
 /**
