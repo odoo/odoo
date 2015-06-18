@@ -76,6 +76,7 @@ class MailMailStats(osv.Model):
         'state_update': fields.function(_compute_state, string='State Update', type='datetime',
                                         multi='state', help='Last state update of the mail',
                                         store=__store),
+        'email_to': fields.text('Recipient', help="Recipient email address"),
     }
 
     _defaults = {
