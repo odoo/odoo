@@ -271,7 +271,6 @@ class purchase_order(osv.osv):
         line = self.pool.get('purchase.order.line')
         order_line_ids = []
         move_ids = []
-        proc_obj = self.pool.get('procurement.order')
         for order in self.browse(cr, uid, ids, context=context):
             order_line_ids += [po_line.id for po_line in order.order_line]
             move_ids += [po_line.move_dest_id.id for po_line in order.order_line if po_line.move_dest_id]
