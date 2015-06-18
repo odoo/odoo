@@ -167,8 +167,9 @@ class TestCurrencyExport(TestExport):
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
                   'data-oe-field="value" data-oe-type="monetary" '
                   'data-oe-expression="obj.value">'
+                      u'{symbol}\N{NO-BREAK SPACE}'
                       '<span class="oe_currency_value">0.12</span>'
-                      u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
+                      '</span>'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
             ).encode('utf-8'),)
