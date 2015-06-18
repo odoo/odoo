@@ -341,6 +341,17 @@ function float_is_zero (value, decimals) {
     return Math.abs(round_precision(value, epsilon)) < epsilon;
 };
 
+/**
+ * Confines a value inside an interval
+ * @param {Number} [val] the value to confine
+ * @param {Number} [min] the minimum of the interval
+ * @param {Number} [max] the maximum of the interval
+ * @return val if val is in [min, max], min if val < min and max otherwise
+ */
+function confine (val, min, max) {
+    return Math.max(min, Math.min(max, val));
+}
+
 function assert (bool) {
     if (!bool) {
         throw new Error("AssertionError");
@@ -413,6 +424,7 @@ return {
     round_precision: round_precision,
     round_decimals: round_decimals,
     float_is_zero: float_is_zero,
+    confine: confine,
     assert: assert,
     xor: xor,
     DropMisordered: DropMisordered,
