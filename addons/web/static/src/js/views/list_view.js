@@ -298,6 +298,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      * this.options.$sidebar or in a div of its template
      **/
     render_sidebar: function($node) {
+        var self = this;
         if (!this.sidebar && this.options.sidebar) {
             this.sidebar = new Sidebar(this);
             if (this.fields_view.toolbar) {
@@ -307,6 +308,20 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                 { label: _t("Export"), callback: this.on_sidebar_export },
                 this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
             ]));
+            if (this.fields_view.fields['active']) {
+                this.sidebar.add_items('other', [{
+                    label: (_t("Unarchive")),
+                    callback: function() {
+                        self.do_archive_unarchive_selected();
+                    }
+                }]);
+                this.sidebar.add_items('other', [{
+                    label: (_t("Archive")),
+                    callback: function() {
+                        self.do_archive_unarchive_selected(true);
+                    }
+                }]);
+            }
 
             $node = $node || this.options.$sidebar || this.$('.oe_list_sidebar');
             this.sidebar.appendTo($node);
@@ -610,6 +625,36 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         return this.alive(this.load_view(context)).then(
             this.proxy('reload_content'));
     },
+    do_archive_unarchive: function(records, do_archive) {
+        var self = this;
+        var record_ids = [];
+        var active_value = do_archive ? false : true;
+        var def = $.Deferred();
+        if (records.length && do_archive && !confirm(_t("Do you really want to Archive these records ?"))) {
+            return;
+        }
+        _.each(records, function (record) {
+            if ((record.active && do_archive) || (!record.active && !do_archive)) {
+                record_ids.push(record.id);
+            }
+        });
+        if (record_ids.length) {
+            def = new Model(self.model).call('write',[record_ids,{'active': active_value }]);
+        }
+        def.done(function() {
+            _.each(records_ids, function (id) {
+                self.records.remove(self.records.get(id));
+            });
+            if (self.records.length === 0 && self.dataset.size() > 0 && self.page != 0) {
+                //Navigate to previous page when all records are archived on current page.
+                return self.$pager.find('div.oe-pager-buttons a:first').trigger('click');
+            } else {
+                self.configure_pager(self.dataset);
+            }
+            self.reload();
+            self.compute_aggregates();
+        });
+    },
     /**
      * Handles the signal to delete lines from the records list
      *
@@ -733,6 +778,14 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      */
     do_add_record: function () {
         this.select_record(null);
+    },
+    do_archive_unarchive_selected: function(do_archive) {
+        var records = this.groups.get_selection().records;
+        if (records.length) {
+            this.do_archive_unarchive(records, do_archive);
+        } else {
+            this.do_warn(_t("Warning"), _t("You must select at least one record."));
+        }
     },
     /**
      * Handles deletion of all selected lines

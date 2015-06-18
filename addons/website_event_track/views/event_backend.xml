@@ -12,6 +12,7 @@
                         <field name="color"/>
                         <field name="speaker_ids"/>
                         <field name="website_url"/>
+                        <field name="active"/>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
@@ -22,6 +23,7 @@
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <li><a t-att-href="record.website_url.value" type="url">View Track</a></li>
                                         <t t-if="widget.editable"><li><a type="edit">Edit Track</a></li></t>
+                                        <t t-if="widget.active_field_exists"><li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li></t>
                                         <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
@@ -76,6 +78,7 @@
                     <field name="speaker_ids"/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
+                        <filter string="Archived" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
                         <filter string="Date" context="{'group_by':'date'}"/>
@@ -101,6 +104,7 @@
                                 <field name="website_published" widget="website_button"/>
                             </button>
                         </div>
+                        <field name="active" invisible="1"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -146,6 +150,7 @@
                 <tree string="Event Track">
                     <field name="name"/>
                     <field name="event_id"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>

@@ -19,6 +19,8 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear"/></a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
+                    <li t-if="widget.active_field_exists and widget.data_records.length"><a class="o_column_achive" t-attf-data-action="archive" href="#">Archive</a></li>
+                    <li t-if="widget.active_field_exists and widget.data_records.length"><a class="o_column_unarchive" t-attf-data-action="unarchive"  href="#">Unarchive</a></li>
                     <t t-if="widget.grouped_by_m2o">
                         <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit</a></li>
                         <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>

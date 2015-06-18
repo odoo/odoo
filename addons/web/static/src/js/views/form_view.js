@@ -201,6 +201,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
      * div of its template
      **/
     render_sidebar: function($node) {
+        var self = this;
         if (!this.sidebar && this.options.sidebar) {
             this.sidebar = new Sidebar(this);
             if (this.fields_view.toolbar) {
@@ -210,6 +211,20 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.on_button_delete },
                 this.is_action_enabled('create') && { label: _t('Duplicate'), callback: this.on_button_duplicate }
             ]));
+            if(this.fields['active']) {
+                this.sidebar.add_items('other', [{
+                    label: _t("Unarchive"),
+                    callback: function() {
+                            self.on_button_archive_unarchive();
+                        },
+                    }]);
+                this.sidebar.add_items('other', [{
+                    label: _t("Archive"),
+                    callback: function() {
+                            self.on_button_archive_unarchive(true);
+                        },
+                    }]);
+            }
 
             $node = $node || this.$('.oe_form_sidebar');
             this.sidebar.appendTo($node);
@@ -772,6 +787,35 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 self.to_edit_mode();
             });
         });
+    },
+    on_button_archive_unarchive: function(do_archive) {
+        var self = this;
+        var def = $.Deferred();
+        var write_rpc_fnc = function(active_field_value) {
+            self.dataset.write(self.datarecord.id, {'active': active_field_value}).done(function() {
+                self.dataset.remove_ids([self.datarecord.id]);
+                if (self.dataset.size()) {
+                    self.execute_pager_action('next');
+                } else {
+                    self.do_action('history_back');
+                }
+                def.resolve();
+            }).fail(function() {
+                def.reject();
+            });
+        };
+        this.has_been_loaded.done(function() {
+            if (self.get_field_value('active') && do_archive) {
+                if (confirm(_t("Do you really want to Archive this record ?"))) {
+                    write_rpc_fnc(false);
+                }
+            } else if (!self.get_field_value('active') && !do_archive){
+                write_rpc_fnc(true);
+            } else {
+                def.resolve();
+            }
+        });
+        return def.promise();
     },
     on_button_delete: function() {
         var self = this;

@@ -30,6 +30,7 @@ class Channel(models.Model):
     }
 
     name = fields.Char('Name', translate=True, required=True)
+    active = fields.Boolean(default=True)
     description = fields.Html('Description', translate=True)
     sequence = fields.Integer(default=10, help='Display order')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
@@ -223,6 +224,7 @@ class Slide(models.Model):
 
     # description
     name = fields.Char('Title', required=True, translate=True)
+    active = fields.Boolean(default=True)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")

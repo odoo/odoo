@@ -74,6 +74,7 @@
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
                         </div>
+                        <field name="active" invisible="1"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
@@ -143,6 +144,7 @@
                     <field name="user_id"/>
                     <field name="state"/>
                     <field name="message_needaction" invisible="1"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -161,6 +163,7 @@
                     <field name="seats_used"/>
                     <field name="seats_expected"/>
                     <field name="color"/>
+                    <field name="active" invisible="1"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -170,6 +173,9 @@
                                         <span class="fa fa-bars fa-lg"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.active_field_exists">
+                                            <li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li>
+                                        </t>
                                         <t t-if="widget.deletable">
                                             <li><a type="delete">Delete</a></li>
                                         </t>
@@ -227,6 +233,7 @@
                 <search string="Events">
                     <field name="name" string="Events"/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
@@ -287,6 +294,7 @@
                     <field name="event_id" />
                     <field name="state"/>
                     <field name="message_needaction" invisible="1"/>
+                    <field name="active" invisible="1"/>
                     <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                     <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
@@ -310,6 +318,7 @@
                     <sheet string="Registration">
                         <group>
                             <group string="Attendee" name="attendee">
+                                <field name="active" invisible="1"/>
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <field name="email"/>
@@ -370,6 +379,7 @@
                     <field name="id" string="Registration ID"/>
                     <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
                     <separator/>
                     <field name="event_id"/>

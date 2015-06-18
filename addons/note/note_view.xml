@@ -46,7 +46,7 @@
           <field name="sequence"/>
           <field name="name"/>
           <field name="stage_id"/>
-          <field name="open"/>
+          <field name="active"/>
           <field name="memo"/>
           <field name="date_done"/>
           <field name="message_follower_ids"/>
@@ -61,16 +61,17 @@
                         <span class="fa fa-bars fa-lg"/>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <t t-if="widget.active_field_exists"><li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li></t>
                         <li><a type="delete">Delete</a></li>
                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                     </ul>
                 </div>
                   <span>
-                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>
+                    <a name="onclick_note_is_done" type="object" t-if="record.active.raw_value"><i class="fa fa-check"/></a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.active.raw_value"><i class="fa fa-undo"/></a>
                   </span>
                 <!-- kanban note -->
-                <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
+                <span t-attf-class="oe_kanban_content #{record.active.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
                 </span>
@@ -94,7 +95,7 @@
       <field name="arch" type="xml">
         <tree string="Stages">
           <field name="name"/>
-          <field name="open"/>
+          <field name="active" invisible="1"/>
           <field name="stage_id"/>
           <field name="tag_ids" widget="many2many_tags"/>
         </tree>
@@ -112,6 +113,7 @@
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
                 </header>
                 <sheet>
+                    <field name="active" invisible="1"/>
                     <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
                 </sheet>
                 <div class="oe_chatter">
@@ -130,8 +132,7 @@
         <search string="Notes">
           <field name="memo" string="Note"/>
           <field name="tag_ids"/>
-          <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
-          <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
+          <filter name="active_false" string="Archived" domain="[('active', '=', False)]"/>
           <group expand="0" string="Group By">
             <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>

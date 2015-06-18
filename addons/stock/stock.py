@@ -3174,6 +3174,7 @@ class stock_warehouse(osv.osv):
 
     _columns = {
         'name': fields.char('Warehouse Name', required=True, select=True),
+        'active': fields.boolean(string='Active'),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'view_location_id': fields.many2one('stock.location', 'View Location', required=True, domain=[('usage', '=', 'view')]),
@@ -3266,6 +3267,7 @@ class stock_warehouse(osv.osv):
                     self.write(cr, uid, [warehouse.id, wh.id], {'route_ids': [(4, inter_wh_route_id)]}, context=context)
 
     _defaults = {
+        'active': True,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
         'reception_steps': 'one_step',
         'delivery_steps': 'ship_only',

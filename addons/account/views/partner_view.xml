@@ -11,7 +11,7 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
@@ -75,7 +75,19 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="active" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_account_position_search" model="ir.ui.view">
+            <field name="name">account.fiscal.position.search</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <search string="Fiscal Position">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 

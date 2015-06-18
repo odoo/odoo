@@ -14,7 +14,7 @@
                       </group>
                       <group>
                         <field name="code"/>
-                        <field name="active"/>
+                        <field name="active" invisible="1"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                       </group>
                     </group>
@@ -76,6 +76,7 @@
                     <field name="number_next_actual"/>
                     <field name="number_increment"/>
                     <field name="implementation"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -86,6 +87,7 @@
                     <field name="name" string="Sequence"/>
                     <field name="code"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>

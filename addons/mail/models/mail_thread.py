@@ -242,6 +242,15 @@ class MailThread(models.AbstractModel):
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in track_self)
 
+        #Check if record archived or unarchived
+        if 'active' in values:
+            if not values['active']:
+                message = _("Record has been Archived")
+            else:
+                message = _("Record has been Unarchived")
+            for record in self:
+                record.message_post(body=message, message_type='comment', subtype='mail.mt_comment')
+
         # Perform write
         result = super(MailThread, self).write(values)
 

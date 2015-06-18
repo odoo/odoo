@@ -32,6 +32,7 @@ class event_track(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata', 'website.published.mixin']
 
     name = fields.Char('Title', required=True, translate=True)
+    active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Proposed by')
     partner_name = fields.Char('Partner Name')

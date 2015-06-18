@@ -335,12 +335,6 @@ class crm_lead(format_address, osv.osv):
     # Backward compatibility
     case_mark_lost = action_set_lost
 
-    def action_set_active(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'active': True}, context=context)
-
-    def action_set_unactive(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'active': False}, context=context)
-
     def action_set_won(self, cr, uid, ids, context=None):
         """ Won semantic: probability = 100 (active untouched) """
         stages_leads = {}

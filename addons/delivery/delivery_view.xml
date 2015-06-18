@@ -13,6 +13,7 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="price" invisible="'order_id' not in context"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -30,7 +31,7 @@
                         </h1>
                     </div>
                     <group>
-                        <field name="active"/>
+                        <field name="active" invisible="1"/>
                     </group>
                     <group name="general">
                         <group string="General Information">
@@ -92,6 +93,17 @@
             </field>
         </record>
 
+        <record id="view_delivery_carrier_search" model="ir.ui.view">
+            <field name="name">delivery.carrier.search</field>
+            <field name="model">delivery.carrier</field>
+            <field name="arch" type="xml">
+                <search string="Carrier">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="action_delivery_carrier_form" model="ir.actions.act_window">
             <field name="name">Delivery Methods</field>
             <field name="type">ir.actions.act_window</field>
@@ -125,6 +137,7 @@
                     <field name="sequence"/>
                     <field name="carrier_id"/>
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -136,9 +149,9 @@
                 <form string="Delivery grids">
                     <group col="4">
                         <field name="name"/>
-                        <field name="active"/>
                         <field name="carrier_id"/>
                         <field name="sequence"/>
+                        <field name="active" invisible="1"/>
                     </group>
                     <notebook>
                         <page string="Grid definition">
@@ -158,6 +171,18 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_delivery_grid_search" model="ir.ui.view">
+            <field name="name">delivery.grid.search</field>
+            <field name="model">delivery.grid</field>
+            <field name="arch" type="xml">
+                <search string="Delivery grids">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="action_delivery_grid_form" model="ir.actions.act_window">
             <field name="name">Delivery Pricelist</field>
             <field name="type">ir.actions.act_window</field>

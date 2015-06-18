@@ -20,8 +20,8 @@
         <field name="model">web.planner</field>
         <field name="arch" type="xml">
             <search string="Planner">
-                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
-                <filter name="unactive" string="Unactive" domain="[('active', '=', False)]"/>
+                <filter name="active" string="Unarchive" domain="[('active', '=', True)]"/>
+                <filter name="unactive" string="Archived" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>

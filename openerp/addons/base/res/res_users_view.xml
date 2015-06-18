@@ -229,6 +229,7 @@
                     <field name="login"/>
                     <field name="lang"/>
                     <field name="login_date"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -241,7 +242,7 @@
                     <field name="company_ids" string="Company" groups="base.group_light_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
-                    <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
+                    <filter name="Inactive" string="Archived" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>

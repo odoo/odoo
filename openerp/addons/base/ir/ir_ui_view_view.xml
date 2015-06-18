@@ -20,7 +20,7 @@
                             <field name="mode"/>
                             <field name="model_data_id"/>
                             <field name="xml_id"/>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -56,6 +56,7 @@
                     <field name="model"/>
                     <field name="xml_id"/>
                     <field name="inherit_id"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -64,8 +65,8 @@
             <field name="arch" type="xml">
                 <search string="Views">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
-                    <filter string="Active" name="active" domain="[('active', '=',True)]"/>
-                    <filter string="Inactive" domain="[('active', '=',False)]"/>
+                    <filter string="Unarchived" name="active" domain="[('active', '=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=',False)]"/>
                     <separator/>
                     <filter string="Form" domain="[('type', '=','form')]"/>
                     <filter string="Tree" domain="[('type', '=', 'tree')]"/>

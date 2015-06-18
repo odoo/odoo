@@ -50,6 +50,7 @@ class hr_job(osv.Model):
     _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', required=True, select=True, translate=True),
+        'active': fields.boolean(string='Active'),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
@@ -80,6 +81,7 @@ class hr_job(osv.Model):
     }
 
     _defaults = {
+        'active': True,
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=ctx),
         'state': 'recruit',
         'no_of_recruitment' : 1,
@@ -279,6 +281,7 @@ class hr_department(osv.osv):
 
     _columns = {
         'name': fields.char('Department Name', required=True),
+        'active': fields.boolean(string='Active'),
         'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
@@ -291,6 +294,7 @@ class hr_department(osv.osv):
     }
 
     _defaults = {
+        'active': True,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
     }
 

@@ -43,6 +43,7 @@ class hr_expense_expense(osv.osv):
     _columns = {
         'name': fields.char('Description', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'id': fields.integer('Sheet ID', readonly=True),
+        'active': fields.boolean('Active'),
         'date': fields.date('Date', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is done."),
         'employee_payable_account_id': fields.many2one('account.account', 'Employee Account', help="Employee payable account", domain=[('deprecated', '=', False)]),
@@ -79,6 +80,7 @@ class hr_expense_expense(osv.osv):
 
     }
     _defaults = {
+        'active': True,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
         'date': fields.date.context_today,
         'state': 'draft',

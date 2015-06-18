@@ -37,6 +37,7 @@ class fleet_vehicle_cost(osv.Model):
 
     _columns = {
         'name': fields.related('vehicle_id', 'name', type="char", string='Name', store=True),
+        'active': fields.boolean(string='Active'),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
         'cost_subtype_id': fields.many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost'),
         'amount': fields.float('Total Price'),
@@ -52,6 +53,7 @@ class fleet_vehicle_cost(osv.Model):
     }
 
     _defaults ={
+        'active': True,
         'cost_type': 'other',
     }
 
@@ -312,6 +314,7 @@ class fleet_vehicle(osv.Model):
     _order= 'license_plate asc'
     _columns = {
         'name': fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
+        'active': fields.boolean(string='Active'),
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate': fields.char('License Plate', required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn': fields.char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False),
@@ -351,6 +354,7 @@ class fleet_vehicle(osv.Model):
         }
 
     _defaults = {
+        'active': True,
         'doors': 5,
         'odometer_unit': 'kilometers',
         'state_id': _get_default_state,
@@ -431,12 +435,14 @@ class fleet_vehicle_odometer(osv.Model):
 
     _columns = {
         'name': fields.function(_vehicle_log_name_get_fnc, type="char", string='Name', store=True),
+        'active': fields.boolean(string='Active'),
         'date': fields.date('Date'),
         'value': fields.float('Odometer Value', group_operator="max"),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True),
         'unit': fields.related('vehicle_id', 'odometer_unit', type="char", string="Unit", readonly=True),
     }
     _defaults = {
+        'active': True,
         'date': fields.date.context_today,
     }
 
@@ -529,6 +535,7 @@ class fleet_vehicle_log_fuel(osv.Model):
 
     _columns = {
         'liter': fields.float('Liter'),
+        'active': fields.boolean(string='Active'),
         'price_per_liter': fields.float('Price Per Liter'),
         'purchaser_id': fields.many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref': fields.char('Invoice Reference', size=64),
@@ -538,6 +545,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
+        'active': True,
         'date': fields.date.context_today,
         'cost_subtype_id': _get_default_service_type,
         'cost_type': 'fuel',
@@ -570,6 +578,7 @@ class fleet_vehicle_log_services(osv.Model):
     _name = 'fleet.vehicle.log.services'
     _description = 'Services for vehicles'
     _columns = {
+        'active': fields.boolean(string='Active'),
         'purchaser_id': fields.many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref': fields.char('Invoice Reference'),
         'vendor_id': fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
@@ -578,6 +587,7 @@ class fleet_vehicle_log_services(osv.Model):
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
     }
     _defaults = {
+        'active': True,
         'date': fields.date.context_today,
         'cost_subtype_id': _get_default_service_type,
         'cost_type': 'services'
@@ -761,6 +771,7 @@ class fleet_vehicle_log_contract(osv.Model):
     _order='state desc,expiration_date'
     _columns = {
         'name': fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
+        'active': fields.boolean(string='Active'),
         'start_date': fields.date('Contract Start Date', help='Date when the coverage of the contract begins'),
         'expiration_date': fields.date('Contract Expiration Date', help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
         'days_left': fields.function(get_days_left, type='integer', string='Warning Date'),
@@ -779,6 +790,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
+        'active': True,
         'purchaser_id': lambda self, cr, uid, ctx: self.pool.get('res.users').browse(cr, uid, uid, context=ctx).partner_id.id or False,
         'date': fields.date.context_today,
         'start_date': fields.date.context_today,

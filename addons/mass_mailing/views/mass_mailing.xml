@@ -219,6 +219,7 @@
                 <search string="Mailing Lists">
                     <field name="name"/>
                     <field name="create_date"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Creation Month" name="group_create_date"
                             context="{'group_by': 'create_date'}"/>
@@ -236,6 +237,7 @@
                     <field name="name"/>
                     <field name="create_date"/>
                     <field name="contact_nbr"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -252,6 +254,7 @@
                                 <field name="contact_nbr" string="Recipients" widget="statinfo"/>
                             </button>
                         </div>
+                        <field name="active" invisible="1"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -297,6 +300,7 @@
                <search string="Mass Mailings">
                     <field name="name" string="Mailings"/>
                     <field name="mass_mailing_campaign_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state"
                             context="{'group_by': 'state'}"/>
@@ -323,6 +327,7 @@
                     <field name="replied"/>
                     <field name="mass_mailing_campaign_id"
                         groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <field name="active" invisible="1" />
                 </tree>
             </field>
         </record>
@@ -423,6 +428,7 @@
                             </button>
                         </div>
 
+                        <field name="active" invisible="1" />
                         <group>
                             <field name="email_from"/>
                             <field name="name"/>
@@ -496,6 +502,7 @@
                     <field name='total'/>
                     <field name='failed'/>
                     <field name='sent_date'/>
+                    <field name="active" invisible="1"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
@@ -505,6 +512,9 @@
                                         <span class="fa fa-bars fa-lg"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.active_field_exists">
+                                            <li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li>
+                                        </t>
                                         <t t-if="widget.deletable">
                                             <li><a type="delete">Delete</a></li>
                                         </t>

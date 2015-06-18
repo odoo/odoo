@@ -15,6 +15,7 @@
                 <field name="stage_id"/>
                 <separator/>
                 <filter string="My Requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <separator/>
                 <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
@@ -41,6 +42,7 @@
                     <div class="oe_right">
                         <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
                     </div>
+                    <field name="active" invisible="1"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Subject"/>
                         <h1>
@@ -83,6 +85,7 @@
                 <field name="category_id"/>
                 <field name="kanban_state"/>
                 <field name="message_needaction_counter"/>
+                <field name="active"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
@@ -99,6 +102,7 @@
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <t t-if="widget.editable"><li><a type="edit">Edit...</a></li></t>
+                                    <t t-if="widget.active_field_exists"><li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li></t>
                                     <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
@@ -144,6 +148,7 @@
                 <field name="user_id"/>
                 <field name="category_id" groups="base.group_hr_manager"/>
                 <field name="stage_id"/>
+                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -208,6 +213,7 @@
                             <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
                     </div>
+                    <field name="active" invisible="1"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Name"/>
                         <h1><field name="name" string="Name"/></h1>
@@ -260,6 +266,7 @@
                 <field name="serial_no"/>
                 <field name="model"/>
                 <field name="maintenance_ids"/>
+                <field name="active"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -276,6 +283,7 @@
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <t t-if="widget.editable"><li><a type="edit">Edit...</a></li></t>
+                                    <t t-if="widget.active_field_exists"><li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li></t>
                                     <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
@@ -319,6 +327,7 @@
                 <field name="user_id"/>
                 <field name="category_id"/>
                 <field name="partner_id" invisible="1"/>
+                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -337,6 +346,7 @@
                 <filter string="New" help="Unassigned" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
                 <filter string="To Do" help="Under Maintenance" domain="[('maintenance_ids', '!=', False), ('maintenance_ids.stage_id.fold', '=', False)]"/>
                 <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <separator/>
                 <filter string="My Equipments" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>

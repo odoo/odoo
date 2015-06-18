@@ -22,6 +22,7 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter string="Approved Leaves" domain="[('state', '=', 'validate')]" name="validated"/>
                     <separator/>
@@ -96,6 +97,7 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" required="1"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
                             <label for="number_of_days_temp" string="Duration"/>
@@ -150,6 +152,7 @@
                     <field name="date_from" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="state"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -170,6 +173,7 @@
                         widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
                     <field name="report_note" groups="base.group_hr_manager"/>
                     <field name="payslip_status" invisible="1"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -192,6 +196,7 @@
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="state"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -210,6 +215,7 @@
                     <field name="date_to"/>
                     <field name="holiday_status_id"/>
                     <field name="state"/>
+                    <field name="active" invisible="1"/>
                     <button name="toggle_payslip_status" field_name="payslip_status" type="object"
                         widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
                     <field name="report_note"/>
@@ -232,6 +238,7 @@
                     <field name="date_to"/>
                     <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="state"/>
+                    <field name="active" invisible="1"/>
                     <field name="payslip_status" invisible="1"/>
                     <button name="toggle_payslip_status" field_name="payslip_status" type="object"
                         widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
@@ -464,7 +471,7 @@
                         <group name="second">
                             <field name="categ_id"/>
                             <field name="color_name"/>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                 </form>
@@ -480,6 +487,7 @@
                     <field name="max_leaves"/>
                     <field name="leaves_taken"/>
                     <field name="remaining_leaves"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -492,6 +500,7 @@
                 <tree string="Leave Type">
                     <field name="name"/>
                     <field name="limit"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -503,6 +512,7 @@
                 <search string="Leave Type">
                     <field name="name" string="Leave Types"/>
                     <field name="categ_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>

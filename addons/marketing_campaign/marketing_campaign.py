@@ -42,6 +42,7 @@ class marketing_campaign(osv.osv):
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'active': fields.boolean(string='Active'),
         'object_id': fields.many2one('ir.model', 'Resource', required=True,
                                       help="Choose the resource on which you want \
 this campaign to be run"),
@@ -80,6 +81,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
     }
 
     _defaults = {
+        'active': True,
         'state': lambda *a: 'draft',
         'mode': lambda *a: 'test',
     }

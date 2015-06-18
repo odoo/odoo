@@ -35,6 +35,7 @@ var KanbanView = View.extend({
         'kanban_record_open': 'open_record',
         'kanban_record_edit': 'edit_record',
         'kanban_record_delete': 'delete_record',
+        'kanban_record_archive_unarchive': 'archive_unarchive_record',
         'kanban_do_action': 'open_action',
         'kanban_reload': 'do_reload',
         'kanban_column_resequence': function (event) {
@@ -43,6 +44,7 @@ var KanbanView = View.extend({
         'kanban_record_update': 'update_record',
         'kanban_column_add_record': 'add_record_to_column',
         'kanban_column_delete': 'delete_column',
+        'kanban_column_archive_unarchive': 'archive_unarchive_records',
         'column_add_record': 'column_add_record',
         'quick_create_add_column': 'add_new_column',
         'kanban_load_more': 'load_more',
@@ -271,6 +273,9 @@ var KanbanView = View.extend({
         }
         return this._super(action);
     },
+    active_field_exists: function() {
+        return this.fields_view.fields['active'];
+    },
     _is_quick_create_enabled: function() {
         if (!this.quick_creatable || !this.is_action_enabled('create'))
             return false;
@@ -348,6 +353,7 @@ var KanbanView = View.extend({
         this.record_options = {
             editable: this.is_action_enabled('edit'),
             deletable: this.is_action_enabled('delete'),
+            active_field_exists: this.active_field_exists(),
             fields: this.fields_view.fields,
             qweb: this.qweb,
             model: this.model,
@@ -394,6 +400,7 @@ var KanbanView = View.extend({
         return {
             editable: this.is_action_enabled('group_edit'),
             deletable: this.is_action_enabled('group_delete'),
+            active_field_exists: this.active_field_exists(),
             grouped_by_m2o: this.grouped_by_m2o,
             relation: this.relation,
             qweb: this.qweb,
@@ -453,6 +460,25 @@ var KanbanView = View.extend({
 
     edit_record: function (event) {
         this.open_record(event, {mode: 'edit'});
+    },
+
+    archive_unarchive_record: function(event) {
+        var self = this;
+        var active_field_value = null;
+        var record = event.data.record;
+        function do_it(active_field_value) {
+            return $.when(self.dataset.write(record.id, {'active': active_field_value })).then(function() {
+                self.do_reload();
+            });
+        };
+        if (record.values['active'].value) {
+            Dialog.confirm(this, _t("Are you sure you want to Archive this record ?"), { confirm_callback: function() {
+                    do_it(false);
+                }
+            });
+        } else {
+            do_it(true);
+        }
     },
 
     delete_record: function (event) {
@@ -571,6 +597,30 @@ var KanbanView = View.extend({
             } else {
                 self.do_reload();
             }
+        });
+    },
+
+    archive_unarchive_records: function(event) {
+        var self = this;
+        var action = event.data.action;
+        var record_ids = [];
+        var active_value = action == 'archive' ? false : true;
+        var def = $.Deferred();
+        var column = event.target;
+        if (!this.active_field_exists()) {
+            return;
+        }
+        _.each(column.records, function(kanban_record) {
+            if ((kanban_record.record.active.value && action == 'archive')
+                || (!kanban_record.record.active.value && action == 'unarchive')) {
+                record_ids.push(kanban_record.id);
+            }
+        });
+        if (record_ids.length) {
+            def = this.dataset._model.call('write',[record_ids, {'active': active_value }]);
+        }
+        def.done(function() {
+            self.do_reload();
         });
     },
 
@@ -729,7 +779,7 @@ function transform_qweb_template (node, fvg, many2manys) {
         case 'button':
         case 'a':
             var type = node.attrs.type || '';
-            if (_.indexOf('action,object,edit,open,delete,url'.split(','), type) !== -1) {
+            if (_.indexOf('action,object,edit,open,delete,archive_unarchive,url'.split(','), type) !== -1) {
                 _.each(node.attrs, function(v, k) {
                     if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                         node.attrs['data-' + k] = v;

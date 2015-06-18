@@ -52,10 +52,10 @@ class note_note(osv.osv):
         return res
 
     def onclick_note_is_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'open': False, 'date_done': fields.date.today()}, context=context)
+        return self.write(cr, uid, ids, {'active': False, 'date_done': fields.date.today()}, context=context)
 
     def onclick_note_not_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'open': True}, context=context)
+        return self.write(cr, uid, ids, {'active': True}, context=context)
 
     #return the default stage for the uid user
     def _get_default_stage_id(self,cr,uid,context=None):
@@ -89,14 +89,14 @@ class note_note(osv.osv):
             type='many2one', 
             relation='note.stage'),
         'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Stages of Users'),
-        'open': fields.boolean('Active', track_visibility='onchange'),
+        'active': fields.boolean('Active', oldname="open", track_visibility='onchange'),
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
     }
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,
-        'open' : 1,
+        'active' : 1,
         'stage_id' : _get_default_stage_id,
     }
     _order = 'sequence'

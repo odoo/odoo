@@ -18,7 +18,12 @@ class Blog(osv.Model):
     _order = 'name'
     _columns = {
         'name': fields.char('Blog Name', required=True, translate=True),
+        'active': fields.boolean(string='Active'),
         'subtitle': fields.char('Blog Subtitle', translate=True),
+    }
+
+    _defaults = {
+        'active': True,
     }
 
     def all_tags(self, cr, uid, ids, min_limit=1, context=None):
@@ -93,6 +98,7 @@ class BlogPost(osv.Model):
 
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
+        'active': fields.boolean(string='Active'),
         'subtitle': fields.char('Sub Title', translate=True),
         'author_id': fields.many2one('res.partner', 'Author'),
         'cover_properties': fields.text('Cover Properties'),
@@ -138,6 +144,7 @@ class BlogPost(osv.Model):
 
     _defaults = {
         'name': '',
+        'active': True,
         'content': _default_content,
         'cover_properties': '{"background-image": "none", "background-color": "oe_none", "opacity": "0.6", "resize_class": ""}',
         'author_id': lambda self, cr, uid, ctx=None: self.pool['res.users'].browse(cr, uid, uid, context=ctx).partner_id.id,

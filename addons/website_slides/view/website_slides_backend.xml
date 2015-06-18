@@ -46,6 +46,7 @@
                                 <field name="website_published" widget="website_button"/>
                             </button>
                         </div>
+                        <field name="active" invisible="1"/>
                         <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_thumb"}'/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
@@ -111,6 +112,7 @@
                     <field name="channel_id"/>
                     <field name="category_id"/>
                     <field name="date_published"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -121,6 +123,7 @@
             <field name="arch" type="xml">
                 <search string="Search Slides">
                     <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter name="published" string="Published" domain="[('website_published', '=', True)]"/>
                     <filter name="not_published" string="Waiting for validation" domain="[('website_published', '=', False)]"/>
                     <group expand="0" string="Group By">
@@ -200,6 +203,7 @@
                                 <field name="website_published" widget="website_button"/>
                             </button>
                         </div>
+                        <field name="active" invisible="1"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Name"/>
@@ -256,7 +260,19 @@
                     <field name="name"/>
                     <field name="visibility"/>
                     <field name="promote_strategy"/>
+                    <field name="active" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_slide_channel_search" model="ir.ui.view">
+            <field name="name">slide.channel.search</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <search string="Search Slides">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 

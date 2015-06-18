@@ -124,6 +124,7 @@
                         <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
+                        <field name="active" invisible="1"/>
                         <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
                             <h1><field name="title" /></h1>
@@ -164,6 +165,7 @@
                     <field name="tot_sent_survey" string="Invitations sent" />
                     <field name="tot_start_survey" string="Started" />
                     <field name="tot_comp_survey" string="Completed" />
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -181,6 +183,7 @@
                     <field name="color" />
                     <field name="auth_required" />
                     <field name="public_url" />
+                    <field name="active" invisible="1"/>
                     <templates>
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
@@ -190,6 +193,7 @@
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <li><a type="edit">Edit Survey</a></li>
+                                    <t t-if="widget.active_field_exists"><li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li></t>
                                     <li t-if="widget.deletable"><a type="delete">Delete</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
@@ -217,6 +221,17 @@
                         </div>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="survey_search">
+            <field name="name">survey_survey_search</field>
+            <field name="model">survey.survey</field>
+            <field name="arch" type="xml">
+                <search string="Search Survey">
+                    <field name="title"/>
+                   <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 
