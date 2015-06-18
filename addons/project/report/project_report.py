@@ -10,7 +10,7 @@ class report_project_task_user(osv.osv):
     _description = "Tasks by user and project"
     _auto = False
     _columns = {
-        'name': fields.char('Task Summary', readonly=True),
+        'name': fields.char('Task Title', readonly=True),
         'user_id': fields.many2one('res.users', 'Assigned To', readonly=True),
         'date_start': fields.datetime('Assignation Date', readonly=True),
         'no_of_days': fields.integer('# of Days', size=128, readonly=True),

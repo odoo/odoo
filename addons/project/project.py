@@ -564,7 +564,7 @@ class task(osv.osv):
 
     _columns = {
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
-        'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
+        'name': fields.char('Task Title', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.html('Description'),
         'priority': fields.selection([('0','Normal'), ('1','High')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
