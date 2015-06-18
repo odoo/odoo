@@ -1,7 +1,7 @@
 import cgi
 import urllib2
 import ssl
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
 from openerp import models, api, service
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -105,7 +105,8 @@ class MercuryTransaction(models.Model):
     # deleted after 6 months
     @api.model
     def cleanup_old_tokens(self):
-        for order in self.env['pos.order'].search([]):
-            if datetime.strptime(order.create_date, DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=6 * 30) < datetime.now():
-                order.ref_no = ""
-                order.record_no = ""
+        expired_creation_date = (date.today() - timedelta(days=6 * 30)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+        for order in self.env['pos.order'].search([('create_date', '<', expired_creation_date)]):
+            order.ref_no = ""
+            order.record_no = ""
