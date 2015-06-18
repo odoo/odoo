@@ -2,10 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import logging
 from tempfile import TemporaryFile
 
 from openerp import tools
 from openerp.osv import osv, fields
+from openerp.exceptions import UserError
+from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
+
 
 class base_language_import(osv.osv_memory):
     """ Language Import """
@@ -38,6 +44,9 @@ class base_language_import(osv.osv_memory):
             fileobj.seek(0)
     
             tools.trans_load_data(cr, fileobj, fileformat, this.code, lang_name=this.name, context=context)
+        except Exception, e:
+            _logger.info('File unsuccessfully imported, due to format mismatch.')
+            raise UserError(_('File not imported due to format mismatch or may be a malformed file. (Valid formats are .csv, .po, .pot)'))
         finally:
             fileobj.close()
         return True
