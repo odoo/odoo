@@ -314,12 +314,11 @@ class sale_order(osv.osv):
 
     def onchange_delivery_id(self, cr, uid, ids, company_id, partner_id, delivery_id, fiscal_position, context=None):
         r = {'value': {}}
-        if not fiscal_position:
-            if not company_id:
-                company_id = self._get_default_company(cr, uid, context=context)
-            fiscal_position = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, delivery_id, context=context)
-            if fiscal_position:
-                r['value']['fiscal_position'] = fiscal_position
+        if not company_id:
+            company_id = self._get_default_company(cr, uid, context=context)
+        fiscal_position = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, delivery_id, context=context)
+        if fiscal_position:
+            r['value']['fiscal_position'] = fiscal_position
         return r
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
