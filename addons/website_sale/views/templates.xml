@@ -108,7 +108,7 @@
   </form>
 </template>
 
-<template id="products_description" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Product Description">
+<template id="products_description" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Product's Description">
   <xpath expr="//div[@class='product_price']" position="before">
       <div class="text-info oe_subdescription" contenteditable="false">
         <div itemprop="description" t-field="product.description_sale"></div>
@@ -202,7 +202,7 @@
   </li>
 </template>
 
-<template id="products_categories" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Categories">
+<template id="products_categories" inherit_id="website_sale.products" active="False" customize_show="True" name="Product(s) Categories">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <ul class="nav nav-pills nav-stacked mt16">
           <li t-att-class=" '' if category else 'active' "><a t-att-href="keep('/shop',category=0)">All Products</a></li>
@@ -244,7 +244,7 @@
   </xpath>
 </template>
 
-<template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Attribute's Filters">
+<template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Product(s) Attribute's Filters">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <form class="js_attributes" method="get">
           <input type="hidden" name="search" t-att-value="search"/>
@@ -299,7 +299,7 @@
   </xpath>
 </template>
 
-<template id="products_list_view" inherit_id="website_sale.products" active="False" customize_show="True" name="List View">
+<template id="products_list_view" inherit_id="website_sale.products" active="False" customize_show="True" name="Product(s) List View">
   <xpath expr="//div[@id='products_grid']//table" position="replace">
     <t t-foreach="products" t-as="product">
       <div class="oe_product oe_list oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
