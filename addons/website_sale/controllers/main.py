@@ -699,6 +699,7 @@ class website_sale(http.Controller):
             if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
                 tx.write({
                     'acquirer_id': acquirer_id,
+                    'amount': order.amount_total,
                 })
             tx_id = tx.id
         else:
