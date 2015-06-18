@@ -77,7 +77,7 @@
   I'm checking "Current membership state" of "Ms. Johnson". It is an "Paid Member" or not.
 -
   !assert {model: res.partner, id: test_partner_1, string: Member should be has Current Membership State in Paid Member}:
-     - membership_state == 'paid'
+     - membership_state == 'invoiced'
 
 - |
   I'm creating new "Regular Membership" which has Membership fee 50 EURO and It's started from 1st June to 31st Dec.
@@ -85,8 +85,8 @@
   !record {model: product.product, id: test_membership_1}:
     categ_id: product.product_category_1
     membership: 1
-    membership_date_from: !eval "(datetime.now() - timedelta(6*31)).strftime('%Y-%m-%d')" 
-    membership_date_to: !eval "(datetime.now() - timedelta(2*31)).strftime('%Y-%m-%d')" 
+    membership_date_from: '2013-01-01'
+    membership_date_to: '2013-12-31'
     name: Regular Membership
     type: service
     list_price: 50.00

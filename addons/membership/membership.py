@@ -312,7 +312,7 @@ class Partner(osv.osv):
                     string = 'Current Membership Status', type = 'selection',
                     selection = STATE,
                     store = {
-                        'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids'], 10),
+                        'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids', 'payment_ids'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help='It indicates the membership state.\n'
