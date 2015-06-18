@@ -30,9 +30,12 @@ class SaleOrder(models.Model):
     @api.multi
     @api.depends('procurement_group_id')
     def _compute_picking_ids(self):
+        group_ids = self.mapped('procurement_group_id.id')
+        moves_data = self.env['stock.move'].read_group([('procurement_id.group_id', 'in', group_ids)], ['picking_id'], ['picking_id'])
+        picking_ids  = [move['picking_id'][0] for move in moves_data if move['picking_id']]
         for order in self:
-            order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
-            order.delivery_count = len(order.picking_ids)
+            order.picking_ids = picking_ids
+            order.delivery_count = len(picking_ids)
 
     @api.onchange('warehouse_id')
     def _onchange_warehouse_id(self):

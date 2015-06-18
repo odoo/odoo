@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+        <!-- Procurement group -->
+        <record id="pg_default_group" model="procurement.group">
+            <field name="move_type">direct</field>
+        </record>
         
         <record id="removal_fifo" model="product.removal">
             <field name="name">First In First Out (FIFO)</field>

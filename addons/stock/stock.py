@@ -2203,10 +2203,10 @@ class stock_move(osv.osv):
         another picking. This method is designed to be inherited.
         """
         values = {
-            'origin': move.origin,
+            'origin': move.group_id.name if move.picking_type_id.name == 'Pick' and move.rule_id.group_propagation_option == 'fixed' else move.origin,
             'company_id': move.company_id and move.company_id.id or False,
             'move_type': move.group_id and move.group_id.move_type or 'direct',
-            'partner_id': move.partner_id.id or False,
+            'partner_id':  False if move.picking_type_id.name == 'Pick' and move.rule_id.group_propagation_option == 'fixed' else move.partner_id.id,
             'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
             'location_id': move.location_id.id,
             'location_dest_id': move.location_dest_id.id,
@@ -3525,7 +3525,11 @@ class stock_warehouse(osv.osv):
         delivery_route_id = route_obj.create(cr, uid, route_vals, context=context)
         wh_route_ids.append((4, delivery_route_id))
         dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, True, values, delivery_route_id, context=context)
+        pg_group = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'stock.pg_default_group')
         for pull_rule in pull_rules_list:
+            if warehouse.delivery_steps == 'pick_pack_ship' and pull_rule['procure_method'] == 'make_to_stock':
+                pull_rule['group_propagation_option'] = 'fixed'
+                pull_rule['group_id'] = pg_group
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
         #create MTO procurement rule and link it to the generic MTO route
         mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, values, context=context)[0]
@@ -3583,8 +3587,12 @@ class stock_warehouse(osv.osv):
         route_name, values = routes_dict[new_delivery_step]
         route_obj.write(cr, uid, warehouse.delivery_route_id.id, {'name': self._format_routename(cr, uid, warehouse, route_name, context=context)}, context=context)
         dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, True, values, warehouse.delivery_route_id.id, context=context)
+        pg_group = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'stock.pg_default_group')
         #create the procurement rules
         for pull_rule in pull_rules_list:
+            if new_delivery_step == 'pick_pack_ship' and pull_rule['procure_method'] == 'make_to_stock':
+                pull_rule['group_propagation_option'] = 'fixed'
+                pull_rule['group_id'] = pg_group
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
         #update receipt route and rules: unlink the existing rules of the warehouse receipt route and recreate it
