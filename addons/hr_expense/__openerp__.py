@@ -4,7 +4,7 @@
 
 {
     'name': 'Expense Tracker',
-    'version': '1.0',
+    'version': '2.0',
     'category': 'Human Resources',
     'sequence': 29,
     'summary': 'Expenses Validation, Invoicing',
@@ -19,35 +19,29 @@ Employee can encode their own expenses and the validation flow puts it automatic
 The whole flow is implemented as:
 ---------------------------------
 * Draft expense
-* Confirmation of the sheet by the employee
-* Validation by his manager
+* Submitted by the employee to his manager
+* Approved by his manager
 * Validation by the accountant and accounting entries creation
 
 This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'website': 'https://www.odoo.com/page/expenses',
     'depends': ['hr', 'account_accountant', 'report'],
     'data': [
         'security/ir.model.access.csv',
-        'hr_expense_data.xml',
-        'hr_expense_sequence.xml',
-        'hr_expense_workflow.xml',
-        'hr_expense_view.xml',
-        'hr_expense_report.xml',
+        'data/hr_expense_data.xml',
+        'data/hr_expense_sequence.xml',
+        'wizard/hr_expense_refuse_reason.xml',
+        'views/hr_expense_views.xml',
         'security/ir_rule.xml',
-        'report/hr_expense_report_view.xml',
-        'hr_expense_installer_view.xml',
+        'views/hr_expense_installer_views.xml',
         'views/report_expense.xml',
-        'hr_dashboard.xml',
+        'report/hr_expense_report_view.xml',
+        'data/web_tip_data.xml',
+        'views/hr_dashboard.xml',
     ],
-    'demo': ['hr_expense_demo.xml'],
-    'test': [
-        '../account/test/account_minimal_test.xml',
-        'test/expense_demo.yml',
-        'test/expense_process.yml',
-    ],
+    'demo': ['data/hr_expense_demo.xml'],
     'installable': True,
-    'auto_install': False,
     'application': True,
 }

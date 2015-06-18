@@ -111,7 +111,7 @@ class account_analytic_account(osv.osv):
         dummy, act_window_id = mod_obj.get_object_reference(cr, uid, 'hr_expense', 'expense_all')
         result = act_obj.read(cr, uid, [act_window_id], context=context)[0]
 
-        line_ids = self.pool['hr.expense.line'].search(cr, uid, [('analytic_account', 'in', ids)], context=context)
+        line_ids = self.pool['hr.expense'].search(cr, uid, [('analytic_account_id', 'in', ids)], context=context)
         result['domain'] = [('line_ids', 'in', line_ids)]
         names = [account.name for account in self.browse(cr, uid, ids, context=context)]
         result['name'] = _('Expenses of %s') % ','.join(names)

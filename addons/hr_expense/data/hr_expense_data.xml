@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
+        <record id="module_install_notification" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="mail.channel_all_employees"/>
             <field name="message_type">notification</field>
@@ -21,19 +21,19 @@
         <!-- Expense-related subtypes for messaging / Chatter -->
         <record id="mt_expense_approved" model="mail.message.subtype">
             <field name="name">Approved</field>
-            <field name="res_model">hr.expense.expense</field>
+            <field name="res_model">hr.expense</field>
             <field name="default" eval="False"/>
             <field name="description">Expense approved</field>
         </record>
         <record id="mt_expense_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
-            <field name="res_model">hr.expense.expense</field>
-            <field name="default" eval="False"/>
+            <field name="res_model">hr.expense</field>
+            <field name="default" eval="True"/>
             <field name="description">Expense refused</field>
         </record>
         <record id="mt_expense_confirmed" model="mail.message.subtype">
             <field name="name">To Approve</field>
-            <field name="res_model">hr.expense.expense</field>
+            <field name="res_model">hr.expense</field>
             <field name="description">Expense confirmed, waiting confirmation</field>
             <field name="default" eval="True"/>
         </record>
@@ -48,4 +48,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>
