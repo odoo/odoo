@@ -225,7 +225,7 @@ var PlannerDialog = Widget.extend({
         this.update_planner(); // explicit call to save data
     },
     on_webclient_action: function(e) {
-        this.$('#PlannerModal').modal('hide');
+        this.$('#PlannerModal').removeClass('fade').modal('hide');
     },
 });
 return {

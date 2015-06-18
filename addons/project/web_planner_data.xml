@@ -321,7 +321,7 @@
                                             <p>Issues have a specific mechanism called escalation. For example, if the  'Support' team can't solve an issue, they can escalate it to a 'Support level 2' project.</p>
                                             <p>To use Issues, activate 'Track issues and bugs' in your
                                             <a t-att-href="prepare_backend_url(
-                                            'project.action_config_settings')">Project Settings.</a>
+                                            'project.action_config_settings', 'form')">Project Settings.</a>
                                         </p>
                                     </div>
                                 </div>
@@ -344,7 +344,7 @@
                                         <li> <strong>Getting statistics</strong> on how much time a task takes to be completed</li>
                                         <li> <strong>Invoicing your customers</strong> on Time &amp; Material projects</li></p>
                                         <p>To use Timesheets, go to your <a t-att-href="prepare_backend_url(
-                                            'project.action_config_settings')">Project Settings</a> and activate:</p>
+                                            'project.action_config_settings', 'form')">Project Settings</a> and activate:</p>
                                         <p><li>for Tasks: 'Record timesheet lines per tasks'</li>
                                         <li>for Issues: 'Invoice working time on issues</li></p>
                                         <p>You can learn more about Timesheets in the <a href="#planner_page7">Timesheets section</a> of this planner.</p>
@@ -675,7 +675,7 @@
                                 Etherpad allows users to simultaneously edit a text document, see all of the edits in real-time and with the ability to display each author's text in their own color.</li></p><br/>
                                 <p><li><strong>You have to manage versions and track changes</strong><br/>
                                 Etherpad auto-saves the document at regular, short intervals, and users can permanently save specific versions at any time.Plus, a "time slider" feature allows anyone to explore the history of the pad.</li></p><br/>
-                                <p><strong>To use Collaborative Notepads</strong>, simply activate the corresponding option in your <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings.</a></p>
+                                <p><strong>To use Collaborative Notepads</strong>, simply activate the corresponding option in your <a t-att-href="prepare_backend_url('project.action_config_settings', 'form')">Project Settings.</a></p>
                         </div>
 
                         <div class="row">
@@ -717,8 +717,8 @@
                                     </div>
                                     <div class="panel-body">
                                         <li>For employees, the <a t-att-href="prepare_backend_url('hr_timesheet_sheet.ir_actions_server_timsheet_sheet', 'form', 'hr_timesheet_sheet')">Current Timesheet </a> view of the HR module is the main tool to check, modify and confirm Timesheets.</li><br/>
-                                        <li>Alternatively, Timesheets can be added directly from Tasks by activating <strong>'Log work activities on tasks'</strong> in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li><br/>
-                                        <li>Or, if you are using Issues, by activating 'Invoice working time on issues', also in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li>
+                                        <li>Alternatively, Timesheets can be added directly from Tasks by activating <strong>'Log work activities on tasks'</strong> in the <a t-att-href="prepare_backend_url('project.action_config_settings', 'form')">Project Settings</a>.</li><br/>
+                                        <li>Or, if you are using Issues, by activating 'Invoice working time on issues', also in the <a t-att-href="prepare_backend_url('project.action_config_settings', 'form')">Project Settings</a>.</li>
                                     </div>
                                 </div>
                             </div>
@@ -1114,7 +1114,7 @@
                             </div>
                             <div class="col-md-4 col-xs-12 text-center o_planner_white_box">
                                 <div class="panel">
-                                    <a t-att-href="prepare_backend_url('mail.action_mail_inbox_feeds')"><i class="fa-2x" data-icon="&#xe090;"></i><br/> Follow the day-to-day activites to be sure that everyone is using it</a>
+                                    <a t-att-href="prepare_backend_url('mail.action_mail_inbox_feeds', 'timeline')"><i class="fa-2x" data-icon="&#xe090;"></i><br/> Follow the day-to-day activites to be sure that everyone is using it</a>
                                 </div>
                             </div>
                         </div>

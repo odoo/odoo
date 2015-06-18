@@ -537,7 +537,7 @@
                                     <span>
                                         <li>Read the <a href="https://www.odoo.com/blog/business-hacks-1/post/how-to-build-your-quotes-for-success-173" target="_blank">blog post on the Quote Builder</a></li>
                                         <li>Activate quotation templates in <a t-att-href="prepare_backend_url(
-                                            'base_setup.action_sale_config')">Sales Settings</a></li>
+                                            'base_setup.action_sale_config', 'form')">Sales Settings</a></li>
                                         <li>Create your templates of offers</li>
                                     </span>
                                 </div>
@@ -546,7 +546,7 @@
                                 <h4 class="text-center"><b>Contracts</b></h4>
                                 <div class="well well-sm">
                                     <t t-if="not is_module_installed('account_analytic_analysis')"><span class="text-muted">To activate the Contracts, check 'Use contracts management' <a t-att-href="prepare_backend_url(
-                                            'base_setup.action_sale_config')">in the Sales Settings.</a> </span></t>
+                                            'base_setup.action_sale_config', 'form')">in the Sales Settings.</a> </span></t>
                                     <h4><b>Fixed price</b> <span class="small">(ex: monthly subscription)</span></h4>
                                     <span>
                                         <li>Create contracts template</li>
@@ -591,7 +591,7 @@
                                     <div class="panel-body">
                                         <span>Each product, one by one<br/>
                                             <a t-att-href="prepare_backend_url(
-                                                'product.product_template_action', 'from', 'sale')">Create a product</a>
+                                                'product.product_template_action', 'form', 'sale')">Create a product</a>
                                         </span>
                                     </div>
                                 </div>
@@ -685,7 +685,7 @@
                                         This email address has been preconfigured as the default
                                         for your sales department.<br/>
                                         <a t-att-href="prepare_backend_url(
-                                            'base_setup.action_sale_config')">(you can change it here)</a>
+                                            'base_setup.action_sale_config', 'form')">(you can change it here)</a>
                                     </p>
                                     <span class="arrow-down"></span>
                                 </div>
@@ -819,7 +819,7 @@
                         </div>
                         <div class="col-md-4 col-xs-12 text-center o_planner_white_box">
                             <div class="panel">
-                                <a t-att-href="prepare_backend_url('mail.action_mail_inbox_feeds')"><i class="fa-2x" data-icon="&#xe090;">
+                                <a t-att-href="prepare_backend_url('mail.action_mail_inbox_feeds', 'timeline')"><i class="fa-2x" data-icon="&#xe090;">
                                     </i><br/> Follow the day-to-day activites to be sure that everyone is using it
                                 </a>
                             </div>

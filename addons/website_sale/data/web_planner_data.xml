@@ -129,11 +129,11 @@
                             </p>
                             <p>To use them:
                                 <li>Activate the 'Support multiple variants per products' option in
-                                    <a t-att-href="prepare_backend_url('base_setup.action_sale_config')">Sales / Settings</a>
+                                    <a t-att-href="prepare_backend_url('base_setup.action_sale_config', 'form')">Sales / Settings</a>
                                 </li>
                                 <li>Select a product from the <a t-att-href="prepare_backend_url('product.product_template_action')">Products list</a>, go to the 'Variants' tab</li>
                                 <li>Add as many variants as you need from 3 different types: radio buttons, drop-down menu or color buttons.</li>
-                                <li>You can also define different prices for the variants you created by activating the 'Use pricelists to adapt your price per customers' option in <a t-att-href="prepare_backend_url('base_setup.action_sale_config')">Sales / Settings</a></li>
+                                <li>You can also define different prices for the variants you created by activating the 'Use pricelists to adapt your price per customers' option in <a t-att-href="prepare_backend_url('base_setup.action_sale_config', 'form')">Sales / Settings</a></li>
                             </p>
                         </div>
                     </div>
@@ -276,7 +276,7 @@
                         <div class="well well-lg">
                             <p>
                                 <strong>Recommended actions:</strong>
-                                <li><a t-att-href="prepare_backend_url('account.action_account_config')">Activate the payment options you want to use</a><br/>
+                                <li><a t-att-href="prepare_backend_url('account.action_account_config', 'form')">Activate the payment options you want to use</a><br/>
                                 <small>(don't forget to apply the changes)</small></li>
                                 <li><a t-att-href="prepare_backend_url('payment.action_payment_acquirer')">Enter their identification credentials</a><br/>
                                 <small>(you'll have to subscribe directly on each of the payment companies' websites)</small></li>
@@ -361,7 +361,7 @@
                     <div class="col-md-12">
                         <div class="well well-lg">
                             <strong>Recommended action:</strong>
-                            <li><a t-att-href="prepare_backend_url('delivery.action_delivery_carrier_form')"> Configure your delivery prices</a> using one or several of the strategies above</li>
+                            <li><a t-att-href="prepare_backend_url('delivery.action_delivery_carrier_form', 'form', 'delivery')"> Configure your delivery prices</a> using one or several of the strategies above</li>
                         </div>
                     </div>
                 </div>
