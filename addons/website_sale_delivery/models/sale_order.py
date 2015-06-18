@@ -121,7 +121,7 @@ class SaleOrder(orm.Model):
     def _get_errors(self, cr, uid, order, context=None):
         errors = super(SaleOrder, self)._get_errors(cr, uid, order, context=context)
         if not self._get_delivery_methods(cr, uid, order, context=context):
-            errors.append(('No delivery method available', 'There is no available delivery method for your order'))            
+            errors.append(('Sorry !', 'We do not deliver to your country or your state.'))
         return errors
 
     def _get_website_data(self, cr, uid, order, context=None):
@@ -140,4 +140,33 @@ class SaleOrder(orm.Model):
         delivery_ids = self._get_delivery_methods(cr, uid, order, context=context)
 
         values['deliveries'] = DeliveryCarrier.browse(cr, SUPERUSER_ID, delivery_ids, context=delivery_ctx)
+        return values
+
+    def _get_shipping_country(self, cr, uid, values, context=None):
+        country_ids = set()
+        state_ids = set()
+        values['shipping_countries'] = values['countries']
+        values['shipping_states'] = values['states']
+
+        delivery_carrier_obj = self.pool['delivery.carrier']
+        delivery_carrier_ids = delivery_carrier_obj.search(cr, SUPERUSER_ID, [('use_detailed_pricelist', '=', False)], context=context)
+        for carrier in delivery_carrier_obj.browse(cr, SUPERUSER_ID, delivery_carrier_ids, context):
+            if not carrier.country_ids and not carrier.state_ids:
+                return values
+            country_ids = country_ids|set(carrier.country_ids.ids)
+            state_country_ids = [country.id for country in carrier.country_ids if country.id not in carrier.state_ids.mapped('country_id.id')]
+            state_ids = state_ids|set(values['states'].filtered(lambda r: r.country_id.id in state_country_ids).ids)|set(carrier.state_ids.ids)
+
+        delivery_grid_obj = self.pool['delivery.grid']
+        delivery_grid_ids = delivery_grid_obj.search(cr, SUPERUSER_ID, [('carrier_id.use_detailed_pricelist', '=', True)], context=context)
+        for grid in delivery_grid_obj.browse(cr, SUPERUSER_ID, delivery_grid_ids, context):
+            if not grid.country_ids and not grid.state_ids:
+                return values
+            country_ids = country_ids|set(grid.country_ids.ids)
+            state_country_ids = [country.id for country in grid.country_ids if country.id not in grid.state_ids.mapped('country_id.id')]
+            state_ids = state_ids|set(values['states'].filtered(lambda r: r.country_id.id in state_country_ids).ids)|set(grid.state_ids.ids)
+
+
+        values['shipping_countries'] = values['countries'].filtered(lambda r: r.id in list(country_ids))
+        values['shipping_states'] = values['states'].filtered(lambda r: r.id in list(state_ids))
         return values

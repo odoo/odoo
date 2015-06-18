@@ -72,8 +72,10 @@ class delivery_carrier(osv.osv):
         'normal_price': fields.float('Normal Price', help="Keep empty if the pricing depends on the advanced pricing per destination"),
         'free_if_more_than': fields.boolean('Free If Order Total Amount Is More Than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping"),
         'amount': fields.float('Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency"),
-        'use_detailed_pricelist': fields.boolean('Advanced Pricing per Destination', help="Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc."),
+        'use_detailed_pricelist': fields.boolean('Advanced Pricing per Destination', help="Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order. The destinations set for the delivery pricelists will be the once available on the website for the delivery address."),
         'pricelist_ids': fields.one2many('delivery.grid', 'carrier_id', 'Advanced Pricing'),
+        'country_ids': fields.many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries'),
+        'state_ids': fields.many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States'),
     }
 
     _defaults = {
@@ -82,13 +84,27 @@ class delivery_carrier(osv.osv):
         'sequence': 10,
     }
 
+    def onchange_states(self, cr, uid, ids, state_ids, country_ids, context=None):
+        if state_ids:
+            state_country_ids = [state['country_id'][0] for state in self.resolve_2many_commands(cr, uid, 'state_ids', state_ids, ['country_id'], context)]
+            country_ids = [country['id'] for country in self.resolve_2many_commands(cr, uid, 'country_ids', country_ids, context)]
+            return {'value': {'country_ids': [(6, 0, state_country_ids + country_ids)]}}
+        return {}
+
     def grid_get(self, cr, uid, ids, contact_id, context=None):
         contact = self.pool.get('res.partner').browse(cr, uid, contact_id, context=context)
         for carrier in self.browse(cr, uid, ids, context=context):
+            if not carrier.use_detailed_pricelist:
+                country_ids = carrier.country_ids.ids
+                state_ids = carrier.state_ids.ids
+                if country_ids and not contact.country_id.id in country_ids:
+                    continue
+                if state_ids and not contact.state_id.id in state_ids:
+                    continue
+                return carrier.grids_id.id
             for grid in carrier.grids_id:
-                get_id = lambda x: x.id
-                country_ids = map(get_id, grid.country_ids)
-                state_ids = map(get_id, grid.state_ids)
+                country_ids = grid.country_ids.ids
+                state_ids = grid.state_ids.ids
                 if country_ids and not contact.country_id.id in country_ids:
                     continue
                 if state_ids and not contact.state_id.id in state_ids:
@@ -157,14 +173,27 @@ class delivery_carrier(osv.osv):
                 grid_line_pool.create(cr, uid, line_data, context=context)
         return True
 
+    def filter_state_country(self, cr, uid, vals, context):
+        if vals.get('country_ids'):
+            country_ids = [country['id'] for country in self.resolve_2many_commands(cr, uid, 'country_ids', vals.get('country_ids'), context)]
+            state_ids = [state['id'] for state in self.resolve_2many_commands(cr, uid, 'state_ids', vals.get('state_ids'), context)]
+            vals['state_ids'] = [(6, 0, self.pool['res.country.state'].browse(cr, uid, state_ids, context).filtered(lambda x: x.country_id.id in country_ids).ids)]
+        return vals
+
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int,long)):
             ids = [ids]
+        if vals.get('country_ids'):
+            country_ids = [country['id'] for country in self.resolve_2many_commands(cr, uid, 'country_ids', vals.get('country_ids'), context)]
+            for carrier in self.browse(cr, uid, ids, context):
+                if carrier.state_ids:
+                    vals['state_ids'] = [(3, state.id) for state in carrier.state_ids.filtered(lambda x: x.country_id.id not in country_ids)]
         res = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
         self.create_grid_lines(cr, uid, ids, vals, context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
+        vals = self.filter_state_country(cr, uid, vals, context)
         res_id = super(delivery_carrier, self).create(cr, uid, vals, context=context)
         self.create_grid_lines(cr, uid, [res_id], vals, context=context)
         return res_id
@@ -231,6 +260,26 @@ class delivery_grid(osv.osv):
 
         return price
 
+    def onchange_states(self, cr, uid, ids, state_ids, country_ids, context=None):
+        if state_ids:
+            state_country_ids = [state['country_id'][0] for state in self.resolve_2many_commands(cr, uid, 'state_ids', state_ids, ['country_id'], context)]
+            country_ids = [country['id'] for country in self.resolve_2many_commands(cr, uid, 'country_ids', country_ids, context)]
+            return {'value':{'country_ids':[(6, 0, state_country_ids + country_ids)]}}
+        return {}
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int,long)):
+            ids = [ids]
+        if vals.get('country_ids'):
+            country_ids = [country['id'] for country in self.resolve_2many_commands(cr, uid, 'country_ids', vals.get('country_ids'), context)]
+            for grid in self.browse(cr, uid, ids, context):
+                if grid.state_ids:
+                    vals['state_ids'] = [(3, state.id) for state in grid.state_ids.filtered(lambda x: x.country_id.id not in country_ids)]
+        return super(delivery_grid, self).write(cr, uid, ids, vals, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        vals = self.pool['delivery.carrier'].filter_state_country(cr, uid, vals, context)
+        return super(delivery_grid, self).create(cr, uid, vals, context=context)
 
 
 class delivery_grid_line(osv.osv):
