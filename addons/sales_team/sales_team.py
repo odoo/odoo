@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime
-from dateutil import relativedelta
-from openerp import tools
+
 from openerp.osv import fields, osv
 
 
@@ -16,27 +14,18 @@ class crm_team(osv.Model):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
 
-    def _get_default_team_id(self, cr, uid, user_id=None, context=None):
-        team_id = self._resolve_team_id_from_context(cr, uid, context=context) or False
-        if not team_id:
-            team_ids = self.search(cr, uid, [('member_ids', '=', user_id or uid)], limit=1, context=context)
-            team_id = team_ids[0] if team_ids else False
-        return team_id
-
-    def _resolve_team_id_from_context(self, cr, uid, context=None):
-        """ Returns ID of team based on the value of 'default_team_id'
-            context key, or None if it cannot be resolved to a single
-            Sales Team.
-        """
+    def _get_default_team_id(self, cr, uid, context=None, user_id=None):
         if context is None:
             context = {}
-        if type(context.get('default_team_id')) in (int, long):
-            return context.get('default_team_id')
-        if isinstance(context.get('default_team_id'), basestring):
-            team_ids = self.name_search(cr, uid, name=context['default_team_id'], context=context)
-            if len(team_ids) == 1:
-                return int(team_ids[0][0])
-        return None
+        if user_id is None:
+            user_id = uid
+        team_id = context.get('default_team_id')
+        if not team_id:
+            team_ids = self.search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', 'in', user_id)], limit=1, context=context)
+            team_id = team_ids[0] if team_ids else False
+        if not team_id:
+            team_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'sales_team.team_sales_department')
+        return team_id
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),

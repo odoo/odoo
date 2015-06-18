@@ -42,7 +42,7 @@
                 </xpath>
 
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
-                    <div t-if="record.use_leads.raw_value">
+                    <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                         <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                             Leads
                         </a>
@@ -63,7 +63,7 @@
                 </xpath>
 
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
-                    <div>
+                    <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                         <a name="%(action_report_crm_lead_salesteam)d" type="action">
                             Leads
                         </a>

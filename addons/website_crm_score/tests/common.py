@@ -60,6 +60,7 @@ class TestScoring(common.TransactionCase):
             'country_id': self.belgium,
             'email_from': 'lead0@test.com',
             'user_id': None,
+            'team_id': False,
             'stage_id': self.stage,
 
         })
@@ -68,12 +69,14 @@ class TestScoring(common.TransactionCase):
             'country_id': self.france,
             'email_from': 'lead1@test.com',
             'user_id': None,
+            'team_id': False,
             'stage_id': self.stage,
         })
         self.lead2 = self.crm_lead.create(cr, uid, {
             'name': 'lead2',
             'email_from': 'lead2@test.com',
             'user_id': None,
+            'team_id': False,
             'stage_id': self.stage,
         })
 

@@ -88,12 +88,3 @@ class Lead(models.Model):
         if 'user_id' in vals:
             vals['assign_date'] = vals.get('user_id') and fields.datetime.now() or False
         return super(Lead, self).write(vals)
-
-    @api.multi
-    @api.onchange('user_id')
-    def on_change_user(self, user_id):
-        ret = super(Lead, self).on_change_user(user_id)
-        if user_id:
-            team_ids = self.env['crm.team'].search([('team_user_ids.user_id', '=', user_id)])
-            ret['value']['team_id'] = team_ids and team_ids[0] or False
-        return ret

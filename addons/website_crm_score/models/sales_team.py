@@ -75,6 +75,15 @@ class team_user(models.Model):
 class crm_team(osv.osv):
     _inherit = "crm.team"
 
+    @api.model
+    def _get_default_team_id(self, user_id=None):
+        team_id = super(crm_team, self)._get_default_team_id(user_id=user_id)
+        if user_id is None:
+            user_id = self.env.user.id
+        if not team_id:
+            team_id = self.search([('team_user_ids.user_id', '=', user_id)], limit=1).id
+        return team_id
+
     @api.one
     def _count_leads(self):
         if self.id:

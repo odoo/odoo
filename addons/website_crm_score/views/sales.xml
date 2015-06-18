@@ -81,10 +81,10 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
+                <field name="priority" position="after">
                     <field name="score" />
                 </field>
-                <xpath expr="//group[@name='references']" position="after">
+                <xpath expr="//group[@name='Misc']" position="after">
                     <group string="Scoring">
                         <field name="score_ids"
                             widget="many2many_tags"

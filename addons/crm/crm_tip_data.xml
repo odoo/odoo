@@ -34,5 +34,27 @@
             <field name="placement">auto top</field>
         </record>
 
+        <record model="web.tip" id="crm_tip_5">
+            <field name="title"></field>
+            <field name="description"><![CDATA[Use the graph view to have a clear reporting of your opportunity pipeline.]]></field>
+            <field name="model">crm.lead</field>
+            <field name="mode">kanban</field>
+            <field name="trigger_selector">.o_kanban_record:eq(20):visible</field>
+            <field name="highlight_selector">button[data-view-type=graph]</field>
+            <field name="end_event">mousedown</field>
+            <field name="placement">left</field>
+        </record>
+
+        <record model="web.tip" id="crm_tip_6">
+            <field name="title"></field>
+            <field name="description"><![CDATA[Gain some time and change the stage of your opportunity right here, no need to go back to your pipeline.]]></field>
+            <field name="model">crm.lead</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_form_field_status.oe_form_status_clickable:visible</field>
+            <field name="highlight_selector">.oe_form_field_status.oe_form_status_clickable</field>
+            <field name="end_event">mousedown</field>
+            <field name="placement">bottom</field>
+        </record>
+
     </data>
 </openerp>

@@ -58,14 +58,6 @@ class crm_lead(format_address, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
 
-    def get_empty_list_help(self, cr, uid, help, context=None):
-        context = dict(context or {})
-        if context.get('default_type') == 'lead':
-            context['empty_list_help_model'] = 'crm.team'
-            context['empty_list_help_id'] = context.get('default_team_id')
-        context['empty_list_help_document_name'] = _("leads")
-        return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
-
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context)
@@ -91,7 +83,7 @@ class crm_lead(format_address, osv.osv):
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         search_domain = []
-        team_id = self.pool['crm.team']._resolve_team_id_from_context(cr, uid, context=context)
+        team_id = context and context.get('default_team_id') or False
         if team_id:
             search_domain += ['|', ('team_ids', '=', team_id)]
             search_domain += [('id', 'in', ids)]
@@ -183,7 +175,7 @@ class crm_lead(format_address, osv.osv):
             [('lead', 'Lead'), ('opportunity', 'Opportunity')],
             string='Type', select=True, required=True,
             help="Type is used to separate Leads and Opportunities"),
-        'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority', select=True),
+        'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Rating', select=True),
         'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
@@ -204,8 +196,6 @@ class crm_lead(format_address, osv.osv):
         # Only used for type opportunity
         'probability': fields.float('Probability', group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
-        'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
-        'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         # CRM Actions
@@ -213,8 +203,8 @@ class crm_lead(format_address, osv.osv):
         'next_activity_1': fields.related("next_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
         'next_activity_2': fields.related("next_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
         'next_activity_3': fields.related("next_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
-        'date_action': fields.date('Next Action Date', select=True),
-        'title_action': fields.char('Next Action Summary'),
+        'date_action': fields.date('Next Activity Date', select=True),
+        'title_action': fields.char('Next Activity Summary'),
 
         'color': fields.integer('Color Index'),
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
@@ -242,7 +232,7 @@ class crm_lead(format_address, osv.osv):
 
     _defaults = {
         'active': 1,
-        'type': 'lead',
+        'type': lambda s, cr, uid, c: 'lead' if s.pool['res.users'].has_group(cr, uid, 'crm.group_use_lead') else 'opportunity',
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
@@ -291,11 +281,7 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
-        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, user_id=user_id, context=context)
-        if user_id and not team_id:
-            team_ids = self.pool.get('crm.team').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
-            if team_ids:
-                team_id = team_ids[0]
+        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context, user_id=user_id)
         return {'value': {'team_id': team_id}}
 
     def stage_find(self, cr, uid, cases, team_id, domain=None, order='sequence', context=None):
@@ -918,9 +904,18 @@ class crm_lead(format_address, osv.osv):
         context = dict(context or {})
         context['empty_list_help_model'] = 'crm.team'
         context['empty_list_help_id'] = context.get('default_team_id', None)
-        context['empty_list_help_document_name'] = _("opportunity")
-        if context.get('default_type') == 'lead':
-            context['empty_list_help_document_name'] = _("lead")
+        context['empty_list_help_document_name'] = _("opportunities")
+        if help:
+            alias_record = self.pool['ir.model.data'].xmlid_to_object(cr, uid, "crm.mail_alias_lead_info")
+            if alias_record and alias_record.alias_domain and alias_record.alias_name:
+                dynamic_help = '<p>%s</p>' % _("""All email incoming to %(link)s  will automatically create new opportunity.
+Update your business card, phone book, social media,... Send an email right now and see it here.""") % {
+                    'link': "<a href='mailto:%s'>%s</a>" % (alias_record.alias_name, alias_record.alias_domain)
+                }
+                return '<p class="oe_view_nocontent_create">%s</p>%s%s' % (
+                    _('Click to add a new opportunity'),
+                    help,
+                    dynamic_help)
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
     # ----------------------------------------

@@ -87,9 +87,11 @@
                 <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
                 <field name="arch" type="xml">
                     <xpath expr="//div[@name='options_active']" position="inside">
-                        <field name="use_leads" on_change="onchange_use_leads(use_leads)"/>
-                        <label for="use_leads" string="Leads"/>
-                        <field name="use_opportunities" class="oe_inline"/>
+                        <div groups="crm.group_use_lead">
+                            <field name="use_leads" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
+                            <label for="use_leads" string="Leads"/>
+                        </div>
+                        <field name="use_opportunities" class="oe_inline" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
                         <label for="use_opportunities"/>
                     </xpath>
                     <xpath expr="//page[@name='members']" position="after">
@@ -101,10 +103,10 @@
                    <xpath expr="//field[@name='code']" position="after">
                         <label for="alias_name" string="Email Alias"
                             groups="base.group_no_one"
-                            attrs="{'invisible': [('use_leads', '=', False)]}"/>
+                            attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                         <div name="alias_def"
                             groups="base.group_no_one"
-                            attrs="{'invisible': [('use_leads', '=', False)]}">
+                            attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}">
                             <field name="alias_id" class="oe_read_only oe_inline"
                                 string="Email Alias" required="0"/>
                             <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
@@ -113,7 +115,7 @@
                         </div>
                         <field name="alias_contact" class="oe_inline"
                            string="Accept Emails From"
-                           attrs="{'invisible': [('use_leads', '=', False)]}"/>
+                           attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                    </xpath>
                 </field>
             </record>

@@ -16,7 +16,7 @@ class crm_activity_report(models.Model):
     author_id = fields.Many2one('res.partner', 'Author', readonly=True)
     user_id = fields.Many2one('res.users', 'Responsible', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
-    subtype_id = fields.Many2one('mail.message.subtype', 'Action', readonly=True)
+    subtype_id = fields.Many2one('mail.message.subtype', 'Activity', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     stage_id = fields.Many2one('crm.stage', 'Stage', readonly=True)
@@ -48,6 +48,10 @@ class crm_activity_report(models.Model):
                     "crm_lead" l
                 on
                     (m.res_id = l.id)
+                inner join
+                    "crm_activity" a
+                on
+                    (m.subtype_id = a.subtype_id)
                 WHERE
                     (m.model = 'crm.lead')
             )""")

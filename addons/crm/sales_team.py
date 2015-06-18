@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
 
@@ -46,10 +47,25 @@ class crm_team(osv.Model):
         'use_opportunities': True,
     }
 
-    def onchange_use_leads(self, cr, uid, ids, use_leads, context=None):
-        if not use_leads:
-            return {'value': {'alias_name': False}}
-        return {'value': {}}
+    def onchange_use_leads_opportunities(self, cr, uid, ids, use_leads, use_opportunities, context=None):
+        if use_leads or use_opportunities:
+            return {'value': {}}
+        return {'value': {'alias_name': False}}
+
+    def _get_alias_defaults_values(self, cr, uid, ids, context=None):
+        res = dict.fromkeys(ids, False)
+        is_group_use_lead = self.pool['res.users'].has_group(cr, uid, 'crm.group_use_lead')
+        for team in self.browse(cr, uid, ids, context=context):
+            alias_defaults = eval(team.alias_defaults)
+            alias_defaults.update({
+                'type': 'lead' if is_group_use_lead and team.use_leads else 'opportunity',
+                'team_id': team.id,
+            })
+            res[team.id] = {
+                'alias_defaults': alias_defaults,
+                'alias_parent_thread_id': team.id,
+            }
+        return res
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -59,9 +75,18 @@ class crm_team(osv.Model):
         if generate_alias_name and not vals.get('alias_name'):
             vals['alias_name'] = vals.get('name')
         team_id = super(crm_team, self).create(cr, uid, vals, context=create_context)
-        team = self.browse(cr, uid, team_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [team.alias_id.id], {'alias_parent_thread_id': team_id, 'alias_defaults': {'team_id': team_id, 'type': 'lead'}}, context=context)
+        self.write(cr, uid, [team_id],
+                   self._get_alias_defaults_values(cr, uid, [team_id], context=context)[team_id],
+                   context=context)
         return team_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(crm_team, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('use_leads') or vals.get('alias_defaults'):
+            alias_res = self._get_alias_defaults_values(cr, uid, ids, context=context)
+            for team_id, values in alias_res.iteritems():
+                super(crm_team, self).write(cr, uid, [team_id], values, context=context)
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the sales team.

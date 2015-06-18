@@ -126,20 +126,24 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name" class="oe_edit_only" string="Lead"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
-                        <span class="label label-danger"
-                            attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
-                        <span class="label label-success"
-                            attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
+                        <label for="tag_ids" class="oe_edit_only"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                        <div class="mt4">
+                            <span class="label label-danger"
+                                attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
+                            <span class="label label-success"
+                                attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
+                        </div>
                     </div>
                     <group>
                         <group>
-                            <field name="partner_name" string="Company Name"/>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
                                 options='{"create_name_field": "name"}'
-                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id}"/>
+                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id}" groups="base.group_no_one"/>
+                            <field name="partner_name" string="Company Name"/>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
@@ -153,7 +157,7 @@
                         <group>
                             <label for="contact_name"/>
                             <div class="o_row">
-                                <field name="contact_name"/><span attrs="{'invisible': [('title', '=', '')]}">, </span>
+                                <field name="contact_name"/>
                                 <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" options='{"no_open": True}'/>
                             </div>
                             <field name="email_from" widget="email"/>
@@ -164,15 +168,11 @@
                         </group>
                         <group>
                             <field name="user_id" on_change="on_change_user(user_id, context)"
-                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'] }"/>
-                            <label for="team_id"/>
-                            <div class="o_row">
-                                <field name="team_id"/>
-                            </div>
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'] }" widget="selection"/>
+                            <field name="team_id" widget="selection" domain="[('use_leads','=',True)]"/>
                             <field name="type" invisible="1"/>
                         </group>
                         <group>
-                            <field name="tag_ids" widget="many2many_tags"/>
                             <field name="priority" widget="priority"/>
                         </group>
                     </group>
@@ -182,9 +182,9 @@
                     </page>
                     <page name="extra" string="Extra Info">
                         <group>
-                            <group string="Mailings">
+                            <group>
                                 <field name="opt_out"/>
-                                <field name="message_bounce" readonly="1"/>
+                                <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
                             </group>
                             <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
                                 <field name="company_id"
@@ -194,7 +194,7 @@
                                 <field name="medium_id"/>
                                 <field name="source_id" />
                             </group>
-                            <group name="misc" string="Misc">
+                            <group name="misc">
                                 <field name="probability" groups="base.group_no_one"/>
                                 <field name="active"/>
                                 <field name="referred"/>
@@ -247,7 +247,7 @@
                 <tree string="Leads" decoration-bf="message_unread==True" decoration-muted="probability == 100">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date"/>
-                    <field name="name"/>
+                    <field name="name" string="Lead"/>
                     <field name="contact_name"/>
                     <field name="country_id"/>
                     <field name="email_from"/>
@@ -323,6 +323,14 @@
                                     </div>
                                     <div class="text-muted">
                                         <span t-if="record.planned_revenue.raw_value"><t t-esc="record.planned_revenue.value"/><field name="company_currency"/></span> <span t-if="record.partner_id.value"> - <t t-esc="record.partner_id.value"/></span>
+                                    </div>
+                                    <div class="text-muted">
+                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <span t-attf-class="#{red || ''}">
+                                            <field name="date_action"/>
+                                            <t t-if="record.date_action.raw_value"> : </t>
+                                            <field name="next_activity_id"/>
+                                        </span>
                                     </div>
                                     <div class="o_kanban_footer">
                                         <field name="priority" widget="priority" groups="base.group_user"/>
@@ -410,8 +418,9 @@
                         <button name="action_set_won" string="Mark Won"
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
-                        <button name="action_set_lost" string="Mark Lost"
-                                type="object" class="oe_highlight"
+                        <button name="%(crm.crm_lead_lost_action)d" string="Mark Lost"
+                                type="action" class="oe_highlight"
+                                context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False)]}"/>
                         <button name="action_set_active" string="Unarchive"
                                 type="object" class="oe_highlight"
@@ -426,27 +435,41 @@
                             <button class="oe_stat_button" type="object"
                                 context="{'partner_id': partner_id}"
                                 name="action_schedule_meeting" icon="fa-calendar">
-                                <field string="Meetings" name="meeting_count" widget="statinfo"/>
+                                <div class="o_stat_info">
+                                    <field name="meeting_count" class="o_stat_value"/>
+                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&lt;', 2)]}"> Meetings</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&gt;', 1)]}"> Meeting</span>
+                                </div>
                             </button>
                         </div>
-                        <div class="oe_title">
+                        <div>
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <span class="label label-danger"
-                                attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
-                            <span class="label label-success"
-                                attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
-                            <div class="o_row">
-                                <label for="planned_revenue" class="oe_edit_only"/>
-                                <label for="probability" class="oe_edit_only"/>
+                            <label for="tag_ids" class="oe_edit_only"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <div class="mt4">
+                                <span class="label label-danger"
+                                    attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
+                                <span class="label label-success"
+                                    attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
                             </div>
-                            <h2 class="o_row">
-                                <field name="company_currency" invisible="1"/>
-                                <field name="planned_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                                <span class="oe_grey"> at </span>
-                                <field name="probability" widget="integer"/>
-                                <span>%%</span>
-                            </h2>
+                            <div class="o_row">
+                                <div class="oe_left">
+                                    <label for="planned_revenue" class="oe_edit_only"/>
+                                    <h2 class="o_row">
+                                        <field name="company_currency" invisible="1"/>
+                                        <field name="planned_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <span class="oe_grey"> at </span>
+                                    </h2>
+                                </div>
+                                <div>
+                                    <label for="probability" class="oe_edit_only"/>
+                                    <h2 class="o_row">
+                                        <field name="probability" widget="integer"/>
+                                        <span>%%</span>
+                                    </h2>
+                                </div>
+                            </div>
                         </div>
                         <group>
                             <group>
@@ -489,19 +512,15 @@
                                     </div>
                                 </div>
                                 <field name="date_deadline"/>
-                                <field name="priority" widget="priority"/>
                             </group>
 
                             <group>
-                                <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
-                                <label for="team_id"/>
-                                <div class="o_row">
-                                    <field name="team_id" widget="selection"/>
-                                </div>
+                                <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}" widget="selection"/>
+                                <field name="team_id" widget="selection"/>
                             </group>
                             <group>
-                                <field name="tag_ids" widget="many2many_tags"/>
-                                <field name="lost_reason"/>
+                                <field name="priority" widget="priority"/>
+                                <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
                                 <field name="date_conversion" invisible="1"/>
                             </group>
                         </group>
@@ -510,7 +529,7 @@
                         <page string="Internal Notes">
                             <field name="description"/>
                         </page>
-                        <page name="lead" string="Lead">
+                        <page name="lead" string="Lead" groups="crm.group_use_lead">
                             <group>
                                 <group>
                                     <field name="partner_name"/>
@@ -534,25 +553,19 @@
                                     <field name="function"/>
                                     <field name="mobile"/>
                                     <field name="fax"/>
+                                    <field name="opt_out"/>
                                 </group>
                                 <group string="Marketing">
                                     <field name="campaign_id" />
                                     <field name="medium_id" />
                                     <field name="source_id" />
                                 </group>
-                                <group string="Mailings" name="mailings">
-                                    <field name="opt_out"/>
-                                </group>
-                                <group string="Misc">
+                                <group string="Misc" name="Misc">
                                     <field name="active"/>
                                     <field name="day_open" groups="base.group_no_one"/>
                                     <field name="day_close" groups="base.group_no_one"/>
                                     <field name="referred"/>
                                     <field name="type" invisible="1"/>
-                                </group>
-                                <group name="references" string="References">
-                                    <field name="ref"/>
-                                    <field name="ref2"/>
                                 </group>
                             </group>
                         </page>
@@ -608,6 +621,8 @@
                     <field name="user_id"/>
                     <field name="partner_id" operator="child_of" string="Customer"/>
                     <field name="stage_id" domain="[]"/>
+                    <field name="next_activity_id"/>
+                    <field name="title_action"/>
                     <field name="probability"/>
                     <field name="lost_reason"/>
                     <separator/>
@@ -645,6 +660,20 @@
                         <filter string="Lost Reason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_tree_activity" model="ir.ui.view">
+            <field name="name">crm.lead.next.activity.tree</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <tree string="Next Activity" create="false" colors="red:date_action and (date_action &lt; current_date)" default_order="date_action">
+                    <field name="name"/>
+                    <field name="date_action"/>
+                    <field name="next_activity_id"/>
+                    <field name="title_action"/>
+                    <field name="date_deadline"/>
+                </tree>
             </field>
         </record>
 
