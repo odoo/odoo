@@ -727,7 +727,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
         self._create_tax_templates_from_rates(company.id)
 
         # Install all the templates objects and generate the real objects
-
         acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
 
         # write values of default taxes for product as super user
@@ -738,6 +737,13 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)
+
+        # Create the current year earning account (outside of the CoA)
+        self.env['account.account'].create({
+            'code': '0',
+            'name': _('Undistributed Profits/Losses'),
+            'user_type': self.env.ref("account.data_unaffected_earnings").id,
+            'company_id': company.id,})
         return {}
 
     @api.multi
