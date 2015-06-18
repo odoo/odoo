@@ -1,55 +1,3 @@
-body {
-    background-color: #fff;
-}
-p {
-    margin: initial;
-}
-a {
-    color: inherit;
-}
-a:hover {
-    color: inherit;
-}
-#wrapwrap .o_editable {
-    font: initial;
-    line-height: initial;
-    color: initial;
-}
-#oe_snippets ~ #wrapwrap .o_editable {
-    margin-bottom: 100px;
-}
-
-#wrapwrap > main > div:first-child {
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-}
-
-.editor_enable #wrapwrap > main > div:first-child:before, #wrapwrap > main > div:first-child:after {
-    content: " ";
-    display: block;
-    height: 100%;
-    position: fixed;
-    top: -4px;
-    width: 0;
-    overflow: hidden;
-}
-.editor_enable #wrapwrap > main > div:first-child:before {
-    border-right: 1px dashed #ccc;
-    margin-left: -5px;
-}
-.editor_enable #wrapwrap > main > div:first-child:after {
-    border-left: 1px dashed #ccc;
-    margin-left: 605px;
-}
-
-.note-color-palette .colorpicker {
-    display: none;
-}
-
-/***************************/
-
 #email_theme_list, #email_template_list {
     clear: both;
     text-align: center;
@@ -128,16 +76,20 @@ a:hover {
 /***************************/
 
 #templates{
+    margin-top: 50px;
     width: 98%;
 }
 #choose_template{
     display: none;
     margin: 5px;
-    padding: 1px 5px;
     position: fixed;
     top: 0;
-    right: 50px;
+    right: 28px;
     z-index: 2000;
+}
+#choose_template span{
+    padding: 1px 5px;
+    height: 24px;
 }
 #templates .template_preview_border{
     overflow: hidden !important;

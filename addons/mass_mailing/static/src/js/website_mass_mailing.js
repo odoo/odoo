@@ -3,10 +3,11 @@ odoo.define('mass_mailing.website_integration', function (require) {
 
 var ajax = require('web.ajax');
 var utils = require('web.utils');
-var animation = require('website.snippets.animation');
+var animation = require('web_editor.snippets.animation');
 var website = require('website.website');
 
-animation.registry.subscribe = animation.Animation.extend({
+
+animation.registry.subscribe = animation.Class.extend({
     selector: ".js_subscribe",
     start: function (editable_mode) {
         var self = this;
@@ -59,7 +60,7 @@ animation.registry.subscribe = animation.Animation.extend({
     },
 });
 
-animation.registry.newsletter_popup = animation.Animation.extend({
+animation.registry.newsletter_popup = animation.Class.extend({
     selector: ".o_newsletter_popup",
     start: function (editable_mode) {
         var self = this;
@@ -96,11 +97,11 @@ animation.registry.newsletter_popup = animation.Animation.extend({
         ajax.jsonRpc('/website_mass_mailing/subscribe', 'call', {
             'list_id': self.$target.data('list-id'),
             'email': $email.length ? $email.val() : false
-        }).then(function () {
+        }).then(function (subscribe) {
             self.$target.find('#o_newsletter_popup').modal('hide');
             $(document).off('mouseleave');
             if (self.redirect_url) {
-                if (_.contains(self.redirect_url.split('/'), window.location.host) || self.redirect_url.indexOf('/')=== 0) {
+                if (_.contains(self.redirect_url.split('/'), window.location.host) || self.redirect_url.indexOf('/')== 0) {
                     window.location.href = self.redirect_url;
                 } else { window.open(self.redirect_url, '_blank'); }
             }
@@ -136,12 +137,12 @@ website.if_dom_contains('div.o_unsubscribe_form', function() {
         });
 
         ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
-            .then(function() {
+            .then(function(result) {
                 $('.alert-info').html('Your changes has been saved.').removeClass('alert-info').addClass('alert-success');
             })
             .fail(function() {
                 $('.alert-info').html('You changes has not been saved, try again later.').removeClass('alert-info').addClass('alert-warning');
-            }); 
+            });
     });
 });
 

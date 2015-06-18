@@ -2,18 +2,19 @@ odoo.define('website_mail.website_mail', function (require) {
 "use strict";
 
 var Model = require('web.Model');
-var editor = require('website.editor');
-var snippets_editor = require('website.snippets.editor');
-
+var rte = require('web_editor.rte');
+var web_editor = require('web_editor.editor');
+var options = require('web_editor.snippets.options');
+var snippets_editor = require('web_editor.snippet.editor');
 
 // Snippet option for resizing  image and column width inline like excel
-snippets_editor.options["width-x"] = snippets_editor.Option.extend({
+options.registry["width-x"] = options.Class.extend({
     start: function () {
         this.container_width = 600;
         var parent = this.$target.closest('[data-max-width]');
         if( parent.length ){
             this.container_width = parseInt(parent.attr('data-max-width'));
-        }
+        } 
         var self = this;
         var offset, sib_offset, target_width, sib_width;
         this.is_image = false;
@@ -58,7 +59,7 @@ snippets_editor.options["width-x"] = snippets_editor.Option.extend({
                 if (compass === 'image'){
                     self.change_width(event, self.$target, target_width, offset ,'plus');
                 }
-            };
+            }
             var body_mouseup = function(){
                 $body.unbind('mousemove', body_mousemove);
                 $body.unbind('mouseup', body_mouseup);
@@ -89,7 +90,7 @@ snippets_editor.options["width-x"] = snippets_editor.Option.extend({
         var self = this;
         _.each($el.siblings(),function(sib){
             max_width +=  self.get_int_width($(sib));
-        });
+        })
         return this.container_width - max_width;
     },
     on_clone: function ($clone) {
@@ -99,7 +100,7 @@ snippets_editor.options["width-x"] = snippets_editor.Option.extend({
             _.each($table.find('tbody>tr'),function(row){
                 var clone_selector = 'td:eq(' + clone_index + ')';
                 var $col_to_clone = $(row).find(clone_selector);
-                if($col_to_clone.length !== 0){
+                if($col_to_clone.length != 0){
                     $col_to_clone.after($col_to_clone.clone());
                 }
             });
@@ -128,31 +129,22 @@ $.summernote.eventHandler.popover.update = function ($popover, oStyle, isAirMode
     $("span.o_table_handler, div.note-table").remove();
 };
 
-editor.EditorBar.include({
+web_editor.Class.include({
     start: function () {
         var self = this;
         if (location.search.indexOf("enable_editor") !== -1) {
-            this.on('rte:ready', this, function () {
+            this.on('rte:start', this, function () {
                 $("#choose_template").off("click").on("click", _.bind(self.on_choose_template, self));
                 $(".theme_thumbnail [data-snippet-theme]").off("click").on("click", _.bind(self.on_set_snippet_theme, self));
-                $("#wrapwrap").on('click', function (event) {
-                    if ($(event.target).is("#wrapwrap")) {
-                        setTimeout(function () {
-                            var node = $("#wrapwrap .o_editable:first *")
-                                .filter(function () { return this.textContent.match(/\S|\u00A0/); })
-                                .add($("#wrapwrap .o_editable:first"))
-                                .last()[0];
-                            $.summernote.core.range.create(node, $.summernote.core.dom.nodeLength(node)).select();
-                        },0);
-                    }
-                });
+                var $editable = $("#editable_area");
+                $editable.html($editable.prop("innerHTML").replace(/^<p[^>]*>\s*<\/p>$/, ''));
             });
             this.on("snippets:ready", this, _.bind(self.display_theme_from_html, self));
         }
         return this._super.apply(this, arguments);
     },
     display_theme_from_html: function () {
-        var theme = $("#wrapwrap .o_editable:first [data-snippet-theme]").data("snippet-theme");
+        var theme = $("#editable_area [data-snippet-theme]").data("snippet-theme");
         if (theme) {
             $("#choose_template").show();
             this.set_snippet_theme(theme);
@@ -170,7 +162,7 @@ editor.EditorBar.include({
         if (event) {
             $("#choose_template").show();
         }
-        var $editable = $("#wrapwrap .o_editable:first");
+        var $editable = $("#editable_area");
         $(".o_table_handler").remove();
         $editable.parent().add("#oe_snippets, #templates, .note-popover").toggleClass("hidden");
         $("#choose_template").children().toggleClass("hidden");
@@ -178,7 +170,7 @@ editor.EditorBar.include({
         $(window.top).trigger('resize');
     },
     on_set_snippet_template: function (event) {
-        var $editable = $("#wrapwrap .o_editable:first");
+        var $editable = $("#editable_area");
         this.rte.historyRecordUndo($editable);
         $editable.html( $(event.target).closest(".theme_thumbnail").find(".js_content").html() );
         $editable.parent().add("#oe_snippets, #templates, .note-popover").toggleClass("hidden");
@@ -201,7 +193,7 @@ editor.EditorBar.include({
     get_snippet_template: function (mailing_model) {
         var self = this;
         var domain = [['model', '=', mailing_model]];
-        new Model('mail.template').call('search_read', [domain]).then(function (datas) {
+        return new Model('mail.template').call('search_read', [domain]).then(function (datas) {
             var $template = $("#templates > div:last").addClass("hidden");
             var $tclone = $template.find("> div > div:first");
             $tclone.siblings().remove();
@@ -221,193 +213,33 @@ editor.EditorBar.include({
     }
 });
 
-var cache = {};
-var rulesCache = [];
-function getMatchedCSSRules(a) {
-    if(cache[a.tagName + "." +a.className]) {
-        return cache[a.tagName + "." +a.className];
-    }
-    if (!rulesCache.length) {
-        var sheets = document.styleSheets;
-        for(var i = 0; i < sheets.length; i++) {
-            var rules = sheets[i].rules || sheets[i].cssRules;
-            if (rules) {
-                for(var r = 0; r < rules.length; r++) {
-                    var selectorText = rules[r].selectorText;
-                    if (selectorText &&
-                            rules[r].cssText &&
-                            selectorText.indexOf(".") !== -1 &&
-                            selectorText.indexOf(":hover") === -1 &&
-                            selectorText.indexOf(":before") === -1 &&
-                            selectorText.indexOf(":after") === -1 &&
-                            selectorText.indexOf(":active") === -1 &&
-                            selectorText.indexOf(":link") === -1 &&
-                            selectorText.indexOf("::") === -1) {
-                        var st = selectorText.split(/\s*,\s*/);
-                        for (var k=0; k<st.length; k++) {
-                            rulesCache.push({
-                                'selector': st[k],
-                                'style': rules[r].style,
-                                'point': st[k].split(/\s+/).length
-                            });
-                        }
-                    }
-                }
-            }
-        }
-
-        rulesCache.sort(function (a,b) {
-            return a.point-b.point;
-        });
-    }
-
-    var css = [];
-    a.matches = a.matches || a.webkitMatchesSelector || a.mozMatchesSelector || a.msMatchesSelector || a.oMatchesSelector;
-    for(var r = 0; r < rulesCache.length; r++) {
-        if (a.matches(rulesCache[r].selector)) {
-            var style = rulesCache[r].style;
-            if (style.parentRule) {
-                var style_obj = {};
-                for (var k=0, len=style.length; k<len; k++) {
-                    style_obj[style[k]] = style[style[k]];
-                }
-                rulesCache[r].style = style = style_obj;
-            }
-            css.push(style);
-        }
-    }
-
-    var style = {};
-    _.each(css, function (v,k) {
-        _.each(v, function (v,k) {
-            if (!style[k] || style[k].indexOf('important') === -1 || v.indexOf('important') !== -1) {
-                style[k] = v;
-            }
-        });
-    });
-
-    return cache[a.tagName + "." +a.className] = style;
-}
-
-$.fn.bindFirst = function(name, fn) {
-    this.bind(name, fn);
-    var handlers = $._data($(this).get(0), 'events')[name.split('.')[0]];
-    var handler = handlers.pop();
-    handlers.splice(0, 0, handler);
-};
-
-snippets_editor.BuildingBlock.include({
-    start: function () {
-        var self = this;
-        this._super();
-        setTimeout(function () {
-            self.img_to_font();
-            self.style_to_class();
-        });
-    },
-
+snippets_editor.Class.include({
     _get_snippet_url: function () {
         return snippets_url;
     },
     clean_for_save: function () {
         this._super();
-        this.class_to_style();
-        this.font_to_img();
-        var $editable = $("#wrapwrap .o_editable:first");
+        var $editable = $("#editable_area");
         var theme = ($("#o_left_bar .o_panel_body > div:not(.hidden)").attr("class") || "").replace(/^\s*|\s*o_mail_block[^\s]+\s*|\s*oe_snippet\s*|\s*ui-draggable\s*|\s*$/g, '');
-        var $theme = $("#wrapwrap .o_editable:first [data-snippet-theme]").removeAttr("data-snippet-theme").removeData("snippet-theme");
+        var $theme = $("#editable_area [data-snippet-theme]").removeAttr("data-snippet-theme").removeData("snippet-theme");
         $editable.children().first().attr("data-snippet-theme", theme);
-        $editable.find(":hidden").remove();
+        $editable.find(":not(br):hidden").remove();
     },
-    // convert font awsome into image
-    font_to_img: function () {
-        $("#wrapwrap .fa").each(function () {
-            var $font = $(this);
-            var content;
-            _.find(editor.fontIcons, function (font) {
-                return _.find(editor.getCssSelectors(font.parser), function (css) {
-                    if ($font.is(css[0].replace(/::?before$/, ''))) {
-                        content = css[1].match(/content:\s*['"](.)['"]/)[1];
-                        return true;
-                    }
-                });
-            });
-            if (content) {
-                var size = parseInt(parseFloat($font.css("font-size"))/parseFloat($font.parent().css("font-size")),10);
-                var src = _.str.sprintf('/website_mail/font_to_img/%s/%s/'+$font.width(), window.encodeURI(content), window.encodeURI($font.css("color")));
-                var $img = $("<img/>").attr("src", src)
-                    .attr("data-class", $font.attr("class"))
-                    .attr("style", $font.attr("style"))
-                    .css({"height": size+"em"}).css("font-size", "");
-                $font.replaceWith($img);
-            } else {
-                $font.remove();
-            }
-        });
-    },
-    // convert image into font awsome
-    img_to_font: function () {
-        $("#wrapwrap img[src*='/website_mail/font_to_img/']").each(function () {
-            var $img = $(this);
-            var $font = $("<span/>").attr("class", $img.data("class")).attr("style", $img.attr("style")).css("height", "");
-            $img.replaceWith($font);
-        });
-    },
-
-    class_to_style: function () {
-        var $editable = $("#wrapwrap .o_editable:first");
-        var selector = _.map(rulesCache, function (a) { return a.selector;}).join(",");
-        $editable.find(selector).each(function () {
-            var $target = $(this);
-            var css = getMatchedCSSRules(this);
-            var style = $target.attr("style") || "";
-            _.each(css, function (v,k) {
-                if (style.indexOf(k) === -1) {
-                    style = k+":"+v+";"+style;
-                }
-            });
-            $target.attr("style", style);
-        });
-    },
-
-    style_to_class: function () {
-        var $editable = $("#wrapwrap .o_editable:first");
-        getMatchedCSSRules($editable[0]);
-        var selector = _.map(rulesCache, function (a) { return a.selector;}).join(",");
-        var $c = $('<span/>').appendTo("body");
-        $editable.find(selector).each(function () {
-            var $target = $(this);
-            var css = getMatchedCSSRules(this);
-            var style = "";
-            _.each(css, function (v,k) {
-                if (style.indexOf(k) === -1) {
-                    style = k+":"+v+";"+style;
-                }
-            });
-            css = $c.attr("style", style).attr("style").split(/\s*;\s*/);
-            style = $target.attr("style") || "";
-            _.each(css, function (v) {
-                style = style.replace(v, '');
-            });
-            $target.attr("style", style.replace(/;+(\s;)*/g, ';').replace(/^;/g, ''));
-        });
-        $c.remove();
-    }
 });
 
-
-window.top.odoo[callback+"_set_value"] = function (value, fields_values, field_name) {
-    var $editable = $("#wrapwrap .o_editable:first");
-    var editor_enable = $('body').hasClass('editor_enable');
+var _set_value = window.top.odoo[callback+"_updown"];
+window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name) {
+    var $editable = $("#editable_area");
     var _val = $editable.prop("innerHTML");
+    var editor_enable = $('body').hasClass('editor_enable');
     value = value || "";
-
-    if(value !== _val) {
+    
+    if(value !==_val) {
         if (editor_enable) {
             if (value !== fields_values[field_name]) {
-                editor.editor_bar.rte.historyRecordUndo($editable, true);
+                rte.history.recordUndo($editable);
             }
-            editor.editor_bar.snippets.make_active(false);
+            snippets_editor.instance.make_active(false);
         }
         
         if (value.indexOf('on_change_model_and_list') === -1) {
@@ -415,11 +247,7 @@ window.top.odoo[callback+"_set_value"] = function (value, fields_values, field_n
             $editable.html(value);
 
             if (editor_enable) {
-                editor.editor_bar.snippets.img_to_font();
-                editor.editor_bar.snippets.style_to_class();
-                if (fields_values.mailing_model) {
-                    editor.editor_bar.display_theme_from_html();
-                }
+                web_editor.editor_bar.display_theme_from_html();
 
                 if (value !== fields_values[field_name]) {
                     $editable.trigger("content_changed");
@@ -428,17 +256,12 @@ window.top.odoo[callback+"_set_value"] = function (value, fields_values, field_n
         }
     }
 
-    if (fields_values.mailing_model) {
-        editor.editor_bar.get_snippet_template(fields_values.mailing_model);
+    if (fields_values.mailing_model && web_editor.editor_bar) {
+        web_editor.editor_bar.get_snippet_template(fields_values.mailing_model);
         if (value.indexOf('on_change_model_and_list') !== -1) {
             window.top.odoo[callback+"_downup"](_val);
         }
     }
-};
-
-
-return {
-    getMatchedCSSRules: getMatchedCSSRules
 };
 
 });
