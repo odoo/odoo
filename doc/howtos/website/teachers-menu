@@ -18,7 +18,8 @@ new file mode 100644
 --- /dev/null
 +++ b/academy/views.xml
 @@ -0,0 +1,13 @@
-+<openerp><data>
++<openerp>
++ <data>
 +  <record id="action_academy_teachers" model="ir.actions.act_window">
 +    <field name="name">Academy teachers</field>
 +    <field name="res_model">academy.teachers</field>
@@ -30,4 +31,5 @@ new file mode 100644
 +  <menuitem id="menu_academy_content_teachers"
 +            parent="menu_academy_content"
 +            action="action_academy_teachers"/>
-+</data></openerp>
++ </data>
++</openerp>

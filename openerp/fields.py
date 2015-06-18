@@ -176,11 +176,11 @@ class Field(object):
             @api.depends('name')
             def _compute_upper(self):
                 for rec in self:
-                    self.upper = self.name.upper() if self.name else False
+                    rec.upper = rec.name.upper() if rec.name else False
 
             def _inverse_upper(self):
                 for rec in self:
-                    self.name = self.upper.lower() if self.upper else False
+                    rec.name = rec.upper.lower() if rec.upper else False
 
             def _search_upper(self, operator, value):
                 if operator == 'like':

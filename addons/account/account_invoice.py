@@ -1326,9 +1326,9 @@ class account_invoice_line(models.Model):
             raise UserError(_("You must first select a partner!"))
         if not product:
             if type in ('in_invoice', 'in_refund'):
-                return {'value': {}, 'domain': {'product_uom': []}}
+                return {'value': {}, 'domain': {'uos_id': []}}
             else:
-                return {'value': {'price_unit': 0.0}, 'domain': {'product_uom': []}}
+                return {'value': {'price_unit': 0.0}, 'domain': {'uos_id': []}}
 
         values = {}
 
