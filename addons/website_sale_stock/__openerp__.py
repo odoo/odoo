@@ -1,7 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Website Sale Stock - Website Delivery information',
-    'version': '0.0.1',
     'description': """
     Display delivery orders (picking) infos on the website
 """,
@@ -9,11 +10,8 @@
         'website_sale',
         'sale_stock',
     ],
-    'installable': True,
     'auto_install': True,
     'data': [
-        'views/website_sale_stock.xml',
-    ],
-    'demo': [
-    ],
+        'views/templates.xml',
+    ]
 }
