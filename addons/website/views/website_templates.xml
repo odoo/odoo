@@ -239,7 +239,7 @@
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li class="divider" groups="base.group_public"/>
         <li groups="base.group_public">
-            <a t-attf-href="/web/login">
+            <a t-attf-href="/web?redirect=#{ request.httprequest.url }">
                 <b>Sign in</b>
             </a>
         </li>

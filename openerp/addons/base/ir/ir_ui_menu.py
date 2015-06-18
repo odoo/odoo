@@ -28,7 +28,6 @@ import threading
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp import api, tools
-from openerp.exceptions import AccessError
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
@@ -379,10 +378,7 @@ class ir_ui_menu(osv.osv):
         :rtype: dict('children': menu_nodes)
         """
         fields = ['name', 'sequence', 'parent_id', 'action']
-        try:
-            menu_root_ids = self.get_user_roots(cr, uid, context=context)
-        except AccessError:
-            return []
+        menu_root_ids = self.get_user_roots(cr, uid, context=context)
         menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
         menu_root = {
             'id': False,
