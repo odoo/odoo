@@ -128,11 +128,14 @@ class lang(osv.osv):
     def _compute_position(self, cr, uid, ids, name, arg, context=None):
         current_user_id = self.pool['res.users'].browse(cr, uid, uid, context=context)
         lang_code = current_user_id.lang
-        current_lang_id = self.search(cr, uid, [('code', '=', current_user_id.lang)], context=context)
+        current_lang_id = self.search(cr, uid, [('code', '=', lang_code)], context=context)
         current_lang_obj = self.browse(cr, uid, current_lang_id, context=context)
         if current_lang_obj.translatable:
-            lang_code = lang_code + '.utf8'
-        locale.setlocale(locale.LC_ALL, str(lang_code))
+            lang_code += '.utf8'
+        try:
+            locale.setlocale(locale.LC_ALL, str(lang_code))
+        except:
+            locale.setlocale(locale.LC_ALL, 'en_US.utf8')
         result = {}
         if (locale.nl_langinfo(locale.CRNCYSTR)[0] == '-'):
             result[current_lang_id[0]] = 'before'

@@ -25,18 +25,18 @@ var PosBaseWidget = Widget.extend({
         this.gui    = options.gui    || (parent ? parent.gui : undefined); 
     },
     format_currency: function(amount,precision){
-        var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
+        var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', rounding: 0.01, decimals: 2};
 
         amount = this.format_currency_no_symbol(amount,precision);
 
-        if (currency.position === 'after') {
+        if (this.pos.currency_position['position'] === 'after') {
             return amount + ' ' + (currency.symbol || '');
         } else {
             return (currency.symbol || '') + ' ' + amount;
         }
     },
     format_currency_no_symbol: function(amount, precision) {
-        var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
+        var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', rounding: 0.01, decimals: 2};
         var decimals = currency.decimals;
 
         if (precision && (typeof this.pos.dp[precision]) !== undefined) {

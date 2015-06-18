@@ -871,8 +871,8 @@ class MonetaryConverter(osv.AbstractModel):
             from_amount = Currency.compute(cr, uid, from_currency.id, display_currency.id, from_amount)
 
         current_user=self.pool['res.users'].browse(cr, uid, uid, context=context)
-        lang_code = context.get('lang') or current_user.lang or 'en_US'
         lang = self.pool['res.lang']
+        lang_code = context.get('lang') or current_user.lang or 'en_US'
         lang_id = lang.search(cr, uid, [('code', '=', lang_code)], context=context)
         lang_objs = lang.browse(cr, uid, lang_id, context=context)
         formatted_amount = lang.format(cr, uid, [lang_code],
