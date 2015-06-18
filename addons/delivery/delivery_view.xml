@@ -92,6 +92,17 @@
             </field>
         </record>
 
+        <record id="view_template_product_weight" model="ir.ui.view">
+            <field name="name">product.template.weight.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="weight" position="replace">
+                    <field digits="(14, 3)" name="weight" string="Weight" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
+                </field>
+            </field>
+        </record>
+
         <record id="action_delivery_carrier_form" model="ir.actions.act_window">
             <field name="name">Delivery Methods</field>
             <field name="type">ir.actions.act_window</field>

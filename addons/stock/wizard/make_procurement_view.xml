@@ -17,7 +17,7 @@
                     </p>
                     <group>
                         <field name="warehouse_id" groups="stock.group_locations"/>
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id)" widget="selection"/>
                         <label for="qty"/>
                         <div>
                             <field name="qty" class="oe_inline"/>
@@ -37,8 +37,8 @@
         <record model="ir.actions.act_window" id="act_make_procurement">
             <field name="name">Procurement Request</field>
             <field name="res_model">make.procurement</field>
-            <field name="src_model">product.product</field>
             <field name="view_mode">form</field>
+            <field name="view_id" ref="view_make_procurment_wizard"/>
             <field name="target">new</field>
         </record>
 

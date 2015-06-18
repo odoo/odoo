@@ -14,6 +14,6 @@ class product_template(osv.Model):
         'email_template_id': fields.many2one(
             'mail.template', 'Product Email Template',
             help='When validating an invoice, an email will be sent to the customer'
-                 'based on this template. The customer will receive an email for each'
-                 'product linked to an email template.'),
+                 ' based on this template. The customer will receive an email for each'
+                 ' product linked to an email template.'),
     }

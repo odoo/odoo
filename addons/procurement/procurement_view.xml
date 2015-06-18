@@ -89,9 +89,9 @@
             <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('group_id','=',active_id)]</field>            
+            <field name="domain">[('group_id','=',active_id)]</field>
         </record>
-        
+
         <record id="procurement_group_form_view" model="ir.ui.view">
             <field name="name">procurement.group.form</field>
             <field name="model">procurement.group</field>
@@ -104,12 +104,12 @@
                         <group>
                             <field name="name"/>
                             <field name="move_type"/>
-                        </group>                        
+                        </group>
                     </sheet>
                 </form>
             </field>
         </record>
-        
+
         <record id="view_procurement_filter" model="ir.ui.view">
             <field name="name">procurement.order.select</field>
             <field name="model">procurement.order</field>
@@ -130,7 +130,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="procurement_order_action_exceptions" model="ir.actions.act_window">
             <field name="name">Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
@@ -140,18 +140,10 @@
             <field name="context">{'search_default_exceptions':1}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                 Click to create a Procurement order in exception state, or remove the filter on the search bar to display all the procurements.
-              </p>
               <p>
-                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.
-              </p>
-              <p>
-                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). 
-                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...
-              </p>
-              <p>
-                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).
+                  A <b>Procurement Exception</b> occurs when the system cannot
+                  find a way to fulfill a procurement. Those exceptions require manual
+                  action: set a supplier on product form, purchase some products, etc.
               </p>
             </field>
         </record>
@@ -166,7 +158,7 @@
             <field name="context">{'search_default_current':1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click to create a procurement order.  
+                 Click to create a procurement order.
               </p>
               <p>
                 A <b>procurement order</b> is used to record a need for a specific
@@ -192,7 +184,7 @@
             <field name="domain">[('product_id.product_tmpl_id.id', '=', active_id)]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click to create a procurement order.  
+                 Click to create a procurement order.
               </p>
               <p>
                 A <b>procurement order</b> is used to record a need for a specific
@@ -218,7 +210,7 @@
             <field name="domain">[('product_id.id', '=', active_id)]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click to create a procurement order.  
+                 Click to create a procurement order.
               </p>
               <p>
                 A <b>procurement order</b> is used to record a need for a specific

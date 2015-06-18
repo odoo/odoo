@@ -229,7 +229,7 @@ class delivery_grid_line(osv.osv):
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price'), ('quantity','Quantity')], 'Variable Factor', required=True),
         'list_base_price': fields.float('Sale Base Price', digits_compute=dp.get_precision('Product Price'), required=True),
         'list_price': fields.float('Sale Price', digits_compute= dp.get_precision('Product Price'), required=True),
-        'standard_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'), required=True),
+        'standard_price': fields.float('Shipper Price', digits_compute= dp.get_precision('Product Price'), required=True),
     }
 
     _defaults = {

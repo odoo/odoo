@@ -1617,7 +1617,7 @@ class stock_production_lot(osv.osv):
     _columns = {
         'name': fields.char('Serial Number', required=True, help="Unique Serial Number"),
         'ref': fields.char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's serial number"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
+        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', 'not in', ['service', 'digital'])]),
         'quant_ids': fields.one2many('stock.quant', 'lot_id', 'Quants', readonly=True),
         'create_date': fields.datetime('Creation Date'),
     }
@@ -1793,7 +1793,7 @@ class stock_move(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
+        'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', 'not in', ['service', 'digital'])], states={'done': [('readonly', True)]}),
         'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store={
             _name: (lambda self, cr, uid, ids, c={}: ids, ['product_id', 'product_uom', 'product_uom_qty'], 10),
         }, string='Quantity',
@@ -4317,23 +4317,10 @@ class stock_warehouse_orderpoint(osv.osv):
         '''
         if not context:
             context = {}
-
         for rule in self.browse(cr, uid, ids, context=context):
             if rule.product_id.uom_id.category_id.id != rule.product_uom.category_id.id:
                 return False
         return True
-
-    def action_view_proc_to_process(self, cr, uid, ids, context=None):
-        act_obj = self.pool.get('ir.actions.act_window')
-        mod_obj = self.pool.get('ir.model.data')
-        proc_ids = self.pool.get('procurement.order').search(cr, uid, [('orderpoint_id', 'in', ids), ('state', 'not in', ('done', 'cancel'))], context=context)
-        result = mod_obj.get_object_reference(cr, uid, 'procurement', 'do_view_procurements')
-        if not result:
-            return False
-
-        result = act_obj.read(cr, uid, [result[1]], context=context)[0]
-        result['domain'] = "[('id', 'in', [" + ','.join(map(str, proc_ids)) + "])]"
-        return result
 
     _columns = {
         'name': fields.char('Name', required=True, copy=False),

@@ -137,7 +137,9 @@ var KanbanRecord = Widget.extend({
         }
         return url;
     },
-
+    kanban_image_saveas: function(model, field, filename_field, id) {
+        return session.url('/web/binary/saveas', {model: model, field: field, filename_field: filename_field, id: id});
+    },
     kanban_getcolor: function(variable) {
         if (typeof(variable) === 'number') {
             return Math.round(variable) % 10;

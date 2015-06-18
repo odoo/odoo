@@ -4,19 +4,16 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 class wizard_valuation_history(osv.osv_memory):
-
     _name = 'wizard.valuation.history'
     _description = 'Wizard that opens the stock valuation history table'
     _columns = {
         'choose_date': fields.boolean('Inventory at Date'),
         'date': fields.datetime('Date', required=True),
     }
-
     _defaults = {
         'choose_date': False,
         'date': fields.datetime.now,
     }
-
     def open_table(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
