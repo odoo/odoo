@@ -62,7 +62,7 @@
 
                                             <div class="row">
                                                 <div class="col-xs-12">
-                                                    <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" class="oe_kanban_action">Print Interview</a>
+                                                    <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Display Interview Form</a>
                                                 </div>
                                             </div>
 
@@ -100,7 +100,8 @@
                                             <a name="action_get_attachment_tree_view" type="object">Documents</a>
                                         </div>
                                         <div>
-                                            <a name="action_print_survey" type="object">Print Interview</a>
+                                            <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Display Interview Form</a>
+                                            <span t-if="!record.survey_id.raw_value">No Interview Form</span>
                                         </div>
                                     </div>
                                     <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">

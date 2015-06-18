@@ -83,15 +83,9 @@ class hr_recruitment_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'case_default': fields.boolean(
-            'Default for New Recruitment',
-            help="If you check this field, this stage will be proposed by default on each new Recruitment. It will not assign this stage to existing Recruitments."),
         'job_ids': fields.many2many('hr.job', 'job_stage_rel', 'stage_id', 'job_id', 'Job Stages'),
-        'requirements': fields.text('Requirements'),
+        'requirements': fields.text('Requirements', help="Enter here the internal requirements for this stage (ex: Offer sent to applicant). It will appear as a tooltip over the stage's name."),
         'template_id': fields.many2one('mail.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
-        'legend_priority': fields.text(
-            'Priority Management Explanation', translate=True,
-            help='Explanation text to help users using the star and priority mechanism on applicants that are in this stage.'),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
@@ -151,8 +145,6 @@ class hr_applicant(osv.Model):
         search_domain = []
         if job_id:
             search_domain += ['|', ('job_ids', '=', job_id)]
-        else:
-            search_domain += ['|', ('case_default', '=', True)]
         search_domain += [('id', 'in', ids)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -205,7 +197,7 @@ class hr_applicant(osv.Model):
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one(
             'hr.recruitment.stage', 'Stage', track_visibility='onchange',
-            domain="['|', ('case_default', '=', True), ('job_ids', '=', job_id)]", copy=False, select=1),
+            domain="[('job_ids', '=', job_id)]", copy=False, select=1),
         'last_stage_id': fields.many2one('hr.recruitment.stage', 'Last Stage',
                                          help='Stage of the applicant before being in the current stage. Used for lost cases analysis.'),
         'categ_ids': fields.many2many('hr.applicant.category', string='Tags'),
@@ -302,6 +294,7 @@ class hr_applicant(osv.Model):
             - job_id: if set, stages must belong to this section or
               be a default case
         """
+        search_domain = []
         if isinstance(applicants, (int, long)):
             applicants = self.browse(cr, uid, applicants, context=context)
         job_ids = set([applicant.job_id.id for applicant in applicants if applicant.job_id])
@@ -309,9 +302,7 @@ class hr_applicant(osv.Model):
             job_ids.add(job_id)
         # OR all job_id and OR with applicant_default
         if job_ids:
-            search_domain = ['|', ('case_default', '=', True), ('job_ids', 'in', list(job_ids))]
-        else:
-            search_domain = [('case_default', '=', True)]
+            search_domain += [('job_ids', 'in', list(job_ids))]
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
@@ -613,12 +604,8 @@ class hr_job(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.partner_id.id
 
-    def _get_type_common(self, cr, uid, context=None):
-        return self.pool['hr.recruitment.stage'].search(cr, uid, [('case_default', '=', True)], context=context)
-
     _defaults = {
         'address_id': _address_get,
-        'stage_ids': _get_type_common,
     }
 
     def _auto_init(self, cr, context=None):

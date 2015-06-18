@@ -94,6 +94,14 @@
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_attachment_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create new documents.
+                </p>
+                <p>
+                    Also you will find here all the related documents and download it by clicking on any individual document.
+                </p>
+            </field>
         </record>
         <menuitem action="action_attachment" id="menu_action_attachment" parent="base.next_id_9"/>
 
