@@ -139,9 +139,9 @@
                                 </field>
                             </page>
                             <page string="Options">
-                                <group colspan="4">
-                                    <field name="users_can_go_back" string="User can come back in the previous page" />
-                                    <field name="auth_required" />
+                                <group class="o_label_nowrap">
+                                    <field name="users_can_go_back" string="User can come back in the previous page"/>
+                                    <field name="auth_required"/>
                                     <field name="quizz_mode" groups="base.group_no_one"/>
                                 </group>
                             </page>
@@ -396,22 +396,28 @@
                                 </field>
                             </page>
                             <page string="Options">
-                                <group string="Constraints" >
-                                    <field name="constr_mandatory" string="Mandatory Answer"/>
-                                    <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
-                                    <group colspan="2" nolabel="1" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
-                                        <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
-                                        <group colspan="2" nolabel="1" attrs="{'invisible': [('validation_required', '=', False)]}">
-                                        <field name="validation_length_min" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
-                                        <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
-                                        <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                        <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                        <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
-                                        <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
-                                        <field name="validation_error_msg" />
-                                        </group>
+                                <group string="Constraints">
+                                    <group colspan="2" col="4">
+                                        <field name="constr_mandatory" string="Mandatory Answer"/>
+                                        <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     </group>
-                                    <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
+                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
+                                        <group>
+                                            <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
+                                        </group>
+                                        <group col="4" attrs="{'invisible': [('validation_required', '=', False)]}">
+                                            <field name="validation_length_min" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                            <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                            <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
+                                            <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
+                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                            <field name="validation_error_msg" colspan="4"/>
+                                        </group>
+                                    </div>
+                                    <group>
+                                        <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
+                                    </group>
                                 </group>
                                 <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
                                     <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])],'required':[('type','=','simple_choice')]}"/>

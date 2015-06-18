@@ -1486,7 +1486,7 @@
     </div>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" t-attf-class="btn btn-sm #{widget.node.attrs.class or ''}"
+    <button type="button" t-attf-class="btn btn-sm oe_button #{widget.node.attrs.class or ''}"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
@@ -1494,7 +1494,7 @@
         <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
         <div t-if="widget.is_stat_button and widget.icon_class" t-att-class="widget.icon_class"></div>
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
-        <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
+        <div t-if="widget.string and widget.is_stat_button" class="o_stat_info"><t t-esc="widget.string"/></div>
     </button>
 </t>
 <t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">

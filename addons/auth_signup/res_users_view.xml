@@ -8,10 +8,17 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <!-- add state field in header -->
-                <xpath expr="//sheet" position="before">
-                    <header>
-                        <field name="state" widget="statusbar"/>
-                    </header>
+                <xpath expr="//header" position="inside">
+                    <button string="Send Reset Password Instructions"
+                                type="object" name="action_reset_password"
+                                attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                    <button string="Send an Invitation Email"
+                                type="object" name="action_reset_password" context="{'create_user': 1}"
+                                attrs="{'invisible': [('state', '!=', 'new')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </xpath>
+
+                <xpath expr="//header" position="after">
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('signup_valid', '!=', True)]}">
                         <p attrs="{'invisible': [('state', '!=', 'active')]}">
                             <b>A password reset has been requested for this user. An email containing the following link has been sent:</b>
@@ -22,17 +29,6 @@
                         <p><field class="oe_inline" name="signup_url" widget="url"/></p>
                         <field name="signup_valid" invisible="1"/>
                     </div>
-                </xpath>
-                <!-- add Reset Password button -->
-                <xpath expr="//div[@name='button_box']//button" position="replace">
-                        <button string="Send Reset Password Instructions"
-                                class="oe_link"
-                                type="object" name="action_reset_password"
-                                attrs="{'invisible': [('state', '!=', 'active')]}"/>
-                        <button string="Send an Invitation Email"
-                                class="oe_link"
-                                type="object" name="action_reset_password" context="{'create_user': 1}"
-                                attrs="{'invisible': [('state', '!=', 'new')]}"/>
                 </xpath>
             </field>
         </record>

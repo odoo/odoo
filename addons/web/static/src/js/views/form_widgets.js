@@ -228,6 +228,7 @@ var KanbanSelection = FieldChar.extend({
         var dd_fetched = this.prepare_dropdown_selection();
         return $.when(dd_fetched).then(function (states) {
             self.states = states;
+            self.$el.addClass('oe_right');
             self.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
             self.$el.find('li').on('click', self.set_kanban_selection.bind(self));
         });
@@ -966,9 +967,8 @@ var LabelSelection = FieldSelection.extend({
     render_value: function() {
         this._super.apply(this, arguments);
         if (this.get("effective_readonly")) {
-            var value = this.get('value'),
-            bt_class = this.classes[value] || 'default';
-            this.$el.html(_.str.sprintf("<span class='label label-%s'>%s<span>", bt_class, this.$el.html()));
+            var btn_class = this.classes[this.get('value')] || 'default';
+            this.$el.wrapInner($('<span/>').addClass('label label-' + btn_class));
         }
     },
 });

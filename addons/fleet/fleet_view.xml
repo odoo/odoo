@@ -253,10 +253,10 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group >
-                                <label for="odometer" />
-                                <div>
-                                    <field name="odometer" class="oe_inline"/>
-                                    <field name="odometer_unit" class="oe_inline"/>
+                                <label for="odometer"/>
+                                <div class="o_row">
+                                    <field name="odometer"/>
+                                    <field name="odometer_unit"/>
                                 </div>
                                 <field name="acquisition_date" />
                                 <field name="car_value" />
@@ -272,14 +272,14 @@
                                 <field name="transmission" />
                                 <field name="fuel_type" />
                                 <label for="co2"/>
-                                <div>
-                                    <field name="co2" class="oe_inline"/> g/km
+                                <div class="o_row">
+                                    <field name="co2"/><span>g/km</span>
                                 </div>
                                 <field name="horsepower" />
                                 <field name="horsepower_tax" />
                                 <label for="power"/>
-                                <div>
-                                    <field name="power" class="oe_inline"/> kW
+                                <div class="o_row">
+                                    <field name="power"/><span>kW</span>
                                 </div>
                             </group>
                         </group>
@@ -302,7 +302,7 @@
                     <field name="vin_sn" />
                     <field name="acquisition_date" />
                     <field name="state_id"/>
-                    <field name="odometer" />
+                    <field name="odometer"/>
                     <field name="odometer_unit" />
                     <field name="contract_renewal_due_soon" invisible="1"/>
                     <field name="contract_renewal_overdue" invisible="1" />
@@ -448,9 +448,9 @@
                             </group>
                             <group string="Odometer details">
                                 <label for="odometer"/>
-                                <div>
-                                    <field name="odometer" class="oe_inline"/>
-                                    <field name="odometer_unit" class="oe_inline"/>
+                                <div class="o_row">
+                                    <field name="odometer"/>
+                                    <field name="odometer_unit"/>
                                 </div>
                             </group>
                         </group>
@@ -647,7 +647,7 @@
             <field name="arch" type="xml">
                 <form string="Fuel Logs">
                     <sheet>
-                        <group col="2">
+                        <group>
                             <group string="Vehicle Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                             </group>
@@ -657,12 +657,12 @@
                                 <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
                             </group>
                         </group>
-                        <group col="2">
+                        <group>
                             <group string="Odometer Details">
                                 <label for="odometer"/>
-                                <div>
-                                    <field name="odometer" class="oe_inline"/>
-                                    <field name="odometer_unit" class="oe_inline"/>
+                                <div class="o_row">
+                                    <field name="odometer"/>
+                                    <field name="odometer_unit"/>
                                 </div>
                             </group>
                             <group string="Additional Details">
@@ -672,9 +672,7 @@
                                 <field name="vendor_id" context="{'default_supplier': True}"/>
                             </group>
                         </group>
-                        <group string="Notes">
-                            <field nolabel="1" name="notes" placeholder="Write here any other information"/>
-                        </group>
+                        <field name="notes" placeholder="Write here any other information"/>
                     </sheet>
                 </form>
             </field>
@@ -761,9 +759,9 @@
                             </group>
                             <group string="Odometer Details">
                                 <label for="odometer"/>
-                                <div>
-                                    <field name="odometer" class="oe_inline"/>
-                                    <field name="odometer_unit" class="oe_inline"/>
+                                <div class="o_row">
+                                    <field name="odometer"/>
+                                    <field name="odometer_unit"/>
                                 </div>
                             </group>
                         </group>

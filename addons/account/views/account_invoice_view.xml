@@ -376,7 +376,7 @@
                                 context="{'search_default_customer':1, 'show_address': 1}"
                                 options='{"always_reload": True}'
                                 domain="[('customer', '=', True)]"/>
-                            <field name="payment_term_id" class="oe_inline"/>
+                            <field name="payment_term_id"/>
                         </group>
                         <group>
                             <field name="date_invoice"/>
@@ -447,7 +447,7 @@
                                 <field name="reconciled" invisible="1"/>
                                 <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1" widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
                             </group>
-                            <field name="comment" class="oe_inline" placeholder="Terms and conditions..."/>
+                            <field name="comment" placeholder="Terms and conditions..."/>
                         </page>
                         <page string="Other Info">
                             <group>
