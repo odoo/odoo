@@ -12,30 +12,30 @@
                         <field name="name"/>
                     </h1>
                     <group>
-                        <group string="Data">
+                        <group>
                             <field name="type"/>
                             <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
                             <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
                             <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
-                            <field name="mimetype"/>
+                            <field name="mimetype" groups="base.group_no_one"/>
                         </group>
-                        <group string="Attached To">
+                        <group string="Attached To" groups="base.group_no_one">
                             <field name="res_model"/>
                             <field name="res_id"/>
                             <field name="res_name"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
-                        <group groups="base.group_no_one" string="History">
+                        <group string="History" groups="base.group_no_one">
                             <label for="create_uid" string="Creation"/>
                             <div name="creation_div">
                                 <field name="create_uid" readonly="1" class="oe_inline"/> on
                                 <field name="create_date" readonly="1" class="oe_inline"/>
                             </div>
                         </group>
-                        <group name="description_group" string="Description" colspan="4">
+                        <group name="description_group" string="Description" groups="base.group_no_one"  colspan="4">
                             <field name="description" nolabel="1"/>
                         </group>
-                        <group string="Indexed Content" colspan="4">
+                        <group groups="base.group_no_one" string="Indexed Content" colspan="4">
                             <field name="index_content" nolabel="1"/>
                         </group>
                     </group>

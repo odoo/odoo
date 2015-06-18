@@ -134,6 +134,11 @@ class project(osv.osv):
             'view_id': False,
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
+            'help': _('''<p class="oe_view_nocontent_create">
+                        Documents are attached to the tasks and issues of your project.</p><p>
+                        Send messages or log internal notes with attachments to link
+                        documents to your project.
+                    </p>'''),
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
