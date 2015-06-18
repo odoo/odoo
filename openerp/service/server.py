@@ -620,6 +620,11 @@ class PreforkServer(CommonServer):
             for pid in self.workers.keys():
                 self.worker_kill(pid, signal.SIGINT)
             while self.workers and time.time() < limit:
+                try:
+                    self.process_signals()
+                except KeyboardInterrupt:
+                    _logger.info("Forced shutdown.")
+                    break
                 self.process_zombie()
                 time.sleep(0.1)
         else:

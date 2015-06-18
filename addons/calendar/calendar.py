@@ -656,18 +656,18 @@ class ir_model(osv.Model):
 original_exp_report = openerp.service.report.exp_report
 
 
-def exp_report(db, uid, object, ids, data=None, context=None):
+def exp_report(db, uid, object, ids, datas=None, context=None):
     """
     Export Report
     """
     if object == 'printscreen.list':
-        original_exp_report(db, uid, object, ids, data, context)
+        original_exp_report(db, uid, object, ids, datas, context)
     new_ids = []
     for id in ids:
         new_ids.append(calendar_id2real_id(id))
-    if data.get('id', False):
-        data['id'] = calendar_id2real_id(data['id'])
-    return original_exp_report(db, uid, object, new_ids, data, context)
+    if datas.get('id', False):
+        datas['id'] = calendar_id2real_id(datas['id'])
+    return original_exp_report(db, uid, object, new_ids, datas, context)
 
 
 openerp.service.report.exp_report = exp_report
