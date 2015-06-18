@@ -1028,7 +1028,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
                     # (Sometimes we have 'i18n_extra' instead of just 'i18n')
-                    addons_module_i18n, _ = os.path.split(fileobj.name)
+                    addons_module_i18n, _ignored = os.path.split(fileobj.name)
                     addons_module, i18n_dir = os.path.split(addons_module_i18n)
                     addons, module = os.path.split(addons_module)
                     pot_handle = misc.file_open(os.path.join(
@@ -1039,7 +1039,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         else:
             _logger.info('Bad file format: %s', fileformat)
-            raise Exception(_('Bad file format'))
+            raise Exception(_('Bad file format: %s') % fileformat)
 
         # Read the POT references, and keep them indexed by source string.
         class Target(object):
@@ -1049,7 +1049,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 self.comments = None
 
         pot_targets = defaultdict(Target)
-        for type, name, res_id, src, _, comments in pot_reader:
+        for type, name, res_id, src, _ignored, comments in pot_reader:
             if type is not None:
                 target = pot_targets[src]
                 target.targets.add((type, name, res_id))
