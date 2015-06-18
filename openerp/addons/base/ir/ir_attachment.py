@@ -279,8 +279,8 @@ class ir_attachment(osv.osv):
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', change_default=True),
-        'type': fields.selection( [ ('url','URL'), ('binary','Binary'), ],
-                'Type', help="Binary File or URL", required=True, change_default=True),
+        'type': fields.selection( [ ('url','URL'), ('binary','File'), ],
+                'Type', help="You can either upload a file from your computer or copy/paste an internet link to your file", required=True, change_default=True),
         'url': fields.char('Url', size=1024),
         # al: We keep shitty field names for backward compatibility with document
         'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
