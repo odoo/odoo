@@ -435,6 +435,36 @@ class module(osv.osv):
             # Determine which auto-installable modules must be installed.
             modules = self.search(auto_domain).filtered(must_install)
 
+        # retrieve the installed (or to be installed) theme modules
+        theme_category = self.env.ref('base.module_category_theme')
+        theme_modules = self.search([
+            ('state', 'in', list(install_states)),
+            ('category_id', 'child_of', [theme_category.id]),
+        ])
+
+        # determine all theme modules that mods depends on, including mods
+        def theme_deps(mods):
+            deps = mods.mapped('dependencies_id.depend_id')
+            while deps:
+                mods |= deps
+                deps = deps.mapped('dependencies_id.depend_id')
+            return mods & theme_modules
+
+        if any(module.state == 'to install' for module in theme_modules):
+            # check: the installation is valid if all installed theme modules
+            # correspond to one theme module and all its theme dependencies
+            if not any(theme_deps(module) == theme_modules for module in theme_modules):
+                state_labels = dict(self.fields_get(['state'])['state']['selection'])
+                themes_list = [
+                    "- %s (%s)" % (module.shortdesc, state_labels[module.state])
+                    for module in theme_modules
+                ]
+                raise UserError(_(
+                    "You are trying to install incompatible themes:\n%s\n\n" \
+                    "Please uninstall your current theme before installing another one.\n"
+                    "Warning: switching themes may significantly alter the look of your current website pages!"
+                ) % ("\n".join(themes_list)))
+
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):
