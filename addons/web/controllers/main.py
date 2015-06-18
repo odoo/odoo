@@ -475,7 +475,10 @@ class Home(http.Controller):
                 request.uid = request.session.uid
 
             menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, context=request.context)
-            return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
+            if not menu_data:
+                return http.local_redirect('/', query=request.params)
+            else:
+                return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
         else:
             return login_redirect()
 
