@@ -510,12 +510,17 @@ var KanbanView = View.extend({
             var dataset = new data.DataSetSearch(self, rel_name, self.dataset.get_context(rel.context));
             dataset.name_get(_.uniq(rel.ids)).done(function(result) {
                 result.forEach(function(nameget) {
-                    // white color (0) should not be selected, 1 instead
-                    var color = KanbanRecord.prototype.kanban_getcolor(nameget[1]) + 1;
-                    var $tag = $('<span>')
-                        .addClass('o_tag oe_kanban_color_' + color)
-                        .attr('title', _.str.escapeHTML(nameget[1]));
-                    $(rel.elements[nameget[0]]).append($tag);
+                    var $element = $(rel.elements[nameget[0]]);
+                    if ($element.hasClass('o_m2m_tags')) {
+                        $element.append('<span class="oe_tag">' + _.str.escapeHTML(nameget[1]) + '</span>');
+                    } else {
+                        // white color (0) should not be selected, 1 instead
+                        var color = KanbanRecord.prototype.kanban_getcolor(nameget[1]) + 1;
+                        var $tag = $('<span>')
+                            .addClass('o_tag oe_kanban_color_' + color)
+                            .attr('title', _.str.escapeHTML(nameget[1]));
+                        $element.append($tag);
+                    }
                 });
                 // we use boostrap tooltips for better and faster display
                 self.$('span.o_tag').tooltip();

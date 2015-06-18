@@ -182,7 +182,7 @@
                                         <field name="partner_id"/> <br/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <field name="tag_ids"/>
+                                        <field name="tag_ids" options='{"m2m_tags": True}'/>
                                     </div>
                                     <div class="oe_kanban_bottom_left">
                                         <t t-raw="record.message_summary.raw_value"/>
