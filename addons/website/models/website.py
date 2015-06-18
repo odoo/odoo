@@ -969,6 +969,13 @@ class website_published_mixin(osv.AbstractModel):
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         return dict.fromkeys(ids, '#')
 
+    def website_publish_button(self, cr, uid, ids, context=None):
+        if self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
+            return self.open_website_url(cr, uid, ids, context)
+        for r in self.browse(cr, uid, ids, context=context):
+            r.write({'website_published': not r.website_published})
+        return True
+
     def open_website_url(self, cr, uid, ids, context=None):
         return {
             'type': 'ir.actions.act_url',
