@@ -387,13 +387,6 @@ class mail_thread(osv.AbstractModel):
             name = ir_model_pool.read(cr, uid, ids, ['name'], context=context)[0]['name']
             self.message_post(cr, uid, thread_id, body=_('%s created') % name, context=context)
 
-        # auto_subscribe: take values and defaults into account
-        create_values = dict(values)
-        for key, val in context.iteritems():
-            if key.startswith('default_') and key[8:] not in create_values:
-                create_values[key[8:]] = val
-        self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
-
         # track values
         track_ctx = dict(context)
         if 'lang' not in track_ctx:
@@ -403,6 +396,14 @@ class mail_thread(osv.AbstractModel):
             if tracked_fields:
                 initial_values = {thread_id: dict.fromkeys(tracked_fields, False)}
                 self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
+
+        # auto_subscribe: take values and defaults into account
+        create_values = dict(values)
+        for key, val in context.iteritems():
+            if key.startswith('default_') and key[8:] not in create_values:
+                create_values[key[8:]] = val
+        self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
+
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -427,13 +428,15 @@ class mail_thread(osv.AbstractModel):
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in records)
 
-        # Perform write, update followers
+        # Perform write
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
-        self.message_auto_subscribe(cr, uid, ids, values.keys(), context=context, values=values)
 
         # Perform the tracking
         if tracked_fields:
             self.message_track(cr, uid, ids, tracked_fields, initial_values, context=track_ctx)
+
+        # update followers
+        self.message_auto_subscribe(cr, uid, ids, values.keys(), context=context, values=values)
 
         return result
 
