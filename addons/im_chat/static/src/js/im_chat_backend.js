@@ -192,9 +192,7 @@ var InstantMessaging = Widget.extend({
     },
     // ui
     position_compute: function() {
-        var $topbar = window.$('#oe_main_menu_navbar'); // .oe_topbar is replaced with .navbar of bootstrap3
-        var top = $topbar.offset().top + $topbar.height();
-        top = Math.max(top - $(window).scrollTop(), 0);
+        var top = 48;
         this.$el.css("top", top);
         this.$el.css("bottom", 0);
     },
