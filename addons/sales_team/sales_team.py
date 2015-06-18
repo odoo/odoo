@@ -50,7 +50,6 @@ class crm_team(osv.Model):
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales team"),
         'parent_id': fields.many2one('crm.team', 'Parent Team'),
         'child_ids': fields.one2many('crm.team', 'parent_id', 'Child Teams'),
-        'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16, 2)),
         'color': fields.integer('Color Index'),
     }

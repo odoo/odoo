@@ -89,12 +89,12 @@
                         <field name="use_opportunities" class="oe_inline"/><label for="use_opportunities"/>
                     </xpath>
                     <xpath expr="//page[@name='members']" position="after">
-                        <page string="Stages">
+                        <page string="Stages" groups="base.group_no_one">
                             <separator string="Select Stages for this Sales Team"/>
                                 <field name="stage_ids"/>
                         </page>
                    </xpath>
-                   <xpath expr="//field[@name='active']" position="before">
+                   <xpath expr="//group[@name='sales_team_more_info']" position="inside">
                         <group name="alias_info" string="Leads Email Alias" class="oe_inline" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <label for="alias_name" string="Email Alias"
                                 attrs="{'invisible': [('alias_domain', '=', False)]}"/>

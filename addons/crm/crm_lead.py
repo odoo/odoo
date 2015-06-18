@@ -88,7 +88,7 @@ class crm_lead(format_address, osv.osv):
             order = "%s desc" % order
         # retrieve team_id from the context and write the domain
         # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
+        # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         search_domain = []
         team_id = self.pool['crm.team']._resolve_team_id_from_context(cr, uid, context=context)
@@ -96,7 +96,7 @@ class crm_lead(format_address, osv.osv):
             search_domain += ['|', ('team_ids', '=', team_id)]
             search_domain += [('id', 'in', ids)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain += [('id', 'in', ids)]
         # retrieve type from the context (if set: choose 'type' or 'both')
         type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
@@ -324,13 +324,12 @@ class crm_lead(format_address, osv.osv):
                 team_ids.add(lead.team_id.id)
             if lead.type not in types:
                 types.append(lead.type)
-        # OR all team_ids and OR with case_default
+        # OR all team_ids
         search_domain = []
         if team_ids:
-            search_domain += [('|')] * len(team_ids)
+            search_domain += [('|')] * (len(team_ids) - 1)
             for team_id in team_ids:
                 search_domain.append(('team_ids', '=', team_id))
-        search_domain.append(('case_default', '=', True))
         # AND with cases types
         if not avoid_add_type_term:
             search_domain.append(('type', 'in', types))

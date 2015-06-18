@@ -77,6 +77,7 @@ Dashboard for CRM will include:
         'sales_team_dashboard.xml',
     ],
     'demo': [
+        'data/crm_stage_demo.xml',
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'data/crm_action_demo.xml',

@@ -22,6 +22,7 @@
         <data>
             <xpath expr="//templates" position="before">
                 <field name="use_quotations"/>
+                <field name="use_invoices"/>
                 <field name="invoiced_forecast"/>
                 <field name="invoiced_target"/>
                 <field name="sales_to_invoice_amount"/>
@@ -51,19 +52,21 @@
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
-                <div t-if="record.use_quotations.raw_value">
-                    <a name="%(action_quotations_salesteams)d" type="action">Quotations</a>
-                </div>
-                <div >
-                    <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
-                </div>
-                <div groups="account.group_account_invoice">
+                <t t-if="record.use_quotations.raw_value">
+                    <div>
+                        <a name="%(action_quotations_salesteams)d" type="action">Quotations</a>
+                    </div>
+                    <div >
+                        <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
+                    </div>
+                </t>
+                <div t-if="record.use_invoices.raw_value" groups="account.group_account_invoice">
                     <a name="%(action_invoice_salesteams)d" type="action">Invoices</a>
                 </div>
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_manage_new')]" position="inside">
-                <div>
+                <div t-if="record.use_quotations.raw_value">
                     <a name="%(action_quotation_form)d" type="action">
                         Quotation
                     </a>
@@ -71,17 +74,19 @@
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
-                <div>
-                    <a name="%(action_order_report_quotation_salesteam)d" type="action">
-                        Quotation
-                    </a>
-                </div>
-                <div>
-                    <a name="%(action_order_report_so_salesteam)d" type="action">
-                        Sales
-                    </a>
-                </div>
-                <div>
+                <t t-if="record.use_quotations.raw_value">
+                    <div>
+                        <a name="%(action_order_report_quotation_salesteam)d" type="action">
+                            Quotation
+                        </a>
+                    </div>
+                    <div>
+                        <a name="%(action_order_report_so_salesteam)d" type="action">
+                            Sales
+                        </a>
+                    </div>
+                </t>
+                <div t-if="record.use_invoices.raw_value">
                     <a name="%(action_account_invoice_report_salesteam)d" type="action">
                         Invoices
                     </a>

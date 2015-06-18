@@ -16,7 +16,6 @@
                     <field name="name"/>
                     <field name="parent_id"/>
                     <field name="user_id"/>
-                    <field name="note"/>
                     <field name="code"/>
                     <group expand="0" string="Group By...">
                         <filter string="Team Leader" domain="[]" context="{'group_by':'user_id'}"/>
@@ -64,7 +63,6 @@
                             <group name="left">
                                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                                 <field name="code" groups="base.group_no_one"/>
-                                <field name="active"/>
                             </group>
                             <group name="right">
                             </group>
@@ -90,16 +88,15 @@
                                     </kanban>
                                 </field>
                             </page>
-                            <page string="More Info" groups="base.group_sale_manager">
-                                <group name="sales_team_more_info">
+                            <page string="More Info" groups="base.group_no_one">
+                                <group>
+                                    <field name="active"/>
                                     <group string="Company" groups="base.group_multi_company">
-                                        <field name="company_id" 
-                                            options="{'no_create': True}"/>
+                                        <field name="company_id" options="{'no_create': True}"/>
                                     </group>
-                                </group>                                
-                            </page>
-                            <page string="Notes">
-                                <field name="note"/>
+                                </group>
+                                <group name="sales_team_more_info">
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

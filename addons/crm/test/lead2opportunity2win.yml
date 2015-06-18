@@ -39,19 +39,6 @@
   !python {model: crm.lead}: |
     self.message_post(cr, uid, [ref('crm_case_3')], subject='Test note', body='Détails envoyés par le client sur ​​le FAX pour la qualité')
 -
-  I win this opportunity
--
-  !python {model: crm.lead}: |
-    self.case_mark_won(cr, uid, [ref("crm_case_3")])
--
-  I check details of the opportunity after having won the opportunity.
--
-  !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_3'))
-    assert lead.stage_id.id == ref('crm.stage_lead6'), "Opportunity stage should be 'Won'."
-    assert lead.stage_id.probability == 100.0, "Opportunity is not 'done'"
-    assert lead.probability == 100.0, "Revenue probability should be 100.0!"
--
   I convert mass lead into opportunity customer.
 -
   !python {model: crm.lead2opportunity.partner.mass}: |
