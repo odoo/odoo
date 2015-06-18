@@ -141,9 +141,10 @@ class stock_partial_picking(osv.osv_memory):
                         return {'cost': cost, 'currency': company_currency}
             else:
                 # use price set on the purchase order
+                # valuated at the currency rate when transaction happens
                 pur_currency = purchase_line.order_id.currency_id.id
                 company_currency = purchase_line.company_id.currency_id.id
-                cost = self.pool.get('res.currency').compute(cr, uid, pur_currency, company_currency, purchase_line.price_unit, round=False, context={'date': purchase_line.date_order})
+                cost = self.pool.get('res.currency').compute(cr, uid, pur_currency, company_currency, purchase_line.price_unit, round=False, context={'date': fields.date.today()})
                 return {'cost': cost, 'currency': company_currency}
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
 
