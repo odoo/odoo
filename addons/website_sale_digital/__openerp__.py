@@ -15,6 +15,6 @@ Sell digital product using attachments to virtual products
         'views/website_sale_digital_view.xml',
     ],
     'demo': [
-        'demo.xml',
+        'data/demo.xml',
     ],
 }
