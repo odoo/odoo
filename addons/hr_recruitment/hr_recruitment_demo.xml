@@ -1,6 +1,76 @@
 <?xml version="1.0"?>
 <openerp>
   <data noupdate="1">
+
+    <record model="hr.recruitment.stage" id="stage_job1">
+        <field name="name">Initial Qualification</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job2">
+        <field name="name">First Interview</field>
+        <field name="template_id" ref="applicant_interest"/>
+        <field name="sequence">2</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job3">
+        <field name="name">Second Interview</field>
+        <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job4">
+        <field name="name">Contract Proposal</field>
+        <field name="sequence">4</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job5">
+        <field name="name">Contract Signed</field>
+        <field name="sequence">5</field>
+        <field name="fold" eval="True"/>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job6">
+        <field name="name">Refused</field>
+        <field name="sequence">6</field>
+        <field name="template_id" ref="applicant_refuse"/>
+        <field name="fold" eval="True"/>
+    </record>
+
+        <!--Manage the job_id to get in hr.applicant-->
+    <record id="hr.job_developer" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">4</field>
+        <field name="survey_id" ref="recruitment_form"/>
+        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
+    </record>
+    <record id="hr.job_ceo" model="hr.job">
+        <field name="survey_id" ref="recruitment_form"/>
+        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
+    </record>
+    <record id="hr.job_cto" model="hr.job">
+        <field name="survey_id" ref="recruitment_form"/>
+        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
+    </record>
+    <record id="hr.job_consultant" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">1</field>
+        <field name="survey_id" ref="recruitment_form"/>
+        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
+    </record>
+    <record id="hr.job_hrm" model="hr.job">
+        <field name="no_of_recruitment">1</field>
+        <field name="state">recruit</field>
+        <field name="survey_id" ref="recruitment_form"/>
+        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
+    </record>
+    <record id="hr.job_marketing" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">3</field>
+        <field name="survey_id" ref="recruitment_form"/>
+        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
+    </record>
+    <record id="hr.job_trainee" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">6</field>
+        <field name="survey_id" ref="recruitment_form"/>
+        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
+    </record>
+
     <record id="hr_case_salesman0" model="hr.applicant">
         <field name="name">Sales Manager</field>
         <field name="job_id" ref="hr.job_marketing"/>
@@ -121,45 +191,6 @@
         <field name="salary_expected">11000.0</field>
         <field eval="time.strftime('%Y-%m-15 18:15:00')" name="date_action"/>
         <field name="title_action">Send mail regarding our interview</field>
-    </record>
-
-    <record id="hr.job_developer" model="hr.job">
-        <field name="state">recruit</field>
-        <field name="no_of_recruitment">4</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
-    </record>
-    <record id="hr.job_ceo" model="hr.job">
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
-    </record>
-    <record id="hr.job_cto" model="hr.job">
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
-    </record>
-    <record id="hr.job_consultant" model="hr.job">
-        <field name="state">recruit</field>
-        <field name="no_of_recruitment">1</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
-    </record>
-    <record id="hr.job_hrm" model="hr.job">
-        <field name="no_of_recruitment">1</field>
-        <field name="state">recruit</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
-    </record>
-    <record id="hr.job_marketing" model="hr.job">
-        <field name="state">recruit</field>
-        <field name="no_of_recruitment">3</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
-    </record>
-    <record id="hr.job_trainee" model="hr.job">
-        <field name="state">recruit</field>
-        <field name="no_of_recruitment">6</field>
-        <field name="survey_id" ref="recruitment_form"/>
-        <field name="stage_ids" eval="[(6, 0, [ref('stage_job1'), ref('stage_job2'), ref('stage_job3'), ref('stage_job4'), ref('stage_job5'), ref('stage_job6')])]"/>
     </record>
 
     <record id="message_application_demo" model="mail.message">

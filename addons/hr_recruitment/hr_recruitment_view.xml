@@ -109,6 +109,8 @@
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
+                    <label for="categ_ids" class="oe_edit_only"/>
+                    <field name="categ_ids" widget="many2many_tags"/>
                     <label for="partner_name" class="oe_edit_only"/>
                     <h2>
                         <field name="partner_name" class="oe_inline"/>
@@ -132,7 +134,7 @@
                             <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
                         </div>
                         <field name="priority" widget="priority"/>
-                        <field name="medium_id"/>
+                        <field name="medium_id" groups="base.group_no_one" />
                         <field name="source_id"/>
                         <field name="reference"/>
                     </group>
@@ -141,8 +143,7 @@
                         <field name="response_id" invisible="1"/>
                         <field name="job_id" on_change="onchange_job(job_id,stage_id)"/>
                         <field name="department_id"/>
-                        <field name="company_id" />
-                        <field name="availability"/>
+                        <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}' />
                     </group>
                     <group string="Contract">
                         <label for="salary_expected"/>
@@ -157,11 +158,9 @@
                             <span class="oe_inline" attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
+                        <field name="availability"/>
                         <field name="emp_id" invisible="1"/>
                     </group>
-                </group>
-                <group>
-                    <field name="categ_ids" widget="many2many_tags"/>
                 </group>
                 <separator string="Application Summary"/>
                 <field name="description" placeholder="Feedback of interviews..."/>
@@ -249,7 +248,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
-                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
+                <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="survey"/>
@@ -387,19 +386,14 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <group name="employee_data" position="inside">
-                <label for="survey_id" groups="base.group_user"/>
-                <div groups="base.group_user" class="o_row">
-                    <field name="survey_id"/>
-                    <button string="Print Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_link"/>
-                </div>
-                <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]"/>
-            </group>
-            <group name="employee_data" position="after">
-                <notebook>
-                    <page string="Recruitment Stage" name="recruitment_stage">
-                        <field name="stage_ids" widget="many2many"></field>
-                    </page>
-                </notebook>
+                <group>
+                    <label for="survey_id" groups="base.group_user"/>
+                    <div groups="base.group_user" class="o_row">
+                        <field name="survey_id"/>
+                        <button string="Display Interview Form" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_link"/>
+                    </div>
+                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]"/>
+                </group>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">
                 <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
@@ -546,13 +540,11 @@
                 <group string="Stage Definition">
                     <group>
                         <field name="name"/>
-                        <field name="sequence"/>
-                        <field name="case_default"/>
-                        <field name="fold"/>
+                        <field name="sequence" groups="base.group_no_one"/>
                     </group>
                     <group>
+                         <field name="fold"/>
                         <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
-                        <field name="legend_priority"/>
                     </group>
                 </group>
                 <separator string="Requirements"/>
