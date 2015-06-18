@@ -2,6 +2,8 @@ odoo.define('survey.survey', function (require) {
 'use strict';
 
 var website = require('website.website');
+var core = require('web.core');
+var _t = core._t;
 
 /*
  * This file is intended to add interactivity to survey forms rendered by
@@ -132,9 +134,11 @@ if(!the_form.length) {
         dataType: 'json',                   // answer expected type
         beforeSubmit: function(){           // hide previous errmsg before resubmitting
             $('.js_errzone').html("").hide();
+            $('.o_required_error').remove();
         },
         success: function(response, status, xhr, wfe){ // submission attempt
             if(_.has(response, 'errors')){  // some questions have errors
+                $("[name='button_submit']").parent().after(_.str.sprintf("<div class='alert alert-danger o_required_error'>%s</div>", _t("Please fill in all of the required fields.")));
                 _.each(_.keys(response.errors), function(key){
                     $("#" + key + '>.js_errzone').append('<p>' + response.errors[key] + '</p>').show();
                 });
