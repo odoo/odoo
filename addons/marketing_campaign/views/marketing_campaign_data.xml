@@ -1,5 +1,5 @@
-<?xml version="1.0" ?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data noupdate="1">
 
     <!-- Cron -->
@@ -22,9 +22,9 @@
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
             <field name="model" eval="'marketing.campaign.segment'"/>
-            <field name="function" eval="'process_segment'"/>
+            <field name="function" eval="'process_segment_cron'"/>
             <field name="args" eval="'()'"/>
         </record>
 
     </data>
-</openerp>
+</odoo>

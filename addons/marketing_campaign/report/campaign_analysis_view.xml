@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
     <record id="view_report_campaign_analysis_pivot" model="ir.ui.view">
         <field name="name">campaign.analysis.pivot</field>
@@ -41,7 +40,6 @@
                 <field name="country_id" invisible="1"/>
                 <field name="res_id" invisible="1"/>
                 <field name="count"/>
-                <field name="total_cost" string="Cost" widget="monetary"/><!-- sum="Cost"/-->
                 <field name="revenue" widget="monetary"/>
             </tree>
         </field>
@@ -82,7 +80,6 @@
         <field name="search_view_id" ref="view_campaign_analysis_search"/>
     </record>
 
-    <menuitem name="Campaign" action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="report_marketing_campaign" sequence="20"/>
+    <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="report_marketing_campaign" sequence="20"/>
 
-    </data>
-</openerp>
+</odoo>
