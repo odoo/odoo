@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data noupdate="1">
 
         <!-- After installation of the module, open the related menu -->
@@ -20,28 +20,28 @@
 
 
         <!-- Casual leave -->
-        <record model="hr.holidays.status" id="holiday_status_cl">
+        <record id="holiday_status_cl" model="hr.holidays.status">
             <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
             <field name="limit" eval="False"/>
             <field name="color_name">black</field>
         </record>
 
         <!-- Sick leave -->
-        <record model="hr.holidays.status" id="holiday_status_sl">
+        <record id="holiday_status_sl" model="hr.holidays.status">
             <field name="name">Sick Leaves</field>
             <field name="limit" eval="True"/>
             <field name="color_name">red</field>
         </record>
 
         <!-- Compensatory Days -->
-        <record model="hr.holidays.status" id="holiday_status_comp">
+        <record id="holiday_status_comp" model="hr.holidays.status">
             <field name="name">Compensatory Days</field>
             <field name="limit" eval="False"/>
             <field name="color_name">lavender</field>
         </record>
 
         <!--Unpaid Leave -->
-        <record model="hr.holidays.status" id="holiday_status_unpaid">
+        <record id="holiday_status_unpaid" model="hr.holidays.status">
             <field name="name">Unpaid</field>
             <field name="limit" eval="True"/>
             <field name="color_name">brown</field>
@@ -106,4 +106,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

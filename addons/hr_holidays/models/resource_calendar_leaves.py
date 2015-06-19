@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import fields, models
 
 
-class resource_calendar_leaves(osv.osv):
-    _inherit = "resource.calendar.leaves"
+class ResourceCalendarLeaves(models.Model):
     _description = "Leave Detail"
-    _columns = {
-        'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
-    }
+    _inherit = "resource.calendar.leaves"
+
+    holiday_id = fields.Many2one("hr.holidays", "Leave Request")

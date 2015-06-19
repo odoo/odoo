@@ -4,13 +4,7 @@
         <field name="res_model">hr.holidays</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{
-            'default_type': 'remove',
-            'search_default_department_id': [active_id],
-            'default_department_id': active_id,
-            'search_default_approve':1}
-        </field>
-        <field name="domain">[('type','=','remove')]</field>
+        <field name="domain">[('request_type','=','remove')]</field>
         <field name="view_id" ref="view_holiday"/>
         <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
     </record>
@@ -20,17 +14,11 @@
         <field name="res_model">hr.holidays</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{
-            'default_type': 'add',
-            'search_default_department_id': [active_id],
-            'default_department_id': active_id,
-            'search_default_approve':1}
-        </field>
-        <field name="domain">[('type','=','add')]</field>
+        <field name="domain">[('request_type','=','add')]</field>
         <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
     </record>
 
-    <record model="ir.actions.act_window" id="action_hr_holidays_leaves_analysis">
+    <record id="action_hr_holidays_leaves_analysis" model="ir.actions.act_window">
         <field name="name">Leaves Analysis</field>
         <field name="res_model">hr.holidays</field>
         <field name="view_type">form</field>
@@ -39,16 +27,12 @@
         <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
     </record>
 
-    <record model="ir.actions.act_window" id="action_hr_holidays_leaves_analysis_filtered">
+    <record id="action_hr_holidays_leaves_analysis_filtered" model="ir.actions.act_window">
         <field name="name">Leaves Analysis</field>
         <field name="res_model">hr.holidays</field>
         <field name="view_type">form</field>
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('holiday_type','=','employee')]</field>
-        <field name="context">{
-            'search_default_department_id': [active_id],
-            'default_department_id': active_id}
-        </field>
         <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
     </record>
 
@@ -69,9 +53,11 @@
                 <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
                     <div t-if="record.leave_to_approve_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
-                            <a name="%(hr_holidays_action_request_from_department)d" type="action">
-                                Leave Requests
-                            </a>
+                            <a name="%(hr_holidays_action_request_from_department)d" type="action"
+                            context="{'default_request_type': 'remove', 'search_default_department_id': [active_id],
+                            'default_department_id': active_id, 'search_default_approve': 1}">
+                            <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Leave Requests
+                        </a>
                         </div>
                         <div class="col-xs-3">
                             <field name="leave_to_approve_count"/>
@@ -79,8 +65,10 @@
                     </div>
                     <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
-                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action">
-                                Allocation Requests
+                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action"
+                            context="{'default_request_type': 'add', 'search_default_department_id': [active_id],
+                            'default_department_id': active_id, 'search_default_approve': 1}">
+                                <t t-esc="record.allocation_to_approve_count.raw_value or 0"/> Allocation Requests
                             </a>
                         </div>
                         <div class="col-xs-3">
@@ -98,7 +86,9 @@
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_to_approve')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="%(hr_holidays_action_request_from_department)d" type="action">
+                            <a name="%(hr_holidays_action_request_from_department)d" type="action"
+                                context="{'default_request_type': 'remove', 'search_default_department_id': [active_id],
+                                'default_department_id': active_id, 'search_default_approve': 1}">
                                 <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Leave Requests
                             </a>
                         </div>
@@ -106,7 +96,9 @@
 
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action">
+                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action"
+                                context="{'default_request_type': 'add', 'search_default_department_id': [active_id],
+                                'default_department_id': active_id, 'search_default_approve': 1}">
                                 <t t-esc="record.allocation_to_approve_count.raw_value or 0"/> Allocation Requests
                             </a>
                         </div>
@@ -116,13 +108,13 @@
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="%(action_hr_holidays_leaves_analysis_filtered)d" type="action">
+                            <a name="%(action_hr_holidays_leaves_analysis_filtered)d" type="action"
+                                context="{'search_default_department_id': [active_id], 'default_department_id': active_id}">
                                 Leaves
                             </a>
                         </div>
                     </div>
                 </xpath>
-
             </data>
         </field>
     </record>
