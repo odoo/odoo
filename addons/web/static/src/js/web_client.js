@@ -48,6 +48,7 @@ var WebClient = Widget.extend({
             this.toggle_bars.apply(this, arguments);
         });
 
+        document.body.classList.add('o_web_client');
         return session.session_bind(this.origin).then(function() {
             self.bind_events();
             return self.show_common();
