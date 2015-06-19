@@ -46,8 +46,8 @@ class MercuryTransaction(models.Model):
             return 0
 
         data['operator_id'] = pos_session.user_id.login
-        data['merchant_id'] = pos_mercury_config.merchant_id
-        data['merchant_pwd'] = pos_mercury_config.merchant_pwd
+        data['merchant_id'] = pos_mercury_config.sudo().merchant_id
+        data['merchant_pwd'] = pos_mercury_config.sudo().merchant_pwd
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
