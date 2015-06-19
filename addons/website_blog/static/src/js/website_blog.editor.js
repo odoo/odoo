@@ -133,22 +133,6 @@ website.if_dom_contains('.website_blog', function() {
         },
     });
 
-    website_define.enable();
-    define(['summernote/summernote'], function () {
-        var enter = $.summernote.pluginEvents.enter;
-        $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
-            enter.call(this, event, editor, layoutInfo);
-
-            var r = $.summernote.core.range.create();
-            var node = $.summernote.core.dom.node(r.sc);
-            var $nodes = $(node).data('chatter-id') && $("p[data-chatter-id='"+$(node).data('chatter-id')+"']", layoutInfo.editable()) || $();
-            if($nodes.length > 1) {
-                $nodes.last().removeAttr('data-chatter-id');
-            }
-        };
-    });
-    website_define.disable();
-
 });
 
 });
