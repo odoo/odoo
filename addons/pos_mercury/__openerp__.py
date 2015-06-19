@@ -1,7 +1,7 @@
 {
-    'name': 'Card Reader',
+    'name': 'Mercury Payment Services',
     'version': '1.0',
-    'category': '',
+    'category': 'Point of Sale',
     'sequence': 6,
     'summary': 'Credit card support for Point Of Sale',
     'description': """
@@ -22,14 +22,14 @@ following:
     'depends': ['web', 'barcodes', 'point_of_sale'],
     'website': '',
     'data': [
-        'data/card_reader_data.xml',
+        'data/pos_mercury_data.xml',
         'security/ir.model.access.csv',
         'views/templates.xml',
         'views/mercury_transactions.xml',
-        'views/card_reader_config.xml',
+        'views/pos_mercury_config.xml',
     ],
     'demo': [
-        'data/card_reader_demo.xml',
+        'data/pos_mercury_demo.xml',
     ],
     'qweb': [
         'static/src/xml/templates.xml',

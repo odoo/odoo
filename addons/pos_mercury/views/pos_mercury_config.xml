@@ -2,9 +2,9 @@
 <openerp>
     <data>
         <!--     BARCODE NOMENCLATURES     -->
-        <record model="ir.ui.view" id="view_card_reader_configuration_form">
-            <field name="name">Card Readers</field>
-            <field name="model">card_reader.configuration</field>
+        <record model="ir.ui.view" id="view_pos_mercury_configuration_form">
+            <field name="name">Mercury Configurations</field>
+            <field name="model">pos_mercury.configuration</field>
             <field name="arch" type="xml">
                 <form string="Card Reader">
                     <sheet>
@@ -17,9 +17,9 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_card_reader_configuration_tree">
-            <field name="name">Card Readers</field>
-            <field name="model">card_reader.configuration</field>
+        <record model="ir.ui.view" id="view_pos_mercury_configuration_tree">
+            <field name="name">Mercury Configurations</field>
+            <field name="model">pos_mercury.configuration</field>
             <field name="arch" type="xml">
                 <tree string="Card Reader">
                     <field name="merchant_id" />
@@ -28,9 +28,9 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_configuration_form">
-            <field name="name">Card Readers</field>
+            <field name="name">Mercury Configurations</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">card_reader.configuration</field>
+            <field name="res_model">pos_mercury.configuration</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
@@ -46,7 +46,7 @@
             <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='amount_authorized_diff']" position="after">
-                    <field name="card_reader_config_id" />
+                    <field name="pos_mercury_config_id" />
                 </xpath>
             </field>
         </record>
@@ -86,12 +86,12 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall" />
-            <field eval="'card_reader.mercury_transaction'" name="model" />
+            <field eval="'pos_mercury.mercury_transaction'" name="model" />
             <field eval="'cleanup_old_tokens'" name="function" />
             <field eval="'()'" name="args" />
         </record>
 
-        <menuitem parent="point_of_sale.menu_point_config_product" action="card_reader.action_configuration_form" id="menu_pos_card_reader_config"
+        <menuitem parent="point_of_sale.menu_point_config_product" action="pos_mercury.action_configuration_form" id="menu_pos_pos_mercury_config"
             sequence="35"/>
     </data>
 </openerp>

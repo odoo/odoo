@@ -12,7 +12,7 @@
     <template id='mercury_transaction'>
       <TStream>
         <Transaction>
-          <t t-call='card_reader.mercury_common'/>
+          <t t-call='pos_mercury.mercury_common'/>
           <OperatorID><t t-esc='operator_id'/></OperatorID>
           <RecordNo>RecordNumberRequested</RecordNo>
           <PartialAuth>Allow</PartialAuth>
@@ -33,7 +33,7 @@
     <template id='mercury_voidsale'>
       <TStream>
         <Transaction>
-          <t t-call='card_reader.mercury_common'/>
+          <t t-call='pos_mercury.mercury_common'/>
           <RefNo><t t-esc='ref_no'/></RefNo>
           <RecordNo><t t-esc='record_no'/></RecordNo>
           <Memo><t t-esc='memo'/></Memo>
@@ -54,7 +54,7 @@
     <template id='mercury_return'>
       <TStream>
         <Transaction>
-          <t t-call='card_reader.mercury_common'/>
+          <t t-call='pos_mercury.mercury_common'/>
           <OperatorID><t t-esc='operator_id'/></OperatorID>
           <PartialAuth>Allow</PartialAuth>
           <RefNo><t t-esc='ref_no'/></RefNo>

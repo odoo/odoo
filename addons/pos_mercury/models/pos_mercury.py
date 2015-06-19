@@ -16,8 +16,8 @@ class barcode_rule(models.Model):
         return list(types)
 
 
-class card_reader_payment_data(models.Model):
-    _name = 'card_reader.configuration'
+class pos_mercury_payment_data(models.Model):
+    _name = 'pos_mercury.configuration'
 
     # FIELDS #
     merchant_id = fields.Char(string='Merchant ID', size=24, required=True, help='Id of the merchant to authenticate him on the payment provider server')
@@ -44,7 +44,7 @@ class account_bank_statement_line(models.Model):
 class account_journal(models.Model):
     _inherit = 'account.journal'
 
-    card_reader_config_id = fields.Many2one('card_reader.configuration', string='Card Reader Config', help='The configuration of the card reader used for this journal')
+    pos_mercury_config_id = fields.Many2one('pos_mercury.configuration', string='Mercury configuration', help='The configuration of Mercury used for this journal')
 
 class pos_order_card(models.Model):
     _inherit = "pos.order"

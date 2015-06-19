@@ -1,4 +1,4 @@
-odoo.define('card_reader.MagneticParser', function (require) {
+odoo.define('pos_mercury.pos_mercury', function (require) {
 "use strict";
 
 var Class   = require('web.Class');
@@ -13,7 +13,7 @@ var utils = require('web.utils');
 var Qweb    = core.qweb;
 var _t      = core._t;
 
-Qweb.add_template('/card_reader/static/src/xml/templates.xml');
+Qweb.add_template('/pos_mercury/static/src/xml/templates.xml');
 
 var BarcodeParser = require('barcodes.BarcodeParser');
 var PopupWidget = require('point_of_sale.popups');
@@ -28,7 +28,7 @@ var allowOnlinePayment = function (pos) {
         return true;
     }
     $.each(pos.journals, function (i, val) {
-        if (val.card_reader_config_id) {
+        if (val.pos_mercury_config_id) {
             onlinePaymentJournal.push({label:val.display_name, item:val.id});
         }
     });
@@ -394,7 +394,7 @@ PaymentScreenWidget.include({
             });
         }
 
-        var mercury_transaction = new Model('card_reader.mercury_transaction');
+        var mercury_transaction = new Model('pos_mercury.mercury_transaction');
         mercury_transaction.call('do_payment', [transaction], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
             // if not receiving a response from Mercury, we should retry
             if (data === "timeout") {
@@ -541,7 +541,7 @@ PaymentScreenWidget.include({
             });
         }
 
-        var mercury_transaction = new Model('card_reader.mercury_transaction');
+        var mercury_transaction = new Model('pos_mercury.mercury_transaction');
         mercury_transaction.call(rpc_method, [request_data], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
             if (data === "timeout") {
                 self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
@@ -657,10 +657,5 @@ PaymentScreenWidget.include({
         this._super();
     }
 });
-
-return {
-    MagneticParser: BarcodeParser,
-    ScreenWidget: ScreenWidget,
-};
 
 });

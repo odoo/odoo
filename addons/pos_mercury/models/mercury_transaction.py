@@ -7,7 +7,7 @@ from openerp import models, api, service
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class MercuryTransaction(models.Model):
-    _name = 'card_reader.mercury_transaction'
+    _name = 'pos_mercury.mercury_transaction'
 
     def _unescape_html(self, s):
         s = s.replace("&lt;", "<")
@@ -25,11 +25,11 @@ class MercuryTransaction(models.Model):
 
         return pos_session
 
-    def _get_card_reader_config_id(self, config, journal_id):
+    def _get_pos_mercury_config_id(self, config, journal_id):
         journal = config.journal_ids.filtered(lambda r: r.id == journal_id)
 
-        if journal and journal.card_reader_config_id:
-            return journal.card_reader_config_id
+        if journal and journal.pos_mercury_config_id:
+            return journal.pos_mercury_config_id
         else:
             return 0
 
@@ -40,14 +40,14 @@ class MercuryTransaction(models.Model):
             return 0
 
         config = pos_session.config_id
-        card_reader_config = self._get_card_reader_config_id(config, data['journal_id'])
+        pos_mercury_config = self._get_pos_mercury_config_id(config, data['journal_id'])
 
-        if not card_reader_config:
+        if not pos_mercury_config:
             return 0
 
         data['operator_id'] = pos_session.user_id.login
-        data['merchant_id'] = card_reader_config.merchant_id
-        data['merchant_pwd'] = card_reader_config.merchant_pwd
+        data['merchant_id'] = pos_mercury_config.merchant_id
+        data['merchant_pwd'] = pos_mercury_config.merchant_pwd
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
@@ -79,13 +79,13 @@ class MercuryTransaction(models.Model):
     def _do_reversal_or_voidsale(self, data, is_voidsale):
         self._setup_request(data)
         data['is_voidsale'] = is_voidsale
-        response = self._do_request('card_reader.mercury_voidsale', data)
+        response = self._do_request('pos_mercury.mercury_voidsale', data)
         return response
 
     @api.model
     def do_payment(self, data):
         self._setup_request(data)
-        response = self._do_request('card_reader.mercury_transaction', data)
+        response = self._do_request('pos_mercury.mercury_transaction', data)
         return response
 
     @api.model
@@ -98,7 +98,7 @@ class MercuryTransaction(models.Model):
 
     def do_return(self, data):
         self._setup_request(data)
-        response = self._do_request('card_reader.mercury_return', data)
+        response = self._do_request('pos_mercury.mercury_return', data)
         return response
 
     # One time (the ones we use) Mercury tokens are required to be

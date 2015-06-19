@@ -1,2 +1,2 @@
-import card_reader
+import pos_mercury
 import mercury_transaction
