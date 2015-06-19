@@ -175,17 +175,18 @@ $('.oe_website_sale').each(function () {
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
 
             $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
-
-            if (data.warning) {
-                var cart_alert = $('.oe_cart').parent().find('#data_warning');
+            var cart_alert = $('.oe_cart').parent().find('#data_warning');
+            if (data.message) {
                 if (cart_alert.length === 0) {
-                    $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
-                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
+                    $('.oe_cart').prepend(_.str.sprintf('<div class="alert alert-%s alert-dismissable" role="alert" id="data_warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> %s </div>', data.message_type, data.message));
                 }
                 else {
-                    cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
+                    cart_alert.html(_.str.sprintf('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> %s', data.message));
                 }
                 $input.val(data.quantity);
+            }
+            else {
+                cart_alert.remove()
             }
         });
       }, 500);
@@ -314,6 +315,7 @@ $('.oe_website_sale').each(function () {
             $product_id.val(0);
             $parent.find(".js_check_product").attr("disabled", "disabled");
         }
+        $product_id.trigger('change');
     });
 
     $('div.js_product', oe_website_sale).each(function () {

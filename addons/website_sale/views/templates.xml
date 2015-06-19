@@ -803,6 +803,10 @@
           <div class="row">
               <div class="col-md-8 col-sm-9 oe_cart">
 
+                  <div t-if="message" t-attf-class="alert alert-#{message_type} alert-dismissable" role="alert" id="data_warning">
+                      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                      <t t-esc="message"/>
+                  </div>
                   <t t-call="website_sale.cart_lines"/>
 
                   <div class="clearfix"/>
