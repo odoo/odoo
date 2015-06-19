@@ -12,10 +12,10 @@
   <t t-extend="PaymentScreen-Paymentlines">
     <t t-jquery=".col-name" t-operation="inner">
       <t t-if="line.cashregister.journal.type === 'bank'">
-        <t t-if="line.swipe_pending">
+        <t t-if="line.mercury_swipe_pending">
           <div style="color: red">WAITING FOR SWIPE</div>
         </t>
-        <t t-if="! line.swipe_pending">
+        <t t-if="! line.mercury_swipe_pending">
           <t t-esc='line.name' />
         </t>
       </t>

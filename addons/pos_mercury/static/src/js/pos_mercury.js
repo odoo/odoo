@@ -114,31 +114,31 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         _paylineproto.init_from_JSON.apply(this, arguments);
 
         this.paid = json.paid;
-        this.card_number = json.card_number;
-        this.card_brand = json.card_brand;
-        this.card_owner_name = json.card_owner_name;
-        this.ref_no = json.ref_no;
-        this.record_no = json.record_no;
-        this.invoice_no = json.invoice_no;
+        this.mercury_card_number = json.mercury_card_number;
+        this.mercury_card_brand = json.mercury_card_brand;
+        this.mercury_card_owner_name = json.mercury_card_owner_name;
+        this.mercury_ref_no = json.mercury_ref_no;
+        this.mercury_record_no = json.mercury_record_no;
+        this.mercury_invoice_no = json.mercury_invoice_no;
         this.mercury_data = json.mercury_data;
-        this.swipe_pending = json.swipe_pending;
+        this.mercury_swipe_pending = json.mercury_swipe_pending;
 
         this.set_credit_card_name();
     },
     export_as_JSON: function () {
         return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid,
-                                                                              card_number: this.card_number,
-                                                                              card_brand: this.card_brand,
-                                                                              card_owner_name: this.card_owner_name,
-                                                                              ref_no: this.ref_no,
-                                                                              record_no: this.record_no,
-                                                                              invoice_no: this.invoice_no,
+                                                                              mercury_card_number: this.mercury_card_number,
+                                                                              mercury_card_brand: this.mercury_card_brand,
+                                                                              mercury_card_owner_name: this.mercury_card_owner_name,
+                                                                              mercury_ref_no: this.mercury_ref_no,
+                                                                              mercury_record_no: this.mercury_record_no,
+                                                                              mercury_invoice_no: this.mercury_invoice_no,
                                                                               mercury_data: this.mercury_data,
-                                                                              swipe_pending: this.swipe_pending});
+                                                                              mercury_swipe_pending: this.mercury_swipe_pending});
     },
     set_credit_card_name: function () {
-        if (this.card_number) {
-            this.name = this.card_brand + " (****" + this.card_number + ")";
+        if (this.mercury_card_number) {
+            this.name = this.mercury_card_brand + " (****" + this.mercury_card_number + ")";
         }
     }
 });
@@ -282,7 +282,7 @@ PaymentScreenWidget.include({
         var lines = this.pos.get_order().get_paymentlines();
 
         for (i = 0; i < lines.length; i++) {
-            if (lines[i].swipe_pending) {
+            if (lines[i].mercury_swipe_pending) {
                 return lines[i];
             }
         }
@@ -295,10 +295,10 @@ PaymentScreenWidget.include({
         var lines = this.pos.get_order().get_paymentlines();
 
         for (i = 0; i < lines.length; i++) {
-            if (lines[i].amount === amount &&
-                lines[i].card_number === card_number &&
-                lines[i].card_brand === card_brand &&
-                lines[i].card_owner_name === card_owner_name) {
+            if (lines[i].mercury_amount === amount &&
+                lines[i].mercury_card_number === card_number &&
+                lines[i].mercury_card_brand === card_brand &&
+                lines[i].mercury_card_owner_name === card_owner_name) {
                 return true;
             }
         }
@@ -427,15 +427,15 @@ PaymentScreenWidget.include({
                         order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
                     }
 
-                    order.selected_paymentline.swipe_pending = false;
                     order.selected_paymentline.paid = true;
-                    order.selected_paymentline.amount = response.authorize;
-                    order.selected_paymentline.card_number = decodedMagtek['number'];
-                    order.selected_paymentline.card_brand = response.card_type;
-                    order.selected_paymentline.card_owner_name = decodedMagtek['name'];
-                    order.selected_paymentline.ref_no = response.ref_no;
-                    order.selected_paymentline.record_no = response.record_no;
-                    order.selected_paymentline.invoice_no = response.invoice_no;
+                    order.selected_paymentline.mercury_swipe_pending = false;
+                    order.selected_paymentline.mercury_amount = response.authorize;
+                    order.selected_paymentline.mercury_card_number = decodedMagtek['number'];
+                    order.selected_paymentline.mercury_card_brand = response.card_type;
+                    order.selected_paymentline.mercury_card_owner_name = decodedMagtek['name'];
+                    order.selected_paymentline.mercury_ref_no = response.ref_no;
+                    order.selected_paymentline.mercury_record_no = response.record_no;
+                    order.selected_paymentline.mercury_invoice_no = response.invoice_no;
                     order.selected_paymentline.mercury_data = response; // used to reverse transactions
                     order.selected_paymentline.set_credit_card_name();
 
@@ -609,7 +609,7 @@ PaymentScreenWidget.include({
             var lines = order.get_paymentlines();
 
             for (i = 0; i < lines.length; i++) {
-                if (lines[i].cashregister.journal.type === 'bank' && lines[i].swipe_pending) {
+                if (lines[i].cashregister.journal.type === 'bank' && lines[i].mercury_swipe_pending) {
                     already_swipe_pending = true;
                 }
             }
@@ -621,7 +621,7 @@ PaymentScreenWidget.include({
                 });
             } else {
                 this._super(id);
-                order.selected_paymentline.swipe_pending = true;
+                order.selected_paymentline.mercury_swipe_pending = true;
                 this.render_paymentlines();
                 order.trigger('change', order); // needed so that export_to_JSON gets triggered
             }
@@ -644,7 +644,7 @@ PaymentScreenWidget.include({
             var lines = this.pos.get_order().get_paymentlines();
 
             for (var i = 0; i < lines.length; i++) {
-                if (lines[i].swipe_pending) {
+                if (lines[i].mercury_swipe_pending) {
                     this.pos.get_order().remove_paymentline(lines[i]);
                     this.render_paymentlines();
                 }

@@ -57,12 +57,12 @@ class pos_order_card(models.Model):
         fields = super(pos_order_card, self)._payment_fields(ui_paymentline)
 
         fields.update({
-            'card_number': ui_paymentline.get('card_number'),
-            'card_brand': ui_paymentline.get('card_brand'),
-            'card_owner_name': ui_paymentline.get('card_owner_name'),
-            'ref_no': ui_paymentline.get('ref_no'),
-            'record_no': ui_paymentline.get('record_no'),
-            'invoice_no': ui_paymentline.get('invoice_no')
+            'card_number': ui_paymentline.get('mercury_card_number'),
+            'card_brand': ui_paymentline.get('mercury_card_brand'),
+            'card_owner_name': ui_paymentline.get('mercury_card_owner_name'),
+            'ref_no': ui_paymentline.get('mercury_ref_no'),
+            'record_no': ui_paymentline.get('mercury_record_no'),
+            'invoice_no': ui_paymentline.get('mercury_invoice_no')
         })
 
         return fields
