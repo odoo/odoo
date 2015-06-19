@@ -486,4 +486,27 @@ class applicant_category(models.Model):
     _name = "hr.applicant.category"
     _description = "Category of applicant"
 
-    name = fields.Char("Name", required=True, translate=True)
+    name = fields.Char("Name", required=True)
+
+    @api.one
+    @api.constrains('name')
+    def _check_unique_name(self):
+        return self._check_unique_accent()
+
+    @api.v8
+    @api.multi
+    def copy_data(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        default['name'] = _("%s (copy)") % self.name
+        return super(applicant_category, self).copy_data(default)
+
+    @api.v7
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % current.name
+        return super(applicant_category, self).copy_data(cr, uid, id, default=default, context=context)

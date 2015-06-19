@@ -77,8 +77,17 @@ class fleet_vehicle_cost(osv.Model):
 class fleet_vehicle_tag(osv.Model):
     _name = 'fleet.vehicle.tag'
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Name', required=True),
     }
+    _constraints = [(osv.Model._check_unique, _('Error! Tag name already exists.'), ['name'])]
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % current.name
+        return super(fleet_vehicle_tag, self).copy_data(cr, uid, id, default=default, context=context)
 
 class fleet_vehicle_state(osv.Model):
     _name = 'fleet.vehicle.state'
