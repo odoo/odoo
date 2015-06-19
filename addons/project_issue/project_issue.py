@@ -51,11 +51,10 @@ class project_issue(osv.Model):
         # - ('id', 'in', 'ids'): add columns that should be present
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
-        search_domain = []
         if 'default_project_id' in context:
-            search_domain += ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
+            search_domain = ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain = [('id', 'in', ids)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)

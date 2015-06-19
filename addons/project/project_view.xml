@@ -93,9 +93,8 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Project Name"/>
                         <h1>
-                            <field name="name" string="Project Name"/>
+                            <field name="name" placeholder="Project Name" class="oe_inline"/>
                         </h1>
                         <div name="options_active" class="oe_edit_only">
                             <div>
@@ -107,7 +106,26 @@
                         </div>
                     </div>
                     <notebook>
-                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <page string="Settings">
+                            <group>
+                                <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
+                                <field name="user_id" string="Project Manager"
+                                        attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
+                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
+                                <field name="privacy_visibility" widget="radio"/>
+                                <field name="resource_calendar_id"
+                                        groups="project.group_time_work_estimation_tasks"/>
+                            </group>
+                            <group name="misc">
+                                <field name="date_start" string="Start Date" groups="project.group_time_work_estimation_tasks"/>
+                                <field name="date" string="End Date" groups="project.group_time_work_estimation_tasks"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                                <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
+                                <field name="currency_id" groups="base.group_multi_currency" required="1"/>
+                                <field name="parent_id" string="Parent" help="Append this project to another one using analytic accounts hierarchy" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}" groups="project.group_time_work_estimation_tasks"/>
+                            </group>
+                        </page>
+                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_no_one">
                             <group name="group_alias">
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
@@ -122,53 +140,6 @@
                                 <field name="alias_contact" class="oe_inline"
                                         string="Accept Emails From"/>
                             </group>
-                        </page>
-                        <page string="Team" name="team">
-                            <field colspan="4" name="members" widget="many2many_kanban" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}">
-                                <kanban quick_create="false" create="true" delete="true">
-                                    <field name="name"/>
-                                    <templates>
-                                        <t t-name="kanban-box">
-                                            <div style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                <div class="oe_module_vignette">
-                                                    <img t-att-src="kanban_image('res.users', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
-                                                    <div class="oe_module_desc">
-                                                        <field name="name"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </t>
-                                    </templates>
-                                </kanban>
-                            </field>
-                        </page>
-                        <page string="Other Info">
-                            <group string="Administration">
-                                <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
-                                <field name="user_id" string="Project Manager"
-                                        attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
-                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
-                                <field name="privacy_visibility" widget="radio"/>
-                                <field name="resource_calendar_id"
-                                        groups="project.group_time_work_estimation_tasks"/>
-                            </group>
-                            <group name="misc">
-                                <field name="date_start" string="Start Date"/>
-                                <field name="date" string="End Date"/>
-                                <field name="sequence" groups="base.group_no_one"/>
-                                <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-                                <field name="currency_id" groups="base.group_multi_currency" required="1"/>
-                                <field name="parent_id" string="Parent" help="Append this project to another one using analytic accounts hierarchy" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}" />
-                            </group>
-                        </page>
-                        <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
-                            <p class="oe_grey">
-                                Stages are defined globally and shared between projects.
-                                You can "configure all available stages".Stages are used to organize work in steps inside a project.
-                                In each step, you are able to change the status (validated, stopped) of the activity, no need to create specific stages for validation or blocked activities.
-                            </p>
-                            <field name="type_ids"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -190,8 +161,8 @@
                     <filter string="Pending" name="Pending" domain="[('state', '=','pending')]"/>
                     <filter string="Template" name="Template" domain="[('state', '=','template')]"/>
                     <separator/>
-                    <filter string="Member" name="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]"/>
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
+                    <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <field name="user_id" string="Project Manager"/>
@@ -270,6 +241,8 @@
                                 "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                         </h1>
                     </div>
+                    <label for="tag_ids" class="oe_edit_only"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
                     <group>
                         <group>
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
@@ -282,7 +255,6 @@
                         </group>
                         <group>
                             <field name="date_deadline"/>
-                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook>
@@ -302,7 +274,7 @@
                                     <field name="date_last_stage_update" groups="base.group_no_one"/>
                                 </group>
                             </group>
-                            <group>
+                            <group groups="project.group_time_work_estimation_tasks">
                                 <group string="Gantt View">
                                     <p class="oe_grey" colspan='2'>
                                         Assign dates to make this task appear in the gantt chart ( <i class="fa fa-tasks"> </i> icon on the top right)
@@ -405,8 +377,8 @@
                     <field name="planned_hours" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
-                    <field name="date_start" groups="base.group_no_one"/>
-                    <field name="date_end" groups="base.group_no_one"/>
+                    <field name="date_start" groups="project.group_time_work_estimation_tasks"/>
+                    <field name="date_end" groups="project.group_time_work_estimation_tasks"/>
                 </tree>
             </field>
         </record>
@@ -526,7 +498,7 @@
             <field name="arch" type="xml">
                 <search string="Tasks Stages">
                    <field name="name" string="Tasks Stages"/>
-                   <filter string="Common" name="common" domain="[('case_default', '=', 1)]" help="Stages common to all projects"/>
+                   <filter string="Common" name="common" help="Stages common to all projects"/>
                 </search>
             </field>
         </record>
@@ -539,7 +511,6 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="case_default"/>
                             <field name="sequence" groups="base.group_no_one"/>
                         </group>
                         <group>
