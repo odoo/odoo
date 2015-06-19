@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!--     BARCODE NOMENCLATURES     -->
         <record model="ir.ui.view" id="view_pos_mercury_configuration_form">
             <field name="name">Mercury Configurations</field>
             <field name="model">pos_mercury.configuration</field>
@@ -57,9 +56,9 @@
           <field name="inherit_id" ref="account.view_bank_statement_form"/>
           <field name="arch" type="xml">
             <xpath expr="//field[@name='amount']" position="before">
-              <field name="prefixed_card_number"/>
-              <field name="card_brand"/>
-              <field name="card_owner_name"/>
+              <field name="mercury_prefixed_card_number"/>
+              <field name="mercury_card_brand"/>
+              <field name="mercury_card_owner_name"/>
             </xpath>
           </field>
         </record>
@@ -70,9 +69,9 @@
           <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
           <field name="arch" type="xml">
             <xpath expr="//field[@name='amount']" position="before">
-              <field name="prefixed_card_number"/>
-              <field name="card_brand"/>
-              <field name="card_owner_name"/>
+              <field name="mercury_prefixed_card_number"/>
+              <field name="mercury_card_brand"/>
+              <field name="mercury_card_owner_name"/>
             </xpath>
           </field>
         </record>

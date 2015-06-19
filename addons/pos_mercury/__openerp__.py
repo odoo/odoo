@@ -29,7 +29,7 @@ following:
         'security/ir.model.access.csv',
         'views/templates.xml',
         'views/mercury_transactions.xml',
-        'views/pos_mercury_config.xml',
+        'views/pos_mercury_views.xml',
     ],
     'demo': [
         'data/pos_mercury_demo.xml',

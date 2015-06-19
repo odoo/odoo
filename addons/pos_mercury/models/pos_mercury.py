@@ -29,20 +29,20 @@ class pos_mercury_payment_data(models.Model):
 class account_bank_statement_line(models.Model):
     _inherit = "account.bank.statement.line"
 
-    card_number = fields.Char(string='Card Number', help='The last 4 numbers of the card used to pay')
-    prefixed_card_number = fields.Char(string='Card Number', compute='_compute_prefixed_card_number')
-    card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, AMEX, ...)')
-    card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
-    ref_no = fields.Char(string='Mercury reference number')
-    record_no = fields.Char(string='Mercury record number')
-    invoice_no = fields.Integer(string='Mercury invoice number')
+    mercury_card_number = fields.Char(string='Card Number', help='The last 4 numbers of the card used to pay')
+    mercury_prefixed_card_number = fields.Char(string='Card Number', compute='_compute_prefixed_card_number')
+    mercury_card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, AMEX, ...)')
+    mercury_card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
+    mercury_ref_no = fields.Char(string='Mercury reference number')
+    mercury_record_no = fields.Char(string='Mercury record number')
+    mercury_invoice_no = fields.Integer(string='Mercury invoice number')
 
     @api.one
     def _compute_prefixed_card_number(self):
-        if self.card_number:
-            self.prefixed_card_number = "********" + self.card_number
+        if self.mercury_card_number:
+            self.mercury_prefixed_card_number = "********" + self.mercury_card_number
         else:
-            self.prefixed_card_number = ""
+            self.mercury_prefixed_card_number = ""
 
 class account_journal(models.Model):
     _inherit = 'account.journal'
@@ -80,14 +80,14 @@ class pos_order_card(models.Model):
         # matter which statement line we pick, just pick one that
         # isn't already used.
         for line in statement_lines:
-            if not line.card_brand:
-                line.card_brand = data.get('card_brand')
-                line.card_number = data.get('card_number')
-                line.card_owner_name = data.get('card_owner_name')
+            if not line.mercury_card_brand:
+                line.mercury_card_brand = data.get('card_brand')
+                line.mercury_card_number = data.get('card_number')
+                line.mercury_card_owner_name = data.get('card_owner_name')
 
-                line.ref_no = data.get('ref_no')
-                line.record_no = data.get('record_no')
-                line.invoice_no = data.get('invoice_no')
+                line.mercury_ref_no = data.get('ref_no')
+                line.mercury_record_no = data.get('record_no')
+                line.mercury_invoice_no = data.get('invoice_no')
 
                 break
 
