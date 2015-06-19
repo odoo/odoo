@@ -180,12 +180,12 @@
                                 <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>
                                 <li t-if="record.mobile_phone.raw_value"><i class="fa fa-mobile"></i> <field name="mobile_phone"/></li>
                             </ul>
-                            <div class="oe_followers o_kanban_button">
-                                <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="o_follow_btn o_following btn btn-primary">
-                                    <span class="o_unfollow">Unfollow</span>
-                                    <span class="o_following">Following</span>
+                            <div class="o_timeline_followers o_kanban_button">
+                                <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="btn btn-default o_timeline_follower o_timeline_following">
+                                    <span class="o_timeline_unfollow">Unfollow</span>
+                                    <span class="o_timeline_following">Following</span>
                                 </button>
-                                <button t-if="!record.message_is_follower.raw_value" name="action_follow" type="object" class="o_follow_btn o_not_following btn btn-primary">Follow</button>
+                                <button t-if="!record.message_is_follower.raw_value" name="action_follow" type="object" class="btn btn-defaulto_timeline_follower o_timeline_notfollow">Follow</button>
                             </div>
                         </div>
                     </div>
