@@ -10,10 +10,7 @@ var gui     = require('point_of_sale.gui');
 var pos_model = require('point_of_sale.models');
 var utils = require('web.utils');
 
-var Qweb    = core.qweb;
 var _t      = core._t;
-
-Qweb.add_template('/pos_mercury/static/src/xml/templates.xml');
 
 var BarcodeParser = require('barcodes.BarcodeParser');
 var PopupWidget = require('point_of_sale.popups');
