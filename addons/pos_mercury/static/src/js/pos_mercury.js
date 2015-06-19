@@ -406,6 +406,13 @@ PaymentScreenWidget.include({
                 return;
             }
 
+            if (data === "internal error") {
+                def.resolve({
+                    message: _t("Odoo error while processing transaction.")
+                });
+                return;
+            }
+
             var response = decodeMercuryResponse(data);
             response.journal_id = parsed_result.journal_id;
 
@@ -542,6 +549,13 @@ PaymentScreenWidget.include({
         mercury_transaction.call(rpc_method, [request_data], undefined, {timeout: self.server_timeout_in_ms}).then(function (data) {
             if (data === "timeout") {
                 self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
+                return;
+            }
+
+            if (data === "internal error") {
+                def.resolve({
+                    message: _t("Odoo error while processing transaction.")
+                });
                 return;
             }
 

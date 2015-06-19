@@ -8,6 +8,7 @@ import werkzeug
 from datetime import date, timedelta
 
 from openerp import models, api, service
+from openerp.exceptions import UserError
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class MercuryTransaction(models.Model):
@@ -16,7 +17,7 @@ class MercuryTransaction(models.Model):
     def _get_pos_session(self):
         pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)])
         if not pos_session:
-            return 0
+            raise UserError("No POS session")
 
         pos_session.login()
 
@@ -28,19 +29,13 @@ class MercuryTransaction(models.Model):
         if journal and journal.pos_mercury_config_id:
             return journal.pos_mercury_config_id
         else:
-            return 0
+            raise UserError("No Mercury config associated with journal")
 
     def _setup_request(self, data):
         pos_session = self._get_pos_session()
 
-        if not pos_session:
-            return 0
-
         config = pos_session.config_id
         pos_mercury_config = self._get_pos_mercury_config_id(config, data['journal_id'])
-
-        if not pos_mercury_config:
-            return 0
 
         data['operator_id'] = pos_session.user_id.login
         data['merchant_id'] = pos_mercury_config.sudo().merchant_id
@@ -74,14 +69,22 @@ class MercuryTransaction(models.Model):
         return response
 
     def _do_reversal_or_voidsale(self, data, is_voidsale):
-        self._setup_request(data)
+        try:
+            self._setup_request(data)
+        except UserError:
+            return "internal error"
+
         data['is_voidsale'] = is_voidsale
         response = self._do_request('pos_mercury.mercury_voidsale', data)
         return response
 
     @api.model
     def do_payment(self, data):
-        self._setup_request(data)
+        try:
+            self._setup_request(data)
+        except UserError:
+            return "internal error"
+
         response = self._do_request('pos_mercury.mercury_transaction', data)
         return response
 
@@ -94,7 +97,11 @@ class MercuryTransaction(models.Model):
         return self._do_reversal_or_voidsale(data, True)
 
     def do_return(self, data):
-        self._setup_request(data)
+        try:
+            self._setup_request(data)
+        except UserError:
+            return "internal error"
+
         response = self._do_request('pos_mercury.mercury_return', data)
         return response
 
