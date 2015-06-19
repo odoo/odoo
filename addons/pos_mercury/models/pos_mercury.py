@@ -23,13 +23,13 @@ class pos_mercury_payment_data(models.Model):
     _name = 'pos_mercury.configuration'
 
     # FIELDS #
-    merchant_id = fields.Char(string='Merchant ID', size=24, required=True, help='Id of the merchant to authenticate him on the payment provider server')
+    merchant_id = fields.Char(string='Merchant ID', required=True, help='Id of the merchant to authenticate him on the payment provider server')
     merchant_pwd = fields.Char(string='Merchant Password', required=True, help='Password of the merchant to authenticate him on the payment provider server')
 
 class account_bank_statement_line(models.Model):
     _inherit = "account.bank.statement.line"
 
-    card_number = fields.Char(string='Card Number', size=4, help='The last 4 numbers of the card used to pay')
+    card_number = fields.Char(string='Card Number', help='The last 4 numbers of the card used to pay')
     prefixed_card_number = fields.Char(string='Card Number', compute='_compute_prefixed_card_number')
     card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, AMEX, ...)')
     card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
