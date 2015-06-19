@@ -175,7 +175,7 @@
       bank_journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'bank')])[0]
       if bank_journal_id:
           bank_account_id = self.pool.get('account.journal').browse(cr, uid, bank_journal_id).default_debit_account_id.id
-      fixed_asset_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_fixed_assets'))])
+      fixed_asset_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', 'in', (ref('account.data_account_type_fixed_assets'),ref('account.data_account_type_current_assets')))])
       equity_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type', '=', ref('account.data_account_type_equity')), ('tag_ids', 'in', [ref('account.demo_capital_account')])])
       if bank_account_id and fixed_asset_account_ids and equity_account_ids:
           self._update(cr, uid, 'account.move.line', 'account', {
