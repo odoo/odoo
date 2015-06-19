@@ -10,25 +10,22 @@
 Allows you to add delivery methods in sale orders and picking.
 ==============================================================
 
-You can define your own carrier and delivery grids for prices. When creating 
+You can define your own carrier for prices. When creating
 invoices from picking, the system is able to add and compute the shipping line.
 """,
     'depends': ['sale_stock'],
     'data': [
         'security/ir.model.access.csv',
-        'delivery_view.xml',
-        'partner_view.xml',
-        'delivery_data.xml',
+        'views/delivery_view.xml',
+        'views/partner_view.xml',
+        'data/delivery_data.xml',
         'views/report_shipping.xml',
         'views/report_deliveryslip.xml'
 
     ],
-    'demo': ['delivery_demo.xml'],
+    'demo': ['data/delivery_demo.xml'],
     'test': [
         '../account/test/account_minimal_test.xml',
-        'test/delivery_cost.yml',
-        'test/stock_move_values_with_invoice_before_delivery.yml',
     ],
     'installable': True,
-    'auto_install': False,
 }

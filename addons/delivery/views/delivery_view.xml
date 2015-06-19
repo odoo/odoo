@@ -1,5 +1,5 @@
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
         <menuitem id="sale_menu_delivery" name="Delivery" parent="base.menu_sale_config" groups="base.group_sale_manager" sequence="12"/>
@@ -12,7 +12,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="price" invisible="'order_id' not in context"/>
+                    <field name="price"/>
                 </tree>
             </field>
         </record>
@@ -22,72 +22,59 @@
             <field name="model">delivery.carrier</field>
             <field name="arch" type="xml">
                 <form string="Carrier">
+                    <header>
+                        <field name="state" widget="statusbar" attrs="{'invisible':['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}" clickable="True"/>
+                    </header>
                     <sheet>
-                    <div class="oe_title" name="title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <field name="active"/>
-                    </group>
-                    <group name="general">
-                        <group string="General Information">
-                            <field name="partner_id"/>
-                            <field name="product_id"/>
-                            <field name="delivery_type"/>
-                        </group>
-                        <group string="Pricing Information" name='pricing_info' attrs="{'invisible':[('delivery_type','!=','grid')]}">
-                            <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                            <label for="free_if_more_than"/>
-                            <div>
-                                <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                                <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
-                            </div>
-                            <field name="use_detailed_pricelist"/>
-                        </group>
-                    </group>
-
-                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
-                        <tree string="Delivery grids">
-                              <field name="sequence"/>
-                              <field name="name"/>
-                        </tree>
-                        <form string="Delivery grids">
-                             <group>
+                        <div class="oe_title" name="title">
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <group name="company">
+                                <field name="partner_id" class="oe_inline"/>
+                                <field name="product_type" invisible="1"/>
+                                <field name="product_sale_ok" invisible="1"/>
+                            </group>
+                        </div>
+                        <notebook>
+                            <page string="Pricing">
                                 <group>
-                                    <field name="name"/>
+                                    <field name="delivery_type" widget="radio"/>
                                 </group>
-                                <group>
-                                    <field name="active"/>
-                                    <field name="sequence"/>
-                                </group>
-                             </group>
-                             <notebook>
-                                <page string="Grid definition">
-                                   <field name="line_ids"/>
-                                </page>
-                                <page string="Destination">
+                                <group attrs="{'invisible':[('delivery_type', '!=', 'fixed')]}">
                                     <group>
-                                        <group>
-                                            <field name="country_ids" widget="many2many_tags"/>
-                                            <field name="state_ids" widget="many2many_tags"/>
-                                        </group>
-                                        <group>
-                                            <label for="zip_from" string="Zip"/>
-                                            <div>
-                                                <field name="zip_from" class="oe_inline"/>
-                                                -
-                                                <field name="zip_to" class="oe_inline"/>
-                                            </div>
-                                        </group>
+                                        <field name="fixed_price"/>
                                     </group>
-                                </page>
-                            </notebook>
-                        </form>
-                   </field>
-                   </sheet>
+                                    <group>
+                                        <div class="o_row">
+                                            <label for="free_if_more_than"/>
+                                            <field name="free_if_more_than"/>
+                                            <field nolabel="1" name="amount" attrs="{'required':[('free_if_more_than','!=', False)], 'invisible':[('free_if_more_than','=', False)]}"/>
+                                        </div>
+                                    </group>
+                                </group>
+                                <group name="general" attrs="{'invisible':[('delivery_type', '!=', 'base_on_rule')]}">
+                                    <field name="price_rule_ids" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Destination">
+                                <group>
+                                    <group>
+                                        <field name="country_ids" widget="many2many_tags"/>
+                                        <field name="state_ids" widget="many2many_tags"/>
+                                    </group>
+                                    <group></group>
+                                    <group>
+                                        <field name="zip_from"/>
+                                    </group>
+                                    <group>
+                                        <field name="zip_to"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -116,83 +103,20 @@
         <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" sequence="1"/>
         <menuitem action="action_delivery_carrier_form" id="sale_menu_action_delivery_carrier_form" parent="sale_menu_delivery" sequence="1"/>
 
-        <!-- Delivery Grids -->
-        <record id="view_delivery_grid_tree" model="ir.ui.view">
-            <field name="name">delivery.grid.tree</field>
-            <field name="model">delivery.grid</field>
+        <record id="view_delivery_price_rule_form" model="ir.ui.view">
+            <field name="name">delivery.price.rule.form</field>
+            <field name="model">delivery.price.rule</field>
             <field name="arch" type="xml">
-                <tree string="Delivery grids">
-                    <field name="sequence"/>
-                    <field name="carrier_id"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_delivery_grid_form" model="ir.ui.view">
-            <field name="name">delivery.grid.form</field>
-            <field name="model">delivery.grid</field>
-            <field name="arch" type="xml">
-                <form string="Delivery grids">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="active"/>
-                        <field name="carrier_id"/>
-                        <field name="sequence"/>
-                    </group>
-                    <notebook>
-                        <page string="Grid definition">
-                            <field name="line_ids"/>
-                        </page>
-                        <page string="Destination">
-                            <group string="Countries">
-                                <field name="country_ids" nolabel="1"/>
-                            </group>
-                            <group string="States">
-                                <field colspan="2" name="state_ids" nolabel="1"/>
-                                <field name="zip_from"/>
-                                <field name="zip_to"/>
-                            </group>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-        <record id="action_delivery_grid_form" model="ir.actions.act_window">
-            <field name="name">Delivery Pricelist</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">delivery.grid</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a delivery price list for a specific region.
-              </p><p>
-                The delivery price list allows you to compute the cost and
-                sales price of the delivery according to the weight of the
-                products and other criteria. You can define several price lists
-                for each delivery method: per country or a zone in a specific
-                country defined by a postal code range.
-              </p>
-            </field>
-        </record>
-        <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery" sequence="2"/>
-        <menuitem action="action_delivery_grid_form" id="sale_menu_action_delivery_grid_form" parent="sale_menu_delivery" sequence="2"/>
-
-        <record id="view_delivery_grid_line_form" model="ir.ui.view">
-            <field name="name">delivery.grid.line.form</field>
-            <field name="model">delivery.grid.line</field>
-            <field name="arch" type="xml">
-                <form string="Grid Lines">
+                <form string="Price Rules">
                     <group>
-                        <field name="name"/>
+                        <field name="name" invisible="1"/>
                     </group>
                     <group>
-                        <label for="type" string="Condition"/>
-                        <div>
-                            <field name="type" class="oe_inline"/>
-                            <field name="operator" class="oe_inline"/>
-                            <field name="max_value" class="oe_inline"/>
+                        <label for="variable" string="Condition"/>
+                        <div class="o_row">
+                            <field name="variable"/>
+                            <field name="operator"/>
+                            <field name="max_value"/>
                         </div>
                         <label for="list_base_price" string="Sale Price"/>
                         <div>
@@ -202,23 +126,19 @@
                             *
                             <field name="variable_factor" class="oe_inline"/>
                         </div>
-                        <field name="standard_price"/>
+                        <field name="standard_price" invisible="1"/>
                     </group>
                 </form>
             </field>
         </record>
-        <record id="view_delivery_grid_line_tree" model="ir.ui.view">
-            <field name="name">delivery.grid.line.tree</field>
-            <field name="model">delivery.grid.line</field>
+        <record id="view_delivery_price_rule_tree" model="ir.ui.view">
+            <field name="name">delivery.price.rule.tree</field>
+            <field name="model">delivery.price.rule</field>
             <field name="arch" type="xml">
-                <tree string="Grid Lines">
+                <tree string="Price Rules">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
-                    <field name="type"/>
-                    <field name="operator"/>
-                    <field name="max_value" nolabel="1"/>
-                    <field name="list_price"/>
-                    <field name="standard_price"/>
+                    <field name="list_base_price" string="Sale Price"/>
                 </tree>
             </field>
         </record>
@@ -238,7 +158,7 @@
                         <label for="carrier_tracking_ref"/>
                         <div>
                             <field name="carrier_tracking_ref" class="oe_inline"/>
-                            <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','=','grid'),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                            <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
                         <field name="carrier_price"/>
                     </group>
@@ -254,11 +174,11 @@
                 </xpath>
                 <xpath expr="//h1" position="before">
                     <div class="oe_right oe_button_box">
-                        <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking" attrs="{'invisible': ['|',('carrier_tracking_ref','=',False),('delivery_type','=','grid')]}" />
+                        <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking" attrs="{'invisible': ['|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule'])]}" />
                     </div>
                 </xpath>
                 <xpath expr="/form/header/button[last()]" position="after">
-                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','=','grid'),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                 </xpath>
               </data>
             </field>
@@ -327,7 +247,7 @@
                       <label for="carrier_tracking_ref"/>
                       <div>
                           <field name="carrier_tracking_ref" class="oe_inline"/>
-                          <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','=','grid'),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                          <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                       </div>
                       <field name="carrier_price"/>
                     </group>
@@ -335,5 +255,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>
