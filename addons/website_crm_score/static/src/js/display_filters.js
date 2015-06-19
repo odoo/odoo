@@ -45,7 +45,7 @@ var Filters = kanban_widgets.AbstractField.extend({
                 }
             }
             else {
-                var $span = '<span class="oe_tag" style="background-color:#fce9e9;">Domain too big<span>';
+                var $span = '<span class="badge" style="background-color:#fce9e9;">Domain too big<span>';
                 self.$el.append($span);
             }
         }
@@ -61,12 +61,12 @@ var Filters = kanban_widgets.AbstractField.extend({
                 // op in NEG_OP
                 tip = 'not ' + tip;
             }
-            var span = '<span class="oe_tag" title="' + tip + '">'+ tag +'</span>';
+            var span = '<span class="badge" title="' + tip + '">'+ tag +'</span>';
             return [i+1, span];
         }
         else if (a === '!'){
             var res = this.interpret(val, i+1);
-            var span = '<span class="oe_tag">!</span>' + res[1];
+            var span = '<span class="badge">!</span>' + res[1];
             return [res[0], span];
         }
         else {

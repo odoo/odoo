@@ -469,7 +469,7 @@ var KanbanView = View.extend({
 
     /*
     *  postprocessing of fields type many2many
-    *  make the rpc request for all ids/model and insert value inside .oe_tags fields
+    *  make the rpc request for all ids/model and insert value inside .o_form_field_many2manytags fields
     */
     postprocess_m2m_tags: function(records) {
         var self = this;
@@ -484,7 +484,7 @@ var KanbanView = View.extend({
         records.forEach(function(record) {
             self.many2manys.forEach(function(name) {
                 var field = record.record[name];
-                var $el = record.$('.oe_form_field.oe_tags[name=' + name + ']');
+                var $el = record.$('.oe_form_field.o_form_field_many2manytags[name=' + name + ']');
                 // fields declared in the kanban view may not be used directly
                 // in the template declaration, for example fields for which the
                 // raw value is used -> $el[0] is undefined, leading to errors
@@ -697,7 +697,7 @@ function transform_qweb_template (node, fvg, many2manys) {
                     many2manys.push(node.attrs.name);
                 }
                 node.tag = 'div';
-                node.attrs['class'] = (node.attrs['class'] || '') + ' oe_form_field oe_tags o_kanban_tags';
+                node.attrs['class'] = (node.attrs['class'] || '') + ' oe_form_field o_form_field_many2manytags o_kanban_tags';
             } else if (fields_registry.contains(ftype)) {
                 // do nothing, the kanban record will handle it
             } else {

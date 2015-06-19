@@ -399,7 +399,7 @@ Tour.register({
 
         {
             title:      "open the many2one to select an other user",
-            element:    '.oe_m2o_drop_down_button',
+            element:    '.oe_list .oe_m2o_drop_down_button',
         },
         {
             title:      "select an other user",
@@ -433,16 +433,11 @@ Tour.register({
 
         {
             title:      "click outside to trigger one2many onchange",
-            element:    '.oe_tags .text-arrow',
+            element:    '.o_form_field_many2manytags .oe_m2o_drop_down_button',
         },
         {
-            title:      "click outside to trigger one2many onchange",
-            element:    '.text-label:first',
-        },
-
-        {
-            title:      "click outside to trigger one2many onchange",
-            element:    '.text-label:first',
+            title:      "add a tag",
+            element:    '.ui-autocomplete a:first',
         },
 
         // remove record
