@@ -30,6 +30,7 @@ from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_escape as escape
+from openerp.tools import float_round
 from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 
@@ -855,12 +856,14 @@ class MonetaryConverter(osv.AbstractModel):
         if not display_currency:
             display_currency = self.display_currency(cr, uid, options['display_currency'], options)
 
+        precision = options.get('digits') or (options.get('field_digits') and cur_field.digits[1]) or display_currency.decimal_places 
+
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
         # lang.format will not set one by default. currency.round will not
         # provide one either. So we need to generate a precision value
         # (integer > 0) from the currency's rounding (a float generally < 1.0).
-        fmt = "%.{0}f".format(display_currency.decimal_places)
+        fmt = "%.{0}f".format(precision)
 
         from_amount = record[field_name]
 
@@ -868,11 +871,14 @@ class MonetaryConverter(osv.AbstractModel):
             from_currency = self.display_currency(cr, uid, options['from_currency'], options)
             from_amount = Currency.compute(cr, uid, from_currency.id, display_currency.id, from_amount)
 
+        if options.get('digits') or options.get('field_digits'): 
+            from_amount = float_round(from_amount, precision_digits=precision)
+        else:
+            from_amount = Currency.round(cr, uid, display_currency, from_amount)
+
         lang_code = context.get('lang') or 'en_US'
         lang = self.pool['res.lang']
-        formatted_amount = lang.format(cr, uid, [lang_code],
-            fmt, Currency.round(cr, uid, display_currency, from_amount),
-            grouping=True, monetary=True)
+        formatted_amount = lang.format(cr, uid, [lang_code], fmt, from_amount, grouping=True, monetary=True)
 
         pre = post = u''
         if display_currency.position == 'before':
@@ -1029,8 +1035,8 @@ class QwebWidgetMonetary(osv.AbstractModel):
     def _format(self, inner, options, qwebcontext):
         inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
         display = self.pool['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
-        precision = int(round(math.log10(display.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        precision = options.get('digits') or max(0,-int(round(math.log10(display.rounding))))
+        fmt = "%.{0}f".format(precision)
         lang_code = qwebcontext.context.get('lang') or 'en_US'
         formatted_amount = self.pool['res.lang'].format(
             qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
