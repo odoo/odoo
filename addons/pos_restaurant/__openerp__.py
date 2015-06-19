@@ -18,11 +18,11 @@ This module adds several restaurant features to the Point of Sale:
 - Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers
 
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'depends': ['point_of_sale'],
     'website': 'https://www.odoo.com/page/point-of-sale',
     'data': [
-        'restaurant_view.xml',
+        'views/restaurant_view.xml',
         'security/ir.model.access.csv',
         'views/templates.xml',
     ],
@@ -34,8 +34,7 @@ This module adds several restaurant features to the Point of Sale:
         'static/src/xml/floors.xml',
     ],
     'demo': [
-        'restaurant_demo.xml',
+        'data/restaurant_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
 }
