@@ -97,7 +97,7 @@
             <field name="name">Badge Kanban View</field>
             <field name="model">gamification.badge</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey">
+                <kanban class="o_kanban_badge">
                     <field name="name"/>
                     <field name="description"/>
                     <field name="image"/>
@@ -110,41 +110,33 @@
                     <field name="rule_max_number" />
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'} oe_kanban_card oe_kanban_global_click oe_kanban_badge">
-                                <div class="oe_kanban_content">
-                                    <div class="pull-left">
-                                        <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="90" height="90" /></a>
+                            <div t-attf-class="o_kanban_two_column oe_kanban_global_click #{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong><field name="name"/></strong>
+                                    <span class="oe_grey">
+                                        <t t-if="record.remaining_sending.value != -1">
+                                            <t t-esc="record.stat_my_monthly_sending.value"/>/<t t-esc="record.rule_max_number.value"/>
+                                        </t>
+                                        <t t-if="record.remaining_sending.value == -1">
+                                            <t t-esc="record.stat_my_monthly_sending.value"/>/∞
+                                        </t>
+                                    </span>
+                                    <div t-if="record.remaining_sending.value == 0" class="oe_grey">Can not grant</div>
+                                    <div>
+                                        <strong><t t-esc="record.stat_count.raw_value"/></strong> granted,
+                                        <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
                                     </div>
-                                    <div class="oe_no_overflow">
-                                        <h4><field name="name"/></h4>
-                                        <t t-if="record.remaining_sending.value != 0">
-                                            <button type="action" name="%(action_grant_wizard)d" class="oe_highlight">Grant</button>
-                                            <span class="oe_grey">
-                                                <t t-if="record.remaining_sending.value != -1">
-                                                    <t t-esc="record.stat_my_monthly_sending.value"/>/<t t-esc="record.rule_max_number.value"/>
-                                                </t>
-                                                <t t-if="record.remaining_sending.value == -1">
-                                                    <t t-esc="record.stat_my_monthly_sending.value"/>/∞
-                                                </t>
-                                            </span>
-                                        </t>
-                                        <t t-if="record.remaining_sending.value == 0">
-                                            <div class="oe_grey">Can not grant</div>
-                                        </t>
-                                        <p class="oe_margin_top_8">
-                                            <strong><t t-esc="record.stat_count.raw_value"/></strong> granted,<br/>
-                                            <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
-                                        </p>
+                                    <div t-if="record.description.value">
+                                        <em><field name="description"/></em>
                                     </div>
-                                    <div class="oe_margin_top_16">
-                                        <t t-if="record.description.value">
-                                            <p><em><field name="description"/></em></p>
-                                        </t>
-                                        <a type="object" name="get_granted_employees">
-                                            <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                                <img class="oe_kanban_badge_avatars img-rounded oe_margin_top_8" t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
-                                            </t>
-                                        </a>
+                                    <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
+                                        <img width="24" height="24" class="oe_kanban_avatar" t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
+                                    </t>
+                                    <div t-if="record.remaining_sending.value != 0" class="o_kanban_button">
+                                        <button type="action" name="%(action_grant_wizard)d" class="oe_highlight btn btn-sm btn-primary">Grant</button>
                                     </div>
                                 </div>
                             </div>
