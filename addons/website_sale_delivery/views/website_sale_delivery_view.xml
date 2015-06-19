@@ -13,11 +13,11 @@
                     </button>
                 </div>
             </div>
-            <group name="general" position="after">
-                <group name="website">
-                    <field name="website_description" attrs="{'invisible':[('website_published', '=', False)]}"/>
+            <div name="title" position="after">
+                <group>
+                    <field name="website_description" string="Description" placeholder="Description displayed on the eCommerce and on the Online Quotations."/>
                 </group>
-            </group>
+            </div>
         </field>
     </record>
  </odoo>
