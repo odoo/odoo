@@ -365,7 +365,9 @@ class sale_order(osv.osv):
                     lines.append(inv_line_id)
         inv = self._prepare_invoice(cr, uid, order, lines, context=context)
         inv_id = inv_obj.create(cr, uid, inv, context=context)
-        self.pool['account.invoice'].browse(cr, uid, inv_id, context=context)._onchange_payment_term_date_invoice()
+        invoice = self.pool['account.invoice'].browse(cr, uid, inv_id, context=context)
+        invoice._onchange_payment_term_date_invoice()
+        invoice.compute_taxes()
         return inv_id
 
     def print_quotation(self, cr, uid, ids, context=None):
