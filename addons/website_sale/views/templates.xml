@@ -1245,5 +1245,15 @@
         <li><a id="create-new-product" href="#" data-action="new_product">New Product</a></li>
     </xpath>
 </template>
+
+<!-- Add a link to the product page in the portal orders followup page -->
+<template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal.orders_followup">
+    <xpath expr="//span[@t-esc='ol.product_id.name']" position="replace">
+        <a t-att-href="ol.product_id.website_url">
+            <span t-esc="ol.product_id.name"/>
+        </a>
+    </xpath>
+</template>
+
 </data>
 </openerp>
