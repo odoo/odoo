@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Point of Sale Discounts',
     'version': '1.0',
@@ -16,7 +15,7 @@ This module allows the cashier to quickly give a percentage
 sale discount to a customer.
 
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['point_of_sale'],
     'data': [
         'views/views.xml',
@@ -27,5 +26,4 @@ sale discount to a customer.
     ],
     'installable': True,
     'website': 'https://www.odoo.com/page/point-of-sale',
-    'auto_install': False,
 }
