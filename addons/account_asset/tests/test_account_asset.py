@@ -23,30 +23,30 @@ class TestAccountAsset(common.TransactionCase):
         # self.browse_ref("account_asset.data_fiscalyear_plus5").create_period()
 
         # In order to test the process of Account Asset, I perform a action to confirm Account Asset.
-        self.browse_ref("account_asset.account_asset_asset_vehicles0").validate()
+        self.browse_ref("account_asset.account_asset_asset_vehicles_test0").validate()
 
         # I check Asset is now in Open state.
-        self.assertEqual(self.browse_ref("account_asset.account_asset_asset_vehicles0").state, 'open',
+        self.assertEqual(self.browse_ref("account_asset.account_asset_asset_vehicles_test0").state, 'open',
             'Asset should be in Open state')
 
         # I compute depreciation lines for asset of CEOs Car.
-        self.browse_ref("account_asset.account_asset_asset_vehicles0").compute_depreciation_board()
-        value = self.browse_ref("account_asset.account_asset_asset_vehicles0")
+        self.browse_ref("account_asset.account_asset_asset_vehicles_test0").compute_depreciation_board()
+        value = self.browse_ref("account_asset.account_asset_asset_vehicles_test0")
         self.assertEqual(value.method_number, len(value.depreciation_line_ids),
             'Depreciation lines not created correctly')
 
         # I create account move for all depreciation lines.
-        ids = self.env['account.asset.depreciation.line'].search([('asset_id', '=', self.ref('account_asset.account_asset_asset_vehicles0'))])
+        ids = self.env['account.asset.depreciation.line'].search([('asset_id', '=', self.ref('account_asset.account_asset_asset_vehicles_test0'))])
         for line in ids:
             line.create_move()
 
         # I check the move line is created.
-        asset = self.env['account.asset.asset'].browse([self.ref("account_asset.account_asset_asset_vehicles0")])[0]
+        asset = self.env['account.asset.asset'].browse([self.ref("account_asset.account_asset_asset_vehicles_test0")])[0]
         self.assertEqual(len(asset.depreciation_line_ids), len(asset.account_move_line_ids),
             'Move lines not created correctly')
 
         # I Check that After creating all the moves of depreciation lines the state "Close".
-        self.assertEqual(self.browse_ref("account_asset.account_asset_asset_vehicles0").state, 'close',
+        self.assertEqual(self.browse_ref("account_asset.account_asset_asset_vehicles_test0").state, 'close',
             'State of asset should be close')
 
         invoice = self.env['account.invoice'].create({
@@ -107,7 +107,7 @@ class TestAccountAsset(common.TransactionCase):
         # WIZARD
         # I create a record to change the duration of asset for calculating depreciation.
 
-        account_asset_asset_office0 = self.browse_ref('account_asset.account_asset_asset_office0')
+        account_asset_asset_office0 = self.browse_ref('account_asset.account_asset_asset_office_test0')
         asset_modify_number_0 = self.env['asset.modify'].create({
             'name': 'Test reason',
             'method_number': 10.0,
