@@ -250,6 +250,18 @@ class ResPartner(models.Model):
             partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
             partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
 
+    def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
+        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
+        if only_unblocked:
+            domain += [('blocked', '=', False)]
+        if self.ids:
+            domain += [('partner_id', 'in', self.ids)]
+        #adding the overdue lines
+        overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<=', date), '&', ('date_maturity', '=', False), ('date', '<=', date)]
+        if overdue_only:
+            domain += overdue_domain
+        return domain
+
     @api.multi
     def _compute_issued_total(self):
         """ Returns the issued total as will be displayed on partner view """
