@@ -1330,6 +1330,9 @@
 </template>
 
 <template id="order_state_message" name="Order State Message">
+    <t groups='base.group_system'>
+      <a class="btn btn-primary pull-right" target="_blank" t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer',acquirer_id.id, 'payment.action_payment_acquirer')"><i class="fa fa-cog"></i> Configure Transfer Details</a>
+    </t>
     <t t-if="(not_order and state == 'error') or (not tx_ids and state == 'error')">
       <p>There seems to be an error with your request.</p>
     </t>
