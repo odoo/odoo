@@ -27,9 +27,9 @@ following:
     'data': [
         'data/pos_mercury_data.xml',
         'security/ir.model.access.csv',
-        'views/templates.xml',
-        'views/mercury_transactions.xml',
+        'views/pos_mercury_templates.xml',
         'views/pos_mercury_views.xml',
+        'views/pos_mercury_transaction_templates.xml',
     ],
     'demo': [
         'data/pos_mercury_demo.xml',
