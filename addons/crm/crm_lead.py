@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
 
@@ -1035,6 +1036,140 @@ Update your business card, phone book, social media,... Send an email right now 
                     partner_info['full_name'] = '%s <%s>' % (lead.partner_name or lead.contact_name, email)
                     break
         return res
+
+    def retrieve_sales_dashboard(self, cr, uid, context=None):
+
+        res = {
+            'meeting': {
+                'today': 0,
+                'next_7_days': 0,
+            },
+            'activity': {
+                'today': 0,
+                'overdue': 0,
+                'next_7_days': 0,
+            },
+            'closing': {
+                'today': 0,
+                'overdue': 0,
+                'next_7_days': 0,
+            },
+            'done': {
+                'this_month': 0,
+                'last_month': 0,
+            },
+            'won': {
+                'this_month': 0,
+                'last_month': 0,
+            },
+            'nb_opportunities': 0,
+        }
+
+        opportunities = self.search_read(
+            cr, uid,
+            [('type', '=', 'opportunity'), ('user_id', '=', uid)],
+            ['date_deadline', 'next_activity_id', 'date_action', 'date_closed', 'planned_revenue'], context=context)
+
+        for opp in opportunities:
+
+            # Expected closing
+            if opp['date_deadline']:
+                date_deadline = datetime.strptime(opp['date_deadline'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
+
+                if date_deadline == date.today():
+                    res['closing']['today'] += 1
+                if date_deadline >= date.today() and date_deadline <= date.today() + timedelta(days=7):
+                    res['closing']['next_7_days'] += 1
+                if date_deadline < date.today():
+                    res['closing']['overdue'] += 1
+
+            # Next activities
+            if opp['next_activity_id'] and opp['date_action']:
+                date_action = datetime.strptime(opp['date_action'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
+
+                if date_action == date.today():
+                    res['activity']['today'] += 1
+                if date_action >= date.today() and date_action <= date.today() + timedelta(days=7):
+                    res['activity']['next_7_days'] += 1
+                if date_action < date.today():
+                    res['activity']['overdue'] += 1
+
+            # Won in Opportunities
+            if opp['date_closed']:
+                date_closed = datetime.strptime(opp['date_closed'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
+
+                if date_closed <= date.today() and date_closed >= date.today().replace(day=1):
+                    if opp['planned_revenue']:
+                        res['won']['this_month'] += opp['planned_revenue']
+                elif date_closed < date.today().replace(day=1) and date_closed >= date.today().replace(day=1) - relativedelta(months=+1):
+                    if opp['planned_revenue']:
+                        res['won']['last_month'] += opp['planned_revenue']
+
+        # crm.activity is a very messy model so we need to do that in order to retrieve the actions done.
+        cr.execute("""
+            SELECT
+                m.id,
+                m.subtype_id,
+                m.date,
+                l.user_id,
+                l.type
+            FROM
+                "mail_message" m
+            LEFT JOIN
+                "crm_lead" l
+            ON
+                (m.res_id = l.id)
+            INNER JOIN
+                "crm_activity" a
+            ON
+                (m.subtype_id = a.subtype_id)
+            WHERE
+                (m.model = 'crm.lead') AND (l.user_id = %s) AND (l.type = 'opportunity')
+        """, (uid,))
+        activites_done = cr.dictfetchall()
+
+        for act in activites_done:
+            if act['date']:
+                date_act = datetime.strptime(act['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
+                if date_act <= date.today() and date_act >= date.today().replace(day=1):
+                        res['done']['this_month'] += 1
+                elif date_act < date.today().replace(day=1) and date_act >= date.today().replace(day=1) - relativedelta(months=+1):
+                    res['done']['last_month'] += 1
+
+        # Meetings
+        min_date = datetime.now().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        max_date = (datetime.now() + timedelta(days=8)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        meetings_domain = [
+            ('start', '>=', min_date),
+            ('start', '<=', max_date)
+        ]
+        # We need to add 'mymeetings' in the context for the search to be correct.
+        meetings = self.pool.get('calendar.event').search_read(cr, uid, meetings_domain, ['start'], context=context.update({'mymeetings': 1}) if context else {'mymeetings': 1})
+        for meeting in meetings:
+            if meeting['start']:
+                start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
+
+                if start == date.today():
+                    res['meeting']['today'] += 1
+                if start >= date.today() and start <= date.today() + timedelta(days=7):
+                    res['meeting']['next_7_days'] += 1
+
+        res['nb_opportunities'] = len(opportunities)
+
+        user = self.pool('res.users').browse(cr, uid, uid, context=context)
+        res['done']['target'] = user.target_sales_done
+        res['won']['target'] = user.target_sales_won
+
+        return res
+
+    def modify_target_sales_dashboard(self, cr, uid, target_name, target_value, context=None):
+
+        if target_name in ['won', 'done', 'invoiced']:
+            # bypass rights (with superuser_id)
+            self.pool('res.users').write(cr, SUPERUSER_ID, [uid], {'target_sales_' + target_name: target_value}, context=context)
+        else:
+            raise UserError(_('This target does not exist.'))
+
 
 class crm_lead_tag(osv.Model):
     _name = "crm.lead.tag"

@@ -1,0 +1,114 @@
+.o_kanban_view.o_kanban_dashboard.o_salesteam_kanban {
+
+    padding: 0;  // remove the padding of the kanban view
+
+    .o_kanban_record {
+        min-width: 450px;
+
+        @media (max-width: @grid-float-breakpoint) {
+            min-width: inherit;
+        }
+    }
+
+    .o_sales_dashboard {
+        padding-top: 20px;
+        background-color: @odoo-view-background-color;
+        position: relative;
+        .o-flex(0, 0,100%);
+        .o-flex-display();
+
+        .o_welcome_message {
+            position: absolute;
+            left: 0;
+            right: 0;
+            .o-flex-display();
+            justify-content: center;
+
+            .o_welcome_image {
+                padding: 20px;
+            }
+            .o_welcome_content {
+                > a {
+                    color: white;
+                    display: inline-block;
+                }
+            }
+        }
+
+        .o_demo {
+            opacity: 0.07;
+        }
+
+        .o_left_panel {
+            .o-flex(1, 0, 0);
+        }
+        .o_right_panel {
+            .o-flex(1, 0, 0);
+
+            @media (max-width: @grid-float-breakpoint) {
+                display: none;
+            }
+        }
+
+        table {
+            -webkit-border-horizontal-spacing: 10px;
+            border-collapse: separate;
+
+            > tbody {
+                > tr {
+                    > td {
+                        vertical-align: middle;
+                        text-align: center;
+                        border-top: 1px solid @odoo-view-background-color;
+
+                        span {
+                            display: inline;
+                        }
+
+                        .o_target_reached {
+                            color: green;
+                        }
+
+                        a:hover {
+                            text-decoration: none;
+                        }
+
+                        &.o_main {
+                            background-color: @odoo-brand-optional;
+                            &:hover {
+                                background-color: darken(@odoo-brand-optional, 10%);
+                            }
+                            a {
+                                color: white;
+                            }
+                        }
+                        &.o_warning {
+                            background-color: orange;
+                            &:hover {
+                                background-color: darken(orange, 10%);
+                            }
+                            a {
+                                color: white;
+                            }
+                        }
+                        &.o_secondary {
+                            background-color: lightgrey;
+                            &:hover {
+                                background-color: darken(lightgrey, 10%);
+                            }
+                            a {
+                                color: black;
+                            }
+                        }
+                        &.o_highlight, .o_highlight {
+                            font-size: 20px;
+                        }
+                        &.o_text {
+                            text-align: left;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
