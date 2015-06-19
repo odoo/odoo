@@ -25,13 +25,13 @@
                                         <div class="o_primary">
                                             <span><t t-esc="record.name.value"/></span>
                                         </div>
-                                        <div t-if="record.alias_id.raw_value">
+                                        <div t-if="record.alias_name.value and record.alias_domain.value">
                                             <span><i class="fa fa-envelope"></i> <t t-esc="record.alias_id.value"/></span>
                                         </div>
                                     </div>
                                 </div><div class="o_kanban_card_manage_pane o_invisible">
                                     <div class="o_kanban_card_manage_section o_kanban_manage_reports">
-                                        <div>
+                                        <div groups="project.group_project_manager">
                                             <a type="edit">Settings</a>
                                         </div>
                                         <div>
