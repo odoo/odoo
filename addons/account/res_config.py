@@ -120,24 +120,6 @@ class AccountConfigSettings(models.TransientModel):
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
-    income_currency_exchange_account_id = fields.Many2one('account.account',
-        related='company_id.income_currency_exchange_account_id',
-        string="Gain Exchange Rate Account",
-        domain=lambda self: [('internal_type', '=', 'other'), ('company_id', '=', self.company_id.id), ('deprecated', '=', False)])
-    expense_currency_exchange_account_id = fields.Many2one('account.account',
-        related='company_id.expense_currency_exchange_account_id',
-        string="Loss Exchange Rate Account",
-        domain=lambda self: [('internal_type', '=', 'other'), ('company_id', '=', self.company_id.id), ('deprecated', '=', False)])
-
-    @api.multi
-    @api.constrains('income_currency_exchange_account_id', 'expense_currency_exchange_account_id')
-    def _check_account_gain_loss(self):
-        for element in self:
-            if element.income_currency_exchange_account_id.company_id and element.company_id != element.income_currency_exchange_account_id.company_id:
-                return False
-            if element.expense_currency_exchange_account_id.company_id and element.company_id != element.expense_currency_exchange_account_id.company_id:
-                return False
-        return True
 
     @api.model
     def _default_has_default_company(self):
@@ -168,10 +150,6 @@ class AccountConfigSettings(models.TransientModel):
             supplier_taxes_id = ir_values.get_default('product.template', 'supplier_taxes_id', company_id = self.company_id.id)
             self.default_sale_tax = isinstance(taxes_id, list) and taxes_id[0] or taxes_id
             self.default_purchase_tax = isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id
-
-            # update gain/loss exchange rate accounts
-            self.income_currency_exchange_account_id = company.income_currency_exchange_account_id
-            self.expense_currency_exchange_account_id = company.expense_currency_exchange_account_id
         return {}
 
     @api.onchange('chart_template_id')
@@ -204,12 +182,6 @@ class AccountConfigSettings(models.TransientModel):
     @api.onchange('sale_tax_rate')
     def onchange_tax_rate(self):
         self.purchase_tax_rate = self.sale_tax_rate or False
-
-    @api.onchange('group_multi_currency')
-    def onchange_multi_currency(self):
-        if not self.group_multi_currency:
-            self.income_currency_exchange_account_id = False
-            self.expense_currency_exchange_account_id = False
 
     @api.multi
     def set_group_multi_currency(self):
