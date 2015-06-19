@@ -4,6 +4,7 @@
 import cgi
 import urllib2
 import ssl
+import werkzeug
 from datetime import date, timedelta
 
 from openerp import models, api, service
@@ -11,13 +12,6 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class MercuryTransaction(models.Model):
     _name = 'pos_mercury.mercury_transaction'
-
-    def _unescape_html(self, s):
-        s = s.replace("&lt;", "<")
-        s = s.replace("&gt;", ">")
-        # this has to be last:
-        s = s.replace("&amp;", "&")
-        return s
 
     def _get_pos_session(self):
         pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)])
@@ -73,7 +67,7 @@ class MercuryTransaction(models.Model):
         r = urllib2.Request('https://w1.mercurypay.com/ws/ws.asmx', data=xml_transaction, headers=headers)
         try:
             u = urllib2.urlopen(r, timeout=65)
-            response = self._unescape_html(u.read())
+            response = werkzeug.utils.unescape(u.read())
         except (urllib2.URLError, ssl.SSLError):
             response = "timeout"
 
