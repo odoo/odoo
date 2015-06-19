@@ -109,10 +109,11 @@ class project_work(osv.osv):
         timeline_id = False
         acc_id = False
 
-        task_obj = task_obj.browse(cr, uid, vals['task_id'], context=context)
+        task_id = vals.get('task_id') or context.get('default_task_id')
+        task_obj = task_obj.browse(cr, uid, task_id, context=context)
         result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
         vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
-        vals_line['user_id'] = vals['user_id']
+        vals_line['user_id'] = vals.get('user_id', uid)
         vals_line['product_id'] = result['product_id']
         if vals.get('date'):
             if len(vals['date']) > 10:
@@ -123,11 +124,11 @@ class project_work(osv.osv):
                 vals_line['date'] = vals['date']
 
         # Calculate quantity based on employee's product's uom
-        vals_line['unit_amount'] = vals['hours']
+        vals_line['unit_amount'] = vals.get('hours', 0)
 
         default_uom = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.project_time_mode_id.id
         if result['product_uom_id'] != default_uom:
-            vals_line['unit_amount'] = self.pool['product.uom']._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
+            vals_line['unit_amount'] = self.pool['product.uom']._compute_qty(cr, uid, default_uom, vals_line['unit_amount'], result['product_uom_id'])
         acc_id = task_obj.project_id and task_obj.project_id.analytic_account_id.id or acc_id
         if acc_id:
             vals_line['account_id'] = acc_id
