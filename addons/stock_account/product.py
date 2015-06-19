@@ -50,17 +50,24 @@ class product_template(osv.osv):
 
     @api.multi
     def _get_product_accounts(self):
-        """ To get the stock input account, stock output account and stock journal related to product.
-        @param product_id: product id
-        @return: dictionary which contains information regarding stock input account, stock output account and stock journal
+        """ Add the stock accounts related to product to the result of super()
+        @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
         """
         accounts = super(product_template, self)._get_product_accounts()
         accounts.update({
             'stock_input': self.property_stock_account_input or self.categ_id.property_stock_account_input_categ,
             'stock_output': self.property_stock_account_output or self.categ_id.property_stock_account_output_categ,
             'stock_valuation': self.categ_id.property_stock_valuation_account_id or False,
-            'stock_journal': self.categ_id.property_stock_journal or False,
         })
+        return accounts
+
+    @api.multi
+    def get_product_accounts(self, fiscal_pos=None):
+        """ Add the stock journal related to product to the result of super()
+        @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
+        """
+        accounts = super(product_template, self).get_product_accounts(fiscal_pos=fiscal_pos)
+        accounts.update({'stock_journal': self.categ_id.property_stock_journal or False})
         return accounts
 
     def do_change_standard_price(self, cr, uid, ids, new_price, context=None):
