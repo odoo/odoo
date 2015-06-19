@@ -3,4 +3,5 @@
 
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
 
+import models
 import l10n_fr

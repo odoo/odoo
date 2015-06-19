@@ -93,7 +93,7 @@
             </ul>
 
             <ul t-if="not company.custom_footer" class="list-inline" name="financial_infos">
-                <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
+                <li t-if="company.vat" name="vat">TIN: <span t-field="company.vat"/></li>
             </ul>
 
             <t t-if="company.custom_footer">

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_fr.report_invoice" inherit_id="account.report_invoice_document">
+        <xpath expr="//span[@name='vat']" position="after">
+            <div t-if="o.partner_id.siret">SIRET: <span t-field="o.partner_id.siret"/></div>
+        </xpath>
+    </template>
+</odoo>
