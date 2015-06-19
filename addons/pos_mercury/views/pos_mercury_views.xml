@@ -77,7 +77,7 @@
         </record>
 
         <!-- Cron job to delete mercury tokens older than 6 months -->
-        <record forcecreate="True" id="ir_cron_amazon_sync" model="ir.cron">
+        <record forcecreate="True" id="ir_cron_mercury_cleanup" model="ir.cron">
             <field name="name">Mercury token cleaning</field>
             <field eval="True" name="active" />
             <field name="user_id" ref="base.user_root" />
