@@ -14,7 +14,7 @@ class barcode_rule(models.Model):
     def _get_type_selection(self):
         types = sets.Set(super(barcode_rule, self)._get_type_selection())
         types.update([
-            ('Credit', 'Credit Card')
+            ('credit', 'Credit Card')
         ])
         return list(types)
 

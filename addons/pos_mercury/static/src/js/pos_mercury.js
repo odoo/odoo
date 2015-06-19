@@ -262,7 +262,7 @@ ScreenWidget.include({
     show: function () {
         this._super();
         if(allowOnlinePayment(this.pos)) {
-            this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_error_action, this));
+            this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_error_action, this));
         }
     }
 });
@@ -633,7 +633,7 @@ PaymentScreenWidget.include({
     show: function () {
         this._super();
         if (allowOnlinePayment(this.pos)) {
-            this.pos.barcode_reader.set_action_callback('Credit', _.bind(this.credit_code_action, this));
+            this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_code_action, this));
         }
     },
 
