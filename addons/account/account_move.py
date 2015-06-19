@@ -695,17 +695,14 @@ class AccountMoveLine(models.Model):
     def _get_pair_to_reconcile(self):
         #field is either 'amount_residual' or 'amount_residual_currency' (if the reconciled account has a secondary currency set)
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
-        #target the pair of move in self that are the oldest
-        sorted_moves = sorted(self, key=lambda a: a.date)
-        debit = credit = False
-        for aml in sorted_moves:
-            if credit != False and credit != False:
-                break
-            if aml[field] > 0 and debit == False:
-                debit = aml
-            elif aml[field] < 0 and credit == False:
-                credit = aml
-        return debit, credit
+        #target the pair of move in self with smallest debit, credit
+        smallest_debit = smallest_credit = False
+        for aml in self:
+            if aml[field] > 0:
+                smallest_debit = (not smallest_debit or aml[field] < smallest_debit[field]) and aml or smallest_debit
+            elif aml[field] < 0:
+                smallest_credit = (not smallest_credit or aml[field] > smallest_credit[field]) and aml or smallest_credit
+        return smallest_debit, smallest_credit
 
     def auto_reconcile_lines(self):
         """ This function iterates recursively on the recordset given as parameter as long as it
