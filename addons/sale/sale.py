@@ -82,8 +82,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _get_default_team(self):
-        default_team_id = self.env['crm.team']._get_default_team_id()
-        return self.env['crm.team'].browse(default_team_id)
+        return self.env['crm.team']._get_default_team_id()
 
     @api.onchange('fiscal_position_id')
     def _compute_tax_id(self):
@@ -769,8 +768,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _get_default_team(self):
-        default_team_id = self.env['crm.team']._get_default_team_id()
-        return self.env['crm.team'].browse(default_team_id)
+        return self.env['crm.team']._get_default_team_id()
 
     team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team)
 
