@@ -18,7 +18,7 @@ United Arab Emirates accounting chart and localization.
     'demo': [ ],
     'data': [
              'l10n_ae_chart.xml',
-             'l10n_ae_wizard.xml',
+             'account_chart_template.yml',
     ],
-    'installable': False,
+    'installable': True,
 }
