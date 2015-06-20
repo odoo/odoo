@@ -718,7 +718,7 @@ class product_template(osv.osv):
             # unlink or inactive product
             for variant_id in map(int,variants_inactive):
                 try:
-                    with cr.savepoint():
+                    with cr.savepoint(), tools.mute_logger('openerp.sql_db'):
                         product_obj.unlink(cr, uid, [variant_id], context=ctx)
                 except (psycopg2.Error, osv.except_osv):
                     product_obj.write(cr, uid, [variant_id], {'active': False}, context=ctx)
