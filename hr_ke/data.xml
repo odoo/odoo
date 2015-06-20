@@ -1,8 +1,226 @@
 <openerp>
     <data>
+<!-- These are the original salary rule categories which we are modify to suite our purpose -->
+        <record id="category1" model="hr.salary.rule.category">
+            <field name="name">Basic Salary</field>
+            <field name="code">BASIC_SAL</field>
+        </record>
+
+        <record id="category2" model="hr.salary.rule.category">
+            <field name="name">Cash Allowance</field>
+            <field name="code">CASH_ALW</field>
+        </record>
+
+        <record id="category3" model="hr.salary.rule.category">
+            <field name="name">Gross Pay</field>
+            <field name="code">GROSS_PAY</field>
+        </record>
+
+        <record id="category4" model="hr.salary.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+        </record>
+
+        <record id="category5" model="hr.salary.rule.category">
+            <field name="name">Net Pay</field>
+            <field name="code">NET_PAY</field>
+        </record>
+
+        <record id="category6" model="hr.salary.rule.category">
+            <field name="name">Company Contribution</field>
+            <field name="code">COMP</field>
+        </record>
+
+<!-- These are the original salary rules  which we are modify to suite our purpose -->
+        <record id="ke_rule1" model="hr.salary.rule">
+            <field name="name">Basic Salary</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">BASIC_SAL</field>
+            <field name="category_id" ref="category1"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
+        </record>
+
+        <record id="ke_rule2" model="hr.salary.rule">
+            <field name="name">Gross Pay</field>
+            <field name="sequence" eval="10"/>
+            <field name="code">GROSS_PAY</field>
+            <field name="category_id" ref="category3"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC_SAL + categories.CASH_ALW</field>
+        </record>
+
+        <record id="ke_rule3" model="hr.salary.rule">
+            <field name="name">Net Pay</field>
+            <field name="sequence" eval="200"/>
+            <field name="code">NET_PAY</field>
+            <field name="category_id" ref="category5"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.GROSS_PAY - categories.NET_TAX - categories.POST_TAX_DED - NSSF - PENSION</field>
+            <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+	</record>
+
+
+<!--Salary Rule categorie -->
+	<record id="category7" model="hr.salary.rule.category">
+	   <field name="name">Benefits (non-cash)</field>
+	   <field name="code">BENEFITS</field>
+	</record>
+	<record id="category8" model="hr.salary.rule.category">
+	   <field name="name">Other Earnings</field>
+	   <field name="code">CASH_ALW</field>
+	</record>
+	<record id="category9" model="hr.salary.rule.category">
+	   <field name="name">Tax Relief</field>
+	   <field name="code">TAX_RELIEF</field>
+	</record>
+	<record id="category10" model="hr.salary.rule.category">
+	   <field name="name">Pre-Tax Deductions</field>
+	   <field name="code">PRE_TAX_DED</field>
+	</record>
+	<record id="category11" model="hr.salary.rule.category">
+	   <field name="name">Post-Tax Deductions</field>
+	   <field name="code">POST_TAX_DED</field>
+	</record>
+	<record id="category12" model="hr.salary.rule.category">
+	   <field name="name">Tax</field>
+	   <field name="code">TAX</field>
+	</record>
+	<record id="category13" model="hr.salary.rule.category">
+	   <field name="name">Net Taxable Income</field>
+	   <field name="code">NET_TAXABLE</field>
+	</record>
+	<record id="category14" model="hr.salary.rule.category">
+	   <field name="name">Gross Taxable Income</field>
+	   <field name="code">GROSS_TAXABLE</field>
+	</record>
+	<record id="category15" model="hr.salary.rule.category">
+	   <field name="name">Net Tax Payable</field>
+	   <field name="code">NET_TAX</field>
+	</record>
+
+<!-- Tax Rule -->
+	<record id="ke_rule16" model="hr.salary.rule">
+	   <field name="name">Pay As You Earn</field>
+	   <field name="category_id" ref="hr_ke.category12"/>
+	   <field name="code">PAYE</field>
+	   <field name="sequence">60</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">
+first_margin=10164
+first_rate = 0.10
+second_margin =19740
+second_rate = 0.15
+third_margin = 29316
+third_rate = 0.20
+fourth_margin = 38892
+fourth_rate = 0.25
+fifth_rate = 0.30
+if categories.NET_TAXABLE &lt;= first_margin:
+ tax= round(first_rate * categories.NET_TAXABLE)
+elif categories.NET_TAXABLE &lt;= second_margin and categories.NET_TAXABLE > first_margin :
+ tax = round((first_rate * first_margin) + (second_rate * (categories.NET_TAXABLE- first_margin)))
+elif categories.NET_TAXABLE &lt;= third_margin and categories.NET_TAXABLE > second_margin :
+ tax = round((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (categories.NET_TAXABLE - second_margin)))
+elif categories.NET_TAXABLE &lt;= fourth_margin and categories.NET_TAXABLE > third_margin :
+ tax = round((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (third_margin - second_margin)) + (fourth_rate * (categories.NET_TAXABLE - third_margin)))
+elif categories.NET_TAXABLE > fourth_margin :
+ tax = round((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (third_margin - second_margin)) + (fourth_rate * (fourth_margin - third_margin)) + (fifth_rate * (categories.NET_TAXABLE-fourth_margin)))
+else:
+ tax = 0
+result = tax
+
+</field>
+	</record>
+<!-- Net Taxable rule -->
+	<record id="ke_rule17" model="hr.salary.rule">
+	   <field name="name">Net Taxable Pay</field>
+	   <field name="category_id" ref="hr_ke.category13"/>
+	   <field name="code">NET_TAXABLE</field>
+	   <field name="sequence">50</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">result = categories.GROSS_TAXABLE - categories.PRE_TAX_DED</field>
+	</record>
+<!-- Gross Taxable rule -->
+	<record id="ke_rule18" model="hr.salary.rule">
+	   <field name="name">Gross Taxable Pay</field>
+	   <field name="category_id" ref="hr_ke.category14"/>
+	   <field name="code">GROSS_TAXABLE</field>
+	   <field name="sequence">30</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">result = categories.GROSS_PAY + categories.BENEFITS</field>
+	</record>
+<!-- Personal Tax Relief Rule -->
+	<record id="ke_rule19" model="hr.salary.rule">
+	   <field name="name">Personal Tax Relief</field>
+	   <field name="category_id" ref="hr_ke.category9"/>
+	   <field name="code">PER_RELIEF</field>
+	   <field name="sequence">65</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">result = 1162</field>
+	</record>
+<!-- NSSF Deductions rule-->
+	<record id="ke_rule20" model="hr.salary.rule">
+	   <field name="name">National Social Security Fund</field>
+	   <field name="category_id" ref="hr_ke.category10"/>
+	   <field name="code">NSSF</field>
+	   <field name="sequence">40</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">result = 200</field>
+	</record>
+<!-- NHIF Deductions rule-->
+	<record id="ke_rule21" model="hr.salary.rule">
+	   <field name="name">National Hospital Insurance Fund</field>
+	   <field name="category_id" ref="hr_ke.category11"/>
+	   <field name="code">NHIF</field>
+	   <field name="sequence">80</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">result = 320</field>
+	</record>
+<!-- Net Tax Rule-->
+	<record id="ke_rule22" model="hr.salary.rule">
+	   <field name="name">Net Tax (PAYE)</field>
+	   <field name="category_id" ref="hr_ke.category15"/>
+	   <field name="code">NET_TAX</field>
+	   <field name="sequence">70</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">result = categories.TAX - categories.TAX_RELIEF</field>
+	</record>
+
+
+
+
+
+
+
+<!--Benefits -->
 	<record id="benefit1" model="ke.benefit.type">
-	   <field name="name">Housing </field>
-	   <field name="code">HOUSE </field>
+	   <field name="name">Housing</field>
+	   <field name="code">HOUSE</field>
 	   <field name="taxable">True</field>
 	   <field name="frequency">month</field>
 	   <field name="formula">
@@ -32,17 +250,14 @@ for other_earning in contract.earnings:
 ### Compute Taxable Value for Housing ###
 COMPUTED_TAXABLE_VALUE = (BASIC_SALARY + TOTAL_BENEFITS + TOTAL_EARNINGS) * PERCENTAGE
 
-### Check whichever is higher between Actual Rent and computed taxable value shall become taxable value of Housing###
-if ACTUAL_RENT > COMPUTED_TAXABLE_VALUE:
-    result = ACTUAL_RENT
-else:
-    result = COMPUTED_TAXABLE_VALUE
+### Whichever is higher between Actual Rent and computed taxable value shall become taxable value of Housing###
+result = max(ACTUAL_RENT, COMPUTED_TAXABLE_VALUE)
 	   </field>
 	</record>
 
 	<record id="benefit2" model="ke.benefit.type">
 	   <field name="name">Electricity </field>
-	   <field name="code">ELECTR </field>
+	   <field name="code">ELECTR</field>
 	   <field name="taxable">True</field>
 	   <field name="frequency">month</field>
 	   <field name="formula">
@@ -52,10 +267,7 @@ else:
 # benefit: this benefit(Electricity)
 # Note: returned value have to be set in the variable 'result'
 PRESCRIBED_RATE = 1500
-if benefit.actual_cost > PRESCRIBED_RATE:
-   result = benefit.actual_cost
-else:
-   result = PRESCRIBED_RATE
+result = max(benefit.actual_cost, PRESCRIBED_RATE)
 	   </field>
 	</record>
 
@@ -71,10 +283,8 @@ else:
 # benefit: this benefit(Water)
 # Note: returned value have to be set in the variable 'result'
 PRESCRIBED_RATE = 500
-if benefit.actual_cost > PRESCRIBED_RATE:
-   result = benefit.actual_cost
-else:
-   result = PRESCRIBED_RATE
+result = max(benefit.actual_cost, PRESCRIBED_RATE)
+
 	   </field>
 	</record>
 
@@ -137,5 +347,169 @@ result = 0.02 * benefit.actual_cost
 result =  benefit.actual_cost
 	   </field>
 	</record>
+
+<!--Other Earnings - bonus-->
+	<record id="earn1" model="ke.earnings.type">
+	   <field name="name">Bonus</field>
+	   <field name="code">BONUS</field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# earning: this earning(Bonus)
+# Note: returned value have to be set in the variable 'result'
+result = 0
+	   </field>
+	</record>
+
+<!--Other Earnings Comission-->
+	<record id="earn2" model="ke.earnings.type">
+	   <field name="name">Commision</field>
+	   <field name="code">COMM</field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# earning: this earning(Bonus)
+# Note: returned value have to be set in the variable 'result'
+result = 0
+	   </field>
+	</record>
+<!--Other Earnings -Overtime-->
+	<record id="earn3" model="ke.earnings.type">
+	   <field name="name">Overtime</field>
+	   <field name="code">OVERTIME</field>
+	   <field name="taxable">True</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# earning: this earning(Bonus)
+# Note: returned value have to be set in the variable 'result'
+result = 0
+	   </field>
+	</record>
+
+<!--Deductions -->
+
+	<record id="deduct1" model="ke.deductions.type">
+	   <field name="name">Pension/Provident Fund Scheme</field>
+	   <field name="code">PENSION</field>
+	   <field name="pre_tax">True</field>
+	   <field name="sequence">40</field>
+	   <field name="net_pay"></field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# deduction: this deduction(Pension/Provident Fund)
+# Note: returned value have to be set in the variable 'result'
+PRESCRIBED_LIMIT = 17500
+PERCENTAGE = 0.3
+PENSIONABLE_PAY = contract.wage
+ACTUAL_CONTRIB = deduction.base
+PERCENT_PAY = PERCENTAGE * PENSIONABLE_PAY
+
+###For Pension/Provident Fund; the lesser of prescibed limit, 30% of pensionable pay or the actual contribution per month is the allowed deduction ####
+result = min(PRESCRIBED_LIMIT, PERCENT_PAY, ACTUAL_CONTRIB)
+	   </field>
+	</record>
+
+	<record id="deduct2" model="ke.deductions.type">
+	   <field name="name">Home Owner Savings Plan (HOSP)</field>
+	   <field name="code">HOSP</field>
+	   <field name="pre_tax">True</field>
+	   <field name="sequence">40</field>
+	   <field name="net_pay">1</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# deduction: this deduction(HOSP)
+# Note: returned value have to be set in the variable 'result'
+PRESCRIBED_LIMIT = 4000
+
+###For HOSP, the lesser of the prescribed limit or the actual contribution to HOSP is taken as the allowed deduction####
+result = min(PRESCRIBED_LIMIT, deduction.base)
+	   </field>
+	</record>
+
+	<record id="deduct3" model="ke.deductions.type">
+	   <field name="name">Owner Occupied Interest</field>
+	   <field name="code">OCI</field>
+	   <field name="pre_tax">True</field>
+	   <field name="sequence">40</field>
+	   <field name="net_pay"></field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# deduction: this deduction(OCI)
+# Note: returned value have to be set in the variable 'result'
+PRESCRIBED_LIMIT = 8333
+
+###For OCI , the lesser of the actual interest paid or the prescribed limit is taken as the allowed deduction####
+result = min(PRESCRIBED_LIMIT, deduction.base)
+	   </field>
+	</record>
+
+
+	<record id="deduct4" model="ke.deductions.type">
+	   <field name="name">Higher Education Loans Board (HELB)</field>
+	   <field name="code">HELB</field>
+	   <field name="pre_tax"></field>
+	   <field name="sequence">80</field>
+	   <field name="net_pay">1</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# deduction: this deduction(HELB)
+# Note: returned value have to be set in the variable 'result'
+
+###Please consult HELB for the formula to use. The default behaviour is to deduct (after Tax) the actual voluntary contribution per employee####
+result = deduction.base
+	   </field>
+	</record>
+
+<!--Tax Reliefs -->
+	<record id="relief1" model="ke.relief.type">
+	   <field name="name">Insurance Relief</field>
+	   <field name="code">INS_RLF</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# relief: this relief(Insurance Relief)
+# Note: returned value have to be set in the variable 'result'
+
+PERCENTAGE = 0.15
+PRESCRIBED_LIMIT = 3000
+COMPUTED_RELIEF = PERCENTAGE * relief.base
+
+###For Insurance relief, the lesser of the 15% of the (actual Insurance premium) and (the prescribed limit of 3000)  shall be deducted from PAYE####
+result = min(PRESCRIBED_LIMIT, COMPUTED_RELIEF)
+	   </field>
+	</record>
+        <!-- Default Salary Structure -->
+
+         <record id="structure_standard" model="hr.payroll.structure">
+            <field name="code">DEFAULT</field>
+            <field name="name">Standard Salary Structure</field>
+            <field eval="[(6, 0, [ref('ke_rule1'), ref('ke_rule2'),ref('ke_rule3'),ref('ke_rule16'), ref('ke_rule17'), ref('ke_rule18'),ref('ke_rule19'), 
+		ref('ke_rule20'), ref('ke_rule21'),ref('ke_rule22'),])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+	    <field name="parent_id"></field>
+        </record>
     </data>
 </openerp>
