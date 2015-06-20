@@ -9,7 +9,9 @@ class account_journal(osv.osv):
     _inherit = 'account.journal'
     _columns = {
         'journal_user': fields.boolean('PoS Payment Method', help="Check this box if this journal define a payment method that can be used in point of sales."),
-
+        'pos_image': fields.binary(
+            'PoS Image', help="This field holds the image used in the"
+            " PoS Front End UI."),
         'amount_authorized_diff' : fields.float('Amount Authorized Difference', help="This field depicts the maximum difference allowed between the ending balance and the theorical cash when closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at the closing of his session saying that he needs to contact his manager."),
     }
 

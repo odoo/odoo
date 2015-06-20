@@ -563,8 +563,13 @@
     <t t-name="PaymentScreen-Paymentmethods">
         <div class='paymentmethods'>
             <t t-foreach="widget.pos.cashregisters" t-as="cashregister">
-                <div class="button paymentmethod" t-att-data-id="cashregister.journal_id[0]">
-                    <t t-esc="cashregister.journal_id[1]" />
+                <div class="button paymentmethod" t-att-data-id="cashregister.journal.id">
+                    <t t-if="cashregister.journal.pos_image">
+                        <span class="cashregister-img">
+                            <img t-att-src='widget.journal_icon_url(cashregister.journal.id)' />
+                        </span>
+                    </t>
+                    <t t-esc="cashregister.journal.display_name" />
                 </div>
             </t>
         </div>
