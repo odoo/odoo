@@ -12,7 +12,7 @@
     'author': "Optima ICT Services LTD",
     'website': "http://optima.co.ke",
     'price': 5,
-    'currency': 'USD',
+    'currency': 'EUR',
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
