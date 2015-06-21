@@ -25,8 +25,7 @@ import time
 from _common import ceiling
 
 
-from openerp import SUPERUSER_ID
-from openerp import tools
+from openerp import api, tools, SUPERUSER_ID
 from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -235,19 +234,17 @@ class product_ul(osv.osv):
 #----------------------------------------------------------
 class product_category(osv.osv):
 
-    def name_get(self, cr, uid, ids, context=None):
-        if isinstance(ids, (list, tuple)) and not len(ids):
-            return []
-        if isinstance(ids, (long, int)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
-        return res
+    @api.multi
+    def name_get(self):
+        def get_names(cat):
+            """ Return the list [cat.name, cat.parent_id.name, ...] """
+            res = []
+            while cat:
+                res.append(cat.name)
+                cat = cat.parent_id
+            return res
+
+        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
