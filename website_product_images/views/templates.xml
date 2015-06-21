@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<template id="optima_assets_frontend" inherit_id="website.assets_frontend" name="optima_shop">
+  <xpath expr="." position="inside">
+      <link rel='stylesheet' href='/website_product_images/static/src/css/optima_website.css'/>
+      <script type="text/javascript" src="/website_product_images/static/src/js/jquery.elevatezoom.js"></script>
+      <script>
+        $('.optima_product_image').elevateZoom({
+          gallery: "optima_thumb",
+          galleryActiveClass: "active",
+          cursor: "crosshair",
+          zoomWindowFadeIn: 500,
+          zoomWindowFadeOut: 750
+        });
+        //pass the images to box
+        $(".optima_thumb_small").bind("click", function(e) {
+          $('.optima_product_image').attr("src", $(".active img").attr("src"));
+        $('.optima_product_image').elevateZoom({ gallery: "optima_thumb", galleryActiveClass: "active", cursor: "crosshair", zoomWindowFadeIn: 500, zoomWindowFadeOut: 750 });
+          return false;
+        });
+      </script>
+  </xpath>
+</template>
+
+<template id="optima_product_images" inherit_id="website_sale.product" name="Optima Product Images">
+  <xpath expr="//div[@class='col-sm-7 col-md-7 col-lg-7']" position="inside">
+        <div  id="optima_thumb">
+        <t t-if="product.image">
+         <a href="#" itemprop="image" class="optima_thumb_small" t-field="product.image" t-field-options='{"widget": "image", "class": "optima_thumbnail"}'/>
+        </t><t t-if="product.image2">
+         <a href="#" itemprop="image" t-field="product.image2" class="optima_thumb_small" t-field-options='{"widget": "image", "class": "optima_thumbnail"}'/>
+        </t><t t-if="product.image3">
+         <a href="#" itemprop="image" t-field="product.image3" class="optima_thumb_small" t-field-options='{"widget": "image", "class": "optima_thumbnail"}'/>
+        </t>
+       </div>
+  </xpath>
+  <xpath expr="//div[@class='col-sm-7 col-md-7 col-lg-7']/span[@t-field='product.image']" position="replace">
+     <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "optima_product_image"}'/>
+  </xpath>
+  <xpath expr="//div[@class='col-sm-7 col-md-7 col-lg-7']/span[@t-field='product.image']" position="before">
+      <t t-foreach="product.website_style_ids" t-as="styl">
+     <div t-att-id="styl.shape.css" t-attf-style="background:##{styl.bg_color};
+            color:##{styl.bg_color}; 
+            width:#{styl.width}px; 
+            height:#{styl.height}px; 
+            position: absolute !important;
+            top: #{styl.top}%;
+            left: #{styl.left}%;
+            ">
+       <div id="optima_promo_text" t-attf-style="color:##{styl.text_color}; font-size: #{styl.font_size}px; top: #{styl.text_top}px;"> <p><t t-esc="styl.msg"/></p></div>
+     </div>
+   </t>
+  </xpath>
+</template>
+    </data>
+</openerp>
