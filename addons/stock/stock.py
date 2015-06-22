@@ -2240,6 +2240,10 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
+            rounding = move.product_id.uom_id.rounding
+            if move.location_dest_id.usage in ('customer')\
+                and float_compare(move.product_qty, move.availability, precision_rounding=rounding) == 1:
+                    continue
             if move.location_id.usage in ('supplier', 'inventory', 'production'):
                 to_assign_moves.append(move.id)
                 #in case the move is returned, we want to try to find quants before forcing the assignment
