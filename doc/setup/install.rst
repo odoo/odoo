@@ -164,7 +164,7 @@ RPM
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
-    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/8.0/nightly/rpm/odoo.repo
+    $ sudo yum config-manager --add-repo=https://nightly.odoo.com/8.0/nightly/rpm/odoo.repo
     $ sudo yum install -y odoo
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
