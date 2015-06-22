@@ -66,7 +66,9 @@
     <t t-jquery="t[t-foreach*='paymentlines'][t-as*='line']" t-operation="append">
       <tr>
         <td colspan="2">
-          &amp;nbsp;&amp;nbsp;APPROVAL CODE: <t t-esc="line.mercury_auth_code"/>
+          <t t-if="line.mercury_data">
+            &amp;nbsp;&amp;nbsp;APPROVAL CODE: <t t-esc="line.mercury_auth_code"/>
+          </t>
         </td>
       </tr>
     </t>
