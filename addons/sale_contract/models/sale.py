@@ -3,6 +3,8 @@ from dateutil.relativedelta import relativedelta
 import datetime
 
 from openerp import models, fields, api
+from openerp.addons.analytic.models import analytic
+from openerp.exceptions import RedirectWarning
 from openerp.tools.translate import _
 
 
@@ -47,6 +49,21 @@ class sale_order(models.Model):
             invoice_vals['comment'] = _("This invoice covers the following period: %s - %s") % (previous_date.date(), (next_date - relativedelta(days=1)).date())
 
         return invoice_vals
+
+    @api.model
+    def test_no_product(self, order):
+        contract_state = dict(analytic.ANALYTIC_ACCOUNT_STATE)
+        if order.project_id and order.project_id.state in ['close', 'cancelled', 'pending']:
+            action = self.env.ref('analytic.action_account_analytic_account_form').read(
+                ['name', 'type', 'view_type', 'view_mode', 'res_model', 'views', 'view_id', 'domain'])[0]
+            form_view = self.env.ref('analytic.view_account_analytic_account_form').id
+            action['name'] = _('Contract')
+            action['domain'] = [('id', '=', order.project_id.id)]
+            action['views'] = [(form_view or False, 'form'), (False, 'tree')]
+            action['res_id'] = order.project_id.id
+            msg = _('''The status of the "%s" contract is  "%s" state, please renew it before confirming the quotation.\n''') % (order.project_id.complete_name, contract_state[order.project_id.state])
+            raise RedirectWarning(msg, action, _('Modify Contract'))
+        return super(sale_order, self).test_no_product(order)
 
 
 class sale_order_line(models.Model):

@@ -6,6 +6,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
+import openerp.tools
 
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
@@ -57,6 +58,35 @@ class account_analytic_account(osv.osv):
 
     def set_pending(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'pending'}, context=context)
+
+    def _check_analytic_account_state(self, cr, uid, analytic_account, context=None):
+        accounts = set(analytic_account.filtered(lambda r: r.state in ('pending', 'cancelled', 'close')))
+        account_name_list = [account.complete_name for account in accounts]
+
+        if accounts:
+            act_window = self.pool['ir.actions.act_window']
+            ir_model_data = self.pool['ir.model.data']
+            action_id = ir_model_data.xmlid_to_res_id(cr, uid, 'analytic.action_account_analytic_account_form')
+            action = act_window.read(cr, uid, action_id, [
+                'name', 'type', 'view_type', 'view_mode', 'res_model', 'views', 'view_id', 'domain'])
+            account_analytic_ids = [account.id for account in accounts]
+            action['domain'] = [('id', 'in', account_analytic_ids)]
+
+            if len(account_analytic_ids) == 1:
+                form_view = ir_model_data.xmlid_to_res_id(cr, uid, 'analytic.view_account_analytic_account_form')
+                action['views'] = [(form_view or False, 'form'), (False, 'list')]
+                action['res_id'] = account_analytic_ids[0]
+                button_string = _('Modify Contract')
+                msg = _('''The status of the "%s" contract is "%s" state.\nYou should not work on this account !\n please renew it.\n''') \
+                    % (list(account_name_list)[0], list(accounts)[0].state)
+            else:
+                tree_view = ir_model_data.xmlid_to_res_id(cr, uid, 'analytic.view_account_analytic_account_tree')
+                action['views'] = [(tree_view or False, 'list'), (False, 'form')]
+                button_string = _('Modify Contract(s)')
+                msg = _('''Analytic Account(s) mentioned below %s in "Closed/Cancelled/To Renew" state, please renew %s before Approve :\n%s.''') \
+                    % (len(account_analytic_ids) > 1 and 'are' or 'is', len(account_analytic_ids) > 1 and 'them' or 'it', '-' + '\n- '.join(account_name_list))
+            raise openerp.exceptions.RedirectWarning(msg, action, button_string)
+        return True
 
 
 class account_analytic_line(osv.osv):
@@ -303,8 +333,6 @@ class account_analytic_line(osv.osv):
                     'title': _('Warning'),
                     'message': _('The analytic account is in pending state.\nYou should not work on this account !')
                 }
-            elif acc.state == 'close' or acc.state == 'cancelled':
-                raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
         return res
 
 
