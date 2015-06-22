@@ -470,6 +470,24 @@ class product_template(osv.osv):
             res[product.id] = len(product.product_variant_ids)
         return res
 
+    def _compute_product_template_field(self, cr, uid, ids, names, arg, context=None):
+        ''' Compute the field from the product_variant if there is only one variant, otherwise returns 0.0 '''
+        res = {id: {} for id in ids}
+        templates = self.browse(cr, uid, ids, context=context)
+        unique_templates = [template.id for template in templates if template.product_variant_count == 1]
+        for template in templates:
+            for name in names:
+                res[template.id][name] = getattr(template.product_variant_ids[0], name) if template.id in unique_templates else 0.0
+        return res     
+
+    def _set_product_template_field(self, cr, uid, product_tmpl_id, name, value, args, context=None):
+        ''' Set the standard price modification on the variant if there is only one variant '''
+        template = self.pool['product.template'].browse(cr, uid, product_tmpl_id, context=context)
+        if template.product_variant_count == 1:
+            variant = self.pool['product.product'].browse(cr, uid, template.product_variant_ids.id, context=context)
+            return variant.write({name: value})
+        return {}        
+
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
         'sequence': fields.integer('Sequence', help='Gives the sequence order when displaying a product list'),
@@ -488,13 +506,12 @@ class product_template(osv.osv):
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
+        'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Cost Price', digits_compute=dp.get_precision('Product Price'), 
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
-                                               "Expressed in the default unit of measure of the product.",
-                                          string="Cost Price"),
-        'volume': fields.float('Volume', help="Volume is the amount of space that an item you are measuring takes up."),
-        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The total weight, including contents, packaging, etc."),
-        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents, not including any packaging, etc."),
+                                                "Expressed in the default unit of measure of the product..", groups="base.group_user", store=True),
+        'volume': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Volume', help="The volume in m3.", store=True),
+        'weight': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg.", store=True),
+        'weight_net': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg.", store=True),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
@@ -622,7 +639,6 @@ class product_template(osv.osv):
     def create_variant_ids(self, cr, uid, ids, context=None):
         product_obj = self.pool.get("product.product")
         ctx = context and context.copy() or {}
-
         if ctx.get("create_product_variant"):
             return None
 
@@ -703,6 +719,14 @@ class product_template(osv.osv):
             related_vals['barcode'] = vals['barcode']
         if vals.get('default_code'):
             related_vals['default_code'] = vals['default_code']
+        if vals.get('standard_price'):
+            related_vals['standard_price'] = vals['standard_price']
+        if vals.get('volume'):
+            related_vals['volume'] = vals['volume']
+        if vals.get('weight'):
+            related_vals['weight'] = vals['weight']
+        if vals.get('weight_net'):
+            related_vals['weight_net'] = vals['weight_net']
         if related_vals:
             self.write(cr, uid, product_template_id, related_vals, context=context)
 
@@ -819,6 +843,16 @@ class product_product(osv.osv):
             res.setdefault(id, 0.0)
         return res
 
+    def open_product_template(self, cr, uid, ids, context=None):
+        """ Utility method used to add an "Open Template" button in product views """
+        product_product = self.browse(cr, uid, ids[0], context=context)
+        return {'type': 'ir.actions.act_window',
+                'res_model': 'product.template',
+                'view_mode': 'form',
+                'res_id': product_product.product_tmpl_id.id,
+                'target': 'current',
+                'flags': {'form': {'action_buttons': True}}}
+
     def view_header_get(self, cr, uid, view_id, view_type, context=None):
         if context is None:
             context = {}
@@ -929,9 +963,8 @@ class product_product(osv.osv):
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
-        'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True, ondelete='restrict'),
+        'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', ondelete='restrict'),
         'is_product_variant': fields.function( _is_product_variant_impl, type='boolean', string='Is a product variant'),
-
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image",
             help="This field holds the image used as image for the product variant, limited to 1024x1024px."),
@@ -946,6 +979,13 @@ class product_product(osv.osv):
         'image_medium': fields.function(_get_image_variant, fnct_inv=_set_image_variant,
             string="Medium-sized image", type="binary",
             help="Image of the product variant (Medium-sized image of product template if false)."),
+        'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
+                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
+                                               "Expressed in the default unit of measure of the product.",
+                                          groups="base.group_user", string="Cost Price"),
+        'volume': fields.float('Volume', help="The volume in m3."),
+        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
+        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
     }
 
     _defaults = {

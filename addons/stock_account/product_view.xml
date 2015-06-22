@@ -27,8 +27,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='standard_price']" position="replace">
                     <field name="cost_method" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}"/>
-                    <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
-                    <div groups="base.group_user">
+                    <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user" attrs="{'invisible':[('product_variant_count','>',1)]}"/>
+                    <div groups="base.group_user" attrs="{'invisible':[('product_variant_count','>',1)]}">
                         <field name="standard_price" attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" class="oe_inline" nolabel="1"/>
                         <label string="/" class="oe_inline" groups="product.group_uom"/>
                         <field name="uom_rel_id" class="oe_inline" groups="product.group_uom"/>
