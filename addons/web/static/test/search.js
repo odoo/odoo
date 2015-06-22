@@ -1421,7 +1421,7 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
         assert.expect(6);
         var view = makeSearchView(this, undefined, undefined, {action: {id: 1}});
         mock.add('ir.filters:get_filters', function () {
-            return [{ name: "filter name", user_id: 42 }];
+            return [{ name: "filter name", user_id: 42, sort: null }];
         });
 
         var $fix = $('#qunit-fixture');
@@ -1447,7 +1447,7 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
         assert.expect(1);
         var view = makeSearchView(this);
         mock.add('ir.filters:get_filters', function () {
-            return [{ name: "filter name", user_id: 42 }];
+            return [{ name: "filter name", user_id: 42, sort: null }];
         });
 
         var $fix = $('#qunit-fixture');
@@ -1465,7 +1465,7 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
         assert.expect(2);
         var view = makeSearchView(this, undefined, undefined, {action: {id: 1}});
         mock.add('ir.filters:get_filters', function () {
-            return [{name: 'filter name', user_id: 42, id: 1}];
+            return [{name: 'filter name', user_id: 42, id: 1, sort: null}];
         });
 
         var $fix = $('#qunit-fixture');
@@ -1484,8 +1484,8 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
         var view = makeSearchView(this, undefined, undefined, {action: {id: 1}});
         mock.add('ir.filters:get_filters', function () {
             return [
-                {name: 'f', user_id: 42, id: 1, context: {'private': 1}},
-                {name: 'f', user_id: false, id: 2, context: {'private': 0}}
+                {name: 'f', user_id: 42, id: 1, context: {'private': 1}, sort: null},
+                {name: 'f', user_id: false, id: 2, context: {'private': 0}, sort: null}
             ];
         });
         var $fix = $('#qunit-fixture');
