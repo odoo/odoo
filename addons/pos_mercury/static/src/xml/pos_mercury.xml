@@ -38,6 +38,16 @@
     </t>
   </t>
 
+  <t t-name="PosMercurySignature">
+    <br />
+    <div>CARDHOLDER WILL PAY CARD ISSUER</div>
+    <div>ABOVE AMOUNT PURSUANT</div>
+    <div>TO CARDHOLDER AGREEMENT</div>
+    <br />
+    <br />
+    <div>X______________________________</div>
+  </t>
+
   <t t-extend="XmlReceipt">
     <t t-jquery="t[t-foreach*='paymentlines'][t-as*='line']" t-operation="append">
       <t t-debug="true"/>
@@ -46,14 +56,23 @@
       </line>
     </t>
     <t t-jquery="receipt" t-operation="append">
-      <br />
       <div>
-        <div>CARDHOLDER WILL PAY CARD ISSUER</div>
-        <div>ABOVE AMOUNT PURSUANT</div>
-        <div>TO CARDHOLDER AGREEMENT</div>
-        <br />
-        <br />
-        <div>X______________________________</div>
+        <t t-call="PosMercurySignature"/>
+      </div>
+    </t>
+  </t>
+
+  <t t-extend="PosTicket">
+    <t t-jquery="t[t-foreach*='paymentlines'][t-as*='line']" t-operation="append">
+      <tr>
+        <td colspan="2">
+          &amp;nbsp;&amp;nbsp;APPROVAL CODE: <t t-esc="line.mercury_auth_code"/>
+        </td>
+      </tr>
+    </t>
+    <t t-jquery="t[t-if*='receipt.footer']" t-operation="after">
+      <div class="pos-center-align">
+        <t t-call="PosMercurySignature"/>
       </div>
     </t>
   </t>
