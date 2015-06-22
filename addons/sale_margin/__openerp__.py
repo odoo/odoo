@@ -13,9 +13,9 @@ Price and Cost Price.
     """,
     'author':'OpenERP SA',
     'depends':['sale'],
-    'demo':['sale_margin_demo.xml'],
+    'demo':['data/sale_order_demo.xml'],
     'test': ['test/sale_margin.yml'],
-    'data':['security/ir.model.access.csv','sale_margin_view.xml'],
+    'data':['security/ir.model.access.csv','views/inherited_sale_order_views.xml'],
     'auto_install': False,
     'installable': True,
 }
