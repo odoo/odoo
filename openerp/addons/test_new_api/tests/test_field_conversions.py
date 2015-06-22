@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import unittest2
+import unittest
 from openerp import models, fields
 
-class TestFieldToColumn(unittest2.TestCase):
+class TestFieldToColumn(unittest.TestCase):
     def test_char(self):
         # create a field, initialize its attributes, and convert it to a column
         field = fields.Char(string="test string", required=True)

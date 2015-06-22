@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import unittest2
+import unittest
 
 import test_term_count
 

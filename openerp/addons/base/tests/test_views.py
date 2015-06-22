@@ -2,7 +2,7 @@
 from functools import partial
 import itertools
 
-import unittest2
+import unittest
 
 from lxml import etree as ET
 from lxml.builder import E

@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-import unittest2
+import unittest
 from openerp.tests.common import TransactionCase
 
 from .. import models

@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import openerp.tests.common as common
 
@@ -104,4 +104,4 @@ class test_ir_values(common.TransactionCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

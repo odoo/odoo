@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 from lxml import etree
 
 import openerp
@@ -118,6 +118,6 @@ class TestACL(common.TransactionCase):
         self.assertEqual(cm.exception.args[0], 'AccessError')
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
