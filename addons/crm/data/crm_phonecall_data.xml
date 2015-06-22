@@ -1,17 +1,17 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 <data noupdate="1">
     <!--
     Phonecall Categories
     -->
-    <record model="crm.phonecall.category" id="categ_phone1">
+    <record id="categ_phone1" model="crm.phonecall.category">
         <field name="name">Inbound</field>
         <field name="team_id" ref="sales_team.team_sales_department"/>
     </record>
-    <record model="crm.phonecall.category" id="categ_phone2">
+    <record id="categ_phone2" model="crm.phonecall.category">
         <field name="name">Outbound</field>
         <field name="team_id" ref="sales_team.team_sales_department"/>
     </record>
 
 </data>
-</openerp>
+</odoo>

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Top menu item -->
         <!--
             This menu item's purpose is to overwrite another one defined in
             the base module in order to set new groups.
         -->
-        <menuitem name="Sales"
-            id="base.menu_base_partner"
+        <menuitem id="base.menu_base_partner" name="Sales"
             groups="base.group_sale_manager,base.group_sale_salesman"
             web_icon="crm,static/description/icon.png"
             sequence="6"/>
@@ -53,11 +51,11 @@
             </field>
         </record>
 
-        <menuitem action="crm_lost_reason_action" id="menu_crm_lost_reason" parent="base.menu_crm_config_lead" sequence="6" groups="base.group_no_one"/>
+        <menuitem id="menu_crm_lost_reason" action="crm_lost_reason_action" parent="base.menu_crm_config_lead" sequence="6" groups="base.group_no_one"/>
 
         
         <!-- CRM STAGE VIEWS -->
-        <record model="ir.ui.view" id="crm_stage_tree">
+        <record id="crm_stage_tree" model="ir.ui.view">
             <field name="name">crm.stage.tree</field>
             <field name="model">crm.stage</field>
             <field name="arch" type="xml">
@@ -70,7 +68,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="crm_stage_form">
+        <record id="crm_stage_form" model="ir.ui.view">
             <field name="name">crm.stage.form</field>
             <field name="model">crm.stage</field>
             <field name="priority" eval="1"/>
@@ -111,5 +109,4 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_stage_tree"/>
         </record>
-    </data>
-</openerp>
+</odoo>

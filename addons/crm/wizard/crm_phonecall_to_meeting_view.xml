@@ -1,11 +1,10 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
             
         <!-- Phonecall to meeting view -->
 
-        <record model="ir.ui.view" id="phonecall2phonecall2meeting_view">
+        <record id="phonecall2phonecall2meeting_view" model="ir.ui.view">
             <field name="name">crm.phonecall2meeting.form</field>
             <field name="model">crm.phonecall2meeting</field>
             <field name="arch" type="xml">
@@ -23,7 +22,7 @@
 
         <!-- Phonecall to meeting action -->
 
-        <record model="ir.actions.act_window" id="phonecall2meeting_act">
+        <record id="phonecall2meeting_act" model="ir.actions.act_window">
             <field name="name">Convert To Meeting</field>
             <field name="res_model">crm.phonecall2meeting</field>
             <field name="view_type">form</field>
@@ -32,5 +31,4 @@
             <field name="target">new</field>
         </record>
 
-    </data>
-</openerp>   
+</odoo>

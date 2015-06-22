@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         
         <record id="base.user_demo" model="res.users">
@@ -10,13 +10,13 @@
             <field name="member_ids" eval="[(4, ref('base.user_demo'))]"/>
         </record>
 
-        <record model="crm.team" id="sales_team.crm_team_1">
+        <record id="sales_team.crm_team_1" model="crm.team">
             <field name="name">Indirect Sales</field>
             <field name="code">IM</field>
             <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
         </record>
 
-        <record model="crm.team" id="sales_team.crm_team_2">
+        <record id="sales_team.crm_team_2" model="crm.team">
             <field name="name">Marketing</field>
             <field name="code">SPD</field>
             <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
@@ -24,4 +24,4 @@
 
   
     </data>
-</openerp>
+</odoo>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from openerp import api, fields, models
 from openerp.http import request
 
 AVAILABLE_PRIORITIES = [
@@ -11,7 +11,7 @@ AVAILABLE_PRIORITIES = [
     ('3', 'Very High'),
 ]
 
-class crm_stage(osv.Model):
+class CrmStage(models.Model):
     """ Model for case stages. This models the main stages of a document
         management flow. Main CRM objects (leads, opportunities, project
         issues, ...) will now use only stages, instead of state and stages.
@@ -22,31 +22,20 @@ class crm_stage(osv.Model):
     _rec_name = 'name'
     _order = "sequence"
 
-    _columns = {
-        'name': fields.char('Stage Name', required=True, translate=True),
-        'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
-        'probability': fields.float('Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success"),
-        'on_change': fields.boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity."),
-        'requirements': fields.text('Requirements'),
-        'team_ids': fields.many2many('crm.team', 'crm_team_stage_rel', 'stage_id', 'team_id', string='Teams',
-                        help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
-        'case_default': fields.boolean('Default to New Sales Team',
-                        help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'legend_priority': fields.text(
-            'Priority Management Explanation', translate=True,
-            help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.'),
-        'fold': fields.boolean('Folded in Kanban View',
-                               help='This stage is folded in the kanban view when'
-                               'there are no records in that stage to display.'),
-        'type': fields.selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ('both', 'Both')],
-                                 string='Type', required=True,
-                                 help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types."),
-    }
-
-    _defaults = {
-        'sequence': 1,
-        'probability': 1.0,
-        'fold': False,
-        'type': 'both',
-        'case_default': True,
-    }
+    name = fields.Char(string='Stage Name', required=True, translate=True)
+    sequence = fields.Integer(help="Used to order stages. Lower is better.", default=1)
+    probability = fields.Float(string='Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success", default=1.0)
+    on_change = fields.Boolean(string='Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity.")
+    requirements = fields.Text('Requirements')
+    team_ids = fields.Many2many('crm.team', 'crm_team_stage_rel', 'stage_id', 'team_id', string='Teams',
+                    help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams.")
+    case_default = fields.Boolean(string='Default to New Sales Team',
+                    help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams.", default=True)
+    legend_priority = fields.Text(string='Priority Management Explanation', translate=True,
+        help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
+    fold = fields.Boolean(string='Folded in Kanban View',
+                           help='This stage is folded in the kanban view when'
+                           'there are no records in that stage to display.')
+    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ('both', 'Both')],
+                             required=True,
+                             help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types.", default='both', oldname="type", string="Stage Type")

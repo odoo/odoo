@@ -1,10 +1,9 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     
     <!-- Phonecall to Phonecall view -->
     
-        <record model="ir.ui.view" id="phonecall_to_phonecall_view">
+        <record id="phonecall_to_phonecall_view" model="ir.ui.view">
             <field name="name">crm.phonecall2phonecall.form</field>
             <field name="model">crm.phonecall2phonecall</field>
             <field name="arch" type="xml">
@@ -29,7 +28,7 @@
 
 <!-- Phonecall to Phonecall action -->
 
-        <record model="ir.actions.act_window" id="phonecall_to_phonecall_act">
+        <record id="phonecall_to_phonecall_act" model="ir.actions.act_window">
             <field name="name">Schedule Other Call</field>
             <field name="res_model">crm.phonecall2phonecall</field>
             <field name="view_type">form</field>
@@ -38,5 +37,4 @@
             <field name="target">new</field>
         </record>
 
-    </data>
-</openerp>   
+</odoo>   

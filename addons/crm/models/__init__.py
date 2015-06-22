@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import calendar_event
 import crm
 import crm_lead

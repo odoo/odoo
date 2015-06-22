@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data noupdate="1">
 
         <!-- Crm stages -->
-        <record model="crm.stage" id="stage_lead1">
+        <record id="stage_lead1" model="crm.stage">
             <field name="name">New</field>
             <field name="case_default">1</field>
             <field name="probability">0</field>
@@ -11,7 +11,7 @@
             <field name="sequence">1</field>
             <field name="type">both</field>
         </record>
-        <record model="crm.stage" id="stage_lead2">
+        <record id="stage_lead2" model="crm.stage">
             <field name="name">Dead</field>
             <field name="case_default">1</field>
             <field name="fold">1</field>
@@ -20,7 +20,7 @@
             <field name="sequence">30</field>
             <field name="type">lead</field>
         </record>
-        <record model="crm.stage" id="stage_lead3">
+        <record id="stage_lead3" model="crm.stage">
             <field name="name">Qualification</field>
             <field name="case_default">1</field>
             <field name="probability">20</field>
@@ -28,7 +28,7 @@
             <field name="sequence">40</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.stage" id="stage_lead4">
+        <record id="stage_lead4" model="crm.stage">
             <field name="name">Proposition</field>
             <field name="case_default">1</field>
             <field name="probability">40</field>
@@ -36,7 +36,7 @@
             <field name="sequence">50</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.stage" id="stage_lead5">
+        <record id="stage_lead5" model="crm.stage">
             <field name="name">Negotiation</field>
             <field name="case_default">1</field>
             <field name="probability">60</field>
@@ -44,7 +44,7 @@
             <field name="sequence">60</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.stage" id="stage_lead6">
+        <record id="stage_lead6" model="crm.stage">
             <field name="name">Won</field>
             <field name="case_default">1</field>
             <field name="fold">1</field>
@@ -53,7 +53,7 @@
             <field name="sequence">70</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.stage" id="stage_lead7">
+        <record id="stage_lead7" model="crm.stage">
             <field name="name">Lost</field>
             <field name="case_default">1</field>
             <field name="fold">1</field>
@@ -63,7 +63,7 @@
             <field name="type">opportunity</field>
         </record>
         
-        <record model="crm.team" id="sales_team.team_sales_department">
+        <record id="sales_team.team_sales_department" model="crm.team">
             <field name="stage_ids" eval="[ (4, ref('stage_lead1')), (4, ref('stage_lead2')),
                                             (4, ref('stage_lead3')), (4, ref('stage_lead4')),
                                             (4, ref('stage_lead5')), (4, ref('stage_lead6')),
@@ -71,35 +71,35 @@
         </record>
         
         <!--  crm categories -->
-        <record model="crm.lead.tag" id="categ_oppor1">
+        <record id="categ_oppor1" model="crm.lead.tag">
             <field name="name">Product</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor2">
+        <record id="categ_oppor2" model="crm.lead.tag">
             <field name="name">Software</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor3">
+        <record id="categ_oppor3" model="crm.lead.tag">
             <field name="name">Services</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor4">
+        <record id="categ_oppor4" model="crm.lead.tag">
             <field name="name">Information</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor5">
+        <record id="categ_oppor5" model="crm.lead.tag">
             <field name="name">Design</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor6">
+        <record id="categ_oppor6" model="crm.lead.tag">
             <field name="name">Training</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor7">
+        <record id="categ_oppor7" model="crm.lead.tag">
             <field name="name">Consulting</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor8">
+        <record id="categ_oppor8" model="crm.lead.tag">
             <field name="name">Other</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
@@ -189,4 +189,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>
