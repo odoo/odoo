@@ -1,292 +1,215 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import crm
-from datetime import datetime
-from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.translate import _
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
-class crm_phonecall(osv.osv):
+class CrmPhoneCall(models.Model):
     """ Model for CRM phonecalls """
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
     _inherit = ['mail.thread']
-    
-    _columns = {
-        'date_action_last': fields.datetime('Last Action', readonly=1),
-        'date_action_next': fields.datetime('Next Action', readonly=1),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
-                        select=True, help='Sales team to which Case belongs to.'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
-        'partner_id': fields.many2one('res.partner', 'Contact'),
-        'company_id': fields.many2one('res.company', 'Company'),
-        'description': fields.text('Description'),
-        'state': fields.selection(
-            [('open', 'Confirmed'),
-             ('cancel', 'Cancelled'),
-             ('pending', 'Pending'),
-             ('done', 'Held')
-             ], string='Status', readonly=True, track_visibility='onchange',
-            help='The status is set to Confirmed, when a case is created.\n'
-                 'When the call is over, the status is set to Held.\n'
-                 'If the callis not applicable anymore, the status can be set to Cancelled.'),
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
-        'date_open': fields.datetime('Opened', readonly=True),
-        # phonecall fields
-        'name': fields.char('Call Summary', required=True),
-        'active': fields.boolean('Active', required=False),
-        'duration': fields.float('Duration', help='Duration in minutes and seconds.'),
-        'categ_id': fields.many2one('crm.phonecall.category', 'Category'),
-        'partner_phone': fields.char('Phone'),
-        'partner_mobile': fields.char('Mobile'),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'date': fields.datetime('Date'),
-        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
-    }
 
-    def _get_default_state(self, cr, uid, context=None):
-        if context and context.get('default_state'):
-            return context.get('default_state')
+    def _default_get_state(self):
+        state = self.env.context.get('default_state')
+        if state:
+            return state
         return 'open'
 
-    _defaults = {
-        'date': fields.datetime.now,
-        'priority': '1',
-        'state':  _get_default_state,
-        'user_id': lambda self, cr, uid, ctx: uid,
-        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
-        'active': 1
-    }
+    date_action_last = fields.Datetime(string='Last Action', readonly=True)
+    date_action_next = fields.Datetime(string='Next Action', readonly=True)
+    create_date = fields.Datetime(string='Creation Date', readonly=True)
+    team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id',\
+                    index=True, help='Sales team to which Case belongs to.', default=lambda self: self.env['crm.team']._get_default_team_id())
+    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
+    partner_id = fields.Many2one('res.partner', string='Contact')
+    company_id = fields.Many2one('res.company', string='Company')
+    description = fields.Text()
+    state = fields.Selection(
+        [('open', 'Confirmed'),
+         ('cancel', 'Cancelled'),
+         ('pending', 'Pending'),
+         ('done', 'Held')
+         ], string='Status', readonly=True, track_visibility='onchange',
+        help='The status is set to Confirmed, when a case is created.\n'
+             'When the call is over, the status is set to Held.\n'
+             'If the callis not applicable anymore, the status can be set to Cancelled.', default=lambda self: self._default_get_state())
+    email_from = fields.Char(string='Email', size=128, help="These people will receive email.")
+    date_open = fields.Datetime(string='Opened', readonly=True)
+    # phonecall fields
+    name = fields.Char(string='Call Summary', required=True)
+    active = fields.Boolean(required=False, default=True)
+    duration = fields.Float(help='Duration in minutes and seconds.')
+    categ_id = fields.Many2one('crm.phonecall.category', string='Category')
+    partner_phone = fields.Char('Phone')
+    partner_mobile = fields.Char('Mobile')
+    priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], default="1")
+    date_closed = fields.Datetime('Closed', readonly=True)
+    date = fields.Datetime(default=fields.Datetime.now)
+    opportunity_id = fields.Many2one('crm.lead', string='Lead/Opportunity')
 
-    def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
-        values = {}
-        if partner_id:
-            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            values = {
-                'partner_phone': partner.phone,
-                'partner_mobile': partner.mobile,
-            }
-        return {'value': values}
+    @api.onchange('partner_id')
+    def on_change_partner_id(self):
+        self.partner_phone = self.partner_id.phone
+        self.partner_mobile = self.partner_id.mobile
 
-    def write(self, cr, uid, ids, values, context=None):
+    @api.onchange('opportunity_id')
+    def on_change_opportunity(self):
+        if self.opportunity_id:
+            self.team_id = self.opportunity_id.team_id.id
+            self.partner_phone = self.opportunity_id.phone
+            self.partner_mobile = self.opportunity_id.mobile
+            self.partner_id = self.opportunity_id.partner_id.id
+
+    @api.multi
+    def write(self, values):
         """ Override to add case management: open/close dates """
-        if values.get('state'):
-            if values.get('state') == 'done':
-                values['date_closed'] = fields.datetime.now()
-                self.compute_duration(cr, uid, ids, context=context)
-            elif values.get('state') == 'open':
-                values['date_open'] = fields.datetime.now()
+        state = values.get('state')
+        if state:
+            if state == 'done':
+                values['date_closed'] = fields.Datetime.now()
+                self._compute_duration()
+            elif state == 'open':
+                values['date_open'] = fields.Datetime.now()
                 values['duration'] = 0.0
-        return super(crm_phonecall, self).write(cr, uid, ids, values, context=context)
+        return super(CrmPhoneCall, self).write(values)
 
-    def compute_duration(self, cr, uid, ids, context=None):
-        for phonecall in self.browse(cr, uid, ids, context=context):
-            if phonecall.duration <= 0:
-                duration = datetime.now() - datetime.strptime(phonecall.date, DEFAULT_SERVER_DATETIME_FORMAT)
-                values = {'duration': duration.seconds/float(60)}
-                self.write(cr, uid, [phonecall.id], values, context=context)
-        return True
-
-    def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
-                    user_id=False, team_id=False, categ_id=False, action='schedule', context=None):
-        """
-        action :('schedule','Schedule a call'), ('log','Log a call')
-        """
-        model_data = self.pool.get('ir.model.data')
-        phonecall_dict = {}
-        if not categ_id:
-            try:
-                res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
-                categ_id = model_data.browse(cr, uid, res_id, context=context).res_id
-            except ValueError:
-                pass
-        for call in self.browse(cr, uid, ids, context=context):
-            if not team_id:
-                team_id = call.team_id and call.team_id.id or False
-            if not user_id:
-                user_id = call.user_id and call.user_id.id or False
-            if not schedule_time:
-                schedule_time = call.date
-            vals = {
-                    'name' : call_summary,
-                    'user_id' : user_id or False,
-                    'categ_id' : categ_id or False,
-                    'description' : call.description or False,
-                    'date' : schedule_time,
-                    'team_id' : team_id or False,
-                    'partner_id': call.partner_id and call.partner_id.id or False,
-                    'partner_phone' : call.partner_phone,
-                    'partner_mobile' : call.partner_mobile,
-                    'priority': call.priority,
-                    'opportunity_id': call.opportunity_id and call.opportunity_id.id or False,
-            }
-            new_id = self.create(cr, uid, vals, context=context)
-            if action == 'log':
-                self.write(cr, uid, [new_id], {'state': 'done'}, context=context)
-            phonecall_dict[call.id] = new_id
-        return phonecall_dict
-
-    def _call_create_partner(self, cr, uid, phonecall, context=None):
-        partner = self.pool.get('res.partner')
-        partner_id = partner.create(cr, uid, {
-                    'name': phonecall.name,
-                    'user_id': phonecall.user_id.id,
-                    'comment': phonecall.description,
-                    'address': []
-        })
-        return partner_id
-
-    def on_change_opportunity(self, cr, uid, ids, opportunity_id, context=None):
-        values = {}
-        if opportunity_id:
-            opportunity = self.pool.get('crm.lead').browse(cr, uid, opportunity_id, context=context)
-            values = {
-                'team_id' : opportunity.team_id and opportunity.team_id.id or False,
-                'partner_phone' : opportunity.phone,
-                'partner_mobile' : opportunity.mobile,
-                'partner_id' : opportunity.partner_id and opportunity.partner_id.id or False,
-            }
-        return {'value' : values}
-
-    def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
-        write_res = self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
-        self._call_set_partner_send_note(cr, uid, ids, context)
-        return write_res
-
-    def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
-        address = self.pool.get('res.partner')
-        return address.create(cr, uid, {
-                    'parent_id': partner_id,
-                    'name': phonecall.name,
-                    'phone': phonecall.partner_phone,
-        })
-
-    def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
-        """
-        Handle partner assignation during a lead conversion.
-        if action is 'create', create new partner with contact and assign lead to new partner_id.
-        otherwise assign lead to specified partner_id
-
-        :param list ids: phonecalls ids to process
-        :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
-        :param int partner_id: partner to assign if any
-        :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
-        """
-        #TODO this is a duplication of the handle_partner_assignation method of crm_lead
-        partner_ids = {}
-        # If a partner_id is given, force this partner for all elements
-        force_partner_id = partner_id
-        for call in self.browse(cr, uid, ids, context=context):
-            # If the action is set to 'create' and no partner_id is set, create a new one
-            if action == 'create':
-                partner_id = force_partner_id or self._call_create_partner(cr, uid, call, context=context)
-                self._call_create_partner_address(cr, uid, call, partner_id, context=context)
-            self._call_set_partner(cr, uid, [call.id], partner_id, context=context)
-            partner_ids[call.id] = partner_id
-        return partner_ids
-
-
-    def redirect_phonecall_view(self, cr, uid, phonecall_id, context=None):
-        model_data = self.pool.get('ir.model.data')
+    @api.multi
+    def redirect_phonecall_view(self):
         # Select the view
-        tree_view = model_data.get_object_reference(cr, uid, 'crm', 'crm_case_phone_tree_view')
-        form_view = model_data.get_object_reference(cr, uid, 'crm', 'crm_case_phone_form_view')
-        search_view = model_data.get_object_reference(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
+        self.ensure_one()
+        tree_view_id = self.env.ref('crm.crm_case_phone_tree_view').id
+        form_view_id = self.env.ref('crm.crm_case_phone_form_view').id
+        search_view_id = self.env.ref('crm.view_crm_case_phonecalls_filter').id
         value = {
-                'name': _('Phone Call'),
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'crm.phonecall',
-                'res_id' : int(phonecall_id),
-                'views': [(form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree'), (False, 'calendar')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
+            'name': _('Phone Call'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'crm.phonecall',
+            'res_id': self.id,
+            'views': [(form_view_id, 'form'), (tree_view_id, 'tree'), (False, 'calendar')],
+            'type': 'ir.actions.act_window',
+            'search_view_id': search_view_id,
         }
         return value
 
-    def convert_opportunity(self, cr, uid, ids, opportunity_summary=False, partner_id=False, planned_revenue=0.0, probability=0.0, context=None):
-        partner = self.pool.get('res.partner')
-        opportunity = self.pool.get('crm.lead')
-        opportunity_dict = {}
-        default_contact = False
-        for call in self.browse(cr, uid, ids, context=context):
-            if not partner_id:
-                partner_id = call.partner_id and call.partner_id.id or False
-            if partner_id:
-                address_id = partner.address_get(cr, uid, [partner_id])['default']
-                if address_id:
-                    default_contact = partner.browse(cr, uid, address_id, context=context)
-            opportunity_id = opportunity.create(cr, uid, {
-                            'name': opportunity_summary or call.name,
-                            'planned_revenue': planned_revenue,
-                            'probability': probability,
-                            'partner_id': partner_id or False,
-                            'mobile': default_contact and default_contact.mobile,
-                            'team_id': call.team_id and call.team_id.id or False,
-                            'description': call.description or False,
-                            'priority': call.priority,
-                            'type': 'opportunity',
-                            'phone': call.partner_phone or False,
-                            'email_from': default_contact and default_contact.email,
-                        })
-            vals = {
-                'partner_id': partner_id,
-                'opportunity_id': opportunity_id,
-                'state': 'done',
-            }
-            self.write(cr, uid, [call.id], vals, context=context)
-            opportunity_dict[call.id] = opportunity_id
-        return opportunity_dict
-
-    def action_make_meeting(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_make_meeting(self):
         """
         Open meeting's calendar view to schedule a meeting on current phonecall.
         :return dict: dictionary value for created meeting view
         """
+        self.ensure_one()
         partner_ids = []
-        phonecall = self.browse(cr, uid, ids[0], context)
-        if phonecall.partner_id and phonecall.partner_id.email:
-            partner_ids.append(phonecall.partner_id.id)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
-        res['context'] = {
-            'default_phonecall_id': phonecall.id,
+        if self.partner_id.email:
+            partner_ids.append(self.partner_id.id)
+        result = self.env['ir.actions.act_window'].for_xml_id(
+            'calendar', 'action_calendar_event')
+        result['context'] = {
+            'default_phonecall_id': self.id,
             'default_partner_ids': partner_ids,
-            'default_user_id': uid,
-            'default_email_from': phonecall.email_from,
-            'default_name': phonecall.name,
-            'default_opportunity_id': phonecall.opportunity_id.id,
+            'default_user_id': self.env.uid,
+            'default_email_from': self.email_from,
+            'default_name': self.name,
+            'default_opportunity_id': self.opportunity_id.id,
         }
-        return res
+        return result
 
-    def action_button_convert2opportunity(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_button_convert2opportunity(self):
         """
         Convert a phonecall into an opp and then redirect to the opp view.
 
-        :param list ids: list of calls ids to convert (typically contains a single id)
         :return dict: containing view information
         """
-        if len(ids) != 1:
+        if len(self) != 1:
             raise UserError(_('It\'s only possible to convert one phonecall at a time.'))
 
-        opportunity_dict = self.convert_opportunity(cr, uid, ids, context=context)
-        return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, opportunity_dict[ids[0]], context)
+        opportunity_dict = self.convert_opportunity()
+        return opportunity_dict.values()[0].redirect_opportunity_view()
 
-    # ----------------------------------------
-    # OpenChatter
-    # ----------------------------------------
+    @api.multi
+    def schedule_another_phonecall(self, schedule_time, call_summary, user_id=False, team_id=False, categ_id=False, action='schedule'):
+        """
+        action :('schedule','Schedule a call'), ('log','Log a call')
+        """
+        phonecall_dict = {}
+        if not categ_id:
+            try:
+                categ_id = self.env.ref('crm.categ_phone2').id
+            except ValueError:
+                pass
+        for call in self:
+            if not team_id:
+                team_id = call.team_id.id
+            if not user_id:
+                user_id = call.user_id.id
+            if not schedule_time:
+                schedule_time = call.date
+            vals = {
+                    'name': call_summary,
+                    'user_id': user_id,
+                    'categ_id': categ_id,
+                    'description': call.description,
+                    'date': schedule_time,
+                    'team_id': team_id,
+                    'partner_id': call.partner_id.id,
+                    'partner_phone': call.partner_phone,
+                    'partner_mobile': call.partner_mobile,
+                    'priority': call.priority,
+                    'opportunity_id': call.opportunity_id.id,
+            }
+            phonecall = self.create(vals)
+            if action == 'log':
+                phonecall.write({'state': 'done'})
+            phonecall_dict[call.id] = phonecall
+        return phonecall_dict
 
-    def _call_set_partner_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Partner has been <b>created</b>."), context=context)
+    def convert_opportunity(self, opportunity_summary=False, partner_id=False, planned_revenue=0.0, probability=0.0):
+        Partner = self.env['res.partner']
+        opportunity_dict = {}
+        default_contact = False
+        for call in self:
+            if not partner_id:
+                partner_id = call.partner_id.id
+            if partner_id:
+                address_id = call.partner_id.address_get()['default']
+                if address_id:
+                    default_contact = Partner.browse(address_id)
+            opportunity_id = call.opportunity_id.create({
+                            'name': opportunity_summary or call.name,
+                            'planned_revenue': planned_revenue,
+                            'probability': probability,
+                            'partner_id': partner_id,
+                            'mobile': default_contact and default_contact.mobile or False,
+                            'team_id': call.team_id.id,
+                            'description': call.description,
+                            'priority': call.priority,
+                            'type': 'opportunity',
+                            'phone': call.partner_phone,
+                            'email_from': default_contact and default_contact.email or False
+                            })
+            vals = {
+                'partner_id': partner_id,
+                'opportunity_id': opportunity_id.id,
+                'state': 'done'
+            }
+            call.write(vals)
+            opportunity_dict[call.id] = opportunity_id
+        return opportunity_dict
 
-class crm_phonecall_category(osv.Model):
+    def _compute_duration(self):
+        for phonecall in self:
+            if phonecall.duration <= 0:
+                duration = fields.Datetime.from_string(fields.Datetime.now()) - fields.Datetime.from_string(phonecall.date)
+                values = {'duration': duration.seconds / float(60)}
+                phonecall.write(values)
+        return True
+
+class CrmPhoneCallCategory(models.Model):
     _name = "crm.phonecall.category"
     _description = "Category of phonecall"
-    _columns = {
-        'name': fields.char('Name', required=True, translate=True),
-        'team_id': fields.many2one('crm.team', 'Sales Team'),
-    }
+
+    name = fields.Char(required=True, translate=True)
+    team_id = fields.Many2one('crm.team', string='Sales Team')
