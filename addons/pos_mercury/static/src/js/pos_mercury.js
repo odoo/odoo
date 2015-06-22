@@ -120,6 +120,7 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         this.mercury_ref_no = json.mercury_ref_no;
         this.mercury_record_no = json.mercury_record_no;
         this.mercury_invoice_no = json.mercury_invoice_no;
+        this.mercury_auth_code = json.mercury_auth_code;
         this.mercury_data = json.mercury_data;
         this.mercury_swipe_pending = json.mercury_swipe_pending;
 
@@ -133,6 +134,7 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
                                                                               mercury_ref_no: this.mercury_ref_no,
                                                                               mercury_record_no: this.mercury_record_no,
                                                                               mercury_invoice_no: this.mercury_invoice_no,
+                                                                              mercury_auth_code: this.mercury_auth_code,
                                                                               mercury_data: this.mercury_data,
                                                                               mercury_swipe_pending: this.mercury_swipe_pending});
     },
@@ -443,6 +445,7 @@ PaymentScreenWidget.include({
                     order.selected_paymentline.mercury_ref_no = response.ref_no;
                     order.selected_paymentline.mercury_record_no = response.record_no;
                     order.selected_paymentline.mercury_invoice_no = response.invoice_no;
+                    order.selected_paymentline.mercury_auth_code = response.auth_code;
                     order.selected_paymentline.mercury_data = response; // used to reverse transactions
                     order.selected_paymentline.set_credit_card_name();
 

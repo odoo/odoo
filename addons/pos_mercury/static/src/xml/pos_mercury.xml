@@ -9,6 +9,7 @@
       </div>
     </div>
   </t>
+
   <t t-extend="PaymentScreen-Paymentlines">
     <t t-jquery=".col-name" t-operation="inner">
       <t t-if="line.cashregister.journal.type === 'bank'">
@@ -34,6 +35,26 @@
     <t t-jquery=".col-tendered.edit">
       this.removeAttr("class");
       this.attr('t-attf-class', 'col-tendered edit #{line.mercury_swipe_pending ? "o_pos_mercury_swipe_pending" : ""}');
+    </t>
+  </t>
+
+  <t t-extend="XmlReceipt">
+    <t t-jquery="t[t-foreach*='paymentlines'][t-as*='line']" t-operation="append">
+      <t t-debug="true"/>
+      <line line-ratio="1">
+        <left><pre>  APPROVAL CODE:</pre><t t-esc="line.mercury_auth_code"/></left>
+      </line>
+    </t>
+    <t t-jquery="receipt" t-operation="append">
+      <br />
+      <div>
+        <div>CARDHOLDER WILL PAY CARD ISSUER</div>
+        <div>ABOVE AMOUNT PURSUANT</div>
+        <div>TO CARDHOLDER AGREEMENT</div>
+        <br />
+        <br />
+        <div>X______________________________</div>
+      </div>
     </t>
   </t>
 </templates>
