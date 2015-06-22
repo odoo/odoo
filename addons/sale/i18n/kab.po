@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-06 14:16+0000\n"
+"PO-Revision-Date: 2015-06-21 17:50+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -96,41 +96,41 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n<p>Azul ${object.partner_id.name},</p>\n\n<p>Ad ttafeḍ dagi ${object.state in ('draft', 'sent') and 'asutar n ssuma' or 'Taladna'} sɣuṛ ${object.company_id.name}: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>Tmsisɣal</strong><br />\n&nbsp;&nbsp;Uṭṭun n tladna: <strong>${object.name}</strong><br />\n&nbsp;&nbsp;Asemday n tladna: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n&nbsp;&nbsp;Azeme n tladna: ${object.date_order}<br />\n% if object.origin:\n&nbsp;&nbsp;Tamsiɣelt n tladna: ${object.origin}<br />\n% endif\n% if object.client_order_ref:\n&nbsp;&nbsp;Tamsisɣelt yinek: ${object.client_order_ref}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Anermis-ik: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n% endif\n</p>\n<p>\nTzemreḍ attwaliḍ asuter-ik n ssuma s srid:\n</p>\n<a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\nhref=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Asuter' or 'Taladna'}</a>\n\n% if object.paypal_url:\n<br/>\n<p>Tzemreḍ ad tefruḍ s webrid n Paypal:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Tzemreḍ aɣ-d-nermeseḍ ma ɣurk istiqsiyen.</p>\n<p>Tanemirt-ik imi tferneḍ ${object.company_id.name or 'takebbwanit enneɣ'}!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n% if object.company_id.street:\n${object.company_id.street}<br/>\n% endif\n% if object.company_id.street2:\n${object.company_id.street2}<br/>\n% endif\n% if object.company_id.city or object.company_id.zip:\n${object.company_id.zip} ${object.company_id.city}<br/>\n% endif\n% if object.company_id.country_id:\n${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n% endif\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nTiliɣri:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nAsmel Web:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
 
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr "Amḍan uznuzu"
+msgstr "# n tludna n uznuzu"
 
 #. module: sale
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr "Amḍan n  izrigen"
+msgstr "# n  izrigen"
 
 #. module: sale
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr "Amḍan n Tnectiwin."
+msgstr "# n Tnectiwin."
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr "Uṭṭun n tladna"
+msgstr "# n tludna n uznuzu"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'Arewway' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Asuter n ssula' or 'Taladna'} (Tamsisɣelt ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Asuter n ssuma' or 'Taladna'} (Tamsisɣelt ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -158,7 +158,7 @@ msgid ""
 "                    quotation, sales order, delivery, invoicing and payment.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned iwakken ad ttarnuḍ asutar n ssuma neɣ taladna i wemsaɣ agi.\n</p><p>\nOdoo ad yefk tallalt i wesefrek n tneflit tanuzt n uznuzu:\nAsutar n ssuma, Taladna, Asiweḍ, Afeter d Wefru.\n</p>"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -175,7 +175,7 @@ msgid ""
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour créer un devis ou bon de commande pour ce client.\n</p><p>\nOdoo vous aidera à gérer efficacement le flux de vente complet:\ndevis, bon de commande, livraison, facturation et paiement.\n</p><p>\nLa fonctionnalité sociale vous aide à organiser des discussions sur chaque commande, et permet à votre client de garder trace de l'évolution de la commande.\n</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned iwakken ad ttarnuḍ asutar n ssuma neɣ taladna i wemsaɣ agi.\n</p><p>\nOdoo ad yefk tallalt i wesefrek n tneflit tanuzt n uznuzu:\nAsutar n ssuma, Taladna, Asiweḍ, Afeter d Wefru.\n</p><p>\nAẓeṭṭa ametti ad yefk tallalt i tuddsa n uskasi ɣef yal taladna, et permet à votre client de garder trace de l'évolution de la commande.\n</p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
@@ -188,7 +188,7 @@ msgid ""
 "                quotation, sales order, delivery, invoicing and payment.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour créer un devis qui pourra être converti en bon de commande.\n</p><p>\nOdoo vous aidera à gérer efficacement le flux de vente complet:\ndevis, bon de commande, livraison, facturation et paiement.\n</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned dagi i wesirew n usuter n ssuma ayuɣlen d taladna.\n</p><p>\nOdoo ad yefka tallalt n usefrek ummid n useddem n uznuzu:\nAsutar n ssuma, Taladna, Asiweḍ, Afeter d wefru.\n</p>"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -206,7 +206,7 @@ msgid ""
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour créer un devis, première étape d'une vente.\n</p><p>\nOdoo vous aidera à gérer efficacement le flux de vente complet:\ndevis, bon de commande, livraison, facturation et paiement.\n</p><p>\nLa fonctionnalité sociale vous aide à organiser des discussions sur chaque commande, et permet à votre client de garder trace de l'évolution de la commande.\n</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned dagi i wesirew n usuter n ssuma, asurif amezwaru ɣer tladna.\n</p><p>\nOdoo ad yefk tallalt n usefrek ummid n useddem n uznuzu:\nAsutar n ssuma, Taladna, Asiweḍ, Afeter d wefru.\n</p><p>\nTawuri n uẓeṭṭa ametti ad tefk tallalt i tuddsa n usdiwen ɣef yal taladna, ad yeǧ amsaɣ-inek aḍfar n unerni n tladna.\n</p>"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -218,7 +218,7 @@ msgid ""
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                Ici la liste des lignes à facturer. Vous pouvez aussi\n                facturer les commandes partiellement, par lignes. Vous \n                n'avez pas besoin de cette liste si vous facturez sur livraison,\n                ou si vous facturez les commandes totalement.\n              </p>\n            "
+msgstr "<p>\nTagi ttabdart n izirien ara tfetereḍ. Tzemreḍ\ndaɣen at-fetereḍ tiludna s imuren,S izirigen.\nUr yesri ara tabdart agi ma t-fetereḍ ɣef isawaḍen\nneɣ ma t-fetereḍ taladna imaṛṛa.\n</p>\n            "
 
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
@@ -244,12 +244,12 @@ msgstr "Azal n Uɛerbun"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:207
 #, python-format
 msgid "Advance Invoice"
-msgstr ""
+msgstr "Tafaturt tuzwirt"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr ""
+msgstr "Afaris uzwir"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
@@ -268,14 +268,14 @@ msgstr "Avance de %s %s"
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr ""
+msgstr "Ticki t sendeḍ ɣef \"Sken izirigen i wefeter\", Fren izirigen ara t-fetreḍ u sirew tafaturt seg umuɣ ifettin \"Ugar\"."
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid ""
 "All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
 "                    or a fixed price (for advances) directly from the sales order form if you prefer."
-msgstr ""
+msgstr "Ifarisen n yezirigen agi n tladna ad ttufetren imaṛṛa. Tzemreḍ diɣen ma tebɣiḍ attfetereḍ amfiḍi n tladna neɣ azal usbiḍ (tazwart n yedrimen) s srid s telwit n tladna."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -313,7 +313,7 @@ msgid ""
 "Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
+msgstr "Ad isireg tawila n yelɣuten ɣef ifarisen wa tsenkreḍ ticki a seqdac yebɣa ad yezenz afaris i\nyettunefken i wemsaɣ yettunefken.\nAmedya: Afaris; Afaris ay teddu ad yemmet, ur d ttaɣ ara uar n 5\nAmsaɣ: Ur tettu yara att-esteqsiḍ ɣef usiweḍ uzrib. "
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
@@ -326,14 +326,14 @@ msgid ""
 "Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
 "You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr ""
+msgstr "Ad isireg asbadu n tewtilin n iguta n umsaɣ yinek: Tarrayt n ufeter (azal usbiḍ, ɣef tferkiwin n wakud, tafaturt tuzwirt), azal ufrin (650 DZD / Ass i wemsiḍen), tangazt (agatu n yiwen aseggwass n tallalt).\nAd tizmired aḍfaṛ n usfari n ugatu d ufeter s webrid awurman.\nayagi ad isebdeb azegrir  account_analytic_analysis."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
+msgstr "Ad isireg asefrek n wazalen yemgaraden s useqdec n ilugan n taggayin n yemsaɣen.\nAmedya : 10% pour les revendeurs, promotion n 5 DZD ɣef ufaris agi, atg."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
@@ -480,12 +480,12 @@ msgstr "Taggayt n ufaris"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "Ṛcem taxxamt agi i wesdukel n tfaturin n wemsaq"
 
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Ṛcem taxxamt agi i wesefrek n isutar n ssuma n tarbaɛt agi n imzenziyen."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -505,7 +505,7 @@ msgstr "Senned dagi iwakken attwaliḍ tasleṭ leqqayen."
 #. module: sale
 #: field:sale.report,delay:0
 msgid "Commitment Delay"
-msgstr ""
+msgstr "Tawala n umtawa"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -668,7 +668,7 @@ msgstr "Azemez anda tlul tladna n uznuzu."
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Default Options"
-msgstr "Options par défaut"
+msgstr "Imsektayen imezwura"
 
 #. module: sale
 #: field:res.company,sale_note:0
@@ -690,7 +690,7 @@ msgstr "Tiwtilin timatutin i yisutar n suma."
 msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
-msgstr ""
+msgstr "Sbadu iswiyen n ufeter deg imsektayen n tarbaɛt agi n imzinziyen iwakken  ad twaliḍ les prévisions d les réalisations n tawala deg yiwet n muɣli."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -730,7 +730,7 @@ msgstr "Tuǧǧit ɣef izrigen"
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr "Afficher les marges sur les bons de commandes"
+msgstr "Sken Afficher les marges sur les bons de commandes"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -769,7 +769,7 @@ msgstr "Tineɣrufin n email"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Amarag n usuddes n Email"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
@@ -808,7 +808,7 @@ msgstr "Di tazwara, sefsax akkw tifaturin iqnen ɣar tladna agi n umsaɣ."
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Anhil amtewsan"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -818,19 +818,19 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Imeltaɣen"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
 msgid ""
 "For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
-msgstr ""
+msgstr "I wesnifel n tmeẓri n umiḍan usliḍ i weskan n isefka importants i wemasay n usenfaṛ i tkebbwaniyin n umeẓlu. Tzemreḍ diɣen atwaliḍ assaɣ n account analytic summary user-wise as well as month wise.\n- Ayagi ad isebded azegrir module account_analytic_analysis."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "Iriden"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -838,7 +838,7 @@ msgid ""
 "Forecast of the invoice revenue for the current month. This is the amount the sales \n"
 "team should invoice this month. It is used to compute the progression ratio \n"
 " of the current and forecast revenue on the kanban view."
-msgstr ""
+msgstr "Iriden n ufeter i waggur agi amiran:\nD asemday i tezmer ad tsiweḍ tarbaɣt n uzenzi aggur agi.\nAd isireg asiḍen n umfidi  réalise/arid ad iţusken di tmeẓri Kanban."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -846,7 +846,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
+msgstr "Seg ussaɣ agi, ɣuṛ-ek timeẓri ɣef wazal asemday iţufetren i wemsaɣ-ik. afecki n unadi yezmer ad iţuseqdec i waggan n tesleṭ n ufeter et ainsi mieux correspondre à vos besoins."
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -967,7 +967,7 @@ msgstr ""
 #. module: sale
 #: field:crm.case.section,invoiced_forecast:0
 msgid "Invoice Forecast"
-msgstr ""
+msgstr "Arid n wezwil  n  iwezla"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -987,7 +987,7 @@ msgstr "Feter izrigen n tladna"
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "Iswi n wezwil  n  iwezla"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -1500,7 +1500,7 @@ msgstr "Silel i tikelt nniḍen tafaturt"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "Tamsiɣelt n usemli d isirewen asuter agi  n tladna n uznuzu."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -1815,7 +1815,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr ""
+msgstr "Asemday war tazendit"
 
 #. module: sale
 #: help:sale.order,project_id:0
@@ -1964,12 +1964,12 @@ msgstr "Azal asemday"
 #: view:sale.order:sale.view_order_tree
 #: view:sale.order:sale.view_quotation_tree
 msgid "Total Tax Included"
-msgstr ""
+msgstr "Asemday t zendiyin"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Asemday war tizendiyin"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
@@ -2011,7 +2011,7 @@ msgstr "Iznan ur neţwaɣer-ara"
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Azal war tazendit"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -2025,7 +2025,7 @@ msgid ""
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
 "                Use Some Order Lines to invoice a selection of the sales order lines."
-msgstr ""
+msgstr "Seqdec Feter taladna n uznuzu imaṛṛa i wusilel n tafaturt n tagara.\nSeqdec Amfidi i wufeter n umfidi seg azal asemday.\nSeqdec ssuma tusbiṭ \nSeqdec"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -2121,7 +2121,7 @@ msgstr "Ur tezmiṛ-ḍ ara ad slaleḍ tafaturt skud ur tesentem-ḍ ara taladn
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
+msgstr "Ur tezmireḍ ara a ţesdukleḍ tiludna n uznuzu s tenfalit yemgaraden ɣas akken d yiwen n umsaɣ."
 
 #. module: sale
 #: code:addons/sale/sale.py:1130
@@ -2129,7 +2129,7 @@ msgstr ""
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr ""
+msgstr "Issefk aţferneḍ tabdart n wazal neɣ amsaɣ deg tfelwit n tladna n uznuzu!\nFren yiwen send afran n ufaris."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:55
