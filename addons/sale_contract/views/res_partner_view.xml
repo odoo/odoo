@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_inherit_account_analytic_analysis" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.analytic.analysis</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.partner_view_buttons"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_inline oe_stat_button" type="action" name="%(action_account_analytic_overdue_all)d" icon="fa-book"
+                    context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}">
+                    <field string="Contracts" name="contracts_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
