@@ -150,6 +150,7 @@
 
         <record id="mass_mail_email_1" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="email_to">aaa@example.com</field>
             <field name="message_id">1111000@OpenERP.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -157,6 +158,7 @@
         </record>
         <record id="mass_mail_email_2" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="email_to">bbb@example.com</field>
             <field name="message_id">1111001@OpenERP.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -164,17 +166,20 @@
         </record>
         <record id="mass_mail_email_3" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="email_to">ccc@example.com</field>
             <field name="message_id">1111002@OpenERP.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_email_4" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="email_to">test.test.com</field>
             <field name="message_id">1111003@OpenERP.com</field>
             <field name="exception" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_email_5" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="email_to">ddd@example.com</field>
             <field name="message_id">1111004@OpenERP.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
