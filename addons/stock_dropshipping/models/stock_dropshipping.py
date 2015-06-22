@@ -1,9 +1,10 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, api
 
 
-class sale_order_line(models.Model):
+class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     @api.multi
@@ -11,7 +12,7 @@ class sale_order_line(models.Model):
         """ skip stock verification if the route goes from supplier to customer
             As the product never goes in stock, no need to verify it's availibility
         """
-        res = super(sale_order_line, self)._check_routing(product, warehouse)
+        res = super(SaleOrderLine, self)._check_routing(product, warehouse)
         if not res:
             for line in self:
                 for pull_rule in line.route_id.pull_ids:

@@ -3,7 +3,7 @@
 
 {
     'name': 'Drop Shipping',
-    'version': '1.0',
+    'version': '2.0',
     'category': 'Warehouse Management',
     'summary': 'Drop Shipping',
     'description': """
@@ -19,11 +19,21 @@ from suppliers to customers (direct delivery) without
 going through the retailer's warehouse. In this case no
 internal transfer document is needed.
 
+The module also adds the possibility to generate both
+customer invoice and supplier bill from the picking.
+
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA, Camptocamp, Odoo Community Association (OCA)',
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['purchase', 'sale_stock'],
-    'data': ['stock_dropshipping.xml'],
+    'depends': [
+        'purchase',
+        'sale_stock'
+    ],
+    'data': [
+        'data/stock_dropshipping.xml',
+        'wizard/stock_invoice_onshipping_view.xml',
+        'security/group.xml'
+    ],
     'test': [
         '../account/test/account_minimal_test.xml',
         '../stock_account/test/stock_valuation_account.xml',

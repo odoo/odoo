@@ -361,9 +361,9 @@ class sale_order_line(osv.osv):
 class stock_move(osv.osv):
     _inherit = 'stock.move'
 
-    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
-        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
-        if move.procurement_id and move.procurement_id.sale_line_id:
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, inv_type, context=None):
+        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, inv_type, context=context)
+        if inv_type in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
                 'invoice_lines': [(4, invoice_line_id)]
@@ -380,15 +380,15 @@ class stock_move(osv.osv):
 
         return invoice_line_id
 
-    def _get_master_data(self, cr, uid, move, company, context=None):
-        if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
+    def _get_master_data(self, cr, uid, move, company, inv_type, context=None):
+        if inv_type in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
             sale_order = move.procurement_id.sale_line_id.order_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
-        elif move.picking_id.sale_id and context.get('inv_type') in ('out_invoice', 'out_refund'):
+        elif inv_type in ('out_invoice', 'out_refund') and move.picking_id.sale_id:
             # In case of extra move, it is better to use the same data as the original moves
             sale_order = move.picking_id.sale_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
-        return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
+        return super(stock_move, self)._get_master_data(cr, uid, move, company, inv_type, context=context)
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)

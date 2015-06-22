@@ -100,9 +100,9 @@ class stock_picking(osv.osv):
             'invoice_line_tax_ids': [(6, 0, taxes_ids)],
         }
 
-    def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
+    def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', move_invoiced=True, context=None):
         invoice_line_obj = self.pool.get('account.invoice.line')
-        invoice_ids = super(stock_picking, self)._invoice_create_line(cr, uid, moves, journal_id, inv_type=inv_type, context=context)
+        invoice_ids = super(stock_picking, self)._invoice_create_line(cr, uid, moves, journal_id, inv_type=inv_type, move_invoiced=move_invoiced, context=context)
         delivey_invoices = {}
         for move in moves:
             for invoice in move.picking_id.sale_id.invoice_ids:

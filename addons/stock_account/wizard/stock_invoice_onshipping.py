@@ -55,8 +55,8 @@ class stock_invoice_onshipping(osv.osv_memory):
         ], string='Invoice type', readonly=True),
     }
     _defaults = {
-        'journal_id': _get_journal,
-        'invoice_type': _get_invoice_type,
+        'journal_id': lambda self, *args, **kwargs: self._get_journal(*args, **kwargs),
+        'invoice_type': lambda self, *args, **kwargs: self._get_invoice_type(*args, **kwargs),
     }
 
     def view_init(self, cr, uid, fields_list, context=None):
