@@ -96,9 +96,10 @@ class stock_return_picking(osv.osv_memory):
         returned_lines = 0
 
         # Cancel assignment of existing chained assigned moves
+        return_moves = list(set(move.move_id for move in data_obj.browse(cr, uid, data['product_return_moves'], context=context)))
         moves_to_unreserve = []
-        for move in pick.move_lines:
-            to_check_moves = [move.move_dest_id] if move.move_dest_id.id else []
+        for move in return_moves:
+            to_check_moves = [move.move_dest_id] if move.move_dest_id else []
             while to_check_moves:
                 current_move = to_check_moves.pop()
                 if current_move.state not in ('done', 'cancel') and current_move.reserved_quant_ids:
