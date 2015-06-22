@@ -72,6 +72,7 @@ var KanbanView = View.extend({
         this.is_empty = undefined;
         this.many2manys = [];
         this.m2m_context = {};
+        this.m2m_options = {};
         this.widgets = [];
         this.data = undefined;
         this.model = dataset.model;
@@ -96,8 +97,13 @@ var KanbanView = View.extend({
                 break;
             } else if (child.tag === 'field') {
                 var ftype = child.attrs.widget || this.fields_view.fields[child.attrs.name].type;
-                if(ftype == "many2many" && "context" in child.attrs) {
-                    this.m2m_context[child.attrs.name] = child.attrs.context;
+                if(ftype == "many2many") {
+                    if ("context" in child.attrs) {
+                        this.m2m_context[child.attrs.name] = child.attrs.context;
+                    }
+                    if ("options" in child.attrs) {
+                        this.m2m_options[child.attrs.name] = child.attrs.options;
+                    }
                 }
             }
         }
@@ -494,7 +500,7 @@ var KanbanView = View.extend({
                     return;
                 }
                 if (!relations[field.relation]) {
-                    relations[field.relation] = { ids: [], elements: {}, context: self.m2m_context[name]};
+                    relations[field.relation] = { ids: [], elements: {}, context: self.m2m_context[name], options: self.m2m_options[name]};
                 }
                 var rel = relations[field.relation];
                 field.raw_value.forEach(function(id) {
@@ -510,8 +516,12 @@ var KanbanView = View.extend({
             var dataset = new data.DataSetSearch(self, rel_name, self.dataset.get_context(rel.context));
             dataset.name_get(_.uniq(rel.ids)).done(function(result) {
                 result.forEach(function(nameget) {
+                    var options = {};
                     var $element = $(rel.elements[nameget[0]]);
-                    if ($element.hasClass('o_m2m_tags')) {
+                    if (rel.options) {
+                        options = pyeval.py_eval(rel.options);
+                    }
+                    if (options.m2m_tags) {
                         $element.append('<span class="oe_tag">' + _.str.escapeHTML(nameget[1]) + '</span>');
                     } else {
                         // white color (0) should not be selected, 1 instead

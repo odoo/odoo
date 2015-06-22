@@ -354,7 +354,7 @@
                     <field name="remaining_hours" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
                     <field name="message_summary"/>
-                    <field name="tag_ids"/>
+                    <field name="tag_ids" options='{"m2m_tags": True}'/>
                     <field name="displayed_image_id"/>
                     <templates>
                     <t t-name="kanban-box">
@@ -380,7 +380,7 @@
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
                                 </div>
                                 <div>
-                                    <field name="tag_ids" options='{"m2m_tags": True}'/>
+                                    <field name="tag_ids"/>
                                 </div>
                                 <div class="oe_kanban_bottom_left">
                                     <field name="priority" widget="priority"/>
