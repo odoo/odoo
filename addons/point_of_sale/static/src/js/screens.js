@@ -1370,6 +1370,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             pos:     this.pos,
             order:   this.pos.get_order(),
             receipt: this.pos.get_order().export_for_printing(),
+            paymentlines: this.pos.get_order().get_paymentlines()
         };
         var receipt = QWeb.render('XmlReceipt',env);
 

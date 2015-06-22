@@ -764,10 +764,10 @@
 
             <!-- Payment Lines -->
 
-            <t t-foreach='receipt.paymentlines' t-as='line'>
+            <t t-foreach='paymentlines' t-as='line'>
                 <line>
-                    <left><t t-esc='line.journal' /></left>
-                    <right><value><t t-esc='line.amount'/></value></right>
+                    <left><t t-esc='line.name' /></left>
+                    <right><value><t t-esc='line.get_amount()'/></value></right>
                 </line>
             </t>
             <br/> 
