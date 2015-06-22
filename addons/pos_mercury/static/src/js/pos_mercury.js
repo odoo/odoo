@@ -20,93 +20,93 @@ var round_pr = utils.round_precision;
 
 var onlinePaymentJournal = [];
 
-var allowOnlinePayment = function (pos) {
-    if (onlinePaymentJournal.length) {
-        return true;
-    }
-    $.each(pos.journals, function (i, val) {
-        if (val.pos_mercury_config_id) {
-            onlinePaymentJournal.push({label:val.display_name, item:val.id});
+var _modelproto = pos_model.PosModel.prototype;
+pos_model.PosModel = pos_model.PosModel.extend({
+    allowOnlinePayment: function () {
+        if (onlinePaymentJournal.length) {
+            return true;
         }
-    });
-    return onlinePaymentJournal.length;
-};
+        $.each(this.journals, function (i, val) {
+            if (val.pos_mercury_config_id) {
+                onlinePaymentJournal.push({label:val.display_name, item:val.id});
+            }
+        });
+        return onlinePaymentJournal.length;
+    },
+    getCashRegisterByJournalID: function (journal_id) {
+        var cashregister_return;
 
-function getCashRegisterByJournalID (cashRegisters, journal_id) {
-    var cashRegisterReturn;
+        $.each(this.cashregisters, function (index, cashregister) {
+            if (cashregister.journal_id[0] === journal_id) {
+                cashregister_return = cashregister;
+            }
+        });
 
-    $.each(cashRegisters, function (index, cashRegister) {
-        if (cashRegister.journal_id[0] == journal_id) {
-            cashRegisterReturn = cashRegister;
+        return cashregister_return;
+    },
+    decodeMagtek: function (magtekInput) {
+        // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
+        var _track1_regex = /%B?([0-9]*)\^([A-Z\/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/;
+
+        var track1 = magtekInput.match(_track1_regex);
+        var magtek_generated = magtekInput.split('|');
+
+        var to_return = {};
+        try {
+            track1.shift(); // get rid of complete match
+            to_return['number'] = track1.shift().substr(-4);
+            to_return['name'] = track1.shift();
+            track1.shift(); // expiration date
+            track1.shift(); // service code
+            track1.shift(); // discretionary data
+            track1.shift(); // zero pad
+
+            magtek_generated.shift(); // track1 and track2
+            magtek_generated.shift(); // clear text crc
+            magtek_generated.shift(); // encryption counter
+            to_return['encrypted_block'] = magtek_generated.shift();
+            magtek_generated.shift(); // enc session id
+            magtek_generated.shift(); // device serial
+            magtek_generated.shift(); // magneprint data
+            magtek_generated.shift(); // magneprint status
+            magtek_generated.shift(); // enc track3
+            to_return['encrypted_key'] = magtek_generated.shift();
+            magtek_generated.shift(); // enc track1
+            magtek_generated.shift(); // reader enc status
+
+            return to_return;
+        } catch (e) {
+            return 0;
         }
-    });
+    },
+    decodeMercuryResponse: function (data) {
+        // get rid of xml version declaration and just keep the RStream
+        // from the response because the xml contains two version
+        // declarations. One for the SOAP, and one for the content. Maybe
+        // we should unpack the SOAP layer in python?
+        data = data.replace(/.*<\?xml version="1.0"\?>/, "");
+        data = data.replace(/<\/CreditTransactionResult>.*/, "");
 
-    return cashRegisterReturn;
-}
+        var xml = $($.parseXML(data));
+        var cmd_response = xml.find("CmdResponse");
+        var tran_response = xml.find("TranResponse");
 
-function decodeMercuryResponse (data) {
-    // get rid of xml version declaration and just keep the RStream
-    // from the response because the xml contains two version
-    // declarations. One for the SOAP, and one for the content. Maybe
-    // we should unpack the SOAP layer in python?
-    data = data.replace(/.*<\?xml version="1.0"\?>/, "");
-    data = data.replace(/<\/CreditTransactionResult>.*/, "");
-
-    var xml = $($.parseXML(data));
-    var cmd_response = xml.find("CmdResponse");
-    var tran_response = xml.find("TranResponse");
-
-    return {
-        status: cmd_response.find("CmdStatus").text(),
-        message: cmd_response.find("TextResponse").text(),
-        error: cmd_response.find("DSIXReturnCode").text(),
-        card_type: tran_response.find("CardType").text(),
-        auth_code: tran_response.find("AuthCode").text(),
-        acq_ref_data: tran_response.find("AcqRefData").text(),
-        process_data: tran_response.find("ProcessData").text(),
-        invoice_no: tran_response.find("InvoiceNo").text(),
-        ref_no: tran_response.find("RefNo").text(),
-        record_no: tran_response.find("RecordNo").text(),
-        purchase: parseFloat(tran_response.find("Purchase").text()),
-        authorize: parseFloat(tran_response.find("Authorize").text()),
-    };
-}
-
-function decodeMagtek (magtekInput) {
-    // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
-    var _track1_regex = /%B?([0-9]*)\^([A-Z\/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/;
-
-    var track1 = magtekInput.match(_track1_regex);
-    var magtek_generated = magtekInput.split('|');
-
-    var to_return = {};
-    try {
-        track1.shift(); // get rid of complete match
-        to_return['number'] = track1.shift().substr(-4);
-        to_return['name'] = track1.shift();
-        track1.shift(); // expiration date
-        track1.shift(); // service code
-        track1.shift(); // discretionary data
-        track1.shift(); // zero pad
-
-        magtek_generated.shift(); // track1 and track2
-        magtek_generated.shift(); // clear text crc
-        magtek_generated.shift(); // encryption counter
-        to_return['encrypted_block'] = magtek_generated.shift();
-        magtek_generated.shift(); // enc session id
-        magtek_generated.shift(); // device serial
-        magtek_generated.shift(); // magneprint data
-        magtek_generated.shift(); // magneprint status
-        magtek_generated.shift(); // enc track3
-        to_return['encrypted_key'] = magtek_generated.shift();
-        magtek_generated.shift(); // enc track1
-        magtek_generated.shift(); // reader enc status
-
-        return to_return;
-    } catch (e) {
-        return 0;
+        return {
+            status: cmd_response.find("CmdStatus").text(),
+            message: cmd_response.find("TextResponse").text(),
+            error: cmd_response.find("DSIXReturnCode").text(),
+            card_type: tran_response.find("CardType").text(),
+            auth_code: tran_response.find("AuthCode").text(),
+            acq_ref_data: tran_response.find("AcqRefData").text(),
+            process_data: tran_response.find("ProcessData").text(),
+            invoice_no: tran_response.find("InvoiceNo").text(),
+            ref_no: tran_response.find("RefNo").text(),
+            record_no: tran_response.find("RecordNo").text(),
+            purchase: parseFloat(tran_response.find("Purchase").text()),
+            authorize: parseFloat(tran_response.find("Authorize").text()),
+        };
     }
-}
+});
 
 var _paylineproto = pos_model.Paymentline.prototype;
 pos_model.Paymentline = pos_model.Paymentline.extend({
@@ -261,7 +261,7 @@ ScreenWidget.include({
 
     show: function () {
         this._super();
-        if(allowOnlinePayment(this.pos)) {
+        if(this.pos.allowOnlinePayment()) {
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_error_action, this));
         }
     }
@@ -342,12 +342,12 @@ PaymentScreenWidget.include({
 
     // Handler to manage the card reader string
     credit_code_transaction: function (parsed_result, old_deferred, retry_nr) {
-        if(!allowOnlinePayment(this.pos)) {
+        if(!this.pos.allowOnlinePayment()) {
             return;
         }
 
         var self = this;
-        var decodedMagtek = decodeMagtek(parsed_result.code);
+        var decodedMagtek = self.pos.decodeMagtek(parsed_result.code);
 
         if (! decodedMagtek) {
             this.gui.show_popup('error',{
@@ -413,7 +413,7 @@ PaymentScreenWidget.include({
                 return;
             }
 
-            var response = decodeMercuryResponse(data);
+            var response = self.pos.decodeMercuryResponse(data);
             response.journal_id = parsed_result.journal_id;
 
             if (response.status === 'Approved') {
@@ -431,7 +431,7 @@ PaymentScreenWidget.include({
                     if (swipe_pending_line) {
                         order.select_paymentline(swipe_pending_line);
                     } else {
-                        order.add_paymentline(getCashRegisterByJournalID(self.pos.cashregisters, parsed_result.journal_id));
+                        order.add_paymentline(self.pos.getCashRegisterByJournalID(parsed_result.journal_id));
                     }
 
                     order.selected_paymentline.paid = true;
@@ -559,7 +559,7 @@ PaymentScreenWidget.include({
                 return;
             }
 
-            var response = decodeMercuryResponse(data);
+            var response = self.pos.decodeMercuryResponse(data);
 
             if (! is_voidsale) {
                 if (response.status != 'Approved' || response.message != 'REVERSED') {
@@ -646,7 +646,7 @@ PaymentScreenWidget.include({
 
     show: function () {
         this._super();
-        if (allowOnlinePayment(this.pos)) {
+        if (this.pos.allowOnlinePayment()) {
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_code_action, this));
         }
     },
