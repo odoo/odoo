@@ -2453,6 +2453,8 @@ class stock_move(osv.osv):
                     elif move.move_dest_id.state == 'waiting':
                         #If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
                         self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
+                elif move.origin_returned_move_id and move.origin_returned_move_id.move_dest_id:
+                    self.action_assign(cr, uid, [move.origin_returned_move_id.move_dest_id.id], context=context)
                 if move.procurement_id:
                     # Does the same as procurement check, only eliminating a refresh
                     procs_to_check.append(move.procurement_id.id)
