@@ -13,7 +13,7 @@
     <t t-jquery=".col-name" t-operation="inner">
       <t t-if="line.cashregister.journal.type === 'bank'">
         <t t-if="line.mercury_swipe_pending">
-          <div style="color: red">WAITING FOR SWIPE</div>
+          <div>WAITING FOR SWIPE</div>
         </t>
         <t t-if="! line.mercury_swipe_pending">
           <t t-esc='line.name' />
@@ -22,6 +22,18 @@
       <t t-if="line.cashregister.journal.type !== 'bank'">
         <t t-esc='line.name' />
       </t>
+    </t>
+    <t t-jquery=".paymentline.selected">
+      this.removeAttr("class");
+      this.attr('t-attf-class', 'paymentline selected #{line.mercury_swipe_pending ? "o_pos_mercury_swipe_pending" : ""}');
+    </t>
+    <t t-jquery=".paymentline">
+      this.removeAttr("class");
+      this.attr('t-attf-class', 'paymentline #{line.mercury_swipe_pending ? "o_pos_mercury_swipe_pending" : ""}');
+    </t>
+    <t t-jquery=".col-tendered.edit">
+      this.removeAttr("class");
+      this.attr('t-attf-class', 'col-tendered edit #{line.mercury_swipe_pending ? "o_pos_mercury_swipe_pending" : ""}');
     </t>
   </t>
 </templates>
