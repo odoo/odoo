@@ -60,13 +60,13 @@ class event_event(models.Model):
     seats_max = fields.Integer(
         string='Maximum Available Seats', oldname='register_max',
         readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
+        help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_availability = fields.Selection(
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],
         'Available Seat', required=True, default='unlimited')
     seats_min = fields.Integer(
-        string='Minimum Reserved Seats', oldname='register_min',
-        help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )")
+        string='Minimum Reservation of Seats Required', oldname='register_min',
+        help="For each event you can define a minimum reserved seats(number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)")
     seats_reserved = fields.Integer(
         oldname='register_current', string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
@@ -160,7 +160,7 @@ class event_event(models.Model):
 
     @api.one
     def _compute_auto_confirm(self):
-        self.auto_confirm = self.env['ir.values'].get_default('marketing.config.settings', 'auto_confirmation')
+        self.auto_confirm = self.env['ir.values'].get_default('event.config.settings', 'auto_confirmation')
 
     reply_to = fields.Char(
         'Reply-To Email', readonly=False, states={'done': [('readonly', True)]},
@@ -336,9 +336,6 @@ class event_registration(models.Model):
 
     @api.one
     def confirm_registration(self):
-        self.event_id.message_post(
-            body=_('New registration confirmed: %s.') % (self.name or ''),
-            subtype="event.mt_event_registration")
         self.state = 'open'
 
         # auto-trigger after_sub (on subscribe) mail schedulers, if needed

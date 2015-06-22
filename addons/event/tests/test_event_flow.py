@@ -13,7 +13,7 @@ class TestEventFlow(TestEventCommon):
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_basic_event_auto_confirm(self):
         """ Basic event management with auto confirmation """
-        self.env['ir.values'].set_default('marketing.config.settings', 'auto_confirmation', True)
+        self.env['ir.values'].set_default('event.config.settings', 'auto_confirmation', True)
 
         # EventUser creates a new event: ok
         test_event = self.Event.sudo(self.user_eventmanager).create({
@@ -66,7 +66,7 @@ class TestEventFlow(TestEventCommon):
     def test_10_advanced_event_flow(self):
         """ Avanced event flow: no auto confirmation, manage minimum / maximum
         seats, ... """
-        self.env['ir.values'].set_default('marketing.config.settings', 'auto_confirmation', False)
+        self.env['ir.values'].set_default('event.config.settings', 'auto_confirmation', False)
 
         # EventUser creates a new event: ok
         test_event = self.Event.sudo(self.user_eventmanager).create({

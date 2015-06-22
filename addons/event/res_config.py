@@ -36,4 +36,4 @@ class event_config_settings(osv.TransientModel):
 
     def set_default_auto_confirmation(self, cr, uid, ids, context=None):
         config_value = self.browse(cr, uid, ids, context=context).auto_confirmation
-        self.pool.get('ir.values').set_default(cr, uid, 'marketing.config.settings', 'auto_confirmation', config_value)
+        self.pool.get('ir.values').set_default(cr, uid, 'event.config.settings', 'auto_confirmation', config_value)

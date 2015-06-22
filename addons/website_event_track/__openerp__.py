@@ -24,6 +24,7 @@ Adds support for:
         'data/event_data.xml',
         'views/website_event.xml',
         'views/event_backend.xml',
+        'data/event_track_tip_data.xml',
         'security/ir.model.access.csv',
         'security/event.xml',
     ],

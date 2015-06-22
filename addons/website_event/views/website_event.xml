@@ -240,7 +240,11 @@
         <section class="container">
             <h1 class="text-center">Event Location</h1>
         </section>
-        <div class="oe_structure oe_empty"/>
+        <h4 class="text-center text-muted"
+            t-field="event.address_id" t-field-options='{
+                "widget": "contact",
+                "fields": ["address", "phone", "mobile", "fax"]
+            }'/>
     </t>
 </template>
 
@@ -260,7 +264,7 @@
             <h4 class="text-center text-muted">
                 <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin_located" t-field-options='{"hide_seconds":"True"}'/> to
                 <span itemprop="endDate" t-field="event.date_end_located" t-field-options='{"hide_seconds":"True"}'/>
-                (<span t-field="event.date_tz"/>)
+                <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-field-options='{
@@ -465,7 +469,7 @@
                     <div class="modal-footer">
                         <div class="pull-left">
                             <button type="submit" class="btn btn-primary">Continue</button> or
-                            <a class="js_goto_event"> Cancel Registration</a>
+                            <a class="js_goto_event" style="cursor: pointer;"> Cancel Registration</a>
                         </div>
                     </div>
                 </div>

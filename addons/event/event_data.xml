@@ -13,13 +13,6 @@
             <field name="state">open</field>
         </record>
 
-        <!-- Event-related subtypes for messaging / Chatter -->
-        <record id="event.mt_event_registration" model="mail.message.subtype">
-            <field name="name">New Registration</field>
-            <field name="res_model">event.event</field>
-            <field name="default" eval="False"/>
-        </record>
-
         <!-- notify all employees of module installation -->
         <function model="mail.channel" name="message_post">
             <value eval="[ref('mail.channel_all_employees')]"/>
@@ -28,7 +21,7 @@
         </function>
 
         <!-- Automatic confirmation of events by default -->
-        <function id="default_auto_confirmation" model="ir.values" name="set_default" eval="('marketing.config.settings', 'auto_confirmation', True)"/>
+        <function id="default_auto_confirmation" model="ir.values" name="set_default" eval="('event.config.settings', 'auto_confirmation', True)"/>
 
         <!-- Event Mail Scheduler-->
         <record model="ir.cron" forcecreate="True" id="event_mail_scheduler">
