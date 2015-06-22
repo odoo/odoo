@@ -85,6 +85,8 @@
                                       <t t-esc="line.amount_str"/></t></td>
                                 <td class="cell_credit"><t t-if="line.amount &lt; 0">
                                       <t t-esc="line.amount_str"/></t></td>
+                                <td class="cell_credit"><t t-if="! line.amount">
+                                    <t t-esc="line.amount_str"/></t></td>
                                 <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
                             </tr>
                         </tbody>
