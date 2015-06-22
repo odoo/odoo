@@ -7,7 +7,6 @@ Sell digital product using attachments to virtual products
 """,
     'author': 'Odoo S.A.',
     'depends': [
-        'document',
         'website_sale',
     ],
     'installable': True,
