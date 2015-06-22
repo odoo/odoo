@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-05 16:29+0000\n"
-"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"PO-Revision-Date: 2015-06-12 13:57+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgid ""
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء أمر دفع.\n</p><p>\nأمر الدفع هو مستند تصدره مؤسستك لسداد\nفاتورة مورد أو مرتجع لعميل.\n</p>"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -44,7 +45,7 @@ msgstr "تسديد الحساب"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr "محاسبة / مدفوعات"
+msgstr "المحاسبة / المدفوعات"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -60,52 +61,52 @@ msgstr "عنوان العميل طالب الأمر"
 #: view:payment.order:account_payment.view_payment_order_form
 #: view:website:account_payment.report_paymentorder
 msgid "Amount"
-msgstr "المقدار"
+msgstr "المبلغ"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_tree
 msgid "Amount Total"
-msgstr "مبلغ الأجمالى"
+msgstr "إجمالي المبلغ"
 
 #. module: account_payment
 #: field:payment.line,amount:0
 msgid "Amount in Company Currency"
-msgstr "الكمية في عملة الشركة"
+msgstr "المبلغ بعملة المؤسسة"
 
 #. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
-msgstr "الكمية في العملة الشريكة"
+msgstr "المبلغ بعملة الشريك"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
 msgid "Are you sure you want to make payment?"
-msgstr "هل انت متأكد للقيام بعملية الدفع؟"
+msgstr "هل ترغب حقاً في إجراء السداد؟"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Bank Account"
-msgstr "حساب البنك"
+msgstr "الحساب البنكي"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr "حساب المصرف لنظام الدفع"
+msgstr "الحساب البنكي لطريقة السداد"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
 msgid "Bank account"
-msgstr "الحساب المصرفي"
+msgstr "الحساب البنكي"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr "يومية البنك أو النقدية لطريقة الدفع"
+msgstr "يومية من النوع نقدية أو بنك لطريقة السداد"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr "قائمة البنك"
+msgstr "بند كشف الحساب"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -118,7 +119,7 @@ msgstr "إلغاء"
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Cancel Payments"
-msgstr ""
+msgstr "إلغاء المدفوعات"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -141,33 +142,33 @@ msgstr "التواصل"
 #. module: account_payment
 #: field:payment.line,communication2:0
 msgid "Communication 2"
-msgstr "اتصال2"
+msgstr "التواصل 2"
 
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr "نوع الاتصال"
+msgstr "نوع التواصل"
 
 #. module: account_payment
 #: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
-msgstr "شركة"
+msgstr "المؤسسة"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
 msgid "Company Currency"
-msgstr "عملة الشركة"
+msgstr "عملة المؤسسة"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Company Currency:"
-msgstr ""
+msgstr "عملة المؤسسة:"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Confirm Payments"
-msgstr "اكد المدفوعات"
+msgstr "تأكيد المدفوعات"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_search
@@ -178,7 +179,7 @@ msgstr "مؤكد"
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
-msgstr "تمً انشاءه"
+msgstr "أنشئ في"
 
 #. module: account_payment
 #: field:account.payment.make.payment,create_uid:0
@@ -194,7 +195,7 @@ msgstr "أُنشئ بواسطة"
 #: field:payment.mode,create_date:0 field:payment.order,create_date:0
 #: field:payment.order.create,create_date:0
 msgid "Created on"
-msgstr "إنشاؤه في"
+msgstr "أنشئ في"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -209,28 +210,28 @@ msgstr "العملة"
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_tree
 msgid "Currency Amount Total"
-msgstr "عملة المبلغ الأجمالى"
+msgstr "عملة المبلغ الإجمالي"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
 msgid "Desitination Account"
-msgstr "حساب الوجهة"
+msgstr "الحساب الهدف"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Destination Account"
-msgstr "حساب الوجهة"
+msgstr "الحساب الهدف"
 
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr "أصل حساب البنك"
+msgstr "الحساب البنكي الهدف"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
-msgstr "مباشرة"
+msgstr "مباشر"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_search
@@ -247,12 +248,12 @@ msgstr "مسودة"
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr "تاريخ الإستحقاق"
+msgstr "تاريخ الاستحقاق"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr "تاريخ الإستحقاق"
+msgstr "تاريخ الاستحقاق"
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
@@ -263,24 +264,24 @@ msgstr "تاريخ السريان"
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
 #: field:payment.order.create,entries:0
 msgid "Entries"
-msgstr "مُدخلات"
+msgstr "القيود"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Entry Information"
-msgstr "معلومات الادخال"
+msgstr "معلومات القيود"
 
 #. module: account_payment
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr "سطور القيود"
+msgstr "بنود القيد"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr "خط المدخل"
+msgstr "بند القيد"
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:42
@@ -292,12 +293,12 @@ msgstr "خطأ!"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "تاريخ التنفيذ"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Execution:"
-msgstr ""
+msgstr "التنفيذ:"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -328,50 +329,50 @@ msgstr "تجميع حسب"
 #: field:payment.order.create,id:0
 #: field:report.account_payment.report_paymentorder,id:0
 msgid "ID"
-msgstr "المعرّف"
+msgstr "المعرف"
 
 #. module: account_payment
 #: help:payment.line,date:0
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr "اذا لم يوجد تاريخ دفع محدد,فإن البنك سيتعامل مع خط الدفع مباشرة"
+msgstr "إذا لم تحدد تاريخ معيناً، فسيقوم البنك بمعالجة هذا البند فوراً."
 
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
 msgid "Import Lines"
-msgstr ""
+msgstr "استيراد البنود"
 
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "استيراد بنود السداد"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Information"
-msgstr "معلومات"
+msgstr "المعلومات"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr "فاتورة"
+msgstr "الفاتورة"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
-msgstr "اعتبارا من تاريخ الفاتورة"
+msgstr "تاريخ سريان الفاتورة"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Invoice Ref"
-msgstr "مرجع الفاتورة"
+msgstr "رقم إشارة الفاتورة"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
 msgid "Invoice Ref."
-msgstr "مرجع للفاتورة"
+msgstr "إشارة الفاتورة"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -382,7 +383,7 @@ msgstr "الفواتير"
 #: view:payment.mode:account_payment.view_payment_mode_search
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr "يومية"
+msgstr "اليومية"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
@@ -403,23 +404,23 @@ msgstr "آخر تحديث بواسطة"
 #: field:payment.line,write_date:0 field:payment.mode,write_date:0
 #: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
-msgstr "آخر تحديث فى"
+msgstr "آخر تحديث في"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr "القيام بالدفع"
+msgstr "إجراء سداد"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Make Payments"
-msgstr "تسديد المدفوعات"
+msgstr "إجراء سداد"
 
 #. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
-msgstr "حالة الدفع"
+msgstr "طريقة السداد"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -429,12 +430,12 @@ msgstr "الاسم"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
 msgid "New Payment Order"
-msgstr "امر دفع جديد"
+msgstr "أمر دفع جديد"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr "أمر"
+msgstr "الأمر"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
@@ -459,12 +460,12 @@ msgstr "عملة الشريك"
 #: view:payment.line:account_payment.view_payment_line_form
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Payment"
-msgstr "الدفع"
+msgstr "السداد"
 
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
-msgstr "تاريخ الدفع"
+msgstr "تاريخ السداد"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -473,12 +474,12 @@ msgstr "تاريخ الدفع"
 #: view:payment.line:account_payment.view_payment_line_tree
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Payment Line"
-msgstr "خط الدفع"
+msgstr "بند السداد"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
 msgid "Payment Lines"
-msgstr "خطوط الدفع"
+msgstr "بنود السداد"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
@@ -490,7 +491,7 @@ msgstr "خطوط الدفع"
 #: view:payment.order:account_payment.view_payment_order_search
 #: field:payment.order,mode:0
 msgid "Payment Mode"
-msgstr "طريقة الدفع"
+msgstr "طريقة السداد"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.action_report_payment_order
@@ -503,7 +504,7 @@ msgstr "أمر الدفع"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Payment Order / Payment"
-msgstr "امر الدفع/الدفع"
+msgstr "الأمر / أمر الدفع"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -515,64 +516,64 @@ msgstr "أوامر الدفع"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr "بيان تعبئة الدفع"
+msgstr ""
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Payment Type:"
-msgstr ""
+msgstr "نوع السداد:"
 
 #. module: account_payment
 #: help:payment.line,amount:0
 msgid "Payment amount in the company currency"
-msgstr "كمية الدفع في عملة الشركة"
+msgstr "مبلغ السداد بعملة المؤسسة"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
 msgid "Payment amount in the partner currency"
-msgstr "كمية الدفع في العملة الشريكة"
+msgstr "مبلغ السداد بعملة الشريك"
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
 msgid "Payment lines"
-msgstr "خطوط الدفع"
+msgstr "بنود السداد"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 #: view:payment.order:account_payment.view_payment_order_tree
 msgid "Payment order"
-msgstr "امر الدفع"
+msgstr "أمر الدفع"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr "تعبئة الدفع"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
 msgid "Populate Statement:"
-msgstr "بيان النشر:"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "التاريخ المفضل"
 
 #. module: account_payment
 #: field:payment.order,reference:0
 #: view:website:account_payment.report_paymentorder
 msgid "Reference"
-msgstr "المرجع"
+msgstr "رقم الإشارة"
 
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr "مسؤول"
+msgstr "المسئول"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr "تاريخ مجدول"
+msgstr "التاريخ المجدول"
 
 #. module: account_payment
 #: view:payment.order.create:account_payment.view_create_payment_order
@@ -588,17 +589,17 @@ msgstr "بحث أوامر الدفع"
 #: view:payment.order.create:account_payment.view_create_payment_order
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "Search Payment lines"
-msgstr "ابحث خطوط الدفع"
+msgstr "بحث بنود السداد"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr "اختار التاريخ اذا قمت باختيار تاريخ مفضل ليُثبت."
+msgstr "اختر تاريخاً إن أردت أن يكون التاريخ المفضل تاريخاً ثابتاً."
 
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr "حدد طريقة الدفع ليتم تطبيقها."
+msgstr "اختر طريقة السداد لتطبيقها."
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -619,30 +620,30 @@ msgstr "منظم"
 #. module: account_payment
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
-msgstr "طلب العميل"
+msgstr "العميل الطالب"
 
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr "يجب أن يكون اسم خط الدفع فريداً !"
+msgstr "يجب أن يكون اسم بند السداد فريداً غير مكرر!"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr "رسالة الوريث للاتصال."
+msgstr "رسالة التواصل اللاحقة."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:57
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "لا يوجد شريك محدد في بند القيد."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr "سيشير ذلك خط المدخل الى معلومات طلب العميل."
+msgstr "سيشير بند القيد هذا إلى معلومات عن العميل الطالب."
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -653,12 +654,12 @@ msgstr "الإجمالي"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Total (Currency)"
-msgstr ""
+msgstr "الإجمالي (العملة)"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Total in Company Currency"
-msgstr "الأجمالى بعملة الشركة"
+msgstr "الأجمالى بعملة المؤسسة"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
@@ -669,14 +670,14 @@ msgstr "معلومات المعاملة"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Used Account:"
-msgstr ""
+msgstr "الحساب المستخدم:"
 
 #. module: account_payment
 #: help:payment.line,communication:0
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr "استخدم كرسالة بينت طلب العميل و الشركة الحالية. تصور‘ماذا تريد ان تقول للمتلقي عن هذا التقرير؟‘"
+msgstr "تستخدم كرسالة بين العميل الطالب وهذه المؤسسة، وتعني ضمنياً \"ما الذي تريد قوله لمستقبلي هذا الأمر\"؟"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -689,7 +690,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
+msgstr "عند إنشاء الأمر سيتم وضعه في حالة \"مسودة\".\nما أن يتم تأكيده في البنك، تصبح حالته \"مؤكد\".\nعند إتمام عملية السداد، تصبح حالته \"منتهي\"."
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -702,17 +703,17 @@ msgstr "نعم"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
+msgstr "لا يمكنك إلغاء فاتورة تم استيرادها بالفعل في أمر دفع. قم بإزالتها أولاً من أمر الدفع التالي: %s."
 
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr "مرجعك"
+msgstr "رقم إشارتك"
 
 #. module: account_payment
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "_Add to payment order"
-msgstr "إ_ضافه الى أمر الدفع"
+msgstr "أضف إلى أمر الدفع"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view

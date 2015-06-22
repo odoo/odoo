@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-06 05:45+0000\n"
+"PO-Revision-Date: 2015-06-21 22:11+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -88,7 +88,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n<p>Azul ${object.partner_id.name},</p>\n\n<p>Tella tfaturt tamaynut iheggan ikeč: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>Timsisɣal</strong><br />\n&nbsp;&nbsp;Uṭṭun n tfaturt: <strong>${object.number}</strong><br />\n&nbsp;&nbsp;Asemday n tfaturt: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n&nbsp;&nbsp;Azemz n tfaturt: ${object.date_invoice}<br />\n% if object.origin:\n&nbsp;&nbsp;Timsisɣal n tladna: ${object.origin}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Anermis-ik: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n% endif\n</p> \n\n% if object.paypal_url:\n<br/>\n<p>Tzemreḍ diɣen a tefruḍ s srid s Paypal:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Tzemreḍ aɣ-d-nermeseḍ ma ɣuṛ-ek istiqsiyen..</p>\n<p>Tanemirt-ik imi tferneḍ ${object.company_id.name or 'Takebbwanit-nneɣ'}!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n% if object.company_id.street:\n${object.company_id.street}<br/>\n% endif\n% if object.company_id.street2:\n${object.company_id.street2}<br/>\n% endif\n% if object.company_id.city or object.company_id.zip:\n${object.company_id.zip} ${object.company_id.city}<br/>\n% endif\n% if object.company_id.country_id:\n${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n% endif\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nTiliɣri:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nAsmel Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
 
 #. module: account
 #: help:account.invoice,state:0
@@ -353,7 +353,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Cliquez pour créer une écriture dans le journal.\n              </p><p>\n                Un écriture de journal consiste en plusieurs lignes de journal, chacune étant\n                soit une opération de crédit, soit une opération de débit.\n              </p><p>\n                Odoo créé automatiquement une écriture de journal par document\n                comptable: facture, avoir, paiement fournisseur, relevé bancaire,\n                etc. Donc, vous ne devriez créer des écritures de journal seulement/principalement\n                pour d'autres opérations.\n              </p>\n            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -464,7 +464,7 @@ msgid ""
 "                refunds and reconcile them directly from the related supplier invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Click to register a refund you received from a supplier.\n              </p><p>\n                Instead of creating the supplier refund manually, you can generate\n                refunds and reconcile them directly from the related supplier invoice.\n              </p>\n            "
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
@@ -549,7 +549,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_temp_range
 msgid "A Temporary table used for Dashboard view"
-msgstr "A Temporary table used for Dashboard view"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_tree
@@ -1661,7 +1661,7 @@ msgstr "Par exemple, une précision décimale de 2 permet une entrée du type : 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
 msgid "Ask Refund"
-msgstr "Demander un avoir"
+msgstr "Ssuter tafaturt n tuɣalin"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_asset
@@ -1860,7 +1860,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Supplier Refund, otherwise a "
 "Partner bank account number."
-msgstr "Numéro du compte bancaire avec lequel la facture sera payée. Un compte bancaire de la société s'il s'agit d'une facture client ou d'un avoir fournisseur, sinon un numéro de compte bancaire du partenaire associé."
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -2019,7 +2019,7 @@ msgstr "S taggayt n ufaris"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Refund"
-msgstr "Par Avoir"
+msgstr "S tafurt n tuɣalin"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
@@ -2131,7 +2131,7 @@ msgstr "Annuler les factures sélectionnées"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr "Annuler : créer l'avoir et lettrer"
+msgstr "Sefsax: silel tafaturt n tuɣalin u siskel"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2156,7 +2156,7 @@ msgstr "Impossible de %s une facture brouillon/proforma/annulée."
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr "Vous ne pouvez pas %s la facture, qui est déjà rapprochée : le rapprochement doit d'abord être annulé. Vous pouvez seulement créer un avoir."
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_move_line.py:1299
@@ -3028,12 +3028,12 @@ msgstr "Créer des périodes mensuelles"
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
-msgstr "Créer avoir"
+msgstr "Silel tafaturt n tuɣalin"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr "Créer un avoir en brouillon"
+msgstr "Silel tafaturt n tuɣalin tarewwayt"
 
 #. module: account
 #: view:account.addtmpl.wizard:account.view_account_addtmpl_wizard_form
@@ -3387,13 +3387,13 @@ msgstr "Conditions de paiement client"
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr "Avoirs clients"
+msgstr "Tafaturt  n tuɣalin n umsaɣ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr "Avoirs clients"
+msgstr "Tifaturin n tuɣalin n yemsaɣen"
 
 #. module: account
 #: field:product.template,taxes_id:0
@@ -4191,14 +4191,14 @@ msgstr "Tuccḍa!"
 msgid ""
 "Error!\n"
 "The duration of the Period(s) is/are invalid."
-msgstr ""
+msgstr "Tuccḍa\nTangazt n tawala/tiwila mačči tamaɣtut (t-in)"
 
 #. module: account
 #: constraint:account.period:0
 msgid ""
 "Error!\n"
 "The period is invalid. Either some periods are overlapping or the period's dates are not matching the scope of the fiscal year."
-msgstr ""
+msgstr "Tuccḍa!\nTawala yagi mačči tameɣtut. Ahat izemzen mlalen neɣ fɣen seg izemzen n useggwass."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -4219,21 +4219,21 @@ msgstr "Tuccḍa!\nUr tezmireḍ ara ad slileḍ amiḍan anida amaraw ines yell
 msgid ""
 "Error!\n"
 "You cannot create recursive Tax Codes."
-msgstr ""
+msgstr "Tuccḍa !\nUr tezmireḍ ara asilel n tengalin n tzendit isnalasen."
 
 #. module: account
 #: constraint:account.account.template:0
 msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
-msgstr ""
+msgstr "Tuccḍa !\nUr tezmireḍ ara asilel n tneɣrufin n imiḍanen isnalasen."
 
 #. module: account
 #: constraint:account.account:0 constraint:account.tax.code:0
 msgid ""
 "Error!\n"
 "You cannot create recursive accounts."
-msgstr ""
+msgstr "Tuccḍa !\nUr tezmireḍ ara asilel n imiḍanen isnalasen."
 
 #. module: account
 #: field:account.account,exchange_rate:0
@@ -4243,7 +4243,7 @@ msgstr "Amfiḍi n tenfalit"
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "Aɛawas n imiḍanen i ţuraǧun"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expense
@@ -4318,7 +4318,7 @@ msgstr "Imzizdig"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filter By:"
-msgstr ""
+msgstr "I ţuzizdeg s :"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -4334,7 +4334,7 @@ msgstr ""
 #: field:account.vat.declaration,filter:0 field:accounting.report,filter:0
 #: field:accounting.report,filter_cmp:0
 msgid "Filter by"
-msgstr ""
+msgstr "I ţuzizdeg s "
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -4358,7 +4358,7 @@ msgstr "Filtré par date"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filtered by period"
-msgstr ""
+msgstr "I ţuzizdeg s twala"
 
 #. module: account
 #: view:account.common.report:account.account_common_report_view
@@ -4428,7 +4428,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Anhil amtewsan"
 
 #. module: account
 #: view:website:account.report_invoice_document
@@ -4440,7 +4440,7 @@ msgstr ""
 #: view:account.fiscal.position.template:account.view_account_position_template_search
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr ""
+msgstr "Tineɣrufin n inhilen imtewsanen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
@@ -4452,7 +4452,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr ""
+msgstr "Inhilen imtewsanen"
 
 #. module: account
 #: field:account.aged.trial.balance,fiscalyear_id:0
@@ -4550,12 +4550,12 @@ msgstr "Amdal n useggwass"
 #: selection:account.statement.operation.template,amount_type:0
 #: selection:account.tax.template,type:0
 msgid "Fixed"
-msgstr ""
+msgstr "Usbiḍ"
 
 #. module: account
 #: selection:account.payment.term.line,value:0 selection:account.tax,type:0
 msgid "Fixed Amount"
-msgstr ""
+msgstr "Azal usbiḍ"
 
 #. module: account
 #: field:account.bank.statement,message_follower_ids:0
@@ -4566,7 +4566,7 @@ msgstr "Imultaɣen"
 #. module: account
 #: help:account.tax.template,amount:0
 msgid "For Tax Type percent enter % ratio between 0-1."
-msgstr ""
+msgstr "I tzendiyin n tewsit \"Amfiḍi\", sekcem amfiḍi gar  0 ed 1."
 
 #. module: account
 #: help:account.financial.report,sign:0
@@ -4603,7 +4603,7 @@ msgstr "Iwakken ad yili d amfiḍi, sekcem azal gar  0-1."
 #. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
-msgstr ""
+msgstr "I tzendiyin illan di tewsit  \"Amfiḍi\", Mudd-ed amifidi gar 0-1."
 
 #. module: account
 #: field:account.invoice,period_id:0 field:account.invoice.report,period_id:0
@@ -4758,22 +4758,22 @@ msgstr "Sirew tira n tlalit n useggwass"
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close
 msgid "Generate Opening Entries"
-msgstr ""
+msgstr "Sirew tira n tlalit"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
 msgid "Generic Reporting"
-msgstr ""
+msgstr "Assaɣen udrimen nniḍen"
 
 #. module: account
 #: help:account.fiscalyear.close,report_name:0
 msgid "Give name of the new entries"
-msgstr ""
+msgstr "Ad imudd aglam a yettunefken i tira timaynutin"
 
 #. module: account
 #: selection:account.tax,applicable_type:0
 msgid "Given by Python Code"
-msgstr ""
+msgstr "Ittunefk sɣuṛ tangalt Python"
 
 #. module: account
 #: help:account.invoice.line,sequence:0
@@ -6340,7 +6340,7 @@ msgstr "Amazray n iznan  d  tiywalin"
 #. module: account
 #: view:account.tax:account.view_tax_form
 msgid "Misc"
-msgstr ""
+msgstr "Ayen nniḍen"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -6352,7 +6352,7 @@ msgstr ""
 #: code:addons/account/account.py:3190
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr ""
+msgstr "Aɣemis n temalin nniḍen"
 
 #. module: account
 #: field:account.model.line,model_id:0
@@ -6379,7 +6379,7 @@ msgstr "Tineɣrufin"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "Modifier : Créer un avoir, le rapprocher et créer une nouvelle facture"
 
 #. module: account
 #: view:account.treasury.report:account.view_account_treasury_report_search
@@ -6397,7 +6397,7 @@ msgstr ""
 #: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "Monthly"
-msgstr ""
+msgstr "S waggur"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
@@ -6456,7 +6456,7 @@ msgstr ""
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 msgid "My Entries"
-msgstr ""
+msgstr "Tira-yiw"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -6549,7 +6549,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "No Analytic Journal!"
-msgstr ""
+msgstr "Ulac aɣemis usliḍ!"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -6568,7 +6568,7 @@ msgstr ""
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
 msgid "No Filters"
-msgstr ""
+msgstr "Ulac imzizdig!"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -6578,42 +6578,42 @@ msgstr ""
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "Ulac aḍfaṛ"
 
 #. module: account
 #: code:addons/account/account_invoice.py:799
 #, python-format
 msgid "No Invoice Lines!"
-msgstr ""
+msgstr "Ulac izrigen a-tfetereḍ!"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "No Partner Defined!"
-msgstr ""
+msgstr "Ulac amendid !"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1299
 #, python-format
 msgid "No Piece Number!"
-msgstr ""
+msgstr "Ulac uṭṭun n tceqquft!"
 
 #. module: account
 #: code:addons/account/installer.py:114
 #, python-format
 msgid "No Unconfigured Company!"
-msgstr ""
+msgstr "Takebbwanit ur tebdid ara!"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "No detail"
-msgstr ""
+msgstr "Ulac aglam leqqayen"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:154
 #, python-format
 msgid "No period found on the invoice."
-msgstr ""
+msgstr "Ulac tawala ɣef tfaturt."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1270
@@ -6864,7 +6864,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line.reconcile.select:account.view_account_move_line_reconcile_select
 msgid "Open for Reconciliation"
-msgstr ""
+msgstr "Lli  i wesiskel"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:account.view_account_move_line_unreconcile_select
@@ -7635,7 +7635,7 @@ msgstr ""
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Pro-forma"
 
 #. module: account
 #: model:res.groups,name:account.group_proforma_invoices
@@ -7732,7 +7732,7 @@ msgstr "Amiḍan n ugemuḍ"
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "Proforma"
-msgstr ""
+msgstr "Pro-forma"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -7782,13 +7782,13 @@ msgstr "Aɣemis n tiɣin"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr ""
+msgstr "Tafaturt n tuɣalin n useǧǧaw"
 
 #. module: account
 #: code:addons/account/account.py:3189
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr ""
+msgstr "Aɣemis n tfaturin n tuɣalin n tiɣin"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
@@ -7814,7 +7814,7 @@ msgstr "Aɣemis n tiɣin"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Aɣemis n tfaturin n tuɣalin n tiɣin"
 
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
@@ -7838,7 +7838,7 @@ msgstr ""
 #: field:account.tax.template,python_compute:0
 #: selection:account.tax.template,type:0
 msgid "Python Code"
-msgstr ""
+msgstr "Tangalt Python"
 
 #. module: account
 #: field:account.tax,python_compute_inv:0
@@ -7860,7 +7860,7 @@ msgstr "Tanecta"
 #. module: account
 #: field:temp.range,name:0
 msgid "Range"
-msgstr ""
+msgstr "Azilal"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -8125,23 +8125,23 @@ msgstr "Tangalt n udasil n tuɣalin"
 #: field:account.tax,ref_base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Refund Base Code Sign"
-msgstr "Base coef. sur avoirs"
+msgstr ""
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
-msgstr "Avoir"
+msgstr "Tafaturt n tuɣalin"
 
 #. module: account
 #: field:account.invoice.refund,journal_id:0
 msgid "Refund Journal"
-msgstr "Journal d'avoirs"
+msgstr "Aɣemis n tfaturin n tuɣalin"
 
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Method"
-msgstr "Méthode d'avoir"
+msgstr "Tarrayt n tfaturin n tuɣalin"
 
 #. module: account
 #: field:account.tax,account_paid_id:0
@@ -8170,7 +8170,7 @@ msgstr ""
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr ""
+msgstr "Silel tafaturt n tuɣalin s tewsit agi. D awezɣi Asnifel neɣ Asefsax n tafturt iţuseskelen yakan."
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -9942,17 +9942,17 @@ msgstr ""
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "This F.Year"
-msgstr ""
+msgstr "Aseggwass agi"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "This Period"
-msgstr ""
+msgstr "Tawala yagi"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "This Year"
-msgstr ""
+msgstr "Aseggwass agi"
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -11396,37 +11396,37 @@ msgstr ""
 #: code:addons/account/static/src/js/account_widgets.js:1807
 #, python-format
 msgid "You must choose at least one record."
-msgstr ""
+msgstr "Issefk ɣarsum ad tferneḍ yiwen n ukalas."
 
 #. module: account
 #: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr ""
+msgstr "Isefk ad tesbaduḍ aɛemis usliḍ n tewsit \"%s\"!"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Issefk ad tferneḍ amendid !"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr ""
+msgstr "Issefk aţferneḍ imiḍanen a t-siskeleḍ."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
 #, python-format
 msgid "You must set a period length greater than 0."
-msgstr ""
+msgstr "Issefk ad muddeḍ teɣzi n twala yugaren 0."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
 #, python-format
 msgid "You must set a start date."
-msgstr ""
+msgstr "Issefk ad muddeḍ azemz n tazwara."
 
 #. module: account
 #: code:addons/account/account.py:422
@@ -11584,7 +11584,7 @@ msgstr "neɣ"
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
 msgid "period close"
-msgstr ""
+msgstr "Amdal n tawala"
 
 #. module: account
 #. openerp-web
@@ -11598,7 +11598,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
 #, python-format
 msgid "remaining)"
-msgstr ""
+msgstr "iqqimed)"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart

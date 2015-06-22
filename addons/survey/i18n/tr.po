@@ -4,13 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Levent Karakaş <levent@mektup.at>, 2015
+# Saban Yildiz <sabany@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 12:59+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-17 13:26+0000\n"
+"Last-Translator: Levent Karakaş <levent@mektup.at>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,21 +71,21 @@ msgstr ""
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
 msgid "<p>If you do not contribute or develop in Odoo, skip this page.</p>"
-msgstr ""
+msgstr "<p>Eğer Odoo'da geliştirme yapmıyor ve katkı sağlamıyorsanız, bu sayfayı geçin.</p>"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
 msgid ""
 "<p>Nobody has replied to your survey yet.</p>\n"
 "            "
-msgstr ""
+msgstr "<p>Anketinize henüz kimse katılmadı</p>"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_user_input
 msgid ""
 "<p>Nobody has replied to your surveys yet.</p>\n"
 "            "
-msgstr ""
+msgstr "<p>Anketlerinize henüz kimse katılmadı.</p>"
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
@@ -95,34 +97,34 @@ msgstr ""
 #. module: survey
 #: model:survey.survey,description:survey.feedback_form
 msgid "<p>This survey should take less than five minutes.</p>"
-msgstr ""
+msgstr "<p>Bu anket 5 dakikadan az sürecektir.</p>"
 
 #. module: survey
 #: constraint:survey.label:0
 msgid "A label must be attached to one and only one question"
-msgstr ""
+msgstr "Bir etiket sadece tek bir soruya eklenmelidir."
 
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "A length must be positive!"
-msgstr ""
+msgstr "Uzunluk pozitif olmalı!"
 
 #. module: survey
 #: help:survey.survey,description:0
 msgid "A long description of the purpose of the survey"
-msgstr ""
+msgstr "Anketin amacını açıklayan uzun bir tanım"
 
 #. module: survey
 #: help:survey.label,quizz_mark:0
 msgid ""
 "A positive score indicates a correct answer; a negative or null score "
 "indicates a wrong answer"
-msgstr ""
+msgstr "Pozitif skor doğru cevabı, negatif ya da boş skor yanlış cevabı belirtir."
 
 #. module: survey
 #: view:website:survey.page
 msgid "A problem has occured"
-msgstr ""
+msgstr "Bir problem oluştu"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_4
@@ -132,7 +134,7 @@ msgstr ""
 #. module: survey
 #: constraint:survey.user_input_line:0
 msgid "A question cannot be unanswered and skipped"
-msgstr ""
+msgstr "Bu soru cevapsız bırakılamaz ya da geçilemez."
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
@@ -142,7 +144,7 @@ msgstr ""
 #. module: survey
 #: model:survey.page,title:survey.feedback_1
 msgid "About your Odoo usage"
-msgstr ""
+msgstr "Odoo kullanımınız hakkında"
 
 #. module: survey
 #: field:survey.mail.compose.message,active_domain:0
@@ -154,12 +156,12 @@ msgstr "Etkin alan adı"
 msgid ""
 "Add list of email of recipients (will not converted in partner), separated "
 "by commas, semicolons or newline..."
-msgstr ""
+msgstr "E-posta alıcılarının listesini (partnera dönüştürülmeyecek) virgül ya da noktalı virgül ile ayırarak ya da yeni satır olarak ekleyin."
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid "Add list of existing contacts..."
-msgstr ""
+msgstr "Mevcut kişilerin listesini ekle..."
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_3
@@ -177,27 +179,27 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result
 msgid "All surveys"
-msgstr ""
+msgstr "Tüm Anketler"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Allow Comments"
-msgstr ""
+msgstr "Yorumlara İzin Ver"
 
 #. module: survey
 #: help:survey.page,description:0
 msgid "An introductory text to your page"
-msgstr ""
+msgstr "Sayfanıza tanımlayıcı bir metin ekleyin"
 
 #. module: survey
 #: view:survey.survey:survey.survey_kanban
 msgid "Analyze Answers"
-msgstr ""
+msgstr "Cevapları Analiz Et"
 
 #. module: survey
 #: view:website:survey.result_choice
 msgid "Answer Choices"
-msgstr ""
+msgstr "Cevap Seçenekleri"
 
 #. module: survey
 #: field:survey.user_input,type:0 field:survey.user_input_line,answer_type:0
@@ -223,12 +225,12 @@ msgstr "Yanıtlar"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "Cevaplar tartışma konusundaki orijinal dokümana gitmez. Bunun oluşturulan mesaj ID'si üzerinde etkisi vardır."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
 msgid "Are you using Odoo on a daily basis?"
-msgstr ""
+msgstr "Günlük olarak Odoo'yu kullanıyor musunuz?"
 
 #. module: survey
 #: field:survey.mail.compose.message,attachment_ids:0
@@ -260,7 +262,7 @@ msgstr "Otomatik olarak ayıklanmış HTML içeriği"
 #. module: survey
 #: view:website:survey.result_number
 msgid "Average"
-msgstr ""
+msgstr "Ortalama"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
@@ -290,20 +292,20 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result
 msgid "Clear All Filters"
-msgstr ""
+msgstr "Tüm Filtreleri Temizle"
 
 #. module: survey
 #: code:addons/survey/survey.py:141
 #: code:addons/survey/wizard/survey_email_compose_message.py:51
 #, python-format
 msgid "Click here to start survey"
-msgstr ""
+msgstr "Ankete başlamak için buraya tıklayın"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:109
 #, python-format
 msgid "Click here to take survey"
-msgstr ""
+msgstr "Ankete katılmak için buraya tıklayın"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -330,7 +332,7 @@ msgstr "Yorum"
 #. module: survey
 #: field:survey.question,comment_count_as_answer:0
 msgid "Comment Field is an Answer Choice"
-msgstr ""
+msgstr "Yorum Alanı bir Yanıt Seçeneğidir"
 
 #. module: survey
 #: field:survey.question,comments_message:0
@@ -362,7 +364,7 @@ msgstr "Yazma modu"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
 msgid "Configuration wizard exists for each important setting"
-msgstr ""
+msgstr "Her önemli ayar için yapılandırma sihirbazı mevcuttur."
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
@@ -378,12 +380,12 @@ msgstr "Yorumlar"
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid ""
 "Copy and paste the HTML code below to add this web link to any webpage."
-msgstr ""
+msgstr "HTML kodunu kopyalayıp aşağıya yapıştırın ve bu web linkini herhangi bir web sitesinde kullanın"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid "Copy, paste and share the web link below to your audience."
-msgstr ""
+msgstr "Kopyalayın, yapıştırın ve aşağıdaki web linkini takipçilerinizle paylaşın."
 
 #. module: survey
 #: field:survey.user_input_line,date_create:0
@@ -444,12 +446,12 @@ msgstr "Tarih ve Zaman"
 #. module: survey
 #: field:survey.user_input_line,value_date:0
 msgid "Date answer"
-msgstr ""
+msgstr "Yanıt zamanı"
 
 #. module: survey
 #: help:survey.user_input,deadline:0
 msgid "Date by which the person can open the survey and submit answers"
-msgstr ""
+msgstr "Katılımcıların anketi açıp katılıp cevaplayabilecekleri tarihin başlangıcı."
 
 #. module: survey
 #: help:survey.survey,message_last_post:0
@@ -466,17 +468,17 @@ msgstr "ZamanSınırı"
 msgid ""
 "Deadline to which the invitation to respond for this survey is valid. If the"
 " field is empty, the invitation is still valid."
-msgstr ""
+msgstr "Ankete katılım davetinin ve anketin geçerli olacağı son gün. Eğer bu alan boş ise davet halen aktiftir."
 
 #. module: survey
 #: field:survey.mail.compose.message,date_deadline:0
 msgid "Deadline to which the invitation to respond is valid"
-msgstr ""
+msgstr "Davetin son geçerlilik tarihi"
 
 #. module: survey
 #: view:survey.survey:survey.survey_kanban
 msgid "Delete!"
-msgstr ""
+msgstr "Sil!"
 
 #. module: survey
 #: field:survey.page,description:0 field:survey.question,description:0
@@ -487,7 +489,7 @@ msgstr "Açıklama"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_1
 msgid "Descriptions and help tooltips are clear enough"
-msgstr ""
+msgstr "Tanımlar ve yardım ip uçları yeterince açık"
 
 #. module: survey
 #: view:survey.survey:survey.survey_kanban
@@ -500,13 +502,13 @@ msgstr "Tasarım"
 #: model:survey.label,value:survey.fcol_2_5_2
 #: model:survey.label,value:survey.fcol_2_7_2
 msgid "Disagree"
-msgstr ""
+msgstr "Katılmıyorum"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 #: field:survey.question,display_mode:0
 msgid "Display mode"
-msgstr ""
+msgstr "Görüntüleme Modu"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_3
@@ -521,7 +523,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_3
 msgid "Do you have suggestions on how to improve the process view ?"
-msgstr ""
+msgstr "İşlem görünümünü geliştirmeye yönelik bir öneriniz var mı?"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
@@ -536,7 +538,7 @@ msgstr "E-mail"
 #. module: survey
 #: view:survey.survey:survey.survey_form
 msgid "Edit Pages and Questions"
-msgstr ""
+msgstr "Sayfaları ve Soruları Düzenle"
 
 #. module: survey
 #: selection:survey.mail.compose.message,type:0
@@ -564,7 +566,7 @@ msgstr "Anketi için e-posta kompozisyon sihirbazı"
 #. module: survey
 #: model:survey.page,title:survey.feedback_2
 msgid "Ergonomy and ease of use"
-msgstr ""
+msgstr "Ergonomi ve kullanım kolaylığı"
 
 #. module: survey
 #: field:survey.question,constr_error_msg:0
@@ -581,12 +583,12 @@ msgstr "Hata!"
 #. module: survey
 #: field:survey.mail.compose.message,partner_ids:0
 msgid "Existing contacts"
-msgstr ""
+msgstr "Mevcut Kontaklar"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_3
 msgid "Extra modules proposed are relevant"
-msgstr ""
+msgstr "Önerilen ekstra modüller uygun"
 
 #. module: survey
 #: view:website:survey.result
@@ -596,17 +598,17 @@ msgstr "Filtreler"
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
-msgstr ""
+msgstr "Mali Yönetim"
 
 #. module: survey
 #: view:website:survey.result
 msgid "Finished surveys"
-msgstr ""
+msgstr "Bitirilen Anketler"
 
 #. module: survey
 #: field:survey.stage,fold:0
 msgid "Folded in kanban view"
-msgstr ""
+msgstr "Kanban görünümünde katlanmış"
 
 #. module: survey
 #: field:survey.survey,message_follower_ids:0
@@ -621,12 +623,12 @@ msgstr "Biçim"
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Free Text"
-msgstr ""
+msgstr "Serbest Metin"
 
 #. module: survey
 #: field:survey.user_input_line,value_free_text:0
 msgid "Free Text answer"
-msgstr ""
+msgstr "Serbest Metin Cevap"
 
 #. module: survey
 #: field:survey.mail.compose.message,email_from:0
@@ -636,7 +638,7 @@ msgstr "Gönderen"
 #. module: survey
 #: view:website:survey.survey view:website:survey.survey_init
 msgid "Go back to surveys"
-msgstr ""
+msgstr "Anketlere geri dön"
 
 #. module: survey
 #: view:website:survey.result_choice view:website:survey.result_matrix
@@ -661,42 +663,42 @@ msgstr "Mesajlaşma özetini tutar (mesajların sayısı, ...). Bu özet kanban 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
 msgid "How do you contribute or plan to contribute to Odoo?"
-msgstr ""
+msgstr "Odoo'ya ne şekilde katkı sağlıyor ya da katkı sağlamayı düşünüyorsunuz?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
 msgid "Human Ressources"
-msgstr ""
+msgstr "İnsan Kaynakları"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
 msgid "I develop new features"
-msgstr ""
+msgstr "Yeni özellikler geliştiriyorum"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_4
 msgid "I do not publish my developments"
-msgstr ""
+msgstr "Geliştirmelerimi yayınlamıyorum"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_4
 msgid "I help to translate"
-msgstr ""
+msgstr "Çevirilerde yardımcı oluyorum"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_3
 msgid "I host them on my own website"
-msgstr ""
+msgstr "Kendi web sitemde barındırıyorum"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_1
 msgid "I participate to discussion and forums"
-msgstr ""
+msgstr "Forumlara ve tartışma gruplarına katkıda bulunuyorum"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_1
 msgid "I use Launchpad, like all official Odoo projects"
-msgstr ""
+msgstr "Tüm resmi Odoo projeleri gibi ben de Launchpad kullanıyorum"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_2
@@ -711,12 +713,12 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_5
 msgid "I write documentations"
-msgstr ""
+msgstr "Dokümantasyonlar yazıyorum"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_2
 msgid "I'd like to contribute but I don't know how?"
-msgstr ""
+msgstr "Katkıda bulunmak istiyorum ama nasıl yapacağımı bilmiyorum"
 
 #. module: survey
 #: field:survey.label,id:0 field:survey.mail.compose.message,id:0
@@ -729,7 +731,7 @@ msgstr "ID"
 #. module: survey
 #: field:survey.user_input,token:0
 msgid "Identification token"
-msgstr ""
+msgstr "Kimlik Belirteci"
 
 #. module: survey
 #: help:survey.survey,message_unread:0
@@ -739,12 +741,12 @@ msgstr "Eğer işaretlenirse yeni mesajlar ilginizi gerektirir"
 #. module: survey
 #: help:survey.survey,users_can_go_back:0
 msgid "If checked, users can go back to previous pages."
-msgstr ""
+msgstr "Seçilirse, kullanıcılar önceki sayfalara gidebilirler."
 
 #. module: survey
 #: help:survey.stage,closed:0
 msgid "If closed, people won't be able to answer to surveys in this column."
-msgstr ""
+msgstr "Eğer kapalıysa, kullanıcılar bu sütundaki anketlere katılamazlar."
 
 #. module: survey
 #: code:addons/survey/survey.py:649
@@ -768,7 +770,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.sfinished
 msgid "If you wish, you can"
-msgstr ""
+msgstr "İstersen yapabilirsin"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_in_progress
@@ -783,12 +785,12 @@ msgstr "İlk mesaj konusu."
 #. module: survey
 #: field:survey.question,validation_email:0
 msgid "Input must be an email"
-msgstr ""
+msgstr "Girdi bir e-posta adresi olmalıdır"
 
 #. module: survey
 #: view:survey.survey:survey.survey_tree
 msgid "Invitations sent"
-msgstr ""
+msgstr "Davetler gönderildi"
 
 #. module: survey
 #: field:survey.survey,message_is_follower:0
@@ -798,42 +800,42 @@ msgstr "İzleyici"
 #. module: survey
 #: field:survey.survey,designed:0
 msgid "Is designed?"
-msgstr ""
+msgstr "Tasarlandı mı?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_2
 msgid "It can be improved"
-msgstr ""
+msgstr "Geliştirilebilir"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_2
 msgid "It helps in the beginning"
-msgstr ""
+msgstr "Başlangıçta yardımcı oluyor."
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_5
 msgid "It is clear"
-msgstr ""
+msgstr "Açık ve net"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_4
 msgid "It is complete"
-msgstr ""
+msgstr "Eksiksiz"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_1
 msgid "It is up-to-date"
-msgstr ""
+msgstr "Güncel"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_5
 msgid "It's easy to find the process you need"
-msgstr ""
+msgstr "İhtiyacınız olan işlemi bulmak kolay"
 
 #. module: survey
 #: field:survey.label,sequence:0
 msgid "Label Sequence order"
-msgstr ""
+msgstr "Etiket Sıra Düzeni"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
@@ -868,7 +870,7 @@ msgstr "Son Güncelleme"
 #. module: survey
 #: field:survey.user_input,last_displayed_page_id:0
 msgid "Last displayed page"
-msgstr ""
+msgstr "Son görüntülenen sayfa"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -878,7 +880,7 @@ msgstr "Bağlantı"
 #. module: survey
 #: field:survey.mail.compose.message,multi_email:0
 msgid "List of emails"
-msgstr ""
+msgstr "E-Posta listesi"
 
 #. module: survey
 #: field:survey.mail.compose.message,is_log:0
@@ -888,18 +890,18 @@ msgstr "Bir İç Not Ekleme"
 #. module: survey
 #: field:survey.survey,auth_required:0 view:website:survey.auth_required
 msgid "Login required"
-msgstr ""
+msgstr "Giriş gerekli"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Long Text Zone"
-msgstr ""
+msgstr "Uzun metin alanı"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 #: field:survey.question,constr_mandatory:0
 msgid "Mandatory Answer"
-msgstr ""
+msgstr "Zorunlu Cevap"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -909,17 +911,17 @@ msgstr "El ile"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix"
-msgstr ""
+msgstr "Matris"
 
 #. module: survey
 #: field:survey.question,matrix_subtype:0
 msgid "Matrix Type"
-msgstr ""
+msgstr "Matris Türü"
 
 #. module: survey
 #: view:website:survey.result
 msgid "Matrix:"
-msgstr ""
+msgstr "Matris:"
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -1726,7 +1728,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.sfinished
 msgid "Thank you!"
-msgstr ""
+msgstr "Teşekkürler!"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -2184,4 +2186,4 @@ msgstr ""
 #. module: survey
 #: view:website:survey.datetime
 msgid "yyyy-mm-dd hh:mm:ss"
-msgstr ""
+msgstr "yyyy-aa-gg ss:dd:ss"
