@@ -362,12 +362,8 @@ Tour.register({
         },
 
         {
-            title:      "switch to list view",
-            waitFor:    ".oe_list_editable",
-            element:    '.oe-cp-switch-list',
-        },
-        {
             title:      "select previous created record",
+            waitFor:    '.breadcrumb li:containsExact(Discussions 2)',
             element:    'td[data-field="name"]:contains(test_trigger):last',
         },
         {

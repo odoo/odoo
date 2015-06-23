@@ -114,8 +114,9 @@
         <record id="action_discussions_2" model="ir.actions.act_window">
             <field name="name">Discussions 2</field>
             <field name="res_model">test_new_api.discussion</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="discussion_form_2"/>
+            <field name="view_ids" eval="[(5,0,0),
+                          (0,0,{'view_mode':'tree'}),
+                          (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_2')})]"/>
         </record>
         <menuitem id="menu_discussions_2" action="action_discussions_2" parent="menu_sub" sequence="10"/>
 
