@@ -170,9 +170,7 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem name="Configuration" parent="menu_hr_attendance_root" id="menu_hr_attendance_config" sequence="100" groups="base.group_configuration"/>
-        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" 
-            parent="menu_hr_attendance_config" groups="base.group_hr_attendance" sequence="1"/>
+        <menuitem name="Configuration" parent="menu_hr_attendance_root" id="menu_hr_attendance_config" sequence="100" groups="base.group_configuration,base.group_hr_attendance" action="open_view_attendance_reason"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">
             <field name="name">hr.employee.form1</field>

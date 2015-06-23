@@ -85,7 +85,8 @@
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
         <field name="context">{}</field>  <!-- force empty -->
     </record>
-    <menuitem name="Recruitment" action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="report_hr_recruitment" sequence="0"/>
+    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root" 
+    sequence="99" action="action_hr_recruitment_report_all"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
         <field name="res_model">hr.recruitment.report</field>

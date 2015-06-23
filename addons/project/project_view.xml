@@ -18,12 +18,6 @@
         <menuitem id="menu_project_config" name="Configuration" parent="base.menu_main_pm"
             sequence="100" groups="base.group_configuration"/>
 
-        <menuitem name="Configuration"
-            id="base.menu_definitions"
-            parent="menu_project_config"
-            groups="base.group_configuration"
-            sequence="100"/>
-
         <record id="view_task_search_form" model="ir.ui.view">
             <field name="name">project.task.search.form</field>
             <field name="model">project.task</field>
@@ -619,7 +613,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_tasks_config" name="GTD" parent="base.menu_definitions" sequence="1"/>
+        <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>
 
         <menuitem action="open_task_type_form" id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1" groups="base.group_no_one"/>
 
@@ -688,7 +682,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="project_tags_action" id="menu_project_tags_act" parent="base.menu_definitions" groups="base.group_no_one"/>
+        <menuitem action="project_tags_action" id="menu_project_tags_act" parent="menu_project_config" groups="base.group_no_one"/>
 
     </data>
 </openerp>
