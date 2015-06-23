@@ -10,7 +10,8 @@ class event_config_settings(osv.TransientModel):
             'Sell events tickets',
             help='Install the event_sale module'),
         'module_website_event_track': fields.boolean(
-            'Organize few days event with track, full agenda, own menu in website'),
+            'Organize few days event with track, full agenda, own menu in website',
+            help='Install the module website_event_track'),
         'module_website_event_questions': fields.boolean(
             'Ask questions to online subscribers',
             help='Install the website_event_questions module'),
