@@ -25,7 +25,6 @@ Tour.register({
         {
             title:     "Change html for this test",
             onload: function () {
-                var $el = $(this.element);
                 var html = '\n'+
                     '<section>\n'+
                     '    <div class="container">\n'+

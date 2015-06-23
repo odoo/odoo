@@ -417,7 +417,6 @@ var Tour = {
     },
     logError: function (step, message, all) {
         var state = Tour.getState();
-        console.log(state.tour.steps.slice());
         message += '\ntour: ' + state.id
             + (step ? '\nstep: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
             + (all ? '\nhref: ' + window.location.href : '' )
