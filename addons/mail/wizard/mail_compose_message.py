@@ -360,6 +360,7 @@ class MailComposer(models.TransientModel):
                 values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
         elif template_id:
             values = self.generate_email_for_composer(template_id, [res_id])[res_id]
+            attachments = values.pop('attachments', [])
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
             values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
