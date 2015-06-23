@@ -243,7 +243,6 @@
                 t-att-data-menu="menu['id']"
                 t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or ''"
                 t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or ''">
-                <i t-if="menu.get('icon')" t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw"/>
                 <span class="oe_menu_text">
                     <t t-esc="menu['name']"/>
                 </span>
