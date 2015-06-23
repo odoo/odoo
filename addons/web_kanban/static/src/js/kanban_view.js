@@ -522,18 +522,18 @@ var KanbanView = View.extend({
                         options = pyeval.py_eval(rel.options);
                     }
                     if (options.m2m_tags) {
-                        $element.append('<span class="oe_tag">' + _.str.escapeHTML(nameget[1]) + '</span>');
+                        $element.append('<span class="o_label_tag label label-default">' + _.str.escapeHTML(nameget[1]) + '</span>');
                     } else {
                         // white color (0) should not be selected, 1 instead
                         var color = KanbanRecord.prototype.kanban_getcolor(nameget[1]) + 1;
                         var $tag = $('<span>')
-                            .addClass('o_tag oe_kanban_color_' + color)
+                            .addClass('o_color_tag oe_kanban_color_' + color)
                             .attr('title', _.str.escapeHTML(nameget[1]));
                         $element.append($tag);
                     }
                 });
                 // we use boostrap tooltips for better and faster display
-                self.$('span.o_tag').tooltip();
+                self.$('span.o_color_tag').tooltip();
             });
         });
     },
