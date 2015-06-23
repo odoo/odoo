@@ -5,6 +5,8 @@ var widget = require('web_editor.widget');
 var animation = require('web_editor.snippets.animation');
 var options = require('web_editor.snippets.options');
 var snippet_editor = require('web_editor.snippet.editor');
+var website = require('website.website');
+var website_animation = require('website.snippets.animation');
 
 
 snippet_editor.Class.include({
@@ -203,6 +205,99 @@ options.registry.carousel = options.registry.slider.extend({
         this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
     },
 });
+
+var EditorCountdown = widget.Dialog.extend({
+    template: 'website.countdown_configuration',
+    events : _.extend({}, widget.Dialog.prototype.events, {
+        'click button[data-action=set_countdown]': 'set_countdown',
+    }),
+    init: function (parent) {
+        this.$target = parent.$target;
+        return this._super();
+    },
+    start: function () {
+        var self = this;
+        $("div.input-group span.fa-calendar").on('click', function(e) {
+            $(e.currentTarget).closest("div.date").datetimepicker({
+                useSeconds: true,
+                icons : {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down'
+                },
+            });
+        });
+        return this._super();
+    },
+    set_countdown: function (e) {
+        var self = this;
+        var release_date = $("#web_countdown_date").val();
+        var add_warning = function (msg){
+            self.$el.find(".alert").remove();
+            self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
+        };
+        var matches = release_date.match(/^(\d{4})\-(\d{2}|\d{1})\-(\d{2}|\d{1}) (\d{2}|\d{1}):(\d{2}|\d{1}):(\d{2}|\d{1})$/);
+        if(matches === null)
+        {
+            add_warning('Invalid Input. Please enter proper DATE, HOURS, MINUTES, SECONDS');
+        }
+        else {
+            this.$target.attr("data-release_date", new Date(release_date).getTime());
+            this.trigger('set_countdown');
+        }
+    },
+});
+
+options.registry.countdown = options.Class.extend({
+    on_set_countdown: function (type, value) {
+        if (type !== 'click') return;
+        var self = this;
+        var release_date = parseInt(this.$target[0].getAttribute("data-release_date"));
+        var set_dialog = new EditorCountdown(self);
+        set_dialog.appendTo($(document.body));
+        if (release_date) {
+            var date = new Date(release_date);
+            $('input#web_countdown_date').val(moment(date).format('YYYY-MM-DD HH:mm:ss'));
+        }
+        set_dialog.on('set_countdown', this, function () {
+            website_animation.countdown(self.$target, false);
+            set_dialog.$el.modal('hide');
+        });
+    },
+    add_timer_element: function (type, value) {
+        var $clock_str = {"o_counter_day": "Days", "o_counter_hour": "Hours", "o_counter_min": "Minutes", "o_counter_sec": "Seconds"};
+        if (value && value.length && type == "click"){
+            if (this.$target.find("div."+value).length){
+                alert('Countdown Timer displaying "' + $clock_str[value] + '" is already there.')
+            }
+            else{
+                var $clock = "<div class='col-md-2 col-sm-3 col-xs-6 text-center mb16'><div class='"+value+" o_countdown-text img-circle col-xs-12 text-center'><p> <font class='o_count_val' contenteditable='false'>00</font></p><p><font>"+$clock_str[value]+"</font></p></div><div>"
+                this.$target.find("div.col-last").first().before($clock);
+            }
+        }
+    },
+});
+
+website.TopBar.include({
+    edit: function () {
+        var self = this;
+        this._super();
+        $('body').on('click',
+            '.o_show_counter',
+            function(){
+                $(this).closest('.container').find(".o_countdown_start").removeClass('hidden');
+                $(this).closest('.container').find(".o_countdown_over").addClass('hidden');
+        });
+        $('body').on('click',
+            '.o_show_release',
+            function(){
+                $(this).closest('.container').find(".o_countdown_start").addClass('hidden');
+                $(this).closest('.container').find(".o_countdown_over").removeClass('hidden');
+        });
+    },
+});
+
 
 options.registry.marginAndResize = options.Class.extend({
     start: function () {
