@@ -38,7 +38,6 @@ input segments, workflow.
     """,
     'website': 'https://www.odoo.com/page/lead-automation',
     'data': [
-        'res_config.xml',
         'marketing_campaign_view.xml',
         'marketing_campaign_data.xml',
         'marketing_campaign_workflow.xml',
