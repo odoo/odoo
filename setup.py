@@ -97,6 +97,7 @@ def py2exe_options():
                         'select',
                         'simplejson',
                         'smtplib',
+                        'suds',
                         'uuid',
                         'vatnumber',
                         'vobject',
@@ -158,6 +159,7 @@ setup(
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
         'simplejson',
+        'suds-jurko',
         'unittest2',
         'vatnumber',
         'vobject',
