@@ -85,6 +85,8 @@ class res_groups(osv.osv):
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
         'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
+        'share': fields.boolean('Share Group',
+                    help="Group created to set access rights for sharing data with some users.")
     }
 
     _sql_constraints = [
@@ -146,6 +148,21 @@ class res_users(osv.osv):
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
 
+    def _is_share(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            res[user.id] = not self.has_group(cr, user.id, 'base.group_user')
+        return res
+
+    def _get_users_from_group(self, cr, uid, ids, context=None):
+        result = set()
+        groups = self.pool['res.groups'].browse(cr, uid, ids, context=context)
+        # Clear cache to avoid perf degradation on databases with thousands of users
+        groups.invalidate_cache()
+        for group in groups:
+            result.update(user.id for user in group.users)
+        return list(result)
+
     _columns = {
         'id': fields.integer('ID'),
         'login_date': fields.datetime('Latest connection', select=1, copy=False),
@@ -171,6 +188,11 @@ class res_users(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help='The company this user is currently working for.', context={'user_preference': True}),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
+        'share': fields.function(_is_share, string='Share User', type='boolean',
+             store={
+                 'res.users': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                 'res.groups': (_get_users_from_group, None, 50),
+             }, help="External user with limited access, created only for the purpose of sharing data."),
     }
 
     # overridden inherited fields to bypass access rights, in case you have
@@ -759,7 +781,10 @@ class groups_view(osv.osv):
         return True
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
-        return self.search(cr, uid, domain or [])
+        if domain is None:
+            domain = []
+        domain.append(('share', '=', False))
+        return self.search(cr, uid, domain, context=context)
 
     def get_groups_by_application(self, cr, uid, context=None):
         """ return all groups classified by application (module category), as a list of pairs:
