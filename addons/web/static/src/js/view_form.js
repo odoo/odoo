@@ -5177,6 +5177,17 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.$el.find('input').eq(0).val('');
         this.set_filename('');
+    },
+    set_value: function(value_){
+        var changed = value_ !== this.get_value();
+        this._super.apply(this, arguments);
+        // Trigger value change if size is the same
+        if (!changed){
+            this.trigger("change:value", this, {
+                oldValue: value_,
+                newValue: value_
+            });
+        }
     }
 });
 
