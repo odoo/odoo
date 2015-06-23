@@ -1053,7 +1053,9 @@ class purchase_order_line(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
         if procurement_ids_to_except:
-            self.pool['procurement.order'].write(cr, uid, procurement_ids_to_except, {'state': 'exception'}, context=context)
+            for po_id in procurement_ids_to_except:
+                procurement_obj.message_post(cr, uid, po_id, body=_('Purchase order line deleted.'), context=context)
+            procurement_obj.write(cr, uid, procurement_ids_to_except, {'state': 'exception'}, context=context)
         return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
@@ -1238,8 +1240,12 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        if procurement.purchase_line_id and procurement.purchase_line_id.order_id.shipped:  # TOCHECK: does it work for several deliveries?
-            return True
+        if procurement.purchase_line_id:
+            if procurement.purchase_line_id.order_id.shipped:
+                return True
+            elif procurement.move_ids:
+                moves = self.pool.get('stock.move').browse(cr, uid, [x.id for x in procurement.move_ids], context=context)
+                return all(move.state == 'done' for move in moves)
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
     def _check_supplier_info(self, cr, uid, ids, context=None):
@@ -1330,7 +1336,7 @@ class procurement_order(osv.osv):
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
 
-        seller_qty = procurement.product_id.seller_qty
+        seller_qty = procurement.product_id.seller_qty if procurement.location_id.usage != 'customer' else 0.0
         pricelist_id = partner.property_product_pricelist_purchase.id
         uom_id = procurement.product_id.uom_po_id.id
         qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
@@ -1369,12 +1375,15 @@ class procurement_order(osv.osv):
             qty = -qty
 
         # Make sure we use the minimum quantity of the partner corresponding to the PO
-        if po_line.product_id.seller_id.id == po_line.order_id.partner_id.id:
-            supplierinfo_min_qty = po_line.product_id.seller_qty
-        else:
-            supplierinfo_obj = self.pool.get('product.supplierinfo')
-            supplierinfo_ids = supplierinfo_obj.search(cr, uid, [('name', '=', po_line.order_id.partner_id.id), ('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
-            supplierinfo_min_qty = supplierinfo_obj.browse(cr, uid, supplierinfo_ids).min_qty
+        # This does not apply in case of dropshipping
+        supplierinfo_min_qty = 0.0
+        if po_line.order_id.location_id.usage != 'customer':
+            if po_line.product_id.seller_id.id == po_line.order_id.partner_id.id:
+                supplierinfo_min_qty = po_line.product_id.seller_qty
+            else:
+                supplierinfo_obj = self.pool.get('product.supplierinfo')
+                supplierinfo_ids = supplierinfo_obj.search(cr, uid, [('name', '=', po_line.order_id.partner_id.id), ('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
+                supplierinfo_min_qty = supplierinfo_obj.browse(cr, uid, supplierinfo_ids).min_qty
 
         if supplierinfo_min_qty == 0.0:
             qty += po_line.product_qty

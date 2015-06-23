@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-05 20:24+0000\n"
+"PO-Revision-Date: 2015-06-21 17:34+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgstr "%s (Anɣel )"
 #: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s ifures"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -65,7 +65,7 @@ msgid ""
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned i tmerna n tegrawalt.\n</p><p>\nIsuddas n tegrawalin d isuddas ed by-products \ni ţuseqdacen i wesilel n tegrawalin tigejdanin . Seqdec umuɣ agi\ni wenadi n tegrawalt iwatan anda i ţuseqdec usuddis.\n</p>"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -182,12 +182,12 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "Ameskar n 0.9 yebɣa ad yini d aḍeqqaṛ n 10% deg ukala n ufares. "
 
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
-msgstr ""
+msgstr "Ameskar n 0.9 yebɣa ad yini d aḍeqqaṛ n 10% deg ukala n ufares. "
 
 #. module: mrp
 #: field:mrp.bom,active:0 field:mrp.routing,active:0
@@ -205,12 +205,12 @@ msgstr "Ulac Asulay urmid"
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "Issefk akkw tinectiwin n ufaris ad ugarent 0.\nIssefk ad tesebdeḍ azegrir mrp_byproduc ma tebɣiḍ asefrek n farisen nniḍen di tegrawalin."
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr ""
+msgstr "Sireg asɣiwes leqqayen ɣef tludna n umahil."
 
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
@@ -243,7 +243,7 @@ msgstr "Azal s isragen"
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
 msgid "Amount measuring unit"
-msgstr ""
+msgstr "Aferdis n usɣel n tnecta"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -420,25 +420,25 @@ msgstr ""
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr ""
+msgstr "Ur tezmireḍ ara ad tekseḍ taladna n ufaris yella deg addad '%s'."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:679
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "Ulac tagrawalt i wefaris agi"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Cannot find bill of material for this product."
-msgstr ""
+msgstr "Ulac tagrawalt i wefaris agi"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 msgid "Capacity Information"
-msgstr ""
+msgstr "Talɣut ɣef ukettar"
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -497,7 +497,7 @@ msgstr "Isuddas"
 #: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
-msgstr ""
+msgstr "Atig n isuddas n %s %s"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -550,25 +550,25 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr ""
+msgstr "Suder kan"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Products"
-msgstr ""
+msgstr "Suder ifarisen"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_lines2:0 view:website:mrp.report_mrporder
 msgid "Consumed Products"
-msgstr ""
+msgstr "Ifarisen iţusuderen"
 
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr " iţusuder i"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -581,7 +581,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
-msgstr ""
+msgstr "Taɣessa n watig"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -707,7 +707,7 @@ msgstr "Tuccḍa!"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Extra Information"
-msgstr ""
+msgstr "Talɣut nniḍen"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
@@ -739,7 +739,7 @@ msgstr "Asun n ifarisen imden"
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
 msgid "Followers"
-msgstr "Imagazen"
+msgstr "Imeltaɣen"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -934,7 +934,7 @@ msgstr "Aleqqem aneggaru di"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Late"
-msgstr ""
+msgstr "Yeɛṭel"
 
 #. module: mrp
 #: field:stock.move.consume,location_id:0
@@ -1072,17 +1072,17 @@ msgstr "Tiludna n ufares iţraǧǧun isufar."
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Mark as Started"
-msgstr ""
+msgstr "Weccem yebda"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
 msgid "Master Bill of Materials"
-msgstr ""
+msgstr "Tigrawalin tigejdanin"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Master Data"
-msgstr ""
+msgstr "Isefka igejdanen"
 
 #. module: mrp
 #: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
@@ -1139,12 +1139,12 @@ msgstr "Amḍan n isragen"
 #: selection:mrp.bom,type:0 selection:mrp.bom.line,type:0
 #: selection:mrp.production,priority:0
 msgid "Normal"
-msgstr "Normal"
+msgstr "Amagnu"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Not urgent"
-msgstr "Non urgent"
+msgstr "Ur yezrib ara"
 
 #. module: mrp
 #: help:mrp.property,composition:0
@@ -1448,22 +1448,22 @@ msgstr "Uṭṭun n Taladna n Ufares"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Taladna n ufaris i yifarisen ifursen"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Taladna n ufaris i tegrawalin"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr ""
+msgstr "Afaris iɣiwsen i ufares"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "Afares yebdan"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1496,24 +1496,24 @@ msgstr "Ifarisen"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Ifarisen i ţusuderen"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_lines:0 view:website:mrp.report_mrporder
 msgid "Products to Consume"
-msgstr ""
+msgstr "Ifarisen i wesuder"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Products to Finish"
-msgstr ""
+msgstr "Ifarisen a yemden"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_created_ids:0
 msgid "Products to Produce"
-msgstr ""
+msgstr "Ifarisen a yeţufaresen"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1524,7 +1524,7 @@ msgstr ""
 #: view:mrp.property:mrp.mrp_property_tree_view
 #: field:procurement.order,property_ids:0
 msgid "Properties"
-msgstr "Propriétés"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.property.group:mrp.mrp_property_group_form_view
@@ -1587,7 +1587,7 @@ msgstr "Ihegga"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
-msgstr ""
+msgstr "Ihegga i wefares"
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
@@ -1604,7 +1604,7 @@ msgstr "Issefk tamsisɣelt aţţili d tasuft di tkebbwanit!"
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr ""
+msgstr "Tamsiɣelt n usemli i d-yesirwen asuter agi n tladna n ufares."
 
 #. module: mrp
 #: help:mrp.bom,position:0
@@ -1718,27 +1718,27 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Scrap Products"
-msgstr "Mettre au rebut"
+msgstr "Rrit ɣeṛ welba"
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Search"
-msgstr "Nnadi"
+msgstr "Nadi"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr "Nnadi tagrawalt"
+msgstr "Nadi tagrawalt"
 
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr "Nnadi isuddas n tegrawalt"
+msgstr "Nadi isuddas n tegrawalt"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Search Production"
-msgstr "Nnadi afares"
+msgstr "Nadi afares"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
@@ -1748,7 +1748,7 @@ msgstr ""
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "Ussan n tɣellist i yal tamhelt n ufares."
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
@@ -1758,7 +1758,7 @@ msgstr "Fren Tanecta"
 #. module: mrp
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
 msgid "Select time unit"
-msgstr ""
+msgstr "Fren aferdis n wakud"
 
 #. module: mrp
 #: field:mrp.bom,sequence:0 field:mrp.bom.line,sequence:0
@@ -1770,7 +1770,7 @@ msgstr "Agzum"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr "Sbed"
+msgstr "Sebded"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -1855,7 +1855,7 @@ msgstr ""
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "Urti atiknikan i ţuseqedcen i weḍfaṛ n ifarisen ifursen "
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
@@ -2031,7 +2031,7 @@ msgstr "Aseqdac"
 #. module: mrp
 #: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
 msgid "Valid From"
-msgstr ""
+msgstr "Iɣbel si"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2043,12 +2043,12 @@ msgstr ""
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Iɣbel seg aggur"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
-msgstr ""
+msgstr "Iɣbel arma"
 
 #. module: mrp
 #: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0

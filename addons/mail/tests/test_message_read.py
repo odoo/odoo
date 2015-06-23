@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.common import TestMail
+from .common import TestMail
 
 
 class test_mail_access_rights(TestMail):

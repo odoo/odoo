@@ -840,8 +840,7 @@ class account_move_line(osv.osv):
                     total_amount = debit or credit
                 else:
                     ctx = context.copy()
-                    if target_date:
-                        ctx.update({'date': target_date})
+                    ctx.update({'date': line.date})
                     total_amount = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, total_amount, context=ctx)
                     actual_debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_debit, context=ctx)
                     actual_credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_credit, context=ctx)

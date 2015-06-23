@@ -24,6 +24,7 @@ from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 import openerp.addons.decimal_precision as dp
 from openerp.tools.float_utils import float_round
+from openerp.exceptions import except_orm
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -481,6 +482,16 @@ class product_template(osv.osv):
             result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
             result['context'] = "{'tree_view_ref':'stock.view_move_tree'}"
         return result
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'uom_id' in vals:
+            new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_id'], context=context)
+            for product in self.browse(cr, uid, ids, context=context):
+                old_uom = product.uom_id
+                if old_uom != new_uom:
+                    if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', [x.id for x in product.product_variant_ids]), ('state', '=', 'done')], limit=1, context=context):
+                        raise except_orm(_('Warning'), _("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
+        return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
 
 class product_removal_strategy(osv.osv):
