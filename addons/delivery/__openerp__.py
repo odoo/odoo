@@ -10,19 +10,22 @@
 Allows you to add delivery methods in sale orders and picking.
 ==============================================================
 
-You can define your own carrier and delivery grids for prices. When creating 
+You can define your own carrier and delivery grids for prices. When creating
 invoices from picking, OpenERP is able to add and compute the shipping line.
 """,
     'author': 'OpenERP SA',
     'depends': ['sale_stock'],
     'data': [
         'security/ir.model.access.csv',
-        'delivery_view.xml',
-        'partner_view.xml',
-        'delivery_data.xml',
-        'views/report_shipping.xml',
+        'views/delivery_views.xml',
+        'views/sale_order_views.xml',
+        'views/stock_picking_views.xml',
+        'views/stock_move_views.xml',
+        'views/partner_views.xml',
+        'data/delivery_data.xml',
+        'views/stock_picking_templates.xml',
     ],
-    'demo': ['delivery_demo.xml'],
+    'demo': ['data/delivery_demo.xml'],
     'test': [
         '../account/test/account_minimal_test.xml',
         'test/delivery_cost.yml',
