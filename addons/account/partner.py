@@ -113,15 +113,15 @@ class account_fiscal_position(osv.osv):
         part_obj = self.pool['res.partner']
         partner = part_obj.browse(cr, uid, partner_id, context=context)
 
-        # partner manually set fiscal position always win
-        if partner.property_account_position:
-            return partner.property_account_position.id
-
         # if no delivery use invocing
         if delivery_id:
             delivery = part_obj.browse(cr, uid, delivery_id, context=context)
         else:
             delivery = partner
+
+        # partner manually set fiscal position always win
+        if delivery.property_account_position or partner.property_account_position:
+            return delivery.property_account_position or partner.property_account_position
 
         domains = [[('auto_apply', '=', True), ('vat_required', '=', partner.vat_subjected)]]
         if partner.vat_subjected:

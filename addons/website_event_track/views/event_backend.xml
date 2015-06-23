@@ -325,8 +325,8 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                 </xpath>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <div name="event_checkboxes">
-                        <field name="show_menu"/>
-                        <label for="show_menu"/>
+                        <field name="show_menu" groups="base.group_no_one"/>
+                        <label for="show_menu" groups="base.group_no_one"/>
                         <field name="show_tracks"/>
                         <label for="show_tracks"/>
                         <field name="show_track_proposal"/>

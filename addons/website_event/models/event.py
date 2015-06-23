@@ -39,7 +39,9 @@ class event(models.Model):
     def _default_hashtag(self):
         return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()
 
-    show_menu = fields.Boolean('Dedicated Menu', compute='_get_show_menu', inverse='_set_show_menu')
+    show_menu = fields.Boolean('Dedicated Menu', compute='_get_show_menu', inverse='_set_show_menu',
+                               help="Creates menus Introduction, Location and Register on the page "
+                                    " of the event on the website."),
     menu_id = fields.Many2one('website.menu', 'Event Menu')
 
     @api.one
