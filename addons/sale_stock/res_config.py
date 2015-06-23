@@ -69,4 +69,4 @@ class sale_configuration(osv.osv_memory):
     def onchange_invoice_methods(self, cr, uid, ids, group_invoice_deli_orders, context=None):
         if not group_invoice_deli_orders:
             return {'value': {'default_order_policy': 'manual'}}
-        return {}
+        return {'value': {'default_order_policy': 'picking'}}
