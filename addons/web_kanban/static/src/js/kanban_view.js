@@ -595,7 +595,7 @@ var KanbanView = View.extend({
         var self = this;
         var column = event.target;
         var context = {};
-        context['default_' + this.group_by_field] = column.value;
+        context['default_' + this.group_by_field] = column.values.id;
         var name = event.data.value;
         this.dataset.name_create(name, context).then(function on_success (data) {
             add_record(data[0]);
