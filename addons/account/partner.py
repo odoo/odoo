@@ -121,7 +121,7 @@ class account_fiscal_position(osv.osv):
 
         # partner manually set fiscal position always win
         if delivery.property_account_position or partner.property_account_position:
-            return delivery.property_account_position or partner.property_account_position
+            return delivery.property_account_position.id or partner.property_account_position.id
 
         domains = [[('auto_apply', '=', True), ('vat_required', '=', partner.vat_subjected)]]
         if partner.vat_subjected:
