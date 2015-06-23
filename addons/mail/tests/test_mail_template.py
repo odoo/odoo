@@ -78,8 +78,8 @@ class TestMailTemplate(TestMail):
         self.assertEqual(message.body, '<p>%s</p>' % self.group_pigs.description)
         self.assertEqual(message.partner_ids, test_recipients)
         self.assertEqual(message.notified_partner_ids, test_recipients)
-        self.assertEqual(set(message.attachment_ids.mapped('res_model')), set(['mail.group']))
-        self.assertEqual(set(message.attachment_ids.mapped('res_id')), set([self.group_pigs.id]))
+        self.assertEqual(set(message.attachment_ids.mapped('res_model')), set(['res.partner']))
+        self.assertEqual(set(message.attachment_ids.mapped('res_id')), set([self.user_admin.partner_id.id]))
         # self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
         #     'mail.message attachment name / data incorrect')
 
