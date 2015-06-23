@@ -1714,46 +1714,6 @@ class BaseModel(object):
         res = self.name_get(cr, access_rights_uid, ids, context)
         return res
 
-    def read_string(self, cr, uid, id, langs, fields=None, context=None):
-        res = {}
-        res2 = {}
-        self.pool.get('ir.translation').check_access_rights(cr, uid, 'read')
-        if not fields:
-            fields = self._columns.keys() + self._inherit_fields.keys()
-        #FIXME: collect all calls to _get_source into one SQL call.
-        for lang in langs:
-            res[lang] = {'code': lang}
-            for f in fields:
-                if f in self._columns:
-                    res_trans = self.pool.get('ir.translation')._get_source(cr, uid, self._name+','+f, 'field', lang)
-                    if res_trans:
-                        res[lang][f] = res_trans
-                    else:
-                        res[lang][f] = self._columns[f].string
-        for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), fields)
-            res2 = self.pool[table].read_string(cr, uid, id, langs, cols, context)
-        for lang in res2:
-            if lang in res:
-                res[lang]['code'] = lang
-            for f in res2[lang]:
-                res[lang][f] = res2[lang][f]
-        return res
-
-    def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.translation').check_access_rights(cr, uid, 'write')
-        #FIXME: try to only call the translation in one SQL
-        for lang in langs:
-            for field in vals:
-                if field in self._columns:
-                    src = self._columns[field].string
-                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
-        for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), vals)
-            if cols:
-                self.pool[table].write_string(cr, uid, id, langs, vals, context)
-        return True
-
     def _add_missing_default_values(self, cr, uid, values, context=None):
         # avoid overriding inherited values when parent is set
         avoid_tables = []
