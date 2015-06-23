@@ -37,8 +37,6 @@ class LunchOrder(models.Model):
     company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     cash_move_balance = fields.Monetary(compute='_compute_cash_balance_count')
-    logged_user = fields.Boolean(compute='_compute_logged_user')
-
     @api.one
     @api.depends('order_line_ids')
     def _compute_total(self):
@@ -82,7 +80,7 @@ class LunchOrder(models.Model):
         prev_cashmove = self.env['lunch.cashmove'].search([('user_id', '=', self.user_id.id)])
         balance = sum(cashmove.amount for cashmove in prev_cashmove)
 
-        if self.total > balance:
+        if self.total > 0 and self.total > balance:
             return {
                 'warning': {
                     'title': _('Insufficient balance'),
@@ -93,15 +91,10 @@ class LunchOrder(models.Model):
     @api.one
     @api.depends('user_id')
     def _compute_cash_balance_count(self):
-        lunch_cash = self.env['lunch.cashmove'].search([('user_id', '=', self.user_id.id)])
-        self.cash_move_balance = sum(cash_balance.amount for cash_balance in lunch_cash)
-
-    @api.one
-    @api.depends('user_id')
-    def _compute_logged_user(self):
-        group_lunch_manager = self.env.ref('lunch.group_lunch_manager')
-        if group_lunch_manager in self.env.user.groups_id or self.env.uid == self.user_id.id:
-            self.logged_user = True
+        # @api.depends is necessary to compute the field when retrieving default values
+        lunch_cash = self.env['lunch.cashmove'].read_group([('user_id', '=', self.env.uid)], ['amount', 'user_id'], ['user_id'])
+        if len(lunch_cash):
+            self.cash_move_balance = lunch_cash[0]['amount']
 
     @api.one
     @api.constrains('date')
@@ -141,13 +134,6 @@ class LunchOrder(models.Model):
             else:
                 self.state = 'new'
         return
-
-    @api.multi
-    def action_lunch_cashmove(self):
-        self.ensure_one()
-        result = self.env.ref('lunch.lunch_cashmove_action_account1').read()[0]
-        result['domain'] = [('user_id', '=', self.user_id.id)]
-        return result
 
 
 class LunchOrderLine(models.Model):

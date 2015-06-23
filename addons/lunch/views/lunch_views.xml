@@ -173,12 +173,6 @@
             </field>
         </record>
 
-        <record id="lunch_cashmove_action_account1" model="ir.actions.act_window">
-            <field name="name">Your Account</field>
-            <field name="res_model">lunch.cashmove</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="lunch_cashmove_view_tree_2"/>
-        </record>
         <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="lunch_cashmove_menu_form" action="lunch_cashmove_action_account" sequence="3"/>
 
         <!--Action for Administrate Orders group by supplier-->
@@ -374,6 +368,9 @@
                         <field name='state' widget='statusbar' statusbar_visible='new,confirmed'/>
                     </header>
                     <sheet>
+                        <div class="alert alert-warning" role="alert" attrs="{'invisible': [('cash_move_balance', '&gt;', 0)]}">
+                            Warning : Your balance is insufficient.
+                        </div>
                         <group>
                             <group>
                                 <field name='user_id'
@@ -381,14 +378,14 @@
                                 <field name='date'/>
                             </group>
                             <group>
-                                <field name='logged_user' invisible="1"/>
-                                <button class="oe_right oe_stat_button"
-                                    attrs="{'invisible': [('logged_user','=',False)]}"
-                                    name="action_lunch_cashmove"
-                                    icon="fa-money"
-                                    type="object">
-                                    <field name="cash_move_balance" widget="statinfo" string="Balance"/>
-                                </button>
+                                <div class="oe_button_box" name="button_box">
+                                    <button class="oe_stat_button"
+                                        name="%(lunch_cashmove_action_account)d"
+                                        icon="fa-money"
+                                        type="action">
+                                        <field name="cash_move_balance" widget="statinfo" string="Your balance"/>
+                                    </button>
+                                </div>
                             </group>
                         </group>
                         <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger"/>
