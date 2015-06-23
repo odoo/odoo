@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api
 import logging
+from openerp.tools import float_round
 _logger = logging.getLogger(__name__)
 
 
@@ -196,7 +197,6 @@ class stock_quant(osv.osv):
         """
         if context is None:
             context = {}
-        currency_obj = self.pool.get('res.currency')
         if context.get('force_valuation_amount'):
             valuation_amount = context.get('force_valuation_amount')
         else:
@@ -206,7 +206,8 @@ class stock_quant(osv.osv):
                 valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
-        valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        valuation_amount = float_round(valuation_amount * qty, precision_digits=prec)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
