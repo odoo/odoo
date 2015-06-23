@@ -174,8 +174,8 @@
                     <label for="tag_ids" class="oe_edit_only"/>
                     <field name="tag_ids" widget="many2many_tags"/>
                     <div name="event_checkboxes">
-                        <field name="show_menu"/>
-                        <label for="show_menu"/>
+                        <field name="show_menu" groups="base.group_no_one"/>
+                        <label for="show_menu" groups="base.group_no_one"/>
                         <field name="show_tracks"/>
                         <label for="show_tracks"/>
                         <field name="show_track_proposal"/>
