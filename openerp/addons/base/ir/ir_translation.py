@@ -3,7 +3,7 @@
 
 import logging
 
-from openerp import tools
+from openerp import api, tools
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -12,17 +12,12 @@ from openerp.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 TRANSLATION_TYPE = [
-    ('field', 'Field'),
+    ('field', 'Field'),                         # deprecated
     ('model', 'Object'),
-    ('rml', 'RML  (deprecated - use Report)'), # Pending deprecation - to be replaced by report!
     ('report', 'Report/Template'),
     ('selection', 'Selection'),
     ('view', 'View'),
-    ('wizard_button', 'Wizard Button'),
-    ('wizard_field', 'Wizard Field'),
-    ('wizard_view', 'Wizard View'),
-    ('xsl', 'XSL'),
-    ('help', 'Help'),
+    ('help', 'Help'),                           # deprecated
     ('code', 'Code'),
     ('constraint', 'Constraint'),
     ('sql_constraint', 'SQL Constraint')
@@ -69,6 +64,21 @@ class ir_translation_import_cursor(object):
             # non-QWeb views do not need a matching res_id -> force to 0 to avoid dropping them
             elif params['res_id'] is None:
                 params['res_id'] = 0
+
+        # backward compatibility: convert 'field', 'help' into 'model'
+        if params['type'] == 'field':
+            model, field = params['name'].split(',')
+            params['type'] = 'model'
+            params['name'] = 'ir.model.fields,field_description'
+            params['imd_model'] = 'ir.model.fields'
+            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+
+        elif params['type'] == 'help':
+            model, field = params['name'].split(',')
+            params['type'] = 'model'
+            params['name'] = 'ir.model.fields,help'
+            params['imd_model'] = 'ir.model.fields'
+            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
 
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
@@ -267,8 +277,7 @@ class ir_translation(osv.osv):
         return translations
 
     def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
-        self._get_ids.clear_cache(self)
-        self.__get_source.clear_cache(self)
+        self.clear_caches()
 
         cr.execute('delete from ir_translation '
                 'where lang=%s '
@@ -354,12 +363,35 @@ class ir_translation(osv.osv):
                 res_id = tuple(res_id)
         return self.__get_source(cr, uid, name, types, lang, source, res_id)
 
+    @api.model
+    @tools.ormcache_context('model_name', keys=('lang',))
+    def get_field_string(self, model_name):
+        """ Return the translation of fields strings in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of a model
+        :return: the model's fields' strings as a dictionary `{field_name: field_string}`
+        """
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        return {field.name: field.field_description for field in fields}
+
+    @api.model
+    @tools.ormcache_context('model_name', keys=('lang',))
+    def get_field_help(self, model_name):
+        """ Return the translation of fields help in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of a model
+        :return: the model's fields' help as a dictionary `{field_name: field_help}`
+        """
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        return {field.name: field.help for field in fields}
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
-        self.__get_source.clear_cache(self)
-        self._get_ids.clear_cache(self)
+        self.clear_caches()
         self.pool['ir.ui.view'].clear_cache()
         return ids
 
@@ -373,8 +405,7 @@ class ir_translation(osv.osv):
         if vals.get('value'):
             vals.update({'state':'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
-        self.__get_source.clear_cache(self)
-        self._get_ids.clear_cache(self)
+        self.clear_caches()
         self.pool['ir.ui.view'].clear_cache()
         return result
 
@@ -384,8 +415,7 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        self.__get_source.clear_cache(self)
-        self._get_ids.clear_cache(self)
+        self.clear_caches()
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 

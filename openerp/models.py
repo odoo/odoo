@@ -380,6 +380,7 @@ class BaseModel(object):
                 'model': self._name,
                 'name': k,
                 'field_description': f.string,
+                'help': f.help or False,
                 'ttype': f.type,
                 'relation': f.comodel_name or '',
                 'select_level': tools.ustr(int(f.index)),
@@ -1166,11 +1167,11 @@ class BaseModel(object):
         Converter = self.pool['ir.fields.converter']
         Translation = self.pool['ir.translation']
         fields = dict(self._fields)
-        field_names = dict(
-            (f, (Translation._get_source(cr, uid, self._name + ',' + f, 'field',
-                                         context.get('lang'))
-                 or field.string))
-            for f, field in fields.iteritems())
+        field_names = {name: field.string for name, field in fields.iteritems()}
+        if context.get('lang'):
+            field_names.update(
+                Translation.get_field_string(cr, uid, self._name, context=context)
+            )
 
         convert = Converter.for_model(cr, uid, self, context=context)
 
