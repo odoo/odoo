@@ -506,7 +506,7 @@ class website_sale(http.Controller):
         return values
 
     mandatory_billing_fields = ["name", "phone", "email", "street2", "city", "country_id"]
-    optional_billing_fields = ["street", "state_id", "vat", "vat_subjected", "zip"]
+    optional_billing_fields = ["street", "state_id", "vat", "zip"]
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id"]
     optional_shipping_fields = ["state_id", "zip"]
 
@@ -536,9 +536,6 @@ class website_sale(http.Controller):
             query[prefix + 'state_id'] = int(query[prefix + 'state_id'])
         if query.get(prefix + 'country_id'):
             query[prefix + 'country_id'] = int(query[prefix + 'country_id'])
-
-        if query.get(prefix + 'vat'):
-            query[prefix + 'vat_subjected'] = True
 
         if not remove_prefix:
             return query

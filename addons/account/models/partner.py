@@ -115,8 +115,8 @@ class AccountFiscalPosition(models.Model):
         else:
             delivery = partner
 
-        domains = [[('auto_apply', '=', True), ('vat_required', '=', partner.vat_subjected)]]
-        if partner.vat_subjected:
+        domains = [[('auto_apply', '=', True), ('vat_required', '=', bool(partner.vat))]]
+        if partner.vat:
             # Possibly allow fallback to non-VAT positions, if no VAT-required position matches
             domains += [[('auto_apply', '=', True), ('vat_required', '=', False)]]
 
@@ -320,8 +320,6 @@ class ResPartner(models.Model):
         else:
             self.currency_id = self.env.user.company_id.currency_id
 
-    vat_subjected = fields.Boolean('VAT Legal Statement',
-        help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")
     debit = fields.Monetary(compute='_credit_debit_get', search=_debit_search, string='Total Payable',

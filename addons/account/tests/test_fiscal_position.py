@@ -17,7 +17,7 @@ class TestFiscalPosition(AccountingTestCase):
         country_id = self.res_country_model.search(cr, uid, [('name', '=', 'France')])[0]
         partner_id = self.res_partner_model.create(cr, uid, dict(
                                                    name="George",
-                                                   vat_subjected=True,
+                                                   vat="BE0477472701",
                                                    notify_email="always",
                                                    country_id=country_id))
         fp_b2c_id = self.fiscal_position_model.create(cr, uid, dict(name="EU-VAT-FR-B2C",
