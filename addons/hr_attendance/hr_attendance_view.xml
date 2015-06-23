@@ -128,14 +128,7 @@
         <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance_root" sequence="20" groups="base.group_hr_attendance"/>
 
         <menuitem name="Reports" parent="menu_hr_attendance_root" sequence="99"
-            id="menu_hr_attendance_report"/>
-        <menuitem
-            name="Attendance"
-            action="action_hr_attendance_graph"
-            id="menu_hr_attendance_graph"
-            parent="menu_hr_attendance_report"
-            sequence="3"
-        />
+            id="menu_hr_attendance_report" action="action_hr_attendance_graph"/>
 
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
