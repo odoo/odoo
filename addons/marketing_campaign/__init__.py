@@ -3,4 +3,3 @@
 
 import marketing_campaign
 import report
-import res_config
