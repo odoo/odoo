@@ -11,7 +11,7 @@ class event_type(models.Model):
     _name = 'event.type'
     _description = 'Event Type'
 
-    name = fields.Char('Event Type', required=True)
+    name = fields.Char('Event Type', required=True, translate=True)
     default_reply_to = fields.Char('Reply To')
     default_registration_min = fields.Integer(
         'Default Minimum Registration', default=0,
