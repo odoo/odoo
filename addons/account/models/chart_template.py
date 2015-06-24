@@ -93,14 +93,16 @@ class AccountChartTemplate(models.Model):
         company = self.env.user.company_id
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template_id:
-            self.env['wizard.multi.charts.accounts'].create({
+            wizard = self.env['wizard.multi.charts.accounts'].create({
                 'company_id': self.env.user.company_id.id,
                 'chart_template_id': self.id,
                 'code_digits': self.code_digits,
                 'transfer_account_id': self.transfer_account_id.id,
                 'currency_id': self.currency_id.id,
                 'bank_account_code_char': self.bank_account_code_char,
-            }).execute()
+            })
+            wizard.onchange_chart_template_id()
+            wizard.execute()
 
     @api.multi
     def open_select_template_wizard(self):
