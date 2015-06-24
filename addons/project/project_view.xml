@@ -199,7 +199,7 @@
                     <filter string="Pending" name="Pending" domain="[('state', '=','pending')]"/>
                     <filter string="Template" name="Template" domain="[('state', '=','template')]"/>
                     <separator/>
-                    <filter string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]"/>
+                    <filter string="Member" name="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]"/>
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
