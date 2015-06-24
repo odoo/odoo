@@ -39,13 +39,18 @@
   </t>
 
   <t t-name="PosMercurySignature">
-    <br />
-    <div>CARDHOLDER WILL PAY CARD ISSUER</div>
-    <div>ABOVE AMOUNT PURSUANT</div>
-    <div>TO CARDHOLDER AGREEMENT</div>
-    <br />
-    <br />
-    <div>X______________________________</div>
+    <t t-foreach="paymentlines" t-as="paymentline">
+      <t t-if="paymentline.mercury_data &amp;&amp; ! printed_signature">
+        <br />
+        <div>CARDHOLDER WILL PAY CARD ISSUER</div>
+        <div>ABOVE AMOUNT PURSUANT</div>
+        <div>TO CARDHOLDER AGREEMENT</div>
+        <br />
+        <br />
+        <div>X______________________________</div>
+        <t t-set="printed_signature" t-value="true"/>
+      </t>
+    </t>
   </t>
 
   <t t-extend="XmlReceipt">
