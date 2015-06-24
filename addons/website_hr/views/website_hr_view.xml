@@ -13,6 +13,11 @@
                     <field name="website_published" widget="website_button"/>
                 </button>
             </div>
+            <xpath expr="//page[@name='public']/group" position="inside">
+                <group>
+                    <field name="public_info"/>
+                </group>
+            </xpath>
         </field>
     </record>
 
