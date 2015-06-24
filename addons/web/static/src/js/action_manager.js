@@ -22,6 +22,13 @@ var Action = core.Class.extend({
         this.title = action.display_name || action.name;
     },
     /**
+     * Not implemented for client actions
+     * @return {Deferred} a rejected Deferred
+     */
+    appendTo: function() {
+        return $.Deferred().reject();
+    },
+    /**
      * This method should restore this previously loaded action
      * Calls on_reverse_breadcrumb callback if defined
      * @return {Deferred} resolved when widget is enabled
@@ -97,6 +104,17 @@ var WidgetAction = Action.extend({
         }
     },
     /**
+     * Wraps the action's widget in a container and appends it to el
+     * @param {DocumentFragment} [el] where to append the widget
+     * @return {Deferred} resolved when the widget is appended
+     */
+    appendTo: function(el) {
+        this.client_action_container = document.createElement('div');
+        this.client_action_container.className = 'oe_client_action';
+        el.appendChild(this.client_action_container);
+        return this.widget.appendTo(this.client_action_container);
+    },
+    /**
      * Restores WidgetAction by calling do_show on its widget
      */
     restore: function() {
@@ -106,14 +124,23 @@ var WidgetAction = Action.extend({
     /**
      * Destroys the widget
      */
-    destroy: function() { 
+    destroy: function() {
         this.widget.destroy();
+        this.client_action_container.remove();
     },
 });
 /**
  * Specialization of WidgetAction for window actions (i.e. ViewManagers)
  */
 var ViewManagerAction = WidgetAction.extend({
+    /**
+     * Appends the action's widget to el
+     * @param {DocumentFragment} [el] where to append the widget
+     * @return {Deferred} resolved when the widget is appended
+     */
+    appendTo: function(el) {
+        return this.widget.appendTo(el);
+    },
     /**
      * Restores a ViewManagerAction
      * Switches to the requested view by calling select_view on the ViewManager
@@ -132,6 +159,12 @@ var ViewManagerAction = WidgetAction.extend({
      */
     set_is_in_DOM: function(is_in_DOM) {
         this.widget.is_in_DOM = is_in_DOM;
+    },
+    /**
+     * Destroys the widget
+     */
+    destroy: function() { 
+        this.widget.destroy();
     },
     /**
      * @return {Array} array of Objects that will be interpreted to display the breadcrumbs
@@ -239,7 +272,7 @@ var ActionManager = Widget.extend({
         // render the inner_widget in a fragment, and append it to the
         // document only when it's ready
         var new_widget_fragment = document.createDocumentFragment();
-        return $.when(this.inner_widget.appendTo(new_widget_fragment)).done(function() {
+        return $.when(this.inner_action.appendTo(new_widget_fragment)).done(function() {
             // Detach the fragment of the previous action and store it within the action
             if (old_action) {
                 old_action.set_fragment(old_widget.$el.detach());
