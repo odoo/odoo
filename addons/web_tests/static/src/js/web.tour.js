@@ -30,7 +30,7 @@ Tour.register({
         {
             title:      "create new message a",
             waitFor:    '.oe_form_required input:propValue(test)',
-            element:    '.oe_form_field_one2many_list_row_add a'
+            element:    '.oe_form_field_x2many_list_row_add:first a'
         },
         {
             title:      "insert body a",
@@ -49,7 +49,7 @@ Tour.register({
             title:      "create new message b",
             waitNot:    '.modal',
             waitFor:    '.oe_application:has(.oe_list_field_cell):has(textarea[name="message_concat"]:propValue([test] Administrator:a))',
-            element:    '.oe_form_field_one2many_list_row_add a'
+            element:    '.oe_form_field_x2many_list_row_add:first a'
         },
         {
             title:      "insert body b",
@@ -106,7 +106,7 @@ Tour.register({
             title:      "create new message c",
             waitNot:    '.modal',
             waitFor:    'textarea[name="message_concat"]:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:bbb)',
-            element:    '.oe_form_field_one2many_list_row_add a'
+            element:    '.oe_form_field_x2many_list_row_add:first a'
         },
         {
             title:      "insert body",
@@ -129,7 +129,7 @@ Tour.register({
         },
         {
             title:      "click to add participants",
-            element:    '.tab-pane:eq(1).active .oe_form_field_many2many_list_row_add a'
+            element:    '.tab-pane:eq(1).active .oe_form_field_x2many_list_row_add a'
         },
         {
             title:      "select participant 1",
@@ -189,7 +189,7 @@ Tour.register({
         {
             title:      "create new message d",
             waitFor:    'li.active a[data-toggle="tab"]:contains(Messages)',
-            element:    '.oe_form_field_one2many_list_row_add a'
+            element:    '.oe_form_field_x2many_list_row_add:first a'
         },
         {
             title:      "insert body",
@@ -208,7 +208,7 @@ Tour.register({
             title:      "create new message e",
             waitNot:    '.modal',
             waitFor:    '.oe_list_field_cell:containsExact(d)',
-            element:    '.oe_form_field_one2many_list_row_add a'
+            element:    '.oe_form_field_x2many_list_row_add:first a'
         },
         {
             title:      "insert body",
@@ -295,7 +295,7 @@ Tour.register({
             title:      "create new message ddd",
             waitNot:    '.modal',
             waitFor:    '.oe_list_field_cell:containsExact(d)',
-            element:    '.oe_form_field_one2many_list_row_add a'
+            element:    '.oe_form_field_x2many_list_row_add:first a'
         },
         {
             title:      "select an other user",
@@ -483,7 +483,7 @@ Tour.register({
         {
             title:      "create new message eee",
             waitFor:    'li.active a[data-toggle="tab"]:contains(Messages)',
-            element:    '.oe_form_field_one2many_list_row_add a'
+            element:    '.oe_form_field_x2many_list_row_add:first a'
         },
         {
             title:      "change text value",
