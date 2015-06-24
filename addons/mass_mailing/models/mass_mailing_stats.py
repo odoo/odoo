@@ -50,6 +50,20 @@ class MailMailStats(osv.Model):
 
         return res
 
+    def _compute_recipient(self, cr, uid, ids, field_names, arg, context=None):
+        res = dict.fromkeys(ids, '')
+        for stat in self.browse(cr, uid, ids, context=context):
+            if not self.pool.get(stat.model):
+                continue
+            target = self.pool[stat.model].browse(cr, uid, stat.res_id, context=context)
+            email = ''
+            for email_field in ('email', 'email_from'):
+                if email_field in target and target[email_field]:
+                    email = ' <%s>' % target[email_field]
+                    break
+            res[stat.id] = '%s%s' % (target.display_name, email)
+        return res
+
     __store = {_name: ((lambda s, c, u, i, t: i), ['exception', 'sent', 'opened', 'replied', 'bounced'], 10)}
 
     _columns = {
@@ -94,6 +108,7 @@ class MailMailStats(osv.Model):
         'state_update': fields.function(_compute_state, string='State Update', type='datetime',
                                         multi='state', help='Last state update of the mail',
                                         store=__store),
+        'recipient': fields.function(_compute_recipient, string='Recipient', type='char'),
     }
 
     _defaults = {

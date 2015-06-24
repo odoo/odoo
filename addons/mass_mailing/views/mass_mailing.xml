@@ -46,6 +46,7 @@
             <field name="model">mail.mail.statistics</field>
             <field name="arch" type="xml">
                 <tree string="Mail Statistics">
+                    <field name="recipient"/>
                     <field name="mail_mail_id_int"/>
                     <field name="message_id"/>
                     <field name="sent"/>
@@ -64,6 +65,7 @@
                 <form string="Mail Statistics">
                     <group>
                         <group>
+                            <field name="recipient"/>
                             <field name="mail_mail_id"/>
                             <field name="mail_mail_id_int"/>
                             <field name="message_id"/>
