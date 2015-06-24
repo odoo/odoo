@@ -761,7 +761,7 @@
             domain="[('config_id', '=', active_id)]" />
 
         <record model="ir.actions.act_window" id="action_pos_config_pos">
-            <field name="name">Point of Sales</field>
+            <field name="name">Point of Sale</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.config</field>
             <field name="view_type">form</field>
@@ -915,7 +915,7 @@
                     <field name="user_id" />
                     <group expand="0" string="Group By">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
-                        <filter string="Point of Sales" domain="[]" context="{'group_by': 'user_id'}" />
+                        <filter string="Point of Sale" domain="[]" context="{'group_by': 'user_id'}" />
                     </group>
                 </search>
             </field>
