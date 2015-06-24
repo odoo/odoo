@@ -16,7 +16,7 @@ def _create_sequence(cr, seq_name, number_increment, number_next):
     There is no access rights check.
     """
     if number_increment == 0:
-        raise Warning(_('Increment number must not be zero.'))
+        raise UserError(_('Increment number must not be zero.'))
     sql = "CREATE SEQUENCE %s INCREMENT BY %%s START WITH %%s" % seq_name
     cr.execute(sql, (number_increment, number_next))
 
@@ -39,7 +39,7 @@ def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
     There is no access rights check.
     """
     if number_increment == 0:
-        raise Warning(_("Increment number must not be zero."))
+        raise UserError(_("Increment number must not be zero."))
     cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
     if not cr.fetchone():
         # sequence is not created yet, we're inside create() so ignore it, will be set later
