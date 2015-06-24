@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="account_tax_code_1" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">DDV-O obrazec</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">1</field>
+            <field name="parent_id" ref=""/>
+        </record>
+        <record id="account_tax_code_10" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">I. Dobave blaga in storitev (vrednosti so brez DDV)</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">10</field>
+            <field name="parent_id" ref="account_tax_code_1"/>
+        </record>
+        <record id="account_tax_code_11" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Dobave blaga in storitev</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">11</field>
+            <field name="parent_id" ref="account_tax_code_10"/>
+        </record>
+        <record id="account_tax_code_11-01" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">11-D01-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">11-01</field>
+            <field name="parent_id" ref="account_tax_code_11"/>
+        </record>
+        <record id="account_tax_code_11-02" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">11-D02-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">11-02</field>
+            <field name="parent_id" ref="account_tax_code_11"/>
+        </record>
+        <record id="account_tax_code_11-03" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">11-D03-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">11-03</field>
+            <field name="parent_id" ref="account_tax_code_11"/>
+        </record>
+        <record id="account_tax_code_11-07" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">11-D07-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">11-07</field>
+            <field name="parent_id" ref="account_tax_code_11"/>
+        </record>
+        <record id="account_tax_code_11a" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Dobave blaga in storitev v SLO, od katerih obračuna DDV prejemnik</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">11a</field>
+            <field name="parent_id" ref="account_tax_code_10"/>
+        </record>
+        <record id="account_tax_code_11a-06" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">11a-D06-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">11a-06</field>
+            <field name="parent_id" ref="account_tax_code_11a"/>
+        </record>
+        <record id="account_tax_code_12" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Dobave blaga in storitev v druge države članice EU</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">12</field>
+            <field name="parent_id" ref="account_tax_code_10"/>
+        </record>
+        <record id="account_tax_code_12-04" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">12-D04-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">12-04</field>
+            <field name="parent_id" ref="account_tax_code_12"/>
+        </record>
+        <record id="account_tax_code_12-05" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">12-D05-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">12-05</field>
+            <field name="parent_id" ref="account_tax_code_12"/>
+        </record>
+        <record id="account_tax_code_13" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Prodaja blaga na daljavo</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">13</field>
+            <field name="parent_id" ref="account_tax_code_10"/>
+        </record>
+        <record id="account_tax_code_14" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Montaža in inštaliranje blaga v drugi državi članici</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">14</field>
+            <field name="parent_id" ref="account_tax_code_10"/>
+        </record>
+        <record id="account_tax_code_15" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Oproščene dobave brez pravice do odbitka DDV</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">15</field>
+            <field name="parent_id" ref="account_tax_code_10"/>
+        </record>
+        <record id="account_tax_code_20" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">II. Obračunani DDV</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">20</field>
+            <field name="parent_id" ref="account_tax_code_1"/>
+        </record>
+        <record id="account_tax_code_21" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">po stopnji 22%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">21</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_21-01" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">21-D01-I</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">21-01</field>
+            <field name="parent_id" ref="account_tax_code_21"/>
+        </record>
+        <record id="account_tax_code_22" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">po stopnji 9,5%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">22</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_22-02" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">22-D02-I</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">22-02</field>
+            <field name="parent_id" ref="account_tax_code_22"/>
+        </record>
+        <record id="account_tax_code_23" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">od pridobitev blaga iz drugih članic EU 22%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">23</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_23-24" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">23-D24-I</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">23-24</field>
+            <field name="parent_id" ref="account_tax_code_23"/>
+        </record>
+        <record id="account_tax_code_23a" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">od prejetih storitev iz drugih držav članic EU 22%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">23a</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_24" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">od pridobitev blaga iz drugih držav članic EU 9,5%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">24</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_24-25" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">24-D25-I</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">24-25</field>
+            <field name="parent_id" ref="account_tax_code_24"/>
+        </record>
+        <record id="account_tax_code_24a" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">od prejetih storitev iz drugih držav članic EU 9,5%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">24a</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_25" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">na podlagi samoobdavčitev kot prejemnik blaga in storitev 22%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">25</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_25-26" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">25-D26-I</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">25-26</field>
+            <field name="parent_id" ref="account_tax_code_25"/>
+        </record>
+        <record id="account_tax_code_25a" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">na podlagi samoobdavčitev kot prejemnik blaga in storitev 9,5%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">25a</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_26" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">na podlagi samoobdavčitev od uvoza</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">26</field>
+            <field name="parent_id" ref="account_tax_code_20"/>
+        </record>
+        <record id="account_tax_code_30" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">III. Nabave blaga in storitev (vrednosti so brez DDV)</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">30</field>
+            <field name="parent_id" ref="account_tax_code_1"/>
+        </record>
+        <record id="account_tax_code_31" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Nabave blaga in storitev</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31</field>
+            <field name="parent_id" ref="account_tax_code_30"/>
+        </record>
+        <record id="account_tax_code_31-20" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">31-D20-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31-20</field>
+            <field name="parent_id" ref="account_tax_code_31"/>
+        </record>
+        <record id="account_tax_code_31-21" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">31-D21-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31-21</field>
+            <field name="parent_id" ref="account_tax_code_31"/>
+        </record>
+        <record id="account_tax_code_31-22" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">31-D22-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31-22</field>
+            <field name="parent_id" ref="account_tax_code_31"/>
+        </record>
+        <record id="account_tax_code_31-23" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">31-D23-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31-23</field>
+            <field name="parent_id" ref="account_tax_code_31"/>
+        </record>
+        <record id="account_tax_code_31-27" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">31-D27-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31-27</field>
+            <field name="parent_id" ref="account_tax_code_31"/>
+        </record>
+        <record id="account_tax_code_31-28" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">31-D28-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31-28</field>
+            <field name="parent_id" ref="account_tax_code_31"/>
+        </record>
+        <record id="account_tax_code_31a" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Nabave blaga in storitev v SLO, od katerih obračuna DDV prejemnik</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31a</field>
+            <field name="parent_id" ref="account_tax_code_30"/>
+        </record>
+        <record id="account_tax_code_31a-26" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">31A-D26-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">31a-26</field>
+            <field name="parent_id" ref="account_tax_code_31a"/>
+        </record>
+        <record id="account_tax_code_32" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Pridobitev blaga iz drugih držav članic EU</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">32</field>
+            <field name="parent_id" ref="account_tax_code_30"/>
+        </record>
+        <record id="account_tax_code_32-24" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">32-D24-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">32-24</field>
+            <field name="parent_id" ref="account_tax_code_32"/>
+        </record>
+        <record id="account_tax_code_32-25" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">32-D25-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">32-25</field>
+            <field name="parent_id" ref="account_tax_code_32"/>
+        </record>
+        <record id="account_tax_code_32a" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Prejete storitve iz drugih držav članic EU</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">32a</field>
+            <field name="parent_id" ref="account_tax_code_30"/>
+        </record>
+        <record id="account_tax_code_33" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Oproščene nabave blaga in storitev ter oproščene pridobitve blaga</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">33</field>
+            <field name="parent_id" ref="account_tax_code_30"/>
+        </record>
+        <record id="account_tax_code_33-29" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">33-D29-O</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">33-29</field>
+            <field name="parent_id" ref="account_tax_code_33"/>
+        </record>
+        <record id="account_tax_code_34" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Nabavna vrednost nepremičnine</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">34</field>
+            <field name="parent_id" ref="account_tax_code_30"/>
+        </record>
+        <record id="account_tax_code_35" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">Nabavna vrednost drugih osnovnih sredstev</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">35</field>
+            <field name="parent_id" ref="account_tax_code_30"/>
+        </record>
+        <record id="account_tax_code_40" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">IV. Odbitek DDV</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">40</field>
+            <field name="parent_id" ref="account_tax_code_1"/>
+        </record>
+        <record id="account_tax_code_41" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">od nabav blaga in storitev v SLO, v EU in od uvoza 22%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">41</field>
+            <field name="parent_id" ref="account_tax_code_40"/>
+        </record>
+        <record id="account_tax_code_41-20" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">41-D20-V</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">41-20</field>
+            <field name="parent_id" ref="account_tax_code_41"/>
+        </record>
+        <record id="account_tax_code_41-22" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">41-D22-V</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">41-22</field>
+            <field name="parent_id" ref="account_tax_code_41"/>
+        </record>
+        <record id="account_tax_code_41-24" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">41-D24-V</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">41-24</field>
+            <field name="parent_id" ref="account_tax_code_41"/>
+        </record>
+        <record id="account_tax_code_41-26" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">41-D26-V</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">41-26</field>
+            <field name="parent_id" ref="account_tax_code_41"/>
+        </record>
+        <record id="account_tax_code_42" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">od nabav blaga in storitev v SLO, v EU in od uvoza 9,5%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">42</field>
+            <field name="parent_id" ref="account_tax_code_40"/>
+        </record>
+        <record id="account_tax_code_42-21" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">42-D21-V</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">42-21</field>
+            <field name="parent_id" ref="account_tax_code_42"/>
+        </record>
+        <record id="account_tax_code_42-23" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">42-D23-V</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">42-23</field>
+            <field name="parent_id" ref="account_tax_code_42"/>
+        </record>
+        <record id="account_tax_code_42-25" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">42-D25-V</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">42-25</field>
+            <field name="parent_id" ref="account_tax_code_42"/>
+        </record>
+        <record id="account_tax_code_43" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">od pavšalnega nadomestila po stopnji 8%</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">43</field>
+            <field name="parent_id" ref="account_tax_code_40"/>
+        </record>
+        <record id="account_tax_code_50" model="account.tax.code.template">
+            <field name="sign">1.0</field>
+            <field name="name">V. Razlika</field>
+            <field name="notprintable" eval="0"/>
+            <field name="code">50</field>
+            <field name="parent_id" ref="account_tax_code_1"/>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="account_chart_si_gd" model="account.chart.template">
+            <field name="name">Kontni načrt za gospodarske družbe</field>
+            <field name="account_root_id" ref="account_account_"/>
+            <field name="tax_code_root_id" ref="account_tax_code_1"/>
+            <field name="bank_account_view_id" ref="account_account_110000"/>
+            <field name="property_account_receivable" ref="account_account_120000"/>
+            <field name="property_account_payable" ref="account_account_220000"/>
+            <field name="property_account_expense_categ" ref="account_account_702000"/>
+            <field name="property_account_income_categ" ref="account_account_762000"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+    </data>
+</openerp>
