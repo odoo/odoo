@@ -1081,6 +1081,16 @@ var One2ManyListView = ListView.extend({
         }
         return this._super(record, options);
     },
+    reload_content: function () {
+        var self = this;
+        if (self.__focus) {
+            self._on_blur_one2many(true);
+            return this._super().then(function () {
+                self.start_edition(self.records.get(self.editor.form.datarecord.id));
+            });
+        }
+        return this._super();
+    },
     _on_focus_one2many: function () {
         this.dataset.o2m.internal_dataset_changed = true;
         this.__focus = true;
