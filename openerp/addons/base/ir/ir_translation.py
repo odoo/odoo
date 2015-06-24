@@ -364,6 +364,37 @@ class ir_translation(osv.osv):
         return self.__get_source(cr, uid, name, types, lang, source, res_id)
 
     @api.model
+    def _get_terms_query(self, field, records):
+        """ Utility function that makes the query for field terms. """
+        query = """ SELECT id, res_id, src, value FROM ir_translation
+                    WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s """
+        name = "%s,%s" % (field.model_name, field.name)
+        params = (records.env.lang, 'model', name, tuple(records.ids))
+        return query, params
+
+    @api.model
+    def _get_terms_mapping(self, field, records):
+        """ Return a function mapping a (trans_id, source, value) to a value.
+        This method is called before querying the database for translations.
+        """
+        return lambda tid, src, value: value
+
+    @api.model
+    def _get_terms_translations(self, field, records):
+        """ Return the terms and translations of a given `field` on `records`.
+
+        :return: {record_id: {source: value}}
+        """
+        result = {rid: {} for rid in records.ids}
+        if records:
+            map_trans = self._get_terms_mapping(field, records)
+            query, params = self._get_terms_query(field, records)
+            self._cr.execute(query, params)
+            for trans_id, res_id, src, value in self._cr.fetchall():
+                result[res_id][src] = map_trans(trans_id, src, value)
+        return result
+
+    @api.model
     @tools.ormcache_context('model_name', keys=('lang',))
     def get_field_string(self, model_name):
         """ Return the translation of fields strings in the context's language.

@@ -1110,15 +1110,50 @@ class _String(Field):
 
     _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
-    _description_translate = property(attrgetter('translate'))
+
+    def _description_translate(self, env):
+        return bool(self.translate)
+
+    def get_trans_terms(self, value):
+        """ Return the sequence of terms to translate found in `value`. """
+        if not callable(self.translate):
+            return [value] if value else []
+        terms = []
+        self.translate(terms.append, value)
+        return terms
+
+    def get_trans_func(self, records):
+        """ Return a translation function `translate` for `self` on the given
+        records; the function call `translate(record_id, value)` translates the
+        field value to the language given by the environment of `records`.
+        """
+        if callable(self.translate):
+            rec_src_trans = records.env['ir.translation']._get_terms_translations(self, records)
+
+            def translate(record_id, value):
+                src_trans = rec_src_trans[record_id]
+                return self.translate(src_trans.get, value)
+
+        else:
+            rec_trans = records.env['ir.translation']._get_ids(
+                '%s,%s' % (self.model_name, self.name), 'model', records.env.lang, records.ids)
+
+            def translate(record_id, value):
+                return rec_trans.get(record_id) or value
+
+        return translate
 
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
-    single-line string in clients
+    single-line string in clients.
 
     :param int size: the maximum size of values stored for that field
-    :param bool translate: whether the values of this field can be translated
+
+    :param translate: enable the translation of the field's values; use
+        `translate=True` to translate field values as a whole; `translate` may
+        also be a callable such that `translate(callback, value)` translates
+        `value` by using `callback(term)` to retrieve the translation of terms.
     """
     type = 'char'
     _slots = {
@@ -1143,7 +1178,10 @@ class Text(_String):
     """ Very similar to :class:`~.Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
 
-    :param translate: whether the value of this field can be translated
+    :param translate: enable the translation of the field's values; use
+        `translate=True` to translate field values as a whole; `translate` may
+        also be a callable such that `translate(callback, value)` translates
+        `value` by using `callback(term)` to retrieve the translation of terms.
     """
     type = 'text'
 

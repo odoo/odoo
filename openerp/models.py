@@ -2135,7 +2135,8 @@ class BaseModel(object):
             )
             model, alias = parent_model, parent_alias
         # handle the case where the field is translated
-        if model._columns[field].translate:
+        translate = model._columns[field].translate
+        if translate and not callable(translate):
             return model._generate_translated_field(alias, field, query)
         else:
             return '"%s"."%s"' % (alias, field)
@@ -3222,6 +3223,7 @@ class BaseModel(object):
             field
             for field in fields
             if field.base_field.column._classic_write
+            if not (field.inherited and callable(field.base_field.column.translate))
         ]
 
         # the query may involve several tables: we need fully-qualified names
@@ -3254,8 +3256,18 @@ class BaseModel(object):
             result.extend(cr.dictfetchall())
 
         ids = [vals['id'] for vals in result]
+        fetched = self.browse(ids)
 
         if ids:
+            # translate the fields if necessary
+            if context.get('lang'):
+                for field in fields_pre:
+                    if not field.inherited and callable(field.column.translate):
+                        f = field.name
+                        translate = field.get_trans_func(fetched)
+                        for vals in result:
+                            vals[f] = translate(vals['id'], vals[f])
+
             # apply the symbol_get functions of the fields we just read
             for field in fields_pre:
                 symbol_get = field.base_field.column._symbol_get
@@ -3312,7 +3324,6 @@ class BaseModel(object):
             record._cache.update(record._convert_to_cache(vals, validate=False))
 
         # store failed values in cache for the records that could not be read
-        fetched = self.browse(ids)
         missing = self - fetched
         if missing:
             extras = fetched - self
@@ -3795,7 +3806,7 @@ class BaseModel(object):
         upd_todo = []
         updend = []
         direct = []
-        totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
+        totranslate = context.get('lang') and context['lang'] != 'en_US'
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3805,7 +3816,7 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if (not totranslate) or not column.translate:
+                    if not (totranslate and column.translate):
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
@@ -3833,7 +3844,16 @@ class BaseModel(object):
             if totranslate:
                 # TODO: optimize
                 for f in direct:
-                    if self._columns[f].translate:
+                    if callable(self._columns[f].translate):
+                        # We do not handle the update of a field where translate
+                        # is a callable. One should update the value without a
+                        # language, or update translated terms separately.
+                        raise ValidationError(_(
+                            "The translation of the field '%s' cannot be "
+                            "directly updated. You can either update its value "
+                            "in English, or update translated terms separately."
+                        ) % self._fields[f].string)
+                    elif self._columns[f].translate:
                         src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
                         if not src_trans:
                             src_trans = vals[f]
@@ -4555,7 +4575,7 @@ class BaseModel(object):
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
-                        if order_column.translate:
+                        if order_column.translate and not callable(order_column.translate):
                             inner_clause = self._generate_translated_field(self._table, order_field, query)
                         else:
                             inner_clause = '"%s"."%s"' % (self._table, order_field)

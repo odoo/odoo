@@ -723,33 +723,14 @@ def trans_generate(lang, modules, cr):
             except AttributeError, exc:
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
-            objmodel = registry.get(obj.model)
-            if (objmodel is None or field_name not in objmodel._columns
-                    or not objmodel._translate):
+            field_model = registry.get(obj.model)
+            if (field_model is None or not field_model._translate or
+                    field_name not in field_model._fields):
                 continue
-            field_def = objmodel._columns[field_name]
-
-            name = "%s,%s" % (encode(obj.model), field_name)
-            push_translation(module, 'field', name, 0, encode(field_def.string))
-
-            if field_def.help:
-                push_translation(module, 'help', name, 0, encode(field_def.help))
-
-            if field_def.translate:
-                ids = objmodel.search(cr, uid, [])
-                obj_values = objmodel.read(cr, uid, ids, [field_name])
-                for obj_value in obj_values:
-                    res_id = obj_value['id']
-                    if obj.name in ('ir.model', 'ir.ui.menu'):
-                        res_id = 0
-                    model_data_ids = model_data_obj.search(cr, uid, [
-                        ('model', '=', model),
-                        ('res_id', '=', res_id),
-                        ])
-                    if not model_data_ids:
-                        push_translation(module, 'model', name, 0, encode(obj_value[field_name]))
+            field_def = field_model._fields[field_name]
 
             if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
+                name = "%s,%s" % (encode(obj.model), field_name)
                 for dummy, val in field_def.selection:
                     push_translation(module, 'selection', name, 0, encode(val))
 
@@ -761,9 +742,7 @@ def trans_generate(lang, modules, cr):
                 parse_func = trans_parse_rml
                 report_type = "report"
             elif obj.report_xsl:
-                fname = obj.report_xsl
-                parse_func = trans_parse_xsl
-                report_type = "xsl"
+                continue
             if fname and obj.report_type in ('pdf', 'xsl'):
                 try:
                     report_file = misc.file_open(fname)
@@ -776,17 +755,15 @@ def trans_generate(lang, modules, cr):
                 except (IOError, etree.XMLSyntaxError):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
-        for field_name, field_def in obj._columns.items():
-            if model == 'ir.model' and field_name == 'name' and obj.name == obj.model:
-                # ignore model name if it is the technical one, nothing to translate
-                continue
-            if field_def.translate:
+        for field_name, field_def in obj._fields.iteritems():
+            if getattr(field_def, 'translate', None):
                 name = model + "," + field_name
                 try:
-                    term = obj[field_name] or ''
-                except:
-                    term = ''
-                push_translation(module, 'model', name, xml_name, encode(term))
+                    value = obj[field_name] or ''
+                except Exception:
+                    continue
+                for term in set(field_def.get_trans_terms(value)):
+                    push_translation(module, 'model', name, xml_name, encode(term))
 
         # End of data for ir.model.data query results
 
