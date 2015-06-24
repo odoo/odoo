@@ -3,5 +3,3 @@
 
 import account_analytic_analysis
 import res_config
-import product_template
-import sale_order

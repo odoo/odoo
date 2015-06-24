@@ -6,7 +6,7 @@
 }
 
 /* mobile preview: the left menu overlaps the quote */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .o_website_quote .bs-sidebar {
     position: relative;
   }
@@ -42,11 +42,16 @@
   padding-left: 30px;
   font-size: 90%;
 }
-@media (max-width: 991px) {
-  .o_website_quote .bs-sidebar {
-    position: static;
-  }
+
+/* Table Styling */
+.wq-table {
+  table-layout: auto !important;
 }
+
+.wq-table th, .wq-table td {
+     border-top: none !important;
+ }
+
 @media (min-width: 992px) {
   .o_website_quote .bs-sidebar .nav > .active > ul {
     display: block;

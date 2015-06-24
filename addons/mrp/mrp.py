@@ -233,6 +233,22 @@ class mrp_bom(osv.osv):
                     bom_empty_prop = bom.id
         return bom_empty_prop
 
+    def _skip_bom_line(self, cr, uid, line, product, context=None):
+        """ Control if a BoM line should be produce, can be inherited for add
+        custom control.
+        @param line: BoM line.
+        @param product: Selected product produced.
+        @return: True or False
+        """
+        if line.date_start and line.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT) or \
+            line.date_stop and line.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT):
+                return True
+        # all bom_line_id variant values must be in the product
+        if line.attribute_value_ids:
+            if not product or (set(map(int,line.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
+                return True
+        return False
+
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product template.
@@ -278,14 +294,8 @@ class mrp_bom(osv.osv):
                 })
 
         for bom_line_id in bom.bom_line_ids:
-            if bom_line_id.date_start and bom_line_id.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT) or \
-                bom_line_id.date_stop and bom_line_id.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT):
-                    continue
-            # all bom_line_id variant values must be in the product
-            if bom_line_id.attribute_value_ids:
-                if not product or (set(map(int,bom_line_id.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
-                    continue
-
+            if self._skip_bom_line(cr, uid, bom_line_id, product, context=context):
+                continue
             if set(map(int, bom_line_id.property_ids or [])) - set(properties or []):
                 continue
 
@@ -765,6 +775,7 @@ class mrp_production(osv.osv):
         proc_obj = self.pool.get("procurement.order")
         procs = proc_obj.search(cr, uid, [('production_id', 'in', ids)], context=context)
         if procs:
+            proc_obj.message_post(cr, uid, procs, body=_('Manufacturing order cancelled.'), context=context)
             proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
 
@@ -960,7 +971,7 @@ class mrp_production(osv.osv):
                                                          location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
                 stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
                 remaining_qty = subproduct_factor * production_qty_uom - qty
-                if not float_is_zero(remaining_qty, precision_rounding=precision):
+                if not float_is_zero(remaining_qty, precision_digits=precision):
                     # In case you need to make more than planned
                     #consumed more in wizard than previously planned
                     extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
@@ -991,7 +1002,7 @@ class mrp_production(osv.osv):
                     stock_mov_obj.action_consume(cr, uid, [raw_material_line.id], consumed_qty, raw_material_line.location_id.id,
                                                  restrict_lot_id=consume['lot_id'], consumed_for=main_production_move, context=context)
                     remaining_qty -= consumed_qty
-                if not float_is_zero(remaining_qty, precision_rounding=precision):
+                if not float_is_zero(remaining_qty, precision_digits=precision):
                     #consumed more in wizard than previously planned
                     product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
                     extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)

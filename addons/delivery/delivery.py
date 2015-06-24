@@ -16,20 +16,6 @@ class delivery_carrier(osv.osv):
     _description = "Carrier"
     _order = 'sequence, id'
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        if context is None:
-            context = {}
-        order_id = context.get('order_id',False)
-        if not order_id:
-            res = super(delivery_carrier, self).name_get(cr, uid, ids, context=context)
-        else:
-            order = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
-            currency = order.pricelist_id.currency_id.name or ''
-            res = [(r['id'], r['name']+' ('+(str(r['price']))+' '+currency+')') for r in self.read(cr, uid, ids, ['name', 'price'], context)]
-        return res
-
     def get_price(self, cr, uid, ids, field_name, arg=None, context=None):
         res={}
         if context is None:

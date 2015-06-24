@@ -646,6 +646,7 @@ var BuildingBlock = Widget.extend({
                                 }
                             });
                         }
+                            $target.closest(".o_editable").trigger("content_changed");
                         // end
 
                         self.make_active($target);
@@ -1067,7 +1068,7 @@ options.background = Option.extend({
     },
     background: function(type, value) {
         if (value && value.length) {
-            this.$bg.css("background-image", 'url(' + value + ')');
+            this.$bg.attr("style", 'background-image: url(' + value + ')' + (this.$bg.attr("style") || '').replace(/background-image:[^;]+/, '') );
             this.$bg.addClass("oe_img_bg");
         } else {
             this.$bg.css("background-image", "");
@@ -1453,6 +1454,7 @@ options.marginAndResize = Option.extend({
                     self.BuildingBlock.editor_busy = false;
                 },0);
                 self.$target.removeClass("resize_editor_busy");
+                    self.$target.closest(".o_editable").trigger("content_changed");
             };
             $body.mousemove(body_mousemove);
             $body.mouseup(body_mouseup);
@@ -1461,6 +1463,7 @@ options.marginAndResize = Option.extend({
             self.$target.css("height", "");
             self.$target.css("overflow", "");
             self.BuildingBlock.cover_target(self.$overlay, self.$target);
+                self.$target.closest(".o_editable").trigger("content_changed");
             return false;
         });
     },

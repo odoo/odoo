@@ -35,8 +35,9 @@
                         <group string="General Information">
                             <field name="partner_id"/>
                             <field name="product_id"/>
+                            <field name="delivery_type"/>
                         </group>
-                        <group string="Pricing Information">
+                        <group string="Pricing Information" name='pricing_info' attrs="{'invisible':[('delivery_type','!=','grid')]}">
                             <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                             <label for="free_if_more_than"/>
                             <div>
@@ -97,7 +98,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to define a new deliver method. 
+                Click to define a new delivery method.
               </p><p>
                 Each carrier (e.g. UPS) can have several delivery methods (e.g.
                 UPS Express, UPS Standard) with a set of pricing rules attached
@@ -229,24 +230,40 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Additional Info']/group[last()]" position="after">
-                <separator string="Carrier Information"/>
-                <group>
-                    <group>
+                <data>
+                  <xpath expr="//page[@string='Additional Info']/group[last()]" position="after">
+                  <separator string="Carrier Information"/>
+                  <group>
+                      <group name='carrier_data'>
                         <field name="carrier_id"/>
-                        <field name="carrier_tracking_ref"/>
-                    </group>
-                    <group>
-                        <label for="weight" string="Weight"/>
+                        <field name="delivery_type" attrs="{'invisible':True}"/>
+                        <label for="carrier_tracking_ref"/>
                         <div>
-                            <field name="weight" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                            <field name="carrier_tracking_ref" class="oe_inline"/>
+                            <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','=','grid'),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
-                        <field name="weight_net" groups="base.group_no_one"/>
-                        <field name="number_of_packages"/>
-                    </group>
-                </group>
-                </xpath>
+                        <field name="carrier_price"/>
+                      </group>
+                      <group>
+                          <label for="weight" string="Weight"/>
+                          <div>
+                              <field name="weight" class="oe_inline"/>
+                              <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                          </div>
+                          <field name="weight_net" groups="base.group_no_one"/>
+                          <field name="number_of_packages"/>
+                      </group>
+                  </group>
+                  </xpath>
+                  <xpath expr="//h1" position="before">
+                      <div class="oe_right oe_button_box">
+                          <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking" attrs="{'invisible': ['|',('carrier_tracking_ref','=',False),('delivery_type','=','grid')]}" />
+                      </div>
+                  </xpath>
+                  <xpath expr="//form[@string='Transfer']/header/button[last()]" position="after">
+                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','=','grid'),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                  </xpath>
+                </data>
             </field>
         </record>
 
@@ -292,28 +309,46 @@
             </field>
         </record>
 
-        <record id="view_order_withcarrier_form" model="ir.ui.view">
-            <field name="name">delivery.sale.order_withcarrier.form.view</field>
+        <record id="view_order_form_with_carrier" model="ir.ui.view">
+            <field name="name">delivery.sale.order.form.view.with_carrier</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='sale_total']" position="after">
-                    <group style="width: 65%%">
-                        <label for="carrier_id"/>
-                        <div>
-                            <field name="id" invisible="1"/>
-                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline"/>
-                            <button name="delivery_set" string="Add in Quote" type="object"
-                                class="oe_edit_only"
-                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
-                            <br/>
-                            <label string="If you don't 'Add in Quote', the exact price will be computed when invoicing based on delivery order(s)."
-                                class="oe_edit_only"
-                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
-                        </div>
+                <data>
+                  <xpath expr="//field[@name='payment_term_id']" position="after">
+                      <field name="id" invisible="1"/>
+                      <label for="carrier_id"/>
+                      <div name='carrier_selection'>
+                          <field name="carrier_id" context="{'order_id': id}" class="oe_inline"/>
+                          <button name="delivery_set" string="Set price" type="object" class="fa fa-arrow-right oe_link" attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                      </div>
+                  </xpath>
+                  <xpath expr="//div[@name='carrier_selection']" position="after">
+                      <field name='delivery_price' widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                  </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_picking_withcarrier_out_form_shipping" model="ir.ui.view">
+            <field name="name">delivery.stock.picking_withcarrier.form.view.shipping</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="delivery.view_picking_withcarrier_out_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="carrier_data"]' position='replace'>
+                    <group name='carrier_data'>
+                      <field name="carrier_id"/>
+                      <field name="delivery_type" attrs="{'invisible':True}"/>
+                      <label for="carrier_tracking_ref"/>
+                      <div>
+                          <field name="carrier_tracking_ref" class="oe_inline"/>
+                          <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','=','grid'),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                      </div>
+                      <field name="carrier_price"/>
                     </group>
                 </xpath>
             </field>
         </record>
+
     </data>
 </openerp>

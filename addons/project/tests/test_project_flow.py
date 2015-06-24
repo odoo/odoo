@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.project.tests.test_project_base import TestProjectBase
+from .test_project_base import TestProjectBase
 from openerp.exceptions import AccessError
 from openerp.tools import mute_logger
 

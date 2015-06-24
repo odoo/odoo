@@ -937,7 +937,6 @@ function change_default_bootstrap_animation_to_edit() {
 
 website.no_editor = !!$(document.documentElement).data('editable-no-editor');
 
-    website.add_template_file('/website/static/src/xml/website.xml');
 website.add_template_file('/website/static/src/xml/website.editor.xml');
 website.dom_ready.done(function () {
     website.ready().then(init_editor);
@@ -965,16 +964,6 @@ website.dom_ready.done(function () {
         }
     });
 });
-
-    website.error = function(data, url) {
-        var $error = $(openerp.qweb.render('website.error_dialog', {
-            'title': data.data ? data.data.arguments[0] : "",
-            'message': data.data ? data.data.arguments[1] : data.statusText,
-            'backend_url': url
-        }));
-        $error.appendTo("body");
-        $error.modal('show');
-    };
 
 
 /* ----- TOP EDITOR BAR FOR ADMIN ---- */
@@ -1860,6 +1849,9 @@ var MediaDialog = Dialog.extend({
         $(document.body).trigger("media-saved", [self.active.media, self.old_media]);
         self.trigger("saved", [self.active.media, self.old_media]);
         setTimeout(function () {
+                if (!self.active.media.parentNode) {
+                    return;
+                }
             range.createFromNode(self.active.media).select();
             click_event(self.active.media, "mousedown");
             if (!this.only_images) {
@@ -2182,7 +2174,11 @@ function getCssSelectors(filter) {
     }
     var sheets = document.styleSheets;
     for(var i = 0; i < sheets.length; i++) {
-        var rules = sheets[i].rules || sheets[i].cssRules;
+        try {
+            var rules = sheets[i].rules || sheets[i].cssRules;
+        } catch(e) {     
+            continue;
+        }
         if (rules) {
             for(var r = 0; r < rules.length; r++) {
                 var selectorText = rules[r].selectorText;

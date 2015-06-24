@@ -5,6 +5,15 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
+INVOICE_TYPE_MAP = {
+    ('outgoing', 'customer'): ['out_invoice'],
+    ('outgoing', 'supplier'): ['in_refund'],
+    ('outgoing', 'transit'): ['out_invoice', 'in_refund'],
+    ('incoming', 'supplier'): ['in_invoice'],
+    ('incoming', 'customer'): ['out_refund'],
+    ('incoming', 'transit'): ['in_invoice', 'out_refund'],
+}
+
 
 class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal(self, cr, uid, context=None):
@@ -26,20 +35,10 @@ class stock_invoice_onshipping(osv.osv_memory):
         pick = pickings and pickings[0]
         if not pick or not pick.move_lines:
             return 'out_invoice'
-        src_usage = pick.move_lines[0].location_id.usage
-        dest_usage = pick.move_lines[0].location_dest_id.usage
         type = pick.picking_type_id.code
-        if type == 'outgoing' and dest_usage == 'supplier':
-            invoice_type = 'in_refund'
-        elif type == 'outgoing' and dest_usage == 'customer':
-            invoice_type = 'out_invoice'
-        elif type == 'incoming' and src_usage == 'supplier':
-            invoice_type = 'in_invoice'
-        elif type == 'incoming' and src_usage == 'customer':
-            invoice_type = 'out_refund'
-        else:
-            invoice_type = 'out_invoice'
-        return invoice_type
+        usage = pick.move_lines[0].location_id.usage if type == 'incoming' else pick.move_lines[0].location_dest_id.usage
+
+        return INVOICE_TYPE_MAP.get((type, usage), ['out_invoice'])[0]
 
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
@@ -58,6 +57,24 @@ class stock_invoice_onshipping(osv.osv_memory):
         'journal_id': _get_journal,
         'invoice_type': _get_invoice_type,
     }
+
+    def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
+        if context is None:
+            context = {}
+        domain = {}
+        value = {}
+        active_id = context.get('active_id')
+        if active_id:
+            picking = self.pool['stock.picking'].browse(cr, uid, active_id, context=context)
+            type = picking.picking_type_id.code
+            usage = picking.move_lines[0].location_id.usage if type == 'incoming' else picking.move_lines[0].location_dest_id.usage
+            invoice_types = INVOICE_TYPE_MAP.get((type, usage), ['out_invoice', 'in_invoice', 'out_refund', 'in_refund'])
+            journal_types = ['purchase' if it in ['in_refund', 'in_invoice'] else 'sale' for it in invoice_types]
+            domain['journal_id'] = [('type', 'in', journal_types)]
+        if journal_id:
+            journal = self.pool['account.journal'].browse(cr, uid, journal_id, context=context)
+            value['journal_type'] = journal.type
+        return {'value': value, 'domain': domain}
 
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.mail.tests.common import TestMail
+from .common import TestMail
 from openerp.tools import mute_logger
 import socket
 
@@ -370,7 +370,7 @@ class TestMailgateway(TestMail):
             MAIL_TEMPLATE, email_from='valid.other@gmail.com',
             msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.com>',
             to='erroneous@example.com>', subject='Re: news',
-            extra='In-Reply-To: %s\n' % self.fake_email.message_id)
+            extra='In-Reply-To:\r\n\t%s\n' % self.fake_email.message_id)
 
         self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain one new message')
         self.assertEqual(len(self.fake_email.child_ids), 1, 'message_process: new message should be children of the existing one')

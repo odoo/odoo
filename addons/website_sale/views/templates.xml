@@ -125,7 +125,12 @@
 <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
   <xpath expr="//div[@class='product_price']" position="inside">
     <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
-    <a class="btn btn-default btn-xs a-submit"><span class="fa fa-shopping-cart"/></a>
+    <t t-if="len(product.product_variant_ids) == 1">
+      <a class="btn btn-default btn-xs a-submit"><span class="fa fa-shopping-cart"/></a>
+    </t>
+    <t t-if="len(product.product_variant_ids) &gt; 1">
+      <a class="btn btn-default btn-xs" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))"><span class="fa fa-shopping-cart"/></a>
+    </t>
   </xpath>
 </template>
 
@@ -1435,215 +1440,13 @@
     </xpath>
 </template>
 
-<template id="orders_followup" name="Odoo - Follow your Orders">
-  <t t-call="website.layout">
-    <div id="wrap">
-      <div class="oe_structure">
-        <h1 class="text-center">
-          Odoo Orders History
-        </h1>
-        <h2 class="text-center text-muted">
-          Follow your Orders
-        </h2>
-      </div>
-      <div class="container oe_website_sale">
-        <t t-if="not orders">
-          <h4 class="text-muted text-center mt64 mb64">
-            You have yet to order anything, why not <a href="/shop/">start now</a> ?
-          </h4>
-        </t>
-
-        <t t-call="website_sale.orders_followup_navbar"/>
-
-        <t t-foreach="orders" t-as="o">
-          <div class='row'>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col-md-12">
-                    <h4>
-                      <t t-if="o.state == 'sent'">
-                        Quotation N°
-                      </t>
-                      <t t-if="o.state != 'sent'">
-                        Order N°
-                      </t>
-                      <span t-field="o.name"/>
-                    </h4>
-                  </div>
-                </div>
-              </div>
-              <div class="panel-body">
-                <!-- <hr/> -->
-                <div class="mb8">
-                    <strong>Date:</strong> <span t-field="o.create_date" t-field-options='{"widget": "date"}'/>
-                </div>
-                <div class='row'>
-                  <div class="col-md-6">
-                    <div>
-                      <strong>Invoicing Address</strong>
-                    </div>
-                    <div>
-                      <address t-field="o.partner_invoice_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
-                    </div>
-                    <t t-set="invoices" t-value="[i for i in o.invoice_ids if i.state not in ['draft', 'cancel']]"/>
-                    <t t-if="invoices">
-                      <div>
-                        <strong>Invoices</strong>
-                      </div>
-                      <div>
-                        <t t-foreach="invoices" t-as="i">
-                          <t t-set="report_url" t-value="'/report/pdf/account.report_invoice/%s' % i.id"/>
-                          <div>
-                            <a t-att-href="report_url"><span class="fa fa-download"/></a>
-                            <a t-att-href="report_url"><span t-field="i.number"/></a>
-                            <span class="text-muted" t-field="i.date_invoice"/>
-                            <t t-if="i.state == 'paid'">
-                              <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Paid</span>
-                            </t>
-                            <t t-if="i.state != 'paid'">
-                              <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
-                            </t>
-                          </div>
-                        </t>
-                      </div>
-                    </t>
-                  </div>
-                  <div id="shipping_address" class="col-md-6">
-                    <div>
-                      <strong>Shipping Address</strong>
-                    </div>
-                    <div>
-                      <address t-field="o.partner_shipping_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
-                    </div>
-                  </div>
-                </div>
-
-                <hr/>
-
-                <div id="product_lines">
-                  <!-- Product lines come here -->
-                </div>
-
-                <hr/>
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <div>
-                      <strong>Contact</strong>
-                    </div>
-                    <div t-field="o.user_id.partner_id" t-field-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="row">
-                      <div class="col-md-10 text-right">
-                        Untaxed Amount:
-                      </div>
-                      <div class="col-md-2 text-right">
-                        <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-10 text-right">
-                        Taxes:
-                      </div>
-                      <div class="col-md-2 text-right">
-                        <span t-field="o.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-10 text-right">
-                        <strong>Total:</strong>
-                      </div>
-                      <div class="col-md-2 text-right">
-                        <strong><span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/></strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </t>
-
-        <t t-if="len(orders) >= 2">
-          <t t-call="website_sale.orders_followup_navbar"/>
-        </t>
-
-      </div>
-      <div class="oe_structure mb32"/>
-    </div>
-  </t>
-</template>
-
-<template id="sales_backend_access" inherit_id='website_sale.orders_followup' customize_show="True" name="Backend Access" active="False">
-  <xpath expr="//div[@class='container oe_website_sale']" position="before">
-    <h4 class="text-muted text-center mt64 mb64">
-      If you wish to access the complete application to manage your orders, you can follow
-      <a href="/web#action=portal_sale.action_orders_portal">this link</a>.
-    </h4>
-  </xpath>
-</template>
-
-<template id="order_invoice" name="Display Products similarly to Invoice form view" inherit_id="website_sale.orders_followup">
-  <xpath expr="//div[@id='product_lines']" position="inside">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-1">
-      <strong>Product</strong>
-    </div>
-    <div class="col-md-1 text-right">
-      <strong>Unit Price</strong>
-    </div>
-    <div class="col-md-1 text-right">
-      <strong>Quantity</strong>
-    </div>
-    <div class="col-md-1 text-right">
-      <strong>Subtotal</strong>
-    </div>
-  </div>
-  <t t-foreach="o.order_line" t-as="ol">
-    <div class="row orders_vertical_align">
-      <div class="col-md-1 text-center">
-        <a t-att-href="'/shop/product/%s' % str(ol.product_id.product_tmpl_id.id)">
-          <img t-att-src="'/website/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
+<!-- Add a link to the product page in the portal orders followup page -->
+<template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal.orders_followup">
+    <xpath expr="//span[@t-esc='ol.product_id.name']" position="replace">
+        <a t-att-href="ol.product_id.website_url">
+            <span t-esc="ol.product_id.name"/>
         </a>
-      </div>
-      <div id='product_name' class="col-md-8">
-        <a t-att-href="'/shop/product/%s' % str(ol.product_id.product_tmpl_id.id)"><span t-field="ol.product_id.name"/></a>
-      </div>
-      <div class="col-md-1 text-right">
-        <span t-field="ol.price_unit" t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
-      </div>
-      <div class="col-md-1 text-right">
-        <t t-if="ol._name == 'sale.order.line'">
-          <span t-field="ol.product_uom_qty"/>
-        </t>
-        <t t-if="ol._name == 'account.invoice.line'">
-          <span t-field="ol.quantity"/>
-        </t>
-      </div>
-      <div class="col-md-1 text-right">
-        <span t-field="ol.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
-      </div>
-    </div>
-  </t>
-</xpath>
-</template>
-
-<template id="orders_followup_navbar" name="Navbar for My Orders page">
-  <div class="row">
-    <div class="col-md-12">
-      <span class="pull-right">
-        <t t-call="website.pager"/>
-      </span>
-    </div>
-  </div>
-</template>
-
-<template id="orders_followup_link" name="Orders Followup Link from User Account" inherit_id="website.layout">
-  <xpath expr="//li[@class='dropdown']/ul/li[contains(.,'Logout')]" position="before">
-    <li><a href="/shop/orders" role="menuitem">My Orders</a></li>
-  </xpath>
+    </xpath>
 </template>
 
 <template id="pricelist_selector" inherit_id="website.layout" name="Website Sale - Switcher Pricelist">

@@ -23,10 +23,10 @@
                         <field name="quote_viewed" invisible="1"/>
                         <field name="options">
                             <tree string="Sales Quotation Template Lines" editable="bottom">
-                                    <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                    <field name="product_id" on_change="on_change_product_id(product_id, uom_id)"/>
                                     <field name="name"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="product.group_uom" on_change="product_uom_change(product_id, uom_id)"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="website_description" invisible="1"/>
@@ -34,10 +34,11 @@
                         </field>
                     </page>
                 </xpath>
-                <xpath expr="//field[@name='payment_term_id']" position="after">
+                <xpath expr="//field[@name='project_id']" position="before">
+                    <field name="require_payment"/>
                     <label for="template_id"/>
                     <div>
-                        <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id)"/>
+                        <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id, pricelist_id)"/>
                         <button name="open_quotation" type="object" 
                         class="oe_link" string="View Online Quotation"
                         attrs="{'invisible': [('template_id', '=', False)]}"/>
@@ -69,6 +70,7 @@
                                <div id="number_of_days">
                                    <field name="number_of_days" class="oe_inline"/> days
                                </div>
+                               <field name="require_payment"/>
                             </group>
                         </group>
                         <notebook>
@@ -77,7 +79,7 @@
                                 <form string="Sales Quotation Template Lines">
                                     <group>
                                         <group>
-                                            <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                            <field name="product_id" on_change="on_change_product_id(product_id, product_uom_id)"/>
                                             <label for="product_uom_qty"/>
                                             <div>
                                                 <field
@@ -101,10 +103,10 @@
                                 </form>
                                 <tree string="Sales Quotation Template Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                    <field name="product_id" on_change="on_change_product_id(product_id, product_uom_id)"/>
                                     <field name="name"/>
                                     <field name="product_uom_qty"/>
-                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="product_uom_id" groups="product.group_uom" on_change="product_uom_change(product_id, product_uom_id"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit"/>
                                     <field name="website_description" invisible="1"/>
@@ -114,10 +116,10 @@
                         <page string="Suggested Products">
                             <field name="options">
                               <tree string="Sales Quotation Template Lines" editable="bottom">
-                                <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                <field name="product_id" on_change="on_change_product_id(product_id, uom_id)"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
-                                <field name="uom_id" groups="product.group_uom"/>
+                                <field name="uom_id" groups="product.group_uom" on_change="product_uom_change(product_id, uom_id)"/>
                                 <field name="price_unit"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="website_description" invisible="1"/>

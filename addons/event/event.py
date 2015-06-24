@@ -79,6 +79,9 @@ class event_event(models.Model):
     seats_used = fields.Integer(
         oldname='register_attended', string='Number of Participations',
         store=True, readonly=True, compute='_compute_seats')
+    seats_expected = fields.Integer(
+        string='Number of Expected Attendees',
+        readonly=True, compute='_compute_seats')
 
     @api.multi
     @api.depends('seats_max', 'registration_ids.state')
@@ -107,6 +110,7 @@ class event_event(models.Model):
         for event in self:
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
+            event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
     # Registration fields
     registration_ids = fields.One2many(
@@ -250,7 +254,7 @@ class event_event(models.Model):
         return res
 
     @api.one
-    def mail_attendees(self, template_id, force_send=True, filter_func=lambda self: True):
+    def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
         for attendee in self.registration_ids.filtered(filter_func):
             self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
@@ -336,7 +340,11 @@ class event_registration(models.Model):
             body=_('New registration confirmed: %s.') % (self.name or ''),
             subtype="event.mt_event_registration")
         self.state = 'open'
-        self.env['event.mail'].run()
+
+        # auto-trigger after_sub (on subscribe) mail schedulers, if needed
+        onsubscribe_schedulers = self.event_id.event_mail_ids.filtered(
+            lambda s: s.interval_type == 'after_sub')
+        onsubscribe_schedulers.execute()
 
     @api.one
     def button_reg_close(self):

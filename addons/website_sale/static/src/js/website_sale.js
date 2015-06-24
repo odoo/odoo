@@ -113,10 +113,14 @@ $('.oe_website_sale').each(function () {
           };
     })();
 
-    $(oe_website_sale).on("change", ".oe_cart input.js_quantity", function (event) {
+    $(oe_website_sale).find(".oe_cart input.js_quantity").on("change", function () {
       var $input = $(this);
+        if ($input.data('update_change')) {
+            console.log($input.val()+ "+++");
+            return;
+        }
       var value = parseInt($input.val(), 10);
-      var $dom = $(event.target).closest('tr');
+      var $dom = $(this).closest('tr');
       var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
       var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
       var line_id = parseInt($input.data('line-id'),10);
@@ -128,7 +132,7 @@ $('.oe_website_sale').each(function () {
             product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
         if (isNaN(value)) value = 0;
-
+        $input.data('update_change', true);
         if ($(this).hasClass('js_no_gup')) { // if get_unit_price (gup) not needed
             var gup = $.when();
         }
@@ -156,6 +160,12 @@ $('.oe_website_sale').each(function () {
             'product_id': parseInt($input.data('product-id'),10),
             'set_qty': value})
             .then(function (data) {
+                $input.data('update_change', false);
+                if (value !== parseInt($input.val(), 10)) {
+                    console.log($input.val()+ "***");
+                    $input.trigger('change');
+                    return;
+                }
                 if (!data.quantity) {
                     location.reload();
                     return;

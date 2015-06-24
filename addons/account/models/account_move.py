@@ -625,8 +625,7 @@ class AccountMoveLine(models.Model):
                 amount_currency_str = formatLang(self.env, abs(actual_debit or actual_credit), currency_obj=line_currency)
                 total_amount_currency_str = formatLang(self.env, total_amount, currency_obj=line_currency)
                 ctx = context.copy()
-                if target_date:
-                    ctx.update({'date': target_date})
+                ctx.update({'date': line.date})
                 total_amount = line_currency.with_context(ctx).compute(total_amount, target_currency)
                 actual_debit = line_currency.with_context(ctx).compute(actual_debit, target_currency)
                 actual_credit = line_currency.with_context(ctx).compute(actual_credit, target_currency)

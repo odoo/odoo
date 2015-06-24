@@ -550,6 +550,16 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
+    def _amount_line_tax(self, cr, uid, line, context=None):
+        taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
+        price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+        cur = line.order_id.pricelist_id.currency_id
+        taxes = taxes.compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
+        val = 0.0
+        for c in taxes:
+            val += c.get('amount', 0.0)
+        return val
+
     def _order_fields(self, cr, uid, ui_order, context=None):
         process_line = partial(self.pool['pos.order.line']._order_line_fields, cr, uid, context=context)
         return {
@@ -689,10 +699,10 @@ class pos_order(osv.osv):
                 res[order.id]['amount_paid'] +=  payment.amount
                 res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
             for line in order.lines:
-                val1 += line.price_subtotal_incl
+                val1 += self._amount_line_tax(cr, uid, line, context=context)
                 val2 += line.price_subtotal
-            res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1-val2)
-            res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1+val2)
         return res
 
     _columns = {
@@ -1078,7 +1088,7 @@ class pos_order(osv.osv):
             order_account = order.partner_id and \
                             order.partner_id.property_account_receivable_id and \
                             order.partner_id.property_account_receivable_id.id or \
-                            account_def and account_def.id or current_company.account_receivable.id
+                            account_def and account_def.id
 
             if move_id is None:
                 # Create an entry for the sale

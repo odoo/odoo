@@ -3,6 +3,7 @@ odoo.define('web.WebClient', function (require) {
 
 var ActionManager = require('web.ActionManager');
 var core = require('web.core');
+var cordova = require('web.cordova');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var Loading = require('web.Loading');
@@ -61,6 +62,10 @@ var WebClient = Widget.extend({
                 delete(self.client_options.action);
             }
             core.bus.trigger('web_client_ready');
+            cordova.ready();
+            cordova.on('back', self, function() {
+                self.do_action('history_back');
+            });
         });
     },
     bind_events: function() {
@@ -259,6 +264,7 @@ var WebClient = Widget.extend({
     on_logout: function() {
         var self = this;
         if (!this.has_uncommitted_changes()) {
+            cordova.logout();
             self.action_manager.do_action('logout');
         }
     },

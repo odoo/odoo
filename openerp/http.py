@@ -44,6 +44,7 @@ except ImportError:
 
 import openerp
 from openerp import SUPERUSER_ID
+from openerp.service.server import memory_info
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
 from openerp.tools import ustr
@@ -97,7 +98,7 @@ def dispatch_rpc(service_name, method, params):
             start_time = time.time()
             start_rss, start_vms = 0, 0
             if psutil:
-                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
             if rpc_request and rpc_response_flag:
                 openerp.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
 
@@ -119,7 +120,7 @@ def dispatch_rpc(service_name, method, params):
             end_time = time.time()
             end_rss, end_vms = 0, 0
             if psutil:
-                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
             logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
                 openerp.netsvc.log(rpc_response, logging.DEBUG, logline, result)
@@ -409,7 +410,7 @@ def route(route=None, **kw):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
-                response = response.get_response()
+                response = response.get_response(request.httprequest.environ)
             if isinstance(response, werkzeug.wrappers.BaseResponse):
                 response = Response.force_type(response)
                 response.set_default()
@@ -567,7 +568,7 @@ class JsonRequest(WebRequest):
                 start_time = time.time()
                 _, start_vms = 0, 0
                 if psutil:
-                    _, start_vms = psutil.Process(os.getpid()).get_memory_info()
+                    _, start_vms = memory_info(psutil.Process(os.getpid()))
                 if rpc_request and rpc_response_flag:
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
@@ -578,7 +579,7 @@ class JsonRequest(WebRequest):
                 end_time = time.time()
                 _, end_vms = 0, 0
                 if psutil:
-                    _, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                    _, end_vms = memory_info(psutil.Process(os.getpid()))
                 logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
                     endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
                 if rpc_response_flag:
@@ -966,7 +967,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
-        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login

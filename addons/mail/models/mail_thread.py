@@ -205,13 +205,6 @@ class MailThread(models.AbstractModel):
             doc_name = self.env['ir.model'].search([('model', '=', self._name)]).read(['name'])[0]['name']
             thread.message_post(body=_('%s created') % doc_name)
 
-        # auto_subscribe: take values and defaults into account
-        create_values = dict(values)
-        for key, val in self._context.iteritems():
-            if key.startswith('default_') and key[8:] not in create_values:
-                create_values[key[8:]] = val
-        thread.message_auto_subscribe(create_values.keys(), values=create_values)
-
         # track values
         if not self._context.get('mail_notrack'):
             if 'lang' not in self._context:
@@ -222,6 +215,14 @@ class MailThread(models.AbstractModel):
             if tracked_fields:
                 initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
                 track_thread.message_track(tracked_fields, initial_values)
+
+        # auto_subscribe: take values and defaults into account
+        create_values = dict(values)
+        for key, val in self._context.iteritems():
+            if key.startswith('default_') and key[8:] not in create_values:
+                create_values[key[8:]] = val
+        thread.message_auto_subscribe(create_values.keys(), values=create_values)
+
         return thread
 
     @api.multi
@@ -242,13 +243,15 @@ class MailThread(models.AbstractModel):
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in track_self)
 
-        # Perform write, update followers
+        # Perform write
         result = super(MailThread, self).write(values)
-        self.message_auto_subscribe(values.keys(), values=values)
 
         # Perform the tracking
         if tracked_fields:
             track_self.message_track(tracked_fields, initial_values)
+
+        # update followers
+        self.message_auto_subscribe(values.keys(), values=values)
 
         return result
 
@@ -867,7 +870,7 @@ class MailThread(models.AbstractModel):
         email_from = decode_header(message, 'From')
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
-        in_reply_to = decode_header(message, 'In-Reply-To')
+        in_reply_to = decode_header(message, 'In-Reply-To').strip()
         thread_references = references or in_reply_to
 
         # 0. First check if this is a bounce message or not.

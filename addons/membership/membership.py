@@ -184,6 +184,11 @@ class Partner(osv.osv):
             list_partner += ids2
         return list_partner
 
+    def _cron_update_membership(self, cr, uid, context=None):
+        partner_ids = self.search(cr, uid, [('membership_state', '=', 'paid')], context=context)
+        if partner_ids:
+            self._store_set_values(cr, uid, partner_ids, ['membership_state'], context=context)
+
     def _membership_state(self, cr, uid, ids, name, args, context=None):
         """This Function return Membership State For Given Partner.
         @param self: The object pointer
@@ -201,10 +206,10 @@ class Partner(osv.osv):
         for id in ids:
             partner_data = self.browse(cr, uid, id, context=context)
             if partner_data.membership_cancel and today > partner_data.membership_cancel:
-                res[id] = 'canceled'
+                res[id] = 'free' if partner_data.free_member else 'canceled'
                 continue
             if partner_data.membership_stop and today > partner_data.membership_stop:
-                res[id] = 'old'
+                res[id] = 'free' if partner_data.free_member else 'old'
                 continue
             s = 4
             if partner_data.member_lines:

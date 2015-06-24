@@ -25,6 +25,7 @@ invoice and send propositions for membership renewal.
     'data': [
         'security/ir.model.access.csv',
         'wizard/membership_invoice_view.xml',
+        'membership_data.xml',
         'membership_view.xml',
         'report/report_membership_view.xml',
     ],

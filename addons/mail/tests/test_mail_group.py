@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.mail.tests.common import TestMail
+from .common import TestMail
 from openerp.exceptions import AccessError
 from openerp.exceptions import except_orm
 from openerp.tools import mute_logger

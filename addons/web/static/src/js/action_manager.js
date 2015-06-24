@@ -374,7 +374,7 @@ var ActionManager = Widget.extend({
                     if (warm) {
                         this.null_action();
                     }
-                    action_loaded = this.do_action(state.action, { additional_context: add_context });
+                    action_loaded = this.do_action(state.action, { additional_context: add_context, state: state });
                     $.when(action_loaded || null).done(function() {
                         self.webclient.menu.is_bound.done(function() {
                             if (self.inner_action && self.inner_action.get_action_descr().id) {
@@ -508,7 +508,6 @@ var ActionManager = Widget.extend({
                 display_title : !popup,
                 headless: (popup || inline) && form,
                 search_disable_custom_filters: action.context && action.context.search_disable_custom_filters,
-                default_view: action.context && action.context.params && action.context.params.view_type,
             });
         }
 
@@ -591,7 +590,7 @@ var ActionManager = Widget.extend({
         var self = this;
         return this.ir_actions_common({
             widget: function () {
-                return new ViewManager(self, null, null, null, action);
+                return new ViewManager(self, null, null, null, action, options);
             },
             action: action,
             klass: 'o_act_window',

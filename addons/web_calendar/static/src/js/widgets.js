@@ -94,7 +94,7 @@ var QuickCreate = Dialog.extend({
     
     slow_add: function() {
         var val = this.$input.val().trim();
-        this.slow_create({'name': val});
+        this.slow_create(_.isEmpty(val) ? {} : {'name': val});
     },
 
     /**

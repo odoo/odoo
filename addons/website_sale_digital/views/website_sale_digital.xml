@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="orders_followup_downloads" name="Orders Downloads Followup" inherit_id="website_sale.order_invoice">
+    <template id="orders_followup_downloads" name="Orders Downloads Followup" inherit_id="website_portal.orders_followup">
         <xpath expr="//div[@id='product_name']" position="inside">
-            <t t-set="attachments" t-value="digital_attachments[o.id].get(ol.product_id.id)"/>
+            <t t-set="attachments" t-value="digital_attachments.get(ol.product_id.id)"/>
             <t t-if="attachments">
                 <span class="dropdown">
                     <button class="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
@@ -10,7 +10,7 @@
                     </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                         <t t-foreach="attachments" t-as="a">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" t-att-href="'/shop/download?attachment_id=%i' % a['id']"><t t-esc="a['name']"/></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" t-att-href="'/my/download?attachment_id=%i' % a['id']"><t t-esc="a['name']"/></a></li>
                         </t>
                     </ul>
                 </span>

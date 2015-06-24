@@ -105,15 +105,15 @@ class AccountFiscalPosition(models.Model):
         PartnerObj = self.env['res.partner']
         partner = PartnerObj.browse(partner_id)
 
-        # partner manually set fiscal position always win
-        if partner.property_account_position_id:
-            return partner.property_account_position_id.id
-
         # if no delivery use invocing
         if delivery_id:
             delivery = PartnerObj.browse(delivery_id)
         else:
             delivery = partner
+
+        # partner manually set fiscal position always win
+        if delivery.property_account_position_id or partner.property_account_position_id:
+            return delivery.property_account_position_id.id or partner.property_account_position_id.id
 
         domains = [[('auto_apply', '=', True), ('vat_required', '=', bool(partner.vat))]]
         if partner.vat:
@@ -240,9 +240,44 @@ class ResPartner(models.Model):
         if not self.ids:
             self.total_invoiced = 0.0
             return True
+
+        user_currency_id = self.env.user.company_id.currency_id.id
         for partner in self:
-            invoices = account_invoice_report.search([('partner_id', 'child_of', partner.id), ('state', 'not in', ['draft', 'cancel'])])
-            partner.total_invoiced = sum(inv.user_currency_price_total for inv in invoices)
+            all_partner_ids = self.search([('id', 'child_of', partner.id)]).ids
+
+            # searching account.invoice.report via the orm is comparatively expensive
+            # (generates queries "id in []" forcing to build the full table).
+            # In simple cases where all invoices are in the same currency than the user's company
+            # access directly these elements
+
+            # generate where clause to include multicompany rules
+            where_query = account_invoice_report._where_calc([
+                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel'])
+            ])
+            account_invoice_report._apply_ir_rules(where_query, 'read')
+            from_clause, where_clause, where_clause_params = where_query.get_sql()
+
+            query = """ WITH currency_rate (currency_id, rate, date_start, date_end) AS (
+                                SELECT r.currency_id, r.rate, r.name AS date_start,
+                                    (SELECT name FROM res_currency_rate r2
+                                     WHERE r2.name > r.name AND
+                                           r2.currency_id = r.currency_id
+                                     ORDER BY r2.name ASC
+                                     LIMIT 1) AS date_end
+                                FROM res_currency_rate r
+                                )
+                      SELECT SUM(price_total * cr.rate) as total
+                        FROM account_invoice_report account_invoice_report, currency_rate cr
+                       WHERE %s
+                         AND cr.currency_id = %%s
+                         AND (COALESCE(account_invoice_report.date, NOW()) >= cr.date_start)
+                         AND (COALESCE(account_invoice_report.date, NOW()) < cr.date_end OR cr.date_end IS NULL)
+                    """ % where_clause
+
+            # price_total is in the currency with rate = 1
+            # total_invoice should be displayed in the current user's currency
+            self.env.cr.execute(query, where_clause_params + [user_currency_id])
+            partner.total_invoiced = self.env.cr.fetchone()[0]
 
     @api.multi
     def _journal_item_count(self):

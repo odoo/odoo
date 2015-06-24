@@ -11,6 +11,7 @@
     'data': [
         'views/payment_acquirer.xml',
         'views/res_config_view.xml',
+        'views/res_partner_view.xml',
         'security/ir.model.access.csv',
         'security/payment_security.xml',
     ],

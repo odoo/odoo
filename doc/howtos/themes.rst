@@ -122,7 +122,7 @@ Compile your file (http://lesscss.org/usage/#command-line-usage) to get the
 
 Add this asset to your template in ``page.xml``::
 
-  <template id="dummy_theme_asset" name="website assete for Dummy theme" inherit_id="website.theme">
+  <template id="dummy_theme_asset" name="website assete for Dummy theme" inherit_id="website.assets_frontend">
       <xpath expr="." position="inside">
           <link rel="stylesheet" href="/dummy_theme/static/style/custom.css"/>
       </xpath>

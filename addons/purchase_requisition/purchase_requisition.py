@@ -147,7 +147,7 @@ class purchase_requisition(osv.osv):
         vals = po_line_obj.onchange_product_id(
             cr, uid, [], supplier_pricelist, product.id, qty, default_uom_po_id,
             supplier.id, date_order=date_order,
-            fiscal_position_id=supplier.property_account_position_id,
+            fiscal_position_id=supplier.property_account_position_id.id,
             date_planned=requisition_line.schedule_date,
             name=False, price_unit=False, state='draft', context=context)['value']
         vals.update({

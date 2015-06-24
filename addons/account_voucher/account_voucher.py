@@ -104,6 +104,10 @@ class AccountVoucher(models.Model):
             account_id = self.partner_id.property_account_receivable_id.id
         elif self.journal_id.type == 'purchase':
             account_id = self.partner_id.property_account_payable_id.id
+        elif self.voucher_type  == 'sale':
+            account_id = sef.journal_id.default_debit_account_id.id
+        elif self.voucher_type == 'purchase':
+            account_id = self.journal_id.default_credit_account_id.id
         else:
             account_id = self.journal_id.default_credit_account_id.id or self.journal_id.default_debit_account_id.id
         self.account_id = account_id
@@ -146,6 +150,10 @@ class AccountVoucher(models.Model):
                 account_id = partner.property_account_receivable_id.id
             elif journal.type == 'purchase':
                 account_id = partner.property_account_payable_id.id
+            elif self.voucher_type == 'sale':
+                account_id = journal.default_debit_account_id.id
+            elif self.voucher_type == 'purchase':
+                account_id = journal.default_credit_account_id.id
             else:
                 account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
         self.account_id = account_id

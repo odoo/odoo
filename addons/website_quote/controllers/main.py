@@ -37,14 +37,41 @@ class sale_quote(http.Controller):
             pdf = report_obj.get_pdf(request.cr, SUPERUSER_ID, [order_id], 'website_quote.report_quote', data=None, context=request.context)
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
+        user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
+        tx_id = request.registry['payment.transaction'].search(request.cr, SUPERUSER_ID, [('reference', '=', order.name)], context=request.context)
+        tx = request.registry['payment.transaction'].browse(request.cr, SUPERUSER_ID, tx_id, context=request.context) if tx_id else False
         values = {
             'quotation': order,
             'message': message and int(message) or False,
             'option': bool(filter(lambda x: not x.line_id, order.options)),
             'order_valid': (not order.validity_date) or (now <= order.validity_date),
             'days_valid': days,
-            'action': action
+            'action': action,
+            'breadcrumb': user.partner_id == order.partner_id,
+            'tx_id': tx_id,
+            'tx_state': tx.state if tx else False,
+            'tx_post_msg': tx.acquirer_id.post_msg if tx else False,
+            'need_payment': not tx_id and order.state == 'manual'
         }
+
+        if order.require_payment or (not tx_id and order.state == 'manual'):
+            payment_obj = request.registry.get('payment.acquirer')
+            acquirer_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=request.context)
+            values['acquirers'] = list(payment_obj.browse(request.cr, token and SUPERUSER_ID or request.uid, acquirer_ids, context=request.context))
+            render_ctx = dict(request.context, submit_class='btn btn-primary', submit_txt=_('Pay & Confirm'))
+            for acquirer in values['acquirers']:
+                acquirer.button = payment_obj.render(
+                    request.cr, SUPERUSER_ID, acquirer.id,
+                    order.name,
+                    order.amount_total,
+                    order.pricelist_id.currency_id.id,
+                    partner_id=order.partner_id.id,
+                    tx_values={
+                        'return_url': '/quote/' + str(order_id) + '/confirm',
+                        'type': 'form',
+                        'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.')
+                    },
+                    context=render_ctx)
         return request.website.render('website_quote.so_quotation', values)
 
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
@@ -53,8 +80,10 @@ class sale_quote(http.Controller):
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
             return request.website.render('website.404')
+        if order.require_payment:
+            return request.website.render('website.404')
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
-        order_obj.signal_workflow(request.cr, SUPERUSER_ID, [order_id], 'order_confirm', context=request.context)
+        order_obj.action_button_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
         message = _('Order signed by %s') % (signer,)
         self.__message_post(message, order_id, message_type='comment', subtype='mt_comment', attachments=attachments)
         return True
@@ -157,3 +186,83 @@ class sale_quote(http.Controller):
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (order.id, token))
+
+    # note dbo: website_sale code
+    @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
+    def payment_transaction(self, acquirer_id, order_id):
+        """ Json method that creates a payment.transaction, used to create a
+        transaction when the user clicks on 'pay now' button. After having
+        created the transaction, the event continues and the user is redirected
+        to the acquirer website.
+
+        :param int acquirer_id: id of a payment.acquirer record. If not set the
+                                user is redirected to the checkout page
+        """
+        cr, uid, context = request.cr, request.uid, request.context
+        transaction_obj = request.registry.get('payment.transaction')
+        order = request.registry.get('sale.order').browse(cr, SUPERUSER_ID, order_id, context=context)
+
+        if not order or not order.order_line or acquirer_id is None:
+            return request.redirect("/quote/" + str(order_id))
+
+        # find an already existing transaction
+        tx_id = transaction_obj.search(cr, SUPERUSER_ID, [('reference', '=', order.name)], context=context)
+        tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
+        if tx:
+            if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+                tx.write({
+                    'acquirer_id': acquirer_id,
+                })
+            tx_id = tx.id
+        else:
+            tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
+                'acquirer_id': acquirer_id,
+                'type': 'form',
+                'amount': order.amount_total,
+                'currency_id': order.pricelist_id.currency_id.id,
+                'partner_id': order.partner_id.id,
+                'partner_country_id': order.partner_id.country_id.id,
+                'reference': order.name,
+                'sale_order_id': order.id,
+            }, context=context)
+            request.session['sale_transaction_id'] = tx_id
+            tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
+
+        # confirm the quotation
+        if tx.acquirer_id.auto_confirm == 'at_pay_now':
+            request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
+
+        return tx_id
+
+    @http.route(['/quote/<int:order_id>/confirm'], type='http', auth="public", website=True)
+    def confirm(self, order_id):
+        cr, uid, context = request.cr, request.uid, request.context
+        transaction_obj = request.registry.get('payment.transaction')
+        sale_order_obj = request.registry.get('sale.order')
+        order = sale_order_obj.browse(cr, SUPERUSER_ID, order_id, context=context)
+
+        if not order or not order.order_line:
+            return request.redirect("/quote/%s" % (order_id))
+
+        # find  transaction
+        tx_id = transaction_obj.search(cr, SUPERUSER_ID, [('reference', '=', order.name)], context=context)
+        tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
+        # create draft invoice if transaction is ok
+        if tx and tx.state == 'pending':
+            sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order_id], context=context)
+            sale_order_obj.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
+            message = _('Order payed by %s, waiting for payment confirmation') % (tx.partner_id.name,)
+            self.__message_post(message, order_id, type='comment', subtype='mt_comment')
+        elif tx and tx.state == 'done':
+            sale_order_obj.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
+            invoice = order.invoice_ids
+            request.registry['account.invoice'].signal_workflow(cr, SUPERUSER_ID, [invoice.id], 'invoice_open', context=context)
+            period_id = request.registry['account.period'].find(cr, SUPERUSER_ID, time.strftime('%Y-%m-%d'), context=context)[0]
+            message = _('Order payed by %s') % (tx.partner_id.name,)
+            self.__message_post(message, order_id, type='comment', subtype='mt_comment')
+            # if website_sale is installed, we need to clean the sale_order linked to the website
+            # otherwise the system will mix transactions on the next SO
+            if hasattr(request.website, 'sale_reset'):
+                request.website.sale_reset()
+
+        return request.redirect("/quote/%s/%s" % (order.id, order.access_token))

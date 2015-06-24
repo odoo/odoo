@@ -156,11 +156,10 @@ class procurement_order(osv.osv):
             if old_proc == proc:
                 key += (route,)
             else:
-                if key:
-                    if key_routes.get(key):
-                        key_routes[key] += [old_proc]
-                    else:
-                        key_routes[key] = [old_proc]
+                if key_routes.get(key):
+                    key_routes[key] += [old_proc]
+                else:
+                    key_routes[key] = [old_proc]
                 old_proc = proc
                 key = (route,)
         if proc: #do not forget last one as we passed through it

@@ -22,7 +22,6 @@ Adds menu to show relevant information to each manager.You can also view the rep
         'account_analytic_analysis_cron.xml',
         'res_config_view.xml',
         'views/account_analytic_analysis.xml',
-        'product_template_view.xml',
     ],
     'demo': ['analytic_account_demo.xml', 'analytic_account_demo.yml'],
     'test': ['../account/test/account_minimal_test.xml', 'test/account_analytic_analysis.yml'],
