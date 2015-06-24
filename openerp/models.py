@@ -3816,7 +3816,12 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if not (totranslate and column.translate):
+                    if totranslate and column.translate:
+                        # vals[field] is a translation: do not update the table
+                        if callable(column.translate):
+                            flabel = ffield.get_description(recs.env)['string']
+                            raise UserError(_("You cannot update the translated value of field '%s'") % flabel)
+                    else:
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
@@ -3841,26 +3846,25 @@ class BaseModel(object):
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
-            if totranslate:
-                # TODO: optimize
-                for f in direct:
-                    if callable(self._columns[f].translate):
-                        # We do not handle the update of a field where translate
-                        # is a callable. One should update the value without a
-                        # language, or update translated terms separately.
-                        raise ValidationError(_(
-                            "The translation of the field '%s' cannot be "
-                            "directly updated. You can either update its value "
-                            "in English, or update translated terms separately."
-                        ) % self._fields[f].string)
-                    elif self._columns[f].translate:
-                        src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
-                        if not src_trans:
-                            src_trans = vals[f]
-                            # Inserting value to DB
-                            context_wo_lang = dict(context, lang=None)
-                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
+            # TODO: optimize
+            for f in direct:
+                column = self._columns[f]
+                if callable(column.translate):
+                    # The English value of a field has been modified,
+                    # synchronize translated terms when possible.
+                    assert not totranslate
+                    self.pool['ir.translation']._sync_terms_translations(
+                        cr, user, self._fields[f], recs, context=context)
+
+                elif column.translate and totranslate:
+                    # The translated value of a field has been modified.
+                    src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
+                    if not src_trans:
+                        # Insert value to DB
+                        src_trans = vals[f]
+                        context_wo_lang = dict(context, lang=None)
+                        self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
+                    self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed

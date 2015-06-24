@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from difflib import get_close_matches
 import logging
 
 from openerp import api, tools
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from openerp.exceptions import AccessError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -172,16 +173,18 @@ class ir_translation(osv.osv):
             context = {}
         res = dict.fromkeys(ids, False)
         for record in self.browse(cr, uid, ids, context=context):
-            if record.type != 'model':
-                res[record.id] = record.src
-            else:
-                model_name, field = record.name.split(',')
+            res[record.id] = record.src
+            if record.type == 'model':
+                model_name, field_name = record.name.split(',')
                 model = self.pool.get(model_name)
-                if model is not None:
+                if model is None:
+                    continue
+                field = model._fields[field_name]
+                if not callable(field.translate):
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
-                    result = model.read(cr, uid, [record.res_id], [field], context=context_no_lang)
-                    res[record.id] = result[0][field] if result else False
+                    result = model.read(cr, uid, [record.res_id], [field_name], context=context_no_lang)
+                    res[record.id] = result[0][field_name] if result else False
         return res
 
     def _set_src(self, cr, uid, id, name, value, args, context=None):
@@ -191,15 +194,18 @@ class ir_translation(osv.osv):
         if context is None:
             context = {}
         record = self.browse(cr, uid, id, context=context)
-        if  record.type == 'model':
-            model_name, field = record.name.split(',')
+        if record.type == 'model':
+            model_name, field_name = record.name.split(',')
             model = self.pool.get(model_name)
-            #We need to take the context without the language information, because we want to write on the
-            #value store in db and not on the one associate with current language.
-            #Also not removing lang from context trigger an error when lang is different
-            context_wo_lang = context.copy()
-            context_wo_lang.pop('lang', None)
-            model.write(cr, uid, [record.res_id], {field: value}, context=context_wo_lang)
+            field = model._fields[field_name]
+            if not callable(field.translate):
+                # Make a context without language information, because we want
+                # to write on the value stored in db and not on the one
+                # associated with the current language. Also not removing lang
+                # from context trigger an error when lang is different.
+                context_wo_lang = context.copy()
+                context_wo_lang.pop('lang', None)
+                model.write(cr, uid, [record.res_id], {field_name: value}, context=context_wo_lang)
         return self.write(cr, uid, id, {'src': value}, context=context)
 
     _columns = {
@@ -395,6 +401,49 @@ class ir_translation(osv.osv):
         return result
 
     @api.model
+    def _sync_terms_translations(self, field, records):
+        """ Synchronize the translations to the terms to translate, after the
+        English value of a field is modified. The algorithm tries to match
+        existing translations to the terms to translate, provided the distance
+        between modified strings is not too large. It allows to not retranslate
+        data where a typo has been fixed in the English value.
+        """
+        if not callable(getattr(field, 'translate', None)):
+            return
+
+        trans = self.env['ir.translation']
+        outdated = trans
+        discarded = trans
+
+        for record in records:
+            # get field value and terms to translate
+            value = record[field.name]
+            terms = set(field.get_trans_terms(value))
+            record_trans = trans.search([
+                ('type', '=', 'model'),
+                ('name', '=', "%s,%s" % (field.model_name, field.name)),
+                ('res_id', '=', record.id),
+            ])
+
+            if not terms:
+                # discard all translations for that field
+                discarded += record_trans
+                continue
+
+            # remap existing translations on terms when possible
+            for trans in record_trans:
+                if trans.src not in terms:
+                    matches = get_close_matches(trans.src, terms, 1, 0.9)
+                    if matches:
+                        trans.write({'src': matches[0], 'state': trans.state})
+                    else:
+                        outdated += trans
+
+        # process outdated and discarded translations
+        outdated.write({'state': 'to_translate'})
+        discarded.unlink()
+
+    @api.model
     @tools.ormcache_context('model_name', keys=('lang',))
     def get_field_string(self, model_name):
         """ Return the translation of fields strings in the context's language.
@@ -431,10 +480,10 @@ class ir_translation(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if vals.get('src') or ('value' in vals and not(vals.get('value'))):
-            vals.update({'state':'to_translate'})
         if vals.get('value'):
-            vals.update({'state':'translated'})
+            vals.setdefault('state', 'translated')
+        elif vals.get('src') or not vals.get('value', True):
+            vals.setdefault('state', 'to_translate')
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         self.clear_caches()
         self.pool['ir.ui.view'].clear_cache()
@@ -450,38 +499,81 @@ class ir_translation(osv.osv):
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
-    def translate_fields(self, cr, uid, model, id, field=None, context=None):
-        trans_model = self.pool[model]
-        domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
-        langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
-        if not langs_ids:
-            raise UserError(_("Translation features are unavailable until you install an extra Odoo translation."))
-        langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
+    @api.model
+    def insert_missing(self, field, records):
+        """ Insert missing translations for `field` on `records`. """
+        records = records.with_context(lang=None)
+        if callable(field.translate):
+            # insert missing translations for each term in src
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                        FROM res_lang l
+                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                            SELECT 1 FROM ir_translation
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
+                        );
+                    """
+            for record in records:
+                src = record[field.name] or None
+                for term in set(field.get_trans_terms(src)):
+                    self._cr.execute(query, {
+                        'name': "%s,%s" % (field.model_name, field.name),
+                        'res_id': record.id,
+                        'src': term,
+                    })
+        else:
+            # insert missing translations for src
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                        FROM res_lang l
+                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                            SELECT 1 FROM ir_translation
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
+                        );
+                        UPDATE ir_translation SET src=%(src)s
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
+                    """
+            for record in records:
+                self._cr.execute(query, {
+                    'name': "%s,%s" % (field.model_name, field.name),
+                    'res_id': record.id,
+                    'src': record[field.name] or None,
+                })
+        self.clear_caches()
+
+    @api.model
+    def translate_fields(self, model, id, field=None):
+        """ Open a view for translating the field(s) of the record (model, id). """
         main_lang = 'en_US'
-        translatable_fields = []
-        for k, f in trans_model._fields.items():
-            if getattr(f, 'translate', False):
-                if f.inherited:
-                    parent_id = trans_model.read(cr, uid, [id], [f.related[0]], context=context)[0][f.related[0]][0]
-                    translatable_fields.append({'name': k, 'id': parent_id, 'model': f.base_field.model_name})
-                    domain.insert(0, '|')
-                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (f.base_field.model_name, k))])
-                else:
-                    translatable_fields.append({'name': k, 'id': id, 'model': model })
-        if len(langs):
-            fields = [f.get('name') for f in translatable_fields]
-            record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
-            for lg in langs:
-                for f in translatable_fields:
-                    # Check if record exists, else create it (at once)
-                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
-                        SELECT %s, %s, %s, 'model', %s, %s WHERE NOT EXISTS
-                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model');
-                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model';
-                        """
-                    src = record[f['name']] or None
-                    name = "%s,%s" % (f['model'], f['name'])
-                    cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
+        if not self.env['res.lang'].search_count([('code', '!=', main_lang)]):
+            raise UserError(_("Translation features are unavailable until you install an extra translation."))
+
+        # determine domain for selecting translations
+        record = self.env[model].with_context(lang=main_lang).browse(id)
+        domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
+
+        def make_domain(fld, rec):
+            name = "%s,%s" % (fld.model_name, fld.name)
+            return ['&', ('res_id', '=', rec.id), ('name', '=', name)]
+
+        # insert missing translations, and extend domain for related fields
+        for name, fld in record._fields.items():
+            if not getattr(fld, 'translate', False):
+                continue
+
+            rec = record
+            if fld.related:
+                try:
+                    # traverse related fields up to their data source
+                    while fld.related:
+                        rec, fld = fld.traverse_related(rec)
+                    if rec:
+                        domain = ['|'] + domain + make_domain(fld, rec)
+                except AccessError:
+                    continue
+
+            assert fld.translate and rec._name == fld.model_name
+            self.insert_missing(fld, rec)
 
         action = {
             'name': 'Translate',
@@ -492,10 +584,11 @@ class ir_translation(osv.osv):
             'domain': domain,
         }
         if field:
-            f = trans_model._fields[field]
-            action['context'] = {
-                'search_default_name': "%s,%s" % (f.base_field.model_name, field)
-            }
+            fld = record._fields[field]
+            if not fld.related:
+                action['context'] = {
+                    'search_default_name': "%s,%s" % (fld.model_name, fld.name),
+                }
         return action
 
     def _get_import_cursor(self, cr, uid, context=None):
