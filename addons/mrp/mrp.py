@@ -1016,6 +1016,17 @@ class mrp_production(osv.osv):
         self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
         return True
 
+    def button_unreserve(self, cr, uid,  production_ids, context=None):
+        #import pudb
+        #pudb.set_trace()
+        productions = self.read(cr, uid, production_ids, ['move_lines', 'move_created_ids'], context=context)
+        self.pool.get('stock.move').action_cancel(cr, uid, productions[0]['move_lines'], context=context)
+        self.pool.get('stock.move').unlink(cr, uid, productions[0]['move_lines'], context=context)
+        self.pool.get('stock.move').action_cancel(cr, uid, productions[0]['move_created_ids'], context=context)
+        self.pool.get('stock.move').unlink(cr, uid, productions[0]['move_created_ids'], context=context)
+        self.signal_workflow(cr, uid, production_ids, 'unreserve')
+        return True
+        
     def _costs_generate(self, cr, uid, production):
         """ Calculates total costs at the end of the production.
         @param production: Id of production order.
