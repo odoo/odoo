@@ -353,8 +353,8 @@ PaymentScreenWidget.include({
 
         if (! decodedMagtek) {
             this.gui.show_popup('error',{
-                'title': 'Error',
-                'body':  _t('Could not read card (bad swipe?)'),
+                'title': 'Could not read card',
+                'body':  _t('This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International).'),
             });
             return;
         }
