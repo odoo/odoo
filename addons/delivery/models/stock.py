@@ -1,91 +1,79 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv
-from openerp.tools.translate import _
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
 
 # Overloaded stock_picking to manage carriers :
-class stock_picking(osv.osv):
+
+
+class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    def _cal_weight(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for picking in self.browse(cr, uid, ids, context=context):
+    @api.depends('product_id', 'move_lines')
+    def _cal_weight(self):
+        for picking in self:
             total_weight = total_weight_net = 0.00
 
             for move in picking.move_lines:
-                if move.state != 'cancel':
-                    total_weight += move.weight
-                    total_weight_net += move.weight_net
+                total_weight += move.weight
+                total_weight_net += move.weight_net
 
-            res[picking.id] = {
-                                'weight': total_weight,
-                                'weight_net': total_weight_net,
-                              }
-        return res
+                move.total_weight = total_weight
+                move.total_weight_net = total_weight_net
 
+    def _default_uom(self):
+        uom_categ_id = self.env.ref('product.product_uom_categ_kgm').id
+        return self.env['product.uom'].search([('category_id', '=', uom_categ_id), ('factor', '=', 1)], limit=1)
 
-    def _get_picking_line(self, cr, uid, ids, context=None):
+    @api.multi
+    def _get_picking_line(self):
         result = {}
-        for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
+        for line in self.env['stock.move']:
             result[line.picking_id.id] = True
         return result.keys()
 
+    carrier_id = fields.Many2one('delivery.carrier', string='Carrier')
+    volume = fields.Float(copy=False)
+    weight = fields.Float(compute='_cal_weight', digits=dp.get_precision('Stock Weight'), store=True)
+    weight_net = fields.Float(compute='_cal_weight', string='Net Weight', digits=dp.get_precision('Stock Weight'), store=True)
+    carrier_tracking_ref = fields.Char(string='Carrier Tracking Ref', copy=False)
+    number_of_packages = fields.Integer(string='Number of Packages', copy=False)
+    weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True,
+        readonly=True, help="Unit of measurement for Weight", default=_default_uom)
 
-    _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Carrier"),
-        'volume': fields.float('Volume', copy=False),
-        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                  store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['state', 'picking_id', 'product_id','product_uom_qty','product_uom'], 40),
-                 }),
-        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                  store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['state', 'picking_id', 'product_id','product_uom_qty','product_uom'], 40),
-                 }),
-        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', copy=False),
-        'number_of_packages': fields.integer('Number of Packages', copy=False),
-        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
-    }
-
-    def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
-        """Prepare the invoice line to add to the shipping costs to the shipping's
-           invoice.
-
+    @api.one
+    def _prepare_shipping_invoice_line(self, picking, invoice):
+        """Prepare the invoice line to add to the shipping costs to the
+        shipping's invoice.
             :param browse_record picking: the stock picking being invoiced
             :param browse_record invoice: the stock picking's invoice
             :return: dict containing the values to create the invoice line,
                      or None to create nothing
         """
-        carrier_obj = self.pool.get('delivery.carrier')
-        grid_obj = self.pool.get('delivery.grid')
+        Carrrier = self.env['delivery.carrier']
+        Grid = self.env['delivery.grid']
         if not picking.carrier_id or \
             any(inv_line.product_id.id == picking.carrier_id.product_id.id
                 for inv_line in invoice.invoice_line_ids):
             return None
-        grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
-                picking.partner_id.id, context=context)
+        grid_id = Carrrier.grid_get(picking.partner_id.id)
         if not grid_id:
-            raise UserError(_('The carrier %s (id: %d) has no delivery grid!') % (picking.carrier_id.name,picking.carrier_id.id))
+            raise UserError(_('The carrier %s (id: %d) has no delivery grid!') %
+                (picking.carrier_id.name, picking.carrier_id.id))
         quantity = sum([line.product_uom_qty for line in picking.move_lines])
-        price = grid_obj.get_price_from_picking(cr, uid, grid_id,
-                invoice.amount_untaxed, picking.weight, picking.volume,
-                quantity, context=context)
+        price = Grid.get_price_from_picking(invoice.amount_untaxed, picking.weight, picking.volume, quantity)
         account_id = picking.carrier_id.product_id.property_account_income.id
         if not account_id:
-            account_id = picking.carrier_id.product_id.categ_id\
-                    .property_account_income_categ.id
+            account_id = picking.carrier_id.product_id.categ_id.property_account_income_categ.id
 
         taxes = picking.carrier_id.product_id.taxes_id
         partner = picking.partner_id or False
         if partner:
-            account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
-            taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes)
+            account_id = self.env['account.fiscal.position'].map_account(partner.property_account_position, account_id)
+            taxes_ids = self.env['account.fiscal.position'].map_tax(partner.property_account_position, taxes)
         else:
             taxes_ids = [x.id for x in taxes]
 
@@ -100,9 +88,10 @@ class stock_picking(osv.osv):
             'invoice_line_tax_ids': [(6, 0, taxes_ids)],
         }
 
-    def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
-        invoice_line_obj = self.pool.get('account.invoice.line')
-        invoice_ids = super(stock_picking, self)._invoice_create_line(cr, uid, moves, journal_id, inv_type=inv_type, context=context)
+    @api.model
+    def _invoice_create_line(self, moves, journal_id, inv_type='out_invoice'):
+        InvoiceLine = self.env['account.invoice.line']
+        invoice_ids = super(StockPicking, self)._invoice_create_line(moves, journal_id, inv_type=inv_type)
         delivey_invoices = {}
         for move in moves:
             for invoice in move.picking_id.sale_id.invoice_ids:
@@ -110,15 +99,7 @@ class stock_picking(osv.osv):
                     delivey_invoices[invoice] = move.picking_id
         if delivey_invoices:
             for invoice, picking in delivey_invoices.items():
-                invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
+                invoice_line = self._prepare_shipping_invoice_line(picking, invoice)
                 if invoice_line:
-                    invoice_line_obj.create(cr, uid, invoice_line)
+                    InvoiceLine.create(invoice_line)
         return invoice_ids
-
-    def _get_default_uom(self, cr, uid, context=None):
-        uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')
-        return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id), ('factor', '=', 1)])[0]
-
-    _defaults = {
-        'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c),
-    }
