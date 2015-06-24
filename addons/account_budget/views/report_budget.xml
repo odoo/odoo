@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_budget">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -14,13 +13,13 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Printed at:</strong>
-                            <p><span t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/> at
+                            <p><span t-esc="date.context_today"/> at
                             <span t-esc="time.strftime('%H:%M:%S')"/></p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Analysis from:</strong>
-                            <p><span t-esc="formatLang(data['form']['date_from'], date=True)"/> to
-                            <span t-esc="formatLang(data['form']['date_to'], date=True)"/></p>
+                            <p><span t-esc="date.from_string(data['form']['date_from'])"/> to
+                            <span t-esc="date.from_string(data['form']['date_to'])"/></p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Budget:</strong>
@@ -39,32 +38,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="funct(o, data['form'])" t-as="line">
+                            <t t-foreach="funct" t-as="line">
                                 <t t-if="line['status'] == 1">
                                     <tr>
                                         <td><strong t-esc="line['name']"/></td>
                                         <td class="text-right">
-                                            <strong t-esc="formatLang(line['theo'], dp='Account', currency_obj = res_company.currency_id)"/>
+                                            <strong t-esc="formatLang(o.env, line['theo'], dp='Account', currency_obj = res_company.currency_id)"/>
                                         </td>
-                                        <td class="text-right"><strong t-esc="formatLang(line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                        <td class="text-right"><strong t-esc="formatLang(line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                        <td class="text-right"><strong t-esc="formatLang(line['perc'],digits=2)"/> %</td>
+                                        <td class="text-right"><strong t-esc="formatLang(o.env, line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                        <td class="text-right"><strong t-esc="formatLang(o.env, line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                        <td class="text-right"><strong t-esc="formatLang(o.env, line['perc'], digits=2)"/> %</td>
                                     </tr>
                                 </t>
                                 <tr t-if="line['status'] != 1">
                                     <td><span style="color: white;" t-esc="'.....'*(line['status'] - 1)"/><span t-esc="line['name']"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['theo'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['perc'],digits=2)"/> % </td>
+                                    <td class="text-right"><span t-esc="formatLang(o.env, line['theo'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="formatLang(o.env, line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="formatLang(o.env, line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="formatLang(o.env, line['perc'], digits=2)"/> % </td>
                                 </tr>
                             </t>
-                            <tr t-foreach="funct_total(data['form'])" t-as="tot">
+                            <tr t-foreach="funct_total" t-as="tot">
                                 <td><strong>Total:</strong></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_theo'], dp='Account',  currency_obj = res_company.currency_id)"/></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_pln'], dp='Account', currency_obj = res_company.currency_id)"/></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_perc'], digits=2)"/> %</td>
+                                <td class="text-right"><strong t-esc="formatLang(o.env, tot['tot_theo'], dp='Account',  currency_obj = res_company.currency_id)"/></td>
+                                <td class="text-right"><strong t-esc="formatLang(o.env, tot['tot_pln'], dp='Account', currency_obj = res_company.currency_id)"/></td>
+                                <td class="text-right"><strong t-esc="formatLang(o.env, tot['tot_prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                <td class="text-right"><strong t-esc="formatLang(o.env, tot['tot_perc'], digits=2)"/> %</td>
                             </tr>
                         </tbody>
                     </table>
@@ -73,5 +72,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
