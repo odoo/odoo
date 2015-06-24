@@ -73,7 +73,7 @@ var KanbanColumn = Widget.extend({
         this.$el.sortable({
             connectWith: '.o_kanban_group',
             revert: 150,
-            delay: 100,
+            delay: 0,
             items: '> .o_kanban_record',
             helper: 'clone',
             cursor: 'move',
