@@ -647,28 +647,6 @@ def trans_export(lang, modules, buffer, format, cr):
     _process(format, modules, translations, buffer, lang)
     del translations
 
-def trans_parse_xsl(de):
-    return list(set(trans_parse_xsl_aux(de, False)))
-
-def trans_parse_xsl_aux(de, t):
-    res = []
-
-    for n in de:
-        t = t or n.get("t")
-        if t:
-                if isinstance(n, SKIPPED_ELEMENT_TYPES) or n.tag.startswith('{http://www.w3.org/1999/XSL/Transform}'):
-                    continue
-                if n.text:
-                    l = n.text.strip().replace('\n',' ')
-                    if len(l):
-                        res.append(l.encode("utf8"))
-                if n.tail:
-                    l = n.tail.strip().replace('\n',' ')
-                    if len(l):
-                        res.append(l.encode("utf8"))
-        res.extend(trans_parse_xsl_aux(n, t))
-    return res
-
 def trans_parse_rml(de):
     res = []
     for n in de:
@@ -688,28 +666,6 @@ def _push(callback, term, source_line):
     # Avoid non-char tokens like ':' '...' '.00' etc.
     if len(term) > 8 or any(x.isalpha() for x in term):
         callback(term, source_line)
-
-def trans_parse_view(element, callback):
-    """ Helper method to recursively walk an etree document representing a
-        regular view and call ``callback(term)`` for each translatable term
-        that is found in the document.
-
-        :param ElementTree element: root of etree document to extract terms from
-        :param callable callback: a callable in the form ``f(term, source_line)``,
-            that will be called for each extracted term.
-    """
-    for el in element.iter():
-        if (not isinstance(el, SKIPPED_ELEMENT_TYPES)
-                and el.tag.lower() not in SKIPPED_ELEMENTS
-                and el.get("translation", '').strip() != "off"
-                and el.text):
-            _push(callback, el.text, el.sourceline)
-        if el.tail:
-            _push(callback, el.tail, el.sourceline)
-        for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
-            value = el.get(attr)
-            if value:
-                _push(callback, value, el.sourceline)
 
 # tests whether an object is in a list of modules
 def in_modules(object_name, modules):
@@ -839,19 +795,7 @@ def trans_generate(lang, modules, cr):
             _logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
 
-        if model=='ir.ui.view':
-            d = etree.XML(encode(obj.arch))
-            if obj.type == 'qweb':
-                view_id = get_root_view(xml_name)
-                push_qweb = lambda t,l: push(module, 'view', 'website', view_id, t)
-                _extract_translatable_qweb_terms(d, push_qweb)
-            else:
-                push_view = lambda t,l: push(module, 'view', obj.model, xml_name, t)
-                trans_parse_view(d, push_view)
-        elif model=='ir.actions.wizard':
-            pass # TODO Can model really be 'ir.actions.wizard' ?
-
-        elif model=='ir.model.fields':
+        if model=='ir.model.fields':
             try:
                 field_name = encode(obj.name)
             except AttributeError, exc:

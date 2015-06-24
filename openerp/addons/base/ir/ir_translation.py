@@ -17,7 +17,7 @@ TRANSLATION_TYPE = [
     ('model', 'Object'),
     ('report', 'Report/Template'),
     ('selection', 'Selection'),
-    ('view', 'View'),
+    ('view', 'View'),                           # deprecated
     ('help', 'Help'),                           # deprecated
     ('code', 'Code'),
     ('constraint', 'Constraint'),
@@ -62,11 +62,14 @@ class ir_translation_import_cursor(object):
             # ugly hack for QWeb views - pending refactoring of translations in master
             if params['imd_model'] == 'website':
                 params['imd_model'] = "ir.ui.view"
-            # non-QWeb views do not need a matching res_id -> force to 0 to avoid dropping them
-            elif params['res_id'] is None:
+            # non-QWeb views do not need a matching res_id in case they do not
+            # have an xml id -> force to 0 to avoid dropping them
+            elif params['res_id'] is None and not params['imd_name']:
+                # maybe we should insert this translation for all views of the
+                # given model?
                 params['res_id'] = 0
 
-        # backward compatibility: convert 'field', 'help' into 'model'
+        # backward compatibility: convert 'field', 'help', 'view' into 'model'
         if params['type'] == 'field':
             model, field = params['name'].split(',')
             params['type'] = 'model'
@@ -80,6 +83,11 @@ class ir_translation_import_cursor(object):
             params['name'] = 'ir.model.fields,help'
             params['imd_model'] = 'ir.model.fields'
             params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+
+        elif params['type'] == 'view':
+            params['type'] = 'model'
+            params['name'] = 'ir.ui.view,arch_db'
+            params['imd_model'] = "ir.ui.view"
 
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
