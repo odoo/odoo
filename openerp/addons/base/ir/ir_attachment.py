@@ -71,7 +71,7 @@ class ir_attachment(osv.osv):
 
     The 'data' function field (_data_get,data_set) is implemented using
     _file_read, _file_write and _file_delete which can be overridden to
-    implement other storage engines, shuch methods should check for other
+    implement other storage engines, such methods should check for other
     location pseudo uri (example: hdfs://hadoppserver)
 
     The default implementation is the file:dirname location that stores files
