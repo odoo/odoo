@@ -22,6 +22,7 @@
             <field name="model">delivery.carrier</field>
             <field name="arch" type="xml">
                 <form string="Carrier">
+                    <sheet>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -36,20 +37,21 @@
                             <field name="partner_id"/>
                             <field name="product_id"/>
                         </group>
-                        <group string="Pricing Information">
-                            <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                            <label for="free_if_more_than"/>
-                            <div>
-                                <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                                <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
-                            </div>
-                            <field name="use_detailed_pricelist"/>
-                        </group>
+                        <group></group>
                     </group>
-
+                    <group string="Pricing Information">
+                        <field name="use_detailed_pricelist"/>
+                        <field name="normal_price" attrs="{'invisible':[('use_detailed_pricelist', '=', True)]}"/>
+                        <field name="free_if_more_than" attrs="{'invisible':[('use_detailed_pricelist', '=', True)]}"/>
+                        <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':['|',('free_if_more_than','=',False),('use_detailed_pricelist','=',True)]}"/>
+                    </group>
+                    <group string="Destinations" attrs="{'invisible':[('use_detailed_pricelist','=',True)]}">
+                        <field name="country_ids" widget="many2many_tags"/>
+                        <field name="state_ids" on_change="onchange_states(state_ids, country_ids)" widget="many2many_tags"/>
+                    </group>
                     <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
                         <tree string="Delivery grids">
-                              <field name="sequence"/>
+                              <field name="sequence" widget="handle"/>
                               <field name="name"/>
                         </tree>
                         <form string="Delivery grids">
@@ -67,24 +69,24 @@
                                    <field name="line_ids"/>
                                 </page>
                                 <page string="Destination">
+                                    <group string="Countries">
+                                        <field name="country_ids" nolabel="1"/>
+                                    </group>
+                                    <group string="States">
+                                        <field name="state_ids" nolabel="1" on_change="onchange_states(state_ids, country_ids)"/>
+                                    </group>
                                     <group>
-                                        <group>
-                                            <field name="country_ids" widget="many2many_tags"/>
-                                            <field name="state_ids" widget="many2many_tags"/>
-                                        </group>
-                                        <group>
-                                            <label for="zip_from" string="Zip"/>
-                                            <div>
-                                                <field name="zip_from" class="oe_inline"/>
-                                                -
-                                                <field name="zip_to" class="oe_inline"/>
-                                            </div>
-                                        </group>
+                                        <field name="zip_from"/>
+                                    </group>
+                                    <group>
+                                        <field name="zip_to"/>
                                     </group>
                                 </page>
                             </notebook>
                         </form>
                    </field>
+                </sheet>
+                <div class="oe_chatter"/>
                 </form>
             </field>
         </record>
@@ -131,6 +133,7 @@
             <field name="model">delivery.grid</field>
             <field name="arch" type="xml">
                 <form string="Delivery grids">
+                    <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -146,12 +149,13 @@
                                 <field name="country_ids" nolabel="1"/>
                             </group>
                             <group string="States">
-                                <field colspan="2" name="state_ids" nolabel="1"/>
+                                <field colspan="2" name="state_ids" on_change="onchange_states(state_ids, country_ids)" nolabel="1"/>
                                 <field name="zip_from"/>
                                 <field name="zip_to"/>
                             </group>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
