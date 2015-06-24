@@ -1,75 +1,49 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import api, fields, models
+
 import openerp.addons.decimal_precision as dp
 
-class sale_order_line(osv.osv):
+class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+    margin = fields.Float(compute='_product_margin', digits=dp.get_precision('Product Price'), store=True)
+    purchase_price = fields.Float(string='Cost Price', digits=dp.get_precision('Product Price'))
+
+    @api.multi
+    def product_id_change(self, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position_id=False, flag=False, context=None):
-        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position_id=False, flag=False):
+        result = super(SaleOrderLine, self).product_id_change(pricelist, product, qty=qty,
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position_id=fiscal_position_id, flag=flag, context=context)
-        if not pricelist:
-            return res
-        if context is None:
-            context = {}
-        frm_cur = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
-        to_cur = self.pool.get('product.pricelist').browse(cr, uid, [pricelist])[0].currency_id.id
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position_id=fiscal_position_id, flag=flag)
+        frm_cur = self.env.user.company_id.currency_id
+        to_cur = self.env['product.pricelist'].browse([pricelist]).currency_id
         if product:
-            product = self.pool['product.product'].browse(cr, uid, product, context=context)
+            product = self.env['product.product'].browse(product)
             purchase_price = product.standard_price
-            to_uom = res.get('product_uom', uom)
+            to_uom = result.get('product_uom', uom)
             if to_uom != product.uom_id.id:
-                purchase_price = self.pool['product.uom']._compute_price(cr, uid, product.uom_id.id, purchase_price, to_uom)
-            ctx = context.copy()
+                purchase_price = self.env['product.uom']._compute_price(
+                    product.uom_id.id, purchase_price, to_uom)
+            ctx = dict(self._context)
             ctx['date'] = date_order
-            price = self.pool.get('res.currency').compute(cr, uid, frm_cur, to_cur, purchase_price, round=False, context=ctx)
-            res['value'].update({'purchase_price': price})
-        return res
-
-    def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
-        cur_obj = self.pool.get('res.currency')
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = 0
-            if line.product_id:
-                tmp_margin = line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uos_qty)
-                res[line.id] = cur_obj.round(cr, uid, cur, tmp_margin)
-        return res
-
-    _columns = {
-        'margin': fields.function(_product_margin, string='Margin', digits_compute= dp.get_precision('Product Price'),
-              store = True),
-        'purchase_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'))
-    }
-
-
-class sale_order(osv.osv):
-    _inherit = "sale.order"
-
-    def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
-        result = {}
-        for sale in self.browse(cr, uid, ids, context=context):
-            result[sale.id] = 0.0
-            for line in sale.order_line:
-                if line.state == 'cancel':
-                    continue
-                result[sale.id] += line.margin or 0.0
+            price = frm_cur.compute(purchase_price, to_cur, round=False)
+            result['value']['purchase_price'] = price
         return result
 
-    def _get_order(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
-            result[line.order_id.id] = True
-        return result.keys()
+    @api.one
+    @api.depends('purchase_price', 'product_uos_qty', 'price_unit')
+    def _product_margin(self):
+        cur = self.order_id.pricelist_id.currency_id
+        self.margin = cur.round(self.price_subtotal - ((self.purchase_price or self.product_id.standard_price) * self.product_uos_qty))
 
-    _columns = {
-        'margin': fields.function(_product_margin, string='Margin', help="It gives profitability by calculating the difference between the Unit Price and the cost price.", store={
-                'sale.order.line': (_get_order, ['margin', 'purchase_price'], 20),
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
-                }, digits_compute= dp.get_precision('Product Price')),
-    }
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    margin = fields.Monetary(compute='_product_margin', help="It gives profitability by calculating the difference between the Unit Price and the cost price.", currency_field='currency_id', digits=dp.get_precision('Product Price'),store=True)
+
+    @api.one
+    @api.depends('order_line.margin')
+    def _product_margin(self):
+        self.margin = sum(line.margin for line in self.order_line if line.state != 'cancel') or 0.0
