@@ -23,7 +23,8 @@ class pos_mercury_payment_data(models.Model):
     _name = 'pos_mercury.configuration'
 
     # FIELDS #
-    merchant_id = fields.Char(string='Merchant ID', required=True, help='Id of the merchant to authenticate him on the payment provider server')
+    name = fields.Char(required=True, help='Name of this Mercury configuration')
+    merchant_id = fields.Char(string='Merchant ID', required=True, help='ID of the merchant to authenticate him on the payment provider server')
     merchant_pwd = fields.Char(string='Merchant Password', required=True, help='Password of the merchant to authenticate him on the payment provider server')
 
 class account_bank_statement_line(models.Model):
