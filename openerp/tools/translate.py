@@ -128,6 +128,52 @@ class UNIX_LINE_TERMINATOR(csv.excel):
 
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
+
+#
+# Helper functions for translating fields
+#
+def encode(s):
+    if isinstance(s, unicode):
+        return s.encode('utf8')
+    return s
+
+TRANSLATED_ATTRS = {
+    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
+}
+
+
+def xml_translate(callback, value):
+    """ Translate an XML value (string), using `callback` for translating text
+    appearing in `value`.
+    """
+    if not value:
+        return value
+
+    def process_text(text):
+        term = text.strip()
+        trans = term and callback(term)
+        return text.replace(term, trans) if trans else text
+
+    def process(node):
+        if not isinstance(node, SKIPPED_ELEMENT_TYPES):
+            if node.text:
+                node.text = process_text(node.text)
+        if node.tail:
+            node.tail = process_text(node.tail)
+        if node.tag == 'attribute' and node.get('name') in TRANSLATED_ATTRS:
+            if node.text:
+                node.text = process_text(node.text)
+        for attr in TRANSLATED_ATTRS:
+            if node.get(attr):
+                node.set(attr, process_text(node.get(attr)))
+        for child in node:
+            process(child)
+
+    root = etree.fromstring(encode(value))
+    process(root)
+    return etree.tostring(root, encoding='utf8')
+
+
 #
 # Warning: better use self.pool.get('ir.translation')._get_source if you can
 #
@@ -667,11 +713,6 @@ def trans_generate(lang, modules, cr):
 
         tnx = (module, source, name, id, type, tuple(comments or ()))
         _to_translate.add(tnx)
-
-    def encode(s):
-        if isinstance(s, unicode):
-            return s.encode('utf8')
-        return s
 
     def push(mod, type, name, res_id, term):
         term = (term or '').strip()
