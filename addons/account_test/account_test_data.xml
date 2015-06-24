@@ -48,8 +48,8 @@ result = res
 <!-- TODO: rewrite test since the model of reconciliation has changed -->
 <!--     <record model="accounting.assert.test" id="account_test_04">
         <field name="sequence">4</field>
-        <field name="name">Test 4: Totally reconciled mouvements</field>
-        <field name="desc">Check if the totally reconciled movements are balanced</field>
+        <field name="name">Test 4: Totally reconciled journal items</field>
+        <field name="desc">Check if the totally reconciled journal items are balanced</field>
         <field name="code_exec"><![CDATA[res = []
 cr.execute("SELECT distinct reconcile_id from account_move_line where reconcile_id is not null")
 rec_ids = cr.dictfetchall()
