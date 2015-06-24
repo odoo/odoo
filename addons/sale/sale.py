@@ -1169,14 +1169,11 @@ class product_product(osv.Model):
     _inherit = 'product.product'
 
     def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
-        r = dict.fromkeys(ids, 0)
-        domain = [
-            ('state', 'in', ['waiting_date','progress','manual', 'shipping_except', 'invoice_except', 'done']),
-            ('product_id', 'in', ids),
-        ]
-        for group in self.pool['sale.report'].read_group(cr, uid, domain, ['product_id','product_uom_qty'], ['product_id'], context=context):
-            r[group['product_id'][0]] = group['product_uom_qty']
-        return r
+        sale = self.pool['sale.order.line']
+        return {
+            product_id: sale.search_count(cr, uid, [('product_id', '=', product_id), ('state', 'in', ['waiting_date', 'progress', 'manual', 'shipping_except', 'invoice_except', 'confirmed', 'done'])], context=context)
+            for product_id in ids
+        }
 
     def action_view_sales(self, cr, uid, ids, context=None):
         result = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'sale.action_order_line_product_tree', raise_if_not_found=True)
