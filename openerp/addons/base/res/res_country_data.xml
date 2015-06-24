@@ -428,6 +428,7 @@
             <field name="name">Finland</field>
             <field name="code">fi</field>
             <field name="image" type="base64" file="base/static/img/country_flags/fi.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="EUR"/>
         </record>
         <record id="fj" model="res.country">
