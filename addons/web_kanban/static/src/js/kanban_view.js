@@ -101,6 +101,7 @@ var KanbanView = View.extend({
                 }
             }
         }
+        this.trigger('kanban_view_loaded');
     },
 
     do_search: function(domain, context, group_by) {

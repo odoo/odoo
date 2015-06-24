@@ -1500,8 +1500,8 @@ var FieldMany2ManyKanban = AbstractManyField.extend(common.CompletionFieldMixin,
     },
     load_view: function() {
         var self = this;
-        var Many2ManyKanbanView = core.view_registry.get('many2many_kanban');
-        this.kanban_view = new Many2ManyKanbanView(this, this.dataset, false, {
+        var KanbanView = core.view_registry.get('kanban');
+        this.kanban_view = new KanbanView(this, this.dataset, false, {
                     'create_text': _t("Add"),
                     'creatable': self.get("effective_readonly") ? false : true,
                     'quick_creatable': self.get("effective_readonly") ? false : true,
@@ -1778,101 +1778,5 @@ return {
     FieldMany2ManyTags: FieldMany2ManyTags,
     AbstractManyField: AbstractManyField,
 };
-
-});
-
-odoo.define('web_kanban.Many2ManyKanbanView', function (require) {
-    "use strict";
-    // This code has a dependency on the addon web_kanban.  This is a weird dependency issue.  To fix it,
-    // we should either move this code into web_kanban, or move web_kanban into the web client.
-
-    var core = require('web.core'),
-        KanbanView = require('web_kanban.KanbanView'),
-        Widget = require('web.Widget');
-
-    var Many2ManyQuickCreate = Widget.extend({
-        template: 'Many2ManyKanban.quick_create',
-
-        /**
-         * close_btn: If true, the widget will display a "Close" button able to trigger
-         * a "close" event.
-         */
-        init: function(parent, dataset, context, buttons) {
-            this._super(parent);
-            this.m2m = this.getParent().view.m2m;
-            this.m2m.quick_create = this;
-            this._dataset = dataset;
-            this._buttons = buttons || false;
-            this._context = context || {};
-        },
-        start: function () {
-            var self = this;
-            self.$text = this.$el.find('input').css("width", "200px");
-            self.$text.textext({
-                plugins : 'arrow autocomplete',
-                autocomplete: {
-                    render: function(suggestion) {
-                        return $('<span class="text-label"/>').
-                                 data('index', suggestion.index).html(suggestion.label);
-                    }
-                },
-                ext: {
-                    autocomplete: {
-                        selectFromDropdown: function() {
-                            $(this).trigger('hideDropdown');
-                            var index = Number(this.selectedSuggestionElement().children().children().data('index'));
-                            var data = self.search_result[index];
-                            if (data.id) {
-                                self.add_id(data.id);
-                            } else {
-                                data.action();
-                            }
-                        },
-                    },
-                    itemManager: {
-                        itemToString: function(item) {
-                            return item.name;
-                        },
-                    },
-                },
-            }).bind('getSuggestions', function(e, data) {
-                var _this = this;
-                var str = !!data ? data.query || '' : '';
-                self.m2m.get_search_result(str).done(function(result) {
-                    self.search_result = result;
-                    $(_this).trigger('setSuggestions', {result : _.map(result, function(el, i) {
-                        return _.extend(el, {index:i});
-                    })});
-                });
-            });
-            self.$text.focusout(function() {
-                self.$text.val("");
-            });
-        },
-        focus: function() {
-            this.$text[0].focus();
-        },
-        add_id: function(id) {
-            var self = this;
-            self.$text.val("");
-            self.trigger('added', id);
-            this.m2m.dataset_changed();
-        },
-    });
-
-    var Many2ManyKanbanView = KanbanView.extend({
-        load_kanban: function(data) {
-            this._super(data);
-            this.render_buttons();
-        },
-        get_quick_create_class: function () {
-            return Many2ManyQuickCreate;
-        },
-        _is_quick_create_enabled: function() {
-            return this._super() && ! this.group_by;
-        },
-    });
-
-    core.view_registry.add('many2many_kanban', Many2ManyKanbanView);
 
 });
