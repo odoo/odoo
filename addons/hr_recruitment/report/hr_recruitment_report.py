@@ -29,6 +29,8 @@ class hr_recruitment_report(models.Model):
     partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
     delay_close = fields.Float('Avg. Delay to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the project issue")
     last_stage_id = fields.Many2one('hr.recruitment.stage', 'Last Stage')
+    medium_id = fields.Many2one('utm.medium', 'Medium', readonly=True, help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad")
+    source_id = fields.Many2one('utm.source', 'Source', readonly=True, help="This is the source of the link Ex: Search Engine, another domain, or name of email list")
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_recruitment_report')
@@ -48,6 +50,8 @@ class hr_recruitment_report(models.Model):
                      s.priority,
                      s.stage_id,
                      s.last_stage_id,
+                     s.medium_id,
+                     s.source_id,
                      sum(salary_proposed) as salary_prop,
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
@@ -69,6 +73,8 @@ class hr_recruitment_report(models.Model):
                      s.type_id,
                      s.priority,
                      s.job_id,
-                     s.department_id
+                     s.department_id,
+                     s.medium_id,
+                     s.source_id
             )
         """)

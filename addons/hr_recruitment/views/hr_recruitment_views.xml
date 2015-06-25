@@ -339,7 +339,7 @@
     <record model="ir.actions.act_window" id="action_hr_job_sources">
         <field name="name">Jobs Sources</field>
         <field name="res_model">hr.recruitment.source</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree</field>
         <field name="domain">[('job_id', '=', active_id)]</field>
         <field name="context">{'default_job_id': active_id}</field>
         <field name="help" type="html">
@@ -642,27 +642,11 @@
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <tree string="Sources of Applicants">
+            <tree string="Sources of Applicants" editable="top">
                 <field name="source_id"/>
                 <field name="email"/>
-                <field name="url"/>
                 <button name="create_alias" string="Create alias" type="object" icon="gtk-redo" />
             </tree>
-        </field>
-    </record>
-    <record model="ir.ui.view" id="hr_recruitment_source_form">
-        <field name="name">hr.recruitment.source.form</field>
-        <field name="model">hr.recruitment.source</field>
-        <field name="arch" type="xml">
-            <form string="Sources of Applicants">
-                <group>
-                    <field name="source_id"/>
-                    <field name="email"/>
-                    <field name="url"/>
-                    <field name="alias_id" invisible="1"/>
-                    <field name="job_id" invisible="1"/>
-                </group>
-            </form>
         </field>
     </record>
     <record id="hr_recruitment_source_action" model="ir.actions.act_window">

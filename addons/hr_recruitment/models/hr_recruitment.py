@@ -22,22 +22,9 @@ class RecruitmentSource(models.Model):
     _inherits = {"utm.source": "source_id"}
 
     source_id = fields.Many2one('utm.source', "Source", ondelete='cascade', required=True)
-    url = fields.Char(string="Url parameters", compute='_compute_url')
-    email = fields.Char(related='alias_id.alias_name', string="Email", readonly=True)
+    email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
     job_id = fields.Many2one('hr.job', "Job ID")
     alias_id = fields.Many2one('mail.alias', "Alias ID")
-
-    @api.depends('source_id', 'source_id.name')
-    @api.one
-    def _compute_url(self):
-        if not self.alias_id.id:
-            self.url = ""
-        else:
-            self.url = werkzeug.url_encode({
-                'utm_campaign': self.env.ref('hr_recruitment.utm_campaign_job').name,
-                'utm_medium': self.env.ref('utm.utm_medium_website').name,
-                'utm_source': self.source_id.name
-            })
 
     @api.multi
     def create_alias(self):
