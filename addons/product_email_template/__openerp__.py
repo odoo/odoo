@@ -6,7 +6,7 @@
     'author': 'OpenERP SA',
     'category': 'Accounting & Finance',
     'description': """
-Add email templates to products to be send on invoice confirmation
+Add email templates to products to be sent on invoice confirmation
 ==================================================================
 
 With this module, link your products to a template to send complete information and tools to your customer.
