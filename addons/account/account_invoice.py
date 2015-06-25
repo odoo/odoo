@@ -1052,7 +1052,9 @@ class account_invoice(osv.osv):
                     i[2]['period_id'] = period_id
 
             ctx.update(invoice=inv)
-            move_id = move_obj.create(cr, uid, move, context=ctx)
+            ctx_copy = ctx.copy()
+            ctx_copy.pop('lang', None)
+            move_id = move_obj.create(cr, uid, move, context=ctx_copy)
             new_move_name = move_obj.browse(cr, uid, move_id, context=ctx).name
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name}, context=ctx)
