@@ -86,7 +86,7 @@
                     </ul>
                     <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
                         <div class="input-group">
-                            <input type="search" class="form-control" name="search" t-att-value="search or ''"/>
+                            <input type="search" class="form-control" name="search" t-att-value="search and search['search'] or ''"/>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-default">Search</button>
                             </span>
@@ -149,6 +149,29 @@
                                 <li t-if="forum.allow_discussion"><a t-attf-href="/forum/#{slug(forum)}/ask?post_type=discussion">New Discussion</a></li>
                             </ul>
                         </t>
+                    </div>
+                    <div class="panel panel-default" t-if="search">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Search Tips</h3>
+                        </div>
+                        <div class="panel-body search_tips">
+                            <table>
+                                <tr class="new_group" title="Search within a tag (can use more than one)"><td class="search_note">tags</td><td>[tag]</td></tr>
+                                <tr class="new_group" title="Search within a tag"><td class="search_note"></td><td>[tag] "words here"</td></tr>
+
+                                <tr class="new_group" title="Search for an exact phrase (can use more than one)"><td class="search_note">exact</td><td>"words here"</td></tr>
+
+                                <tr class="new_group" title="Search within a user's posts"><td class="search_note">author</td><td>user:1234</td></tr>
+
+                                <tr class="new_group" title="Search posts with a score of 3 or higher"><td class="search_note">score</td><td>score:3 <span class="search_note">(3+)</span></td></tr>
+                                <tr title="Search posts with a score of 0"><td></td><td>score:0 <span class="search_note">(none)</span></td></tr>
+
+                                <tr class="new_group" title="Search questions with at least 250 views"><td class="search_note">views</td><td>views:250</td></tr>
+
+                                <tr class="new_group" title="Exclude words or tags"><td class="search_note">exclude</td><td>-[tag]</td></tr>
+                            </table>
+                            <a t-attf-href="/forum/#{slug(forum)}/search_help" class="fa fa-arrow-right"> Advanced Search Tips</a>
+                        </div>
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -319,6 +342,13 @@
     </t>
 </template>
 
+<!-- Advance Search Layout -->
+<template id="search_help">
+    <t t-call="website_forum.header">
+        <div t-field="forum.search_help"/>
+    </t>
+</template>
+
 <!-- All Forums Layout -->
 <template id="forum_all">
     <t t-call="website.layout">
@@ -345,7 +375,6 @@
                 <span t-if="post_type == 'question'"> Questions</span>
                 <span t-if="post_type == 'link'"> Links</span>
                 <span t-if="post_type == 'discussion'"> Threads</span>
-            <t t-esc="search"/>
             <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <t t-if="filters == 'unanswered'"> Unanswered</t>
@@ -392,6 +421,26 @@
               </ul>
             </small>
         </h2>
+        <div t-if="search">
+            <div t-if="search['display_search']" class="col-xs-12 mb8">
+                <span>results found containing</span>
+                <div><b t-esc="search['display_search']"/></div>
+            </div>
+            <div t-if="search['display_tag']" class="col-xs-12 mb8">
+                <span>tagged with</span>
+                <div>
+                    <t t-foreach="search['display_tag']" t-as="display_tag">
+                        <span t-esc="display_tag" t-att-class="display_tag not in ['or', 'not'] and 'label label-info' or ''"/>
+                    </t>
+                </div>
+            </div>
+            <div t-if="search['display_options']" class="col-xs-12 mb8">
+                <span>Search Options</span>
+                <div t-foreach="search['display_options']" t-as="display_options">
+                    <b t-esc="display_options"/>
+                </div>
+            </div>
+        </div>
         <div t-foreach="question_ids" t-as="question" class="mb16">
             <t t-call="website_forum.display_post"/>
         </div>

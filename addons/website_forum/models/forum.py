@@ -45,6 +45,14 @@ class Forum(models.Model):
             return f.read()
         return False
 
+    @api.model
+    def _get_default_search_help(self):
+        fname = modules.get_module_resource('website_forum', 'data', 'forum_default_search.html')
+        with open(fname, 'r') as f:
+            return f.read()
+        return False
+    search_help = fields.Html('Search Guidelines', default=_get_default_search_help, translate=True)
+
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
