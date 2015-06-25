@@ -98,6 +98,8 @@ class AccountConfigSettings(models.TransientModel):
     module_account_plaid = fields.Boolean(string="Import of Bank Statements from Plaid.",
                                           help='Get your bank statements grom you bank and import them through plaid.com.\n'
                                           '-that installs the module account_plaid.')
+    module_account_tax_cash_basis = fields.Boolean(string="Allow Tax Cash Basis",
+                                        help='Generate tax cash basis entrie when reconciliating entries')
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")

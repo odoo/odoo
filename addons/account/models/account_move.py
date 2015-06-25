@@ -55,7 +55,7 @@ class AccountMove(models.Model):
                     for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
                         total_reconciled += partial_line.amount
             if total_amount == 0.0:
-                move.matched_percentage = 100.0
+                move.matched_percentage = 1.0
             else:
                 move.matched_percentage = total_reconciled / total_amount
 
