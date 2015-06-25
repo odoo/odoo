@@ -9,7 +9,7 @@
             <link type="text/less" href="/website_slides/static/src/less/website_slides.less" rel="stylesheet" t-ignore="true"/>
 
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+            <t t-call="web.bootstrap"/>
             <t t-call="website.pdf_js_lib"></t>
             <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
             <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>

@@ -49,6 +49,21 @@
             <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
         </template>
 
+        <template id="web.bootstrap">
+            <script src="/web/static/lib/bootstrap/js/affix.js"></script>
+            <script src="/web/static/lib/bootstrap/js/alert.js"></script>
+            <script src="/web/static/lib/bootstrap/js/button.js"></script>
+            <script src="/web/static/lib/bootstrap/js/carousel.js"></script>
+            <script src="/web/static/lib/bootstrap/js/collapse.js"></script>
+            <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
+            <script src="/web/static/lib/bootstrap/js/modal.js"></script>
+            <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
+            <script src="/web/static/lib/bootstrap/js/popover.js"></script>
+            <script src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
+            <script src="/web/static/lib/bootstrap/js/tab.js"></script>
+            <script src="/web/static/lib/bootstrap/js/transition.js"></script>
+        </template>
+
         <template id="jqueryui_conflict" name="jquery.ui.conflict">
             <!-- TODO: get rid of this hack once jQuery.ui is removed -->
             <script type="text/javascript" charset="utf-8">
@@ -74,18 +89,7 @@
             <link rel="stylesheet" href="/web/static/lib/jquery.textext/jquery.textext.css"/>
             <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"></script>
 
-            <script src="/web/static/lib/bootstrap/js/affix.js"></script>
-            <script src="/web/static/lib/bootstrap/js/alert.js"></script>
-            <script src="/web/static/lib/bootstrap/js/button.js"></script>
-            <script src="/web/static/lib/bootstrap/js/carousel.js"></script>
-            <script src="/web/static/lib/bootstrap/js/collapse.js"></script>
-            <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
-            <script src="/web/static/lib/bootstrap/js/modal.js"></script>
-            <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
-            <script src="/web/static/lib/bootstrap/js/popover.js"></script>
-            <script src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
-            <script src="/web/static/lib/bootstrap/js/tab.js"></script>
-            <script src="/web/static/lib/bootstrap/js/transition.js"></script>
+            <t t-call="web.bootstrap"/>
 
             <!-- jQuery ui -->
             <link rel="stylesheet" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
