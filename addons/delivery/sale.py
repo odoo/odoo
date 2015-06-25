@@ -66,6 +66,7 @@ class sale_order(osv.Model):
         acc_fp_obj = self.pool.get('account.fiscal.position')
         self._delivery_unset(cr, uid, ids, context=context)
         currency_obj = self.pool.get('res.currency')
+        line_ids = []
         for order in self.browse(cr, uid, ids, context=context):
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
@@ -84,7 +85,7 @@ class sale_order(osv.Model):
                 price_unit = currency_obj.compute(cr, uid, order.company_id.currency_id.id, order.pricelist_id.currency_id.id,
                     price_unit, context=dict(context or {}, date=order.date_order))
             #create the sale order line
-            line_obj.create(cr, uid, {
+            line_id = line_obj.create(cr, uid, {
                 'order_id': order.id,
                 'name': grid.carrier_id.name,
                 'product_uom_qty': 1,
@@ -94,3 +95,5 @@ class sale_order(osv.Model):
                 'tax_id': [(6, 0, taxes_ids)],
                 'is_delivery': True
             }, context=context)
+            line_ids.append(line_id)
+        return line_ids
