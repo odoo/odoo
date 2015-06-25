@@ -95,9 +95,6 @@ class AccountConfigSettings(models.TransientModel):
     module_account_bank_statement_import_qif = fields.Boolean(string='Import of Bank Statements in .QIF Format.',
         help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
             '-that installs the module account_bank_statement_import_qif.')
-    module_account_plaid = fields.Boolean(string="Import of Bank Statements from Plaid.",
-                                          help='Get your bank statements grom you bank and import them through plaid.com.\n'
-                                          '-that installs the module account_plaid.')
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
