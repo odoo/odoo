@@ -44,9 +44,18 @@ class sale_order(osv.Model):
         warning = {}
         title = False
         message = False
-        if self.partner_id.sale_warn != 'no-message':
-            title =  _("Warning for %s") % self.partner_id.name
-            message = self.partner_id.sale_warn_msg
+        partner = self.partner_id
+
+        # If partner has no warning, check its company
+        if partner.sale_warn == 'no-message' and partner.parent_id:
+            partner = partner.parent_id
+
+        if partner.sale_warn != 'no-message':
+            # Block if partner only has warning but parent company is blocked
+            if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
+                partner = partner.parent_id
+            title =  _("Warning for %s") % partner.name
+            message = partner.sale_warn_msg
             warning = {
                     'title': title,
                     'message': message,
@@ -68,7 +77,15 @@ class purchase_order(osv.osv):
         title = False
         message = False
         partner = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+
+        # If partner has no warning, check its company
+        if partner.purchase_warn == 'no-message' and partner.parent_id:
+            partner = partner.parent_id
+
         if partner.purchase_warn != 'no-message':
+            # Block if partner only has warning but parent company is blocked
+            if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
+                partner = partner.parent_id
             title = _("Warning for %s") % partner.name
             message = partner.purchase_warn_msg
             warning = {
@@ -96,19 +113,27 @@ class account_invoice(osv.osv):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         result =  super(account_invoice, self)._onchange_partner_id()
+        partner = self.partner_id
         res = {}
-        if not self.partner_id:
+        if not partner:
             self.account_id = False
             self.payment_term_id = False
             return result
 
-        if self.partner_id.invoice_warn != 'no-message':
+        # If partner has no warning, check its company
+        if partner.invoice_warn == 'no-message' and partner.parent_id:
+            partner = partner.parent_id
+
+        if partner.invoice_warn != 'no-message':
+            # Block if partner only has warning but parent company is blocked
+            if partner.invoice_warn != 'block' and partner.parent_id and partner.parent_id.invoice_warn == 'block':
+                partner = partner.parent_id
             res['warning'] = {
-                'title': _("Warning for %s") % self.partner_id.name,
-                'message': self.partner_id.invoice_warn_msg
+                'title': _("Warning for %s") % partner.name,
+                'message': partner.invoice_warn_msg
                 }
 
-            if self.partner_id.invoice_warn == 'block':
+            if partner.invoice_warn == 'block':
                 self.partner_id = False
 
             return res
@@ -125,7 +150,15 @@ class stock_picking(osv.osv):
         warning = {}
         title = False
         message = False
+
+        # If partner has no warning, check its company
+        if partner.picking_warn == 'no-message' and partner.parent_id:
+            partner = partner.parent_id
+
         if partner.picking_warn != 'no-message':
+            # Block if partner only has warning but parent company is blocked
+            if partner.picking_warn != 'block' and partner.parent_id and partner.parent_id.picking_warn == 'block':
+                partner = partner.parent_id
             title = _("Warning for %s") % partner.name
             message = partner.picking_warn_msg
             warning = {
