@@ -224,6 +224,7 @@ var DataImport = Widget.extend({
         if (!this.$('input.oe_import_file').val()) { return; }
 
         this.$el.removeClass('oe_import_preview oe_import_error');
+        this.$el.find('.oe_import_toggle').toggle((this.$('input.oe_import_file')[0].files[0].type == "text/csv"));
         jsonp(this.$el, {
             url: '/base_import/set_file'
         }, this.proxy('settings_changed'));

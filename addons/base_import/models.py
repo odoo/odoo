@@ -2,6 +2,12 @@ import csv
 import itertools
 import logging
 import operator
+import datetime
+
+try:
+    import xlrd
+except ImportError:
+    xlrd = None
 
 try:
     from cStringIO import StringIO
@@ -10,12 +16,22 @@ except ImportError:
 
 import psycopg2
 
+from odsreader import odsreader
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
 _logger = logging.getLogger(__name__)
+
+FILE_TYPE_DICT = {
+    'text/csv': 'csv',
+    'application/vnd.ms-excel': 'xls',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+    'application/vnd.oasis.opendocument.spreadsheet': 'ods'
+}
+
 class ir_import(orm.TransientModel):
     _name = 'base_import.import'
     # allow imports to survive for 12h in case user is slow
@@ -125,6 +141,46 @@ class ir_import(orm.TransientModel):
 
         # TODO: cache on model?
         return fields
+
+    def _file_type_handler(self, file_type, record, options):
+        file_extension = FILE_TYPE_DICT.get(file_type)
+        if file_extension:
+            return getattr(self, '_read_' + file_extension)(record, options)
+        else:
+            raise UserError(_("Not a compatible file format. It should be CSV, XLS, XLSX or ODS file"))
+
+    def _read_xls(self, record, options):
+        if not xlrd:
+            raise UserError(_(" XLRD library not found. XLS/XLSX file would not import."))
+        book = xlrd.open_workbook(file_contents=record.file)
+        bk = book.sheet_by_index(0)
+        for row_index in range(bk.nrows):
+            keys = []
+            for col_index in range(bk.ncols):
+                if bk.cell_type(row_index, col_index) == xlrd.XL_CELL_NUMBER:
+                    keys.append(str(bk.cell_value(row_index, col_index)))
+                elif bk.cell_type(row_index, col_index) == xlrd.XL_CELL_DATE:
+                    date_decimal = bk.cell_value(row_index, col_index) % 1
+                    if date_decimal == 0.0:
+                        keys.append(xlrd.xldate.xldate_as_datetime(bk.cell_value(row_index, col_index), book.datemode).strftime('%Y-%m-%d'))
+                    else:
+                        keys.append(xlrd.xldate.xldate_as_datetime(bk.cell_value(row_index, col_index), book.datemode).strftime('%Y-%m-%d %H:%M:%S'))
+                elif bk.cell_type(row_index, col_index) == xlrd.XL_CELL_BOOLEAN:
+                    if bk.cell_value(row_index, col_index) == 1:
+                        keys.append('True')
+                    elif bk.cell_value(row_index, col_index) == 0:
+                        keys.append('False')
+                elif bk.cell_type(row_index, col_index) == xlrd.XL_CELL_ERROR:
+                    if bk.cell_value(row_index, col_index) in xlrd.error_text_from_code:
+                        raise UserError(_("Error during reading XLS/XLSX file. Error Code: %s"% xlrd.error_text_from_code[bk.cell_value(row_index, col_index)] ))
+                else:
+                    keys.append(bk.cell_value(row_index, col_index))
+            yield keys
+
+    _read_xlsx = _read_xls
+
+    def _read_ods(self, record, options):
+        return iter(odsreader(record.file))
 
     def _read_csv(self, record, options):
         """ Returns a CSV-parsed iterator of all empty lines in the file
@@ -236,7 +292,7 @@ class ir_import(orm.TransientModel):
         fields = self.get_fields(cr, uid, record.res_model, context=context)
 
         try:
-            rows = self._read_csv(record, options)
+            rows = self._file_type_handler(record.file_type, record, options)
 
             headers, matches = self._match_headers(rows, fields, options)
             # Match should have consumed the first row (iif headers), get
@@ -287,7 +343,7 @@ class ir_import(orm.TransientModel):
         # Get only list of actually imported fields
         import_fields = filter(None, fields)
 
-        rows_to_import = self._read_csv(record, options)
+        rows_to_import = self._file_type_handler(record.file_type, record, options)
         if options.get('headers'):
             rows_to_import = itertools.islice(
                 rows_to_import, 1, None)
