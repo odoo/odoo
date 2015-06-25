@@ -753,7 +753,6 @@
                                             states="confirmed,assigned,waiting,partially_available"/>
                                 </tree>
                             </field>
-                            <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                             <field name="picking_type_entire_packs" invisible="1"/>
                             <field name="pack_operation_pack_ids" attrs="{'invisible': [('pack_operation_pack_ids', '=', []), ('picking_type_entire_packs', '=', False)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_picking_id': id}" groups="stock.group_tracking_lot">
                                 <tree editable="bottom" colors="grey:qty_done&gt;0;">
@@ -771,6 +770,7 @@
                                             states="confirmed,assigned,waiting,partially_available"/>
                                 </tree>
                             </field>
+                            <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Initial Demand" attrs="{'invisible': [('state', 'not in', ('draft', 'confirmed', 'waiting'))]}">
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">

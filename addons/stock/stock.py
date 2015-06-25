@@ -1283,7 +1283,7 @@ class stock_picking(models.Model):
         for ops in operations:
             #for each operation, create the links with the stock move by seeking on the matching reserved quants,
             #and deffer the operation if there is some ambiguity on the move to select
-            if ops.package_id and not ops.product_id and (not done_qtys or ops.product_qty):
+            if ops.package_id and not ops.product_id and (not done_qtys or ops.qty_done):
                 #entire package
                 quant_ids = package_obj.get_content(cr, uid, [ops.package_id.id], context=context)
                 for quant in quant_obj.browse(cr, uid, quant_ids, context=context):
@@ -1298,7 +1298,7 @@ class stock_picking(models.Model):
                         need_rereserve = True
             elif ops.product_id.id:
                 #Check moves with same product
-                product_qty = done_qtys and ops.qty_done or ops.product_qty
+                product_qty = ops.qty_done if done_qtys else ops.product_qty
                 qty_to_assign = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, product_qty, ops.product_id.uom_id, context=context)
                 for move_dict in prod2move_ids.get(ops.product_id.id, []):
                     move = move_dict['move']
