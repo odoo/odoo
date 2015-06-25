@@ -533,6 +533,11 @@ class res_users(osv.osv):
     def get_company_currency_id(self, cr, uid, context=None):
         return self.browse(cr, uid, uid, context=context).company_id.currency_id.id
 
+    def user_systray_info(self, cr, uid, context=None):
+        user = self.browse(cr, SUPERUSER_ID, uid, context=context)
+        display_company_name = self.has_group(cr, uid, 'base.group_multi_company') and len(user.company_ids) > 1
+        return {'company': user.company_id.name if display_company_name else False}
+
 #----------------------------------------------------------
 # Implied groups
 #

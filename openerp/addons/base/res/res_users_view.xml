@@ -281,7 +281,7 @@
                         <field name="lang" readonly="0"/>
                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                         <field name="tz_offset" invisible="1"/>
-                        <field name="company_id" options="{'no_create': True}" readonly="0"
+                        <field name="company_id" options="{'no_create': True, 'no_open': True}" readonly="0"
                             groups="base.group_multi_company"/>
                     </group>
                     <group string="Email Preferences">
@@ -311,6 +311,40 @@
             <field name="act_window_id" ref="action_res_users_my"/>
         </record>
 
+        <record id="view_users_form_switch_comp" model="ir.ui.view">
+            <field name="name">res.users.switch.company.form</field>
+            <field name="model">res.users</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Users">
+                    <group>
+                        <group>
+                            <field name="company_id" options="{'no_create': True, 'no_open': True}" readonly="0"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <footer>
+                        <button name="preference_save" type="object" string="Save" class="oe_highlight"/>
+                        or
+                        <button name="preference_cancel" string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_res_users_comp_switch" model="ir.actions.act_window">
+            <field name="name">Switch Company</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+        <record id="action_res_users_comp_switch_view" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_users_form_switch_comp"/>
+            <field name="act_window_id" ref="action_res_users_comp_switch"/>
+        </record>
 
     </data>
 </openerp>
