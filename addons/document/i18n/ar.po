@@ -1,25 +1,26 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# hoxhe aits <hoxhe0@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:38+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "عدد الملفات"
 
@@ -31,11 +32,10 @@ msgid "%s (%s)"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:117
-#: code:addons/document/document.py:307
+#: code:addons/document/document.py:117 code:addons/document/document.py:307
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (نسخة)"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -43,8 +43,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
@@ -54,12 +53,8 @@ msgstr ""
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"استخدم تعبير بايثوت لتقييم ذلك الحق.\n"
-"يمكن استخدام ‘dir_id‘, ‘نموذج_res‘ كمرجع للتسجيل الجاري , في المجلدات "
-"الدينامية"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
+msgstr "استخدم تعبير بايثوت لتقييم ذلك الحق.\nيمكن استخدام ‘dir_id‘, ‘نموذج_res‘ كمرجع للتسجيل الجاري , في المجلدات الدينامية"
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -81,9 +76,7 @@ msgstr "جميع ملفات المستخدمين"
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
-"بجانب الموديل الرئيسي, يرفق هذا التعريف ذلك الملف لتسجيل محدد للنموذج "
-"الرئيسي."
+msgstr "بجانب الموديل الرئيسي, يرفق هذا التعريف ذلك الملف لتسجيل محدد للنموذج الرئيسي."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -110,20 +103,16 @@ msgstr "أغسطس"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
-"أختر هذا الحقل اذا كنت تريد اسم الملف ليشمل اسم التسجيل.\n"
-"اذا وُضعت سيصبح المجلد مصدر له."
+msgstr "أختر هذا الحقل اذا كنت تريد اسم الملف ليشمل اسم التسجيل.\nاذا وُضعت سيصبح المجلد مصدر له."
 
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"أختر هذا اذا كنت تريد استخدام نفس الهيكل كموضوع تم اختياره في النظام."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "أختر هذا اذا كنت تريد استخدام نفس الهيكل كموضوع تم اختياره في النظام."
 
 #. module: document
 #: field:document.directory,child_ids:0
@@ -169,7 +158,7 @@ msgstr "حقول السياق"
 #: field:document.directory.dctx,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أُنشئ بواسطة"
 
 #. module: document
 #: field:document.configuration,create_date:0
@@ -178,7 +167,7 @@ msgstr ""
 #: field:document.directory.dctx,create_date:0
 #: field:document.storage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "إنشاؤه في"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -274,8 +263,7 @@ msgid "Directory name contains special characters!"
 msgstr "الدليل يحتوي علي رموز خاصة"
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "اسم الدليل يجب أن يكون فريدا"
@@ -315,14 +303,10 @@ msgstr "النص التلقائي"
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
-"يمكن لكل دليل اما ان يكون له علامة مثبتة او تتصل بمصدر اخر ، كما هو الحال مع "
-"أنظمة التشغيل، هو الدليل الثكلاسيكي التي يمكن أن تحتوي على مجموعة من "
-"الملفات. الدلائل المرتبطة بموارد الانظمة تملك تلقائيا دون الدلائل لكل واحد "
-"من أنواع الموارد المحددة في الدليل الأصل."
+msgstr "يمكن لكل دليل اما ان يكون له علامة مثبتة او تتصل بمصدر اخر ، كما هو الحال مع أنظمة التشغيل، هو الدليل الثكلاسيكي التي يمكن أن تحتوي على مجموعة من الملفات. الدلائل المرتبطة بموارد الانظمة تملك تلقائيا دون الدلائل لكل واحد من أنواع الموارد المحددة في الدليل الأصل."
 
 #. module: document
 #: code:addons/document/document.py:573
@@ -360,8 +344,7 @@ msgstr "حقل"
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr ""
-"لإستخدام الحقل كإسم على دلائل المصدر. اذا كان فارغ , سيتم استخدام‘‘الاسم‘‘."
+msgstr "لإستخدام الحقل كإسم على دلائل المصدر. اذا كان فارغ , سيتم استخدام‘‘الاسم‘‘."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -444,7 +427,7 @@ msgstr "الملفات المنشأه تلقائيا"
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Group By"
-msgstr ""
+msgstr "تجميع حسب"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -452,37 +435,29 @@ msgid "Groups"
 msgstr "المجموعات"
 
 #. module: document
-#: field:document.configuration,id:0
-#: field:document.directory,id:0
+#: field:document.configuration,id:0 field:document.directory,id:0
 #: field:document.directory.content,id:0
 #: field:document.directory.content.type,id:0
-#: field:document.directory.dctx,id:0
-#: field:document.storage,id:0
-#: field:report.document.file,id:0
-#: field:report.document.user,id:0
+#: field:document.directory.dctx,id:0 field:document.storage,id:0
+#: field:report.document.file,id:0 field:report.document.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرّف"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
 msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
-msgstr ""
-"اذا كانت صحيحة, سيتم تثبيت كل المرفقات التي تتوافق مع هذا المصدر. اذا كانت "
-"خاطئة, واحدة منهم فقط ستكون مثبتة كجزء."
+msgstr "اذا كانت صحيحة, سيتم تثبيت كل المرفقات التي تتوافق مع هذا المصدر. اذا كانت خاطئة, واحدة منهم فقط ستكون مثبتة كجزء."
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
-"إذا وضعت مشروع هنا، و يظهر هذا الدليل القالب اسفل كل هذه المشاريع. و\"ترفق\" "
-"الدلائل من هذا القبيل إلى نموذج او تسجيل معين، تماما مثل المرفقات. لا تضع "
-"الدليل الأصل إذا قمت بتحديد النموذج الاساسي."
+msgstr "إذا وضعت مشروع هنا، و يظهر هذا الدليل القالب اسفل كل هذه المشاريع. و\"ترفق\" الدلائل من هذا القبيل إلى نموذج او تسجيل معين، تماما مثل المرفقات. لا تضع الدليل الأصل إذا قمت بتحديد النموذج الاساسي."
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -527,7 +502,7 @@ msgstr "اخر مستخدم قام بالتعديل"
 #: field:document.directory.dctx,write_uid:0
 #: field:document.storage,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: document
 #: field:document.configuration,write_date:0
@@ -536,7 +511,7 @@ msgstr ""
 #: field:document.directory.dctx,write_date:0
 #: field:document.storage,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث فى"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -569,8 +544,7 @@ msgid "Modified Date"
 msgstr "تاريخ التعديل"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "الشهر"
 
@@ -619,8 +593,7 @@ msgstr "فقط للاعضاء المصرح لهم الوصول الي هذا ا�
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,user_id:0
 #: view:ir.attachment:document.view_attach_filter_inherit2
-#: field:ir.attachment,user_id:0
-#: field:report.document.user,user_id:0
+#: field:ir.attachment,user_id:0 field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "المالك"
 
@@ -773,8 +746,7 @@ msgid "Users File"
 msgstr "ملفات المستخدم"
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #: code:addons/document/document.py:347
 #, python-format
 msgid "ValidateError"
@@ -788,11 +760,9 @@ msgstr "الملفات التخيلية"
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"عند تنفيذ هذا الإجراء التلقائي ، سوف يتم تهيئة الأدلة الخاصة بك تلقائياً "
-"بناءاً على البرامج التي تم تثبيتها."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
+msgstr "عند تنفيذ هذا الإجراء التلقائي ، سوف يتم تهيئة الأدلة الخاصة بك تلقائياً بناءاً على البرامج التي تم تثبيتها."
 
 #. module: document
 #: field:report.document.user,name:0
@@ -812,4 +782,4 @@ msgstr "res_config_contents"
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "غير معروف"

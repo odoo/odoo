@@ -621,7 +621,7 @@ instead of a single view its ``arch`` field is composed of any number of
     <!-- improved idea categories list -->
     <record id="idea_category_list2" model="ir.ui.view">
         <field name="name">id.category.list2</field>
-        <field name="model">ir.ui.view</field>
+        <field name="model">idea.category/field>
         <field name="inherit_id" ref="id_category_list"/>
         <field name="arch" type="xml">
             <!-- find field description inside tree, and add the field
@@ -764,6 +764,7 @@ method should simply set the value of the field to compute on every record in
 
         name = fields.Char(compute='_compute_name')
 
+        @api.multi
         def _compute_name(self):
             for record in self:
                 record.name = str(random.randint(1, 1e6))
@@ -1073,7 +1074,7 @@ predefined searches. Filters must have one of the following attributes:
                 domain="[('inventor_id', '=', uid)]"/>
         <group string="Group By">
             <filter name="group_by_inventor" string="Inventor"
-                    context="{'group_by': 'inventor'}"/>
+                    context="{'group_by': 'inventor_id'}"/>
         </group>
     </search>
 

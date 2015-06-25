@@ -1,21 +1,21 @@
-# Lithuanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Lithuanian <lt@li.org>\n"
+"PO-Revision-Date: 2015-06-01 22:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Lithuanian (http://www.transifex.com/projects/p/odoo-8/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:12+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: project_issue
 #: field:project.issue.report,email:0
@@ -36,7 +36,7 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:299
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopija)"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_version_action
@@ -44,8 +44,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new version.\n"
 "              </p><p>\n"
-"                Define here the different versions of your products on "
-"which\n"
+"                Define here the different versions of your products on which\n"
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
@@ -56,10 +55,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "<p>\n"
-"                    The Odoo issues tacker allows you to efficiantly manage "
-"things\n"
-"                    like internal requests, software development bugs, "
-"customer\n"
+"                    The Odoo issues tacker allows you to efficiantly manage things\n"
+"                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc.\n"
 "                </p>\n"
 "            "
@@ -69,8 +66,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
 "<p>\n"
-"                The Odoo issues tacker allows you to efficiantly manage "
-"things\n"
+"                The Odoo issues tacker allows you to efficiantly manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc.\n"
 "            </p>\n"
@@ -83,20 +79,18 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,active:0
-#: field:project.issue.version,active:0
+#: field:project.issue,active:0 field:project.issue.version,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktyvus"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Įveskite vidines pastabas..."
 
 #. module: project_issue
 #: help:project.config.settings,fetchmail_issue:0
@@ -108,7 +102,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitinė sąskaita"
 
 #. module: project_issue
 #: field:project.issue,date_open:0
@@ -121,7 +115,7 @@ msgstr ""
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
-msgstr ""
+msgstr "Priskirtas"
 
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
@@ -146,7 +140,7 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Blokuota"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
@@ -159,10 +153,9 @@ msgid "Category:"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,channel:0
-#: field:project.issue.report,channel:0
+#: field:project.issue,channel:0 field:project.issue.report,channel:0
 msgid "Channel"
-msgstr ""
+msgstr "Kanalas"
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
@@ -172,12 +165,12 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,date_closed:0
 msgid "Closed"
-msgstr ""
+msgstr "Uždaryta"
 
 #. module: project_issue
 #: field:project.issue,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Spalvos indeksas"
 
 #. module: project_issue
 #: help:project.issue.report,channel:0
@@ -195,7 +188,7 @@ msgstr ""
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Įmonė"
 
 #. module: project_issue
 #: help:project.issue,progress:0
@@ -205,20 +198,19 @@ msgstr ""
 #. module: project_issue
 #: view:project.config.settings:project_issue.view_config_settings
 msgid "Configure"
-msgstr ""
+msgstr "Konfigūruoti"
 
 #. module: project_issue
-#: field:project.issue,partner_id:0
-#: field:project.issue.report,partner_id:0
+#: field:project.issue,partner_id:0 field:project.issue.report,partner_id:0
 msgid "Contact"
-msgstr ""
+msgstr "Kontaktas"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Sukūrimo data"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -232,37 +224,36 @@ msgid "Create issues from an incoming email account "
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,create_uid:0
-#: field:project.issue.version,create_uid:0
+#: field:project.issue,create_uid:0 field:project.issue.version,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Sukūrė"
 
 #. module: project_issue
 #: field:project.issue.version,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Sukurta"
 
 #. module: project_issue
 #: field:project.issue,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Sukūrimo data"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:424
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Pirkėjas"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:426
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Kliento el. pašto adresas"
 
 #. module: project_issue
 #: field:project.issue,date:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
@@ -277,7 +268,7 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Paskutinės žinutės publikavimo data po šiuo įrašu."
 
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
@@ -297,12 +288,12 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Dienų skaičius iki užvėrimo"
 
 #. module: project_issue
 #: field:project.issue,date_deadline:0
 msgid "Deadline"
-msgstr ""
+msgstr "Galutinis terminas"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -317,12 +308,12 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
 msgid "Delete"
-msgstr ""
+msgstr "Ištrinti"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "Description"
-msgstr ""
+msgstr "Aprašymas"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -337,17 +328,17 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Laikotarpis"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
 msgid "Edit..."
-msgstr ""
+msgstr "Keisti..."
 
 #. module: project_issue
 #: field:project.issue,email_from:0
 msgid "Email"
-msgstr ""
+msgstr "El. paštas"
 
 #. module: project_issue
 #: constraint:project.project:0
@@ -357,7 +348,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "Extra Info"
-msgstr ""
+msgstr "Papildoma informacija"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
@@ -372,33 +363,32 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Prenumeratoriai"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Group By"
-msgstr ""
+msgstr "Grupuoti pagal"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "High"
-msgstr ""
+msgstr "Aukštas"
 
 #. module: project_issue
 #: help:project.issue,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html formatu, kad būtų galima įterpti į kanban rodinius."
 
 #. module: project_issue
-#: field:project.issue,id:0
-#: field:project.issue.report,id:0
+#: field:project.issue,id:0 field:project.issue.report,id:0
 #: field:project.issue.version,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -410,12 +400,12 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
 
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ar prenumeratorius"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
@@ -467,7 +457,7 @@ msgstr ""
 #: view:project.issue.version:project_issue.project_issue_version_form_view
 #: view:project.issue.version:project_issue.project_issue_version_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "Versija"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_assigned
@@ -508,12 +498,12 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "Kanban statusas"
 
 #. module: project_issue
 #: field:project.issue,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "Paskutinis veiksmas"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -523,7 +513,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Paskutinės žinutės data"
 
 #. module: project_issue
 #: field:project.issue,date_last_stage_update:0
@@ -532,15 +522,14 @@ msgid "Last Stage Update"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,write_uid:0
-#: field:project.issue.version,write_uid:0
+#: field:project.issue,write_uid:0 field:project.issue.version,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Paskutini kartą atnaujino"
 
 #. module: project_issue
 #: field:project.issue.version,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Paskutinį kartą atnaujinta"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
@@ -551,17 +540,17 @@ msgstr ""
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Low"
-msgstr ""
+msgstr "Žemas"
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Pranešimai"
 
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Žinučių ir pranešimų istorija"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -573,7 +562,7 @@ msgstr ""
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "New"
-msgstr ""
+msgstr "Naujas"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -583,20 +572,19 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,date_action_next:0
 msgid "Next Action"
-msgstr ""
+msgstr "Kitas veiksmas"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:440
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Nėra temos"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-#: selection:project.issue,priority:0
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "Įprasta"
 
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
@@ -616,7 +604,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partneris"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
@@ -626,7 +614,7 @@ msgstr ""
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Svarbumas"
 
 #. module: project_issue
 #: field:project.issue,description:0
@@ -636,7 +624,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,progress:0
 msgid "Progress (%)"
-msgstr ""
+msgstr "Progresas (%)"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -645,7 +633,7 @@ msgstr ""
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projektas"
 
 #. module: project_issue
 #: field:project.project,project_escalation_id:0
@@ -686,7 +674,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Pardavimų komanda"
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -698,7 +686,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Search"
-msgstr ""
+msgstr "Paieška"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -706,38 +694,38 @@ msgstr ""
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,stage_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Etapas"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Pakeistas etapas"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Pakeistas etapas"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "Statistics"
-msgstr ""
+msgstr "Statistika"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "Status"
-msgstr ""
+msgstr "Būsena"
 
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Santrauka"
 
 #. module: project_issue
 #: field:project.issue,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Žymos"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -745,7 +733,7 @@ msgstr ""
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,task_id:0
 msgid "Task"
-msgstr ""
+msgstr "Užduotis"
 
 #. module: project_issue
 #: help:project.issue,email_cc:0
@@ -753,12 +741,12 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
+msgstr "Prieš siunčiant laišką šie el. pašto adresai bus pridėti į CC lauką visiems išsiunčiamiems ir gaunamiems šio įrašo el. laiškams. Atskirkite atskirus el. pašto adresus kableliu"
 
 #. module: project_issue
 #: help:project.issue,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Šie žmonės gaus el. laiškus."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -773,28 +761,27 @@ msgstr ""
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
-msgstr ""
+msgstr "Nepriskirta"
 
 #. module: project_issue
 #: field:project.issue,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neperžiūrėtos žinutės"
 
 #. module: project_issue
 #: field:project.issue,write_date:0
 msgid "Update Date"
-msgstr ""
+msgstr "Atnaujinimo data"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "Naudotojo el. paštas"
 
 #. module: project_issue
-#: field:project.issue,version_id:0
-#: field:project.issue.report,version_id:0
+#: field:project.issue,version_id:0 field:project.issue.report,version_id:0
 msgid "Version"
-msgstr ""
+msgstr "Versija"
 
 #. module: project_issue
 #: field:project.issue.version,name:0
@@ -811,12 +798,12 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:397
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #. module: project_issue
 #: field:project.issue,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
+msgstr "Stebėtojų el. paštai"
 
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
@@ -845,7 +832,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.project,issue_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "nežinomas"
 
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited

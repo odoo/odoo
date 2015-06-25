@@ -4,6 +4,7 @@ import random
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
+from openerp.tools.translate import _
 
 
 class sale_order(osv.Model):
@@ -59,7 +60,7 @@ class sale_order(osv.Model):
             values['name'] = line.name
         else:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            values['name'] = product.description_sale or product.name
+            values['name'] = product.description_sale and "%s\n%s" % (product.display_name, product.description_sale) or product.display_name
 
         values['product_id'] = product_id
         values['order_id'] = order_id
@@ -73,6 +74,9 @@ class sale_order(osv.Model):
 
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
+            if so.state != 'draft':
+                request.session['sale_order_id'] = None
+                raise osv.except_osv(_('Error!'), _('It is forbidden to modify a sale order which is not in draft status'))
             if line_id != False:
                 line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
                 if line_ids:
@@ -177,7 +181,7 @@ class website(orm.Model):
                 values['partner_id'] = partner.id
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
 
-                if flag_pricelist or values.get('fiscal_position') != fiscal_position:
+                if flag_pricelist or values.get('fiscal_position', False) != fiscal_position:
                     update_pricelist = True
 
             # update the pricelist
@@ -186,7 +190,8 @@ class website(orm.Model):
                 values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
                 sale_order.write(values)
                 for line in sale_order.order_line:
-                    sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
+                    if line.exists():
+                        sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
 
             # update browse record
             if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:

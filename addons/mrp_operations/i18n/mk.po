@@ -1,21 +1,22 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-27 08:00+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:58+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -26,23 +27,11 @@ msgstr "# од ставки"
 #: help:mrp.production.workcenter.line,state:0
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
-msgstr ""
-"* Кога работниот налог е креиран тој е подесен на статус 'Нацрт'.\n"
-"* Кога корисникот го подесува работниот налог во режим старт тогаш времето "
-"ќе биде подесено во статус 'Во тек'.\n"
-"* Кога работниот налог е во режим работи, доколку корисникот сака да го "
-"запре или да направи промени во налогот, може да го подеси во статус 'Чекам' "
-".\n"
-"* Кога корисникот го откажува работниот налог тој ќе биде подесен во статус "
-"'Откажано'.\n"
-"* Кога налогот е комплетно обработен времето еподесено во статус 'Завршено'."
+"* When order is completely processed that time it is set in 'Finished' status."
+msgstr "* Кога работниот налог е креиран тој е подесен на статус 'Нацрт'.\n* Кога корисникот го подесува работниот налог во режим старт тогаш времето ќе биде подесено во статус 'Во тек'.\n* Кога работниот налог е во режим работи, доколку корисникот сака да го запре или да направи промени во налогот, може да го подеси во статус 'Чекам' .\n* Кога корисникот го откажува работниот налог тој ќе биде подесен во статус 'Откажано'.\n* Кога налогот е комплетно обработен времето еподесено во статус 'Завршено'."
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -51,26 +40,13 @@ msgid ""
 "            Click to start a new work order.\n"
 "          </p><p>\n"
 "            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Кликни за да започенш нов работен налог.\n"
-"          </p><p>\n"
-"            За да обработите или склопите производи, и да употребите "
-"суровини и\n"
-"            готови производи мора да управувате со операциите на обработка.\n"
-"            Операциите на обработување често се нарекуваат Работни налози.\n"
-"            Различните операции ќе имаат различно влијание на трошоците на \n"
-"            обработка и планирање во зависност од обемот на работата.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Кликни за да започенш нов работен налог.\n          </p><p>\n            За да обработите или склопите производи, и да употребите суровини и\n            готови производи мора да управувате со операциите на обработка.\n            Операциите на обработување често се нарекуваат Работни налози.\n            Различните операции ќе имаат различно влијание на трошоците на \n            обработка и планирање во зависност од обемот на работата.\n          </p>\n        "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -82,28 +58,11 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
+"            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"           Кликни за да започнеш нов работен налог. \n"
-"          </p><p>\n"
-"            Работниот налог е список на операции кои треба да бидат изведени "
-"за\n"
-"            секој налог за обработка. Откако ќе го започнете првиот работен "
-"налог\n"
-"            од налогот за обработка, налогот за обработка автоматски се "
-"означува\n"
-"            како започнат. Откако ќе ја завршите последната операција од "
-"налогот\n"
-"            за обработка, налогот за обработка автоматски е завршен и "
-"поврзаните\n"
-"            производи се произведени.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n           Кликни за да започнеш нов работен налог. \n          </p><p>\n            Работниот налог е список на операции кои треба да бидат изведени за\n            секој налог за обработка. Откако ќе го започнете првиот работен налог\n            од налогот за обработка, налогот за обработка автоматски се означува\n            како започнат. Откако ќе ја завршите последната операција од налогот\n            за обработка, налогот за обработка автоматски е завршен и поврзаните\n            производи се произведени.\n          </p>\n        "
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -142,9 +101,7 @@ msgstr "Откажано"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr ""
-"Означи го ова за да можете да ги движите независно сите налози за "
-"производство, без да ги отстраните зависните."
+msgstr "Означи го ова за да можете да ги движите независно сите налози за производство, без да ги отстраните зависните."
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
@@ -267,8 +224,7 @@ msgid "Hours by Work Center"
 msgstr "Часови по работен центар"
 
 #. module: mrp_operations
-#: field:mrp.workorder,id:0
-#: field:mrp_operations.operation,id:0
+#: field:mrp.workorder,id:0 field:mrp_operations.operation,id:0
 #: field:mrp_operations.operation.code,id:0
 msgid "ID"
 msgstr "ID"
@@ -290,25 +246,20 @@ msgstr "Во тек"
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
-"Со цел да се заврши операцијата, таа мора да биде во состојба Започни или "
-"Продолжи!"
+msgstr "Со цел да се заврши операцијата, таа мора да биде во состојба Започни или Продолжи!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:445
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
-"Со цел да се паузира операцијата, таа мора да биде во состојба Започни или "
-"Продолжи!"
+msgstr "Со цел да се паузира операцијата, таа мора да биде во состојба Започни или Продолжи!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:449
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
-"Со цел да се продолжи операцијата, таа мора да биде во состојба Пауза!"
+msgstr "Со цел да се продолжи операцијата, таа мора да биде во состојба Пауза!"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -370,9 +321,7 @@ msgstr "Име на операцијата"
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr ""
-"Операцијата е веќе започната. Можете да ја Паузирате/Завршите/Откажете "
-"операцијата."
+msgstr "Операцијата е веќе започната. Можете да ја Паузирате/Завршите/Откажете операцијата."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:457
@@ -605,8 +554,7 @@ msgstr "Движење на залиха"
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr ""
-"Поминато време помеѓу операциите започни и сопри во овој Работен центар"
+msgstr "Поминато време помеѓу операциите започни и сопри во овој Работен центар"
 
 #. module: mrp_operations
 #: field:mrp.workorder,total_cycles:0

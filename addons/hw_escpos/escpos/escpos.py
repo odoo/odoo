@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
-@author: Manuel F Martinez <manpaz@bashlinux.com>
-@organization: Bashlinux
-@copyright: Copyright (c) 2012 Bashlinux
-@license: GPL
-'''
 
-
-import logging
 import time
 import copy
 import io
@@ -21,19 +13,15 @@ import xml.dom.minidom as minidom
 
 from PIL import Image
 
-_logger = logging.getLogger(__name__)
-
 try:
     import jcconv
 except ImportError:
     jcconv = None
-    _logger.warning('ESC/POS: please install jcconv for improved Japanese receipt printing:\n  # pip install jcconv')
 
 try: 
     import qrcode
 except ImportError:
     qrcode = None
-    _logger.warning('ESC/POS: please install the qrcode python module for qrcode printing in point of sale receipts:\n  # pip install qrcode')
 
 from constants import *
 from exceptions import *
@@ -107,14 +95,14 @@ class StyleStack:
                 'off':      TXT_BOLD_OFF,
                 'on':       TXT_BOLD_ON,
                 # must be issued after 'size' command
-                # because ESC ! resets ESC E
+                # because ESC ! resets ESC -
                 '_order':   10,
             },
             'font': {
                 'a':        TXT_FONT_A,
                 'b':        TXT_FONT_B,
                 # must be issued after 'size' command
-                # because ESC ! resets ESC M
+                # because ESC ! resets ESC -
                 '_order':   10,
             },
             'size': {
@@ -122,7 +110,7 @@ class StyleStack:
                 'double-height':    TXT_2HEIGHT,
                 'double-width':     TXT_2WIDTH,
                 'double':           TXT_DOUBLE,
-                '_order':           1,
+                '_order':   1,
             },
             'color': {
                 'black':    TXT_COLOR_BLACK,
@@ -181,9 +169,8 @@ class StyleStack:
     def to_escpos(self):
         """ converts the current style to an escpos command string """
         cmd = ''
-        # Sort commands because some commands affect others (see _order attributes above)
         ordered_cmds = self.cmds.keys()
-        ordered_cmds.sort(lambda x, y: cmp(self.cmds[x]['_order'], self.cmds[y]['_order']))
+        ordered_cmds.sort(lambda x,y: cmp(self.cmds[x]['_order'], self.cmds[y]['_order']))
         for style in ordered_cmds:
             cmd += self.cmds[style][self.get(style)]
         return cmd

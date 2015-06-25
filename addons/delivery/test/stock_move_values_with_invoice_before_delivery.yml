@@ -1,0 +1,83 @@
+-
+  test that the store fields of stock moves are computed with invoice before delivery flow
+-
+  set a weight on ipod 16GB
+-
+  !python {model: product.product, id: product.product_product_11}: |
+    self.write({'weight': 0.25, 'weight_net': 0.2})
+-
+  create a SO with invoice before delivery
+-
+  !record {model: sale.order, id: sale_prepaid}:
+    partner_id: base.res_partner_18
+    partner_invoice_id: base.res_partner_18
+    partner_shipping_id: base.res_partner_18
+    pricelist_id: product.list0
+    order_policy: 'prepaid'
+    order_line:
+      - name: 'Ipod'
+        product_id: product.product_product_11
+        product_uom_qty: 2
+        product_uos_qty: 2
+        product_uom: product.product_uom_unit
+        price_unit: 750.00
+    carrier_id: normal_delivery_carrier
+-
+  I add delivery cost in Sale order.
+-
+  !python {model: sale.order, id: sale_prepaid}: |
+    self.delivery_set()
+-
+  I confirm the SO.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_prepaid}
+-
+  I check that the invoice was created
+-
+  !python {model: sale.order, id: sale_prepaid}: |
+    assert len(self.invoice_ids) == 1, "Invoice not created."
+-
+  I confirm the invoice
+-
+  !python {model: sale.order, id: sale_prepaid}: |
+    invoice = self.invoice_ids[0]
+    invoice.signal_workflow('invoice_open')
+-
+  I pay the invoice.
+-
+  !python {model: sale.order, id: sale_prepaid}: |
+    invoice = self.invoice_ids[0]
+    invoice.signal_workflow('invoice_open')
+    journal = self.env['account.journal'].search([('type', '=', 'cash'),
+                                                  ('company_id', '=', self.company_id.id)],
+                                                  limit=1)
+    invoice.pay_and_reconcile(
+         invoice.amount_total, ref('account.cash'), ref('account.period_8'),
+         journal.id, ref('account.cash'),
+         ref('account.period_8'), journal.id,
+         name='test')
+-
+  Check the SO after paying the invoice
+-
+  !python {model: sale.order, id: sale_prepaid}: |
+     assert self.invoice_exists, 'order not invoiced'
+     assert self.invoiced, 'order is not paid'
+     assert len(self.picking_ids) == 1, 'pickings not generated'
+-
+  check the stock moves
+-
+  !python {model: sale.order, id: sale_prepaid}: |
+     move = self.picking_ids.move_lines
+     assert move.product_qty == 2, 'wrong product_qty'
+     assert move.weight == 0.5, 'wrong move weight'
+     assert move.weight_net == 0.4, 'wrong move weight_net'
+-
+  ship
+-
+  !python {model: sale.order, id: sale_prepaid}: |
+     picking = self.picking_ids.action_done()
+-
+  Check the SO after shipping
+-
+  !python {model: sale.order, id: sale_prepaid}: |
+     assert self.state == 'done'

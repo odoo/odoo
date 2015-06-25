@@ -196,7 +196,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                         + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
-                value = instance.web.str_to_date(value.substring(0,10));
+                value = instance.web.auto_str_to_date(value);
             return value.toString(normalize_format(l10n.date_format));
         case 'time':
             if (typeof(value) == "string")
@@ -238,10 +238,6 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':
-            tmp = Number(value);
-            if (!isNaN(tmp))
-                return tmp;
-
             var tmp2 = value;
             do {
                 tmp = tmp2;

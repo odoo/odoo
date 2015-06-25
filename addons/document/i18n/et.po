@@ -1,25 +1,25 @@
-# Estonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Estonian <et@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Estonian (http://www.transifex.com/projects/p/odoo-8/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:39+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "Failide arv"
 
@@ -31,8 +31,7 @@ msgid "%s (%s)"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:117
-#: code:addons/document/document.py:307
+#: code:addons/document/document.py:117 code:addons/document/document.py:307
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -43,8 +42,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
@@ -54,14 +52,13 @@ msgstr ""
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
 msgstr ""
 
 #. module: document
 #: field:document.directory.content.type,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiivne"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
@@ -83,7 +80,7 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "April"
-msgstr ""
+msgstr "Aprill"
 
 #. module: document
 #. openerp-web
@@ -95,29 +92,26 @@ msgstr ""
 #. module: document
 #: view:ir.attachment:document.view_document_file_tree
 msgid "Attachments"
-msgstr ""
+msgstr "Manused"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Vali see kui sa soovid kasutada sama puustruktuuri kui objektil valitud "
-"süsteemis."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "Vali see kui sa soovid kasutada sama puustruktuuri kui objektil valitud süsteemis."
 
 #. module: document
 #: field:document.directory,child_ids:0
@@ -128,7 +122,7 @@ msgstr "Alam"
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Ettevõte"
 
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
@@ -172,7 +166,7 @@ msgstr ""
 #: field:document.directory.dctx,create_date:0
 #: field:document.storage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Loodud"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -193,7 +187,7 @@ msgstr "Muutmise kuupäev"
 #. module: document
 #: selection:report.document.user,month:0
 msgid "December"
-msgstr ""
+msgstr "Detsember"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -268,8 +262,7 @@ msgid "Directory name contains special characters!"
 msgstr "Kaustanimi sisaldab erisümboleid!"
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Kataloogi nimi peab olema ainulaadne"
@@ -309,8 +302,8 @@ msgstr ""
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
 
@@ -328,7 +321,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.dctx,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "Avaldis"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -338,12 +331,12 @@ msgstr "Laiend"
 #. module: document
 #: selection:report.document.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Veebruar"
 
 #. module: document
 #: field:document.directory.dctx,field:0
 msgid "Field"
-msgstr ""
+msgstr "Väli"
 
 #. module: document
 #: help:document.directory,resource_field:0
@@ -355,7 +348,7 @@ msgstr ""
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "Fields"
-msgstr ""
+msgstr "Väljad"
 
 #. module: document
 #: field:report.document.user,datas_fname:0
@@ -433,7 +426,7 @@ msgstr ""
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Group By"
-msgstr ""
+msgstr "Rühmitamine"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -441,16 +434,13 @@ msgid "Groups"
 msgstr "Grupid"
 
 #. module: document
-#: field:document.configuration,id:0
-#: field:document.directory,id:0
+#: field:document.configuration,id:0 field:document.directory,id:0
 #: field:document.directory.content,id:0
 #: field:document.directory.content.type,id:0
-#: field:document.directory.dctx,id:0
-#: field:document.storage,id:0
-#: field:report.document.file,id:0
-#: field:report.document.user,id:0
+#: field:document.directory.dctx,id:0 field:document.storage,id:0
+#: field:report.document.file,id:0 field:report.document.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
@@ -462,8 +452,8 @@ msgstr ""
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
@@ -482,17 +472,17 @@ msgstr "Indekseeritud sisu"
 #. module: document
 #: selection:report.document.user,month:0
 msgid "January"
-msgstr ""
+msgstr "Jaanuar"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Juuli"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "June"
-msgstr ""
+msgstr "Juuni"
 
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
@@ -525,12 +515,12 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Märts"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: document
 #: field:document.directory.content.type,mimetype:0
@@ -553,15 +543,14 @@ msgid "Modified Date"
 msgstr "Muutmise kuupäev"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "Kuu"
 
 #. module: document
 #: view:ir.attachment:document.view_attach_filter_inherit0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Minu dokumendid"
 
 #. module: document
 #: field:document.directory,name:0
@@ -576,12 +565,12 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "November"
-msgstr ""
+msgstr "Number"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktoober"
 
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
@@ -603,8 +592,7 @@ msgstr ""
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,user_id:0
 #: view:ir.attachment:document.view_attach_filter_inherit2
-#: field:ir.attachment,user_id:0
-#: field:report.document.user,user_id:0
+#: field:ir.attachment,user_id:0 field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "Omanik"
 
@@ -632,7 +620,7 @@ msgstr "Partner"
 #. module: document
 #: field:document.directory.content,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "Prefiks"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.act_res_partner_document
@@ -658,7 +646,7 @@ msgstr ""
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Resources"
-msgstr ""
+msgstr "Ressursid"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
@@ -680,7 +668,7 @@ msgstr ""
 #. module: document
 #: selection:report.document.user,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -749,9 +737,7 @@ msgstr "Tüüp"
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Kasuta doomeninime kui soovid rakendada automaatset filtrit nähaolevatele "
-"resurssidele."
+msgstr "Kasuta doomeninime kui soovid rakendada automaatset filtrit nähaolevatele resurssidele."
 
 #. module: document
 #: view:report.document.user:document.view_report_document_user_search
@@ -759,8 +745,7 @@ msgid "Users File"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #: code:addons/document/document.py:347
 #, python-format
 msgid "ValidateError"
@@ -774,14 +759,14 @@ msgstr "Virtuaalsed failid"
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
 msgstr ""
 
 #. module: document
 #: field:report.document.user,name:0
 msgid "Year"
-msgstr ""
+msgstr "Aasta"
 
 #. module: document
 #: view:ir.attachment:document.view_document_file_form
@@ -796,4 +781,4 @@ msgstr ""
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "tundmatu"

@@ -1,21 +1,22 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-11-08 11:27+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:05+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -24,47 +25,17 @@ msgid ""
 "                 Click to create a Procurement.\n"
 "              </p>\n"
 "              <p>\n"
-"                <b>Procurement Orders</b> represent the need for a certain "
-"quantity of products, at a given time, in a given location.\n"
+"                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.\n"
 "              </p>\n"
 "              <p>\n"
-"                <b>Sales Orders</b> are one typical source of Procurement "
-"Orders (but these are distinct documents). \n"
-"                <br/>Depending on the procurement parameters and the product "
-"configuration, the procurement engine will attempt to satisfy the need by "
-"reserving products from stock, ordering products from a supplier, or passing "
-"a manufacturing order, etc...\n"
+"                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
+"                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...\n"
 "              </p>\n"
 "              <p>\n"
-"                A <b>Procurement Exception</b> occurs when the system cannot "
-"find a way to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message in the chatter).\n"
+"                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Кликнете да креирате набавка.\n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Налози за набавка</b> претставуваат потреба од одредена "
-"количина на производи, во даден момент, на дадена локација.\n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Налози за продажба</b> се типични извори за налози за "
-"набавка (но ова се различни документи). \n"
-"                <br/>Во зависност од параметрите на набавката и "
-"конфигурацијата на производот, системот за набавка ќе се обиде да ја "
-"задоволи потребата преку резервирање на производите од залиха, нарачување на "
-"производи од добавувач, или преку праќање на налог за производство, итн...\n"
-"              </p>\n"
-"              <p>\n"
-"                A <b>Исклучок за набавка</b> се случува кога системот не "
-"може да најде начин да ја исполни набавката. Некои исклучоци ќе се "
-"резолвираат автоматски, но за некои е потребна рачна интервенција (тие се "
-"идентификувани со специфична порака на грешка).\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Кликнете да креирате набавка.\n              </p>\n              <p>\n                <b>Налози за набавка</b> претставуваат потреба од одредена количина на производи, во даден момент, на дадена локација.\n              </p>\n              <p>\n                <b>Налози за продажба</b> се типични извори за налози за набавка (но ова се различни документи). \n                <br/>Во зависност од параметрите на набавката и конфигурацијата на производот, системот за набавка ќе се обиде да ја задоволи потребата преку резервирање на производите од залиха, нарачување на производи од добавувач, или преку праќање на налог за производство, итн...\n              </p>\n              <p>\n                A <b>Исклучок за набавка</b> се случува кога системот не може да најде начин да ја исполни набавката. Некои исклучоци ќе се резолвираат автоматски, но за некои е потребна рачна интервенција (тие се идентификувани со специфична порака на грешка).\n              </p>\n            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -73,18 +44,14 @@ msgid ""
 "                 Click to create a procurement order.  \n"
 "              </p>\n"
 "              <p>\n"
-"                A <b>procurement order</b> is used to record a need for a "
-"specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>\n"
 "              </p>\n"
 "              <p>\n"
 "                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
+"                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
@@ -134,16 +101,13 @@ msgstr "Провери набавка"
 #. module: procurement
 #: help:procurement.order,rule_id:0
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
-msgstr ""
-"Избрано правило за резолуција на набавка. Обично избрано од системот, но "
-"може и рачно да се подеси од страна на менаџерот за набавка за да присили "
-"необично однесување."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
+msgstr "Избрано правило за резолуција на набавка. Обично избрано од системот, но може и рачно да се подеси од страна на менаџерот за набавка за да присили необично однесување."
 
 #. module: procurement
-#: field:procurement.order,company_id:0
-#: field:procurement.rule,company_id:0
+#: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
 msgid "Company"
 msgstr "Компанија"
 
@@ -163,16 +127,14 @@ msgid "Confirmed"
 msgstr "Потврдено"
 
 #. module: procurement
-#: field:procurement.group,create_uid:0
-#: field:procurement.order,create_uid:0
+#: field:procurement.group,create_uid:0 field:procurement.order,create_uid:0
 #: field:procurement.order.compute.all,create_uid:0
 #: field:procurement.rule,create_uid:0
 msgid "Created by"
 msgstr "Креирано од"
 
 #. module: procurement
-#: field:procurement.group,create_date:0
-#: field:procurement.order,create_date:0
+#: field:procurement.group,create_date:0 field:procurement.order,create_date:0
 #: field:procurement.order.compute.all,create_date:0
 #: field:procurement.rule,create_date:0
 msgid "Created on"
@@ -254,15 +216,11 @@ msgstr "Набавки на група"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е "
-"директно во html формат со цел да биде вметнато во kanban преглед."
+msgstr "Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: procurement
-#: field:procurement.group,id:0
-#: field:procurement.order,id:0
-#: field:procurement.order.compute.all,id:0
-#: field:procurement.rule,id:0
+#: field:procurement.group,id:0 field:procurement.order,id:0
+#: field:procurement.order.compute.all,id:0 field:procurement.rule,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -274,9 +232,7 @@ msgstr "Доколку се означени новите пораки, потр
 #. module: procurement
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
-"Ако не е означено ќе ви дозволи да го сокриете правилото без да го "
-"одстраните."
+msgstr "Ако не е означено ќе ви дозволи да го сокриете правилото без да го одстраните."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -295,16 +251,14 @@ msgid "Last Message Date"
 msgstr "Датум на последна порака"
 
 #. module: procurement
-#: field:procurement.group,write_uid:0
-#: field:procurement.order,write_uid:0
+#: field:procurement.group,write_uid:0 field:procurement.order,write_uid:0
 #: field:procurement.order.compute.all,write_uid:0
 #: field:procurement.rule,write_uid:0
 msgid "Last Updated by"
 msgstr "Последно ажурирање од"
 
 #. module: procurement
-#: field:procurement.group,write_date:0
-#: field:procurement.order,write_date:0
+#: field:procurement.group,write_date:0 field:procurement.order,write_date:0
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
@@ -487,9 +441,7 @@ msgstr "Референца"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr ""
-"Референца на документот што ја креирал оваа набавка.\n"
-"Ова е автоматски комплетирано од Odoo."
+msgstr "Референца на документот што ја креирал оваа набавка.\nОва е автоматски комплетирано од Odoo."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
@@ -561,8 +513,7 @@ msgstr "Резиме"
 #. module: procurement
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
-"Ова поле ќе го пополни потеклото на пакувањето и името на неговите движења"
+msgstr "Ова поле ќе го пополни потеклото на пакувањето и името на неговите движења"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view

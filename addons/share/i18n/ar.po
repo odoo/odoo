@@ -1,28 +1,29 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * share
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:21+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: share
 #: model:res.groups,comment:share.group_share_user
 msgid ""
 "\n"
-"Members of this groups have access to the sharing wizard, which allows them "
-"to invite external users to view or edit some of their documents."
+"Members of this groups have access to the sharing wizard, which allows them to invite external users to view or edit some of their documents."
 msgstr ""
 
 #. module: share
@@ -46,12 +47,12 @@ msgstr "(عدل)"
 #. module: share
 #: model:ir.model,name:share.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "مجموعات الوصول"
 
 #. module: share
 #: field:share.wizard,access_mode:0
 msgid "Access Mode"
-msgstr ""
+msgstr "وضع الوصول"
 
 #. module: share
 #: view:share.wizard:share.share_step2_form
@@ -66,13 +67,13 @@ msgstr "معلومات الولوج"
 #. module: share
 #: help:share.wizard,access_mode:0
 msgid "Access rights to be granted on the shared documents."
-msgstr ""
+msgstr "صلاحيات الوصول الممنوحة على المستندات قيد المشاركة."
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:640
 #, python-format
 msgid "Action and Access Mode are required to create a shared access."
-msgstr ""
+msgstr "الإجراء ووضع الوصول مطلوبين لإنشاء المشاركة."
 
 #. module: share
 #: field:share.wizard,action_id:0
@@ -84,13 +85,13 @@ msgstr "إجراء للمشاركة"
 msgid ""
 "An email notification with instructions has been sent to the following "
 "people:"
-msgstr ""
+msgstr "تم إرسال بريد بتعليمات إلى الجهات التالية:"
 
 #. module: share
 #: help:share.wizard,message:0
 msgid ""
 "An optional personal message, to be included in the email notification."
-msgstr ""
+msgstr "رسالة شخصية اختيارية، ليتم تضمينها في بريد الإخطار."
 
 #. module: share
 #: selection:share.wizard,access_mode:0
@@ -116,12 +117,12 @@ msgstr "إغلاق"
 #. module: share
 #: field:share.wizard,embed_code:0
 msgid "Code"
-msgstr ""
+msgstr "الرمز"
 
 #. module: share
 #: view:share.wizard:share.share_step1_form
 msgid "Configuration"
-msgstr ""
+msgstr "الإعدادات"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:491
@@ -130,16 +131,15 @@ msgid "Copied access for sharing"
 msgstr "نسخ الوصول للمشاركة"
 
 #. module: share
-#: field:share.wizard,create_uid:0
-#: field:share.wizard.result.line,create_uid:0
+#: field:share.wizard,create_uid:0 field:share.wizard.result.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أُنشئ بواسطة"
 
 #. module: share
 #: field:share.wizard,create_date:0
 #: field:share.wizard.result.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "إنشاؤه في"
 
 #. module: share
 #: field:share.wizard,view_type:0
@@ -157,12 +157,12 @@ msgstr "قاعدة البيانات"
 #: code:addons/share/wizard/share_wizard.py:77
 #, python-format
 msgid "Direct link or embed code"
-msgstr ""
+msgstr "رابط مباشر أو كود دمج"
 
 #. module: share
 #: field:share.wizard,embed_option_search:0
 msgid "Display search view"
-msgstr ""
+msgstr "عرض واجهة البحث"
 
 #. module: share
 #: field:share.wizard,embed_option_title:0
@@ -179,11 +179,10 @@ msgstr "نطاق"
 #: code:addons/share/wizard/share_wizard.py:844
 #, python-format
 msgid "Email Required"
-msgstr ""
+msgstr "البريد مطلوب"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:77
-#: field:share.wizard,new_users:0
+#: code:addons/share/wizard/share_wizard.py:77 field:share.wizard,new_users:0
 #, python-format
 msgid "Emails"
 msgstr "الرسائل الإلكترونية"
@@ -193,25 +192,25 @@ msgstr "الرسائل الإلكترونية"
 #: code:addons/share/static/src/js/share.js:63
 #, python-format
 msgid "Embed"
-msgstr ""
+msgstr "دمج"
 
 #. module: share
 #: help:share.wizard,embed_code:0
 msgid ""
 "Embed this code in your documents to provide a link to the shared document."
-msgstr ""
+msgstr "أضف هذا الكود إلى مستندك لتوفر رابطاً لمشاركة المستند."
 
 #. module: share
 #: view:share.wizard:share.share_step2_form
 msgid "Embedded code options"
-msgstr ""
+msgstr "خيارات كود الدمج"
 
 #. module: share
 #: help:res.users,share:0
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
-msgstr ""
+msgstr "مستخدم خارجي بصلاحيات وصول محدودة، أنشئ فقط لأغراض مشاركة البيانات."
 
 #. module: share
 #: help:res.groups,share:0
@@ -225,7 +224,7 @@ msgstr "إنشاء مجموعة لتعيين حقوق الوصول لتبادل 
 msgid ""
 "Hello,\n"
 "\n"
-msgstr ""
+msgstr "مرحباً،\n\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:822
@@ -233,7 +232,7 @@ msgstr ""
 msgid ""
 "I have shared %s (%s) with you!\n"
 "\n"
-msgstr ""
+msgstr "قمت بمشاركة %s (%s) معك!\n\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:854
@@ -241,18 +240,17 @@ msgstr ""
 msgid ""
 "I've shared %s with you!\n"
 "\n"
-msgstr ""
+msgstr "قمت بمشاركة %s معك!\n\n"
 
 #. module: share
-#: field:share.wizard,id:0
-#: field:share.wizard.result.line,id:0
+#: field:share.wizard,id:0 field:share.wizard.result.line,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرّف"
 
 #. module: share
 #: view:share.wizard:share.share_step1_form
 msgid "Include an Optional Personal Message"
-msgstr ""
+msgstr "أضف رسالة شخصية اختيارية"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:614
@@ -264,37 +262,35 @@ msgstr ""
 #: code:addons/share/wizard/share_wizard.py:795
 #, python-format
 msgid "Invitation"
-msgstr ""
+msgstr "دعوة"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:820
 #, python-format
 msgid "Invitation to collaborate about %s"
-msgstr ""
+msgstr "دعوة للتعاون في شأن %s"
 
 #. module: share
 #. openerp-web
 #: code:addons/share/static/src/xml/share.xml:9
 #, python-format
 msgid "Invite"
-msgstr ""
+msgstr "دعوة"
 
 #. module: share
 #: field:share.wizard,invite:0
 msgid "Invite users to OpenSocial record"
-msgstr ""
+msgstr "دعوة مستخدمين لمشاركة سجل OpenSocial"
 
 #. module: share
-#: field:share.wizard,write_uid:0
-#: field:share.wizard.result.line,write_uid:0
+#: field:share.wizard,write_uid:0 field:share.wizard.result.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: share
-#: field:share.wizard,write_date:0
-#: field:share.wizard.result.line,write_date:0
+#: field:share.wizard,write_date:0 field:share.wizard.result.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث فى"
 
 #. module: share
 #: field:share.wizard.result.line,login:0
@@ -309,14 +305,13 @@ msgstr "صفحة الوصول الرئيسية للمستخدمين لضمان �
 #. module: share
 #: help:share.wizard,record_name:0
 msgid "Name of the shared record, if sharing a precise record"
-msgstr ""
+msgstr "اسم السجل قيد المشاركة، إذا كنت تشارك سجلاً بعينه"
 
 #. module: share
-#: field:share.wizard,email_1:0
-#: field:share.wizard,email_2:0
+#: field:share.wizard,email_1:0 field:share.wizard,email_2:0
 #: field:share.wizard,email_3:0
 msgid "New user email"
-msgstr ""
+msgstr "بريد المستخدم الجديد"
 
 #. module: share
 #: field:share.wizard.result.line,newly_created:0
@@ -332,20 +327,19 @@ msgstr "التالي"
 #: code:addons/share/wizard/share_wizard.py:204
 #, python-format
 msgid "No email address configured"
-msgstr ""
+msgstr "لم يتم ضبط عنوان بريد"
 
 #. module: share
 #: view:res.groups:share.res_groups_search_sharing
 msgid "Non-Share Groups"
-msgstr ""
+msgstr "بلا مجموعات المشاركة"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:834
 #: code:addons/share/wizard/share_wizard.py:868
 #, python-format
 msgid ""
-"Odoo is a powerful and user-friendly suite of Business Applications (CRM, "
-"Sales, HR, etc.)\n"
+"Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
 "It is open source and can be found on https://www.odoo.com."
 msgstr ""
 
@@ -382,8 +376,7 @@ msgstr "رسالة شخصيّة"
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:647
 #, python-format
-msgid ""
-"Please indicate the emails of the persons to share with, one per line."
+msgid "Please indicate the emails of the persons to share with, one per line."
 msgstr ""
 
 #. module: share
@@ -391,8 +384,7 @@ msgstr ""
 msgid ""
 "Please select the action that opens the screen containing the data you want "
 "to share."
-msgstr ""
-"الرجاء اختيار الإجراء الذي يفتح شاشة تحتوي على البيانات التي تريد مشاركتها."
+msgstr "الرجاء اختيار الإجراء الذي يفتح شاشة تحتوي على البيانات التي تريد مشاركتها."
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:758
@@ -444,8 +436,7 @@ msgid "Share Title"
 msgstr "عنوان المشاركة"
 
 #. module: share
-#: field:share.wizard,embed_url:0
-#: field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "مشاركة URL"
 
@@ -514,8 +505,7 @@ msgstr ""
 #: code:addons/share/wizard/share_wizard.py:636
 #, python-format
 msgid ""
-"Sorry, the current screen and filter you are trying to share are not "
-"supported at the moment.\n"
+"Sorry, the current screen and filter you are trying to share are not supported at the moment.\n"
 "You may want to try a simpler filter."
 msgstr ""
 
@@ -545,8 +535,7 @@ msgstr ""
 #: code:addons/share/wizard/share_wizard.py:855
 #, python-format
 msgid ""
-"The documents are not attached, you can view them online directly on my Odoo "
-"server at:\n"
+"The documents are not attached, you can view them online directly on my Odoo server at:\n"
 "    %s\n"
 "\n"
 msgstr ""
@@ -555,7 +544,8 @@ msgstr ""
 #: code:addons/share/wizard/share_wizard.py:864
 #, python-format
 msgid ""
-"The documents have been automatically added to your current Odoo documents.\n"
+"The documents have been automatically added to your current Odoo "
+"documents.\n"
 msgstr ""
 
 #. module: share
@@ -605,15 +595,13 @@ msgstr "اسم المستخدم"
 #. module: share
 #: model:ir.model,name:share.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "المستخدمون"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:865
 #, python-format
 msgid "You may use your current login (%s) and password to view them.\n"
-msgstr ""
-"يمكنك استخدام معلومات تسجيل الدخول الخاصة بك الحالية(%s) وكلمة المرور "
-"لعرضها.\n"
+msgstr "يمكنك استخدام معلومات تسجيل الدخول الخاصة بك الحالية(%s) وكلمة المرور لعرضها.\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:643
@@ -633,7 +621,7 @@ msgstr ""
 #: view:share.wizard:share.share_step0_form
 #: view:share.wizard:share.share_step1_form
 msgid "or"
-msgstr ""
+msgstr "أو"
 
 #. module: share
 #: field:share.wizard.result.line,user_id:0

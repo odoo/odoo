@@ -68,7 +68,7 @@ from pprint import pformat
 from weakref import WeakSet
 from werkzeug.local import Local, release_local
 
-from openerp.tools import frozendict
+from openerp.tools import frozendict, classproperty
 
 _logger = logging.getLogger(__name__)
 
@@ -638,7 +638,7 @@ def guess(method):
                         return cr_uid_ids_context(method)
                     else:
                         return cr_uid_ids(method)
-                elif names[3] == 'id':
+                elif names[3] == 'id' or names[3] == 'res_id':
                     if 'context' in names or kwname:
                         return cr_uid_id_context(method)
                     else:
@@ -674,6 +674,10 @@ class Environment(object):
     """
     _local = Local()
 
+    @classproperty
+    def envs(cls):
+        return cls._local.environments
+
     @classmethod
     @contextmanager
     def manage(cls):
@@ -699,7 +703,7 @@ class Environment(object):
         args = (cr, uid, context)
 
         # if env already exists, return it
-        env, envs = None, cls._local.environments
+        env, envs = None, cls.envs
         for env in envs:
             if env.args == args:
                 return env
@@ -845,8 +849,7 @@ class Environment(object):
     def add_todo(self, field, records):
         """ Mark `field` to be recomputed on `records`. """
         recs_list = self.all.todo.setdefault(field, [])
-        # use user admin for accessing records without access rights issues
-        recs_list.append(records.sudo())
+        recs_list.append(records)
 
     def remove_todo(self, field, records):
         """ Mark `field` as recomputed on `records`. """
@@ -891,6 +894,26 @@ class Environment(object):
         if invalids:
             raise Warning('Invalid cache for fields\n' + pformat(invalids))
 
+    @property
+    def recompute(self):
+        return self.all.recompute
+
+    @contextmanager
+    def norecompute(self):
+        tmp = self.all.recompute
+        self.all.recompute = False
+        try:
+            yield
+        finally:
+            self.all.recompute = tmp
+
+    @property
+    def recompute_old(self):
+        return self.all.recompute_old
+
+    def clear_recompute_old(self):
+        del self.all.recompute_old[:]
+
 
 class Environments(object):
     """ A common object for all environments in a request. """
@@ -898,6 +921,8 @@ class Environments(object):
         self.envs = WeakSet()           # weak set of environments
         self.todo = {}                  # recomputations {field: [records]}
         self.mode = False               # flag for draft/onchange
+        self.recompute = True
+        self.recompute_old = []        # list of old api compute fields to recompute
 
     def add(self, env):
         """ Add the environment `env`. """

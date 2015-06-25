@@ -452,7 +452,7 @@ class TestTemplating(ViewCase):
     def setUp(self):
         import openerp.modules
         super(TestTemplating, self).setUp()
-        self._pool = openerp.modules.registry.RegistryManager.get(common.DB)
+        self._pool = openerp.modules.registry.RegistryManager.get(common.get_db_name())
         self._init = self._pool._init
         # fuck off
         self._pool._init = False
@@ -680,6 +680,20 @@ class test_views(ViewCase):
             arch="""<?xml version="1.0"?>
                         <xpath expr="//field[@name='url']" position="before">
                           <field name="name"/>
+                        </xpath>
+                    """,
+        )
+        self.assertTrue(validate())     # inherited view
+
+        # validation of a second inherited view (depending on 1st)
+        self._insert_view(
+            name='inherited view 2',
+            model=model,
+            priority=5,
+            inherit_id=vid,
+            arch="""<?xml version="1.0"?>
+                        <xpath expr="//field[@name='name']" position="after">
+                          <field name="target"/>
                         </xpath>
                     """,
         )

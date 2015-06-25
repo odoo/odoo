@@ -230,8 +230,8 @@ Possible children elements of the list view are:
         Possible attributes are ``invisible`` (hides the button) and
         ``readonly`` (disables the button but still shows it)
     ``states``
-        shorthand for ``invisible`` ``attrs``: a list of space, separated
-        states, requires that the model has a ``state`` field and that it is
+        shorthand for ``invisible`` ``attrs``: a list of states, comma separated,
+        requires that the model has a ``state`` field and that it is
         used in the view.
 
         Makes the button ``invisible`` if the record is *not* in one of the
@@ -851,7 +851,9 @@ Possible children of the view element are:
     an object with all the requested fields as its attributes. Each field has
     two attributes ``value`` and ``raw_value``, the former is formatted
     according to current user parameters, the latter is the direct value from
-    a :meth:`~openerp.models.Model.read`
+    a :meth:`~openerp.models.Model.read` (except for date and datetime fields
+    that are `formatted according to user's locale
+    <https://github.com/odoo/odoo/blob/8.0/addons/web_kanban/static/src/js/kanban.js#L900>`_)
   ``read_only_mode``
     self-explanatory
 
