@@ -40,11 +40,19 @@ options.registry.gallery = options.Class.extend({
     drop_and_build_snippet: function() {
         var uuid = 0;
         $(".carousel").each(function () {
-            var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/, ''));
+            var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/g, ''));
             if (id > uuid) uuid = id;
         });
         this.$target.find('.carousel').attr('id', 'slideshow_'+ (uuid+1));
         this.$target.find('[data-target]').attr('data-target', '#slideshow_'+ (uuid+1));
+    },
+    on_focus: function() {
+        this._super();
+        if(!this.$target.find("img").length) {
+            this.images_rm("click");
+        } else {
+            this.reset();
+        }
     },
     styling  : function(type, value) {
         var classes = this.$el.find('li[data-styling]').map(function () {
@@ -76,7 +84,8 @@ options.registry.gallery = options.Class.extend({
                 $parent.addClass("saved_active");
                 var index = self.$target.find(".item.saved_active").index();
                 $parent.removeClass("saved_active");
-                self.$target.find(".carousel:first li[data-target]:eq("+index+")").css("background-image", "url("+$(img).attr("src")+")");
+                var $thumb = self.$target.find(".carousel:first li[data-target]:eq("+index+")");
+                $thumb.attr("style", 'background-image: url(' + $(img).attr("src") + ')' + ($thumb.attr("style") || '').replace(/background-image:[^;]+/, ''));
             });
     },
     get_imgs: function () {
@@ -197,14 +206,14 @@ options.registry.gallery = options.Class.extend({
             urls = $imgs.map(function() { return $(this).attr("src"); } ).get(),
             uuid = 0;
         $(".carousel").each(function () {
-            var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/, ''));
+            var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/g, ''));
             if (id > uuid) uuid = id;
         });
         var params = {
                 srcs : urls,
-                index: 1,
+                index: urls.length ? urls.length - 1 : 1,
                 title: "",
-                interval : this.$target.data("interval") || false,
+                interval : this.$target.find('.carousel:first').attr("data-interval") || false,
                 id: "slideshow_" + (uuid+1)
             },
             $slideshow = $(qweb.render('website.gallery.slideshow', params));

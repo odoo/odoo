@@ -177,6 +177,7 @@ var MediaDialog = Dialog.extend({
         }
 
         $(document.body).trigger("media-saved", [self.active.media, self.old_media]);
+        $(self.old_media).trigger("saved", [self.active.media, self.old_media]);
         self.trigger("saved", [self.active.media, self.old_media]);
         setTimeout(function () {
             if (!self.active.media.parentNode) {
