@@ -31,7 +31,7 @@ class OgoneController(http.Controller):
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public')
     def ogone_s2s_create_json(self, **kwargs):
-        data = kwargs['params']
+        data = kwargs
         acquirer_id = int(data.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         new_id = acquirer.s2s_process(data)
