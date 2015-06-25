@@ -39,11 +39,11 @@
                     <td>
                             <t t-if="ticket.price or editable">
                               <t t-if="(ticket.price-ticket.price_reduce) &gt; 1">
-                                <del class="text-danger" style="white-space: nowrap;" t-field="ticket.price" t-field-options='{
+                                <del class="text-danger mr4" style="white-space: nowrap;" t-field="ticket.price" t-field-options='{
                                   "widget": "monetary",
                                   "from_currency": "website.currency_id",
                                   "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                                }'/>&amp;nbsp;
+                                }'/>
                               </t>
                               <span t-field="ticket.price_reduce" t-field-options='{
                                "widget": "monetary",

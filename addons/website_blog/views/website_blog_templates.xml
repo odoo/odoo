@@ -61,16 +61,15 @@
                         <h4>
                             <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
-                                &amp;nbsp;
-                                <span class="fa fa-exclamation-triangle" title="Not published"/>
+                                <span class="fa fa-exclamation-triangle ml8" title="Not published"/>
                             </span>
                         </h4>
                         <div class="text-muted">
-                            <span class="fa fa-calendar"> <span t-field="post.create_date"/> &amp;nbsp;</span>
+                            <span class="fa fa-calendar mr8"> <span t-field="post.create_date"/></span>
                             <span class="fa fa-folder-open"> In
-                                <a t-attf-href="#{blog_url(blog=post.blog_id)}">
+                                <a class="mr8" t-attf-href="#{blog_url(blog=post.blog_id)}">
                                 <span t-field="post.blog_id"/>
-                                </a> &amp;nbsp;
+                                </a>
                             </span>
                         </div>
                         <div class="text-muted fa fa-tags">
@@ -177,7 +176,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/> &amp;nbsp;
+                <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
             </t>
         </p>
     </xpath>
@@ -336,7 +335,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/> &amp;nbsp;
+                <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
             </t>
         </p>
     </xpath>
