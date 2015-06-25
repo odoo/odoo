@@ -39,7 +39,7 @@ Static Page
 Creating a new template
 '''''''''''''''''''''''
 
-Create a new file :file:`odoo/addons/theme_dummy/views/pages.xml` and open it.
+Create a new file :file:`odoo/addons/dummy_theme/views/pages.xml` and open it.
 
 In odoo, a page means a new template. You don't need special skills, simply
 copy paste the lines::
@@ -101,8 +101,8 @@ Pimp Your Theme
 Easy styling with less
 ''''''''''''''''''''''
 
-In ``odoo/addons/theme_dummy/static`` create a new folder and name it
-``style``. In the new folder ``odoo/addons/theme_dummy/static/style`` create a
+In ``odoo/addons/dummy_theme/static`` create a new folder and name it
+``style``. In the new folder ``odoo/addons/dummy_theme/static/style`` create a
 file and name it ``custom.less``. Open ``custom.less`` in the text editor and
 modify these lines as below:
 
@@ -147,7 +147,7 @@ container. Here we try with the 'wrapwrap' id.
 Easy layout with bootstrap
 ''''''''''''''''''''''''''
 
-Open :file:`odoo/addons/theme_dummy/views/pages.xml` and add a new section::
+Open :file:`odoo/addons/dummy_theme/views/pages.xml` and add a new section::
 
   <section>
       <div class="container">
@@ -169,7 +169,7 @@ Refresh the page and check how it looks.
 
 The background of the alert component is the default Bootstrap primary color.
 The two other div your created have no custom styles applied yet.  Open
-:file:`odoo/addons/theme_dummy/static/style/custom.less` and add these lines:
+:file:`odoo/addons/dummy_theme/static/style/custom.less` and add these lines:
 
 .. code-block:: css
 
@@ -236,7 +236,7 @@ the class ``oe_snippet_thumbnail`` and add your thumbnail image (100x79px)::
   <xpath expr="//div[@id='snippet_structure']" position="inside">
       <div>
           <div class="oe_snippet_thumbnail">
-              <img class="oe_snippet_thumbnail_img" src="/theme_Dummy/static/img/blocks/block_title.png"/>
+              <img class="oe_snippet_thumbnail_img" src="/dummy_theme/static/img/blocks/block_title.png"/>
               <span class="oe_snippet_thumbnail_title">SNIP IT!</span>
           </div>
       </div>
@@ -255,7 +255,7 @@ rows to hold your content. Please refer the the Bootstrap documentation::
   <xpath expr="//div[@id='snippet_structure']" position="inside">
       <div>
           <div class="oe_snippet_thumbnail">
-              <img class="oe_snippet_thumbnail_img" src="/theme_Dummy/static/img/blocks/block_title.png"/>
+              <img class="oe_snippet_thumbnail_img" src="/dummy_theme/static/img/blocks/block_title.png"/>
               <span class="oe_snippet_thumbnail_title">SNIP IT!</span>
           </div>
 
@@ -283,8 +283,8 @@ Adding images to your snippet
 You can easely add images in your snippets simply by setting up css
 backgrounds images.
 
-Put your images in ``odoo/addons/theme_dummy/static/img``, or in sub-folders
-if needed. Open :file:`odoo/addons/theme_dummy/static/style/custom.less`, add
+Put your images in ``odoo/addons/dummy_theme/static/img``, or in sub-folders
+if needed. Open :file:`odoo/addons/dummy_theme/static/style/custom.less`, add
 these lines
 
 .. code-block:: css
@@ -297,7 +297,7 @@ these lines
 
 Add also the ``width`` and the ``height`` css attributes to theses new classes.
 
-In :file:`odoo/addons/theme_dummy/views/pages.xml` change the correspondant
+In :file:`odoo/addons/dummy_theme/views/pages.xml` change the correspondant
 lines as below::
 
   <div class="row">
@@ -324,7 +324,7 @@ Understanding XPath
 
 As your stylesheets are running on the whole website, giving more option to
 your snippets and applying them independently will push your design
-forward. In ``odoo/addons/theme_dummy/views/`` create a new file, name it
+forward. In ``odoo/addons/dummy_theme/views/`` create a new file, name it
 ``options.xml`` and add these lines::
 
     <template id="gourman_website_options_pattern" inherit_id="website.snippet_options">
@@ -379,7 +379,7 @@ XPath & inherits
 You can also add images in your variables and use them on certain part of your
 pages, snippets or any html element.
 
-In :file:`odoo/addons/theme_dummy/static/style/custom.css` add these new lines
+In :file:`odoo/addons/dummy_theme/static/style/custom.css` add these new lines
 
 .. code:: css
 
@@ -392,7 +392,7 @@ In :file:`odoo/addons/theme_dummy/static/style/custom.css` add these new lines
 Now that you have set the background image, you can decide how and where the
 user can use it, for example, on a simple div.
 
-Open :file:`odoo/addons/theme_dummy/views/options.xml` and add this new xpath::
+Open :file:`odoo/addons/dummy_theme/views/options.xml` and add this new xpath::
 
   <xpath expr="//div[@data-option='background-dummy']//ul" position="after">
       <ul class="dropdown-menu">
@@ -405,14 +405,14 @@ Open :file:`odoo/addons/theme_dummy/views/options.xml` and add this new xpath::
 Your option is ready to be applied but you want it to be shown only a certain
 part of a snippet.
 
-Open :file:`odoo/addons/theme_dummy/views/snippets.xml` and add a new snippet
+Open :file:`odoo/addons/dummy_theme/views/snippets.xml` and add a new snippet
 with the method we learned previously::
 
     <xpath expr="//div[@id='snippet_structure']" position="inside">
         <div>
         <!-- Add a Thumbnail in the Website Builder drop-down menu -->
             <div class="oe_snippet_thumbnail">
-                <img class="oe_snippet_thumbnail_img" src="/theme_Dummy/static/img/blocks/block_title.png"/>
+                <img class="oe_snippet_thumbnail_img" src="/dummy_theme/static/img/blocks/block_title.png"/>
                 <span class="oe_snippet_thumbnail_title">Test OPTION</span>
             </div>
         <!-- Your Snippet content -->
@@ -458,7 +458,7 @@ design.  Do not use the Media Manager uploading Tool to add image in your
 theme. The images url's will be lost on reload!  Instead of uploading your
 images, you can create your own library and disable the old ones.
 
-In ``odoo/addons/theme_dummy/views/`` create a new file, name it
+In ``odoo/addons/dummy_theme/views/`` create a new file, name it
 ``images.xml`` and add these lines::
 
   <record id="image_bg_blue" model="ir.attachment">
