@@ -1148,6 +1148,8 @@ class account_invoice(osv.Model):
 
     _columns = {
         'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id'),
+        'sale_ids': fields.many2many('sale.order', 'sale_order_invoice_rel', 'invoice_id', 'order_id', 'Sale Orders',
+                             readonly=True, copy=False, help="This is the list of sale orders related to this invoice. One invoice may have multiple sale orders related. "),
     }
 
     _defaults = {
@@ -1172,6 +1174,15 @@ class account_invoice(osv.Model):
             for id in ids:
                 workflow.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
         return super(account_invoice, self).unlink(cr, uid, ids, context=context)
+
+
+class account_invoice_line(osv.Model):
+    _inherit = 'account.invoice.line'
+
+    _columns= {
+        'sale_line_ids': fields.many2many('sale.order.line', 'sale_order_line_invoice_rel', 'invoice_id', 'order_line_id',
+                                          'Sale Order Lines', readonly=True, copy=False)
+    }
 
 
 class procurement_order(osv.osv):

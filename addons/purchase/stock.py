@@ -46,43 +46,14 @@ class stock_move(osv.osv):
             default['purchase_line_id'] = False
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
-    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
-        if move.purchase_line_id:
-            invoice_line_vals['purchase_line_id'] = move.purchase_line_id.id
-            invoice_line_vals['account_analytic_id'] = move.purchase_line_id.account_analytic_id.id or False
-        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
-        if move.purchase_line_id:
-            purchase_line = move.purchase_line_id
-            self.pool.get('purchase.order.line').write(cr, uid, [purchase_line.id], {
-                'invoice_lines': [(4, invoice_line_id)]
-            }, context=context)
-            self.pool.get('purchase.order').write(cr, uid, [purchase_line.order_id.id], {
-                'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
-            })
-            purchase_line_obj = self.pool.get('purchase.order.line')
-            purchase_obj = self.pool.get('purchase.order')
-            invoice_line_obj = self.pool.get('account.invoice.line')
-            purchase_id = move.purchase_line_id.order_id.id
-            purchase_line_ids = purchase_line_obj.search(cr, uid, [('order_id', '=', purchase_id), ('invoice_lines', '=', False), '|', ('product_id', '=', False), ('product_id.type', '=', 'service')], context=context)
-            if purchase_line_ids:
-                inv_lines = []
-                for po_line in purchase_line_obj.browse(cr, uid, purchase_line_ids, context=context):
-                    acc_id = purchase_obj._choose_account_from_po_line(cr, uid, po_line, context=context)
-                    inv_line_data = purchase_obj._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
-                    inv_line_id = invoice_line_obj.create(cr, uid, inv_line_data, context=context)
-                    inv_lines.append(inv_line_id)
-                    po_line.write({'invoice_lines': [(4, inv_line_id)]})
-                invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_line_vals['invoice_id']}, context=context)
-        return invoice_line_id
-
-    def _get_master_data(self, cr, uid, move, company, context=None):
-        if context.get('inv_type') == 'in_invoice' and move.purchase_line_id:
+    def _get_master_data(self, cr, uid, move, inv_type, context=None):
+        if inv_type == 'in_invoice' and move.purchase_line_id:
             purchase_order = move.purchase_line_id.order_id
             return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-        if context.get('inv_type') == 'in_refund' and move.origin_returned_move_id.purchase_line_id:
+        if inv_type == 'in_refund' and move.origin_returned_move_id.purchase_line_id:
             purchase_order = move.origin_returned_move_id.purchase_line_id.order_id
             return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-        elif context.get('inv_type') in ('in_invoice', 'in_refund') and move.picking_id:
+        elif inv_type in ('in_invoice', 'in_refund') and move.picking_id:
             # In case of an extra move, it is better to use the data from the original moves
             for purchase_move in move.picking_id.move_lines:
                 if purchase_move.purchase_line_id:
@@ -94,19 +65,20 @@ class stock_move(osv.osv):
             if partner and partner.property_product_pricelist_purchase and code == 'incoming':
                 currency = partner.property_product_pricelist_purchase.currency_id.id
                 return partner, uid, currency
-        return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
-
+        return super(stock_move, self)._get_master_data(cr, uid, move, inv_type, context=context)
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        purchase_line = False
         if inv_type == 'in_invoice' and move.purchase_line_id:
             purchase_line = move.purchase_line_id
-            res['invoice_line_tax_ids'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
-            res['price_unit'] = purchase_line.price_unit
         elif inv_type == 'in_refund' and move.origin_returned_move_id.purchase_line_id:
             purchase_line = move.origin_returned_move_id.purchase_line_id
-            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
+        if purchase_line:
+            res['invoice_line_tax_ids'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
+            res['account_analytic_id'] = purchase_line.account_analytic_id.id
+            res['purchase_line_ids'] = [(4, purchase_line.id)]
         return res
 
     def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
@@ -122,7 +94,7 @@ class stock_move(osv.osv):
                         mov = self.browse(cr, uid, mov_id[0], context=context)
                         fp = mov.purchase_line_id.order_id.fiscal_position
                         res = self.pool.get("account.invoice.line").product_id_change(cr, uid, [], move.product_id.id, None, partner_id=move.picking_id.partner_id.id, fposition_id=(fp and fp.id), type='in_invoice', context=context)
-                        extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_id'])]
+                        extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_ids'])]
         return (is_extra_move, extra_move_tax)
 
 
@@ -187,22 +159,36 @@ class stock_picking(osv.osv):
                }),
     }
 
-    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
-        purchase_obj = self.pool.get("purchase.order")
-        purchase_line_obj = self.pool.get('purchase.order.line')
-        invoice_line_obj = self.pool.get('account.invoice.line')
-        invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
-        return invoice_id
-
-    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
-        inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
-        if move.purchase_line_id and move.purchase_line_id.order_id:
-            purchase = move.purchase_line_id.order_id
-            inv_vals.update({
-                'fiscal_position_id': purchase.fiscal_position_id.id,
-                'payment_term_id': purchase.payment_term_id.id,
-                })
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, moves, context=None):
+        inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, moves, context=context)
+        purchases = []
+        for move in moves:
+            if move.purchase_line_id or move.origin_returned_move_id.purchase_line_id:
+                purchase = move.purchase_line_id.order_id or move.origin_returned_move_id.purchase_line_id.order_id
+                inv_vals.update({
+                    'fiscal_position_id': purchase.fiscal_position_id.id,
+                    'payment_term_id': purchase.payment_term_id.id,
+                    })
+                purchases.append(purchase.id)
+        if purchases:
+            inv_vals['purchase_ids'] = [(6, 0, list(set(purchases)))]
         return inv_vals
+
+    def get_service_line_vals(self, cr, uid, moves, partner, inv_type, context=None):
+        purchase_obj = self.pool['purchase.order']
+        purchase_line_obj = self.pool['purchase.order.line']
+        res = super(stock_picking, self).get_service_line_vals(cr, uid, moves, partner, inv_type, context=context)
+        # Add service lines for purchases
+        if inv_type == 'in_invoice':
+            purchase_ids = list(set([x.purchase_line_id.order_id.id for x in moves if x.purchase_line_id]))
+            purchase_line_ids = purchase_line_obj.search(cr, uid, [('order_id', 'in', purchase_ids), ('invoice_lines', '=', False), '|', ('product_id', '=', False),
+                                                                   ('product_id.type', '=', 'service')], context=context)
+            for po_line in purchase_line_obj.browse(cr, uid, purchase_line_ids, context=context):
+                acc_id = purchase_obj._choose_account_from_po_line(cr, uid, po_line, context=context)
+                inv_line_data = purchase_obj._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
+                inv_line_data['purchase_line_ids'] = [(4, po_line.id)]
+                res += [(0, 0, inv_line_data)]
+        return res
 
 
 class stock_warehouse(osv.osv):

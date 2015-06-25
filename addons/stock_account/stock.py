@@ -72,18 +72,13 @@ class stock_move(osv.osv):
         'invoice_state': lambda *args, **argv: 'none'
     }
 
-    def _get_master_data(self, cr, uid, move, company, context=None):
+    def _get_master_data(self, cr, uid, move, inv_type, context=None):
         ''' returns a tuple (browse_record(res.partner), ID(res.users), ID(res.currency)'''
-        currency = company.currency_id.id
+        currency = move.company_id.currency_id.id
         partner = move.picking_id and move.picking_id.partner_id
-        if partner:
-            code = self.get_code_from_locs(cr, uid, move, context=context)
-            if partner.property_product_pricelist and code == 'outgoing':
-                currency = partner.property_product_pricelist.currency_id.id
+        if partner and partner.property_product_pricelist and inv_type in ('out_invoice', 'out_refund'):
+            currency = partner.property_product_pricelist.currency_id.id
         return partner, uid, currency
-
-    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
-        return self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
 
     def _get_price_unit_invoice(self, cr, uid, move_line, type, context=None):
         """ Gets price unit for invoice
@@ -263,7 +258,7 @@ class stock_picking(osv.osv):
                                 self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
         return invoices
 
-    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, moves, context=None):
         if context is None:
             context = {}
         partner, currency_id, company_id, user_id = key
@@ -273,12 +268,8 @@ class stock_picking(osv.osv):
         else:
             account_id = partner.property_account_payable_id.id
             payment_term = partner.property_supplier_payment_term_id.id or False
-        if not move.origin:
-            origin = move.picking_id.name
-        else:
-            origin = move.picking_id.name + ', ' + move.origin
         return {
-            'origin': origin,
+            'origin': ','.join(list(set([x.picking_id.name for x in moves]))),
             'date_invoice': context.get('date_inv', False),
             'user_id': user_id,
             'partner_id': partner.id,
@@ -291,55 +282,58 @@ class stock_picking(osv.osv):
             'journal_id': journal_id,
         }
 
+    def get_service_line_vals(self, cr, uid, moves, partner, inv_type, context=None):
+        return []
+
     def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
         invoice_obj = self.pool.get('account.invoice')
         move_obj = self.pool.get('stock.move')
         invoices = {}
         is_extra_move, extra_move_tax = move_obj._get_moves_taxes(cr, uid, moves, inv_type, context=context)
+
         product_price_unit = {}
+        invoices_moves = {}
         for move in moves:
             company = move.company_id
             origin = move.picking_id.name
-            partner, _user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
-
+            partner, _user_id, currency_id = move_obj._get_master_data(cr, uid, move, inv_type, context=context)
             # Force user_id to be current user, to avoid creating multiple invoices when lines
             # have been sold by different salesmen
             _user_id = uid
-
             key = (partner, currency_id, company.id, _user_id)
-            invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
-            if key not in invoices:
-                # Get account and payment terms
-                invoice_id = self._create_invoice_from_picking(cr, uid, move.picking_id, invoice_vals, context=context)
-                invoices[key] = invoice_id
+            if key not in invoices_moves:
+                invoices_moves[key] = [move]
             else:
-                invoice = invoice_obj.browse(cr, uid, invoices[key], context=context)
-                if not invoice.origin or invoice_vals['origin'] not in invoice.origin.split(', '):
-                    elements = (invoice.origin or '').split(',') + (invoice_vals['origin'] or '').split(',')
-                    invoice_origin = ', '.join(set(e.strip() for e in elements))
-                    invoice.write({'origin': invoice_origin})
+                invoices_moves[key] += [move]
 
-            invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-            invoice_line_vals['invoice_id'] = invoices[key]
-            invoice_line_vals['origin'] = origin
-            if not is_extra_move[move.id]:
-                product_price_unit[invoice_line_vals['product_id'], invoice_line_vals['uos_id']] = invoice_line_vals['price_unit']
-            if is_extra_move[move.id] and (invoice_line_vals['product_id'], invoice_line_vals['uos_id']) in product_price_unit:
-                invoice_line_vals['price_unit'] = product_price_unit[invoice_line_vals['product_id'], invoice_line_vals['uos_id']]
-            if is_extra_move[move.id]:
-                desc = (inv_type in ('out_invoice', 'out_refund') and move.product_id.product_tmpl_id.description_sale) or \
-                    (inv_type in ('in_invoice','in_refund') and move.product_id.product_tmpl_id.description_purchase)
-                invoice_line_vals['name'] += ' ' + desc if desc else ''
-                if extra_move_tax[move.picking_id, move.product_id]:
-                    invoice_line_vals['invoice_line_tax_ids'] = extra_move_tax[move.picking_id, move.product_id]
-                #the default product taxes
-                elif (0, move.product_id) in extra_move_tax:
-                    invoice_line_vals['invoice_line_tax_ids'] = extra_move_tax[0, move.product_id]
-
-            move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
-            move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
-
-        return invoices.values()
+        inv_moves={}
+        for key in invoices_moves.keys():
+            moves_key = invoices_moves[key]
+            invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, moves_key, context=context)
+            partner = key[0]
+            invoice_line_vals = []
+            for move in moves_key:
+                line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+                if not is_extra_move[move.id]:
+                    product_price_unit[line_vals['product_id'], line_vals['uos_id']] = line_vals['price_unit']
+                if is_extra_move[move.id] and (line_vals['product_id'], line_vals['uos_id']) in product_price_unit:
+                    line_vals['price_unit'] = product_price_unit[line_vals['product_id'], line_vals['uos_id']]
+                if is_extra_move[move.id]:
+                    desc = (inv_type in ('out_invoice', 'out_refund') and move.product_id.product_tmpl_id.description_sale) or \
+                        (inv_type in ('in_invoice','in_refund') and move.product_id.product_tmpl_id.description_purchase)
+                    line_vals['name'] += ' ' + desc if desc else ''
+                    if extra_move_tax[move.picking_id, move.product_id]:
+                        line_vals['invoice_line_tax_ids'] = extra_move_tax[move.picking_id, move.product_id]
+                    #the default product taxes
+                    elif (0, move.product_id) in extra_move_tax:
+                        line_vals['invoice_line_tax_ids'] = extra_move_tax[0, move.product_id]
+                invoice_line_vals += [(0, 0, line_vals)]
+            invoice_vals['invoice_line_ids'] = invoice_line_vals
+            invoice_vals['invoice_line_ids'] += self.get_service_line_vals(cr, uid, moves_key, partner, inv_type, context=context)
+            invoice_id = invoice_obj.create(cr, uid, invoice_vals, context=context)
+            move_obj.write(cr, uid, [x.id for x in moves_key], {'invoice_state': 'invoiced'}, context=context)
+            inv_moves[invoice_id] = moves_key
+        return inv_moves
 
     def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
         """

@@ -78,7 +78,7 @@ class StockPicking(models.Model):
             'account_id': account_id,
             'price_unit': price,
             'quantity': 1,
-            'invoice_line_tax_id': [(6, 0, taxes_ids)],
+            'invoice_line_tax_ids': [(6, 0, taxes_ids)],
         }
 
         return res
