@@ -39,7 +39,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="get_lines(data['form']['based_on'], data['form']['company_id'])" t-as="taxline">
+                        <tr t-foreach="get_lines(data['form']['based_on'], data['form']['company_id'], data['form']['chart_tax_id'])" t-as="taxline">
                             <t t-if="len(taxline['level']) > 5">
                                 <t t-set="style" t-value="'font-weight:normal;'"/>
                             </t>
