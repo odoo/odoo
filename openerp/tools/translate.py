@@ -219,8 +219,13 @@ class XMLTranslator(object):
 
     def process(self, node):
         """ Process the given xml `node`: collect `todo` and `done` items. """
-        if isinstance(node, SKIPPED_ELEMENT_TYPES) or node.tag in SKIPPED_ELEMENTS:
-            # serialize the node as done, but keep its tail as todo
+        if (
+            isinstance(node, SKIPPED_ELEMENT_TYPES) or
+            node.tag in SKIPPED_ELEMENTS or
+            node.get("translation", "").strip() == "off" or
+            node.tag == "attribute" and node.get("name") not in TRANSLATED_ATTRS
+        ):
+            # do not translate the contents of the node
             tail, node.tail = node.tail, None
             self.done(etree.tostring(node))
             self.todo(escape(tail or ""))

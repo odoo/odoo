@@ -96,3 +96,28 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms,
             ['stuff before', 'stuff after'])
+
+    def test_translate_xml_off(self):
+        """ Test xml_translate() with attribute translate="off". """
+        terms = []
+        source = """<div>
+                        stuff before
+                        <div translation="off">Do not translate this</div>
+                        stuff after
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms,
+            ['stuff before', 'stuff after'])
+
+    def test_translate_xml_attribute(self):
+        """ Test xml_translate() with <attribute> elements. """
+        terms = []
+        source = """<field name="foo" position="attributes">
+                        <attribute name="string">Translate this</attribute>
+                        <attribute name="option">Do not translate this</attribute>
+                    </field>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms,
+            ['Translate this'])
