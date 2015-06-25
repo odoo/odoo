@@ -689,7 +689,8 @@ class pos_order(osv.osv):
                 val1 += self._amount_line_tax(cr, uid, line, context=context)
                 val2 += line.price_subtotal
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1)
-            res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1+val2)
+            amount_untaxed = cur_obj.round(cr, uid, cur, val2)
+            res[order.id]['amount_total'] = res[order.id]['amount_tax'] + amount_untaxed
         return res
 
     _columns = {
