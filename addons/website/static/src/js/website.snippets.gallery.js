@@ -1,7 +1,9 @@
 odoo.define('website.snippets.gallery', function (require) {
 'use strict';
 
+var animation = require('website.snippets.animation');
 var core = require('web.core');
+var editor = require('website.editor');
 var snippets_editor = require('website.snippets.editor');
 var website = require('website.website');
 
@@ -19,6 +21,14 @@ website.add_template_file('/website/static/src/xml/website.gallery.xml');
   This is the snippet responsible for configuring the image galleries.
   Look at /website/views/snippets.xml for the available options
   ------------------------------------------------------------------------*/
+editor.MediaDialog.include({
+    save: function() {
+        this._super();
+        var slide = $(this.active.media).parents(".carousel");
+        if(slide)
+            slide.find("li.active[data-slide-to]").css("background-image", "url(" + $(this.media).attr("src") + ")");
+    },
+});
 snippets_editor.options.gallery = snippets_editor.Option.extend({
     start  : function() {
         this._super();
@@ -36,7 +46,7 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
     drop_and_build_snippet: function() {
         var uuid = 0;
         $(".carousel").each(function () {
-            var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/, ''));
+            var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/g, ''));
             if (id > uuid) uuid = id;
         });
         this.$target.find('.carousel').attr('id', 'slideshow_'+ (uuid+1));
@@ -193,14 +203,14 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
             urls = $imgs.map(function() { return $(this).attr("src"); } ).get(),
             uuid = 0;
         $(".carousel").each(function () {
-            var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/, ''));
+            var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/g, ''));
             if (id > uuid) uuid = id;
         });
         var params = {
                 srcs : urls,
-                index: 1,
+                index: urls.length ? urls.length - 1 : 1,
                 title: "",
-                interval : this.$target.data("interval") || false,
+                interval : this.$target.find('.carousel:first').attr("data-interval") || false,
                 id: "slideshow_" + (uuid+1)
             },
             $slideshow = $(QWeb.render('website.gallery.slideshow', params));
@@ -214,7 +224,7 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$target.find('li.fa').off('click');
         if (this.$target.data("snippet-view", view)) {
-            var view = new website.snippet.animationRegistry.gallery_slider(this.$target, true);
+            var view = new animation.registry.gallery_slider(this.$target, true);
             this.$target.data("snippet-view", view);
         } else {
             this.$target.data("snippet-view").start(true);
@@ -231,10 +241,10 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
         if(type !== "click") return;
         var self = this;
         var $container = this.$target.find(".container:first");
-        var editor = new website.editor.MediaDialog(this.$target.closest('.o_editable'), null, {select_images: true});
-        editor.appendTo(document.body);
+        var _editor = new editor.MediaDialog(this.$target.closest('.o_editable'), null, {select_images: true});
+        _editor.appendTo(document.body);
         var index = Math.max(_.map(this.$target.find("img").get(), function (img) { return img.dataset.index | 0; })) + 1;
-        editor.on('saved', this, function (attachments) {
+        _editor.on('saved', this, function (attachments) {
             for (var i = 0 ; i < attachments.length; i++) {
                 var img = $('<img class="img img-responsive mb8 mt8"/>')
                     .attr("src", attachments[i].url)
