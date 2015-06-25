@@ -69,10 +69,10 @@ class delivery_carrier(osv.osv):
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
         'price' : fields.function(get_price, string='Price'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it."),
-        'normal_price': fields.float('Normal Price', help="Keep empty if the pricing depends on the advanced pricing per destination"),
-        'free_if_more_than': fields.boolean('Free If Order Total Amount Is More Than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping"),
-        'amount': fields.float('Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency"),
-        'use_detailed_pricelist': fields.boolean('Advanced Pricing per Destination', help="Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc."),
+        'normal_price': fields.float('Normal Price', help="Base price"),
+        'free_if_more_than': fields.boolean('Free If Order Total Amount Is More Than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping."),
+        'amount': fields.float('Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency."),
+        'use_detailed_pricelist': fields.boolean('Advanced Pricing per Destination', help="Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc. Normal Price and Free If Order Total are ignored when this is selected."),
         'pricelist_ids': fields.one2many('delivery.grid', 'carrier_id', 'Advanced Pricing'),
     }
 
@@ -112,12 +112,6 @@ class delivery_carrier(osv.osv):
             # not using advanced pricing per destination: override grid
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
-            if grid_id and not (record.normal_price or record.free_if_more_than):
-                grid_pool.unlink(cr, uid, grid_id, context=context)
-
-            if not (record.normal_price or record.free_if_more_than):
-                continue
-
             if not grid_id:
                 grid_data = {
                     'name': record.name,
@@ -142,17 +136,18 @@ class delivery_carrier(osv.osv):
                     'list_price': 0.0,
                 }
                 grid_line_pool.create(cr, uid, line_data, context=context)
-            if record.normal_price:
-                line_data = {
-                    'grid_id': grid_id and grid_id[0],
-                    'name': _('Default price'),
-                    'type': 'price',
-                    'operator': '>=',
-                    'max_value': 0.0,
-                    'standard_price': record.normal_price,
-                    'list_price': record.normal_price,
-                }
-                grid_line_pool.create(cr, uid, line_data, context=context)
+
+            line_data = {
+                'grid_id': grid_id and grid_id[0],
+                'name': _('Default price'),
+                'type': 'price',
+                'operator': '>=',
+                'max_value': 0.0,
+                'standard_price': record.normal_price,
+                'list_price': record.normal_price,
+            }
+            grid_line_pool.create(cr, uid, line_data, context=context)
+
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
