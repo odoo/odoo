@@ -50,6 +50,7 @@ var TimelineRecordThread = form_common.AbstractField.extend ({
             'readonly': this.node.attrs.readonly || false,
             'compose_placeholder' : this.node.attrs.placeholder || false,
             'display_log_button' : this.options.display_log_button || true,
+            'internal_subtypes' : this.options.internal_subtypes || [],
             'show_compose_message': true,
             'show_link': this.parent.is_action_enabled('edit') || true,
         }, this.node.params);
@@ -1218,10 +1219,16 @@ var ComposeMessage = Attachment.extend ({
             'content_subtype': 'plaintext',
         };
 
-        if(log){
-            values.subtype = false;
-        }else{
-            values.subtype = 'mail.mt_comment';
+        if (log) {
+            var subtype_id = parseInt(this.$('select').first().val());
+            if (_.indexOf(_.pluck(self.options.internal_subtypes, 'id'), subtype_id) == -1) {
+                values['subtype'] = 'mail.mt_note'
+            }
+            else {
+                values['subtype_id'] = subtype_id;
+            }
+        } else {
+            values['subtype'] = 'mail.mt_comment';
         }
 
         this.parent_thread.ds_thread._model.call('message_post', [this.context.default_res_id], values).done(function (message_id) {

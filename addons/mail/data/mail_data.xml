@@ -68,5 +68,11 @@
             <field name="name">Discussions</field>
             <field name="sequence" eval="0"/>
         </record>
+        <record id="mt_note" model="mail.message.subtype">
+            <field name="name">Note</field>
+            <field name="default" eval="False"/>
+            <field name="internal" eval="True"/>
+            <field name="sequence" eval="100"/>
+        </record>
     </data>
 </openerp>

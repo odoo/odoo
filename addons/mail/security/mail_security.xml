@@ -38,6 +38,13 @@
             <field name="perm_unlink" eval="False"/>
         </record>
 
+        <record id="mail_message_subtype_rule_public" model="ir.rule">
+            <field name="name">mail.message.subtype: portal/public: read public subtypes</field>
+            <field name="model_id" ref="model_mail_message_subtype"/>
+            <field name="domain_force">[('internal', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
+        </record>
+
         <!--
         This rule can not be uncommented, because we have a more wide method in mail.message. When we implement a many2one_variable field, we will be able to uncomment this.
         <record id="mail_message_read_partner_or_author" model="ir.rule">

@@ -10,7 +10,7 @@ class test_portal(TestMail):
         port_msg = self.group_portal.message_post(body='Message')
 
         # Do: Chell comments Pigs, ok because can write on it (public group)
-        self.group_portal.sudo(self.user_portal).message_post(body='I love Pigs')
+        self.group_portal.sudo(self.user_portal).message_post(body='I love Pigs', message_type='comment', subtype='mail.mt_comment')
         # Do: Chell creates a mail.compose.message record on Pigs, because he uses the wizard
         compose = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',

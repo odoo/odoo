@@ -37,10 +37,18 @@
         <div class="o_timeline_msg o_timeline_msg_composer">
             <div class="o_timeline_msg_center">
                 <div class="o_timeline_msg_content">
-                    <button class="oe_full" title="Open the full mail composer">
+                    <button t-if="! widget.is_log" class="oe_full" title="Open the full mail composer">
                         <i class='fa fa-pencil-square-o'/>
                     </button>
                     <t t-call="ThreadListRecipients"/>
+                    <t t-if="widget.is_log and widget.options.internal_subtypes.length > 1">
+                        <label>Activity</label>
+                        <select class="">
+                            <t t-foreach="widget.options.internal_subtypes" t-as="subtype">
+                                <option t-att-value="subtype['id']"><t t-raw="subtype['name']"/></option>
+                            </t>
+                        </select>
+                    </t>
                     <textarea class="field_text"></textarea>
                 </div>
                 <div class="o_timeline_msg_footer">

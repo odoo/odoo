@@ -541,7 +541,7 @@ class Message(models.Model):
                 count=count, access_rights_uid=access_rights_uid)
         # Non-employee see only messages with a subtype (aka, no internal logs)
         if not self.env['res.users'].has_group('base.group_user'):
-            args = ['&', ('subtype_id', '!=', False)] + list(args)
+            args = ['&', '&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)] + list(args)
         # Perform a super with count as False, to have the ids, not a counter
         ids = super(Message, self)._search(
             args, offset=offset, limit=limit, order=order,
@@ -620,7 +620,11 @@ class Message(models.Model):
             return
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env['res.users'].has_group('base.group_user'):
-            self._cr.execute('SELECT DISTINCT id FROM "%s" WHERE message_type = %%s AND subtype_id IS NULL AND id = ANY (%%s)' % (self._table), ('comment', self.ids,))
+            self._cr.execute('''SELECT DISTINCT message.id, message.subtype_id, subtype.internal
+                                FROM "%s" AS message
+                                LEFT JOIN "mail_message_subtype" as subtype
+                                ON message.subtype_id = subtype.id
+                                WHERE message.message_type = %%s AND (message.subtype_id IS NULL OR subtype.internal IS TRUE) AND message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
             if self._cr.fetchall():
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
@@ -783,10 +787,16 @@ class Message(models.Model):
         self.ensure_one()  # tde: not sure, just for testinh, will see
         partners_to_notify = self.env['res.partner']
 
-        # all followers of the mail.message document have to be added as partners and notified if a subtype is defined (otherwise: log message)
+        # all followers of the mail.message document have to be added as partners and notified
+        # and filter to employees only if the subtype is internal
         if self.subtype_id and self.model and self.res_id:
-            followers = self.env['mail.followers'].sudo().search([('res_model', '=', self.model), ('res_id', '=', self.res_id)])
-            partners_to_notify |= followers.filtered(lambda fol: self.subtype_id in fol.subtype_ids).mapped('partner_id')
+            followers = self.env['mail.followers'].sudo().search([
+                ('res_model', '=', self.model),
+                ('res_id', '=', self.res_id)
+            ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
+            if self.subtype_id.internal:
+                followers.filtered(lambda fol: fol.partner_id.user_ids and fol.partner_id.user_ids[0].has_group('base.group_user'))
+            partners_to_notify |= followers.mapped('partner_id')
 
         # remove me from notified partners, unless the message is written on my own wall
         if self.subtype_id and self.author_id and self.model == "res.partner" and self.res_id == self.author_id.id:

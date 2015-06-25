@@ -336,8 +336,17 @@ class MailThread(models.AbstractModel):
         if view_type == 'form':
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='message_ids']"):
+                # the 'Log a note' button is employee only
                 options = json.loads(node.get('options', '{}'))
-                options['display_log_button'] = self.env.user.sudo().has_group('base.group_user')
+                is_employee = self.env.user.has_group('base.group_user')
+                options['display_log_button'] = is_employee
+                if is_employee:
+                    Subtype = self.env['mail.message.subtype'].sudo()
+                    # fetch internal subtypes
+                    internal_subtypes = Subtype.search_read([
+                        ('res_model', 'in', [False, self._name]),
+                        ('internal', '=', True)], ['name', 'description', 'sequence'])
+                    options['internal_subtypes'] = internal_subtypes
                 node.set('options', json.dumps(options))
             res['arch'] = etree.tostring(doc)
         return res
@@ -1552,8 +1561,9 @@ class MailThread(models.AbstractModel):
             attachments, kwargs.pop('attachment_ids', []), model, self.ids and self.ids[0] or None)
 
         # 4: mail.message.subtype
-        subtype_id = False
-        if subtype:
+        subtype_id = kwargs.get('subtype_id', False)
+        if not subtype_id:
+            subtype = subtype or 'mt_note'
             if '.' not in subtype:
                 subtype = 'mail.%s' % subtype
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype)
@@ -1607,8 +1617,10 @@ class MailThread(models.AbstractModel):
 
         # Post-process: subscribe author, update message_last_post
         if model and model != 'mail.thread' and self.ids and subtype_id:
-            # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
-            self.sudo().write({'message_last_post': fields.datetime.now()})
+            subtype_rec = self.env['mail.message.subtype'].sudo().browse(subtype_id)
+            if not subtype_rec.internal:
+                # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
+                self.sudo().write({'message_last_post': fields.Datetime.now()})
         if new_message.author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
             self.message_subscribe([new_message.author_id.id])
         return new_message

@@ -12,6 +12,7 @@ class TestTracking(TestMail):
             return body.replace(' ', '').replace('\n', '')
         Subtype = self.env['mail.message.subtype']
         Data = self.env['ir.model.data']
+        note_subtype = self.env.ref('mail.mt_note')
 
         group_system = self.env.ref('base.group_system')
         group_user = self.env.ref('base.group_user')
@@ -97,7 +98,7 @@ class TestTracking(TestMail):
         self.group_pigs.sudo(self.user_employee).write({'name': 'my_name'})
         self.assertEqual(len(self.group_pigs.message_ids), 1)
         last_msg = self.group_pigs.message_ids[-1]
-        self.assertFalse(last_msg.subtype_id)
+        self.assertEqual(last_msg.subtype_id, note_subtype)
         self.assertEqual(len(last_msg.tracking_value_ids), 1)
         self.assertEqual(last_msg.tracking_value_ids.field, 'name')
         self.assertEqual(last_msg.tracking_value_ids.field_desc, 'Name')

@@ -22,9 +22,14 @@ class MailMessageSubtype(models.Model):
         'Description', translate=True,
         help='Description that will be added in the message posted for this '
              'subtype. If void, the name will be added instead.')
+    internal = fields.Boolean(
+        'Internal Only',
+        help='Messages with internal subtypes will be visible only by employees, aka members of base_user group')
     parent_id = fields.Many2one(
         'mail.message.subtype', string='Parent', ondelete='set null',
-        help='Parent subtype, used for automatic subscription.')
+        help='Parent subtype, used for automatic subscription. This field is not'
+             'correctly named. For example on a project, project subtypes have'
+             'parent_id to task-related subtypes.')
     relation_field = fields.Char(
         'Relation field',
         help='Field used to link the related model to the subtype model when '
