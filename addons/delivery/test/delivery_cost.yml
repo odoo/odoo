@@ -19,9 +19,9 @@
     carrier_id: normal_delivery_carrier
 -
   I add delivery cost in Sale order.
-
 -
   !python {model: sale.order}: |
+    self.pool.get('product.product').write(cr, uid, [ref('product_product_delivery')], {'taxes_id': [(5, 0, 0)]}, context=context) # Removing taxes as this can cause problem (re. price_included)
     self.delivery_set(cr, uid, [ref("sale_normal_delivery_charges")], context=context)
 -
   I check sale order after added delivery cost.
