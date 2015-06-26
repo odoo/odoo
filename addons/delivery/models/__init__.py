@@ -23,7 +23,4 @@ import delivery
 import delivery_carrier
 import partner
 import sale_order
-import sale
 import stock_picking
-import stock
-
