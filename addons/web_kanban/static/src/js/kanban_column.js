@@ -69,25 +69,27 @@ var KanbanColumn = Widget.extend({
         }
         this.$header.tooltip();
 
-        this.update_column();
         this.$el.sortable({
             connectWith: '.o_kanban_group',
-            revert: 150,
+            revert: 0,
             delay: 0,
             items: '> .o_kanban_record',
             helper: 'clone',
             cursor: 'move',
             over: function () {
-                self.folded = false;
+                self.$el.addClass('o_kanban_hover');
                 self.update_column();
+            },
+            out: function () {
+                self.$el.removeClass('o_kanban_hover');
             },
             update: function (event, ui) {
                 var record = ui.item.data('record');
                 var index = self.records.indexOf(record);
                 var test2 = $.contains(self.$el[0], record.$el[0]);
+                record.$el.removeAttr('style');  // jqueryui sortable add display:block inline
                 if (index >= 0 && test2) {
                     // resequencing records
-                    record.$el.removeAttr('style');  // jqueryui sortable add display:block inline
                     self.trigger_up('kanban_column_resequence');
                 } else if (index >= 0 && !test2) {
                     // removing record from this column
@@ -102,6 +104,7 @@ var KanbanColumn = Widget.extend({
                 self.update_column();
             }
         });
+        this.update_column();
         this.$el.click(function (event) {
             if (self.$el.hasClass('o_column_folded')) {
                 event.preventDefault();

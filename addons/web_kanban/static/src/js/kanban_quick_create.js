@@ -50,12 +50,10 @@ var ColumnQuickCreate = Widget.extend({
 
     events: {
         'click .o_kanban_add': function (event) {
-            console.log('click okanbanadd');
             event.stopPropagation();
             this.add_column();
         },
         'click .o_kanban_quick_create': function (event) {
-            console.log('click quickcreate');
             event.stopPropagation();
         },
         'keypress input': function (event) {

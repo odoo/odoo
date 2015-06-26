@@ -48,7 +48,7 @@
         <div class="o_kanban_quick_create">
             <input type="text" placeholder="Add"/>
             <button class="btn btn-primary o_kanban_add">Add</button>
-            <button class="btn btn-default o_kanban_cancel">Cancel</button>
+            <button class="btn btn-default o_kanban_cancel">Discard</button>
         </div>
     </div>
 </t>
@@ -61,7 +61,7 @@
     <div class="o_kanban_quick_create">
         <input type="text" placeholder="Add"/>
         <button class="btn btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-default o_kanban_cancel">Cancel</button>
+        <button class="btn btn-default o_kanban_cancel">Discard</button>
     </div>
 </t>
 
@@ -70,15 +70,6 @@
         <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
     </li>
 </t>
-<div t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
-    <input/>
-    <t t-if="widget._buttons">
-        <div class="oe_kanban_quick_create_buttons">
-            <button class="oe_kanban_quick_create_add">Add</button>
-            or <a href="#" class="oe_kanban_quick_create_close">Cancel</a>
-        </div>
-    </t>
-</div>
 <t t-name="KanbanView.nocontent">
     <div class="oe_view_nocontent">
         <t t-raw="content"/>
