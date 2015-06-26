@@ -36,7 +36,12 @@ class test_portal(TestMail):
         cls.group_portal_id = cls.env.ref('base.group_portal').id
 
         # Create Chell (portal user)
-        cls.user_chell_id = cls.res_users.create(cr, uid, {'name': 'Chell Gladys', 'login': 'chell', 'email': 'chell@gladys.portal', 'groups_id': [(6, 0, [cls.group_portal_id])]})
+        cls.user_chell_id = cls.res_users.create(cr, uid, {
+            'name': 'Chell Gladys',
+            'login': 'chell',
+            'email': 'chell@gladys.portal',
+            'groups_id': [(6, 0, [cls.group_portal_id])]
+        }, {'no_reset_password': True})
         cls.user_chell = cls.res_users.browse(cr, uid, cls.user_chell_id)
         cls.partner_chell_id = cls.user_chell.partner_id.id
 

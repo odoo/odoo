@@ -100,7 +100,7 @@ class TestMail(common.SavepointCase):
             'login': 'raoul',
             'alias_name': 'raoul',
             'groups_id': [(6, 0, [cls.group_employee_id])]
-        })
+        }, {'no_reset_password': True})
         cls.user_bert_id = cls.res_users.create(cr, uid, {
             'name': 'Bert Tartignole',
             'signature': 'SignBert',
@@ -108,7 +108,7 @@ class TestMail(common.SavepointCase):
             'login': 'bert',
             'alias_name': 'bert',
             'groups_id': [(6, 0, [])]
-        })
+        }, {'no_reset_password': True})
         cls.user_raoul = cls.res_users.browse(cr, uid, cls.user_raoul_id)
         cls.user_bert = cls.res_users.browse(cr, uid, cls.user_bert_id)
         cls.user_admin = cls.res_users.browse(cr, uid, uid)

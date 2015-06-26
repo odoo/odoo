@@ -45,19 +45,19 @@ class TestPortalProjectBase(TestProjectBase):
             'login': 'chell',
             'alias_name': 'chell',
             'groups_id': [(6, 0, [self.group_portal_id])]
-        })
+        }, {'no_reset_password': True})
         self.user_public_id = self.res_users.create(cr, uid, {
             'name': 'Donovan Public',
             'login': 'donovan',
             'alias_name': 'donovan',
             'groups_id': [(6, 0, [self.group_public_id])]
-        })
+        }, {'no_reset_password': True})
         self.user_manager_id = self.res_users.create(cr, uid, {
             'name': 'Eustache Manager',
             'login': 'eustache',
             'alias_name': 'eustache',
             'groups_id': [(6, 0, [self.group_project_manager_id])]
-        })
+        }, {'no_reset_password': True})
 
         # Test 'Pigs' project
         self.project_pigs_id = self.project_project.create(cr, uid, {

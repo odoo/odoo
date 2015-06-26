@@ -57,21 +57,21 @@ class TestProjectBase(TestMail):
             'alias_name': 'armande',
             'email': 'armande.projectuser@example.com',
             'groups_id': [(6, 0, [cls.group_employee_id, cls.group_project_user_id])]
-        })
+        }, {'no_reset_password': True})
         cls.user_projectmanager_id = cls.res_users.create(cr, uid, {
             'name': 'Bastien ProjectManager',
             'login': 'bastien',
             'alias_name': 'bastien',
             'email': 'bastien.projectmanager@example.com',
             'groups_id': [(6, 0, [cls.group_employee_id, cls.group_project_manager_id])]
-        })
+        }, {'no_reset_password': True})
         cls.user_none_id = cls.res_users.create(cr, uid, {
             'name': 'Charlie Avotbonkeur',
             'login': 'charlie',
             'alias_name': 'charlie',
             'email': 'charlie.noone@example.com',
             'groups_id': [(6, 0, [])]
-        })
+        }, {'no_reset_password': True})
         cls.user_projectuser = cls.res_users.browse(cr, uid, cls.user_projectuser_id)
         cls.user_projectmanager = cls.res_users.browse(cr, uid, cls.user_projectmanager_id)
         cls.partner_projectuser_id = cls.user_projectuser.partner_id.id
