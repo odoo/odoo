@@ -1286,6 +1286,24 @@ class mrp_production(osv.osv):
                 workflow.trg_validate(uid, 'mrp.production', order.id, 'moves_ready', cr)
         return True
 
+    def action_terminate(self, cr, uid, ids, context=None):
+        """ Terminate the production order and cancel remaining stock moves.
+        @return: True
+        """
+        if context is None:
+            context = {}
+        move_obj = self.pool.get('stock.move')
+        proc_obj = self.pool.get('procurement.order')
+        for production in self.browse(cr, uid, ids, context=context):
+            if production.move_created_ids:
+                move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
+            procs = proc_obj.search(cr, uid, [('move_dest_id', 'in', [x.id for x in production.move_lines])], context=context)
+            if procs:
+                proc_obj.cancel(cr, uid, procs, context=context)
+            move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
+            production.product_qty = sum([x.product_uom_qty for x in production.move_created_ids2 if x.state == 'done'])
+        self.signal_workflow(cr, uid, ids, 'button_produce_terminate')
+        return True
 
 class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
