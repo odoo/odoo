@@ -847,6 +847,8 @@
                         help="Manufacturing Orders which are ready to start production."/>
                     <filter icon="terp-check" string="In Production" name="inprogress" domain="[('state','=','in_production')]"
                         help="Manufacturing Orders which are currently in production."/>
+                    <filter icon="terp-check" string="Produced" name="produced" domain="[('move_created_ids2.state','=','done')]"
+                        help="Manufacturing Orders for which products are already produced."/>
                     <separator/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                         help="Production started late"/>

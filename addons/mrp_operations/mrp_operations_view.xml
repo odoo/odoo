@@ -128,6 +128,8 @@
                 <separator/>
                 <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                     help="Production started late"/>
+                <filter icon="terp-check" string="Produced" name="produced" domain="[('production_id.move_created_ids2.state','=','done')]"
+                    help="Work Orders for which products are already produced."/>
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
                 <group expand="0" string="Group By">
