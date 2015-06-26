@@ -705,7 +705,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             c.add(action.context);
         }
         action.context = c;
-        this.do_execute_action(
+        return this.do_execute_action(
             action, this.dataset, id, _.bind(callback, null, id));
     },
     /**
