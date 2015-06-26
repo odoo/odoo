@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		<record id="view_hr_employee_health_insurance" model="ir.ui.view">
+            <field name="name">hr.employee.form.health.insurance</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page[@string='HR Settings']" position="after">
+					<page string="Health Insurance">
+						<group col="4">
+							 <group>
+								<field name="health"/>
+							 </group>
+							 <group>
+								<field name="date"/>
+							 </group>
+							 <group>
+								<field name="coverage"/>
+							 </group>
+						</group>
+						<field name="employee_coverage_status_ids" nolabel="1">
+							<tree string="Employee Coverate Status">
+					           <field name="status"/>
+					           <field name="dob"/>
+		                       <field name="date_coverage_starts"/>
+		                       <field name="notes"/>
+		                       <field name="hr_employee_id" invisible="1"/>
+		                    </tree>
+		                    <form string="Employee Coverage Status" version="7.0">
+								<group>
+									<group>
+										<field name="status"/>
+										<field name="dob"/>
+									</group>
+									<group>
+										<field name="date_coverage_starts"/>
+									</group>
+								</group>
+								<label for="notes"/>
+								<field name="notes"/>
+							</form>
+						</field>						
+					</page>					
+                </xpath>				
+			</field>
+		</record>
+		
+		
+		<!--record id="view_employee_coverage_status_form" model="ir.ui.view">
+            <field name="name">employee.coverage.status.form</field>
+            <field name="model">employee.coverage.status</field>
+            <field name="arch" type="xml">
+            	<form string="Employee Coverage Status" version="7.0">
+        			<group>
+        				<group>
+        					<field name="status"/>
+        					<field name="dob"/>
+    					</group>
+    					<group>
+        					<field name="date_coverage_starts"/>
+        					<field name="notes"/>
+    					</group>
+        			</group>
+    			</form>
+			</field>
+		</record-->
+	</data>
+</openerp>

@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		<record id="view_hr_employee_extended" model="ir.ui.view">
+            <field name="name">hr.employee.form.extended</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page[@string='HR Settings']" position="after">
+                    <page string="Hire/Terminate">
+                      <group>
+                        <group string="Hire">
+                          <field name="hire_application_date"/>
+                          <field name="hire_driving_record_check"/>
+                          <field name="hire_pre_employment_drug_test"/>
+                          <field name="hire_honesty_test"/>
+                          <field name="hire_employee_handbook"/>
+                          <field name="hire_confidentially_agreement"/>
+                          <field name="hire_no_cell_phone"/>
+                          <field name="hire_job_descriptions"/>
+                          <field name="hire_tax_forms"/>
+                          <field name="hire_i9_documents"/>
+                          <field name="hire_direct_deposit"/>
+                          <field name="hire_OH_new_reporting"/>
+                          <field name="hire_auto_insurance"/>
+                          <field name="hire_mailbox"/>
+                          <field name="hire_credit_card_policy"/>
+                          <field name="hire_uniforms"/>
+                          <field name="hire_keys"/>
+                          <field name="hire_logins"/>
+                          <field name="hire_picture_release"/>
+                          <field name="hire_clc_card"/>
+                        </group>
+                        <group string="Hire Benefits">
+                          <field name="hire_health_30"/>
+                          <field name="hire_dental_30"/>
+                          <field name="hire_vision_30"/>
+                          <field name="hire_life_90"/>
+                          <field name="hire_disability_90"/>
+                          <field name="hire_401k_30"/>
+                          <field name="hire_union"/>
+                          <field name="hire_safety_policy"/>
+                          <field name="hire_fire_exit"/>
+                          <field name="hire_hepatitis_vaccine"/>
+                          <field name="hire_ppe"/>
+                          <field name="hire_confined_trining"/>
+                          <field name="hire_DOT_card"/>
+                          <field name="hire_DOT_card_duration"/>
+                          <field name="hire_CDL_tracking"/>
+                          <field name="hire_training_tri"/>
+                        </group>
+                      </group>
+                      
+                      <group>
+                        <group string="Terminate">
+                          <field name="terminate_auto_insurance"/>
+                          <field name="terminate_mailbox"/>
+                          <field name="terminate_credit_card_policy"/>
+                          <field name="terminate_uniforms"/>
+                          <field name="terminate_keys"/>
+                          <field name="terminate_logins"/>
+                        </group>
+                        <group string="Terminate Benefits">
+                          <field name="terminate_health_30"/>
+                          <field name="terminate_dental_30"/>
+                          <field name="terminate_vision_30"/>
+                          <field name="terminate_life_90"/>
+                          <field name="terminate_disability_90"/>
+                          <field name="terminate_401k_30"/>
+                          <field name="terminate_union"/>
+                          <field name="terminate_ppe"/>
+                          <field name="terminate_training_tri"/>
+                        </group>
+                      </group>
+                    </page>					
+        </xpath>				
+			</field>
+		</record>
+	</data>
+</openerp>
