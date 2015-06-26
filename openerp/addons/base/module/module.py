@@ -460,8 +460,9 @@ class module(osv.osv):
         ir_model_data = self.pool.get('ir.model.data')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
         ir_model_data._module_data_uninstall(cr, uid, modules_to_remove, context)
-        self.write(cr, uid, ids, {'state': 'uninstalled'})
-        return True
+        return self.write(
+            cr, uid, ids, {'state': 'uninstalled', 'latest_version': False},
+            context=context)
 
     def downstream_dependencies(self, cr, uid, ids, known_dep_ids=None,
                                 exclude_states=['uninstalled', 'uninstallable', 'to remove'],

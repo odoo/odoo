@@ -118,7 +118,7 @@ POSTGRES_CONFDELTYPES = {
 }
 
 def intersect(la, lb):
-    return filter(lambda x: x in lb, la)
+    return list(set(lb).intersection(la))
 
 def same_name(f, g):
     """ Test whether functions `f` and `g` are identical or have the same name """
@@ -1753,7 +1753,7 @@ class BaseModel(object):
                     else:
                         res[lang][f] = self._columns[f].string
         for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), fields)
+            cols = list(set(fields).intersection(self._inherit_fields))
             res2 = self.pool[table].read_string(cr, uid, id, langs, cols, context)
         for lang in res2:
             if lang in res:
@@ -1771,7 +1771,7 @@ class BaseModel(object):
                     src = self._columns[field].string
                     self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
         for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), vals)
+            cols = list(set(vals).intersection(self._inherit_fields))
             if cols:
                 self.pool[table].write_string(cr, uid, id, langs, vals, context)
         return True

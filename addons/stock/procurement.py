@@ -190,6 +190,7 @@ class procurement_order(osv.osv):
             'date_expected': newdate,
             'propagate': procurement.rule_id.propagate,
             'priority': procurement.priority,
+            'restrict_partner_id': procurement.move_dest_id.restrict_partner_id.id,
         }
         return vals
 
