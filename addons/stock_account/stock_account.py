@@ -451,7 +451,7 @@ class AccountChartTemplate(models.Model):
 
         todo_list = [ # Property Stock Accounts
             'property_stock_account_input_categ_id',
-            'property_stock_account_output_categ',
+            'property_stock_account_output_categ_id',
             'property_stock_valuation_account_id',
         ]
         for record in todo_list:
