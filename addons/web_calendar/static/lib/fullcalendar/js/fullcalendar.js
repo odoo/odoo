@@ -2362,17 +2362,30 @@ function BasicView(element, calendar, viewName) {
 		if (date.getMonth() != month) {
 			classNames.push('fc-other-month');
 		}
-		if (+date == +today) {
+
+
+        if (+date == +today) {
 			classNames.push(
 				'fc-today',
 				tm + '-state-highlight'
 			);
-		}
+        }
+        else if (
+                (date.getMonth() == 0 && date.getDate() == 1) ||    // New Years day (always the same)
+                (date.getMonth() == 6 && date.getDate() == 4) ||    // Forth of July (always the same)
+                (date.getMonth() == 11 && date.getDate() == 25) ||  // Christmas (always the same)
+		        (date.getMonth() == 4 && date.getDate() == MemorialDay(date.getFullYear())) ||   // Memorial Day
+                (date.getMonth() == 8 && date.getDate() == LaborDay(date.getFullYear())) ||    // Labor Day
+                (date.getMonth() == 10 && date.getDate() == ThanksgivingDay(date.getFullYear()))     // Thanksgiving
+            )
+        {
+            classNames.push('fc-holiday');
+        }
 		else if (date < today) {
-			classNames.push('fc-past');
+		    classNames.push('fc-past');
 		}
 		else {
-			classNames.push('fc-future');
+		    classNames.push('fc-future');
 		}
 
 		html +=
@@ -2383,7 +2396,31 @@ function BasicView(element, calendar, viewName) {
 			"<div>";
 
 		if (showNumbers) {
-			html += "<div class='fc-day-number'>" + date.getDate() + "</div>";
+		    if (date.getMonth() == 0 && date.getDate() == 1)            // New Years day (always the same)
+		    {
+		        html += "New Years";
+		    }
+		    else if (date.getMonth() == 6 && date.getDate() == 4)       // Forth of July (always the same)
+		    {
+		        html += "Fourth of July";
+		    }
+		    else if (date.getMonth() == 11 && date.getDate() == 25)     // Christmas (always the same)
+		    {
+		        html += "Christmas";
+		    }
+		    else if (date.getMonth() == 4 && date.getDate() == MemorialDay(date.getFullYear()))      // Memorial Day
+		    {
+		        html += "Memorial Day";
+		    }
+		    else if (date.getMonth() == 8 && date.getDate() == LaborDay(date.getFullYear()))       // Labor Day
+		    {
+		        html += "Labor Day";
+		    }
+		    else if (date.getMonth() == 10 && date.getDate() == ThanksgivingDay(date.getFullYear()))     // Thanksgiving
+		    {
+		        html += "Thanksgiving";
+		    }
+		    html += "<div class='fc-day-number'>" + date.getDate() + "</div>";
 		}
 
 		html +=
@@ -2396,7 +2433,76 @@ function BasicView(element, calendar, viewName) {
 		return html;
 	}
 
+    // Last Monday in May
+	function MemorialDay(year) {
+	    var dtD;
+	    dtD = new Date(year, 4, 31);
+	    var nX = dtD.getDay();  // 0 = Sunday
 
+	    switch (nX)
+	    {
+	        case 0: // Sunday
+	            return dtD.getDate() - 6;
+	        case 1: // Monday
+	            return dtD.getDate() - 0;
+	        case 2: // Tuesday
+	            return dtD.getDate() - 1;
+	        case 3: // Wednesday
+	            return dtD.getDate() - 2;
+	        case 4: // Thursday
+	            return dtD.getDate() - 3;
+	        case 5: // Friday
+	            return dtD.getDate() - 4;
+	        case 6: // Saturday
+	            return dtD.getDate() - 5;
+	    }
+	}
+
+    // First Monday in September
+	function LaborDay(year) {
+	    var dtD;
+	    dtD = new Date(year, 8, 1);
+	    var nX = dtD.getDay()
+	    switch (nX) {
+	        case 0: // Sunday
+	            return dtD.getDate() + 1;
+	        case 1: // Monday
+	            return dtD.getDate() + 0;
+	        case 2: // Tuesday
+	            return dtD.getDate() + 6;
+	        case 3: // Wednesday
+	            return dtD.getDate() + 5;
+	        case 4: // Thursday
+	            return dtD.getDate() + 4;
+	        case 5: // Friday
+	            return dtD.getDate() + 3;
+	        case 6: // Saturday
+	            return dtD.getDate() + 2;
+	    }
+	}
+
+    // Forth Thursday in November
+	function ThanksgivingDay(year) {
+	    var dtD;
+	    dtD = new Date(year, 10, 1);
+	    var nX = dtD.getDay()
+	    switch (nX) {
+	        case 0:
+	            return 26;
+	        case 1:
+	            return 25;
+	        case 2:
+	            return 24;
+	        case 3:
+	            return 23;
+	        case 4:
+	            return22;
+	        case 5:
+	            return 28;
+	        default:
+	            return 27;
+	    }
+	}
 
 	/* Dimensions
 	-----------------------------------------------------------*/

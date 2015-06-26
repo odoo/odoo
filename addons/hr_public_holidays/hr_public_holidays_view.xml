@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        
+        <record id="view_public_holidays_tree" model="ir.ui.view">
+            <field name="name">hr.holidays.public.tree</field>
+            <field name="model">hr.holidays.public</field>
+            <field name="arch" type="xml">
+                <tree string="Public Holidays">
+                    <field name="year"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_public_holidays_form" model="ir.ui.view">
+            <field name="name">hr.holidays.public.form</field>
+            <field name="model">hr.holidays.public</field>
+            <field name="arch" type="xml">
+                <form string="Public Holidays">
+                    <group>
+                        <field name="year"/>
+                    </group>
+                    <newline/>
+                    <group string="Public Holidays" colspan="4" col="1">
+                        <field name="line_ids" nolabel="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_public_holiday_line_tree" model="ir.ui.view">
+            <field name="name">hr.holidays.public.line.tree</field>
+            <field name="model">hr.holidays.public.line</field>
+            <field name="arch" type="xml">
+                <tree string="Public Holidays" editable="top">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="variable"/>
+                    <field name="created"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="open_public_holidays_view" model="ir.actions.act_window">
+            <field name="name">Public Holidays</field>
+            <field name="res_model">hr.holidays.public</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem action="open_public_holidays_view"
+                  id="menu_public_holidays_view"
+                  parent="hr.menu_hr_configuration"
+                  sequence="20"/>
+        
+
+		<record id="view_calendar_event_extended" model="ir.ui.view">
+            <field name="name">calendar.event.form.extended</field>
+			<field name="model">calendar.event</field>
+			<field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='location']" position="after">
+					<field name="holiday"/>
+                </xpath>				
+			</field>
+		</record>
+		
+		
+		<record id="view_hr_holidays_extended" model="ir.ui.view">
+            <field name="name">hr.holidays.form.extended</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='department_id']" position="after">
+					<field name="holiday"/>
+                </xpath>				
+			</field>
+		</record>
+		
+		<!--record model="ir.ui.view" id="calendar.view_calendar_event_tree">
+		    <field name="name">CRM - Meetings Tree</field>
+		    <field name="model">calendar.event</field>
+		    <field name="domain">[('holiday', '=', False)]</field>
+		    <field name="arch" type="xml">
+		        <tree string="Meetings" fonts="bold:message_unread==True">
+		            <field name="name" string="Subject"/>
+		            <field name="allday" invisible="True"/>
+		            <field name="start_date" string="Date"/>
+		            <field name="start_datetime" string="Date"/>
+		            <field name="user_id"/>
+		            <field name="location"/>
+		            <field name="show_as"/>
+		            <field name="class" string="Privacy"/>
+		            <field name="state" invisible="True"/>
+		            <field name="duration"/>
+		            <field name="message_unread" invisible="1"/>
+		        </tree>
+		    </field>
+		</record-->
+		
+		<!--record model="ir.actions.act_window.view" id="action_view_calendar_event_tree">
+		    <field name="act_window_id" ref="action_calendar_event"/>
+		    <field name="sequence" eval="2"/>
+		    <field name="view_mode">tree</field>
+		    <field name="view_id" ref="view_calendar_event_tree"/>
+		</record-->
+		
+		<!--record id="calendar.action_calendar_event" model="ir.actions.act_window">
+		    <field name="name">Meetings</field>
+		    <field name="res_model">calendar.event</field>
+		    <field name="view_mode">tree,form,gantt</field>
+		    <field name="domain">[('holiday', '=', False)]</field>
+		    <field name="view_id" ref="calendar.view_calendar_event_calendar"/>
+		    <field name="search_view_id" ref="calendar.view_calendar_event_search"/>
+		    <field name="help" type="html">
+		      <p class="oe_view_nocontent_create">
+		        Click to schedule a new meeting.
+		      </p><p>
+		        The calendar is shared between employees and fully integrated with
+		        other applications such as the employee holidays or the business
+		        opportunities.
+		      </p>
+		    </field>
+		</record-->
+					
+    </data>
+</openerp>

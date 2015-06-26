@@ -276,11 +276,33 @@ openerp.web_calendar = function(instance) {
                     self.proxy('update_record')(event._id, data);
                 },
                 eventRender: function (event, element, view) {
+                	console.log(self);
                     element.find('.fc-event-title').html(event.title);
+                    new instance.web.Model(self.model).call('read',[event.id]).done(function(res){
+                    	console.log(res);
+                    	if (res.holiday) {
+                    	    element.find('.fc-event-title').parent().css({ 'background-color': 'cornflowerblue' });
+                    	    element.find('.fc-event-title').parent().css({ 'color': 'black' });
+                    		element.find('.fc-event-time').parent().css({'background-color':'cornflowerblue'});
+                    		element.find('.fc-event-time').parent().css({'color': 'black' });
+                    		element.find('.fc-event-time').hide();
+                    		
+                    	}
+                    });
+                    /*holiday_obj = new instance.web.Model("hr.holidays");
+                    holiday_obj.call('read',[event.id]).done(function(res){
+                    	console.log(res);
+                    	if (res.holiday){
+                    		element.find('.fc-event-time').parent().css({'background-color':'red'});
+                    		element.find('.fc-event-time').hide();
+                    		
+                    	}
+                    });*/                    
                 },
                 eventAfterRender: function (event, element, view) {
                     if ((view.name !== 'month') && (((event.end-event.start)/60000)<=30)) {
                         //if duration is too small, we see the html code of img
+                        
                         var current_title = $(element.find('.fc-event-time')).text();
                         var new_title = current_title.substr(0,current_title.indexOf("<img")>0?current_title.indexOf("<img"):current_title.length);
                         element.find('.fc-event-time').html(new_title);
@@ -322,7 +344,6 @@ openerp.web_calendar = function(instance) {
 
         init_calendar: function() {
             var self = this;
-             
             if (!this.sidebar && this.options.$sidebar) {
                 translate = get_fc_defaultOptions();
                 this.sidebar = new instance.web_calendar.Sidebar(this);
@@ -598,7 +619,6 @@ openerp.web_calendar = function(instance) {
          * Transform fullcalendar event object to OpenERP Data object
          */
         get_event_data: function(event) {
-
             // Normalize event_end without changing fullcalendars event.
             var data = {
                 name: event.title
@@ -1261,7 +1281,6 @@ openerp.web_calendar = function(instance) {
             this.initial_is_loaded = this.is_loaded;
 
             var self = this;
-
             // This dataset will use current widget to '.build_context()'.
             var field_type = field_manager.fields_view.fields[node.attrs.name].type;
             this.dataset = new (get_field_dataset_class(field_type))(
