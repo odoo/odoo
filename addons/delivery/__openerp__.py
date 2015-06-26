@@ -25,8 +25,6 @@ invoices from picking, the system is able to add and compute the shipping line.
     'demo': ['data/delivery_demo.xml'],
     'test': [
         '../account/test/account_minimal_test.xml',
-        'test/delivery_cost.yml',
-        'test/stock_move_values_with_invoice_before_delivery.yml',
     ],
     'installable': True,
 }

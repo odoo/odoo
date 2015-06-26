@@ -1,24 +1,6 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Odoo, Open Source Business Applications
-#    Copyright (c) 2015 Odoo S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import time
 import logging
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError
@@ -56,7 +38,7 @@ class DeliveryCarrier(models.Model):
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True)
     grid_ids = fields.One2many('delivery.grid', 'carrier_id', string='Delivery Grids', oldname='grids_id')
     active = fields.Boolean(help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it.", default=True)
-    normal_price = fields.Float(help="Keep empty if the pricing depends on the advanced pricing per destination")
+    normal_price = fields.Float(help="Keep empty if the pricing depends on the advanced pricing per destination", string="Normal Price")
     free_if_more_than = fields.Boolean(string='Free If Order Total Amount Is More Than', default=False, help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping")
     amount = fields.Float(help="Amount of the order to benefit from a free shipping, expressed in the company currency")
     use_detailed_pricelist = fields.Boolean(string='Advanced Pricing per Destination', help="Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc.""")
@@ -83,9 +65,17 @@ class DeliveryCarrier(models.Model):
                         _logger.info("Carrier %s: %s, not found", self.name, e.name)
                         self.price = 0.0
             else:
-                res = super(DeliveryCarrier, self).get_price('price', [])
-                self.available = res[self.id]['available']
-                self.price = res[self.id]['price']
+                order = SaleOrder.browse(order_id)
+                carrier_grid = self.grid_get(order.partner_shipping_id)
+                if carrier_grid:
+                    try:
+                        self.price = self.grid_ids.get_price(order, time.strftime('%Y-%m-%d'))
+                        self.available = True
+                    except UserError, e:
+                        # no suitable delivery method found, probably
+                        # configuration error
+                        _logger.info("Carrier %s: %s", self.name, e.name)
+                        self.price = 0.0
 
     # -------------------------- #
     # API for external providers #
@@ -178,6 +168,7 @@ class DeliveryCarrier(models.Model):
                     'sequence': 10,
                 }
                 grids = Grid.create(grid_data)
+            if grids:
                 grids.line_ids.unlink()
 
             # create the grid lines

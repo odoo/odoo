@@ -1,23 +1,6 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Odoo, Open Source Business Applications
-#    Copyright (c) 2015 Odoo S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import time
 
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError
@@ -28,7 +11,6 @@ class SaleOrder(models.Model):
 
     delivery_price = fields.Float(string='Estimated Delivery Price', compute='_compute_delivery_price')
     carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", help="Complete this field if you plan to invoice the shipping based on picking.")
-
 
     @api.depends('carrier_id', 'partner_id', 'order_line')
     def _compute_delivery_price(self):
@@ -57,13 +39,13 @@ class SaleOrder(models.Model):
         self._delivery_unset()
 
         for order in self:
+            # Shipping providers are used when delivery_type is other than 'grid'
+
+            if order.state not in ('draft', 'sent'):
+                raise UserError(_('The order state have to be draft to add delivery lines.'))
+
+            carrier = order.carrier_id
             if order.carrier_id and order.carrier_id.delivery_type != 'grid':
-                # Shipping providers are used when delivery_type is other than 'grid'
-
-                if order.state not in ('draft', 'sent'):
-                    raise UserError(_('The order state have to be draft to add delivery lines.'))
-
-                carrier = order.carrier_id
                 account_id = carrier.product_id.property_account_income.id
                 if not account_id:
                     account_id = carrier.product_id.categ_id.property_account_income_categ.id
@@ -88,7 +70,28 @@ class SaleOrder(models.Model):
 
             else:
                 # Classic grid-based carriers
-                super(SaleOrder, self).delivery_set()
+                grid_id = carrier.grid_get(order.partner_shipping_id.id)
+                if not grid_id:
+                    raise UserError(_('No grid matching for this carrier!'))
+
+                grid = self.env['delivery.grid'].browse(grid_id)
+                taxes = grid.carrier_id.product_id.taxes_id
+                price_unit = grid.get_price(order, time.strftime('%Y-%m-%d'))
+                if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
+                    price_unit = self.env['res.currency'].with_context(date=order.date_order).compute(order.company_id.currency_id.id, order.pricelist_id.currency_id.id,
+                    price_unit)
+                MappedTaxes = order.fiscal_position_id.map_tax(taxes)
+                #create the sale order line
+                SaleOrderLine.create({
+                    'order_id': order.id,
+                    'name': grid.carrier_id.name,
+                    'product_uom_qty': 1,
+                    'product_uom': grid.carrier_id.product_id.uom_id.id,
+                    'product_id': grid.carrier_id.product_id.id,
+                    'price_unit': price_unit,
+                    'tax_id': [(6, 0, MappedTaxes.ids)],
+                    'is_delivery': True
+                })
 
 
 class SaleOrderLine(models.Model):
