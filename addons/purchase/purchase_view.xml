@@ -280,6 +280,7 @@
                                 </group>
                                 <group>
                                     <field name="invoice_method"/>
+                                    <field name="invoiced" invisible="1"/>
                                     <field name="payment_term_id" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="fiscal_position_id" attrs="{'readonly': [('invoiced','=', True)]}" />
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
