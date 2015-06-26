@@ -27,11 +27,26 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     delivery_price = fields.Float(string='Estimated Delivery Price', compute='_compute_delivery_price')
+    carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", help="Complete this field if you plan to invoice the shipping based on picking.")
+
 
     @api.depends('carrier_id', 'partner_id', 'order_line')
     def _compute_delivery_price(self):
         for order in self:
             order.delivery_price = order.carrier_id.with_context(order_id=order.id).price
+
+    @api.multi
+    def onchange_partner_id(self, partner_id):
+        result = super(SaleOrder, self).onchange_partner_id(partner_id)
+        if partner_id:
+            dtype = self.env['res.partner'].browse(partner_id).property_delivery_carrier.id
+            if dtype:
+                result['value']['carrier_id'] = dtype
+        return result
+
+    @api.multi
+    def _delivery_unset(self):
+        self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)]).unlink()
 
     @api.multi
     def delivery_set(self):
@@ -74,3 +89,9 @@ class SaleOrder(models.Model):
             else:
                 # Classic grid-based carriers
                 super(SaleOrder, self).delivery_set()
+
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    is_delivery = fields.Boolean(string="Is a Delivery")

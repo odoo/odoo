@@ -1,5 +1,4 @@
-<openerp>
-    <data>
+<odoo>
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
         <menuitem id="sale_menu_delivery" name="Delivery" parent="base.menu_sale_config" groups="base.group_sale_manager" sequence="12"/>
@@ -188,9 +187,9 @@
                     </group>
                     <group>
                         <group>
-                            <label for="type" string="Condition"/>
+                            <label for="variable" string="Condition"/>
                             <div>
-                                <field name="type" class="oe_inline"/>
+                                <field name="variable" class="oe_inline"/>
                                 <field name="operator" class="oe_inline"/>
                                 <field name="max_value" class="oe_inline"/>
                             </div>
@@ -216,7 +215,7 @@
                 <tree string="Grid Lines">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
-                    <field name="type"/>
+                    <field name="variable"/>
                     <field name="operator"/>
                     <field name="max_value" nolabel="1"/>
                     <field name="list_price"/>
@@ -350,5 +349,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

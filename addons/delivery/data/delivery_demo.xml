@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="1">
+<odoo>
 
         <!-- Update a transporter -->
         <record id="res_partner_delivery" model="res.partner">
@@ -59,7 +58,7 @@
             <field name="grid_id" ref="delivery_grid"/>
             <field eval="300" name="max_value"/>
             <field name="operator">&gt;=</field>
-            <field name="type">price</field>
+            <field name="variable">price</field>
             <field eval="0" name="list_price"/>
             <field eval="0" name="standard_price"/>
         </record>
@@ -69,5 +68,4 @@
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier')]"/>
             <field name="value" eval="'delivery.carrier,'+str(ref('normal_delivery_carrier'))"/>
         </record>
-    </data>
-</openerp>
+</odoo>
