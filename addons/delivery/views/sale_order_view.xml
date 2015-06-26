@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_order_withcarrier_form" model="ir.ui.view">
+            <field name="name">delivery.sale.order_withcarrier.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='sale_total']" position="after">
+                    <group style="width: 65%%">
+                        <label for="carrier_id"/>
+                        <div>
+                            <field name="id" invisible="1"/>
+                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline"/>
+                            <button name="delivery_set" string="Add in Quote" type="object"
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                            <br/>
+                            <label string="If you don't 'Add in Quote', the exact price will be computed when invoicing based on delivery order(s)."
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+</odoo>

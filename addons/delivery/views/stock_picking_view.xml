@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
+            <field name="name">delivery.stock.picking_withcarrier.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Additional Info']/group[last()]" position="after">
+                <separator string="Carrier Information"/>
+                <group>
+                    <group>
+                        <field name="carrier_id"/>
+                        <field name="carrier_tracking_ref"/>
+                    </group>
+                    <group>
+                        <label for="weight" string="Weight"/>
+                        <div>
+                            <field name="weight" class="oe_inline"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <field name="weight_net" groups="base.group_no_one"/>
+                        <field name="number_of_packages"/>
+                    </group>
+                </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_picking_tree" model="ir.actions.act_window">
+            <field name="name">Picking to be invoiced</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
+            <field name="filter" eval="True"/>
+            <field name="context">{'default_invoice_state': '2binvoiced', 'default_type': 'out', 'contact_display': 'partner'}</field>
+            <field name="search_view_id" eval="False"/>
+        </record>
+</odoo>
