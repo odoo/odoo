@@ -337,7 +337,7 @@
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>

@@ -287,7 +287,7 @@
             <field name="name">CRM - Leads Kanban</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -302,7 +302,7 @@
                     <templates>
                         <field name="date_deadline"/>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} o_kanban_small oe_kanban_global_click">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
