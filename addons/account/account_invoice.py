@@ -67,6 +67,19 @@ class account_invoice(models.Model):
         self.amount_tax = sum(line.amount for line in self.tax_line)
         self.amount_total = self.amount_untaxed + self.amount_tax
 
+    @api.one
+    @api.depends('invoice_line.price_subtotal', 'tax_line.amount')
+    def _compute_amount_fixed(self):
+        self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line)
+        self.amount_tax = sum(line.amount for line in self.tax_line)
+
+        self.amount_untaxed_fixed = self.amount_untaxed
+        self.amount_total_fixed = self.amount_untaxed + self.amount_tax
+        if self.type == 'out_refund':
+            self.amount_total_fixed = 0 - self.amount_total_fixed
+            self.amount_untaxed_fixed = 0 - self.amount_untaxed_fixed
+
+
     @api.model
     def _default_journal(self):
         inv_type = self._context.get('type', 'out_invoice')
@@ -145,6 +158,22 @@ class account_invoice(models.Model):
                 partial_reconciliations_done.append(line.reconcile_partial_id.id)
             self.residual += line_amount
         self.residual = max(self.residual, 0.0)
+
+    @api.one
+    @api.depends(
+        'state', 'currency_id', 'invoice_line.price_subtotal',
+        'move_id.line_id.account_id.type',
+        'move_id.line_id.amount_residual',
+        # Fixes the fact that move_id.line_id.amount_residual, being not stored and old API, doesn't trigger recomputation
+        'move_id.line_id.reconcile_id',
+        'move_id.line_id.amount_residual_currency',
+        'move_id.line_id.currency_id',
+        'move_id.line_id.reconcile_partial_id.line_partial_ids.invoice.type',
+    )
+    def _compute_residual_fixed(self):
+        self.residual_fixed = self.residual
+        if self.type == 'out_refund':
+            self.residual_fixed = 0 - self.residual
 
     @api.one
     @api.depends(
@@ -267,10 +296,14 @@ class account_invoice(models.Model):
 
     amount_untaxed = fields.Float(string='Subtotal', digits=dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_amount', track_visibility='always')
+    amount_untaxed_fixed = fields.Float(string='Subtotal', digits=dp.get_precision('Account'),
+        store=False, readonly=True, compute='_compute_amount_fixed', track_visibility='always')
     amount_tax = fields.Float(string='Tax', digits=dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_amount')
     amount_total = fields.Float(string='Total', digits=dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_amount')
+    amount_total_fixed = fields.Float(string='Total', digits=dp.get_precision('Account'),
+        store=False, readonly=True, compute='_compute_amount_fixed')
 
     currency_id = fields.Many2one('res.currency', string='Currency',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -296,6 +329,9 @@ class account_invoice(models.Model):
         compute='_compute_move_lines')
     residual = fields.Float(string='Balance', digits=dp.get_precision('Account'),
         compute='_compute_residual', store=True,
+        help="Remaining amount due.")
+    residual_fixed = fields.Float(string='Balance', digits=dp.get_precision('Account'),
+        compute='_compute_residual_fixed', store=False,
         help="Remaining amount due.")
     payment_ids = fields.Many2many('account.move.line', string='Payments',
         compute='_compute_payments')
