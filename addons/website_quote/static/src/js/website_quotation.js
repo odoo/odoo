@@ -174,7 +174,7 @@ $(document).ready(function () {
         .find("input[name='acquirer']:checked").click();
 
     // When clicking on payment button: create the tx using json then continue to the acquirer
-    $payment.on("click", 'button[type="submit"],button[name="submit"]', function (ev) {
+    $('.oe_quote_acquirer_button').on("click", 'button[type="submit"],button[name="submit"]', function (ev) {
       ev.preventDefault();
       ev.stopPropagation();
       var $form = $(ev.currentTarget).parents('form');
