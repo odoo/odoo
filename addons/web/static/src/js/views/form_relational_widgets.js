@@ -1234,9 +1234,13 @@ var One2ManyFormView = FormView.extend({
 });
 
 var FieldOne2Many = FieldX2Many.extend({
-    x2many_views: {
-        list: One2ManyListView,
-        form: One2ManyFormView,
+   init: function() {
+        this._super.apply(this, arguments);
+        this.x2many_views = {
+            form: One2ManyFormView,
+            kanban: core.view_registry.get('one2many_kanban'),
+            list: One2ManyListView,
+        };
     },
     start: function() {
         this.$el.addClass('oe_form_field_one2many');
@@ -1645,6 +1649,31 @@ odoo.define('web_kanban.Many2ManyKanbanView', function (require) {
 
     var _t = core._t;
 
+    var One2ManyKanbanView = KanbanView.extend({
+        add_record: function() {
+            var self = this;
+            new common.FormViewDialog(this, {
+                res_model: self.x2m.field.relation,
+                res_id: null,
+                domain: self.x2m.build_domain(),
+                context: self.x2m.build_context(),
+                title: _t("Create: ") + self.x2m.string,
+                initial_view: "form",
+                alternative_form_view: self.x2m.field.views ? self.x2m.field.views.form : undefined,
+                disable_multiple_selection: false,
+                create_function: function(data, options) {
+                    return self.x2m.data_create(data, options);
+                },
+                read_function: function(ids, fields, options) {
+                    return self.x2m.data_read(ids, fields, options);
+                },
+                on_selected: function() {
+                    self.x2m.reload_current_view();
+                }
+            }).open();
+        },
+    });
+
     var Many2ManyKanbanView = KanbanView.extend({
         add_record: function() {
             var self = this;
@@ -1684,6 +1713,7 @@ odoo.define('web_kanban.Many2ManyKanbanView', function (require) {
         },
     });
 
+    core.view_registry.add('one2many_kanban', One2ManyKanbanView);
     core.view_registry.add('many2many_kanban', Many2ManyKanbanView);
 
 });
