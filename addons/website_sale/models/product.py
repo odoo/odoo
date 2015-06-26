@@ -115,8 +115,8 @@ class product_template(osv.Model):
     }
 
     def _defaults_website_sequence(self, cr, uid, *l, **kwargs):
-        cr.execute('SELECT MAX(website_sequence)+1 FROM product_template')
-        next_sequence = cr.fetchone()[0] or 0
+        cr.execute('SELECT MIN(website_sequence)-1 FROM product_template')
+        next_sequence = cr.fetchone()[0] or 10
         return next_sequence
 
     _defaults = {
