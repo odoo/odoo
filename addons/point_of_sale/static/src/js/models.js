@@ -55,6 +55,8 @@ exports.PosModel = Backbone.Model.extend({
         this.partners = [];
         this.cashier = null;
         this.cashregisters = [];
+        this.fiscal_position_tax = {};
+        this.fiscal_position = {};
         this.taxes = [];
         this.pos_session = null;
         this.config = null;
@@ -181,7 +183,7 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model:  'res.partner',
-        fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date'],
+        fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date','property_account_position_id'],
         domain: [['customer','=',true]], 
         loaded: function(self,partners){
             self.partners = partners;
@@ -371,7 +373,19 @@ exports.PosModel = Backbone.Model.extend({
             });
 
         },
-    },  {
+    },{
+        model:  'account.fiscal.position',
+        fields: ['name', 'country_id', 'auto_apply'],
+        loaded: function(self, fiscal_position){
+            self.fiscal_position = fiscal_position;
+        },
+    },{
+        model:  'account.fiscal.position.tax',
+        fields: ['position_id', 'tax_src_id', 'tax_dest_id'],
+        loaded: function(self, fiscal_position_tax){
+            self.fiscal_position_tax = fiscal_position_tax;
+        },
+     },{
         label: 'fonts',
         loaded: function(){
             var fonts_loaded = new $.Deferred();
@@ -1241,11 +1255,23 @@ exports.Orderline = Backbone.Model.extend({
     get_tax: function(){
         return this.get_all_prices().tax;
     },
+    get_fiscal_tax: function(){
+        var product_tax = this.get_product().taxes_id.slice(0);
+        if(product_tax && this.order.fiscal_position_id) {
+            var fiscal_tax = this.order.fiscal_tax.length || this.order.get_fiscal_tax(this.order.fiscal_position_id);
+            _.each(product_tax, function(v, i) {
+                if(fiscal_tax.hasOwnProperty(v)) {
+                    product_tax[i] = fiscal_tax[v];
+                }
+            });
+        }
+        return _.uniq(_.compact(product_tax));
+    },
     get_applicable_taxes: function(){
         var i;
         // Shenaningans because we need
         // to keep the taxes ordering.
-        var ptaxes_ids = this.get_product().taxes_id;
+        var ptaxes_ids = this.get_fiscal_tax();
         var ptaxes_set = {};
         for (i = 0; i < ptaxes_ids.length; i++) {
             ptaxes_set[ptaxes_ids[i]] = true;
@@ -1262,7 +1288,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.get_all_prices().taxDetails;
     },
     get_taxes: function(){
-        var taxes_ids = this.get_product().taxes_id;
+        var taxes_ids = this.get_fiscal_tax();
         var taxes = [];
         for (var i = 0; i < taxes_ids.length; i++) {
             taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
@@ -1332,8 +1358,7 @@ exports.Orderline = Backbone.Model.extend({
         var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
         var taxtotal = 0;
 
-        var product =  this.get_product();
-        var taxes_ids = product.taxes_id;
+        var taxes_ids = this.get_fiscal_tax();
         var taxes =  this.pos.taxes;
         var taxdetail = {};
         var product_taxes = [];
@@ -1450,6 +1475,8 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines   = new PaymentlineCollection(); 
         this.pos_session_id = this.pos.pos_session.id;
         this.finalized      = false; // if true, cannot be modified.
+        this.fiscal_position_id = this.pos.config.fiscal_position_ids && this.pos.config.fiscal_position_ids[0] || false;
+        this.fiscal_tax = {};
 
         this.set({ client: null });
 
@@ -1540,6 +1567,7 @@ exports.Order = Backbone.Model.extend({
             uid: this.uid,
             sequence_number: this.sequence_number,
             creation_date: this.creation_date,
+            fiscal_position_id: this.fiscal_position_id,
         };
     },
     export_for_printing: function(){
@@ -1968,10 +1996,39 @@ exports.Order = Backbone.Model.extend({
     is_to_invoice: function(){
         return this.to_invoice;
     },
+    get_fiscal_tax: function(fiscal_id) {
+        var fposition_tax = this.pos.fiscal_position_tax;
+        var fiscal_tax = {};
+        if (fiscal_id) {
+            _.each(fposition_tax, function(tax) {
+                if (tax.position_id[0] == fiscal_id) {
+                    fiscal_tax[tax.tax_src_id[0]] = tax.tax_dest_id[0];
+                }
+            });
+        }
+        return fiscal_tax;
+    },
+    get_fiscal_position_id: function(client) {
+        var fposition = this.pos.fiscal_position;
+        if (client) {
+            if(client.property_account_position_id) {
+                return client.property_account_position_id[0]
+            } else if (client.country_id) {
+                _.each(fposition, function(fp) {
+                    if (fp.auto_apply == true && fp.country_id[0] == client.country_id[0]) {
+                        return fp.id
+                    }
+                });
+            }
+        }
+        return false;
+    },
     /* ---- Client / Customer --- */
     // the client related to the current order.
     set_client: function(client){
         this.assert_editable();
+        this.fiscal_position_id = this.get_fiscal_position_id(client) || this.fiscal_position_id;
+        this.fiscal_tax = this.get_fiscal_tax(this.fiscal_position_id);
         this.set('client',client);
     },
     get_client: function(){

@@ -1903,6 +1903,47 @@ var PaymentScreenWidget = ScreenWidget.extend({
 });
 gui.define_screen({name:'payment', widget: PaymentScreenWidget});
 
+var FiscalPositionButton = ActionButtonWidget.extend({
+    template: 'FiscalPositionButton',
+
+    start: function() {
+        var self = this;
+        this.fiscal_position = _.filter(self.pos.fiscal_position, function(fp) {return _.contains(self.pos.config.fiscal_position_ids, fp.id)});
+        this.$('.fp-label').text(this.fiscal_position[0].name);
+    },
+    button_click: function() {
+        var self = this;
+        var list = [];
+        _.each(self.fiscal_position, function(fp) {
+            list.push({label: fp.name, item: fp});
+        })
+        this.gui.show_popup('selection', {
+            'title': 'Please select a fiscal position',
+            'list': list,
+            'confirm': function(fp) {
+                self.apply_fiscal_position(fp);
+            },
+        });
+    },
+    apply_fiscal_position: function(fp) {
+        var order = this.pos.get_order();
+        this.$('.fp-label').text(fp.name);
+        order.fiscal_position_id = fp.id;
+        order.fiscal_tax = order.get_fiscal_tax(order.fiscal_position_id);
+        _.each(order.get_orderlines(), function(line) {
+            order.add_orderline(line);
+        });
+    },
+});
+
+define_action_button({
+    'name': 'fiscal position',
+    'widget': FiscalPositionButton,
+    'condition': function() {
+        return this.pos.config.fiscal_position_ids.length > 1;
+    },
+});
+
 return {
     ReceiptScreenWidget: ReceiptScreenWidget,
     ActionButtonWidget: ActionButtonWidget,
