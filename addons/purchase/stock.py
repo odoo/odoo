@@ -64,9 +64,6 @@ class stock_move(osv.osv):
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
-        if move.purchase_line_id:
-            invoice_line_vals['purchase_line_id'] = move.purchase_line_id.id
-            invoice_line_vals['account_analytic_id'] = move.purchase_line_id.account_analytic_id.id or False
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
@@ -117,6 +114,8 @@ class stock_move(osv.osv):
             purchase_line = move.purchase_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
+            res['purchase_line_id'] = purchase_line.id
+            res['account_analytic_id'] = purchase_line.account_analytic_id.id or False
         return res
 
     def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
