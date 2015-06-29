@@ -202,10 +202,12 @@ class product_product(osv.osv):
         return res
 
     def _compute_nbr_reordering_rules(self, cr, uid, ids, field_names=None, arg=None, context=None):
-        res = {}
-        product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id', 'in', ids)], ['product_id'], ['product_id'], context=context)
+        res = dict.fromkeys(ids, {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0})
+        product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
         for data in product_data:
-            res[data['product_id'][0]] = int(data['product_id_count'])
+            res[data['product_id'][0]]['nbr_reordering_rules'] = int(data['product_id_count'])
+            res[data['product_id'][0]]['reordering_min_qty'] = data['product_min_qty']
+            res[data['product_id'][0]]['reordering_max_qty'] = data['product_max_qty']
         return res
 
     _columns = {
@@ -266,7 +268,9 @@ class product_product(osv.osv):
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
-        'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer'),
+        'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer', multi=True),
+        'reordering_min_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),
+        'reordering_max_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -374,11 +378,13 @@ class product_template(osv.osv):
         return res
 
     def _compute_nbr_reordering_rules(self, cr, uid, ids, field_names=None, arg=None, context=None):
-        res = dict.fromkeys(ids, 0)
-        product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id.product_tmpl_id', 'in', ids)], ['product_id'], ['product_id'], context=context)
+        res = dict.fromkeys(ids, {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0})
+        product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id.product_tmpl_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
         for data in product_data:
             product_tmpl_id = data['__domain'][1][2][0]
-            res[product_tmpl_id] += data['product_id_count']
+            res[product_tmpl_id]['nbr_reordering_rules'] = int(data['product_id_count'])
+            res[product_tmpl_id]['reordering_min_qty'] = data['product_min_qty']
+            res[product_tmpl_id]['reordering_max_qty'] = data['product_max_qty']
         return res
 
     _columns = {
@@ -423,7 +429,9 @@ class product_template(osv.osv):
         
         'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
                                     help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
-        'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer'),
+        'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer', multi=True),
+        'reordering_min_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),
+        'reordering_max_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),
         'route_from_categ_ids': fields.related('categ_id', 'total_route_ids', type="many2many", relation="stock.location.route", string="Category Routes"),
     }
 

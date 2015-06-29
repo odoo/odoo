@@ -227,9 +227,20 @@
                         <field name="qty_available2" widget="statinfo"/>
                     </button>
                    <button class="oe_stat_button" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" string="Moves" groups="stock.group_stock_user" icon="fa-arrows-v"/>
-                   <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh">
+                   <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action"
+                        attrs="{'invisible':['|',('type', '=', 'service'),('nbr_reordering_rules', '==', 1)]}" icon="fa-refresh">
                         <field name="nbr_reordering_rules" widget="statinfo"/>
+                    </button>
+                    <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action"
+                        attrs="{'invisible':['|',('type', '=', 'service'),('nbr_reordering_rules', '!=', 1)]}" icon="fa-refresh">
+                        <div class="o_form_field o_stat_info mr4">
+                            <span class="o_stat_text">Min :</span>
+                            <span class="o_stat_text">Max:</span>
+                        </div>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value"><field name="reordering_min_qty"/></span>
+                            <span class="o_stat_value"><field name="reordering_max_qty"/></span>
+                        </div>
                     </button>
                    <button class="oe_stat_button" name="action_view_routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location" string="Routes"/>
                 </div>
@@ -249,11 +260,22 @@
                         <field name="qty_available2" widget="statinfo"/>
                    </button>
                    <button class="oe_stat_button" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" string="Moves" groups="stock.group_stock_user" icon="fa-arrows-v"/>
-                   <button class="oe_stat_button" name="action_view_orderpoints" type="object" 
-                        attrs="{'invisible':[('type', 'in', ('service','consu'))]}" icon="fa-refresh">
+                   <button class="oe_stat_button" name="action_view_orderpoints" type="object"
+                        attrs="{'invisible':['|',('type', 'in', ('service','consu')),('nbr_reordering_rules', '==', 1)]}" icon="fa-refresh">
                         <field name="nbr_reordering_rules" widget="statinfo"/>
                     </button>
-                   <button class="oe_stat_button" name="action_view_routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location" string="Routes"/>
+                    <button class="oe_stat_button" name="action_view_orderpoints" type="object"
+                        attrs="{'invisible':['|',('type', 'in', ('service','consu')),('nbr_reordering_rules', '!=', 1)]}" icon="fa-refresh">
+                        <div class="o_form_field o_stat_info mr4">
+                            <span class="o_stat_text">Min :</span>
+                            <span class="o_stat_text">Max:</span>
+                        </div>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value"><field name="reordering_min_qty"/></span>
+                            <span class="o_stat_value"><field name="reordering_max_qty"/></span>
+                        </div>
+                    </button>
+                    <button class="oe_stat_button" name="action_view_routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location" string="Routes"/>
                 </div>
             </field>
         </record>
