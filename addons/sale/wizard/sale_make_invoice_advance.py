@@ -9,6 +9,55 @@ class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
     _description = "Sales Advance Payment Invoice"
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(sale_advance_payment_inv, self).default_get(cr, uid, fields, context=context)
+        vals = self._amount_total(cr, uid, context=context)
+        res.update(vals)
+        return res
+
+    def _get_amounts(self, cr, uid, ids, field_name, arg, context=None):
+        vals = self._amount_total(cr, uid, context=context)
+        return dict.fromkeys(ids, vals)
+
+    def _amount_calculate(self, invoice):
+        invoiced, paid = 0, 0
+        if invoice.state not in ('cancel', 'draft'):
+            invoiced = invoice.amount_total
+        if invoice.state == 'paid':
+            paid = invoice.amount_total
+        if invoice.state == 'open':
+            paid = invoice.amount_total - invoice.residual
+        return invoiced , paid
+
+    def _currency_position(self, amount, order):
+        amount_paid = (amount, order.currency_id.symbol)
+        if order.currency_id.position == 'before':
+            amount_paid = amount_paid[::-1]
+        return _('(Including %s %s paid)') % amount_paid
+
+    def _amount_total(self, cr, uid, context=None):
+        vals = {}
+        refunded, invoiced, paid, refund_amount = 0.0, 0.0, 0.0, 0.0
+        if context is None:
+            context = {}
+        account_inv = self.pool['account.invoice']
+        order_id = context.get('active_id')
+        if order_id:
+            order = self.pool['sale.order'].browse(cr, uid, order_id, context=context)
+            refund_ids = account_inv.search(cr, uid, [('refund_invoice_id', 'in', order.invoice_ids.ids)], context=context)
+            for refund in account_inv.browse(cr, uid, refund_ids, context=context):
+                refunded_amount, refund_amount_paid = self._amount_calculate(refund)
+                refunded += refunded_amount
+                refund_amount += refund_amount_paid
+            for invoice in order.invoice_ids:
+                invoiced_amount, paid_amount = self._amount_calculate(invoice)
+                invoiced += invoiced_amount
+                paid += paid_amount
+            paid = self._currency_position(paid, order)
+            refund_amount = self._currency_position(refund_amount, order)
+            vals.update({'currency_id': order.currency_id.id, 'amount_total': order.amount_total, 'amount_paid': paid, 'amount_invoiced': invoiced, 'amount_refunded': -refunded, 'amount_tobe_invoice': order.amount_total - invoiced + refunded, 'refund_paid': refund_amount})
+        return vals
+
     _columns = {
         'advance_payment_method':fields.selection(
             [('all', 'Invoice the whole sales order'), ('percentage','Percentage'), ('fixed','Fixed price (deposit)'),
@@ -21,6 +70,19 @@ class sale_advance_payment_inv(osv.osv_memory):
             help="Select a product of type service which is called 'Advance Product'.\nYou may have to create it and set it as a default value on this field."),
         'amount': fields.float('Advance Amount', digits=0,
             help="The amount to be invoiced in advance. \nTaxes are not taken into account for advance invoices."),
+        'amount_total': fields.function(_get_amounts, string='Invoice Amount', multi='amounts', type="float",
+            help="Order total amount."),
+        'amount_paid': fields.function(_get_amounts, string='Amount Paid', multi='amounts', type="char",
+            help="Order paid amount."),
+        'refund_paid': fields.function(_get_amounts, string='Refund Paid', multi='amounts', type="char",
+            help="Invoice refund paid amount."),
+        'amount_invoiced': fields.function(_get_amounts, string='Already Invoiced', multi='amounts', type="float",
+            help="The amount already invoiced as an advance."),
+        'amount_refunded': fields.function(_get_amounts, string='Refunded', multi='amounts', type="float",
+            help="Invoice refund amount"),
+        'amount_tobe_invoice': fields.function(_get_amounts, string='Remaining Amount To Invoice', multi='amounts', type="float",
+            help="The amount to be invoiced."),
+        'currency_id': fields.function(_get_amounts, type='many2one', relation='res.currency', string='Currency', multi='amounts'),
     }
 
     def _get_advance_product(self, cr, uid, context=None):

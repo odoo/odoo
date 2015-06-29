@@ -96,9 +96,12 @@ class sale_order(osv.osv):
     def _get_invoiced(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
+            result = self.pool['account.invoice'].read_group(cr, uid, [('refund_invoice_id', 'in', order.invoice_ids.ids)], ['refund_invoice_id'], ['refund_invoice_id'], context=context)
+            mapped_data = dict([(m['refund_invoice_id'][0], m['refund_invoice_id_count']) for m in result])
             res[order.id] = {
                 'invoice_count': len(order.invoice_ids),
                 'invoiced': False,
+                'refund_count': mapped_data
             }
             if order.state != 'manual' and any(invoice.state == 'paid' for invoice in order.invoice_ids):
                 res[order.id]['invoiced'] = True
@@ -143,6 +146,7 @@ class sale_order(osv.osv):
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', readonly=True, copy=False, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."),
         'invoice_count': fields.function(_get_invoiced, type='integer', string='Invoices', multi="counts"),
+        'refund_count': fields.function(_get_invoiced, type='integer', string='Refunds', multi="counts"),
         'invoiced': fields.function(_get_invoiced, fnct_search=_search_invoiced, type='boolean', string='Paid', multi="counts"),
         'note': fields.text('Terms and conditions'),
         'amount_untaxed': fields.function(_amount_all_wrapper, digits=0, string='Untaxed Amount',
@@ -415,8 +419,8 @@ class sale_order(osv.osv):
         act_obj = self.pool.get('ir.actions.act_window')
 
         result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        inv_id = result and result[1] or False
+        result = act_obj.read(cr, uid, [inv_id], context=context)[0]
         #compute the number of invoices to display
         inv_ids = []
         for so in self.browse(cr, uid, ids, context=context):
@@ -427,6 +431,26 @@ class sale_order(osv.osv):
         else:
             res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
             result['views'] = [(res and res[1] or False, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
+        return result
+
+    def action_view_refund(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        account_invoice = self.pool['account.invoice']
+        id = mod_obj.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree1')
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        #compute the number of invoices refund to display
+        inv_ids = []
+        for so in self.browse(cr, uid, ids, context=context):
+            inv_ids += account_invoice.search(cr, uid, [('refund_invoice_id', 'in', so.invoice_ids.ids)], context=context)
+
+        #choose the view_mode accordingly
+        if len(inv_ids) > 1:
+            result['domain'] = [('id', 'in', inv_ids)]
+        else:
+            res = mod_obj.xmlid_to_res_id(cr, uid, 'account.invoice_form')
+            result['views'] = [(res or False, 'form')]
             result['res_id'] = inv_ids and inv_ids[0] or False
         return result
 

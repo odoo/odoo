@@ -152,6 +152,13 @@
                             attrs="{'invisible': [('invoice_count', '=', 0)]}" groups="base.group_user">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
                         </button>
+                        <button name="action_view_refund"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                            attrs="{'invisible': [('refund_count', '=', 0)]}" groups="base.group_user">
+                            <field name="refund_count" widget="statinfo" string="Refunds"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label string="Quotation" attrs="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>

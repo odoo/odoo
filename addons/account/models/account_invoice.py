@@ -296,7 +296,7 @@ class AccountInvoice(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity',
         related='partner_id.commercial_partner_id', store=True, readonly=True,
         help="The commercial entity that will be used on Journal Entries for this invoice")
-
+    refund_invoice_id = fields.Many2one('account.invoice', string="Refund Invoice")
     outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON')
     payments_widget = fields.Text(compute='_get_payment_info_JSON')
     has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON')
@@ -893,6 +893,7 @@ class AccountInvoice(models.Model):
             # create the new invoice
             values = self._prepare_refund(invoice, date_invoice=date_invoice, date=date,
                                     description=description, journal_id=journal_id)
+            values['refund_invoice_id'] = invoice.id
             new_invoices += self.create(values)
         return new_invoices
 
