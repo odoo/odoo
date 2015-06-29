@@ -8,8 +8,8 @@ class AccountJournal(models.Model):
 
     @api.one
     @api.depends('outbound_payment_method_ids')
-    def _compute_check_writing_payment_method_selected(self):
-        self.check_writing_payment_method_selected = any(pm.code == 'check_writing' for pm in self.outbound_payment_method_ids)
+    def _compute_check_printing_payment_method_selected(self):
+        self.check_printing_payment_method_selected = any(pm.code == 'check_printing' for pm in self.outbound_payment_method_ids)
 
     @api.one
     @api.depends('check_manual_sequencing')
@@ -32,8 +32,8 @@ class AccountJournal(models.Model):
         help="Checks numbering sequence.")
     check_next_number = fields.Integer('Next Check Number', compute='_get_check_next_number', inverse='_set_check_next_number',
         help="Sequence number of the next printed check.")
-    check_writing_payment_method_selected = fields.Boolean(compute='_compute_check_writing_payment_method_selected',
-        help="Technical feature used to know whether check writing was enabled as payment method.")
+    check_printing_payment_method_selected = fields.Boolean(compute='_compute_check_printing_payment_method_selected',
+        help="Technical feature used to know whether check printing was enabled as payment method.")
 
     @api.model
     def create(self, vals):
@@ -60,18 +60,18 @@ class AccountJournal(models.Model):
 
     def _default_outbound_payment_methods(self):
         methods = super(AccountJournal, self)._default_outbound_payment_methods()
-        return methods + self.env.ref('account_check_writing.account_payment_method_check_writing')
+        return methods + self.env.ref('account_check_printing.account_payment_method_check')
 
     @api.model
-    def _enable_check_writing_on_bank_journals(self):
-        """ Enables check writing payment method and add a check sequence on bank journals.
+    def _enable_check_printing_on_bank_journals(self):
+        """ Enables check printing payment method and add a check sequence on bank journals.
             Called upon module installation via data file.
         """
-        check_writing = self.env.ref('account_check_writing.account_payment_method_check_writing')
+        check_printing = self.env.ref('account_check_printing.account_payment_method_check')
         bank_journals = self.search([('type', '=', 'bank')])
         for bank_journal in bank_journals:
             check_sequence = self._create_check_sequence({'name': bank_journal.name, 'company_id': bank_journal.company_id.id})
             bank_journal.write({
-                'outbound_payment_method_ids': [(4, check_writing.id, None)],
+                'outbound_payment_method_ids': [(4, check_printing.id, None)],
                 'check_sequence_id': check_sequence.id,
             })
