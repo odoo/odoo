@@ -65,7 +65,6 @@ class account_payment_populate_statement(osv.osv_memory):
             return {'type': 'ir.actions.act_window_close'}
 
         statement = statement_obj.browse(cr, uid, context['active_id'], context=context)
-
         for line in line_obj.browse(cr, uid, line_ids, context=context):
             ctx = context.copy()
             ctx['date'] = line.ml_maturity_date  # was value_date earlier,but this field exists no more now
