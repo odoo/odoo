@@ -4,14 +4,16 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
 # zhang hao <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-08 02:45+0000\n"
-"Last-Translator: zhang hao <zhanghao@jointd.com>\n"
+"PO-Revision-Date: 2015-06-26 04:47+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +24,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,entry_count:0
 msgid "# Asset Entries"
-msgstr ""
+msgstr "# 资产分录"
 
 #. module: account_asset
 #: field:asset.asset.report,nbr:0
@@ -48,7 +50,7 @@ msgstr "资产会计"
 #. module: account_asset
 #: field:account.asset.asset,active:0
 msgid "Active"
-msgstr "激活"
+msgstr "有效"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -58,12 +60,12 @@ msgstr "在这里添加一个内部提示 ..."
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
-msgstr "已折旧金额"
+msgstr "已折旧的总额"
 
 #. module: account_asset
 #: field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
-msgstr "折旧行金额"
+msgstr "折旧行的总额"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
@@ -73,7 +75,7 @@ msgstr "分析信息"
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
 msgid "Analytic account"
-msgstr "核算科目"
+msgstr "分析账户"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -114,7 +116,7 @@ msgstr "要修改的资产周期"
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr "固定资产树"
+msgstr "资产层级"
 
 #. module: account_asset
 #: view:account.asset.history:account_asset.view_account_asset_history_form
@@ -142,7 +144,7 @@ msgstr "资产类别"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr "资产折旧明细"
+msgstr "资产折旧行"
 
 #. module: account_asset
 #: view:account.asset.history:account_asset.view_account_asset_history_tree
@@ -239,12 +241,12 @@ msgstr "选择要对正在使用的固定资产自动提折旧的期间"
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
-msgstr "报废"
+msgstr "关闭"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Closed"
-msgstr "已报废"
+msgstr "已关闭"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
@@ -279,12 +281,12 @@ msgstr "计算资产"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Confirm Asset"
-msgstr "确认固定资产"
+msgstr "确认资产"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Create Move"
-msgstr "新建会计凭证"
+msgstr "创建凭证"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
@@ -383,7 +385,7 @@ msgstr "折旧日期"
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
-msgstr "折旧分录"
+msgstr "折旧条目"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -453,12 +455,12 @@ msgstr "扩展过滤器..."
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "General"
-msgstr "基本设置"
+msgstr "通用"
 
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
 msgid "Gross Amount"
-msgstr "总金额"
+msgstr "总额"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -487,7 +489,7 @@ msgstr "历史名称"
 #: field:asset.asset.report,id:0
 #: field:asset.depreciation.confirmation.wizard,id:0 field:asset.modify,id:0
 msgid "ID"
-msgstr "标识"
+msgstr "ID"
 
 #. module: account_asset
 #: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
@@ -504,7 +506,7 @@ msgstr "发票"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "发票明细"
+msgstr "发票行"
 
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
@@ -514,7 +516,7 @@ msgstr "折旧后资产的剩余价值金额"
 #. module: account_asset
 #: field:account.asset.category,journal_id:0
 msgid "Journal"
-msgstr "凭证簿"
+msgstr "日记账"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:349
@@ -639,19 +641,19 @@ msgstr "已登帐金额"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Posted depreciation lines"
-msgstr "已登帐明细"
+msgstr "已登帐折旧明细"
 
 #. module: account_asset
 #: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr "年限百分比"
+msgstr "即时按比例分配"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr "等比折旧仅用于“折旧次数”的计时方式"
+msgstr "即时按比例分配仅能用于“折旧次数”的计时方式"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0
@@ -689,7 +691,7 @@ msgstr "运行中"
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
-msgstr "细分值"
+msgstr "残值"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_search
@@ -699,12 +701,12 @@ msgstr "搜索资产类别"
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence"
-msgstr "编号"
+msgstr "序列"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Set to Close"
-msgstr "设为报废"
+msgstr "设为关闭"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -766,7 +768,7 @@ msgstr "以月计的折旧间隔"
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
 msgid "Unposted Amount"
-msgstr "未登帐金额"
+msgstr "未登帐总额"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0

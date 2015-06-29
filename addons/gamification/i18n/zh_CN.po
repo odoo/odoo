@@ -3,13 +3,14 @@
 # * gamification
 # 
 # Translators:
+# mrshelly <mrshelly@hotmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-04 04:51+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-26 11:43+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr ""
+msgstr "\n        <p>恭喜你获得一枚徽章 <strong>${object.badge_id.name}</strong> !\n            % if object.sender_id\n                徽章授予者 <strong>${object.sender_id.name}</strong>.\n            % endif\n        </p>\n\n        % if object.comment\n            <p><em>${object.comment}</em></p>\n        % endif\n        "
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_goal_reminder
@@ -1907,7 +1908,7 @@ msgstr ""
 #: code:addons/gamification/static/src/xml/gamification.xml:108
 #, python-format
 msgid "more details..."
-msgstr ""
+msgstr "更多细节…"
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
@@ -1919,12 +1920,12 @@ msgstr "or"
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
 msgid "refresh"
-msgstr ""
+msgstr "刷新"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
 msgid "reply later"
-msgstr ""
+msgstr "以后答复"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
@@ -1934,9 +1935,9 @@ msgstr ""
 #. module: gamification
 #: view:gamification.badge.user:gamification.badge_user_kanban_view
 msgid "the"
-msgstr ""
+msgstr "于"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
 msgid "this month"
-msgstr ""
+msgstr "本月"

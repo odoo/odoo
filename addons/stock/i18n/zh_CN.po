@@ -6,6 +6,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # jeffery chen fan <jeffery9@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
+# xtjie <xtjie@126.com>, 2015
+# youring <youring@gmail.com>, 2015
 # youring <youring@gmail.com>, 2015
 # zhang hao <zhanghao@jointd.com>, 2015
 msgid ""
@@ -13,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-22 04:08+0000\n"
+"PO-Revision-Date: 2015-06-29 03:46+0000\n"
 "Last-Translator: zhang hao <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -39,14 +41,14 @@ msgid ""
 "                * Transferred: has been processed, can't be modified or cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr ""
+msgstr "\n                * 草稿：即未确认状态，直到确认前不会被安排分拣。\n\n                * 等待另一操作：等待另一库存移动完成后而自动变为可用状态（例如MTO流程）。\n\n                * 等待可用：等待产品可用状态。\n\n                * 部分可用：部分产品可用并被保留。\n\n                * 准备转移：产品已被保留，等待确认即可转移。\n\n                * 已转移：已完成转移，无法修改和取消。\n\n                * 已取消：已取消，无法被再次确认。"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_dropshipping:0
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr ""
+msgstr "\n创建从供应商采购直接发到客户的直运dropship库移路由，增加更加复杂的测试，需安装 stock_dropshipping模块。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1662
@@ -154,7 +156,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* 供应商库位 : 表示产品的供应商来源位置的虚拟库位\n                       \n* 视图 : 用于为仓库建立一个分层的结构的虚拟库位。用来聚集下级库位；不能直接放置产品\n                       \n* 内部库位 : 您仓库内部的实际库位。\n                       \n* 客户库位 : 表示产品的客户送货目的地的虚拟库位。\n                       \n* 盘点: 用于盘点操作的虚拟库位，用于确认库存量(实物盘点表) \n                       \n* 需求 : 当来源是(供应商或生产)还不得而知时用于临时需求操作的虚拟库位。当需求计划运行完成后这个库位应该为空、\n                       \n* 生产 : 生产作业的虚拟对应库位: 这库位可以有消耗品、原料及成品\n                       \n* 运输库位: 公司之间或仓库内部操作的对应库位\n                      "
 
 #. module: stock
 #. openerp-web
@@ -174,7 +176,7 @@ msgid ""
 "                    routes can be assigned to a product, a product category or be fixed\n"
 "                    on procurement or sales order. </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    单击 创建路径。\n              </p>\n                <p>您可以在这里定义您仓库的主要路径\n                    并可以定义您产品的流程。 这些\n                    路线可以分配给产品、产品类别或固定于\n                    需求单或销售订单上。 </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -235,7 +237,7 @@ msgid ""
 "                customers.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                添加一个序列号。\n              </p><p>\n                这是所有产品批次的记录清单。当\n                您选择了一个批号，你能获得\n                批号中包含产品的可追溯性。默认情况下，\n                此列表过滤出了您仓库中可用的序列号，\n                但您可以通过取消“可用”这个过滤条件来获得所有批次。\n               接收或者发运给客户的。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_form
@@ -2039,7 +2041,7 @@ msgstr "盘存盈亏"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Inventory of"
-msgstr ""
+msgstr "盘存"
 
 #. module: stock
 #: field:stock.config.settings,group_uos:0
@@ -2329,7 +2331,7 @@ msgstr "批次"
 #. module: stock
 #: field:stock.warehouse,mto_pull_id:0
 msgid "MTO rule"
-msgstr ""
+msgstr "MTO规则"
 
 #. module: stock
 #: model:ir.model,name:stock.model_make_procurement
@@ -2377,7 +2379,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,group_stock_adv_location:0
 msgid "Manage advanced routes for your warehouse"
-msgstr ""
+msgstr "管理仓库的高级路线"
 
 #. module: stock
 #: field:stock.config.settings,group_uom:0
@@ -4034,7 +4036,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:122
 #, python-format
 msgid "Scanned"
-msgstr ""
+msgstr "已扫描"
 
 #. module: stock
 #. openerp-web
@@ -4941,13 +4943,13 @@ msgstr "对产品和序列号跟踪不同的日期。\n下列日期可被跟踪�
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
 msgid "Track lots or serial numbers"
-msgstr ""
+msgstr "跟踪批次或序列号码"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 #: field:stock.transfer_details_items,transfer_id:0
 msgid "Transfer"
-msgstr ""
+msgstr "转移"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -4999,7 +5001,7 @@ msgstr ""
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique Serial Number"
-msgstr ""
+msgstr "唯一序列号码"
 
 #. module: stock
 #: field:stock.quant,cost:0
@@ -5198,12 +5200,12 @@ msgstr "等待可用"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Availability Transfers"
-msgstr ""
+msgstr "等待可用转移"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Waiting Moves"
-msgstr ""
+msgstr "等待移动"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -5224,17 +5226,17 @@ msgstr "仓库"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Warehouse Address:"
-msgstr ""
+msgstr "仓库地址："
 
 #. module: stock
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Warehouse Configuration"
-msgstr ""
+msgstr "仓库配置"
 
 #. module: stock
 #: field:stock.warehouse,name:0
 msgid "Warehouse Name"
-msgstr ""
+msgstr "仓库名称"
 
 #. module: stock
 #: field:procurement.rule,propagate_warehouse_id:0
@@ -5288,13 +5290,13 @@ msgstr "警告!"
 #: code:addons/stock/stock.py:3866
 #, python-format
 msgid "Warning: wrong UoM!"
-msgstr ""
+msgstr "警告：错误UoM！"
 
 #. module: stock
 #: code:addons/stock/stock.py:3873
 #, python-format
 msgid "Warning: wrong quantity!"
-msgstr ""
+msgstr "警告：错误数量！"
 
 #. module: stock
 #: help:product.putaway,fixed_location_ids:0
@@ -5560,9 +5562,9 @@ msgstr "⇒ 请求补货"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
-msgstr ""
+msgstr "⇒ 设置数量为 0"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "⇒ Update"
-msgstr ""
+msgstr "⇒ 更新"
