@@ -1609,6 +1609,9 @@ class _RelationalMulti(_Relational):
             if not record.id:
                 record = record.browse()        # new record has no value
             result = record[self.name]
+            # collect ids in order to be faster when reading big lists
+            # from the database (common case probably)
+            ids = []
             # modify result with the commands;
             # beware to not introduce duplicates in result
             for command in value:
@@ -1631,8 +1634,10 @@ class _RelationalMulti(_Relational):
                         result = result.browse(command[2])
                 elif isinstance(command, dict):
                     result += result.new(command)
-                else:
-                    result += result.browse(command) - result
+                elif command not in ids:
+                    ids.append(command)
+            if ids:
+                result += result.browse(ids) - result
             return result
         elif not value:
             return self.null(record.env)
