@@ -38,7 +38,7 @@ class DeliveryCarrier(models.Model):
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True)
     grid_ids = fields.One2many('delivery.grid', 'carrier_id', string='Delivery Grids', oldname='grids_id')
     active = fields.Boolean(help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it.", default=True)
-    normal_price = fields.Float(help="Keep empty if the pricing depends on the advanced pricing per destination")
+    normal_price = fields.Float(help="Keep empty if the pricing depends on the advanced pricing per destination", string="Normal Price")
     free_if_more_than = fields.Boolean(string='Free If Order Total Amount Is More Than', default=False, help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping")
     amount = fields.Float(help="Amount of the order to benefit from a free shipping, expressed in the company currency")
     use_detailed_pricelist = fields.Boolean(string='Advanced Pricing per Destination', help="Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc.""")
@@ -168,6 +168,7 @@ class DeliveryCarrier(models.Model):
                     'sequence': 10,
                 }
                 grids = Grid.create(grid_data)
+            if grids:
                 grids.line_ids.unlink()
 
             # create the grid lines
