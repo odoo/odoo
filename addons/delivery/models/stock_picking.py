@@ -1,31 +1,44 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Odoo, Open Source Business Applications
-#    Copyright (c) 2015 Odoo S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api
+import openerp.addons.decimal_precision as dp
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    @api.depends('product_id', 'move_lines')
+    def _cal_weight(self):
+        for picking in self:
+            total_weight = total_weight_net = 0.00
+
+            for move in picking.move_lines:
+                total_weight += move.weight
+                total_weight_net += move.weight_net
+
+                move.total_weight = total_weight
+                move.total_weight_net = total_weight_net
+
+    def _default_uom(self):
+        uom_categ_id = self.env.ref('product.product_uom_categ_kgm').id
+        return self.env['product.uom'].search([('category_id', '=', uom_categ_id), ('factor', '=', 1)], limit=1)
+
+    @api.multi
+    def _get_picking_line(self):
+        result = {}
+        for line in self.env['stock.move']:
+            result[line.picking_id.id] = True
+        return result.keys()
+
     carrier_price = fields.Float(string="Shipping Cost", readonly=True)
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
+    carrier_id = fields.Many2one('delivery.carrier', string='Carrier')
+    volume = fields.Float(copy=False)
+    weight = fields.Float(compute='_cal_weight', digits=dp.get_precision('Stock Weight'), store=True)
+    weight_net = fields.Float(compute='_cal_weight', string='Net Weight', digits=dp.get_precision('Stock Weight'), store=True)
+    carrier_tracking_ref = fields.Char(string='Carrier Tracking Ref', copy=False)
+    number_of_packages = fields.Integer(string='Number of Packages', copy=False)
+    weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly=True, help="Unit of measurement for Weight", default=_default_uom)
 
     @api.multi
     def do_transfer(self):
@@ -52,7 +65,9 @@ class StockPicking(models.Model):
 
         # Classic carrier
         if carrier.delivery_type == 'grid':
-            return super(StockPicking, self)._prepare_shipping_invoice_line(picking, invoice)
+            grid_id = carrier.grid_get(picking.partner_id.id)
+            if not grid_id:
+                raise UserError(_('The carrier %s (id: %d) has no delivery grid!') % (picking.carrier_id.name, picking.carrier_id.id))
 
         # Shipping provider
         price = picking.carrier_price
@@ -82,6 +97,22 @@ class StockPicking(models.Model):
         }
 
         return res
+
+    @api.model
+    def _invoice_create_line(self, moves, journal_id, inv_type='out_invoice'):
+        InvoiceLine = self.env['account.invoice.line']
+        invoice_ids = super(StockPicking, self)._invoice_create_line(moves, journal_id, inv_type=inv_type)
+        delivey_invoices = {}
+        for move in moves:
+            for invoice in move.picking_id.sale_id.invoice_ids:
+                if invoice.id in invoice_ids:
+                    delivey_invoices[invoice] = move.picking_id
+        if delivey_invoices:
+            for invoice, picking in delivey_invoices.items():
+                invoice_line = self._prepare_shipping_invoice_line(picking, invoice)
+                if invoice_line:
+                    InvoiceLine.create(invoice_line)
+        return invoice_ids
 
     @api.one
     def send_to_shipper(self):
