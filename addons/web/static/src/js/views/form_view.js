@@ -725,6 +725,27 @@ var FormView = View.extend(common.FieldManagerMixin, {
             $(e.target).attr("disabled", false);
         });
     },
+    popup_alertbox: function(values) {
+        var self = this;
+        if(this.session.user_context.translation_flag)return;
+        self.on("change:actual_mode", self, function(){
+            if(self.get("actual_mode")=="edit"){
+                self.$el.find('#alertbox').remove();
+            }
+        });
+        this.$el.find('#alertbox').remove();
+        
+        return new Model('res.lang').call('search_read',[ [['code','=', this.session.user_context.lang]], ['name'] ], {context: self.dataset.context}).then(function(result){
+            _.each(_.keys(values), function(field_name){
+                    var trans_field = _.find(self.translatable_fields, function(field){ return field_name == field.name; });
+                    if(trans_field){
+                        var temp = $(QWeb.render('alertbox', {'widget':trans_field,'lang':result[0].name}));
+                        self.$el.find('.oe_form_sheet').prepend(temp);
+                        $(temp).find('a:first').click(trans_field.on_translate);
+                    }
+            });
+        });
+    },
     on_button_cancel: function(event) {
         var self = this;
         if (this.can_be_discarded()) {
@@ -872,6 +893,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 } else {
                     // Write save
                     save_deferral = self.dataset.write(self.datarecord.id, values, {readonly_fields: readonly_values}).then(function(r) {
+                        self.popup_alertbox(values);
                         return self.record_saved(r);
                     }, null);
                 }

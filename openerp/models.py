@@ -3844,7 +3844,7 @@ class BaseModel(object):
         upd_todo = []
         updend = []
         direct = []
-        totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
+        totranslate = context.get('lang', False)
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3881,15 +3881,23 @@ class BaseModel(object):
 
             if totranslate:
                 # TODO: optimize
+                ir_translation = self.pool['ir.translation']
+                model_name = self.pool[self._name]
+                context_wo_lang = dict(context, lang=None)
                 for f in direct:
-                    if self._columns[f].translate:
-                        src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
-                        if not src_trans:
-                            src_trans = vals[f]
-                            # Inserting value to DB
-                            context_wo_lang = dict(context, lang=None)
-                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
+                    if f not in ['write_uid', 'write_date']:
+                        src_trans = model_name.read(cr, user, ids, [f])[0][f]
+                        if self.pool['res.lang'].check_single_lang_enable(cr, user, context=None):
+                            if self.write(cr, user, ids, {f: vals[f]}, context_wo_lang):
+                                ids_to_unlink = ir_translation.search(cr, user, [('src', '=', src_trans), ('type', '=', 'model'), ('name', '=', self._name+','+f), ('res_id', 'in', ids)])
+                                ir_translation.unlink(cr, user, ids_to_unlink, context)
+                        else:
+                            if not src_trans:
+                                src_trans = vals[f]
+                                 # Inserting value to DB
+                                context_wo_lang = dict(context, lang=None)
+                                self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
+                            ir_translation._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
