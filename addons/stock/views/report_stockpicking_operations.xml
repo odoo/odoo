@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <template id="report_picking_operations">
+        <template id="external_layout_barcode_right" inherit_id="report.external_layout" primary="True">
+            <xpath expr="//t[@t-call='report.external_layout_header']" position="attributes">
+                <attribute name="t-call">stock.external_layout_header_barcode_right</attribute>
+            </xpath>
+        </template>
+        <template id="external_layout_header_barcode_right" inherit_id="report.external_layout_header" primary="True">
+            <xpath expr="//div[@name='company_address']" position="after">
+                <div class="col-xs-4 pull-right" name="right_box">
+                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;"/>
+                </div>
+            </xpath>
+        </template>
+        <template id="report_picking">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-call="report.external_layout">
+                    <t t-call="stock.external_layout_barcode_right">
                         <div class="page">
-                            <div class="row"><div class="col-xs-4 pull-right">
-                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;"/>
-                            </div></div>
+                            <br/>
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
@@ -39,10 +49,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <h2>
-                            <span t-field="o.picking_type_id"/>:
-                            <span t-field="o.name"/>
-                            </h2>
+                            <br/><br/>
+                            <div t-field="o.picking_type_id"/>
+                            <h1 t-field="o.name" class="mt0"/>
                             <table class="table table-condensed">
                             <thead>
                                 <tr>
@@ -71,7 +80,7 @@
                             </table>
                             <br/>
                             <br/>
-                            <table class="table table-condensed">
+                            <table class="table table-condensed" t-if="o.pack_operation_ids">
                               <thead>
                                 <tr>
                                     <th><strong>Product</strong></th>
@@ -111,6 +120,10 @@
                                 </tr>
                               </tbody>
                             </table>
+                            <p t-if="not o.pack_operation_ids">
+                                You do not have any products reserved for this picking.  Please click the 'Reserve' button
+                                to check if products are available.
+                            </p>
                         </div>
                     </t>
                  </t>

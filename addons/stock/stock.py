@@ -891,11 +891,6 @@ class stock_picking(models.Model):
         context = dict(context or {}, active_ids=ids)
         return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking', context=context)
 
-    def do_print_picking_operations(self, cr, uid, ids, context=None):
-        '''This function prints the picking list with the pack operations and should be used in the bar code interface'''
-        context = dict(context or {}, active_ids=ids)
-        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking_operations', context=context)
-
     def launch_packops(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'launch_pack_operations': True}, context=context)
 

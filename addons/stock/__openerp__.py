@@ -69,7 +69,6 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_package_barcode.xml',
         'views/report_lot_barcode.xml',
         'views/report_location_barcode.xml',
-        'views/report_stockpicking.xml',
         'views/report_stockpicking_operations.xml',
         'views/report_stockinventory.xml',
         'report/report_stock_forecast.xml',
