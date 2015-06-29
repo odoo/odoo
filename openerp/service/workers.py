@@ -23,8 +23,11 @@ except ImportError:
 
 import openerp
 import openerp.tools.config as config
+from openerp.netsvc import memory_info
 
 _logger = logging.getLogger(__name__)
+
+
 
 class Multicorn(object):
     """ Multiprocessing inspired by (g)unicorn.
@@ -261,7 +264,7 @@ class Worker(object):
             _logger.info("Worker (%d) max request (%s) reached.", self.pid, self.request_count)
             self.alive = False
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-        rss, vms = psutil.Process(os.getpid()).get_memory_info()
+        rss, vms = memory_info(psutil.Process(os.getpid()))
         if vms > config['limit_memory_soft']:
             _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
             self.alive = False # Commit suicide after the request.
@@ -396,7 +399,7 @@ class WorkerCron(Worker):
             self.setproctitle(db_name)
             if rpc_request_flag:
                 start_time = time.time()
-                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
             while True:
                 # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 # TODO why isnt openerp.addons.base defined ?
@@ -410,7 +413,7 @@ class WorkerCron(Worker):
                 openerp.sql_db.close_db(db_name)
             if rpc_request_flag:
                 end_time = time.time()
-                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
                 logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (db_name, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
                 _logger.debug("WorkerCron (%s) %s", self.pid, logline)
 
