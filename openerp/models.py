@@ -3889,7 +3889,7 @@ class BaseModel(object):
                         src_trans = model_name.read(cr, user, ids, [f])[0][f]
                         if self.pool['res.lang'].check_single_lang_enable(cr, user, context=None):
                             if self.write(cr, user, ids, {f: vals[f]}, context_wo_lang):
-                                ids_to_unlink = ir_translation.search(cr, user, [('src', '=', src_trans), ('type', '=', 'model'), ('name', '=', self._name+','+f), ('res_id', 'in', ids)])
+                                ids_to_unlink = ir_translation.search(cr, user, [('src', '=', src_trans if not isinstance(src_trans, tuple) else src_trans[1]), ('type', '=', 'model'), ('name', '=', self._name+','+f), ('res_id', 'in', ids)])
                                 ir_translation.unlink(cr, user, ids_to_unlink, context)
                         else:
                             if not src_trans:
