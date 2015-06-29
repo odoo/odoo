@@ -87,7 +87,7 @@ class account_journal(models.Model):
                 short_name = format_date(show_date, 'd MMM', locale=locale)
                 data.append({'x': short_name, 'y':last_balance, 'name': name})
 
-        return [{'values': data, 'color': '#ff7f0e', 'area': True}]
+        return [{'values': data, 'area': True}]
 
     @api.multi
     def get_bar_graph_datas(self):
@@ -96,7 +96,7 @@ class account_journal(models.Model):
         if self.type == 'purchase':
             title = _('Bills you need to pay')
         today = datetime.strptime(fields.Date.context_today(self), DF)
-        data.append({'label': _('Past'), 'value':0.0, 'color': '#ff0000'})
+        data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
         day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang', 'en_US')))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
@@ -111,7 +111,7 @@ class account_journal(models.Model):
                     label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang', 'en_US'))
                 else:
                     label = format_date(start_week, 'd MMM', locale=self._context.get('lang', 'en_US'))+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang', 'en_US'))
-            data.append({'label':label,'value':0.0, 'color': '#ff0000' if i<0 else '#ff7f0e'})
+            data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
         select_sql_clause = """SELECT sum(residual_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
@@ -132,8 +132,6 @@ class account_journal(models.Model):
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
                 data[index]['value'] = query_results[index].get('total')
-            else:
-                data[index]['color'] = '#ffffff'
 
         return [{'values': data, 'title': title}]
 

@@ -10,12 +10,87 @@
             border-top-style: solid;
             border-top-width: 1px;
         }
-        .o_kanban_graph_section {
-            padding: 16px;
-        }
         .o_dashboard_star {
             font-size: 12px;
             margin-left: 5px;
+        }
+        .o_kanban_graph_section {
+            padding-top: 20px;
+
+            .nvtooltip {
+                padding: 0 8px 0 8px;
+                .o_tooltip_content {
+                    color: @odoo-brand-primary;
+                    font-weight: bold;
+                }
+            }
+            .o_graph_linechart {
+
+                svg {
+                    height: 75px;
+
+                    // X axis
+                    g.nv-x.nv-axis {
+                        transform: translateY(50px);
+
+                        // Remove max and min labels
+                        g.nv-axisMaxMin {
+                            display: none;
+                        }
+                        g.tick.major {
+                            // Don't know why, but leads to strange bold text
+                            // stroke: @odoo-brand-primary;
+
+                            line {
+                                display: none;
+                            }
+                        }
+                    }
+
+                    // !important are needed because nvd3 uses inline style on elements
+
+                    // Remove strokes
+                    g.nv-linesWrap {
+                        g.nv-group.nv-series-0 {
+                            fill-opacity: 0.3 !important;
+                            fill: @odoo-brand-primary !important;
+                            stroke: @odoo-brand-primary !important;
+
+                            .nv-point {
+                                visibility: hidden;
+                                r: 3;
+                                stroke: @odoo-brand-primary !important;
+                                fill: white;
+                                stroke-width: 2;
+                            }
+                            .nv-point:nth-child(5n+1) {
+                                visibility: visible;
+                                fill-opacity: .95 !important;
+                                stroke-opacity: .95 !important;
+                            }
+                        }
+                    }
+                }
+            }
+            .o_graph_barchart {
+
+                svg {
+                    height: 75px;
+                    overflow: visible;
+                    g.nv-barsWrap {
+                        g.nv-group.nv-series-0 {
+                            g.past {
+                                opacity: 0.5;
+                                fill: @odoo-brand-primary !important;
+                            }
+                            g.future {
+                                opacity: 0.5;
+                                fill: @odoo-brand-optional !important;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

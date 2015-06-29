@@ -5,84 +5,116 @@ var kanban_widgets = require('web_kanban.widgets');
 
 var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
     start: function() {
-        var self = this;
-        self.graph_type = self.$node.attr('graph_type')
-        self.display_graph(JSON.parse(self.field.raw_value));
+        this.graph_type = this.$node.attr('graph_type');
+        this.data = JSON.parse(this.field.raw_value);
+        this.display_graph();
     },
-    display_graph : function(data) {
+
+    display_graph : function() {
         var self = this;
         nv.addGraph(function () {
-            self.$el.append('<svg style="height:75px; overflow:visible;">');
-            var type = self.graph_type
-            switch(type) {
+            self.$svg = self.$el.append('<svg>');
+
+            switch(self.graph_type) {
+
                 case "line":
-                    var chart = nv.models.lineChart();
-                    chart.options({
-                        x: function(d,u) { return u},
-                        width: self.$el.find('svg').width(),
-                        height: self.$el.find('svg').height(),
-                        margin: {'left': 15, 'right':10, 'top':10, 'bottom': 20},
+                    self.$svg.addClass('o_graph_linechart');
+
+                    self.chart = nv.models.lineChart();
+                    self.chart.options({
+                        x: function(d, u) { return u },
+                        margin: {'left': 0, 'right': 0, 'top': 0, 'bottom': 0},
                         showYAxis: false,
                         showLegend: false,
                         tooltips: true,
                         tooltipContent: function(key, x, y, e, graph) {
-                            var header = "";
-                            $.each(e.series.values, function(k,v){
-                                if (v.x === x){
-                                    header = v.name;
+                            return self.create_tooltip(x, y, e);
+                        },
+                    });
+                    self.chart.xAxis
+                        .tickFormat(function(d) {
+                            var label = '';
+                            _.each(self.data, function(v, k){
+                                if (v.values[d] && v.values[d].x){
+                                    label = v.values[d].x;
                                 }
                             });
-                            return '<h3>' + header + '</h3> <p> Balance ' +  y + '</p>'},
-                    });
-                    chart.xAxis
-                    .tickFormat(function(d) {
-                        var label = '';
-                        $.each(data, function(el){
-                            if (data[el].values[d] && data[el].values[d].x){
-                                label = data[el].values[d].x;
-                            }
+                            return label;
                         });
-                        return label;
-                    })
-                    .showMaxMin(false);
-                    chart.yAxis.tickFormat(d3.format(',.2f'));
+                    self.chart.yAxis
+                        .tickFormat(d3.format(',.2f'));
+
                     break;
+
                 case "bar":
-                    var bar_color = [];
-                    $.each(data[0].values, function(k,v){
-                        bar_color.push(v.color);
-                    })
-                    var chart = nv.models.discreteBarChart()
-                    .x(function(d) { return d.label })
-                    .y(function(d) { return d.value })
-                    .width(self.$el.find('svg').width())
-                    .height(self.$el.find('svg').height())
-                    .showValues(false)
-                    .showYAxis(false)
-                    .color(bar_color)
-                    .margin({'left': 15, 'right':10, 'top':10, 'bottom': 25})
-                    .tooltips(true);
-                    chart.xAxis.axisLabel(data[0].title);
-                    chart.yAxis.tickFormat(d3.format(',.2f'));
+                    self.$svg.addClass('o_graph_barchart');
+
+                    self.chart = nv.models.discreteBarChart()
+                        .x(function(d) { return d.label })
+                        .y(function(d) { return d.value })
+                        .showValues(false)
+                        .showYAxis(false)
+                        .margin({'left': 0, 'right': 0, 'top': 0, 'bottom': 40})
+                        .tooltips(true)
+                        .tooltipContent(function(key, x, y, e, graph) {
+                            return self.create_tooltip(x, y, e);
+                        });
+
+                    self.chart.xAxis.axisLabel(self.data[0].title);
+                    self.chart.yAxis.tickFormat(d3.format(',.2f'));
+
                     break;
             }
-            self.svg = self.$el.find('svg')[0];
-            d3.select(self.svg)
-                .datum(data)
+            d3.select(self.$el.find('svg')[0])
+                .datum(self.data)
                 .transition().duration(1200)
-                .call(chart);
-            nv.utils.windowResize(function() { d3.select(self.svg).call(chart.width(self.$el.find('svg').width()).height(self.$el.find('svg').height())); self.postprocess(); });
-            
+                .call(self.chart);
+
+            self.customize_chart(self.data);
+
+            nv.utils.windowResize(self.on_resize);
         });
-        //ugly, need to do something else
-        setTimeout(function(){self.postprocess();},2000);
-        
-        
     },
-    postprocess: function(){
-        var low_rect = $(this.svg).find('rect').filter(function(){return $(this).attr('height') < 1.0 })
-        low_rect.attr('height', 1);
+
+    on_resize: function(){
+        this.chart.update();
+        this.customize_chart(this.data);
     },
+
+    customize_chart: function(){
+
+        if (this.graph_type === 'bar') {
+            // Add classes related to time on each bar of the bar chart
+            var bar_classes = _.map(this.data[0].values, function (v, k) {return v.type});
+
+            _.each(this.$('.nv-bar'), function(v, k){
+                v.classList.add(bar_classes[k]);
+            });
+        }
+    },
+
+    create_tooltip: function(x, y, e){
+        var header = _.findWhere(e.series.values, {x: x})
+        header = header && header.name || x;
+
+        var $tooltip = $('<div>').addClass('o_tooltip');
+
+        $('<b>')
+            .addClass('o_tooltip_title')
+            .html(header)
+            .appendTo($tooltip)
+        $('<div>')
+            .addClass('o_tooltip_content')
+            .html('Balance ' + y)
+            .appendTo($tooltip)
+        return $tooltip[0].outerHTML;
+    },
+
+    destroy: function(){
+        nv.utils.offWindowResize(this.on_resize);
+        this._super();
+    },
+
 });
 
 
