@@ -284,7 +284,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         return res
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, *args, **kwargs):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         state = self.pool.get('ir.model.fields.anonymization')._get_global_state(cr, uid, context=context)
 
         if context is None:
@@ -292,7 +292,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         step = context.get('step', 'new_window')
 
-        res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)
+        res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
         eview = etree.fromstring(res['arch'])
         placeholder = eview.xpath("group[@name='placeholder1']")

@@ -46,8 +46,8 @@ class board_board(osv.osv):
         """
 
         res = {}
-        res = super(board_board, self).fields_view_get(cr, user, view_id, view_type,
-                                                       context, toolbar=toolbar, submenu=submenu)
+        res = super(board_board, self).fields_view_get(cr, user, view_id=view_id, view_type=view_type,
+                                                       context=context, toolbar=toolbar, submenu=submenu)
 
         CustView = self.pool.get('ir.ui.view.custom')
         vids = CustView.search(cr, user, [('user_id', '=', user), ('ref_id', '=', view_id)], context=context)

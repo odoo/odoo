@@ -330,14 +330,14 @@ class MailThread(models.AbstractModel):
 
         return help
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(MailThread, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(MailThread, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='message_ids']"):
                 options = json.loads(node.get('options', '{}'))
-                user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
-                options['display_log_button'] = user.has_group('base.group_user')
+                options['display_log_button'] = self.env.user.sudo().has_group('base.group_user')
                 node.set('options', json.dumps(options))
             res['arch'] = etree.tostring(doc)
         return res
