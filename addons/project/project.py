@@ -28,7 +28,49 @@ from openerp import tools
 from openerp.addons.resource.faces import task as Task
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import ustr
 
+
+def replace_hours_label(model, cr, uid, view, context=None):
+    users_obj = model.pool.get('res.users')
+    if context is None: context = {}
+    # read uom as admin to avoid access rights issues, e.g. for portal/share users,
+    # this should be safe (no context passed to avoid side-effects)
+    obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
+    try:
+        # using get_object to get translation value
+        uom_hour = model.pool['ir.model.data'].get_object(cr, uid, 'product', 'product_uom_hour', context=context)
+    except ValueError:
+        uom_hour = False
+    if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
+        return view
+
+    eview = etree.fromstring(view['arch'])
+
+    def _check_rec(eview):
+        if eview.attrib.get('widget','') == 'float_time':
+            eview.set('widget','float')
+        label = eview.attrib.get('string', '')
+        if uom_hour.name in label:
+            eview.set('string', label.replace(uom_hour.name, obj_tm.name))
+        for child in eview:
+            _check_rec(child)
+        return True
+
+    def _replace_label(view_info):
+        for f in view_info['fields']:
+            label = ustr(view_info['fields'][f]['string'])
+            if uom_hour.name in label:
+                view_info['fields'][f]['string'] = label.replace(uom_hour.name, obj_tm.name)
+            #recursive the nested views
+            for sub_name, subview in view_info['fields'][f].get('views', {}).iteritems():
+                _replace_label(subview)
+
+    _check_rec(eview)
+    view['arch'] = etree.tostring(eview)
+
+    _replace_label(view)
+    return view
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -545,6 +587,10 @@ def Project():
             vals.update(alias_model_id=model_ids[0])
         return super(project, self).write(cr, uid, ids, vals, context=context)
 
+    # Override view according to the company definition
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(project, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
+        return replace_hours_label(self, cr, uid, res, context=context)
 
 class task(osv.osv):
     _name = "project.task"
@@ -840,44 +886,8 @@ class task(osv.osv):
 
     # Override view according to the company definition
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        users_obj = self.pool.get('res.users')
-        if context is None: context = {}
-
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
-
-        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
-        # this should be safe (no context passed to avoid side-effects)
-        obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
-        try:
-            # using get_object to get translation value
-            uom_hour = self.pool['ir.model.data'].get_object(cr, uid, 'product', 'product_uom_hour', context=context)
-        except ValueError:
-            uom_hour = False
-        if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
-            return res
-
-        eview = etree.fromstring(res['arch'])
-
-        # if the project_time_mode_id is not in hours (so in days), display it as a float field
-        def _check_rec(eview):
-            if eview.attrib.get('widget','') == 'float_time':
-                eview.set('widget','float')
-            for child in eview:
-                _check_rec(child)
-            return True
-
-        _check_rec(eview)
-
-        res['arch'] = etree.tostring(eview)
-
-        # replace reference of 'Hours' to 'Day(s)'
-        for f in res['fields']:
-            # TODO this NOT work in different language than english
-            # the field 'Initially Planned Hours' should be replaced by 'Initially Planned Days'
-            # but string 'Initially Planned Days' is not available in translation
-            if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours', obj_tm.name)
-        return res
+        return replace_hours_label(self, cr, uid, res, context=context)
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         context = dict(context or {})
