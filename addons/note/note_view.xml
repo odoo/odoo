@@ -67,7 +67,7 @@
                 </div>
                   <span>
                     <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-check"/></a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>
                   </span>
                 <!-- kanban note -->
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
