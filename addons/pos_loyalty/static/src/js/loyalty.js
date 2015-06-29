@@ -306,12 +306,13 @@ openerp.pos_loyalty = function(instance){
             }
         },
             
-        validate: function(){
+        finalize: function(){
             var client = this.get_client();
             if ( client ) {
                 client.loyalty_points = this.get_new_total_points();
             }
-            _super.prototype.validate.apply(this,arguments);
+            this.pos.gui.screen_instances.clientlist.partner_cache.clear_node(client.id);
+            _super.prototype.finalize.apply(this,arguments);
         },
 
         export_for_printing: function(){

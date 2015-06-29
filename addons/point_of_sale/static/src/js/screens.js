@@ -205,6 +205,14 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
             return node;
         },
+        clear_node: function(key) {
+            var cached = this.cache[key];
+            if (cached) {
+                delete this.cache[key];
+                delete this.access_time[key];
+                this.size --;
+            }
+        },
         get_node: function(key){
             var cached = this.cache[key];
             if(cached){
