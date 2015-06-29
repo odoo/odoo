@@ -70,7 +70,7 @@
                                     <button name="open_sale_order_lines"
                                         class="oe_link"
                                         string="⇒ Invoice" type="object"
-                                        context="{'default_partner_id': [partner_id],'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}"/>
+                                        context="{'default_partner_id': partner_id,'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}"/>
                                     or view
                                 </span>
 
@@ -80,7 +80,7 @@
                                 <button name="%(action_sales_order)d" string="Sales Orders"
                                     type="action"
                                     class="oe_link"
-                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id], 'default_pricelist_id': pricelist_id}"
+                                    context="{'default_partner_id': partner_id, 'search_default_project_id': [active_id],'default_project_id': [active_id], 'default_pricelist_id': pricelist_id}"
                                     />
                             </td>
                         </tr><tr attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
