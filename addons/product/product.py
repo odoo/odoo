@@ -390,7 +390,7 @@ class product_template(osv.osv):
                 products = self.browse(cr, uid, ids, context=context)
                 qtys = map(lambda x: (x, quantity, partner), products)
                 pl = plobj.browse(cr, uid, pricelist, context=context)
-                price = plobj._price_get_multi(cr,uid, pl, qtys, context=context)
+                price = plobj._price_get_multi(cr, uid, pl, qtys, context=context)
                 for id in ids:
                     res[id] = price.get(id, 0.0)
         for id in ids:
@@ -527,6 +527,7 @@ class product_template(osv.osv):
             help="This is minimum quantity to purchase from Main Vendor."),
         'seller_id': fields.related('seller_ids','name', type='many2one', relation='res.partner', string='Main Vendor',
             help="Main vendor who has highest priority in vendor list."),
+        'seller_price': fields.related('seller_ids','price', type='float', string='Supplier Price', help="This is price to purchase from Main Supplier."),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
@@ -539,6 +540,7 @@ class product_template(osv.osv):
         # related to display product product information if is_product_variant
         'barcode': fields.related('product_variant_ids', 'barcode', type='char', string='Barcode', oldname='ean13'),
         'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
+        'item_ids': fields.one2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items'),
     }
 
     def _price_get_list_price(self, product):
@@ -549,10 +551,7 @@ class product_template(osv.osv):
             context = {}
 
         if 'currency_id' in context:
-            pricetype_obj = self.pool.get('product.price.type')
-            price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
-            price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
-
+            currency_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
@@ -575,9 +574,8 @@ class product_template(osv.osv):
             if 'currency_id' in context:
                 # Take the price_type currency from the product field
                 # This is right cause a field cannot be in more than one currency
-                res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
-                    context['currency_id'], res[product.id],context=context)
-
+                res[product.id] = self.pool.get('res.currency').compute(cr, uid, currency_id,
+                    context['currency_id'], res[product.id], context=context)
         return res
 
     def _get_uom_id(self, cr, uid, *args):
@@ -1206,19 +1204,24 @@ class product_supplierinfo(osv.osv):
         'product_uom': fields.related('product_tmpl_id', 'uom_po_id', type='many2one', relation='product.uom', string="Vendor Unit of Measure", readonly="1", help="This comes from the product form."),
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this vendor, expressed in the vendor Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
-        'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
+        'price': fields.float('Price', required=True, digits_compute=dp.get_precision('Product Price'), help="The price for minimum buy of product"),
+        'currency_id': fields.many2one('res.currency', 'Currency', required=True),
+        'date_start': fields.date('Start Date', help="Start date for validating supplier price"),
+        'date_end': fields.date('End Date', help="End date for expiring supplier price"),
+        'product_tmpl_id' : fields.many2one('product.template', 'Product Template', ondelete='cascade', select=True, oldname='product_id'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
-        'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Vendor Pricelist', copy=True),
         'company_id':fields.many2one('res.company', string='Company',select=1),
     }
     _defaults = {
         'min_qty': 0.0,
         'sequence': 1,
         'delay': 1,
+        'price': 0.0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
+        'currency_id': lambda self, cr, uid, context: self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id,
     }
 
-    _order = 'sequence'
+    _order = 'sequence, min_qty desc, price'
 
 
 class pricelist_partnerinfo(osv.osv):
