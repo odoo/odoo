@@ -12,10 +12,16 @@
         }
     }
 
-    &.o_kanban_dashboard {
+    &.o_kanban_dashboard.o_kanban_ungrouped {
 
         .o_visible {
             width: 100%;
+
+            /* This is a hack ; without this, a scrollbar appears
+             * to scroll horizontally because of inline-block and width: 100%,
+             * but they are both necessary.
+            */
+            overflow: hidden;
         }
 
         /* This is a hack but this is the least ugly way to do it:
@@ -33,6 +39,7 @@
             padding-right: 0px !important;
             margin-left: 0px !important;
             margin-right: 0px !important;
+            overflow: hidden;
             
             * {
                 padding-left: 0px !important;
@@ -62,7 +69,11 @@
         .o_kanban_record {
             padding: 0;
             position: relative;
-            margin: 4px 8px;
+            margin-right: 16px;
+            @media (max-width: @grid-float-breakpoint) {
+                margin-bottom: 10px;
+                margin-right: 0px;
+            }
         }
 
         a {
@@ -141,6 +152,10 @@
             border-color: lightgrey;
             border-top-style: solid;
             border-top-width: 1px;
+        }
+
+        .oe_kanban_colorpicker {
+            height: 20px;
         }
     }
 }
