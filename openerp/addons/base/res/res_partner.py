@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import operator
 import datetime
 from lxml import etree
 import math
@@ -601,19 +602,29 @@ class res_partner(osv.Model, format_address):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
-        for record in self.browse(cr, uid, ids, context=context):
-            name = record.name
-            if record.parent_id and not record.is_company:
-                name = "%s, %s" % (record.parent_name, name)
+        if context.get('show_address_only') or context.get('show_address'):
+            get_field = getattr
+            records = self.browse(cr, uid, ids, context=context)
+        else:
+            get_field = operator.getitem
+            records = self.read(
+                cr, uid, ids,
+                ['name', 'parent_name', 'parent_id', 'is_company', 'email'],
+                context=context)
+        for record in records:
+            name = get_field(record, 'name')
+            if get_field(record, 'parent_id') and\
+                    not get_field(record, 'is_company'):
+                name = "%s, %s" % (get_field(record, 'parent_name'), name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)
             if context.get('show_address'):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
             name = name.replace('\n\n','\n')
             name = name.replace('\n\n','\n')
-            if context.get('show_email') and record.email:
-                name = "%s <%s>" % (name, record.email)
-            res.append((record.id, name))
+            if context.get('show_email') and get_field(record, 'email'):
+                name = "%s <%s>" % (name, get_field(record, 'email'))
+            res.append((get_field(record, 'id'), name))
         return res
 
     def _parse_partner_name(self, text, context=None):
