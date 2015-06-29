@@ -514,28 +514,28 @@ class Field(object):
         if self.inherited and field.required:
             self.required = True
 
+    def traverse_related(self, record):
+        """ Traverse the fields of the related field `self` except for the last
+        one, and return it as a pair `(last_record, last_field)`. """
+        for name in self.related[:-1]:
+            record = record[name][:1]
+        return record, self.related_field
+
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
-            if not record.id:
-                # draft record, do not switch to another environment
-                other = record
-            # traverse the intermediate fields; follow the first record at each step
-            for name in self.related[:-1]:
-                other = other[name][:1]
-            record[self.name] = other[self.related[-1]]
+            # do not switch to another environment if record is a draft one
+            other, field = self.traverse_related(other if record.id else record)
+            record[self.name] = other[field.name]
 
     def _inverse_related(self, records):
         """ Inverse the related field `self` on `records`. """
         for record in records:
-            other = record
-            # traverse the intermediate fields, and keep at most one record
-            for name in self.related[:-1]:
-                other = other[name][:1]
+            other, field = self.traverse_related(record)
             if other:
-                other[self.related[-1]] = record[self.name]
+                other[field.name] = record[self.name]
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field `self`. """
@@ -1702,11 +1702,8 @@ class _RelationalMulti(_Relational):
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
         for record in records:
-            value = record
-            # traverse the intermediate fields, and keep at most one record
-            for name in self.related[:-1]:
-                value = value[name][:1]
-            record[self.name] = value[self.related[-1]]
+            other, field = self.traverse_related(record)
+            record[self.name] = other[field.name]
 
 
 class One2many(_RelationalMulti):
