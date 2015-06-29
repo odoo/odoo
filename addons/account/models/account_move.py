@@ -407,7 +407,7 @@ class AccountMoveLine(models.Model):
 
         is_partner = res_type == 'partner'
         res_alias = is_partner and 'p' or 'a'
-        self.env.cr.execute(
+        self.env.cr.execute(self.env.cr.mogrify(
             """ SELECT %s account_id, account_name, account_code, max_date, to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked FROM (
                     SELECT %s
                         %s.last_time_entries_checked AS last_time_entries_checked,
@@ -456,7 +456,7 @@ class AccountMoveLine(models.Model):
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias,
                 res_alias,
-            ))
+            )))
 
         # Apply ir_rules by filtering out
         rows = self.env.cr.dictfetchall()
@@ -481,17 +481,17 @@ class AccountMoveLine(models.Model):
         """ Returns two lines whose amount are opposite """
 
         # Get pairs
-        partner_id_condition = partner_id and 'AND a.partner_id = %d AND b.partner_id = %d' % (partner_id, partner_id) or ''
-        self.env.cr.execute(
+        partner_id_condition = partner_id and 'AND a.partner_id = %s AND b.partner_id = %s' % (partner_id, partner_id) or ''
+        self.env.cr.execute(self.env.cr.mogrify(
             """ SELECT a.id, b.id
                 FROM account_move_line a, account_move_line b
                 WHERE a.amount_residual = -b.amount_residual
                 AND NOT a.reconciled AND NOT b.reconciled
-                AND a.account_id = %d AND b.account_id = %d
+                AND a.account_id = %s AND b.account_id = %s
                 %s
                 ORDER BY a.date asc
                 LIMIT 10
-            """ % (account_id, account_id, partner_id_condition))
+            """ % (account_id, account_id, partner_id_condition)))
         pairs = self.env.cr.fetchall()
 
         # Apply ir_rules by filtering out
