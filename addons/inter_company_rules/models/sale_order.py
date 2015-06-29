@@ -44,10 +44,6 @@ class sale_order(models.Model):
         if not PurchaseOrder.sudo(intercompany_uid).check_access_rights('create', raise_exception=False):
             raise Warning(_("Inter company user of company %s doesn't have enough access rights") % company.name)
 
-        # check pricelist currency should be same with SO/PO document
-        if self.pricelist_id.currency_id.id != company_partner.property_product_pricelist_purchase.currency_id.id:
-            raise Warning(_('You cannot create PO from SO because purchase pricelist currency is different than sale pricelist currency.'))
-
         # create the PO and generate its lines from the SO
         PurchaseOrderLine = self.env['purchase.order.line']
         # read it as sudo, because inter-compagny user can not have the access right on PO
@@ -83,7 +79,6 @@ class sale_order(models.Model):
             'origin': self.name,
             'partner_id': company_partner.id,
             'location_id': warehouse.lot_stock_id.id,
-            'pricelist_id': company_partner.property_product_pricelist_purchase.id,
             'date_order': self.date_order,
             'company_id': company.id,
             'fiscal_position_id': company_partner.property_account_position_id,

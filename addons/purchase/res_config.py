@@ -20,13 +20,6 @@ class purchase_config_settings(osv.osv_memory):
              ('picking', 'Control vendor bill on incoming shipments'),
              ('order', 'Control vendor bill on a pregenerated draft invoice'),
             ], 'Default invoicing control method', required=True, default_model='purchase.order'),
-        'group_purchase_pricelist':fields.selection([
-            (0, 'Set a fixed cost price on each product'),
-            (1, 'Use pricelists to adapt your price per vendors or products')
-            ], "Pricelists",
-            implied_group='product.group_purchase_pricelist',
-            help='Allows to manage different prices based on rules per category of vendor.\n'
-                 'Example: 10% for retailers, promotion of 5 EUR on this product, etc.'),
         'group_uom':fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
             (1, 'Some products may be sold/puchased in different unit of measures (advanced)')

@@ -35,7 +35,6 @@ class AccountAnalyticLine(models.Model):
             return {}
         product_obj = self.pool.get('product.product')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
-        product_price_type_obj = self.pool.get('product.price.type')
         product_uom_obj = self.pool.get('product.uom')
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
         prod = product_obj.browse(cr, uid, prod_id, context=context)
@@ -58,25 +57,20 @@ class AccountAnalyticLine(models.Model):
             if not a:
                 a = prod.categ_id.property_account_income_categ_id.id
 
-        flag = False
         # Compute based on pricetype
-        product_price_type_ids = product_price_type_obj.search(cr, uid, [('field', '=', 'standard_price')], context=context)
-        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
         if journal_id:
             journal = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
             if journal.type == 'sale':
-                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field', '=', 'list_price')], context=context)
-                if product_price_type_ids:
-                    pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
+                price_type = 'list_price'
+            else:
+                price_type = 'standard_price'
         # Take the company currency as the reference one
-        if pricetype.field == 'list_price':
-            flag = True
         ctx = context.copy()
         if unit:
             # price_get() will respect a 'uom' in its context, in order
             # to return a default price for those units
             ctx['uom'] = unit
-        amount_unit = prod.price_get(pricetype.field, context=ctx)
+        amount_unit = prod.price_get(price_type, context=ctx)
         if amount_unit:
             amount_unit = amount_unit[prod.id]
         else:
@@ -86,7 +80,7 @@ class AccountAnalyticLine(models.Model):
         cur_record = self.browse(cr, uid, id, context=context)
         currency = cur_record.exists() and cur_record.currency_id or prod.company_id.currency_id
         result = round(amount, currency.decimal_places)
-        if not flag:
+        if price_type and price_type != 'list_price':
             result *= -1
         return {'value': {
             'amount': result,
@@ -98,8 +92,6 @@ class AccountAnalyticLine(models.Model):
     @api.v8
     @api.onchange('product_id', 'product_uom_id')
     def on_change_unit_amount(self):
-        product_price_type_obj = self.env['product.price.type']
-
         journal_id = self.journal_id
         if not journal_id:
             journal_id = self.env['account.analytic.journal'].search([('type', '=', 'purchase')], limit=1)
@@ -136,17 +128,16 @@ class AccountAnalyticLine(models.Model):
 
         # Compute based on pricetype
         amount_unit = 0.0
-        pricetype = False
         if self.product_id:
             if journal_id.type == 'sale':
-                pricetype = product_price_type_obj.search([('field', '=', 'list_price')], limit=1)
+                price_type = 'list_price'
             else:
-                pricetype = product_price_type_obj.search([('field', '=', 'standard_price')], limit=1)
-            amount_unit = self.product_id.with_context(ctx).price_get(pricetype.field)[self.product_id.id]
+                price_type = 'standard_price'
+            amount_unit = self.product_id.with_context(ctx).price_get(price_type)[self.product_id.id]
 
         amount = amount_unit * self.unit_amount
         result = round(amount, self.currency_id.decimal_places)
-        if pricetype and pricetype.field != 'list_price':
+        if price_type and price_type != 'list_price':
             result *= -1
         self.amount = result
         self.general_account_id = account

@@ -28,13 +28,11 @@ class sale_configuration(osv.TransientModel):
                  '(650€/day for a developer), the duration (one year support contract).\n'
                  'You will be able to follow the progress of the contract and invoice automatically.\n'
                  '-It installs the sale_contract module.'),
-        'group_sale_pricelist':fields.selection([
-            (0, 'Set a fixed sale price on each product'),
-            (1, 'Use pricelists to adapt your price per customers or products')
-            ], "Pricelists",
-            implied_group='product.group_sale_pricelist',
+        'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
                     Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
+        'group_pricelist_item':fields.boolean("Show pricelists to customers", implied_group='product.group_pricelist_item'),
+        'group_product_pricelist':fields.boolean("Show pricelists On Products", implied_group='product.group_product_pricelist'),
         'group_uom':fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
             (1, 'Some products may be sold/purchased in different unit of measures (advanced)')
@@ -69,10 +67,25 @@ class sale_configuration(osv.TransientModel):
             (1, 'Have 3 fields on sales orders: customer, invoice address, delivery address')
             ], "Customer Addresses",
             implied_group='sale.group_delivery_invoice_address'),
+        'sale_pricelist_setting': fields.selection([('fixed', 'A single sale price per product'), ('percentage', 'Different prices per customer segment'), ('formula', 'Advanced pricing based on formula')], required=True,
+        help='Fix Price: all price manage from products sale price.\n'
+             'Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n'
+             'Advanced pricing based on formula: You can  have all the rights on pricelist'),
     }
 
+    _defaults = {'sale_pricelist_setting': 'fixed'}
+
     def set_sale_defaults(self, cr, uid, ids, context=None):
-        return {}
+        sale_price = self.browse(cr, uid, ids, context=context).sale_pricelist_setting
+        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'sale_pricelist_setting', sale_price)
+        return res
+
+    def onchange_sale_price(self, cr, uid, ids, sale_pricelist_setting, context=None):
+        if sale_pricelist_setting == 'percentage':
+            return {'value': {'group_product_pricelist': True, 'group_sale_pricelist': True, 'group_pricelist_item': False}}
+        if sale_pricelist_setting == 'formula':
+            return {'value': {'group_pricelist_item': True, 'group_sale_pricelist': True, 'group_product_pricelist': False}}
+        return {'value': {'group_pricelist_item': False, 'group_sale_pricelist': False, 'group_product_pricelist': False}}
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'

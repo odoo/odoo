@@ -227,6 +227,20 @@ class sale_order(osv.osv):
             return 'sale.mt_order_sent'
         return super(sale_order, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    def onchange_date_order(self, cr, uid, ids, date_order, pricelist_id, context=None):
+        if context is None:
+            context = {}
+        warning = {}
+        if not date_order or not pricelist_id:
+            return {}
+        pricelist = self.pool['product.pricelist'].browse(cr, uid, pricelist_id, context=context)
+        date_order = date_order[0:10] or time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        for item in pricelist.item_ids:
+            if item.date_start and date_order < item.date_start or item.date_end and date_order > item.date_end:
+                warning = {'title': _('Order Date Warning!'),
+                           'message': _('Order date must be equal or in between pricelist item dates')}
+        return {'warning': warning}
+
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
         if not pricelist_id:
             return {}
