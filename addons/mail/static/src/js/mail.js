@@ -6,6 +6,7 @@ var mail_utils = require('mail.utils');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
+var Model = require('web.Model');
 var form_common = require('web.form_common');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
@@ -14,6 +15,7 @@ var utils = require('web.utils');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
 var View = require('web.View');
+var Mention = require('mail.mention');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -359,6 +361,8 @@ var MailThread = Attachment.extend ({
 
         // add some data to messages for the display
         _.each(this.messages, function (msg) {
+            if(msg.body)
+                msg.body = self.convert_into_link(msg.body);
             if (msg.message_type != "expandable") {
                 msg = self.format_message(msg);
             }
@@ -834,6 +838,7 @@ var MailThread = Attachment.extend ({
      * insert a message in the DOM
      */
     insert_message: function (message) {
+        message.body = this.convert_into_link(message.body);
         message.content = this.view.qweb.render("timeline-message", {record: message});
         this.$('.oe_view_nocontent').remove();
         if (this.options.view_inbox && !this.root) {
@@ -847,6 +852,15 @@ var MailThread = Attachment.extend ({
         }
     },
 
+     /**
+     * Used for @ mention functionality
+     * Convert span tag into link, To make link of partner
+     */
+    convert_into_link: function(msg) {
+        var re = /@<span data-oe-model="([^"]*)"\s+data-oe-id="([^"]*)">(.*?)\<\/span>/g; 
+        var subst = "<a href='#model=$1&id=$2' class='o_timeline_action_author' data-partner='$2'>$3</a>";
+        return msg.replace(re, subst);
+    },
     /**
      * add and convert thread data for display
      */
@@ -1070,11 +1084,16 @@ var ComposeMessage = Attachment.extend ({
     },
 
     start: function () {
+        var self = this;
         this.ds_attachment = new data.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
         this.$(".o_timeline_msg_attachment_list").html(this.display_attachments(this));
         this.bind_events();
+        // Store result: current user is from employee group ? (For Mention widget)
+        new Model('res.users').call('has_group', ['base.group_user']).done(function(is_employee) {
+            self.is_employee = is_employee;
+        });
         return this._super.apply(this, arguments);
     },
 
@@ -1083,6 +1102,11 @@ var ComposeMessage = Attachment.extend ({
         this.replaceElement($render);
         this.$(".o_timeline_msg_attachment_list").html(this.display_attachments(this));
         this.bind_events();
+        // Initialize Mention widget if current user is from employee group and it's not log
+        if(this.is_employee && !this.is_log) {
+            this.mail_mention = new Mention(this);
+            this.mail_mention.insertAfter(this.$el.find(".field_text"));
+        }
     },
 
     bind_events: function () {
@@ -1177,8 +1201,26 @@ var ComposeMessage = Attachment.extend ({
 
         return suggested_partners;
     },
-
+    /**
+     * preprocess_message_post: Used for @ mention functionality
+     * If mention partner remove from textarea we don't send mail to those partner.
+     * Make <span> for mentioned parners that is convert into link at read time.
+     */
+    preprocess_message_post: function() {
+        var self = this;
+        this.mail_body = self.$('textarea').val();
+        this.selected_partners = this.mail_mention ? this.mail_mention.selected_partners : [];
+        _.each(this.selected_partners, function(value, key){
+            var word = _.str.sprintf("@%s", value);
+            if(self.mail_body.indexOf(word) != -1) {
+                self.mail_body = self.mail_body.replace(word, _.str.sprintf("@<span data-oe-model='res.partner' data-oe-id='%s'>%s</span> ", key, value));
+               return;
+            }
+            delete self.selected_partners[key];
+        });
+    },
     on_message_post: function (event) {
+        this.preprocess_message_post();
         if (this.flag_post){
             return;
         }
@@ -1200,20 +1242,20 @@ var ComposeMessage = Attachment.extend ({
      * post a message and fetch the message
      */
     do_send_message_post: function (partner_ids, log) {
-        var self = this;
+        var self = this, selected_partners_ids = _.keys(this.selected_partners);
 
         var values = {
-            'body': this.$('textarea').val(),
+            'body': this.mail_body,
             'subject': false,
             'parent_id': this.parent_id || this.id,
-            'partner_ids': partner_ids,
+            'partner_ids': _.uniq(partner_ids.concat(selected_partners_ids)),
             'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
             'context': _.extend(this.parent_thread.context, {
                 'mail_post_autofollow': true,
                 'mail_post_autofollow_partner_ids': partner_ids,
             }),
             'message_type': 'comment',
-            'content_subtype': 'plaintext',
+            'content_subtype': 'html',
         };
 
         if (log) {
@@ -1227,7 +1269,6 @@ var ComposeMessage = Attachment.extend ({
         } else {
             values['subtype'] = 'mail.mt_comment';
         }
-
         this.parent_thread.ds_thread._model.call('message_post', [this.context.default_res_id], values).done(function (message_id) {
             var thread = self.parent_thread;
 

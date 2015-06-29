@@ -93,6 +93,14 @@
     <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" 
           class="oe_placeholder_compose"></span>
 </t>
+<t t-name="Mention">
+    <t t-if="result">
+        <t t-foreach="result.length" t-as='index'>
+            <t t-set="res" t-value="result[index]"/>
+            <li t-att-tabindex="index"><img class="list_img" t-attf-src='/web/binary/image?model=res.partner&amp;field=image_small&amp;id=#{res.id}' /> <span t-attf-id='#{res.id}'><t t-raw='res.name' /></span> (<i><t t-raw='res.email' /></i>)</li>
+         </t>
+    </t>
+</t>
 
 <!--
     ComposeMessage.AddAttachment template
