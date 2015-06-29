@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    if(! $("ul.js_add_cart_variants[data-attribute_value_ids]").length){
+        return;
+    }
     $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
         .off('click')
         .removeClass('a-submit')

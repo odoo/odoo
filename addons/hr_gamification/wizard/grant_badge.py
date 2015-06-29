@@ -30,7 +30,7 @@ class hr_grant_badge_wizard(osv.TransientModel):
         'employee_id': fields.many2one("hr.employee", string='Employee', required=True),
         'user_id': fields.related("employee_id", "user_id",
                                   type="many2one", relation="res.users",
-                                  store=True, string='User')
+                                  store=True, string='User', required=True)
     }
 
     def action_grant_badge(self, cr, uid, ids, context=None):

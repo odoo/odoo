@@ -1,38 +1,22 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pad
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 06:38+0000\n"
-"Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-05-27 14:02+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/odoo-8/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:57+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
-
-#. module: pad
-#: code:addons/pad/web/editors.py:32
-#, python-format
-msgid "Ok"
-msgstr "Aceptar"
-
-#. module: pad
-#: code:addons/pad/web/editors.py:29
-#, python-format
-msgid "Name"
-msgstr "Nombre"
-
-#. module: pad
-#: help:res.company,pad_index:0
-msgid "The root URL of the company's pad instance"
-msgstr "La URL raíz de la instancia pad de la compañía."
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -40,45 +24,93 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: pad
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "¡Error! No puede crear compañías recursivas."
-
-#. module: pad
-#: code:addons/pad/web/editors.py:17
-#, python-format
-msgid "Write"
-msgstr "Escribir"
-
-#. module: pad
-#: model:ir.module.module,description:pad.module_meta_information
-msgid ""
-"\n"
-"Adds enhanced support for (Ether)Pad attachments in the web client, lets "
-"the\n"
-"company customize which Pad installation should be used to link to new pads\n"
-"(by default, pad.openerp.com)\n"
-"    "
+#: field:pad.common,create_uid:0
+msgid "Created by"
 msgstr ""
-"\n"
-"Añade soporte mejorado para adjuntos (Ether)Pad en el cliente web, permite "
-"que la\n"
-"compañía personalice que instalación Pad debe ser utilizada para conectar a "
-"los nuevos pads\n"
-"(por defecto, pad.openerp.com)\n"
-"    "
 
 #. module: pad
-#: field:res.company,pad_index:0
-msgid "Pad root URL"
-msgstr "URL raíz pad"
+#: field:pad.common,create_date:0
+msgid "Created on"
+msgstr "Creado en"
 
 #. module: pad
-#: view:res.company:0
-msgid "Pad"
-msgstr "Pad"
+#: code:addons/pad/pad.py:52
+#, python-format
+msgid "Error"
+msgstr "Error"
 
 #. module: pad
-#: model:ir.module.module,shortdesc:pad.module_meta_information
-msgid "Enhanced support for (Ether)Pad attachments"
-msgstr "Soporte mejorado para adjuntos (Ether)Pad"
+#: help:res.company,pad_key:0
+msgid "Etherpad lite api key."
+msgstr ""
+
+#. module: pad
+#: help:res.company,pad_server:0
+msgid "Etherpad lite server. Example: beta.primarypad.com"
+msgstr ""
+
+#. module: pad
+#: field:pad.common,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: pad
+#: field:pad.common,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: pad
+#: field:pad.common,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: pad
+#: field:res.company,pad_key:0
+msgid "Pad Api Key"
+msgstr ""
+
+#. module: pad
+#: field:res.company,pad_server:0
+msgid "Pad Server"
+msgstr ""
+
+#. module: pad
+#: code:addons/pad/pad.py:52
+#, python-format
+msgid ""
+"Pad creation failed,                 either there is a problem with your pad"
+" server URL or with your connection."
+msgstr ""
+
+#. module: pad
+#: view:res.company:pad.view_company_form_with_pad
+msgid "Pads"
+msgstr ""
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:49
+#, python-format
+msgid "This pad will be initialized on first edit"
+msgstr ""
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:46
+#, python-format
+msgid "Unable to load pad"
+msgstr ""
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:9
+#, python-format
+msgid ""
+"You must configure the etherpad through the menu Settings > Companies > "
+"Companies, in the configuration tab of your company."
+msgstr ""
+
+#. module: pad
+#: view:res.company:pad.view_company_form_with_pad
+msgid "e.g. beta.primarypad.com"
+msgstr ""

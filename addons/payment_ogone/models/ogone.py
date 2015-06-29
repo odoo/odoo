@@ -5,6 +5,7 @@ import logging
 from lxml import etree, objectify
 from pprint import pformat
 import time
+from datetime import datetime
 from urllib import urlencode
 import urllib2
 import urlparse
@@ -13,7 +14,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_ogone.controllers.main import OgoneController
 from openerp.addons.payment_ogone.data import ogone
 from openerp.osv import osv, fields
-from openerp.tools import float_round
+from openerp.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -244,7 +245,7 @@ class PaymentTxOgone(osv.Model):
         if status in self._ogone_valid_tx_status:
             tx.write({
                 'state': 'done',
-                'date_validate': data['TRXDATE'],
+                'date_validate': datetime.strptime(data['TRXDATE'],'%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             })
             return True

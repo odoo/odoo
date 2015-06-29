@@ -1,21 +1,22 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-03 07:14+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <nicola.riolini@gmail.com>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:38+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -26,15 +27,12 @@ msgstr "<="
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a delivery price list for a specific "
-"region.\n"
+"                Click to create a delivery price list for a specific region.\n"
 "              </p><p>\n"
 "                The delivery price list allows you to compute the cost and\n"
 "                sales price of the delivery according to the weight of the\n"
-"                products and other criteria. You can define several price "
-"lists\n"
-"                for each delivery method: per country or a zone in a "
-"specific\n"
+"                products and other criteria. You can define several price lists\n"
+"                for each delivery method: per country or a zone in a specific\n"
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
@@ -46,16 +44,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new deliver method. \n"
 "              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
+"                Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method.\n"
 "              </p><p>\n"
-"                These methods allow to automatically compute the delivery "
-"price\n"
-"                according to your settings; on the sales order (based on "
-"the\n"
+"                These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
@@ -67,8 +61,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: field:delivery.carrier,active:0
-#: field:delivery.grid,active:0
+#: field:delivery.carrier,active:0 field:delivery.grid,active:0
 msgid "Active"
 msgstr "Attivo"
 
@@ -109,8 +102,7 @@ msgstr "Disponibile"
 #: view:delivery.carrier:delivery.view_delivery_carrier_tree
 #: field:delivery.grid,carrier_id:0
 #: model:ir.model,name:delivery.model_delivery_carrier
-#: field:stock.picking,carrier_id:0
-#: view:website:stock.report_picking
+#: field:stock.picking,carrier_id:0 view:website:stock.report_picking
 msgid "Carrier"
 msgstr "Trasportatore"
 
@@ -129,17 +121,13 @@ msgstr "Rif. Monitoraggio Vettore"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr ""
-"Spuntare questa casella per gestire i prezzi delle consegne in funzione "
-"della destinazione, del peso, del totale dell'ordine, ecc."
+msgstr "Spuntare questa casella per gestire i prezzi delle consegne in funzione della destinazione, del peso, del totale dell'ordine, ecc."
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
-"Completare questo campo se si prevede di fatturare le consegne in base ai "
-"picking."
+msgstr "Completare questo campo se si prevede di fatturare le consegne in base ai picking."
 
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
@@ -158,15 +146,13 @@ msgid "Countries"
 msgstr "Nazioni"
 
 #. module: delivery
-#: field:delivery.carrier,create_uid:0
-#: field:delivery.grid,create_uid:0
+#: field:delivery.carrier,create_uid:0 field:delivery.grid,create_uid:0
 #: field:delivery.grid.line,create_uid:0
 msgid "Created by"
 msgstr "Creato da"
 
 #. module: delivery
-#: field:delivery.carrier,create_date:0
-#: field:delivery.grid,create_date:0
+#: field:delivery.carrier,create_date:0 field:delivery.grid,create_date:0
 #: field:delivery.grid.line,create_date:0
 msgid "Created on"
 msgstr "Creato il"
@@ -198,8 +184,7 @@ msgid "Delivery Grids"
 msgstr "Griglie di Consegna"
 
 #. module: delivery
-#: field:delivery.carrier,name:0
-#: field:res.partner,property_delivery_carrier:0
+#: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Metodo di Consegna"
@@ -298,8 +283,7 @@ msgid "Grid definition"
 msgstr "Definizione Griglia"
 
 #. module: delivery
-#: field:delivery.carrier,id:0
-#: field:delivery.grid,id:0
+#: field:delivery.carrier,id:0 field:delivery.grid,id:0
 #: field:delivery.grid.line,id:0
 msgid "ID"
 msgstr "ID"
@@ -309,9 +293,7 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr ""
-"Se il campo attivo e' impostato su falso, permetterà di nascondere il "
-"vettore senza rimuoverlo."
+msgstr "Se il campo attivo e' impostato su falso, permetterà di nascondere il vettore senza rimuoverlo."
 
 #. module: delivery
 #: help:delivery.grid,active:0
@@ -330,8 +312,8 @@ msgstr ""
 #. module: delivery
 #: view:sale.order:delivery.view_order_withcarrier_form
 msgid ""
-"If you don't 'Add in Quote', the exact price will be computed when invoicing "
-"based on delivery order(s)."
+"If you don't 'Add in Quote', the exact price will be computed when invoicing"
+" based on delivery order(s)."
 msgstr ""
 
 #. module: delivery
@@ -351,15 +333,13 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: field:delivery.carrier,write_uid:0
-#: field:delivery.grid,write_uid:0
+#: field:delivery.carrier,write_uid:0 field:delivery.grid,write_uid:0
 #: field:delivery.grid.line,write_uid:0
 msgid "Last Updated by"
 msgstr "Ultima modifica di"
 
 #. module: delivery
-#: field:delivery.carrier,write_date:0
-#: field:delivery.grid,write_date:0
+#: field:delivery.carrier,write_date:0 field:delivery.grid,write_date:0
 #: field:delivery.grid.line,write_date:0
 msgid "Last Updated on"
 msgstr "Ultima modifica il"
@@ -433,8 +413,7 @@ msgid "Picking to be invoiced"
 msgstr "Picking da fatturare"
 
 #. module: delivery
-#: field:delivery.carrier,price:0
-#: selection:delivery.grid.line,type:0
+#: field:delivery.carrier,price:0 selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Prezzo"
@@ -479,8 +458,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,sequence:0
-#: field:delivery.grid.line,sequence:0
+#: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
 msgid "Sequence"
 msgstr "Sequenza"
 
@@ -510,9 +488,7 @@ msgstr "Il trasportatore %s (id: %d) non ha una griglia di consegne !"
 #: code:addons/delivery/sale.py:74
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
-"Lo stato dell'ordine deve essere in stato bozza per aggiungere linee di "
-"consegna."
+msgstr "Lo stato dell'ordine deve essere in stato bozza per aggiungere linee di consegna."
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
@@ -522,8 +498,7 @@ msgstr "Partner che sta effettuando il servizio spedizioni."
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
-"Questo metodo di consegna sarà utilizzato quando si fattura da picking."
+msgstr "Questo metodo di consegna sarà utilizzato quando si fattura da picking."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -542,8 +517,7 @@ msgid "Unable to fetch delivery method!"
 msgstr ""
 
 #. module: delivery
-#: field:stock.move,weight_uom_id:0
-#: field:stock.picking,weight_uom_id:0
+#: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Unità di misura"
 
@@ -559,8 +533,7 @@ msgid "Unit of measurement for Weight"
 msgstr "Unità di misura per peso"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
+#: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
 msgid "Variable"
 msgstr "Variabile"
 
@@ -571,8 +544,7 @@ msgstr "Fattore Variabile"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.picking,volume:0
 msgid "Volume"
 msgstr "Volume"
 
@@ -584,11 +556,9 @@ msgstr "Attenzione!"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.move,weight:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.move,weight:0
 #: view:stock.picking:delivery.view_picking_withcarrier_out_form
-#: field:stock.picking,weight:0
-#: view:website:stock.report_picking
+#: field:stock.picking,weight:0 view:website:stock.report_picking
 msgid "Weight"
 msgstr "Peso"
 

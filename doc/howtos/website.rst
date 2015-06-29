@@ -255,7 +255,7 @@ since "Carol" is not an integer, the route was ignored and no route could be
 found.
 
 Odoo provides an additional converter called ``model`` which provides records
-directly when given their id, let's use that and create a generic page for
+directly when given their id. Let's use this to create a generic page for
 teacher biographies:
 
 .. patch::

@@ -1,32 +1,30 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_ldap
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-03-24 16:05+0000\n"
-"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
-"Language-Team: Slovenian <translations@matmoz.si>\n"
+"PO-Revision-Date: 2015-05-27 14:07+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
 "Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: auth_ldap
 #: help:res.company.ldap,create_user:0
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
-msgstr ""
-"Samodejno ustvari lokalni uporabniški račun za nove uporabnike, ki se "
-"overjajo preko LDAP"
+msgstr "Samodejno ustvari lokalni uporabniški račun za nove uporabnike, ki se overjajo preko LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -65,8 +63,7 @@ msgid "LDAP Configuration"
 msgstr "LDAP nastavitve"
 
 #. module: auth_ldap
-#: view:res.company:auth_ldap.company_form_view
-#: field:res.company,ldaps:0
+#: view:res.company:auth_ldap.company_form_view field:res.company,ldaps:0
 msgid "LDAP Parameters"
 msgstr "LDAP parametri"
 
@@ -124,12 +121,9 @@ msgstr "Parametri procesa"
 #: help:res.company.ldap,ldap_tls:0
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
-"option requires a server with STARTTLS enabled, otherwise all authentication "
-"attempts will fail."
-msgstr ""
-"Zahtevaj varno TLS/SSL šifriranje ob povezavi na LDAP strežnik. Taopcija "
-"zahteva strežnik z omogočenim STARTTLS, drugače bodo vsiposkusi overjanja "
-"spodleteli."
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr "Zahtevaj varno TLS/SSL šifriranje ob povezavi na LDAP strežnik. Taopcija zahteva strežnik z omogočenim STARTTLS, drugače bodo vsiposkusi overjanja spodleteli."
 
 #. module: auth_ldap
 #: field:res.company.ldap,sequence:0
@@ -163,9 +157,7 @@ msgstr "Geslo LDAP"
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
-msgstr ""
-"LDAP uporabniški račun, ki se uporablja za poizvedbe po imeniku. Za anonimno "
-"povezavo pustite prazno."
+msgstr "LDAP uporabniški račun, ki se uporablja za poizvedbe po imeniku. Za anonimno povezavo pustite prazno."
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_tls:0

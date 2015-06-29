@@ -1,27 +1,28 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * resource
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-09-10 11:12+0000\n"
-"Last-Translator: Miku Laitinen <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:17+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
 #: code:addons/resource/resource.py:685
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopio)"
 
 #. module: resource
 #: code:addons/resource/faces/resource.py:340
@@ -33,8 +34,7 @@ msgstr "(loma)"
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Define working hours and time table that could be scheduled "
-"to your project members\n"
+"                Define working hours and time table that could be scheduled to your project members\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -124,12 +124,12 @@ msgstr "Perjantai"
 #: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
 #: view:resource.resource:resource.view_resource_resource_search
 msgid "Group By"
-msgstr ""
+msgstr "Ryhmittele"
 
 #. module: resource
 #: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
 msgid "Hours"
-msgstr ""
+msgstr "Tuntia"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -137,30 +137,24 @@ msgid "Human"
 msgstr "Ihminen"
 
 #. module: resource
-#: field:resource.calendar,id:0
-#: field:resource.calendar.attendance,id:0
-#: field:resource.calendar.leaves,id:0
-#: field:resource.resource,id:0
+#: field:resource.calendar,id:0 field:resource.calendar.attendance,id:0
+#: field:resource.calendar.leaves,id:0 field:resource.resource,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr ""
-"Jos tyhjä, tämä on yrityksen yleinen loma-aika. Jos resurssi asetetaan, loma "
-"koskee vain sitä resurssia."
+msgstr "Jos tyhjä, tämä on yrityksen yleinen loma-aika. Jos resurssi asetetaan, loma koskee vain sitä resurssia."
 
 #. module: resource
 #: help:resource.resource,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"Jos aktiivisen kentän arvo on epätosi (false), voit piilottaa resurssin "
-"poistamatta sitä."
+msgstr "Jos aktiivisen kentän arvo on epätosi (false), voit piilottaa resurssin poistamatta sitä."
 
 #. module: resource
 #: view:resource.resource:resource.view_resource_resource_search
@@ -173,7 +167,7 @@ msgstr "Passiivinen"
 #: field:resource.calendar.leaves,write_uid:0
 #: field:resource.resource,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: resource
 #: field:resource.calendar,write_date:0
@@ -217,10 +211,8 @@ msgid "Monday"
 msgstr "Maanantai"
 
 #. module: resource
-#: field:resource.calendar,name:0
-#: field:resource.calendar.attendance,name:0
-#: field:resource.calendar.leaves,name:0
-#: field:resource.resource,name:0
+#: field:resource.calendar,name:0 field:resource.calendar.attendance,name:0
+#: field:resource.calendar.leaves,name:0 field:resource.resource,name:0
 msgid "Name"
 msgstr "Nimi"
 
@@ -290,10 +282,7 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr ""
-"Resurssit mahdollistavat projektin eri vaiheissa tarvittavien resurssien "
-"luomisen ja hallitsemisen. Voit myös asettaa niiden tehokkuustason ja "
-"kuormituksen huomoiden viikottaiset työajat."
+msgstr "Resurssit mahdollistavat projektin eri vaiheissa tarvittavien resurssien luomisen ja hallitsemisen. Voit myös asettaa niiden tehokkuustason ja kuormituksen huomoiden viikottaiset työajat."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -328,7 +317,7 @@ msgstr "Alku ja loppupäivä työnteolle."
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Aloituspäivä"
 
 #. module: resource
 #: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
@@ -345,8 +334,8 @@ msgstr "Sunnuntai"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
 msgstr ""
 
 #. module: resource

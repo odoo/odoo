@@ -1,21 +1,22 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-11-08 13:36+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:49+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:26+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
@@ -52,9 +53,7 @@ msgstr "Активниот идентификациски број не е по�
 #: help:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
-"Ви овозможува да конфигурирате валуацијата на пописите на производите и "
-"категориите на производи."
+msgstr "Ви овозможува да конфигурирате валуацијата на пописите на производите и категориите на производи."
 
 #. module: stock_account
 #: selection:product.template,cost_method:0
@@ -93,29 +92,19 @@ msgstr "Одберете одреден датум"
 #. module: stock_account
 #: help:stock.inventory,period_id:0
 msgid ""
-"Choose the accounting period where you want to value the stock moves created "
-"by the inventory instead of the default one (chosen by the inventory end "
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
 "date)"
 msgstr ""
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid ""
-"Choose the date for which you want to get the stock valuation of your "
-"products.\n"
+"Choose the date for which you want to get the stock valuation of your products.\n"
 "\n"
-"                        This will filter the stock operation that weren't "
-"done at the selected date, to retreive the quantity\n"
-"                        you had, and gives you the inventory value according "
-"to the standard price used at that time."
-msgstr ""
-"Изберете датум за кој сакате да добиете проценка на залиха на вашите "
-"производи.\n"
-"\n"
-"                        Ове ќе ги филтрира операциите за залиха што не биле "
-"направени на избраниот датум, за да се добие количината\n"
-"                        што сте ја имале, и ви ја дава инвентарската "
-"вредност според стандардните цени што се користеле во тоа време."
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
+msgstr "Изберете датум за кој сакате да добиете проценка на залиха на вашите производи.\n\n                        Ове ќе ги филтрира операциите за залиха што не биле направени на избраниот датум, за да се добие количината\n                        што сте ја имале, и ви ја дава инвентарската вредност според стандардните цени што се користеле во тоа време."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -167,9 +156,7 @@ msgstr "Креирајте фактура за добавувач"
 #. module: stock_account
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
-msgstr ""
-"Креирај и отвори ја фактурата кога корисникот ќе го заврши налогот за "
-"испорака"
+msgstr "Креирај и отвори ја фактурата кога корисникот ќе го заврши налогот за испорака"
 
 #. module: stock_account
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
@@ -235,27 +222,17 @@ msgid "Group by partner"
 msgstr "Групирај по партнер"
 
 #. module: stock_account
-#: field:stock.change.standard.price,id:0
-#: field:stock.history,id:0
-#: field:stock.invoice.onshipping,id:0
-#: field:wizard.valuation.history,id:0
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: stock_account
 #: help:stock.change.standard.price,new_price:0
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
-msgstr ""
-"Доколку цената на чинење е зголемена, сметката за варијација на залиха ќе "
-"биде задолжена и сметката за излез на залиха ќе има побарување со вредност= "
-"(разлика на износ * достапна количина).\n"
-"Доколку чената на чинење е намалена, сметката за варијација на залиха ќе има "
-"побарување а сметката за влез на залиха ќе биде задолжена."
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "Доколку цената на чинење е зголемена, сметката за варијација на залиха ќе биде задолжена и сметката за излез на залиха ќе има побарување со вредност= (разлика на износ * достапна количина).\nДоколку чената на чинење е намалена, сметката за варијација на залиха ќе има побарување а сметката за влез на залиха ќе биде задолжена."
 
 #. module: stock_account
 #: help:product.template,valuation:0
@@ -271,8 +248,8 @@ msgstr ""
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
 msgstr ""
 
 #. module: stock_account
@@ -297,8 +274,7 @@ msgid "Inventory Value"
 msgstr ""
 
 #. module: stock_account
-#: field:procurement.order,invoice_state:0
-#: field:stock.move,invoice_state:0
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
 msgstr "Контрола на фактури"
@@ -399,8 +375,7 @@ msgstr "Не може да се примени"
 #: code:addons/stock_account/product.py:83
 #, python-format
 msgid ""
-"One of the following information is missing on the product or product "
-"category and prevents the accounting valuation entries to be created:\n"
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
 "    Product: %s\n"
 "    Stock Input Account: %s\n"
 "    Stock Output Account: %s\n"
@@ -527,12 +502,9 @@ msgstr "Стандардната цена е променета"
 #. module: stock_account
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
@@ -596,13 +568,9 @@ msgstr "Вредност на залиха на датум"
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
-"This allows to automatically launch the invoicing wizard if the delivery is "
-"to be invoiced when you send or deliver goods.\n"
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
-msgstr ""
-"Ова дозволува автоматско стартување на волшебникот за фактури ако испораката "
-"треба да биде фактурирана кога испраќате или испорачувате стоки.\n"
-"-Ова го инсталира модулот stock_invoice_directly."
+msgstr "Ова дозволува автоматско стартување на волшебникот за фактури ако испораката треба да биде фактурирана кога испраќате или испорачувате стоки.\n-Ова го инсталира модулот stock_invoice_directly."
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
@@ -631,12 +599,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Се користи за вреднување на залихата во реално време. Кога е поставено на "
-"виртуелна локација (не е внатрешен тип), оваа сметка ќе се користи за "
-"зачувување на вредноста на производите што се преместуваат од внатрешна "
-"локација на оваа локација, наместо во стандардната Сметка за Излез на Залиха "
-"поставена на производот. Ова нема влијание за внатрешните локации."
+msgstr "Се користи за вреднување на залихата во реално време. Кога е поставено на виртуелна локација (не е внатрешен тип), оваа сметка ќе се користи за зачувување на вредноста на производите што се преместуваат од внатрешна локација на оваа локација, наместо во стандардната Сметка за Излез на Залиха поставена на производот. Ова нема влијание за внатрешните локации."
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -646,12 +609,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Се користи за вреднување на стоката во реално време. Кога е поставено на "
-"виртуелна локација (не е внатрешен тип), оваа сметка ќе се користи за "
-"зачувување на вредноста на производите што се преместуваат од таа локација "
-"на внатрешна локација, наместо во стандардната Сметка за Излез на Залиха "
-"поставена на производот. Ова нема влијание за внатрешните локации."
+msgstr "Се користи за вреднување на стоката во реално време. Кога е поставено на виртуелна локација (не е внатрешен тип), оваа сметка ќе се користи за зачувување на вредноста на производите што се преместуваат од таа локација на внатрешна локација, наместо во стандардната Сметка за Излез на Залиха поставена на производот. Ова нема влијание за внатрешните локации."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -670,14 +628,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
-msgstr ""
-"При вршење на вреднување на залихата во реално време, копиите на елементите "
-"од дневникот за движењето на влезната залиха ќе се запишуваат во оваа "
-"сметка, освен ако нема одредена сметка за вреднување на изворната локација. "
-"Оваа е стандардната вредност за сите производи во оваа категорија. Исто така "
-"може директно да се внесе за секој производ."
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "При вршење на вреднување на залихата во реално време, копиите на елементите од дневникот за движењето на влезната залиха ќе се запишуваат во оваа сметка, освен ако нема одредена сметка за вреднување на изворната локација. Оваа е стандардната вредност за сите производи во оваа категорија. Исто така може директно да се внесе за секој производ."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_input:0
@@ -686,12 +639,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
-"При вршење на вреднување на залихата во реално време, копиите на елементите "
-"од дневникот за движењето на влезната залиха ќе се запишуваат во оваа "
-"сметка, освен ако нема одредена сметка за вреднување на изворната локација. "
-"Кога не е назначена на производот, се користи таа од категоријата на "
-"производот."
+msgstr "При вршење на вреднување на залихата во реално време, копиите на елементите од дневникот за движењето на влезната залиха ќе се запишуваат во оваа сметка, освен ако нема одредена сметка за вреднување на изворната локација. Кога не е назначена на производот, се користи таа од категоријата на производот."
 
 #. module: stock_account
 #: help:product.category,property_stock_account_output_categ:0
@@ -699,14 +647,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
-msgstr ""
-"При вршење на вреднување на залихата во реално време, копиите на елементите "
-"од дневникот за движењето на излезната залиха ќе се запишуваат во оваа "
-"сметка, освен ако нема одредена сметка за вреднување на целната локација. "
-"Оваа е стандардната вредност за сите производи во оваа категорија. Исто така "
-"може директно да се внесе за секој производ."
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "При вршење на вреднување на залихата во реално време, копиите на елементите од дневникот за движењето на излезната залиха ќе се запишуваат во оваа сметка, освен ако нема одредена сметка за вреднување на целната локација. Оваа е стандардната вредност за сите производи во оваа категорија. Исто така може директно да се внесе за секој производ."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -715,30 +658,21 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
-"При вршење на вреднување на залихата во реално време, копиите на елементите "
-"од записникот за движењето на излезната залиха ќе се запишуваат во оваа "
-"сметка, освен ако нема одредена сметка за вреднување на целната локација. "
-"Кога не е назначена на производот, се користи таа од категоријата на "
-"производот."
+msgstr "При вршење на вреднување на залихата во реално време, копиите на елементите од записникот за движењето на излезната залиха ќе се запишуваат во оваа сметка, освен ако нема одредена сметка за вреднување на целната локација. Кога не е назначена на производот, се користи таа од категоријата на производот."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"При вреднување на залихата во реално време, оваа е записничката сметка во "
-"која записите автоматски се внесуваат со процесирањето."
+msgstr "При вреднување на залихата во реално време, оваа е записничката сметка во која записите автоматски се внесуваат со процесирањето."
 
 #. module: stock_account
 #: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
-"Со вклучување на вреднувањето на производите во реално време, оваа сметка ќе "
-"ја содржи моменталната вредност на производите."
+msgstr "Со вклучување на вреднувањето на производите во реално време, оваа сметка ќе ја содржи моменталната вредност на производите."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
@@ -755,4 +689,4 @@ msgstr "_Примени"
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "or"
-msgstr ""
+msgstr "или"

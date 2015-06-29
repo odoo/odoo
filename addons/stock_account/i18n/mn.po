@@ -1,21 +1,22 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-18 11:31+0000\n"
-"Last-Translator: gobi <Unknown>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-8/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-19 05:59+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
@@ -52,8 +53,7 @@ msgstr "Агуулгад Идэвхтэй ID тохируулагдаагүй б
 #: help:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
-"Бараан болон барааны ангилалын үнэлгээний тохиргоог хийх бололцоог олгоно."
+msgstr "Бараан болон барааны ангилалын үнэлгээний тохиргоог хийх бололцоог олгоно."
 
 #. module: stock_account
 #: selection:product.template,cost_method:0
@@ -92,31 +92,19 @@ msgstr "Тухайлсан Огноог Сонгох"
 #. module: stock_account
 #: help:stock.inventory,period_id:0
 msgid ""
-"Choose the accounting period where you want to value the stock moves created "
-"by the inventory instead of the default one (chosen by the inventory end "
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
 "date)"
-msgstr ""
-"Тооллогын үндсэн огнооны оронд (тооллого дуусах огноо сонгогддог) барааны "
-"үнэлгээг хийх санхүүгийн мөчлөгийг сонгоно уу"
+msgstr "Тооллогын үндсэн огнооны оронд (тооллого дуусах огноо сонгогддог) барааны үнэлгээг хийх санхүүгийн мөчлөгийг сонгоно уу"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid ""
-"Choose the date for which you want to get the stock valuation of your "
-"products.\n"
+"Choose the date for which you want to get the stock valuation of your products.\n"
 "\n"
-"                        This will filter the stock operation that weren't "
-"done at the selected date, to retreive the quantity\n"
-"                        you had, and gives you the inventory value according "
-"to the standard price used at that time."
-msgstr ""
-"Барааны үнэлгээг авахыг хүсч буй огноог сонгоно уу.\n"
-"\n"
-"                        Энэ сонгосон өдөрт дуусаагүй байгаа агуулахын "
-"ажиллагаануудыг шүүнэ, \n"
-"                        танд байсан тоо хэмжээг авч тухайн огноонд байсан "
-"нөөцийн үнэлгээг стандарт үнэ дээр \n"
-"                        суурилан өгнө."
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
+msgstr "Барааны үнэлгээг авахыг хүсч буй огноог сонгоно уу.\n\n                        Энэ сонгосон өдөрт дуусаагүй байгаа агуулахын ажиллагаануудыг шүүнэ, \n                        танд байсан тоо хэмжээг авч тухайн огноонд байсан нөөцийн үнэлгээг стандарт үнэ дээр \n                        суурилан өгнө."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -234,26 +222,17 @@ msgid "Group by partner"
 msgstr "Харилцагаар Бүлэглэх"
 
 #. module: stock_account
-#: field:stock.change.standard.price,id:0
-#: field:stock.history,id:0
-#: field:stock.invoice.onshipping,id:0
-#: field:wizard.valuation.history,id:0
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: stock_account
 #: help:stock.change.standard.price,new_price:0
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
-msgstr ""
-"Хэрэв өртөг үнэ өсвөл (тоо хэмжээний зөрүү * байгаа тоо хэмжээ) утгаар "
-"барааны хазайлтын данс дебитлэгдэж барааны гарах данс нь кредитлэгдэнэ.\n"
-"Хэрэв өртөг үнэ буурвал барааны хазайлтын данс кредитлэгдэж барааны орох "
-"данс дебитлэгдэнэ."
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "Хэрэв өртөг үнэ өсвөл (тоо хэмжээний зөрүү * байгаа тоо хэмжээ) утгаар барааны хазайлтын данс дебитлэгдэж барааны гарах данс нь кредитлэгдэнэ.\nХэрэв өртөг үнэ буурвал барааны хазайлтын данс кредитлэгдэж барааны орох данс дебитлэгдэнэ."
 
 #. module: stock_account
 #: help:product.template,valuation:0
@@ -264,21 +243,14 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
-"Хэрэв бодит хугацааны үнэлгээ зөвшөөрсөн байгаа бол систем нь автоматаар "
-"барааны хөдөлгөөн харгалзах журналын бичилтийг 'Өртөгийн арга'-р заагдсан "
-"барааны үнэтэйгээр бичдэг. Тооллогын зөрүүний данс нь барааны ангилал дээр "
-"заагддаг бөгөөд энэ нь барааны одоогийн өртөгийг илэрхийлнэ. Бараа орох, "
-"гарах данс нь ирж буй бараа, гарч буй барааны харьцах дансыг агуулна."
+msgstr "Хэрэв бодит хугацааны үнэлгээ зөвшөөрсөн байгаа бол систем нь автоматаар барааны хөдөлгөөн харгалзах журналын бичилтийг 'Өртөгийн арга'-р заагдсан барааны үнэтэйгээр бичдэг. Тооллогын зөрүүний данс нь барааны ангилал дээр заагддаг бөгөөд энэ нь барааны одоогийн өртөгийг илэрхийлнэ. Бараа орох, гарах данс нь ирж буй бараа, гарч буй барааны харьцах дансыг агуулна."
 
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
-msgstr ""
-"Газардсан өртөгийг бэлтгэх баримт дээр тооцоолох модулийг суулгадаг бөгөөд "
-"энэ модуль газардсан өртөгийг ялгаатай бараануудад хувааж өгдөг."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
+msgstr "Газардсан өртөгийг бэлтгэх баримт дээр тооцоолох модулийг суулгадаг бөгөөд энэ модуль газардсан өртөгийг ялгаатай бараануудад хувааж өгдөг."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -302,8 +274,7 @@ msgid "Inventory Value"
 msgstr "Тооллогын Үнэлгээ"
 
 #. module: stock_account
-#: field:procurement.order,invoice_state:0
-#: field:stock.move,invoice_state:0
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
 msgstr "Нэхэмжлэлийн Хяналт"
@@ -404,23 +375,14 @@ msgstr "Хэрэглэх боломжгүй"
 #: code:addons/stock_account/product.py:83
 #, python-format
 msgid ""
-"One of the following information is missing on the product or product "
-"category and prevents the accounting valuation entries to be created:\n"
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
 "    Product: %s\n"
 "    Stock Input Account: %s\n"
 "    Stock Output Account: %s\n"
 "    Stock Valuation Account: %s\n"
 "    Stock Journal: %s\n"
 "    "
-msgstr ""
-"Бараа юмуу барааны ангилал дээр дараах мэдээллийн аль нэг нь алга байна "
-"иймээс үнэлгээний санхүүгийн бичилтүүд үүсч чадахгүй байна:\n"
-"    Бараа: %s\n"
-"    Барааны Орлогын Данс: %s\n"
-"    Барааны Зарлагын Данс: %s\n"
-"    Барааны Үнэлгээний Данс: %s\n"
-"    Барааны Журнал: %s\n"
-"    "
+msgstr "Бараа юмуу барааны ангилал дээр дараах мэдээллийн аль нэг нь алга байна иймээс үнэлгээний санхүүгийн бичилтүүд үүсч чадахгүй байна:\n    Бараа: %s\n    Барааны Орлогын Данс: %s\n    Барааны Зарлагын Данс: %s\n    Барааны Үнэлгээний Данс: %s\n    Барааны Журнал: %s\n    "
 
 #. module: stock_account
 #: field:stock.history,date:0
@@ -540,19 +502,10 @@ msgstr "Стандарт үнэ өөрчлөгдсөн"
 #. module: stock_account
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
-"Стандарт Үнэ: Өртөг үнэ нь тухайлсан мөчлөгийн төгсгөлд гараар засагддаг "
-"(ихэнхдээ жил бүр).\n"
-"                    Дундаж үнэ: Өртөг нь үнэ нь орлогын хүргэлт бүрт дахин "
-"тооцоологддог бөгөөд барааны үнэлгээнд хэрэглэгддэг.\n"
-"                    Бодит Үнэ: Өртөг үнэ нь сүүлийн гарсан хүргэлтийн өртөг "
-"байна (тухайлбал тооллогын дутагдлын тохиолдолд хэрэглэгдэнэ)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr "Стандарт Үнэ: Өртөг үнэ нь тухайлсан мөчлөгийн төгсгөлд гараар засагддаг (ихэнхдээ жил бүр).\n                    Дундаж үнэ: Өртөг нь үнэ нь орлогын хүргэлт бүрт дахин тооцоологддог бөгөөд барааны үнэлгээнд хэрэглэгддэг.\n                    Бодит Үнэ: Өртөг үнэ нь сүүлийн гарсан хүргэлтийн өртөг байна (тухайлбал тооллогын дутагдлын тохиолдолд хэрэглэгдэнэ)."
 
 #. module: stock_account
 #: field:product.category,property_stock_account_input_categ:0
@@ -615,13 +568,9 @@ msgstr "Өгсөн огноо дахь нөөцийн үнэлгээ"
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
-"This allows to automatically launch the invoicing wizard if the delivery is "
-"to be invoiced when you send or deliver goods.\n"
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
-msgstr ""
-"Энэ нь барааг илгээх, хүргэх үед хүргэлтийг нэхэмжлэх шаардлагатай бол "
-"нэхэмжлэлийн харилцах цонхыг нээдэг.\n"
-"-Энэ нь stock_invoice_directly модулийг суулгадаг."
+msgstr "Энэ нь барааг илгээх, хүргэх үед хүргэлтийг нэхэмжлэх шаардлагатай бол нэхэмжлэлийн харилцах цонхыг нээдэг.\n-Энэ нь stock_invoice_directly модулийг суулгадаг."
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
@@ -650,11 +599,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Тооллогын шууд үнэлгээнд хэрэглэгддэг. Хийсвэр байрлал (дотоод биш төрлийн) "
-"дээр тохируулагдсан тохиолдолд Барааны Гарах Дансын оронд дотоод байрлалаас "
-"энэ байрлал руу шилжиж байгаа барааны үнийг авдаг. Дотоод байрлалд энэ "
-"нөлөөлөхгүй."
+msgstr "Тооллогын шууд үнэлгээнд хэрэглэгддэг. Хийсвэр байрлал (дотоод биш төрлийн) дээр тохируулагдсан тохиолдолд Барааны Гарах Дансын оронд дотоод байрлалаас энэ байрлал руу шилжиж байгаа барааны үнийг авдаг. Дотоод байрлалд энэ нөлөөлөхгүй."
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -664,11 +609,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Тооллогын бодит хугацааны үнэлгээнд хэрэглэгдэнэ. Хийсвэр байрлалууд (дотоод "
-"биш байрлалууд) дээр тохируулагдсан үед энэ байрлалаас гарч дотоод байрлалд "
-"очих барааны үнийг энэ данс нь хадгална. Өөрөөр хэлбэл Барааны Гаралтын "
-"дансын оронд хэрэглэгдэнэ. Дотоод байрлалуудад энэ нь нөлөө байхгүй."
+msgstr "Тооллогын бодит хугацааны үнэлгээнд хэрэглэгдэнэ. Хийсвэр байрлалууд (дотоод биш байрлалууд) дээр тохируулагдсан үед энэ байрлалаас гарч дотоод байрлалд очих барааны үнийг энэ данс нь хадгална. Өөрөөр хэлбэл Барааны Гаралтын дансын оронд хэрэглэгдэнэ. Дотоод байрлалуудад энэ нь нөлөө байхгүй."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -687,13 +628,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
-msgstr ""
-"Бодит хугацаанд тооллогын үнэлгээ хийх тохиолдолд эх байрлалд үнэлгээний "
-"дансыг тусгайлан заагаагүй бол ирж байгаа барааны хөдөлгөөний журналын "
-"харьцах данс нь бүгд энэ дансанд бичигдэх болно. Энэ нь энэ ангилалын бүх "
-"барааны анхны утга болно. Мөн бараа тус бүр дээр тохируулагдаж бас болно."
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "Бодит хугацаанд тооллогын үнэлгээ хийх тохиолдолд эх байрлалд үнэлгээний дансыг тусгайлан заагаагүй бол ирж байгаа барааны хөдөлгөөний журналын харьцах данс нь бүгд энэ дансанд бичигдэх болно. Энэ нь энэ ангилалын бүх барааны анхны утга болно. Мөн бараа тус бүр дээр тохируулагдаж бас болно."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_input:0
@@ -702,11 +639,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
-"Бодит хугацаанд шууд тооллогын үнэлгээ хийх тохиолдолд эх байрлалд "
-"үнэлгээний дансыг тусгайлан заагаагүй бол ирж байгаа барааны хөдөлгөөний "
-"журналын харьцах тал нь бүгд энэ дансанд бичигдэх болно. Бараанд "
-"тохируулагдаагүй бол барааны ангилалынх хэрэглэгдэнэ."
+msgstr "Бодит хугацаанд шууд тооллогын үнэлгээ хийх тохиолдолд эх байрлалд үнэлгээний дансыг тусгайлан заагаагүй бол ирж байгаа барааны хөдөлгөөний журналын харьцах тал нь бүгд энэ дансанд бичигдэх болно. Бараанд тохируулагдаагүй бол барааны ангилалынх хэрэглэгдэнэ."
 
 #. module: stock_account
 #: help:product.category,property_stock_account_output_categ:0
@@ -714,14 +647,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
-msgstr ""
-"Бодит хугацаанд шууд тооллогын үнэлгээ хийх тохиолдолд хүрэх байрлалд "
-"үнэлгээний дансыг тусгайлан заагаагүй бол гарж байгаа барааны хөдөлгөөний "
-"журналын харьцах тал нь бүгд энэ дансанд бичигдэх болно. Энэ нь энэ "
-"ангилалын бүх барааны анхны утга болно. Мөн бараа тус бүр дээр тохируулагдаж "
-"бас болно."
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "Бодит хугацаанд шууд тооллогын үнэлгээ хийх тохиолдолд хүрэх байрлалд үнэлгээний дансыг тусгайлан заагаагүй бол гарж байгаа барааны хөдөлгөөний журналын харьцах тал нь бүгд энэ дансанд бичигдэх болно. Энэ нь энэ ангилалын бүх барааны анхны утга болно. Мөн бараа тус бүр дээр тохируулагдаж бас болно."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -730,29 +658,21 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
-"Шууд бодит хугацаанд тооллогын үнэлгээг хийж байгаа бол гарч байгаа барааны "
-"хөдөлгөөний журналын бичилтийн харьцах тал бүгд энэ дансанд бичигдэнэ. "
-"Гэхдээ хүрэх байрлал дээр үнэлгээний данс тохируулагдсан тэр дансанд "
-"бичигдэнэ. Бараанд тохируулагдаагүй бол барааны ангилалынх хэрэглэгдэнэ."
+msgstr "Шууд бодит хугацаанд тооллогын үнэлгээг хийж байгаа бол гарч байгаа барааны хөдөлгөөний журналын бичилтийн харьцах тал бүгд энэ дансанд бичигдэнэ. Гэхдээ хүрэх байрлал дээр үнэлгээний данс тохируулагдсан тэр дансанд бичигдэнэ. Бараанд тохируулагдаагүй бол барааны ангилалынх хэрэглэгдэнэ."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Тооллогын бодит хугацааны үнэлгээ хийж байхад энэ нь барааны хөдөлгөөнийг "
-"боловсруулахад санхүүгийн бичилт хийгдэх Санхүүгийн Журнал юм."
+msgstr "Тооллогын бодит хугацааны үнэлгээ хийж байхад энэ нь барааны хөдөлгөөнийг боловсруулахад санхүүгийн бичилт хийгдэх Санхүүгийн Журнал юм."
 
 #. module: stock_account
 #: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
-"Барааны бодит хугацааны үнэлгээг өгөгдсөн бараан дээр зөвшөөрөгдсөн байгаа "
-"тохиолдолд энэ данс нь барааны идэвхтэй үнийг хадгална."
+msgstr "Барааны бодит хугацааны үнэлгээг өгөгдсөн бараан дээр зөвшөөрөгдсөн байгаа тохиолдолд энэ данс нь барааны идэвхтэй үнийг хадгална."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history

@@ -1,21 +1,22 @@
-# Latvian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Latvian <lv@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Latvian (http://www.transifex.com/projects/p/odoo-8/language/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:46+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
@@ -53,8 +54,7 @@ msgid ""
 "                Click to register new expenses. \n"
 "              </p><p>\n"
 "                Odoo will ensure the whole process is followed; the expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
+"                sheet is validated by manager(s), the employee is reimbursed\n"
 "                from his expenses, some expenses must be re-invoiced to the\n"
 "                customers.\n"
 "              </p>\n"
@@ -69,7 +69,7 @@ msgstr "Apstiprināts"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Accounting"
-msgstr ""
+msgstr "Grāmatvedība"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
@@ -163,16 +163,14 @@ msgid "Create Month"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_uid:0
-#: field:hr.expense.line,create_uid:0
+#: field:hr.expense.expense,create_uid:0 field:hr.expense.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Izveidoja"
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_date:0
-#: field:hr.expense.line,create_date:0
+#: field:hr.expense.expense,create_date:0 field:hr.expense.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Izveidots"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
@@ -187,8 +185,7 @@ msgid "Currency"
 msgstr "Valūta"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date:0
-#: field:hr.expense.line,date_value:0
+#: field:hr.expense.expense,date:0 field:hr.expense.line,date_value:0
 #: view:website:hr_expense.report_expense
 msgid "Date"
 msgstr "Datums"
@@ -203,28 +200,24 @@ msgstr "Datums "
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
-msgstr ""
-"Avansa Norēķinu pieņemšanas izpildei datums. Tiek aizpildīts, kad tiek "
-"nospiesta poga Pieņemt."
+msgstr "Avansa Norēķinu pieņemšanas izpildei datums. Tiek aizpildīts, kad tiek nospiesta poga Pieņemt."
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
 msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
 "Confirm is pressed."
-msgstr ""
-"Avansa Norēķinu apstiprināšanas datums. Tiek aizpildīts, kad tiek nospiesta "
-"poga Apstiprināt."
+msgstr "Avansa Norēķinu apstiprināšanas datums. Tiek aizpildīts, kad tiek nospiesta poga Apstiprināt."
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Pēdējā ierakstam piesaistītā ziņojuma datums."
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "Date:"
-msgstr ""
+msgstr "Datums:"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.product_normal_form_view_installer
@@ -256,8 +249,7 @@ msgstr "Nodaļa"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
-#: field:hr.expense.expense,name:0
-#: field:hr.expense.line,description:0
+#: field:hr.expense.expense,name:0 field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Apraksts"
 
@@ -270,7 +262,7 @@ msgstr ""
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: selection:hr.expense.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Pabeigts"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
@@ -306,7 +298,7 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:348
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Kļūda!"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -416,11 +408,10 @@ msgstr "Paplašinātie filtri..."
 #. module: hr_expense
 #: field:hr.expense.expense,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Sekotāji"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "Norādīt Žurnālu"
 
@@ -443,7 +434,7 @@ msgstr "TIek noteikta avansa norēķinu rindu attēlošanas secība."
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupēt pēc"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -468,43 +459,40 @@ msgid "Hotel Accommodation"
 msgstr "Izdevumi par viesnīcu"
 
 #. module: hr_expense
-#: field:hr.expense.expense,id:0
-#: field:hr.expense.line,id:0
+#: field:hr.expense.expense,id:0 field:hr.expense.line,id:0
 #: field:hr.expense.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ja atzīmēts, tad jauni ziņojumi pieprasīs jūsu uzmanību."
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ir sekotājs"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Kontējumi"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Pēdēja ziņojuma datums"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_uid:0
-#: field:hr.expense.line,write_uid:0
+#: field:hr.expense.expense,write_uid:0 field:hr.expense.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Pēdējo reizi atjaunoja"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_date:0
-#: field:hr.expense.line,write_date:0
+#: field:hr.expense.expense,write_date:0 field:hr.expense.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Pēdējās izmaiņas"
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
@@ -514,12 +502,12 @@ msgstr "Grāmatojums"
 #. module: hr_expense
 #: field:hr.expense.expense,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Ziņojumi"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Ziņojumu un komunikācijas vēsture"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -535,7 +523,7 @@ msgstr "Nosaukums"
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: selection:hr.expense.expense,state:0
 msgid "New"
-msgstr ""
+msgstr "Jauns"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -576,7 +564,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Apmaksāts"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:348
@@ -601,17 +589,17 @@ msgstr "Produkts"
 #. module: hr_expense
 #: field:hr.expense.report,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Produkta daudzums"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Produkta veidne"
 
 #. module: hr_expense
 #: view:product.product:hr_expense.product_expense_installer_tree_view
 msgid "Products"
-msgstr ""
+msgstr "Produkti"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -654,8 +642,8 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
 msgstr ""
 
 #. module: hr_expense
@@ -678,17 +666,17 @@ msgstr ""
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: field:hr.expense.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Statuss"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Nosūtīt vadītājam"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Kopsavilkums"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:230
@@ -726,8 +714,7 @@ msgstr "Apmaksai"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 #: view:hr.expense.line:hr_expense.view_expenses_line_tree
-#: field:hr.expense.line,total_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,total_amount:0 view:website:hr_expense.report_expense
 msgid "Total"
 msgstr "Kopā"
 
@@ -743,8 +730,7 @@ msgid "Total Price"
 msgstr "Cena Kopā"
 
 #. module: hr_expense
-#: field:hr.expense.line,unit_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,unit_amount:0 view:website:hr_expense.report_expense
 msgid "Unit Price"
 msgstr "Vienības Cena"
 
@@ -752,12 +738,12 @@ msgstr "Vienības Cena"
 #: field:hr.expense.line,uom_id:0
 #: view:product.product:hr_expense.product_expense_installer_tree_view
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mērvienība"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neizlasīti ziņojumi"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_id:0
@@ -775,8 +761,7 @@ msgid "Validation By"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "Apstiprināšanas Datums"
 
@@ -810,13 +795,13 @@ msgstr "Gaida apstiprināšanu"
 #: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Brīdinājums"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Brīdinājums!"
 
 #. module: hr_expense
 #: field:hr.expense.expense,website_message_ids:0
@@ -832,11 +817,9 @@ msgstr ""
 #: help:hr.expense.expense,state:0
 msgid ""
 "When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
+" It is confirmed by the user and request is sent to admin, the status is 'Waiting Confirmation'.            \n"
 "If the admin accepts it, the status is 'Accepted'.\n"
-" If the accounting entries are made for the expense request, the status is "
-"'Waiting Payment'."
+" If the accounting entries are made for the expense request, the status is 'Waiting Payment'."
 msgstr ""
 
 #. module: hr_expense

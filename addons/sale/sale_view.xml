@@ -421,6 +421,8 @@
                 <search string="Search Sales Order">
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]"  help="Sales Order Lines ready to be invoiced"/>
                     <separator/>
+                    <filter string="Confirmed" domain="[('state', 'in', ['waiting_date','progress','manual', 'shipping_except', 'invoice_except', 'done'])]" name="confirmed"/>
+                    <separator/>
                     <filter string="My Sales Order Lines" icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     <field name="order_id"/>
                     <field name="order_partner_id" operator="child_of"/>
@@ -494,6 +496,7 @@
             <field name="name">Sales Order Lines</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_id" ref="view_order_line_tree"/>
+            <field name="context">{'search_default_confirmed': 1}</field>
         </record>
         <record model="ir.ui.view" id="product_form_view_sale_order_button">
             <field name="name">product.product.sale.order</field>

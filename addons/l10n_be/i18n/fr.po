@@ -1,21 +1,22 @@
-# French translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * l10n_be
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/projects/p/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:18+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_appro_mbsd3
@@ -53,12 +54,9 @@ msgid "Charges financières"
 msgstr "Charges financières"
 
 #. module: l10n_be
-#: view:l1on_be.vat.declaration:0
-#: field:l1on_be.vat.declaration,comments:0
-#: view:partner.vat.intra:0
-#: field:partner.vat.intra,comments:0
-#: view:partner.vat.list:0
-#: field:partner.vat.list,comments:0
+#: view:l1on_be.vat.declaration:0 field:l1on_be.vat.declaration,comments:0
+#: view:partner.vat.intra:0 field:partner.vat.intra,comments:0
+#: view:partner.vat.list:0 field:partner.vat.list,comments:0
 msgid "Comments"
 msgstr "Commentaires"
 
@@ -103,11 +101,10 @@ msgstr ""
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.menu_account_report_be_bs
 msgid "Balance Sheet"
-msgstr ""
+msgstr "Bilan"
 
 #. module: l10n_be
-#: view:l1on_be.vat.declaration:0
-#: view:partner.vat.intra:0
+#: view:l1on_be.vat.declaration:0 view:partner.vat.intra:0
 #: field:partner.vat.intra,tax_code_id:0
 msgid "Company"
 msgstr "Société"
@@ -185,7 +182,7 @@ msgstr ""
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:116
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erreur!"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:112
@@ -200,7 +197,7 @@ msgstr ""
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:246
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "Données insuffisantes !"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_effetspayer4
@@ -236,9 +233,7 @@ msgstr ""
 #: help:partner.vat.intra,period_ids:0
 msgid ""
 "Select here the period(s) you want to include in your intracom declaration"
-msgstr ""
-"Sélectionnez ici la/les période(s) que vous souhaitez inclure dans votre "
-"déclaration de TVA Intracommunautaire."
+msgstr "Sélectionnez ici la/les période(s) que vous souhaitez inclure dans votre déclaration de TVA Intracommunautaire."
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_stocketcommandesencoursdexcution1
@@ -248,13 +243,12 @@ msgstr ""
 #. module: l10n_be
 #: field:partner.vat.intra,mand_id:0
 msgid "Reference"
-msgstr ""
+msgstr "Référence"
 
 #. module: l10n_be
 #: help:partner.vat.intra,period_code:0
 msgid ""
-"This is where you have to set the period code for the intracom declaration "
-"using the format: ppyyyy\n"
+"This is where you have to set the period code for the intracom declaration using the format: ppyyyy\n"
 "      PP can stand for a month: from '01' to '12'.\n"
 "      PP can stand for a trimester: '31','32','33','34'\n"
 "          The first figure means that it is a trimester,\n"
@@ -262,16 +256,7 @@ msgid ""
 "      PP can stand for a complete fiscal year: '00'.\n"
 "      YYYY stands for the year (4 positions).\n"
 "    "
-msgstr ""
-"C'est ici que vous devez saisir le code de la période pour la déclaration de "
-"TVA intracommunautaire en utilisant le format : ppyyyy\n"
-"      PP peut indiquer le mois : de \"01\" à \"12\".\n"
-"      PP peut indiquer un trimestre : \"31\", \"32\", \"33\", \"34\"\n"
-"          Où le premier chiffre (3) indique qu'il s'agit d'un trimestre,\n"
-"          Et le second chiffre (1 à 4) indique le numéro de trimestre.\n"
-"      PP pour un exercice complet : '00'.\n"
-"      YYYY indique l'année (codée sur 4 chiffres).\n"
-"    "
+msgstr "C'est ici que vous devez saisir le code de la période pour la déclaration de TVA intracommunautaire en utilisant le format : ppyyyy\n      PP peut indiquer le mois : de \"01\" à \"12\".\n      PP peut indiquer un trimestre : \"31\", \"32\", \"33\", \"34\"\n          Où le premier chiffre (3) indique qu'il s'agit d'un trimestre,\n          Et le second chiffre (1 à 4) indique le numéro de trimestre.\n      PP pour un exercice complet : '00'.\n      YYYY indique l'année (codée sur 4 chiffres).\n    "
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_dettesunanauplus2
@@ -346,9 +331,7 @@ msgstr "Données insuffisantes !"
 #: help:partner.vat.list,partner_ids:0
 msgid ""
 "You can remove clients/partners which you do not want to show in xml file"
-msgstr ""
-"Vous pouvez enlever les clients/partenaires que vous ne voulez pas afficher "
-"dans le fichier xml"
+msgstr "Vous pouvez enlever les clients/partenaires que vous ne voulez pas afficher dans le fichier xml"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_bnficepertedelexcercice1
@@ -415,8 +398,7 @@ msgstr ""
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,file_save:0
-#: field:partner.vat.intra,file_save:0
-#: field:partner.vat.list,file_save:0
+#: field:partner.vat.intra,file_save:0 field:partner.vat.list,file_save:0
 msgid "Save File"
 msgstr "Sauvegarder le Fichier"
 
@@ -534,18 +516,15 @@ msgid "Bénéfice (Perte) de l'excercice avant impôts"
 msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat.intra:0
-#: field:partner.vat.intra,country_ids:0
+#: view:partner.vat.intra:0 field:partner.vat.intra,country_ids:0
 msgid "European Countries"
 msgstr "Pays Européens"
 
 #. module: l10n_be
-#: view:l1on_be.vat.declaration:0
-#: view:partner.vat:0
-#: view:partner.vat.intra:0
+#: view:l1on_be.vat.declaration:0 view:partner.vat:0 view:partner.vat.intra:0
 #: view:partner.vat.list:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
@@ -606,15 +585,14 @@ msgid "No belgian contact with a VAT number in your database."
 msgstr ""
 
 #. module: l10n_be
-#: field:l1on_be.vat.declaration,msg:0
-#: field:partner.vat.intra,msg:0
+#: field:l1on_be.vat.declaration,msg:0 field:partner.vat.intra,msg:0
 msgid "File created"
 msgstr "Fichier crée"
 
 #. module: l10n_be
 #: view:partner.vat.list:0
 msgid "Customers"
-msgstr ""
+msgstr "Clients"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_chargesexceptionnelles1
@@ -656,7 +634,7 @@ msgstr ""
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Advanced Options"
-msgstr ""
+msgstr "Options avancées"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_produitsexceptionnels1
@@ -698,7 +676,7 @@ msgstr ""
 #: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:69
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Erreur"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_capitalsouscrit3
@@ -713,7 +691,7 @@ msgstr "Déclaration de TVA Intracommunautaire par Partenaire"
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_stocks2
 msgid "Stocks"
-msgstr ""
+msgstr "Stocks"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_valeursdisponibles1
@@ -760,9 +738,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_be
-#: view:l1on_be.vat.declaration:0
-#: view:partner.vat:0
-#: view:partner.vat.intra:0
+#: view:l1on_be.vat.declaration:0 view:partner.vat:0 view:partner.vat.intra:0
 #: view:partner.vat.list:0
 msgid "Cancel"
 msgstr "Annuler"
@@ -776,8 +752,7 @@ msgid "No email address associated with the company."
 msgstr ""
 
 #. module: l10n_be
-#: view:l1on_be.vat.declaration:0
-#: view:partner.vat.list:0
+#: view:l1on_be.vat.declaration:0 view:partner.vat.list:0
 msgid "Create XML"
 msgstr "Créer le fichier XML"
 
@@ -810,7 +785,7 @@ msgstr ""
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.menu_account_report_be_pl
 msgid "Profit And Loss"
-msgstr ""
+msgstr "Compte de résultat"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_passif0
@@ -820,7 +795,7 @@ msgstr ""
 #. module: l10n_be
 #: view:partner.vat.list:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimer"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_fournisseurs4
@@ -843,8 +818,7 @@ msgid "Capital"
 msgstr "Capital"
 
 #. module: l10n_be
-#: view:l1on_be.vat.declaration:0
-#: view:partner.vat.intra:0
+#: view:l1on_be.vat.declaration:0 view:partner.vat.intra:0
 #: view:partner.vat.list:0
 msgid "Save the File with '.xml' extension."
 msgstr "Sauvegarder le fichier avec l'extension \".xml\""
@@ -872,7 +846,8 @@ msgstr ""
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_charges_expl_pr_restruct2
 msgid ""
-"Charges d'exploitation portées à l'actif au titre de frais de restructuration"
+"Charges d'exploitation portées à l'actif au titre de frais de "
+"restructuration"
 msgstr ""
 
 #. module: l10n_be
@@ -991,8 +966,7 @@ msgid "No VAT number associated with the company."
 msgstr ""
 
 #. module: l10n_be
-#: field:l1on_be.vat.declaration,name:0
-#: field:partner.vat.intra,name:0
+#: field:l1on_be.vat.declaration,name:0 field:partner.vat.intra,name:0
 #: field:partner.vat.list,name:0
 msgid "File Name"
 msgstr "Nom du fichier"
@@ -1010,7 +984,7 @@ msgstr "Demander le paiement"
 #. module: l10n_be
 #: field:partner.vat,year:0
 msgid "Year"
-msgstr ""
+msgstr "Année"
 
 #. module: l10n_be
 #: model:account.financial.report,name:l10n_be.account_financial_report_rservesindisponibles3

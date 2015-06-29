@@ -1,23 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet_invoice
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-04-26 03:03+0000\n"
-"Last-Translator: user3 <Unknown>\n"
-"Language-Team: Russian <http://translate.starlight-"
-"biz.com//projects/odoo/hr_timesheet_invoice/ru/>\n"
+"PO-Revision-Date: 2015-05-29 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-27 05:38+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
 "Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
@@ -35,28 +34,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new type of invoicing.\n"
 "              </p><p>\n"
-"                Odoo allows you to create default invoicing types. You "
-"might\n"
+"                Odoo allows you to create default invoicing types. You might\n"
 "                have to regularly assign discounts because of a specific\n"
-"                contract or agreement with a customer. From this menu, you "
-"can\n"
+"                contract or agreement with a customer. From this menu, you can\n"
 "                create additional types of invoicing to speed up your\n"
 "                invoicing.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Нажмите, чтобы добавить новый тип счета.\n"
-"              </p><p>\n"
-"                Odoo позволяет создавать типы  выставления счетов-фактур по "
-"умолчанию. Вы могли   бы быть вынуждены регулярно выставлять счета по "
-"конкретному \n"
-"                 договору или соглашению с клиентом. Из этого меню, вы "
-"можете \n"
-"                 создать дополнительные виды счетов, чтобы ускорить \n"
-"                 выставление счетов.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Нажмите, чтобы добавить новый тип счета.\n              </p><p>\n                Odoo позволяет создавать типы  выставления счетов-фактур по умолчанию. Вы могли   бы быть вынуждены регулярно выставлять счета по конкретному \n                 договору или соглашению с клиентом. Из этого меню, вы можете \n                 создать дополнительные виды счетов, чтобы ускорить \n                 выставление счетов.\n              </p>\n            "
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
@@ -171,17 +156,14 @@ msgstr "Ошибка настроек!"
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:180
 #, python-format
-msgid ""
-"Contract incomplete. Please fill in the Customer and Pricelist fields."
-msgstr ""
-"Контракт не заполнен. Пожалуйста заполните поля Покупатель и Прайс-лист."
+msgid "Contract incomplete. Please fill in the Customer and Pricelist fields."
+msgstr "Контракт не заполнен. Пожалуйста заполните поля Покупатель и Прайс-лист."
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,price:0
 #: field:hr.timesheet.invoice.create.final,price:0
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
-#: field:report.timesheet.line,cost:0
-#: field:report_timesheet.user,cost:0
+#: field:report.timesheet.line,cost:0 field:report_timesheet.user,cost:0
 #: view:website:hr_timesheet_invoice.report_analyticprofit
 msgid "Cost"
 msgstr "Стоимость"
@@ -370,10 +352,7 @@ msgstr "Февраль"
 msgid ""
 "Fill this field only if you want to force to use a specific product. Keep "
 "empty to use the real product that comes from the cost."
-msgstr ""
-"Заполните это поле, только если вы хотите использовать конкретный продукт. "
-"Оставьте пустым для использования реального продукт, который исходит из "
-"стоимости."
+msgstr "Заполните это поле, только если вы хотите использовать конкретный продукт. Оставьте пустым для использования реального продукт, который исходит из стоимости."
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
@@ -418,11 +397,9 @@ msgstr "Группировать по"
 #: field:report.account.analytic.line.to.invoice,id:0
 #: field:report.analytic.account.close,id:0
 #: field:report.hr_timesheet_invoice.report_analyticprofit,id:0
-#: field:report.timesheet.line,id:0
-#: field:report_timesheet.account,id:0
+#: field:report.timesheet.line,id:0 field:report_timesheet.account,id:0
 #: field:report_timesheet.account.date,id:0
-#: field:report_timesheet.invoice,id:0
-#: field:report_timesheet.user,id:0
+#: field:report_timesheet.invoice,id:0 field:report_timesheet.user,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -509,9 +486,7 @@ msgstr "Выставление счета"
 msgid ""
 "It allows to set the discount while making invoice, keep empty if the "
 "activities should not be invoiced."
-msgstr ""
-"Это позволяет установить скидку, делая счет, оставьте пустым, если "
-"деятельность не должна выставляться."
+msgstr "Это позволяет установить скидку, делая счет, оставьте пустым, если деятельность не должна выставляться."
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -553,8 +528,7 @@ msgstr "Июнь"
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_max:0
 msgid "Keep empty if this contract is not limited to a total fixed price."
-msgstr ""
-"Оставьте пустым если этот договор не ограничен общей фиксированной ценой."
+msgstr "Оставьте пустым если этот договор не ограничен общей фиксированной ценой."
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
@@ -618,8 +592,7 @@ msgstr "Май"
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,month:0
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
-#: field:report.timesheet.line,month:0
-#: field:report_timesheet.account,month:0
+#: field:report.timesheet.line,month:0 field:report_timesheet.account,month:0
 #: field:report_timesheet.account.date,month:0
 #: field:report_timesheet.user,month:0
 msgid "Month"
@@ -748,9 +721,7 @@ msgstr "Статус"
 msgid ""
 "The cost of each work done will be displayed on the invoice. You probably "
 "don't want to check this"
-msgstr ""
-"Стоимость каждой проделанной работы будет отображена в счете. Вы возможно не "
-"хотите проверить это"
+msgstr "Стоимость каждой проделанной работы будет отображена в счете. Вы возможно не хотите проверить это"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
@@ -760,18 +731,14 @@ msgstr "Детали каждой выполненной работы отобр
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
-msgstr ""
-"Продукт, который будет использоваться для выставления счета на оставшуюся "
-"сумму"
+msgstr "Продукт, который будет использоваться для выставления счета на оставшуюся сумму"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,pricelist_id:0
 msgid ""
 "The product to invoice is defined on the employee form, the price will be "
 "deducted by this pricelist on the product."
-msgstr ""
-"Продукт в счете-фактуре определяется в форме сотрудников, цена на продукт "
-"будет определена этим прейскурантом."
+msgstr "Продукт в счете-фактуре определяется в форме сотрудников, цена на продукт будет определена этим прейскурантом."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,date:0
@@ -984,22 +951,16 @@ msgstr "Внимание!"
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
 msgid ""
-"When reinvoicing costs, the amount on the invoice lines is given by the sale "
-"price of the corresponding product (if any, and if its sale price is not 0). "
-"You can use the following field to enforce the use of a single product for "
-"all the chosen lines in the future invoices."
-msgstr ""
-"При повторном выставлении счетов на затраты, сумма в строках счетов "
-"определяется ценой продажи соответствующего товара (если таковые имеются, и, "
-"если его продажная цена не равна 0). Вы можете использовать следующее поле, "
-"чтобы обеспечить использование одного продукта для всех выбранных линий в "
-"будущих счетах."
+"When reinvoicing costs, the amount on the invoice lines is given by the sale"
+" price of the corresponding product (if any, and if its sale price is not "
+"0). You can use the following field to enforce the use of a single product "
+"for all the chosen lines in the future invoices."
+msgstr "При повторном выставлении счетов на затраты, сумма в строках счетов определяется ценой продажи соответствующего товара (если таковые имеются, и, если его продажная цена не равна 0). Вы можете использовать следующее поле, чтобы обеспечить использование одного продукта для всех выбранных линий в будущих счетах."
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,name:0
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
-#: field:report.timesheet.line,name:0
-#: field:report_timesheet.account,name:0
+#: field:report.timesheet.line,name:0 field:report_timesheet.account,name:0
 #: field:report_timesheet.account.date,name:0
 #: field:report_timesheet.user,name:0
 msgid "Year"
@@ -1023,12 +984,7 @@ msgid ""
 "timesheet invoicing, you may use another ratio. For instance, if you do a "
 "20% advance invoice (fixed price, based on a sales order), you should "
 "invoice the rest on timesheet with a 80% ratio."
-msgstr ""
-"Как правило, счета-фактуры выставляются на 100% табелей. Но если смешать "
-"фиксированную цену и  выставление счетов табелей, можно использовать другое "
-"соотношение. Например, если вы делаете 20% авансовых счет-фактур "
-"(фиксированная цена, на основе заказа клиента), вы должны выставить "
-"остальные счета табелей в соотношении 80%."
+msgstr "Как правило, счета-фактуры выставляются на 100% табелей. Но если смешать фиксированную цену и  выставление счетов табелей, можно использовать другое соотношение. Например, если вы делаете 20% авансовых счет-фактур (фиксированная цена, на основе заказа клиента), вы должны выставить остальные счета табелей в соотношении 80%."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit

@@ -4391,8 +4391,12 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
 });
 
 instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
-    get_context: function() {
+    get_context: function(extra_context) {
         this.context = this.o2m.build_context();
+        if(extra_context)
+        {
+            this.context.add(extra_context);
+        }
         return this.context;
     }
 });
@@ -5734,6 +5738,17 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.$el.find('input').eq(0).val('');
         this.set_filename('');
+    },
+    set_value: function(value_){
+        var changed = value_ !== this.get_value();
+        this._super.apply(this, arguments);
+        // Trigger value change if size is the same
+        if (!changed){
+            this.trigger("change:value", this, {
+                oldValue: value_,
+                newValue: value_
+            });
+        }
     }
 });
 

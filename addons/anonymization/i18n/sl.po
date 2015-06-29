@@ -1,23 +1,23 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * anonymization
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-03-24 16:05+0000\n"
-"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
-"Language-Team: Slovenian <translations@matmoz.si>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
 "Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
@@ -66,10 +66,9 @@ msgstr "Anonimna vrednost je prazna. To se ne bi smelo zgoditi."
 #: code:addons/anonymization/anonymization.py:300
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your "
-"database."
-msgstr ""
-"Pred procesom anonimnosti naredite varnostno kopijo podatkovne zbirke."
+"Before executing the anonymization process, you should make a backup of your"
+" database."
+msgstr "Pred procesom anonimnosti naredite varnostno kopijo podatkovne zbirke."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:444
@@ -77,9 +76,7 @@ msgstr ""
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
-msgstr ""
-"Anonimnost polj vrste: binary, many2many, many2one, one2many, reference ni "
-"mogoča."
+msgstr "Anonimnost polj vrste: binary, many2many, many2one, one2many, reference ni mogoča."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -191,9 +188,7 @@ msgstr "Uvoz"
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
-msgstr ""
-"Če želite razveljaviti proces anonimnosti, morate imeti datoteko, ki ste jo "
-"izvozili pri uveljavitvi anonimnosti."
+msgstr "Če želite razveljaviti proces anonimnosti, morate imeti datoteko, ki ste jo izvozili pri uveljavitvi anonimnosti."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,write_uid:0
@@ -287,10 +282,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
-msgstr ""
-"Anonimnost podatkovne zbirke je trenutno v nestabilnem stanju. Nekatera "
-"polja so anonimna, nekatera pa niso. Poskušajte rešiti problem preden "
-"poskusite ustvariti, zapisovati ali brisati polja."
+msgstr "Anonimnost podatkovne zbirke je trenutno v nestabilnem stanju. Nekatera polja so anonimna, nekatera pa niso. Poskušajte rešiti problem preden poskusite ustvariti, zapisovati ali brisati polja."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:358
@@ -299,10 +291,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
-msgstr ""
-"Anonimnost podatkovne zbirke je trenutno v nestabilnem stanju. Nekatera "
-"polja so anonimna, nekatera pa niso. Poskušajte rešiti problem, preden "
-"storite karkoli drugega."
+msgstr "Anonimnost podatkovne zbirke je trenutno v nestabilnem stanju. Nekatera polja so anonimna, nekatera pa niso. Poskušajte rešiti problem, preden storite karkoli drugega."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:391
@@ -312,10 +301,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
-msgstr ""
-"Anonimnost podatkovne zbirke je trenutno v nestabilnem stanju. Nekatera "
-"polja so anonimna, nekatera pa niso. Poskušajte rešiti problem, preden "
-"storite karkoli."
+msgstr "Anonimnost podatkovne zbirke je trenutno v nestabilnem stanju. Nekatera polja so anonimna, nekatera pa niso. Poskušajte rešiti problem, preden storite karkoli."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:389
@@ -328,9 +314,7 @@ msgstr "Podatkovna zbirka je že anonimna. Ponovitev procesa ni mogoča."
 msgid ""
 "This is the file created by the anonymization process. It should have the "
 "'.pickle' extention."
-msgstr ""
-"Ta datoteka je rezultat procesa anonimnosti in bi morala imeti končnico "
-"'.pickle'."
+msgstr "Ta datoteka je rezultat procesa anonimnosti in bi morala imeti končnico '.pickle'."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0

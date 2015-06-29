@@ -10,7 +10,7 @@
                       <field name="journal_type" readonly="1"/>
                   </h1>
                   <group>
-                      <field name="journal_id" domain="[('type','=',journal_type)]"/>
+                      <field name="journal_id" domain="[('type','=',journal_type)]" on_change="onchange_journal_id(journal_id)"/>
                       <field name="group"/>
                       <field name="invoice_date" />
                   </group>

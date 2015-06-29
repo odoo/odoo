@@ -1,21 +1,23 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_forum
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Saban Yildiz <sabany@projetgrup.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-15 16:47+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"PO-Revision-Date: 2015-06-25 14:36+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:31+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_forum
 #: model:email.template,body_html:website_forum.validation_email
@@ -25,15 +27,13 @@ msgid ""
 "    Hello ${object.name},\n"
 "</p>\n"
 "<p>\n"
-"    You have been invited to validate your email in order to get access to "
-"\"${object.company_id.name}\" Q/A Forums.\n"
+"    You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
 "</p>\n"
 "<p>\n"
 "    To validate your email, please click on the following link:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for "
-"\"${object.company_id.name}\" Q/A Forums</a></li>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for \"${object.company_id.name}\" Q/A Forums</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "    Thanks,\n"
@@ -44,12 +44,12 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\nMerhaba ${object.name},\n</p>\n<p>\n\"${object.company_id.name}\" Forumlarına erişebilmek için e-posta adresinizi onaylayınız.\n</p>\n<p>\nE-posta adresinizi onaylamak için aşağıdaki linke tıklayınız:\n</p>\n<ul>\n<li><a href=\"${ctx.get('token_url')}\"> \"${object.company_id.name}\" forumları için E-posta\nadresimi onayla</a></li>\n</ul>\n<p>\nTeşekkürler,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Forum doğrulaması"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -69,7 +69,7 @@ msgstr "- Gerçekten iyi soruları ve cevapları seçmek için yardımcı olur!"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- no need to answer the same question twice. Also, please"
-msgstr ""
+msgstr "- aynı soruyu iki defa yanıtlamanıza gerek yok. Ayrıca, lütfen"
 
 #. module: website_forum
 #: selection:forum.post.vote,vote:0
@@ -82,7 +82,7 @@ msgstr "-1"
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr ""
+msgstr "<p><i>%s</i> için yeni bir yanıt gönderildi. Mesajı görüntülemek için<a href=\"%s/forum/%s/question/%s\">buraya tıklayın.</a></p>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:380
@@ -90,14 +90,14 @@ msgstr ""
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
+msgstr "<p><i>%s</i> için  %s yeni bir yanıt gönderildi. Mesajı görüntülemek için<a href=\"%s/forum/%s/question/%s\">buraya tıklayın.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
 msgid ""
 "<p>This community is for professionals and enthusiasts of our products and "
 "services.</p>"
-msgstr ""
+msgstr "<p>Bu topluluk ürünlerimizin ve servislerimizin profesyonelleri ve meraklıları içindir.</p>"
 
 #. module: website_forum
 #: view:website:website_forum.tag
@@ -105,7 +105,7 @@ msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr ""
+msgstr "Etiket, sizin sorunuzu diğer sorularla birlikte kategorize eden bir belirteçtir.\nDoğru etiketleri kullanmak, diğerleri için sorunuzu bulmayı ve yanıtlamayı daha\nda kolaylaştırır."
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -115,21 +115,20 @@ msgstr "Bu Forum Hakkında"
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_own:0
 msgid "Accept an answer on its own questions"
-msgstr ""
+msgstr "Kabul et ve kendi sorusunda yanıtla"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_all:0
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Kabul et ve tüm sorulara yanıt ver"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accept:0
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Bir cevap kabul ediliyor"
 
 #. module: website_forum
-#: field:forum.post,active:0
-#: selection:forum.post,state:0
+#: field:forum.post,active:0 selection:forum.post,state:0
 msgid "Active"
 msgstr "Etkin"
 
@@ -159,36 +158,35 @@ msgstr "Cevap Düzenlendi"
 #. module: website_forum
 #: field:forum.forum,karma_answer:0
 msgid "Answer a question"
-msgstr ""
+msgstr "Bir soru cevapla"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
 msgid "Answer accepted"
-msgstr ""
+msgstr "Cevap kabul edildi"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
 msgid "Answer downvoted"
-msgstr ""
+msgstr "Cevap eksi oy aldı"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_flagged:0
 msgid "Answer flagged"
-msgstr ""
+msgstr "Cevap işaretlendi"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Cevap artı oy aldı"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Answered on"
-msgstr ""
+msgstr "Cevaplandı"
 
 #. module: website_forum
-#: field:forum.post,child_count:0
-#: field:forum.post,child_ids:0
+#: field:forum.post,child_count:0 field:forum.post,child_ids:0
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full
 msgid "Answers"
@@ -202,18 +200,18 @@ msgstr "Bir Soru Sor"
 #. module: website_forum
 #: field:forum.forum,karma_ask:0
 msgid "Ask a question"
-msgstr ""
+msgstr "Bir soru sor"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Ask your Question"
-msgstr ""
+msgstr "Sorunuzu Sorun"
 
 #. module: website_forum
 #: field:forum.post,create_date:0
 #: view:website:website_forum.post_description_full
 msgid "Asked on"
-msgstr ""
+msgstr "Soruldu"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -223,7 +221,7 @@ msgstr "Soruldu:"
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_new:0
 msgid "Asking a question"
-msgstr ""
+msgstr "Bir soru soruluyor"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -233,25 +231,24 @@ msgstr "Yazan"
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
 msgid "Autobiographer"
-msgstr ""
+msgstr "Autobiographer"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Back to"
-msgstr ""
+msgstr "Geri dön"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "Badge \""
-msgstr ""
+msgstr "Rozet \""
 
 #. module: website_forum
-#: field:res.users,badge_ids:0
-#: view:website:website_forum.badge
+#: field:res.users,badge_ids:0 view:website:website_forum.badge
 #: view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Badges"
-msgstr ""
+msgstr "Rozetler"
 
 #. module: website_forum
 #: view:website:website_forum.badge
@@ -259,7 +256,7 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
+msgstr "Soru ve cevaplarınızla itibar kazanmanızın yanı sıra,\nyardımcı oldukça rozetler kazanacaksınız. Rozetler\nprofil  sayfanıza ve gönderilernizde görülür."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -269,513 +266,507 @@ msgstr "Biyografi"
 #. module: website_forum
 #: field:forum.post,can_accept:0
 msgid "Can Accept"
-msgstr ""
+msgstr "Kabul Edebilir"
 
 #. module: website_forum
 #: field:forum.post,can_answer:0
 msgid "Can Answer"
-msgstr ""
+msgstr "Cevaplayabilir"
 
 #. module: website_forum
 #: field:forum.post,can_ask:0
 msgid "Can Ask"
-msgstr ""
+msgstr "Soru Sorabilir"
 
 #. module: website_forum
 #: field:forum.post,can_close:0
 msgid "Can Close"
-msgstr ""
+msgstr "Kapatabilir"
 
 #. module: website_forum
 #: field:forum.post,can_comment:0
 msgid "Can Comment"
-msgstr ""
+msgstr "Yorum Yapabilir"
 
 #. module: website_forum
 #: field:forum.post,can_comment_convert:0
 msgid "Can Convert to Comment"
-msgstr ""
+msgstr "Yoruma Çevirebilir"
 
 #. module: website_forum
 #: field:forum.post,can_downvote:0
 msgid "Can Downvote"
-msgstr ""
+msgstr "Eksi Oy Verebilir"
 
 #. module: website_forum
 #: field:forum.post,can_edit:0
 msgid "Can Edit"
-msgstr ""
+msgstr "Düzenleyebilir"
 
 #. module: website_forum
 #: field:forum.post,can_unlink:0
 msgid "Can Unlink"
-msgstr ""
+msgstr "Çözümleyebilir"
 
 #. module: website_forum
 #: field:forum.post,can_upvote:0
 msgid "Can Upvote"
-msgstr ""
+msgstr "Artı Oy Verebilir"
 
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
 msgid "Change question tags"
-msgstr ""
+msgstr "Soru etiketlerini değiştirebilir"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "Check available badges"
-msgstr ""
+msgstr "Uygun rozetleri kontrol et"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
 #: model:gamification.challenge,name:website_forum.challenge_chief_commentator
 msgid "Chief Commentator"
-msgstr ""
+msgstr "Usta Yorumcu"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "City"
-msgstr ""
+msgstr "İl"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr ""
+msgstr "Foruma katılmanızı sağlayacak e-posta doğrulama mailini göndermek için buraya tıklayın."
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
 msgid "Clickable links (Editor)"
-msgstr ""
+msgstr "Tıklanabilir Linkler (Düzenleyici)"
 
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #. module: website_forum
 #: field:forum.forum,karma_close_all:0
 msgid "Close all posts"
-msgstr ""
+msgstr "Tüm gönderileri kapat"
 
 #. module: website_forum
 #: field:forum.forum,karma_close_own:0
 msgid "Close its own posts"
-msgstr ""
+msgstr "Kendi gönderilerini kapat"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Close question"
-msgstr ""
+msgstr "Soruyu kapat"
 
 #. module: website_forum
 #: field:forum.post,closed_uid:0
 msgid "Closed by"
-msgstr ""
+msgstr "Kapatan"
 
 #. module: website_forum
 #: field:forum.post,closed_date:0
 msgid "Closed on"
-msgstr ""
+msgstr "Kapatıldı"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
 #: view:website:website_forum.post_description_full
 msgid "Comment"
-msgstr ""
+msgstr "Yorum"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_all:0
 msgid "Comment all posts"
-msgstr ""
+msgstr "Tüm gönderilere yorum yap"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_own:0
 msgid "Comment its own posts"
-msgstr ""
+msgstr "Kendi gönderilerine yorum yap"
 
 #. module: website_forum
 #: view:website:website_forum.post_comment
 msgid "Comment this post..."
-msgstr ""
+msgstr "Bu gönderiye yorum yap..."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
 #: model:gamification.challenge,name:website_forum.challenge_commentator
 #: model:gamification.goal.definition,name:website_forum.definition_commentator
 msgid "Commentator"
-msgstr ""
+msgstr "Yorumcu"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
 msgid "Comments"
-msgstr ""
+msgstr "Yorumlar"
 
 #. module: website_forum
 #: help:forum.post,website_message_ids:0
 msgid "Comments on forum post"
-msgstr ""
+msgstr "Gönderideki yorumlar"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
 msgid "Complete own biography"
-msgstr ""
+msgstr "Öz geçmişini tamamla"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_configure_profile
 msgid "Completed own biography"
-msgstr ""
+msgstr "Öz geçmiş tamamlandı"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid ""
-"Congratulations! Your email has just been validated. You may now participate "
-"to our forums."
-msgstr ""
+"Congratulations! Your email has just been validated. You may now participate"
+" to our forums."
+msgstr "Tebrikler! E-posta adresiniz doğrulandı. Şimdi forumlarımıza katılabilirsiniz."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 #: field:forum.post,content:0
 msgid "Content"
-msgstr ""
+msgstr "İçerik"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_all:0
 msgid "Convert all answers to comments and vice versa"
-msgstr ""
+msgstr "Tüm cevapları yorum vb. dönüştür."
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_own:0
 msgid "Convert its own answers to comments and vice versa"
-msgstr ""
+msgstr "Kendi cevaplarını ve yorumlarını dönüştür"
 
 #. module: website_forum
 #: help:forum.post,is_correct:0
 msgid "Correct Answer or Answer on this question accepted."
-msgstr ""
+msgstr "Doğru cevap ya da bu soruya verilen cevap kabul edildi."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Country"
-msgstr ""
+msgstr "Ülke"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Country..."
-msgstr ""
+msgstr "Ülke"
 
 #. module: website_forum
 #: field:forum.post.vote,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Oluşturma Tarihi"
 
 #. module: website_forum
-#: field:forum.forum,create_uid:0
-#: field:forum.post,create_uid:0
-#: field:forum.post.reason,create_uid:0
-#: field:forum.post.vote,create_uid:0
+#: field:forum.forum,create_uid:0 field:forum.post,create_uid:0
+#: field:forum.post.reason,create_uid:0 field:forum.post.vote,create_uid:0
 #: field:forum.tag,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: website_forum
-#: field:forum.forum,create_date:0
-#: field:forum.post.reason,create_date:0
+#: field:forum.forum,create_date:0 field:forum.post.reason,create_date:0
 #: field:forum.tag,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturulma"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr ""
+msgstr "Güvenilir Soru"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
 #: model:gamification.challenge,name:website_forum.challenge_critic
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
-msgstr ""
+msgstr "Eleştiri"
 
 #. module: website_forum
-#: help:forum.forum,message_last_post:0
-#: help:forum.post,message_last_post:0
+#: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Girişe işlenmiş son mesajın tarihi."
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
 msgid "Delete all posts"
-msgstr ""
+msgstr "Tüm gönderileri silebilir"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_own:0
 msgid "Delete its own posts"
-msgstr ""
+msgstr "Kendi gönderilerini silebilir"
 
 #. module: website_forum
 #: field:forum.forum,description:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_6
 #: model:gamification.challenge,name:website_forum.challenge_disciplined
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
-msgstr ""
+msgstr "Disiplinli"
 
 #. module: website_forum
 #: field:forum.forum,karma_downvote:0
 msgid "Downvote"
-msgstr ""
+msgstr "Eksi Oy"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Edit Profile"
-msgstr ""
+msgstr "Profili Düzenle"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Edit Your Bio"
-msgstr ""
+msgstr "Biografinizi Düzenleyin"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr ""
+msgstr "Önceki Cevabınızı Düzenleyin"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Tüm gönderileri düzenleyebilir"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit answer"
-msgstr ""
+msgstr "Cevabı düzenle"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_own:0
 msgid "Edit its own posts"
-msgstr ""
+msgstr "Tüm gönderilerini düzenleyebilir"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit question"
-msgstr ""
+msgstr "Soruyu düzenle"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit your Question"
-msgstr ""
+msgstr "Sorunuzu Düzenleyin"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
 #: model:gamification.challenge,name:website_forum.challenge_editor
 #: model:gamification.goal.definition,name:website_forum.definition_editor
 msgid "Editor"
-msgstr ""
+msgstr "Düzenleyici"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Email"
-msgstr ""
+msgstr "E-Mail"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
 #: model:gamification.challenge,name:website_forum.challenge_enlightened
 #: model:gamification.goal.definition,name:website_forum.definition_enlightened
 msgid "Enlightened"
-msgstr ""
+msgstr "Aydınlatıldı"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Enter your Question"
-msgstr ""
+msgstr "Sorunuzu Giriniz"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr ""
+msgstr "Popüler Sorular"
 
 #. module: website_forum
 #: field:forum.post,favourite_count:0
 msgid "Favorite Count"
-msgstr ""
+msgstr "Favori Sayısı"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Favori Soru"
 
 #. module: website_forum
 #: field:forum.post,favourite_ids:0
 msgid "Favourite"
-msgstr ""
+msgstr "Favori"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
 msgid "Favourite Question (1)"
-msgstr ""
+msgstr "Favori Soru (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
 msgid "Favourite Question (25)"
-msgstr ""
+msgstr "Favori Soru (25)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
 msgid "Favourite Question (5)"
-msgstr ""
+msgstr "Favori Soru (5)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Favourite Questions"
-msgstr ""
+msgstr "Favori Sorular"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Filtrele"
 
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Bir gönderiyi rahatsız edici olarak işaretle"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Followed"
-msgstr ""
+msgstr "Takip Edildi"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr ""
+msgstr "Takip Edilen Sorular"
 
 #. module: website_forum
 #: field:forum.forum,message_follower_ids:0
 #: field:forum.post,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "İzleyiciler"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_search
-#: field:forum.post,forum_id:0
-#: field:forum.post.vote,forum_id:0
+#: field:forum.post,forum_id:0 field:forum.post.vote,forum_id:0
 #: field:forum.tag,forum_id:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
 #: model:website.menu,name:website_forum.menu_questions
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #. module: website_forum
 #: field:gamification.badge,level:0
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "Forum Rozet Seviyesi"
 
 #. module: website_forum
 #: view:res.users:website_forum.view_users_form_forum
 msgid "Forum Karma"
-msgstr ""
+msgstr "Forum Karması"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_form
 #: model:ir.model,name:website_forum.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Forum Gönderisi"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Posts"
-msgstr ""
+msgstr "Forum Gönderileri"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.model,name:website_forum.model_forum_forum
-#: model:ir.ui.menu,name:website_forum.menu_forum
-#: view:website:website.layout
+#: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
 msgid "Forums"
-msgstr ""
+msgstr "Forumlar"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "İK Personel Amaçları"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "Ödüllendirme"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
 #: model:gamification.challenge,name:website_forum.challenge_good_answer
 msgid "Good Answer"
-msgstr ""
+msgstr "Güzel Cevap"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_answer
 msgid "Good Answer (6)"
-msgstr ""
+msgstr "Güzel Cevap (6)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_9
 #: model:gamification.challenge,name:website_forum.challenge_good_question
 msgid "Good Question"
-msgstr ""
+msgstr "Güzel Soru"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_4
 #: model:gamification.challenge,name:website_forum.challenge_great_answer
 msgid "Great Answer"
-msgstr ""
+msgstr "Müthiş Cevap"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_answer
 msgid "Great Answer (15)"
-msgstr ""
+msgstr "Müthiş Cevap (15)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_10
 #: model:gamification.challenge,name:website_forum.challenge_great_question
 msgid "Great Question"
-msgstr ""
+msgstr "Müthiş Soru"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupla İle"
 
 #. module: website_forum
 #: field:forum.forum,faq:0
 msgid "Guidelines"
-msgstr ""
+msgstr "Yönergeler"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_6
 #: model:gamification.challenge,name:website_forum.challenge_guru
 msgid "Guru"
-msgstr ""
+msgstr "Guru"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_guru
 msgid "Guru (15)"
-msgstr ""
+msgstr "Guru (15)"
 
 #. module: website_forum
 #: field:forum.post,uid_has_answered:0
 msgid "Has Answered"
-msgstr ""
+msgstr "Yanıtladı"
 
 #. module: website_forum
 #: field:forum.post,has_validated_answer:0
@@ -785,30 +776,25 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
-msgstr ""
+msgstr "Yardım"
 
 #. module: website_forum
-#: help:forum.forum,message_summary:0
-#: help:forum.post,message_summary:0
+#: help:forum.forum,message_summary:0 help:forum.post,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Mesajlaşma özetini tutar (mesajların sayısı, ...). Bu özet kanban ekranlarına eklenebilmesi için html biçimindedir."
 
 #. module: website_forum
-#: field:forum.forum,id:0
-#: field:forum.post,id:0
-#: field:forum.post.reason,id:0
-#: field:forum.post.vote,id:0
-#: field:forum.tag,id:0
+#: field:forum.forum,id:0 field:forum.post,id:0 field:forum.post.reason,id:0
+#: field:forum.post.vote,id:0 field:forum.tag,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_forum
-#: help:forum.forum,message_unread:0
-#: help:forum.post,message_unread:0
+#: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Eğer işaretlenirse yeni mesajlar ilginizi gerektirir"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -816,79 +802,78 @@ msgid ""
 "If you close this question, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed questions to moderate\n"
 "            them."
-msgstr ""
+msgstr "Eğer bu soruyu seçerseniz, kullanıcıların çoğu için gizli olacaktır. Sadece\nyüksek karması olan kullanıcılar kapalı soruları görebilir ve\ndüzenleyebilir."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "If you wanted to comment on the question or answer, just"
-msgstr ""
+msgstr "Eğer bu soru ya da cevaba yanıt vermek istiyorsan, sadece"
 
 #. module: website_forum
 #: field:forum.forum,message_is_follower:0
 #: field:forum.post,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "İzleyici"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "E-posta adresiniz doğrulanmamış gibi görünüyor."
 
 #. module: website_forum
-#: field:res.users,karma:0
-#: view:website:website_forum.user_detail_full
+#: field:res.users,karma:0 view:website:website_forum.user_detail_full
 msgid "Karma"
-msgstr ""
+msgstr "Karma"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Karma Kazançları"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Requirements"
-msgstr ""
+msgstr "Karma Gereksinimleri"
 
 #. module: website_forum
 #: field:forum.post,karma_accept:0
 msgid "Karma to accept this answer"
-msgstr ""
+msgstr "Bu cevabı kabul etmek için karma"
 
 #. module: website_forum
 #: field:forum.post,karma_answer:0
 msgid "Karma to answer"
-msgstr ""
+msgstr "Cevaplamak için gerekli olan karma"
 
 #. module: website_forum
 #: field:forum.post,karma_ask:0
 msgid "Karma to ask"
-msgstr ""
+msgstr "Soru sormak için gerekli olan karma"
 
 #. module: website_forum
 #: field:forum.post,karma_close:0
 msgid "Karma to close"
-msgstr ""
+msgstr "Kapatmak için gerekli olan karma"
 
 #. module: website_forum
 #: field:forum.post,karma_comment:0
 msgid "Karma to comment"
-msgstr ""
+msgstr "Yorum yazmak için gerekli olan karma"
 
 #. module: website_forum
 #: field:forum.post,karma_downvote:0
 msgid "Karma to downvote"
-msgstr ""
+msgstr "Eksi oy vermek için gerekli olan karma"
 
 #. module: website_forum
 #: field:forum.post,karma_edit:0
 msgid "Karma to edit"
-msgstr ""
+msgstr "Düzenlemek için gerekli olan karma"
 
 #. module: website_forum
 #: field:forum.post,karma_unlink:0
 msgid "Karma to unlink"
-msgstr ""
+msgstr "Ayırmak için gerekli olan karma"
 
 #. module: website_forum
 #: field:forum.post,karma_upvote:0
@@ -901,26 +886,21 @@ msgid "Keep Informed"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_last_post:0
-#: field:forum.post,message_last_post:0
+#: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Son Mesaj Tarihi"
 
 #. module: website_forum
-#: field:forum.forum,write_uid:0
-#: field:forum.post.reason,write_uid:0
-#: field:forum.post.vote,write_uid:0
-#: field:forum.tag,write_uid:0
+#: field:forum.forum,write_uid:0 field:forum.post.reason,write_uid:0
+#: field:forum.post.vote,write_uid:0 field:forum.tag,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: website_forum
-#: field:forum.forum,write_date:0
-#: field:forum.post.reason,write_date:0
-#: field:forum.post.vote,write_date:0
-#: field:forum.tag,write_date:0
+#: field:forum.forum,write_date:0 field:forum.post.reason,write_date:0
+#: field:forum.post.vote,write_date:0 field:forum.tag,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -938,16 +918,14 @@ msgid "Linking files (Editor)"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_ids:0
-#: field:forum.post,message_ids:0
+#: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesajlar"
 
 #. module: website_forum
-#: help:forum.forum,message_ids:0
-#: help:forum.post,message_ids:0
+#: help:forum.forum,message_ids:0 help:forum.post,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mesajlar ve İletişim Geçmişi"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -975,11 +953,10 @@ msgid "My Vote"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,name:0
-#: view:forum.post:website_forum.view_forum_post_form
+#: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
 #: field:forum.tag,name:0
 msgid "Name"
-msgstr ""
+msgstr "Adı"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
@@ -1090,7 +1067,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Kişiler"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -1141,10 +1118,9 @@ msgid "Popular Question (500)"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.post.vote,post_id:0
-#: view:website:website_forum.post_comment
+#: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
 msgid "Post"
-msgstr ""
+msgstr "İşle"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
@@ -1175,7 +1151,7 @@ msgstr ""
 #: field:forum.tag,post_ids:0
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 msgid "Posts"
-msgstr ""
+msgstr "Blog Yazıları"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -1197,7 +1173,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,parent_id:0
 msgid "Question"
-msgstr ""
+msgstr "Soru"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:414
@@ -1230,14 +1206,13 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Question:"
-msgstr ""
+msgstr "Soru:"
 
 #. module: website_forum
-#: view:website:website_forum.forum_index
-#: view:website:website_forum.header
+#: view:website:website_forum.forum_index view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Questions"
-msgstr ""
+msgstr "Sorular"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:376
@@ -1258,23 +1233,22 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,closed_reason_id:0
 msgid "Reason"
-msgstr ""
+msgstr "Neden"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Reason:"
-msgstr ""
+msgstr "Neden:"
 
 #. module: website_forum
-#: view:website:website_forum.404
-#: view:website:website_forum.private_profile
+#: view:website:website_forum.404 view:website:website_forum.private_profile
 msgid "Return to the question list."
 msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_26
@@ -1286,7 +1260,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Search"
-msgstr ""
+msgstr "Arama"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1314,7 +1288,7 @@ msgstr ""
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_form
 msgid "Send a message to the group"
-msgstr ""
+msgstr "Grupa bir mesaj gönder"
 
 #. module: website_forum
 #: view:website:website_forum.404
@@ -1324,7 +1298,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Sort by"
-msgstr ""
+msgstr "Sıralandır"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1334,7 +1308,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,state:0
 msgid "Status"
-msgstr ""
+msgstr "Durumu"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_6
@@ -1349,10 +1323,9 @@ msgid "Student"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_summary:0
-#: field:forum.post,message_summary:0
+#: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Özet"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
@@ -1364,17 +1337,14 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Tag"
-msgstr ""
+msgstr "Etiket"
 
 #. module: website_forum
-#: field:forum.post,tag_ids:0
-#: view:website:website_forum.ask_question
-#: view:website:website_forum.edit_post
-#: view:website:website_forum.forum_index
-#: view:website:website_forum.header
-#: view:website:website_forum.tag
+#: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
+#: view:website:website_forum.edit_post view:website:website_forum.forum_index
+#: view:website:website_forum.header view:website:website_forum.tag
 msgid "Tags"
-msgstr ""
+msgstr "Etiketler"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -1408,17 +1378,17 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,name:0
 msgid "Title"
-msgstr ""
+msgstr "Başlık"
 
 #. module: website_forum
 #: field:forum.post.vote,recipient_id:0
 msgid "To"
-msgstr ""
+msgstr "Bitiş"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Geçiş navigasyonu"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1436,15 +1406,14 @@ msgid "Unlink its own comments"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_unread:0
-#: field:forum.post,message_unread:0
+#: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Okunmamış Mesajlar"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Update"
-msgstr ""
+msgstr "Güncelle"
 
 #. module: website_forum
 #: field:forum.post,write_date:0
@@ -1484,12 +1453,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post.vote,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Kullanıcılar"
 
 #. module: website_forum
 #: field:forum.post,is_correct:0
@@ -1504,56 +1473,54 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Views"
-msgstr ""
+msgstr "Görünümler"
 
 #. module: website_forum
 #: field:forum.post.vote,vote:0
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Vote"
-msgstr ""
+msgstr "Oy ver"
 
 #. module: website_forum
-#: field:forum.post,vote_count:0
-#: field:forum.post,vote_ids:0
+#: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
 #: view:website:website_forum.user_detail_full
 msgid "Votes"
-msgstr ""
+msgstr "Oylar"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Website"
-msgstr ""
+msgstr "Websitesi"
 
 #. module: website_forum
 #: field:forum.forum,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Web Sitesi Mesajları"
 
 #. module: website_forum
 #: help:forum.forum,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_description:0
 #: field:forum.post,website_meta_description:0
 #: field:forum.tag,website_meta_description:0
 msgid "Website meta description"
-msgstr ""
+msgstr "Websitesi meta açıklaması"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_keywords:0
 #: field:forum.post,website_meta_keywords:0
 #: field:forum.tag,website_meta_keywords:0
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Websitesi meta anahtar kelimeler"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_title:0
-#: field:forum.post,website_meta_title:0
-#: field:forum.tag,website_meta_title:0
+#: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
 msgid "Website meta title"
-msgstr ""
+msgstr "Websitesi meta başlık"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1575,7 +1542,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "and"
-msgstr ""
+msgstr "ve"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1583,8 +1550,7 @@ msgid "answers"
 msgstr ""
 
 #. module: website_forum
-#: view:website:website_forum.badge
-#: view:website:website_forum.user_badges
+#: view:website:website_forum.badge view:website:website_forum.user_badges
 msgid "awarded users"
 msgstr ""
 
@@ -1618,7 +1584,7 @@ msgstr ""
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "ile"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1720,12 +1686,12 @@ msgstr ""
 #: view:website:website_forum.post_comment
 #: view:website:website_forum.post_description_full
 msgid "on"
-msgstr ""
+msgstr "bunda"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "or"
-msgstr ""
+msgstr "veya"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1790,7 +1756,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,self_reply:0
 msgid "unknown"
-msgstr ""
+msgstr "bilinmeyen"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1813,22 +1779,20 @@ msgid "views"
 msgstr ""
 
 #. module: website_forum
-#: view:website:website_forum.display_post
-#: view:website:website_forum.vote
+#: view:website:website_forum.display_post view:website:website_forum.vote
 msgid "vote"
 msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.display_post
-#: view:website:website_forum.user_detail_full
-#: view:website:website_forum.vote
+#: view:website:website_forum.user_detail_full view:website:website_forum.vote
 msgid "votes"
 msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "website"
-msgstr ""
+msgstr "Websitesi"
 
 #. module: website_forum
 #: view:website:website_forum.display_post

@@ -1,21 +1,23 @@
-# French translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * note
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-12-27 07:55+0000\n"
-"Last-Translator: Florian Hatat <Unknown>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2015-05-30 13:41+0000\n"
+"Last-Translator: Guewen Baconnier <guewen.baconnier@camptocamp.com>\n"
+"Language-Team: French (http://www.transifex.com/projects/p/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:59+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -24,10 +26,8 @@ msgid ""
 "            Click to add a personal note.\n"
 "          </p><p>\n"
 "            Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings).\n"
 "          </p><p>\n"
@@ -35,28 +35,10 @@ msgid ""
 "            removing or modifying columns.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Cliquez pour ajouter une note personnelle.\n"
-"          </p><p>\n"
-"            Utilisez les notes pour organiser vos tâches personnelles ou "
-"notes. Toutes\n"
-"            les notes sont privées; personne d'autre ne pourra les voir. "
-"Cependant,\n"
-"            vous pouvez partager des notes avec d'autres personnes en "
-"invitant des abonnés\n"
-"            sur la note. (Utile pour les compte-rendus de réunion, "
-"particulièrement si vous activez les pads collaboratifs).\n"
-"          </p><p>\n"
-"            Vous pouvez personnaliser votre méthode de traitement des "
-"notes/tâches en ajoutant, en enlevant ou en modifiant des          "
-"colonnes.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Cliquez pour ajouter une note personnelle.\n          </p><p>\n            Utilisez les notes pour organiser vos tâches personnelles ou notes. Toutes\n            les notes sont privées; personne d'autre ne pourra les voir. Cependant,\n            vous pouvez partager des notes avec d'autres personnes en invitant des abonnés\n            sur la note. (Utile pour les compte-rendus de réunion, particulièrement si vous activez les pads collaboratifs).\n          </p><p>\n            Vous pouvez personnaliser votre méthode de traitement des notes/tâches en ajoutant, en enlevant ou en modifiant des          colonnes.\n          </p>\n        "
 
 #. module: note
-#: view:note.note:note.view_note_note_filter
-#: field:note.note,open:0
+#: view:note.note:note.view_note_note_filter field:note.note,open:0
 msgid "Active"
 msgstr "Actif"
 
@@ -76,28 +58,26 @@ msgid "Color Index"
 msgstr "Indice couleur"
 
 #. module: note
-#: field:note.note,create_uid:0
-#: field:note.stage,create_uid:0
+#: field:note.note,create_uid:0 field:note.stage,create_uid:0
 #: field:note.tag,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Créé par"
 
 #. module: note
-#: field:note.note,create_date:0
-#: field:note.stage,create_date:0
+#: field:note.note,create_date:0 field:note.stage,create_date:0
 #: field:note.tag,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Créé le"
 
 #. module: note
 #: field:note.note,date_done:0
 msgid "Date done"
-msgstr ""
+msgstr "Date de clôture"
 
 #. module: note
 #: help:note.note,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Date du dernier message enregistré sur cet enregistrement"
 
 #. module: note
 #: view:note.note:note.view_note_note_kanban
@@ -117,21 +97,19 @@ msgstr "Abonnés"
 #. module: note
 #: view:note.note:note.view_note_note_filter
 msgid "Group By"
-msgstr ""
+msgstr "Regrouper par"
 
 #. module: note
 #: help:note.note,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Contient le résumé de la discussion (nombre de messages, ...). Ce résumé est au format HTML pour permettre son utilisation dans les vues kanban."
 
 #. module: note
-#: field:note.note,id:0
-#: field:note.stage,id:0
-#: field:note.tag,id:0
+#: field:note.note,id:0 field:note.stage,id:0 field:note.tag,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: note
 #: help:note.note,message_unread:0
@@ -146,21 +124,19 @@ msgstr "Est abonné"
 #. module: note
 #: field:note.note,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Date du dernier message"
 
 #. module: note
-#: field:note.note,write_uid:0
-#: field:note.stage,write_uid:0
+#: field:note.note,write_uid:0 field:note.stage,write_uid:0
 #: field:note.tag,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Dernière modification par"
 
 #. module: note
-#: field:note.note,write_date:0
-#: field:note.stage,write_date:0
+#: field:note.note,write_date:0 field:note.stage,write_date:0
 #: field:note.tag,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Dernière mise à jour le"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_03
@@ -181,7 +157,7 @@ msgstr "Historique des messages et communications"
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr ""
+msgstr "Nouveau"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -225,8 +201,7 @@ msgid "Notes / Fancy mode"
 msgstr ""
 
 #. module: note
-#: field:note.note,user_id:0
-#: field:note.stage,user_id:0
+#: field:note.note,user_id:0 field:note.stage,user_id:0
 msgid "Owner"
 msgstr "Propriétaire"
 
@@ -236,16 +211,14 @@ msgid "Owner of the note stage."
 msgstr "Propriétaire de l'étape de la note."
 
 #. module: note
-#: field:note.note,sequence:0
-#: field:note.stage,sequence:0
+#: field:note.note,sequence:0 field:note.stage,sequence:0
 msgid "Sequence"
 msgstr "Séquence"
 
 #. module: note
-#: view:note.note:note.view_note_note_filter
-#: field:note.note,stage_id:0
+#: view:note.note:note.view_note_note_filter field:note.note,stage_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Étape"
 
 #. module: note
 #: field:note.stage,name:0
@@ -262,7 +235,7 @@ msgstr "Étape des notes"
 #: model:ir.ui.menu,name:note.menu_notes_stage
 #: view:note.note:note.view_note_note_tree
 msgid "Stages"
-msgstr ""
+msgstr "Étapes"
 
 #. module: note
 #: view:note.stage:note.view_note_stage_tree
@@ -285,10 +258,9 @@ msgid "Tag Name"
 msgstr ""
 
 #. module: note
-#: view:note.note:note.view_note_note_form
-#: field:note.note,tag_ids:0
+#: view:note.note:note.view_note_note_form field:note.note,tag_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Étiquettes"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_04

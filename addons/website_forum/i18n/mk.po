@@ -1,21 +1,22 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_forum
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-11-11 12:59+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:31+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: website_forum
 #: model:email.template,body_html:website_forum.validation_email
@@ -25,15 +26,13 @@ msgid ""
 "    Hello ${object.name},\n"
 "</p>\n"
 "<p>\n"
-"    You have been invited to validate your email in order to get access to "
-"\"${object.company_id.name}\" Q/A Forums.\n"
+"    You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
 "</p>\n"
 "<p>\n"
 "    To validate your email, please click on the following link:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for "
-"\"${object.company_id.name}\" Q/A Forums</a></li>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for \"${object.company_id.name}\" Q/A Forums</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "    Thanks,\n"
@@ -69,8 +68,7 @@ msgstr "- навистина помага ако се изберат најдо�
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- no need to answer the same question twice. Also, please"
-msgstr ""
-"- нема потреба два пати да одговорите на истото прашање. Исто така, ве молиме"
+msgstr "- нема потреба два пати да одговорите на истото прашање. Исто така, ве молиме"
 
 #. module: website_forum
 #: selection:forum.post.vote,vote:0
@@ -83,10 +81,7 @@ msgstr "-1"
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr ""
-"<p>Нов одговор за <i>%s</i> е објавен. <a "
-"href=\"%s/forum/%s/question/%s\">Кликнете овде за да пристапите на "
-"постот.</a></p>"
+msgstr "<p>Нов одговор за <i>%s</i> е објавен. <a href=\"%s/forum/%s/question/%s\">Кликнете овде за да пристапите на постот.</a></p>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:380
@@ -94,10 +89,7 @@ msgstr ""
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
-"<p>Ново прашање <i>%s</i> е поставено на %s. <a "
-"href=\"%s/forum/%s/question/%s\">Кликнете овде да го видите "
-"прашањето.</a></p>"
+msgstr "<p>Ново прашање <i>%s</i> е поставено на %s. <a href=\"%s/forum/%s/question/%s\">Кликнете овде да го видите прашањето.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -135,8 +127,7 @@ msgid "Accepting an answer"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.post,active:0
-#: selection:forum.post,state:0
+#: field:forum.post,active:0 selection:forum.post,state:0
 msgid "Active"
 msgstr "Активно"
 
@@ -194,8 +185,7 @@ msgid "Answered on"
 msgstr "Одговорено на"
 
 #. module: website_forum
-#: field:forum.post,child_count:0
-#: field:forum.post,child_ids:0
+#: field:forum.post,child_count:0 field:forum.post,child_ids:0
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full
 msgid "Answers"
@@ -253,8 +243,7 @@ msgid "Badge \""
 msgstr "Значка \""
 
 #. module: website_forum
-#: field:res.users,badge_ids:0
-#: view:website:website_forum.badge
+#: field:res.users,badge_ids:0 view:website:website_forum.badge
 #: view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Badges"
@@ -266,10 +255,7 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
-"Покрај стекнувањето репутација преку вашите прашања и одговори,\n"
-"            добивате и значки ако сте од особена помош. Значките\n"
-"            се појавуваат на вашата профилна страна, и на вашите објави."
+msgstr "Покрај стекнувањето репутација преку вашите прашања и одговори,\n            добивате и значки ако сте од особена помош. Значките\n            се појавуваат на вашата профилна страна, и на вашите објави."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -440,8 +426,8 @@ msgstr "Комплетирана сопствена биографија"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid ""
-"Congratulations! Your email has just been validated. You may now participate "
-"to our forums."
+"Congratulations! Your email has just been validated. You may now participate"
+" to our forums."
 msgstr ""
 
 #. module: website_forum
@@ -481,17 +467,14 @@ msgid "Create Date"
 msgstr "Датум на креирање"
 
 #. module: website_forum
-#: field:forum.forum,create_uid:0
-#: field:forum.post,create_uid:0
-#: field:forum.post.reason,create_uid:0
-#: field:forum.post.vote,create_uid:0
+#: field:forum.forum,create_uid:0 field:forum.post,create_uid:0
+#: field:forum.post.reason,create_uid:0 field:forum.post.vote,create_uid:0
 #: field:forum.tag,create_uid:0
 msgid "Created by"
 msgstr "Креирано од"
 
 #. module: website_forum
-#: field:forum.forum,create_date:0
-#: field:forum.post.reason,create_date:0
+#: field:forum.forum,create_date:0 field:forum.post.reason,create_date:0
 #: field:forum.tag,create_date:0
 msgid "Created on"
 msgstr "Креирано на"
@@ -510,8 +493,7 @@ msgid "Critic"
 msgstr "Критичар"
 
 #. module: website_forum
-#: help:forum.forum,message_last_post:0
-#: help:forum.post,message_last_post:0
+#: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
 msgid "Date of the last message posted on the record."
 msgstr "Датум на испраќање на последната порака"
 
@@ -677,8 +659,7 @@ msgstr "Следбеници"
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_search
-#: field:forum.post,forum_id:0
-#: field:forum.post.vote,forum_id:0
+#: field:forum.post,forum_id:0 field:forum.post.vote,forum_id:0
 #: field:forum.tag,forum_id:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
@@ -712,8 +693,7 @@ msgstr "Објави на форум"
 #: view:forum.forum:website_forum.view_forum_forum_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.model,name:website_forum.model_forum_forum
-#: model:ir.ui.menu,name:website_forum.menu_forum
-#: view:website:website.layout
+#: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
 msgid "Forums"
 msgstr "Форуми"
 
@@ -798,27 +778,20 @@ msgid "Help"
 msgstr "Помош"
 
 #. module: website_forum
-#: help:forum.forum,message_summary:0
-#: help:forum.post,message_summary:0
+#: help:forum.forum,message_summary:0 help:forum.post,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Содржи резиме на конверзација (број на пораки, ...). Ова резиме е директно "
-"во html формат со цел да биде вметнато во kanban преглед."
+msgstr "Содржи резиме на конверзација (број на пораки, ...). Ова резиме е директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: website_forum
-#: field:forum.forum,id:0
-#: field:forum.post,id:0
-#: field:forum.post.reason,id:0
-#: field:forum.post.vote,id:0
-#: field:forum.tag,id:0
+#: field:forum.forum,id:0 field:forum.post,id:0 field:forum.post.reason,id:0
+#: field:forum.post.vote,id:0 field:forum.tag,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: website_forum
-#: help:forum.forum,message_unread:0
-#: help:forum.post,message_unread:0
+#: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Доколку е означено, новите пораки го бараат вашето вниманите."
 
@@ -828,11 +801,7 @@ msgid ""
 "If you close this question, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed questions to moderate\n"
 "            them."
-msgstr ""
-"Ако го затворите ова прашање, ќе биде сокриено за повеќето корисници. Само\n"
-"            корисниците со висока карма можат да гледат затворени прашања за "
-"да\n"
-"            ги уредуваат."
+msgstr "Ако го затворите ова прашање, ќе биде сокриено за повеќето корисници. Само\n            корисниците со висока карма можат да гледат затворени прашања за да\n            ги уредуваат."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -851,8 +820,7 @@ msgid "It appears your email has not been verified."
 msgstr ""
 
 #. module: website_forum
-#: field:res.users,karma:0
-#: view:website:website_forum.user_detail_full
+#: field:res.users,karma:0 view:website:website_forum.user_detail_full
 msgid "Karma"
 msgstr "Карма"
 
@@ -917,24 +885,19 @@ msgid "Keep Informed"
 msgstr "Бидете информирани"
 
 #. module: website_forum
-#: field:forum.forum,message_last_post:0
-#: field:forum.post,message_last_post:0
+#: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
 msgid "Last Message Date"
 msgstr "Датум на последна порака"
 
 #. module: website_forum
-#: field:forum.forum,write_uid:0
-#: field:forum.post.reason,write_uid:0
-#: field:forum.post.vote,write_uid:0
-#: field:forum.tag,write_uid:0
+#: field:forum.forum,write_uid:0 field:forum.post.reason,write_uid:0
+#: field:forum.post.vote,write_uid:0 field:forum.tag,write_uid:0
 msgid "Last Updated by"
 msgstr "Последно ажурирање од"
 
 #. module: website_forum
-#: field:forum.forum,write_date:0
-#: field:forum.post.reason,write_date:0
-#: field:forum.post.vote,write_date:0
-#: field:forum.tag,write_date:0
+#: field:forum.forum,write_date:0 field:forum.post.reason,write_date:0
+#: field:forum.post.vote,write_date:0 field:forum.tag,write_date:0
 msgid "Last Updated on"
 msgstr "Последно ажурирање на"
 
@@ -954,14 +917,12 @@ msgid "Linking files (Editor)"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_ids:0
-#: field:forum.post,message_ids:0
+#: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
 msgid "Messages"
 msgstr "Пораки"
 
 #. module: website_forum
-#: help:forum.forum,message_ids:0
-#: help:forum.post,message_ids:0
+#: help:forum.forum,message_ids:0 help:forum.post,message_ids:0
 msgid "Messages and communication history"
 msgstr "Историја на пораки и комуникација"
 
@@ -991,8 +952,7 @@ msgid "My Vote"
 msgstr "Мој глас"
 
 #. module: website_forum
-#: field:forum.forum,name:0
-#: view:forum.post:website_forum.view_forum_post_form
+#: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
 #: field:forum.tag,name:0
 msgid "Name"
 msgstr "Име"
@@ -1123,9 +1083,7 @@ msgstr "Ве молиме внесете описно прашање (треба
 msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
-msgstr ""
-"Ве молиме внесете валидна е-маил адреса за да добивате известувања за "
-"одговори или коментари."
+msgstr "Ве молиме внесете валидна е-маил адреса за да добивате известувања за одговори или коментари."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1159,8 +1117,7 @@ msgid "Popular Question (500)"
 msgstr "Популарно прашање (500)"
 
 #. module: website_forum
-#: field:forum.post.vote,post_id:0
-#: view:website:website_forum.post_comment
+#: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
 msgid "Post"
 msgstr "Испрати"
 
@@ -1251,8 +1208,7 @@ msgid "Question:"
 msgstr "Прашање:"
 
 #. module: website_forum
-#: view:website:website_forum.forum_index
-#: view:website:website_forum.header
+#: view:website:website_forum.forum_index view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Questions"
 msgstr "Прашања"
@@ -1284,8 +1240,7 @@ msgid "Reason:"
 msgstr "Причина:"
 
 #. module: website_forum
-#: view:website:website_forum.404
-#: view:website:website_forum.private_profile
+#: view:website:website_forum.404 view:website:website_forum.private_profile
 msgid "Return to the question list."
 msgstr "Вратете со на листата на прашања."
 
@@ -1367,8 +1322,7 @@ msgid "Student"
 msgstr "Ученик"
 
 #. module: website_forum
-#: field:forum.forum,message_summary:0
-#: field:forum.post,message_summary:0
+#: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
 msgid "Summary"
 msgstr "Резиме"
 
@@ -1385,12 +1339,9 @@ msgid "Tag"
 msgstr "Ознака"
 
 #. module: website_forum
-#: field:forum.post,tag_ids:0
-#: view:website:website_forum.ask_question
-#: view:website:website_forum.edit_post
-#: view:website:website_forum.forum_index
-#: view:website:website_forum.header
-#: view:website:website_forum.tag
+#: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
+#: view:website:website_forum.edit_post view:website:website_forum.forum_index
+#: view:website:website_forum.header view:website:website_forum.tag
 msgid "Tags"
 msgstr "Ознаки"
 
@@ -1454,8 +1405,7 @@ msgid "Unlink its own comments"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_unread:0
-#: field:forum.post,message_unread:0
+#: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
 msgid "Unread Messages"
 msgstr "Непрочитани пораки"
 
@@ -1531,8 +1481,7 @@ msgid "Vote"
 msgstr "Глас"
 
 #. module: website_forum
-#: field:forum.post,vote_count:0
-#: field:forum.post,vote_ids:0
+#: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
 #: view:website:website_forum.user_detail_full
 msgid "Votes"
 msgstr "Гласови"
@@ -1568,8 +1517,7 @@ msgstr ""
 
 #. module: website_forum
 #: field:forum.forum,website_meta_title:0
-#: field:forum.post,website_meta_title:0
-#: field:forum.tag,website_meta_title:0
+#: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
 msgid "Website meta title"
 msgstr ""
 
@@ -1601,8 +1549,7 @@ msgid "answers"
 msgstr "одговори"
 
 #. module: website_forum
-#: view:website:website_forum.badge
-#: view:website:website_forum.user_badges
+#: view:website:website_forum.badge view:website:website_forum.user_badges
 msgid "awarded users"
 msgstr "наградени корисници"
 
@@ -1620,9 +1567,7 @@ msgstr "значки:"
 #: view:website:website_forum.ask_question
 msgid ""
 "be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)"
-msgstr ""
-"бидете јасни и прецизни, избегнете непотребни претставувања (Здраво, ... "
-"Благодарам...)"
+msgstr "бидете јасни и прецизни, избегнете непотребни претставувања (Здраво, ... Благодарам...)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1638,7 +1583,7 @@ msgstr "бронза"
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "од"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1740,18 +1685,17 @@ msgstr "надвор од темата или не е релеванто"
 #: view:website:website_forum.post_comment
 #: view:website:website_forum.post_description_full
 msgid "on"
-msgstr ""
+msgstr "на"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "please, try to make your question interesting to others"
-msgstr ""
-"ве молиме обидете се да го направите вашето прашање интересно за другите"
+msgstr "ве молиме обидете се да го направите вашето прашање интересно за другите"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1834,15 +1778,13 @@ msgid "views"
 msgstr "прегледи"
 
 #. module: website_forum
-#: view:website:website_forum.display_post
-#: view:website:website_forum.vote
+#: view:website:website_forum.display_post view:website:website_forum.vote
 msgid "vote"
 msgstr "глас"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
-#: view:website:website_forum.user_detail_full
-#: view:website:website_forum.vote
+#: view:website:website_forum.user_detail_full view:website:website_forum.vote
 msgid "votes"
 msgstr "гласови"
 

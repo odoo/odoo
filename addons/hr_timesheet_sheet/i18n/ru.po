@@ -1,40 +1,30 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet_sheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-26 03:03+0000\n"
-"Last-Translator: user3 <Unknown>\n"
-"Language-Team: Russian <http://translate.starlight-"
-"biz.com//projects/odoo/hr_timesheet_sheet/ru/>\n"
+"PO-Revision-Date: 2015-05-29 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-27 05:38+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
 "Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"timesheet.                 \n"
-"* The 'Confirmed' status is used for to confirm the timesheet by user.       "
-"          \n"
-"* The 'Done' status is used when users timesheet is accepted by his/her "
-"senior."
-msgstr ""
-" * Статус 'Черновик'  используется, когда пользователь кодирует новый и "
-"неподтвержденный табель. ↵ \n"
-"* Статус 'Подтверждено' используется для подтверждения табеля "
-"пользователем.↵ \n"
-"* Статус \"Готов\" используется, когда табель пользователей принимается "
-"его/ее руководителем."
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
+"* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
+"* The 'Done' status is used when users timesheet is accepted by his/her senior."
+msgstr " * Статус 'Черновик'  используется, когда пользователь кодирует новый и неподтвержденный табель. ↵ \n* Статус 'Подтверждено' используется для подтверждения табеля пользователем.↵ \n* Статус \"Готов\" используется, когда табель пользователей принимается его/ее руководителем."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
@@ -66,26 +56,11 @@ msgid ""
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager.\n"
 "              </p><p>\n"
-"                Timesheets can also be invoiced to customers, depending on "
-"the\n"
+"                Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Подтвердить новый табель.\n"
-"              </p><p>\n"
-"               Вы должны заполнять табель каждый день и подтверждать в конце "
-"\n"
-"                 недели. После того, как табель подтвержден, он должен быть "
-"\n"
-"                 утвержден менеджером.\n"
-"              </p><p>\n"
-"               Табели также могут быть включены в счет для клиентов, в "
-"зависимости от \n"
-"                 конфигурации соответствующих договоров каждого проекта.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Подтвердить новый табель.\n              </p><p>\n               Вы должны заполнять табель каждый день и подтверждать в конце \n                 недели. После того, как табель подтвержден, он должен быть \n                 утвержден менеджером.\n              </p><p>\n               Табели также могут быть включены в счет для клиентов, в зависимости от \n                 конфигурации соответствующих договоров каждого проекта.\n              </p>\n            "
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -110,8 +85,7 @@ msgstr "Добавить строку"
 #: field:hr.config.settings,timesheet_max_difference:0
 msgid ""
 "Allow a difference of time between timesheets and attendances of (in hours)"
-msgstr ""
-"Разрешить разницу времени между расписаниями и посещениями в (в часах)"
+msgstr "Разрешить разницу времени между расписаниями и посещениями в (в часах)"
 
 #. module: hr_timesheet_sheet
 #: help:hr.config.settings,timesheet_max_difference:0
@@ -119,9 +93,7 @@ msgstr ""
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr ""
-"Разрешенная разница в часах между входом/выходом и вычисление для расписания "
-"на одном листе. Установите его на 0, если вы не хотите никакого контроля."
+msgstr "Разрешенная разница в часах между входом/выходом и вычисление для расписания на одном листе. Установите его на 0, если вы не хотите никакого контроля."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
@@ -298,9 +270,7 @@ msgstr "Сотрудники"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Ошибка! Вход (соответственно и Выход) должен следовать за Выходом (соотв. "
-"Входом)"
+msgstr "Ошибка! Вход (соответственно и Выход) должен следовать за Выходом (соотв. Входом)"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -337,9 +307,7 @@ msgstr "Группировать по"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Содержит обзор чата (количество сообщений, ...). Это краткое изложение "
-"непосредственно в HTML формате для того, чтобы вставить в виды kanban."
+msgstr "Содержит обзор чата (количество сообщений, ...). Это краткое изложение непосредственно в HTML формате для того, чтобы вставить в виды kanban."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -347,8 +315,7 @@ msgid "Hours"
 msgstr "Часы"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.current.open,id:0
-#: field:hr_timesheet_sheet.sheet,id:0
+#: field:hr.timesheet.current.open,id:0 field:hr_timesheet_sheet.sheet,id:0
 #: field:hr_timesheet_sheet.sheet.account,id:0
 #: field:hr_timesheet_sheet.sheet.day,id:0
 msgid "ID"
@@ -371,40 +338,32 @@ msgstr "Черновик"
 msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
-msgstr ""
-"В целях создания табеля для этого сотрудника, вы должны закрепить за "
-"сотрудником аналитический журнал , например \"журнал табеля\"."
+msgstr "В целях создания табеля для этого сотрудника, вы должны закрепить за сотрудником аналитический журнал , например \"журнал табеля\"."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link him/her to a "
-"user."
-msgstr ""
-"В целях создания табеля для этого сотрудника, вам необходимо соединить "
-"его/ее с пользователем."
+"In order to create a timesheet for this employee, you must link him/her to a"
+" user."
+msgstr "В целях создания табеля для этого сотрудника, вам необходимо соединить его/ее с пользователем."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product, like 'Consultant'."
-msgstr ""
-"В целях создания табеля для этого сотрудника, вы должны указать ссылку "
-"сотрудника к продукту, как 'Консультант'."
+"In order to create a timesheet for this employee, you must link the employee"
+" to a product, like 'Consultant'."
+msgstr "В целях создания табеля для этого сотрудника, вы должны указать ссылку сотрудника к продукту, как 'Консультант'."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product."
-msgstr ""
-"В целях создания расписания для этого сотрудника, вы должны привязать "
-"сотрудника к продукту."
+"In order to create a timesheet for this employee, you must link the employee"
+" to a product."
+msgstr "В целях создания расписания для этого сотрудника, вы должны привязать сотрудника к продукту."
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
@@ -485,16 +444,9 @@ msgid ""
 "the system. From the same form, you can register your attendances (Sign "
 "In/Out) and describe the working hours made on the different projects. At "
 "the end of the period defined in the company, the timesheet is confirmed by "
-"the user and can be validated by his manager. If required, as defined on the "
-"project, you can generate the invoices based on the timesheet."
-msgstr ""
-"\"Моё расписание\" открывает таблицу-расписание, в котором можно планировать "
-"действия внутри системы. В этой же форме можно регистрировать посещаемость "
-"(Вход/Выход) и вести описание рабочих часов, затраченных на различные "
-"проекты. В конце определённого организацией периода, расписание "
-"подтверждается пользователем и может быть проверено его руководителем. При "
-"необходимости, определяемой проектом, можно создать счета на основе "
-"расписания."
+"the user and can be validated by his manager. If required, as defined on the"
+" project, you can generate the invoices based on the timesheet."
+msgstr "\"Моё расписание\" открывает таблицу-расписание, в котором можно планировать действия внутри системы. В этой же форме можно регистрировать посещаемость (Вход/Выход) и вести описание рабочих часов, затраченных на различные проекты. В конце определённого организацией периода, расписание подтверждается пользователем и может быть проверено его руководителем. При необходимости, определяемой проектом, можно создать счета на основе расписания."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
@@ -536,8 +488,7 @@ msgstr "Периодичность, с которой вы проверяете 
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Please create an employee and associate it with this user."
-msgstr ""
-"Пожалуйста, создайте сотрудника и свяжите его с данным пользователем."
+msgstr "Пожалуйста, создайте сотрудника и свяжите его с данным пользователем."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
@@ -577,8 +528,7 @@ msgid "Set to Draft"
 msgstr "Установить в Черновик"
 
 #. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0
-#: field:hr.attendance,sheet_id:0
+#: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.account,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
@@ -596,8 +546,7 @@ msgstr "Выход"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
-#: field:hr.timesheet.report,state:0
-#: field:hr_timesheet_sheet.sheet,state:0
+#: field:hr.timesheet.report,state:0 field:hr_timesheet_sheet.sheet,state:0
 msgid "Status"
 msgstr "Статус"
 
@@ -618,9 +567,7 @@ msgstr "Резюме"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr ""
-"Табель не может быть подтвержден, так как он не содержит равное количество "
-"входов и выходов."
+msgstr "Табель не может быть подтвержден, так как он не содержит равное количество входов и выходов."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -818,8 +765,7 @@ msgstr "Неделя "
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr ""
-"Вы не можете ввести дату посещаемости за пределами текущих дат табелей."
+msgstr "Вы не можете ввести дату посещаемости за пределами текущих дат табелей."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
@@ -827,9 +773,7 @@ msgstr ""
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr ""
-"Вы не можете ввести посещаемость в представленном табеле. Обратитесь к "
-"менеджеру, чтобы сбросить его, прежде чем добавлять посещаемость."
+msgstr "Вы не можете ввести посещаемость в представленном табеле. Обратитесь к менеджеру, чтобы сбросить его, прежде чем добавлять посещаемость."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
@@ -861,10 +805,7 @@ msgstr "Вы не можете ввести дату посещения за п�
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
-"Вы не можете иметь 2 табеля, которые перекрываются!↵ \n"
-"Пожалуйста, воспользуйтесь меню \"Мой Текущий Табель\", чтобы избежать этой "
-"проблемы."
+msgstr "Вы не можете иметь 2 табеля, которые перекрываются!↵ \nПожалуйста, воспользуйтесь меню \"Мой Текущий Табель\", чтобы избежать этой проблемы."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
@@ -872,9 +813,7 @@ msgstr ""
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
-"Вы не можете иметь 2 табеля, которые перекрываются!↵ \n"
-"Пожалуйста, воспользуйтесь меню \"Мой Табель\", чтобы избежать этой проблемы."
+msgstr "Вы не можете иметь 2 табеля, которые перекрываются!↵ \nПожалуйста, воспользуйтесь меню \"Мой Табель\", чтобы избежать этой проблемы."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
@@ -900,9 +839,7 @@ msgstr "Вы не можете изменить запись в утвержде
 msgid ""
 "You will be able to register your working hours and\n"
 "                        activities."
-msgstr ""
-"Вы сможете зарегистрировать свои рабочие часы и \n"
-"                         деятельность."
+msgstr "Вы сможете зарегистрировать свои рабочие часы и \n                         деятельность."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
@@ -912,16 +849,4 @@ msgstr "или"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "to"
-msgstr ""
-
-#~ msgid "#Nbr"
-#~ msgstr "№"
-
-#~ msgid "#Total Attendance"
-#~ msgstr "Общая посещаемость"
-
-#~ msgid "#Total Timesheet"
-#~ msgstr "#Итого расписание"
-
-#~ msgid "#Total Diff"
-#~ msgstr "#Итого разница"
+msgstr "до"

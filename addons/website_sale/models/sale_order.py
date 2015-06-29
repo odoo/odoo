@@ -75,6 +75,7 @@ class sale_order(osv.Model):
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
             if so.state != 'draft':
+                request.session['sale_order_id'] = None
                 raise osv.except_osv(_('Error!'), _('It is forbidden to modify a sale order which is not in draft status'))
             if line_id != False:
                 line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
@@ -189,7 +190,8 @@ class website(orm.Model):
                 values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
                 sale_order.write(values)
                 for line in sale_order.order_line:
-                    sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
+                    if line.exists():
+                        sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
 
             # update browse record
             if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:

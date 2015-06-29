@@ -211,8 +211,6 @@ class _column(object):
         """ return a dictionary with all the arguments to pass to the field """
         base_items = [
             ('copy', self.copy),
-        ]
-        truthy_items = filter(itemgetter(1), [
             ('index', self.select),
             ('manual', self.manual),
             ('string', self.string),
@@ -223,6 +221,8 @@ class _column(object):
             ('groups', self.groups),
             ('change_default', self.change_default),
             ('deprecated', self.deprecated),
+        ]
+        truthy_items = filter(itemgetter(1), [
             ('group_operator', self.group_operator),
             ('size', self.size),
             ('ondelete', self.ondelete),

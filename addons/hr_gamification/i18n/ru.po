@@ -1,23 +1,22 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_gamification
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-04-26 03:03+0000\n"
-"Last-Translator: Bloodlog <Unknown>\n"
-"Language-Team: Russian <http://translate.starlight-"
-"biz.com//projects/odoo/hr_gamification/ru/>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-27 05:37+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
 "Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -26,27 +25,12 @@ msgid ""
 "                    Click to create a challenge. \n"
 "                </p>\n"
 "                <p>\n"
-"                    Assign a list of goals to chosen users to evaluate "
-"them.\n"
-"                    The challenge can use a period (weekly, monthly...) for "
-"automatic creation of goals.\n"
-"                    The goals are created for the specified users or member "
-"of the group.\n"
+"                    Assign a list of goals to chosen users to evaluate them.\n"
+"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
+"                    The goals are created for the specified users or member of the group.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Нажмите, чтобы создать задачу. \n"
-"                </p>\n"
-"                <p>\n"
-"                    Определите список целей для выбранных пользователей, "
-"чтобы оценить их.\n"
-"                    Задача может использовать промежуток времени "
-"(еженедельно, ежемесячно...) для автоматического создания целей.\n"
-"                    Цели создаются для конкретных пользователей или членов "
-"группы.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Нажмите, чтобы создать задачу. \n                </p>\n                <p>\n                    Определите список целей для выбранных пользователей, чтобы оценить их.\n                    Задача может использовать промежуток времени (еженедельно, ежемесячно...) для автоматического создания целей.\n                    Цели создаются для конкретных пользователей или членов группы.\n                </p>\n            "
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -59,16 +43,7 @@ msgid ""
 "                    Goals can be created automatically by using challenges.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Нажмите, чтобы создать цель. \n"
-"                </p>\n"
-"                <p>\n"
-"                    Цель определяется пользователем и типом цели.\n"
-"                    Цели могут создаваться автоматически путем использования "
-"задач.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Нажмите, чтобы создать цель. \n                </p>\n                <p>\n                    Цель определяется пользователем и типом цели.\n                    Цели могут создаваться автоматически путем использования задач.\n                </p>\n            "
 
 #. module: hr_gamification
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
@@ -79,9 +54,7 @@ msgstr "Значки"
 #: view:hr.employee:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr ""
-"Значки - это награды за хорошую работу. Давайте их тем, кто по вашему мнению "
-"их заслужил."
+msgstr "Значки - это награды за хорошую работу. Давайте их тем, кто по вашему мнению их заслужил."
 
 #. module: hr_gamification
 #: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
@@ -102,8 +75,7 @@ msgstr "Нажмите, чтобы наградить этого сотрудн�
 #. module: hr_gamification
 #: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr ""
-"Опишите, что они сделали и почему это важно (будет в публичном доступе)"
+msgstr "Опишите, что они сделали и почему это важно (будет в публичном доступе)"
 
 #. module: hr_gamification
 #: field:gamification.badge.user,employee_id:0
@@ -206,13 +178,12 @@ msgstr "Вы не можете отправить награду себе"
 #: code:addons/hr_gamification/wizard/grant_badge.py:45
 #, python-format
 msgid "You can send badges only to employees linked to a user."
-msgstr ""
-"Вы можете отправить значки только сотрудникам, связанных с пользователем."
+msgstr "Вы можете отправить значки только сотрудникам, связанных с пользователем."
 
 #. module: hr_gamification
 #: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: hr_gamification
 #: view:hr.employee:hr_gamification.hr_hr_employee_view_form

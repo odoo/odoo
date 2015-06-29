@@ -1,41 +1,31 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-15 07:54+0000\n"
-"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/odoo-8/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:27+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
+"* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
-" * El estado 'Borrador' se usa cuando un usuario está introduciendo un nuevo "
-"y no confirmado comprobante.\n"
-"* 'Pro-forma' se establece cuando el comprobante está en estado pro-forma. "
-"El comprobante aún no tiene un número de comprobante.\n"
-"* El estado 'Asentado' se usa cuando el usuario confirma el comprobante, "
-"asignándole un número de comprobante y creándose los asientos contables.\n"
-"* El estado 'Cancelado' se usa cuando el usuario cancela el comprobante."
+msgstr " * El estado 'Borrador' se usa cuando un usuario está introduciendo un nuevo y no confirmado comprobante.\n* 'Pro-forma' se establece cuando el comprobante está en estado pro-forma. El comprobante aún no tiene un número de comprobante.\n* El estado 'Asentado' se usa cuando el usuario confirma el comprobante, asignándole un número de comprobante y creándose los asientos contables.\n* El estado 'Cancelado' se usa cuando el usuario cancela el comprobante."
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
@@ -59,18 +49,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new supplier payment.\n"
 "              </p><p>\n"
-"                Odoo helps you easily track payments you make and the "
-"remaining balances you need to pay your suppliers.\n"
+"                Odoo helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un nuevo pago de proveedor.\n"
-"</p><p>\n"
-"Odoo le permite gestionar fácilmente los pagos que ha realizado y los saldos "
-"pendientes que tiene que pagar a sus proveedores.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo pago de proveedor.\n</p><p>\nOdoo le permite gestionar fácilmente los pagos que ha realizado y los saldos pendientes que tiene que pagar a sus proveedores.\n</p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -78,20 +60,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a sale receipt.\n"
 "              </p><p>\n"
-"                When the sale receipt is confirmed, you can record the "
-"customer\n"
+"                When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un recibo de venta.\n"
-"</p>\n"
-"<p>\n"
-"Cuando un recibo de venta es confirmado, puede grabar el pago de cliente "
-"relacionado.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un recibo de venta.\n</p>\n<p>\nCuando un recibo de venta es confirmado, puede grabar el pago de cliente relacionado.\n</p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -100,22 +73,12 @@ msgid ""
 "                Click to register a new payment. \n"
 "              </p><p>\n"
 "                Enter the customer and the payment method and then, either\n"
-"                create manually a payment record or Odoo will propose to "
-"you\n"
-"                automatically the reconciliation of this payment with the "
-"open\n"
+"                create manually a payment record or Odoo will propose to you\n"
+"                automatically the reconciliation of this payment with the open\n"
 "                invoices or sales receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para registrar un nuevo pago\n"
-"</p><p>\n"
-"Introduzca el cliente y el método de pago y entonces, o bien crear \n"
-"manualmente un registro de pago u Odoo le propondrá automáticamente\n"
-"la conciliación de este pago con las facturas o recibos abiertos.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para registrar un nuevo pago\n</p><p>\nIntroduzca el cliente y el método de pago y entonces, o bien crear \nmanualmente un registro de pago u Odoo le propondrá automáticamente\nla conciliación de este pago con las facturas o recibos abiertos.\n</p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -127,38 +90,22 @@ msgid ""
 "                supplier payment related to this purchase receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para registrar un recibo de compras.\n"
-"</p><p>\n"
-"Cuando se confirma un recibo de compra, puede registrar el pago de proveedor "
-"relacionado con este recibo de compra.\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para registrar un recibo de compras.\n</p><p>\nCuando se confirma un recibo de compra, puede registrar el pago de proveedor relacionado con este recibo de compra.\n</p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview of the amount "
-"invoiced\n"
+"            From this report, you can have an overview of the amount invoiced\n"
 "            to your customer as well as payment delays. The tool search can\n"
 "            also be used to personalise your Invoices reports and so, match\n"
 "            this analysis to your needs.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p>\n"
-"    Desde este informe, puede ver la cantidad facturada a sus clientes así "
-"como los pagos retrasados. La herramienta de busqueda puede ser usada para "
-"personalizar sus informes de facturas, adecuando este análisis a sus "
-"necesidades.\n"
-"</p>\n"
-"        "
+msgstr "<p>\n    Desde este informe, puede ver la cantidad facturada a sus clientes así como los pagos retrasados. La herramienta de busqueda puede ser usada para personalizar sus informes de facturas, adecuando este análisis a sus necesidades.\n</p>\n        "
 
 #. module: account_voucher
-#: field:account.voucher,account_id:0
-#: field:account.voucher.line,account_id:0
+#: field:account.voucher,account_id:0 field:account.voucher.line,account_id:0
 #: field:sale.receipt.report,account_id:0
 msgid "Account"
 msgstr "Cuenta"
@@ -213,9 +160,7 @@ msgstr "Está seguro de que desea desconciliar este registro?"
 msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
-msgstr ""
-"En la fecha de operación, la tasa de cambio fue\n"
-"%s = %s"
+msgstr "En la fecha de operación, la tasa de cambio fue\n%s = %s"
 
 #. module: account_voucher
 #: field:sale.receipt.report,delay_to_pay:0
@@ -262,8 +207,7 @@ msgid "Cancel Voucher"
 msgstr "Cancelar comprobante"
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: selection:sale.receipt.report,state:0
+#: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
 
@@ -278,13 +222,10 @@ msgstr "No se pueden borrar comprobantes que ya están abiertos o pagados."
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr ""
-"Marque esta opción si no está seguro de este asiento y desea marcarlo como "
-"'Para ser revisado' por un experto contable."
+msgstr "Marque esta opción si no está seguro de este asiento y desea marcarlo como 'Para ser revisado' por un experto contable."
 
 #. module: account_voucher
-#: field:account.voucher,company_id:0
-#: field:account.voucher.line,company_id:0
+#: field:account.voucher,company_id:0 field:account.voucher.line,company_id:0
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,company_id:0
 msgid "Company"
@@ -295,9 +236,7 @@ msgstr "Compañía"
 msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
-msgstr ""
-"Calculada como la diferencia entre la cantidad escrita en el comprobante y "
-"la suma de las asignaciones en las líneas del comprobante."
+msgstr "Calculada como la diferencia entre la cantidad escrita en el comprobante y la suma de las asignaciones en las líneas del comprobante."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1057
@@ -316,8 +255,7 @@ msgid "Counterpart Comment"
 msgstr "Comentario de la contrapartida"
 
 #. module: account_voucher
-#: field:account.voucher,create_uid:0
-#: field:account.voucher.line,create_uid:0
+#: field:account.voucher,create_uid:0 field:account.voucher.line,create_uid:0
 msgid "Created by"
 msgstr "Creado por"
 
@@ -370,8 +308,7 @@ msgid "Customer Payments"
 msgstr "Pagos de cliente"
 
 #. module: account_voucher
-#: field:account.voucher,date:0
-#: field:account.voucher.line,date_original:0
+#: field:account.voucher,date:0 field:account.voucher.line,date_original:0
 #: field:sale.receipt.report,date:0
 msgid "Date"
 msgstr "Fecha"
@@ -434,8 +371,7 @@ msgid "Draft Vouchers"
 msgstr "Comprobantes borrador"
 
 #. module: account_voucher
-#: field:account.voucher,date_due:0
-#: field:account.voucher.line,date_due:0
+#: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
 #: field:sale.receipt.report,date_due:0
 msgid "Due Date"
 msgstr "Fecha vencimiento"
@@ -477,8 +413,7 @@ msgstr "Filtros extendidos..."
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
-msgstr ""
-"Campo de uso interno para representar si el comprobante es multi-moneda o no"
+msgstr "Campo de uso interno para representar si el comprobante es multi-moneda o no"
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -517,13 +452,10 @@ msgstr "Frase de referencia"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene "
-"directamente en formato HTML para poder ser insertado en las vistas kanban."
+msgstr "Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: account_voucher
-#: field:account.voucher,id:0
-#: field:account.voucher.line,id:0
+#: field:account.voucher,id:0 field:account.voucher.line,id:0
 #: field:sale.receipt.report,id:0
 msgid "ID"
 msgstr "ID"
@@ -608,14 +540,12 @@ msgid "Last Message Date"
 msgstr "Fecha del último mensaje"
 
 #. module: account_voucher
-#: field:account.voucher,write_uid:0
-#: field:account.voucher.line,write_uid:0
+#: field:account.voucher,write_uid:0 field:account.voucher.line,write_uid:0
 msgid "Last Updated by"
 msgstr "Última actualización de"
 
 #. module: account_voucher
-#: field:account.voucher,write_date:0
-#: field:account.voucher.line,write_date:0
+#: field:account.voucher,write_date:0 field:account.voucher.line,write_date:0
 msgid "Last Updated on"
 msgstr "Última actualización en"
 
@@ -708,8 +638,7 @@ msgstr "Importe pagado en la moneda de la compañía"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
-#: field:account.voucher,partner_id:0
-#: field:account.voucher.line,partner_id:0
+#: field:account.voucher,partner_id:0 field:account.voucher.line,partner_id:0
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
@@ -726,8 +655,7 @@ msgid "Pay Bill"
 msgstr "Pagar factura"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
 msgstr "Pagar directamente"
 
@@ -738,17 +666,14 @@ msgid "Pay Invoice"
 msgstr "Pagar factura"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
 msgstr "Pagar tarde o agrupar fondos"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: field:account.voucher,pay_now:0
-#: selection:account.voucher,type:0
-#: field:sale.receipt.report,pay_now:0
-#: selection:sale.receipt.report,type:0
+#: field:account.voucher,pay_now:0 selection:account.voucher,type:0
+#: field:sale.receipt.report,pay_now:0 selection:sale.receipt.report,type:0
 msgid "Payment"
 msgstr "Pago"
 
@@ -817,9 +742,7 @@ msgstr "Por favor defina una secuencia en el diario."
 #: code:addons/account_voucher/account_voucher.py:518
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
-msgstr ""
-"Por favor defina las cuentas de ingresos y gastos por defecto en el diario "
-"\"%s\"."
+msgstr "Por favor defina las cuentas de ingresos y gastos por defecto en el diario \"%s\"."
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -865,8 +788,7 @@ msgid "Pro-forma Vouchers"
 msgstr "Comprobantes pro-forma"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Purchase"
 msgstr "Compra"
 
@@ -888,8 +810,7 @@ msgstr "Comprobante de compra"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Receipt"
 msgstr "Recibo"
 
@@ -910,8 +831,7 @@ msgid "Register Payment"
 msgstr "Registrar pago"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Sale"
 msgstr "Venta"
 
@@ -1053,32 +973,23 @@ msgstr "La factura que iba a pagar ya no es válida."
 msgid ""
 "The specific rate that will be used, in this voucher, between the selected "
 "currency (in 'Payment Rate Currency' field)  and the voucher currency."
-msgstr ""
-"La tasa de cambio específica que se usará en este comprobante, entre la "
-"moneda seleccionada (en el campo 'Tasa de cambio del pago') y la moneda del "
-"comprobante."
+msgstr "La tasa de cambio específica que se usará en este comprobante, entre la moneda seleccionada (en el campo 'Tasa de cambio del pago') y la moneda del comprobante."
 
 #. module: account_voucher
 #: help:account.voucher,payment_option:0
 msgid ""
 "This field helps you to choose what you want to do with the eventual "
-"difference between the paid amount and the sum of allocated amounts. You can "
-"either choose to keep open this difference on the partner's account, or "
+"difference between the paid amount and the sum of allocated amounts. You can"
+" either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
-msgstr ""
-"Este campo le ayuda a escoger que quiere hacer con la eventual diferencia "
-"entre la cantidad pagada y la suma de las cantidades asignadas. Puede "
-"escoger mantener abierta esa diferencia en la cuenta del cliente, o "
-"conciliarla con el/los pago(s)."
+msgstr "Este campo le ayuda a escoger que quiere hacer con la eventual diferencia entre la cantidad pagada y la suma de las cantidades asignadas. Puede escoger mantener abierta esa diferencia en la cuenta del cliente, o conciliarla con el/los pago(s)."
 
 #. module: account_voucher
 #: help:account.voucher,currency_help_label:0
 msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
-msgstr ""
-"Esta frase le ayuda a conocer cómo especificar la tasa del pago dándole el "
-"efecto directo que tiene"
+msgstr "Esta frase le ayuda a conocer cómo especificar la tasa del pago dándole el efecto directo que tiene"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1250,10 +1161,9 @@ msgstr "Línea de comprobante errónea"
 #: code:addons/account_voucher/account_voucher.py:1243
 #, python-format
 msgid ""
-"You have to configure account base code and account tax code on the '%s' tax!"
-msgstr ""
-"¡Debe configurar código de la base contable y código del impuesto contable "
-"del impuesto '%s'!"
+"You have to configure account base code and account tax code on the '%s' "
+"tax!"
+msgstr "¡Debe configurar código de la base contable y código del impuesto contable del impuesto '%s'!"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1103
@@ -1262,10 +1172,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' to manage "
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
-msgstr ""
-"Debería configurar la \"cuenta de ganancias por tipo de cambio\" para "
-"administrar automáticamente el registro de los apuntes contables "
-"relacionados con las diferencias entre los tipos de cambio."
+msgstr "Debería configurar la \"cuenta de ganancias por tipo de cambio\" para administrar automáticamente el registro de los apuntes contables relacionados con las diferencias entre los tipos de cambio."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1097
@@ -1274,10 +1181,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' to manage "
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
-msgstr ""
-"Debería configurar la \"cuenta de pérdidas por tipo de cambio\" para "
-"administrar automáticamente el registro de los apuntes contables "
-"relacionados con las diferencias entre los tipos de cambio."
+msgstr "Debería configurar la \"cuenta de pérdidas por tipo de cambio\" para administrar automáticamente el registro de los apuntes contables relacionados con las diferencias entre los tipos de cambio."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1114
@@ -1305,15 +1209,3 @@ msgstr "Por ejemplo, factura FV/0042"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 msgid "or"
 msgstr "o"
-
-#~ msgid "Group by month of Invoice Date"
-#~ msgstr "Agrupar por mes de la fecha de factura"
-
-#~ msgid "Companies"
-#~ msgstr "Compañías"
-
-#~ msgid "Gain Exchange Rate Account"
-#~ msgstr "Ingresos por diferencia de cambio"
-
-#~ msgid "Loss Exchange Rate Account"
-#~ msgstr "Pérdida por diferencia de cambio"

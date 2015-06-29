@@ -1,21 +1,22 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"PO-Revision-Date: 2015-05-27 14:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-8/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:29+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -24,29 +25,13 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite da postavite novo automatsko pravilo akcije. \n"
-"              </p><p>\n"
-"                Koristite automatske akcije da automatski pokrenete akciju "
-"za\n"
-"                različite događaje. Primjer: potencijal kreiran od strane "
-"određenog\n"
-"                korisnika može automatski biti dodjeljen određenom prodajnom "
-"timu, \n"
-"                ili prilika koja je još uvijek u statusu \"Na čekanju\" "
-"nakon 14 dana, može\n"
-"                pokrenuti automatski email podsjetnik.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknite da postavite novo automatsko pravilo akcije. \n              </p><p>\n                Koristite automatske akcije da automatski pokrenete akciju za\n                različite događaje. Primjer: potencijal kreiran od strane određenog\n                korisnika može automatski biti dodjeljen određenom prodajnom timu, \n                ili prilika koja je još uvijek u statusu \"Na čekanju\" nakon 14 dana, može\n                pokrenuti automatski email podsjetnik.\n              </p>\n            "
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -65,8 +50,7 @@ msgid "Actions"
 msgstr "Radnje"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "Aktivan"
 
@@ -115,12 +99,12 @@ msgstr "Kreiraj datum"
 #: field:base.action.rule,create_uid:0
 #: field:base.action.rule.lead.test,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Kreirao"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Kreirano"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -138,10 +122,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
-"Odgodi nakon datuma okidanja. Možete da postavite negativan broj ako trebate "
-"odgodu prije datuma okidanja, kao na primjer slanje podsjetnika 15 minuta "
-"prije sastanka."
+msgstr "Odgodi nakon datuma okidanja. Možete da postavite negativan broj ako trebate odgodu prije datuma okidanja, kao na primjer slanje podsjetnika 15 minuta prije sastanka."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -187,10 +168,9 @@ msgid "Hours"
 msgstr "Sati"
 
 #. module: base_action_rule
-#: field:base.action.rule,id:0
-#: field:base.action.rule.lead.test,id:0
+#: field:base.action.rule,id:0 field:base.action.rule.lead.test,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_id:0
@@ -202,9 +182,9 @@ msgstr ""
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
-msgstr ""
-"Ako je prisutan, ovaj uslov mora biti ispunjen prije ažuriranja zapisa."
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "Ako je prisutan, ovaj uslov mora biti ispunjen prije ažuriranja zapisa."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -219,8 +199,8 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
-"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
 
@@ -309,7 +289,8 @@ msgstr "Naziv pravila"
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid ""
-"Select when the action must be run, and add filters and/or timing conditions."
+"Select when the action must be run, and add filters and/or timing "
+"conditions."
 msgstr ""
 
 #. module: base_action_rule
@@ -341,7 +322,7 @@ msgstr "Status"
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Tema"
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -370,9 +351,7 @@ msgstr ""
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
-"Kada bi trebao uslov biti okinut. Ako je prisutan, biće provjeren od strane "
-"planera. Ako je prazno, biće provjereno priliko kreiranja i ažuriranja."
+msgstr "Kada bi trebao uslov biti okinut. Ako je prisutan, biće provjeren od strane planera. Ako je prazno, biće provjereno priliko kreiranja i ažuriranja."
 
 #. module: base_action_rule
 #: field:base.action.rule,kind:0

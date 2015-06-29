@@ -1,23 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_holidays
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-26 03:03+0000\n"
-"Last-Translator: user3 <Unknown>\n"
-"Language-Team: Russian <http://translate.starlight-"
-"biz.com//projects/odoo/hr_holidays/ru/>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-27 05:37+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
 "Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -31,33 +30,17 @@ msgid ""
 "                number of open days related to your leave.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Нажмите чтобы создать новую заявку на отгул.\n"
-"              </p><p>\n"
-"                Как только вы создаете запрос на отгул, он отправляется "
-"менеджеру на   утверждение. Убедитесь что вы выбрали правильный тип запроса "
-"на отгул (оздоровление, государственные праздники, болезнь) и точное "
-"количество дней отгул.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Нажмите чтобы создать новую заявку на отгул.\n              </p><p>\n                Как только вы создаете запрос на отгул, он отправляется менеджеру на   утверждение. Убедитесь что вы выбрали правильный тип запроса на отгул (оздоровление, государственные праздники, болезнь) и точное количество дней отгул.\n              </p>\n            "
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
 msgid ""
 "<p>\n"
-"               You can assign remaining Legal Leaves for each employee, "
-"Odoo\n"
+"               You can assign remaining Legal Leaves for each employee, Odoo\n"
 "               will automatically create and validate allocation requests.\n"
 "             </p>\n"
 "           "
-msgstr ""
-"<p>\n"
-"               Можно назначить распределить утвержденные отгулы для каждого "
-"сотрудника, Odoo↵ \n"
-"               автоматически создает и проверяет запросы на распределение. \n"
-"             </p>\n"
-"           "
+msgstr "<p>\n               Можно назначить распределить утвержденные отгулы для каждого сотрудника, Odoo↵ \n               автоматически создает и проверяет запросы на распределение. \n             </p>\n           "
 
 #. module: hr_holidays
 #: field:hr.holidays.status,active:0
@@ -142,8 +125,7 @@ msgid "Approve"
 msgstr "Утвердить"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
@@ -191,9 +173,7 @@ msgstr "Тэгом сотрудника"
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
-msgstr ""
-"Сотрудником: Распределение/Запрос для индивидуального сотрудника, Тэгом "
-"сотрудника: Распределение/Запрос для группы сотрудников в категории"
+msgstr "Сотрудником: Распределение/Запрос для индивидуального сотрудника, Тэгом сотрудника: Распределение/Запрос для группы сотрудников в категории"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:hr_holidays.view_hr_holidays_summary_dept
@@ -202,8 +182,7 @@ msgid "Cancel"
 msgstr "Отменить"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Отменено"
 
@@ -221,12 +200,8 @@ msgstr "Категория сотрудника"
 #: help:hr.holidays,type:0
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves "
-"available for someone"
-msgstr ""
-"Выберите \"Запрос на отгул\" если кто-либо берет выходной.\n"
-"Выберите \"Запрос на распределение\" если вы хотите увеличить количество "
-"доступных дней отгула для кого-либо"
+"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
+msgstr "Выберите \"Запрос на отгул\" если кто-либо берет выходной.\nВыберите \"Запрос на распределение\" если вы хотите увеличить количество доступных дней отгула для кого-либо"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -255,16 +230,14 @@ msgid "Confirmed"
 msgstr "Утверждено"
 
 #. module: hr_holidays
-#: field:hr.holidays,create_uid:0
-#: field:hr.holidays.status,create_uid:0
+#: field:hr.holidays,create_uid:0 field:hr.holidays.status,create_uid:0
 #: field:hr.holidays.summary.dept,create_uid:0
 #: field:hr.holidays.summary.employee,create_uid:0
 msgid "Created by"
 msgstr "Создано"
 
 #. module: hr_holidays
-#: field:hr.holidays,create_date:0
-#: field:hr.holidays.status,create_date:0
+#: field:hr.holidays,create_date:0 field:hr.holidays.status,create_date:0
 #: field:hr.holidays.summary.dept,create_date:0
 #: field:hr.holidays.summary.employee,create_date:0
 msgid "Created on"
@@ -344,11 +317,9 @@ msgstr "Ошибка!"
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that "
-"is 'active' (active field is True)"
-msgstr ""
-"Фильтры только для распределений и запросов, которые принадлежат к типу "
-"отгула, который «активен» (поле активности \"Действителен\")"
+"Filters only on allocations and requests that belong to an holiday type that"
+" is 'active' (active field is True)"
+msgstr "Фильтры только для распределений и запросов, которые принадлежат к типу отгула, который «активен» (поле активности \"Действителен\")"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -391,15 +362,11 @@ msgstr "Итоговый отчет сотрудников об отгулах �
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Содержит обзор чата (количество сообщений, ...). Это краткое изложение "
-"непосредственно в HTML формате для того, чтобы вставить в виды kanban."
+msgstr "Содержит обзор чата (количество сообщений, ...). Это краткое изложение непосредственно в HTML формате для того, чтобы вставить в виды kanban."
 
 #. module: hr_holidays
-#: field:hr.holidays,id:0
-#: field:hr.holidays.remaining.leaves.user,id:0
-#: field:hr.holidays.status,id:0
-#: field:hr.holidays.summary.dept,id:0
+#: field:hr.holidays,id:0 field:hr.holidays.remaining.leaves.user,id:0
+#: field:hr.holidays.status,id:0 field:hr.holidays.summary.dept,id:0
 #: field:hr.holidays.summary.employee,id:0
 msgid "ID"
 msgstr "ID"
@@ -414,9 +381,7 @@ msgstr "Если проверенные новые сообщения требу
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr ""
-"Если активное поле установлено в False, это позволяет вам скрыть тип без его "
-"удаления."
+msgstr "Если активное поле установлено в False, это позволяет вам скрыть тип без его удаления."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
@@ -424,10 +389,7 @@ msgid ""
 "If you select this check box, the system allows the employees to take more "
 "leaves than the available ones for this type and will not take them into "
 "account for the \"Remaining Legal Leaves\" defined on the employee form."
-msgstr ""
-"Если вы установите этот флажок, система позволяет сотрудникам брать больше "
-"отгулов, чем уже имеются для этого типа и не будет принимать их во внимание "
-"для \"оставшихся законных отгулов\", определенных в форме сотрудников."
+msgstr "Если вы установите этот флажок, система позволяет сотрудникам брать больше отгулов, чем уже имеются для этого типа и не будет принимать их во внимание для \"оставшихся законных отгулов\", определенных в форме сотрудников."
 
 #. module: hr_holidays
 #: field:hr.holidays,message_is_follower:0
@@ -445,16 +407,14 @@ msgid "Last Message Date"
 msgstr "Дата последнего сообщения"
 
 #. module: hr_holidays
-#: field:hr.holidays,write_uid:0
-#: field:hr.holidays.status,write_uid:0
+#: field:hr.holidays,write_uid:0 field:hr.holidays.status,write_uid:0
 #: field:hr.holidays.summary.dept,write_uid:0
 #: field:hr.holidays.summary.employee,write_uid:0
 msgid "Last Updated by"
 msgstr "Последний раз обновлено"
 
 #. module: hr_holidays
-#: field:hr.holidays,write_date:0
-#: field:hr.holidays.status,write_date:0
+#: field:hr.holidays,write_date:0 field:hr.holidays.status,write_date:0
 #: field:hr.holidays.summary.dept,write_date:0
 #: field:hr.holidays.summary.employee,write_date:0
 msgid "Last Updated on"
@@ -503,8 +463,7 @@ msgid "Leave Requests to Approve"
 msgstr "Запросы на отгул на утверждение"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-#: field:hr.holidays,holiday_status_id:0
+#: xsl:holidays.summary:0 field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:hr_holidays.edit_holiday_status_form
 #: view:hr.holidays.status:hr_holidays.view_holiday_status_normal_tree
@@ -548,8 +507,7 @@ msgid "Leaves Management"
 msgstr "Контроль над отгулами"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-#: view:hr.holidays:hr_holidays.view_holiday_graph
+#: xsl:holidays.summary:0 view:hr.holidays:hr_holidays.view_holiday_graph
 #: view:hr.holidays:hr_holidays.view_holiday_simple
 #: view:hr.holidays.summary.employee:hr_holidays.view_hr_holidays_summary_employee
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -646,8 +604,7 @@ msgstr "Максимально разрешенные отгулы - Взяты�
 #: help:hr.holidays.status,virtual_remaining_leaves:0
 msgid ""
 "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
-msgstr ""
-"Максимально разрешенные отгулы - Взятые отгулы - Отгулы, ждущие подтверждения"
+msgstr "Максимально разрешенные отгулы - Взятые отгулы - Отгулы, ждущие подтверждения"
 
 #. module: hr_holidays
 #: field:hr.holidays,meeting_id:0
@@ -717,9 +674,7 @@ msgstr "Количество дней"
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
 "type in the calendar."
-msgstr ""
-"После проверки отгула, Odoo будет создать соответствующую встречу этого типа "
-"в календаре."
+msgstr "После проверки отгула, Odoo будет создать соответствующую встречу этого типа в календаре."
 
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
@@ -749,8 +704,7 @@ msgid "Refuse"
 msgstr "Отклонить"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Отказано"
@@ -826,8 +780,7 @@ msgid "Search Leave Type"
 msgstr "Искать по типу отгула"
 
 #. module: hr_holidays
-#: field:hr.holidays,manager_id2:0
-#: selection:hr.holidays,state:0
+#: field:hr.holidays,manager_id2:0 selection:hr.holidays,state:0
 msgid "Second Approval"
 msgstr "Второе утверждение"
 
@@ -876,30 +829,15 @@ msgstr "Резюме"
 msgid ""
 "The employee or employee category of this request is missing. Please make "
 "sure that your user login is linked to an employee."
-msgstr ""
-"Сотрудник или категория сотрудников данного запроса не найдена. Пожалуйста "
-"убедитесь что ваш логин пользователя соединен с пользователем."
+msgstr "Сотрудник или категория сотрудников данного запроса не найдена. Пожалуйста убедитесь что ваш логин пользователя соединен с пользователем."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:503
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when "
-"there is only one leave type with the option 'Allow to Override Limit' "
-"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
-"decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
-"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
-"the employees if the configuration does not allow to use this field."
-msgstr ""
-"Функцию в поле 'Оставшиеся законные отгулы' можно использовать только тогда, "
-"когда есть только один тип отгула с опцией \"Разрешить для переопределения "
-"лимита\". (%sFound). В противном случае, обновление неоднозначно, поскольку "
-"мы не можем решить, какие типы отгулов должны быть обновлены. ↵ \n"
-"Вы можете предпочесть использовать классическое меню \"Запросы на отгулы\" и "
-"\"распределение запросов», расположенных в «кадровые ресурсы\\отгулы\" чтобы "
-"управлять отгулами сотрудников, если конфигурация не позволяет использовать "
-"это поле."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \\ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field."
+msgstr "Функцию в поле 'Оставшиеся законные отгулы' можно использовать только тогда, когда есть только один тип отгула с опцией \"Разрешить для переопределения лимита\". (%sFound). В противном случае, обновление неоднозначно, поскольку мы не можем решить, какие типы отгулов должны быть обновлены. ↵ \nВы можете предпочесть использовать классическое меню \"Запросы на отгулы\" и \"распределение запросов», расположенных в «кадровые ресурсы\\отгулы\" чтобы управлять отгулами сотрудников, если конфигурация не позволяет использовать это поле."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -917,14 +855,11 @@ msgstr "Количества оставшихся отгулов не доста
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
-msgstr ""
-"Количество оставшихся отгулов не достаточно для данного типа.\n"
-"Пожалуйста, подтвердите также отгулы ожидающие утверждения."
+msgstr "Количество оставшихся отгулов не достаточно для данного типа.\nПожалуйста, подтвердите также отгулы ожидающие утверждения."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:286
-#: code:addons/hr_holidays/hr_holidays.py:311
-#: sql_constraint:hr.holidays:0
+#: code:addons/hr_holidays/hr_holidays.py:311 sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
 msgstr "Начальная дата должна быть раньше конечной даты."
@@ -932,60 +867,44 @@ msgstr "Начальная дата должна быть раньше коне�
 #. module: hr_holidays
 #: help:hr.holidays,state:0
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.         "
-"   \n"
-"The status is 'To Approve', when holiday request is confirmed by user.       "
-"     \n"
-"The status is 'Refused', when holiday request is refused by manager.         "
-"   \n"
+"The status is set to 'To Submit', when a holiday request is created.            \n"
+"The status is 'To Approve', when holiday request is confirmed by user.            \n"
+"The status is 'Refused', when holiday request is refused by manager.            \n"
 "The status is 'Approved', when holiday request is approved by manager."
-msgstr ""
-"Статус установлен в \"Представить\", когда запрос на отгул создан. ↵ \n"
-"Статус \"Утвердить\", когда запрос на отгул подтверждается пользователем. ↵ "
-"\n"
-"Статус \"Отказано\", когда менеджер отказал в запросе на отгул. ↵ \n"
-"Статус \"Одобрено\", когда запрос на отгул утвержден менеджером."
+msgstr "Статус установлен в \"Представить\", когда запрос на отгул создан. ↵ \nСтатус \"Утвердить\", когда запрос на отгул подтверждается пользователем. ↵ \nСтатус \"Отказано\", когда менеджер отказал в запросе на отгул. ↵ \nСтатус \"Одобрено\", когда запрос на отгул утвержден менеджером."
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id:0
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr ""
-"Поле автоматически заполняется пользователем, который утверждает отгул"
+msgstr "Поле автоматически заполняется пользователем, который утверждает отгул"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr ""
-"Эта область автоматически заполняется пользователем, который утверждает "
-"отгул на втором уровне (если отгул требует двойного утверждения)"
+msgstr "Эта область автоматически заполняется пользователем, который утверждает отгул на втором уровне (если отгул требует двойного утверждения)"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,color_name:0
 msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Department."
-msgstr ""
-"Этот цвет будет использован в отчете по отгулам, размещенном в "
-"отчетах/отгулах подразделением."
+msgstr "Этот цвет будет использован в отчете по отгулам, размещенном в отчетах/отгулах подразделением."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
 msgid ""
 "This value is given by the sum of all holidays requests with a negative "
 "value."
-msgstr ""
-"Это значение образовано суммой всех праздничных запросов с негативной "
-"оценкой."
+msgstr "Это значение образовано суммой всех праздничных запросов с негативной оценкой."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,max_leaves:0
 msgid ""
 "This value is given by the sum of all holidays requests with a positive "
 "value."
-msgstr ""
-"Это оценка образована суммой всех выходных запросов с положительной оценкой."
+msgstr "Это оценка образована суммой всех выходных запросов с положительной оценкой."
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
@@ -1020,10 +939,7 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
-msgstr ""
-"Общее количество законных отгулов распределенных для данного сотрудника, "
-"измените это значение создав распределение/запрос отгула. Итог основывается "
-"на всех типов запросов без преобладающих ограничений."
+msgstr "Общее количество законных отгулов распределенных для данного сотрудника, измените это значение создав распределение/запрос отгула. Итог основывается на всех типов запросов без преобладающих ограничений."
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
@@ -1103,9 +1019,7 @@ msgstr "Пшеничный"
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr ""
-"После выбора, Утверждение/Запрос отгула для этого типа получают второе "
-"подтверждение для утверждения."
+msgstr "После выбора, Утверждение/Запрос отгула для этого типа получают второе подтверждение для утверждения."
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
@@ -1141,8 +1055,7 @@ msgstr ""
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "You have to select at least one Department. And try again."
-msgstr ""
-"Вы должны выбрать как минимум одно подразделение. И попробовать снова."
+msgstr "Вы должны выбрать как минимум одно подразделение. И попробовать снова."
 
 #. module: hr_holidays
 #: view:hr.employee:hr_holidays.view_employee_form_leave_inherit
@@ -1164,7 +1077,7 @@ msgstr "из"
 #: view:hr.holidays.summary.dept:hr_holidays.view_hr_holidays_summary_dept
 #: view:hr.holidays.summary.employee:hr_holidays.view_hr_holidays_summary_employee
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0

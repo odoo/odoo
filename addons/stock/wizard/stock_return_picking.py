@@ -57,6 +57,9 @@ class stock_return_picking(osv.osv_memory):
         result1 = []
         if context is None:
             context = {}
+        if context and context.get('active_ids', False):
+            if len(context.get('active_ids')) > 1:
+                raise osv.except_osv(_('Warning!'), _("You may only return one picking at a time!"))
         res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
         uom_obj = self.pool.get('product.uom')
@@ -147,6 +150,8 @@ class stock_return_picking(osv.osv_memory):
                     'state': 'draft',
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': move.location_id.id,
+                    'picking_type_id': pick_type_id,
+                    'warehouse_id': pick.picking_type_id.warehouse_id.id,
                     'origin_returned_move_id': move.id,
                     'procure_method': 'make_to_stock',
                     'restrict_lot_id': data_get.lot_id.id,
