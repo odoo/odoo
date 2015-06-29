@@ -3,14 +3,16 @@
 # * project
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
+# Qing Wang <snowkite@outlook.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-22 04:08+0000\n"
-"Last-Translator: mrshelly <mrshelly@hotmail.com>\n"
+"PO-Revision-Date: 2015-06-29 06:21+0000\n"
+"Last-Translator: Qing Wang <snowkite@outlook.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,18 +23,18 @@ msgstr ""
 #. module: project
 #: field:res.partner,task_count:0
 msgid "# Tasks"
-msgstr ""
+msgstr "# 任务"
 
 #. module: project
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
-msgstr "天数"
+msgstr "# 天"
 
 #. module: project
 #: field:project.task.history.cumulative,nbr_tasks:0
 #: field:report.project.task.user,nbr:0
 msgid "# of Tasks"
-msgstr ""
+msgstr "#  任务"
 
 #. module: project
 #: code:addons/project/project.py:360 code:addons/project/project.py:380
@@ -145,17 +147,17 @@ msgstr "允许任务委派"
 #. module: project
 #: help:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Allows you to compute Time Estimation on tasks."
-msgstr "可以估算任务时间"
+msgstr "允许你基于任务计算时间估计"
 
 #. module: project
 #: help:project.config.settings,group_tasks_work_on_tasks:0
 msgid "Allows you to compute work on tasks."
-msgstr "可以计算的工作任务。"
+msgstr "允许你基于任务计算工作"
 
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
 msgid "Allows you to delegate tasks to other users."
-msgstr "允许您将任务委托给其他用户。"
+msgstr "允许你委托任务给其他用户。"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
@@ -165,7 +167,7 @@ msgstr "分析"
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "辅助核算科目"
+msgstr "分析账户"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -201,7 +203,7 @@ msgstr "已安排任务"
 #. module: project
 #: field:report.project.task.user,user_id:0
 msgid "Assigned To"
-msgstr "分配给"
+msgstr "指派给"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -209,7 +211,7 @@ msgstr "分配给"
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assigned to"
-msgstr "指派到"
+msgstr "指派给"
 
 #. module: project
 #: code:addons/project/project.py:212
@@ -248,13 +250,13 @@ msgstr ""
 #: code:addons/project/wizard/project_task_delegate.py:78
 #, python-format
 msgid "CHECK: "
-msgstr "CHECK: "
+msgstr "检查: "
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:81
 #, python-format
 msgid "CHECK: %s"
-msgstr "参考：%s"
+msgstr "检查:  %s"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -304,7 +306,7 @@ msgstr "颜色索引"
 #. module: project
 #: view:project.task.type:project.task_type_search
 msgid "Common"
-msgstr "公共"
+msgstr "共通"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -426,7 +428,7 @@ msgstr "剩余天数"
 #: field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
-msgstr "计划完成日期"
+msgstr "截止日期"
 
 #. module: project
 #: field:project.task.type,case_default:0
@@ -446,7 +448,7 @@ msgstr "委派"
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "Delegated Task"
-msgstr "委派任务"
+msgstr "已委派任务"
 
 #. module: project
 #: field:project.task,child_ids:0
@@ -467,7 +469,7 @@ msgstr "委派給"
 #: code:addons/project/project.py:938
 #, python-format
 msgid "Delegated User should be specified"
-msgstr "应该制定委派用户"
+msgstr "应该指定委派用户"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -477,7 +479,7 @@ msgstr "委派任务"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Delegation"
-msgstr "任务委派"
+msgstr "委派"
 
 #. module: project
 #: view:project.project:project.view_project_kanban
@@ -526,7 +528,7 @@ msgstr "编辑..."
 #. module: project
 #: field:report.project.task.user,hours_effective:0
 msgid "Effective Hours"
-msgstr "有效时间"
+msgstr "实际时数"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -597,7 +599,7 @@ msgstr "其它信息"
 #. module: project
 #: model:project.category,name:project.project_category_02
 msgid "Feature request"
-msgstr "功能要求"
+msgstr "功能需求"
 
 #. module: project
 #: field:project.task.type,fold:0
@@ -775,7 +777,7 @@ msgstr ""
 #: code:addons/project/project.py:171
 #, python-format
 msgid "Invalid Action!"
-msgstr "无效的动作！"
+msgstr "非法的动作"
 
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
@@ -998,7 +1000,7 @@ msgstr "附件数量"
 #. module: project
 #: view:project.project:project.view_project_project_filter
 msgid "Open"
-msgstr "待处理"
+msgstr "开放"
 
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
@@ -1042,7 +1044,7 @@ msgstr "业务伙伴"
 #: view:project.project:project.view_project_project_filter
 #: selection:project.project,state:0 selection:project.task.delegate,state:0
 msgid "Pending"
-msgstr "未决"
+msgstr "待定"
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -1154,7 +1156,7 @@ msgstr "任务分派"
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr "任务进度"
+msgstr "任务工作"
 
 #. module: project
 #: view:project.task:project.view_project_task_graph
@@ -1265,7 +1267,7 @@ msgstr "剩余时间"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Reset as Project"
-msgstr "重设项目"
+msgstr "重设为项目"
 
 #. module: project
 #: field:project.task.history,user_id:0
@@ -1488,7 +1490,7 @@ msgstr "任务工作"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr "延期的任务"
+msgstr "受阻的任务"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -1727,12 +1729,12 @@ msgstr "你要分派这个任务给哪个用户"
 #. module: project
 #: field:project.task.delegate,state:0
 msgid "Validation State"
-msgstr "确认状态"
+msgstr "验证状态"
 
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "Validation Task"
-msgstr "确认任务"
+msgstr "验证任务"
 
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
@@ -1799,7 +1801,7 @@ msgstr "你的任务主题"
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "_Delegate"
-msgstr "_分派"
+msgstr "_D分派"
 
 #. module: project
 #: view:project.task:project.view_task_kanban

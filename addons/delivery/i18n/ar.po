@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-05 16:31+0000\n"
-"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"PO-Revision-Date: 2015-06-24 12:57+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgid ""
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء قائمة أسعار التوصيل لمنطقة معينة.\n</p><p>\nتسمح لك قائمة أسعار التوصيل بحساب تكاليف التوصيل وأسعار\nالشحن وفقاً لوزن المنتجات واشتراطات أخرى. يمكنك تعريف عدة\nقوائم أسعار لكل طريقة شحن: حسب الدولة أو منطقة معينة في\nالدولة، أو حسب شريحة من الرموز البريدية.\n</p>"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -54,7 +55,7 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لتعريف طريقة توصيل جديدة.\n</p><p>\nلكل شركة شحن (مثل فيديكس أو DHL)، يمكنك ضبط عدة\nطرق توصيل (مثل الشحن السريع، الشحن البحري) بمجموعة\nمعينة من قواعد احتساب الأسعار لكل طريقة.\n</p><p>\nتسمح لك هذه الطرق بحساب تكاليف التوصيل والشحن\nوفقاً لإعداداتك؛ وفي أوامر البيع (وفقاً لعرض السعر) أو\nالفاتورة (وفقاً ل,امر التسليم).\n</p>"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -69,12 +70,12 @@ msgstr "نشط"
 #. module: delivery
 #: view:sale.order:delivery.view_order_withcarrier_form
 msgid "Add in Quote"
-msgstr ""
+msgstr "إضافة إلى عرض السعر"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "تسعير متقدم"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
@@ -84,14 +85,14 @@ msgstr "تسعير متقدم على حسب الوجهة"
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr "المقدار"
+msgstr "المبلغ"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr ""
+msgstr "مبلغ الأمر ليتأهل لاستخدام الشحن المجاني، معبراً عنه بعملة الشركة."
 
 #. module: delivery
 #: field:delivery.carrier,available:0
@@ -105,35 +106,35 @@ msgstr "متوفر"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: field:stock.picking,carrier_id:0 view:website:stock.report_picking
 msgid "Carrier"
-msgstr "الناقل"
+msgstr "شركة الشحن"
 
 #. module: delivery
 #: view:stock.picking:delivery.view_picking_withcarrier_out_form
 msgid "Carrier Information"
-msgstr ""
+msgstr "معلومات شركة الشحن"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr "مرجع تعقب الناقل"
+msgstr "رقم تتبع شركة الشحن"
 
 #. module: delivery
 #: help:delivery.carrier,use_detailed_pricelist:0
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr ""
+msgstr "حدد هذا الاختيار إذا كنت ترغب في إدارة قوائم أسعار الشحن اعتماداً على العنوان المرسل إليه، وزن المنتج، إجمالي مبلغ البيع، إلخ."
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr "اكمل هذا الحقل اذا كنت تخطط لعمل فاتورة  للشحن بناءًا على الإختيار."
+msgstr "أكمل هذا الحقل إذا كنت تخطط لإصدار فاتورة الشحن من أمر الاستلام."
 
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "Condition"
-msgstr "شرط"
+msgstr "الشرط"
 
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
@@ -144,19 +145,19 @@ msgstr "سعر التكلفة"
 #: view:delivery.grid:delivery.view_delivery_grid_form
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
-msgstr "بلدان"
+msgstr "الدول"
 
 #. module: delivery
 #: field:delivery.carrier,create_uid:0 field:delivery.grid,create_uid:0
 #: field:delivery.grid.line,create_uid:0
 msgid "Created by"
-msgstr "أُنشئ بواسطة"
+msgstr "أنشئ بواسطة"
 
 #. module: delivery
 #: field:delivery.carrier,create_date:0 field:delivery.grid,create_date:0
 #: field:delivery.grid.line,create_date:0
 msgid "Created on"
-msgstr "إنشاؤه في"
+msgstr "أنشئ في"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:162
@@ -167,63 +168,63 @@ msgstr "السعر الافتراضي"
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "التسليم"
+msgstr "الشحن"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "شبكة التسليم"
+msgstr "شبكة الشحن"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "خط شبكة التسليم"
+msgstr "بند شبكة الشحن"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "شبكات التسليم"
+msgstr "شبكات الشحن"
 
 #. module: delivery
 #: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
-msgstr "طريقة التوصيل"
+msgstr "طريقة الشحن"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr "طرق التسليم"
+msgstr "طرق الشحن"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "قائمة اسعار التسليم"
+msgstr "قائمة أسعار الشحن"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "المنتج المُسلم"
+msgstr "منتج الشحن"
 
 #. module: delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
-msgstr "التسليم عن طريق هيئة البريد"
+msgstr "الشحن بالبريد الفرنسي"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 #: view:delivery.grid:delivery.view_delivery_grid_form
 #: view:delivery.grid:delivery.view_delivery_grid_tree
 msgid "Delivery grids"
-msgstr "شبكات التسليم"
+msgstr "شبكات الشحن"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 #: view:delivery.grid:delivery.view_delivery_grid_form
 msgid "Destination"
-msgstr "المقصد"
+msgstr "الوجهة"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -233,13 +234,13 @@ msgstr "ثابت"
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "مجاني إذا كان إجمالي المبلغ أكبر من"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:151
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "مجاناً إذا كان أكثر من %.2f"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -249,33 +250,33 @@ msgstr "المعلومات العامة"
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
 msgid "Gives the sequence order when calculating delivery grid."
-msgstr ""
+msgstr "يضع مسلسلاً لترتيب الأمر عند احتساب شبكة الشحن."
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "وتعطي امر المتتابعة عند عرض قائمة شبكة التسليم."
+msgstr "يضع مسلسلاً لترتيب قائمة شبكات الشحن."
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "شبكية"
+msgstr "الشبكة"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "خط التسليم"
+msgstr "بند الشبكة"
 
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_tree
 msgid "Grid Lines"
-msgstr "خطوط الشبكة"
+msgstr "بنود الشبكة"
 
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr "اسم الشبكية"
+msgstr "اسم الشبكة"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -287,51 +288,51 @@ msgstr "تعريف الشبكة"
 #: field:delivery.carrier,id:0 field:delivery.grid,id:0
 #: field:delivery.grid.line,id:0
 msgid "ID"
-msgstr "معرّف"
+msgstr "المعرف"
 
 #. module: delivery
 #: help:delivery.carrier,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr "اذا كان الحقل النشط خاطيء, ستسمح لك بإخفاء ناقل التسليم بدون إزالتها."
+msgstr "إذا ألغيت تحديد حقل نشط، سيمكنك إخفاء شركة الشحن وإيقاف التعامل بها دون حذفها."
 
 #. module: delivery
 #: help:delivery.grid,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr "اذا كان الحقل النشط خاطيء, ستسمح لك بإخفاء شبكة التسليم بدون ازالتها."
+msgstr "إذا ألغيت تحديد حقل نشط، فسيمكنك إخفاء شبكة الشحن دون حذفها."
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
+msgstr "إذا كان مبلغ الأمر أكبر من حد معين، فيمكن للعميل أن يستفيد من الشحن المجاني"
 
 #. module: delivery
 #: view:sale.order:delivery.view_order_withcarrier_form
 msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing"
 " based on delivery order(s)."
-msgstr ""
+msgstr "إذا لم تقم بإضافة تكاليف الشحن إلى عرض السعر، فسيتم احتساب القيمة بدقة عند إصدار الفاتورة من (أوامر التسليم)."
 
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
 msgid "Is a Delivery"
-msgstr ""
+msgstr "توصيل وشحن"
 
 #. module: delivery
 #: help:delivery.carrier,available:0
 msgid "Is the carrier method possible with the current order."
-msgstr ""
+msgstr "هل يمكن استخدام شركة الشحن وطريقة الشحن مع الأمر الحالي."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
+msgstr "اتركه فارغاً إذا كان التسعير يعتمد على عنوان الشحن."
 
 #. module: delivery
 #: field:delivery.carrier,write_uid:0 field:delivery.grid,write_uid:0
@@ -343,12 +344,12 @@ msgstr "آخر تحديث بواسطة"
 #: field:delivery.carrier,write_date:0 field:delivery.grid,write_date:0
 #: field:delivery.grid.line,write_date:0
 msgid "Last Updated on"
-msgstr "آخر تحديث فى"
+msgstr "آخر تحديث في"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
-msgstr "القيمة القصوى"
+msgstr "أقصى قيمة"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -358,7 +359,7 @@ msgstr "الاسم"
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr "صافي الوزن"
+msgstr "الوزن الصافي"
 
 #. module: delivery
 #: field:stock.move,weight_net:0
@@ -369,18 +370,18 @@ msgstr "الوزن الصافي"
 #: code:addons/delivery/sale.py:71
 #, python-format
 msgid "No Grid Available!"
-msgstr ""
+msgstr "لا توجد شبكة شحن!"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:71
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "لا توجد شبكة شحن لشركة الشحن هذه!"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr "السعر الافتراضي (العادي)"
+msgstr "السعر العادي"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
@@ -390,28 +391,28 @@ msgstr "عدد العبوات"
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr "عملية"
+msgstr "المعامل"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:74
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "الأمر ليس في حالة مسودة!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr "شريك"
+msgstr "الشريك"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr "قائمة الالتقاط"
+msgstr "قائمة الاستلام"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree
 msgid "Picking to be invoiced"
-msgstr "اختيار ما تريد عمل له فاتورة"
+msgstr "إصدار فواتير عمليات الاستلام"
 
 #. module: delivery
 #: field:delivery.carrier,price:0 selection:delivery.grid.line,type:0
@@ -433,7 +434,7 @@ msgstr "معلومات التسعير"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Quantity"
-msgstr "كمية"
+msgstr "الكمية"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
@@ -443,12 +444,12 @@ msgstr "سعر البيع"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "أمر المبيعات"
+msgstr "أمر البيع"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "خط طلب المبيعات"
+msgstr "بند أمر البيع"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:237
@@ -456,50 +457,50 @@ msgstr "خط طلب المبيعات"
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "grid(s) criteria."
-msgstr ""
+msgstr "المنتج المحدد لا يوافق شر(و)ط الشحن في أي من شبكات الشحن."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
 msgid "Sequence"
-msgstr "مسلسل"
+msgstr "المسلسل"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr "ابدأ الرمز"
+msgstr "بداية الرموز البريدية"
 
 #. module: delivery
 #: view:delivery.grid:delivery.view_delivery_grid_form
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr "حالات"
+msgstr "المحافظات"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr "حركة مخزن"
+msgstr "حركة المخزون"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "الناقل %s (id: %d( لا يوجد لديها شبكة تسليم!"
+msgstr "لم يتم تعريف شبكة للشركة الشحن %s (المعرف: %d)!"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:74
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr "يُسجل حالة الامر كمسودة ليضاف الى خطوط التسليم."
+msgstr "يجب أن تكون حالة الأمر مسودة ليمكنك إضافة بنود الشحن."
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "الشريك الذي يقدم خدمة الشحن."
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "سيستخدم اسلوب التسليم عندما تكون الفاتورة بالإختيار."
+msgstr "سيتم استخدام طريقة الشحن هذه عند إصدار الفواتير من عمليات الاستلام."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -509,13 +510,13 @@ msgstr "إلى الرمز"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "شركة الشحن"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:237
 #, python-format
 msgid "Unable to fetch delivery method!"
-msgstr ""
+msgstr "لم يمكن جلب طريقة الشحن!"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
@@ -526,12 +527,12 @@ msgstr "وحدة القياس"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "وحدة القياس (و.ق) المستخدمة في قياس الوزن."
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "وحدة قياس الوزن"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
@@ -541,13 +542,13 @@ msgstr "متغير"
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr "عامل متغير"
+msgstr "معامل متغير"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0 field:stock.picking,volume:0
 msgid "Volume"
-msgstr "حجم"
+msgstr "الحجم"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:90
@@ -567,19 +568,19 @@ msgstr "الوزن"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr "الوزن * المقدار"
+msgstr "الوزن × الحجم"
 
 #. module: delivery
 #: view:website:stock.report_picking
 msgid "Will be invoiced to:"
-msgstr ""
+msgstr "سيتم إصدار فاتورته إلى:"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "Zip"
-msgstr "ألبريدي"
+msgstr "الرمز البريدي"
 
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "in Function of"
-msgstr ""
+msgstr "هو دالة من"

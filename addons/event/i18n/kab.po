@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-21 22:02+0000\n"
+"PO-Revision-Date: 2015-06-28 23:51+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid ""
 "        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n<p>Azul ${object.name},</p>\n<p>Tadyant ${object.event_id.name} Anda t multɣeḍ tentem. Ad teḍru si ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} ɣeṛ ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\nMa tesriḍ talɣut nniḍen, nermes agezdu nneɣ n tedaynt.</p>\n<p>Tanemmirt inek ɣef uţekki !</p>\n<p>Ar tufat;</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -815,7 +815,7 @@ msgstr "Tamurt"
 #: field:event.confirm,create_uid:0 field:event.event,create_uid:0
 #: field:event.registration,create_uid:0 field:event.type,create_uid:0
 msgid "Created by"
-msgstr "Ilul-ed sɣuṛ"
+msgstr "Yerna-t"
 
 #. module: event
 #: field:event.confirm,create_date:0 field:event.event,create_date:0

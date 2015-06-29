@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-21 17:34+0000\n"
+"PO-Revision-Date: 2015-06-28 23:51+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr "%s ifures"
 msgid ""
 "'Consume only' mode will only consume the products with the quantity selected.\n"
 "'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
-msgstr ""
+msgstr "Askar n 'Ssuder kan', ad issuder kan ifarisen s tnectiwin iţufernen.\nAskar 'Suder & Fares' ad issuder w-ad ifares ifarisen s tenectiwin ifernen, ad imdel taladna n ufares ticki asemday n tenectiwin n tladna ţufarsent."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
@@ -95,7 +95,7 @@ msgid ""
 "                orders according to procurement needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned dagi i tmerna n tegrawalin. \n</p><p>\nTigrawalin ad siregent tabadut n tebdart n isufar n ufares\niţusqedcen i wufares n ufaris yemden; s wubrid \nn tladna n ufares neɣ asegrew n ifarisen.\n</p><p>\nOdoo ad iseqdec tigrawalin iwkken ad isumer s webrid awurman \ntiludna n ufares according to procurement needs.\n</p>"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -270,7 +270,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "Iţraǧu isufar n ufares"
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
@@ -348,7 +348,7 @@ msgstr "Taɣessa Tegrawalt"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "Tagrawalt ak-teǧ ad tesbaduḍ tabdart n isufar iwatan i wefares n ufaris yemden."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -372,12 +372,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr "Tawsit n Uzrig n Tegrawalt"
+msgstr "Tawsit n Uzirig n Tegrawalt"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
 msgid "BoM Lines"
-msgstr "Izrigen n Tegrawalt"
+msgstr "Izirigen n Tegrawalt"
 
 #. module: mrp
 #: field:mrp.bom,type:0
@@ -414,7 +414,7 @@ msgstr "Ifsax"
 #: code:addons/mrp/stock.py:183
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Ur yezmir ara ad isuder amussu s tencta tilemt neɣ tibawt."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:605
@@ -539,25 +539,25 @@ msgstr "Suder & Fares"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Ssuder izirigen"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Ssuder amussu"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr "Suder kan"
+msgstr "Ssuder kan"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Products"
-msgstr "Suder ifarisen"
+msgstr "Ssuder ifarisen"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -568,20 +568,20 @@ msgstr "Ifarisen iţusuderen"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr " iţusuder i"
+msgstr " iţussuder i"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
-msgstr ""
+msgstr "Tasqamt n uferdis n usɣel"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:148
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
-msgstr "Taɣessa n watig"
+msgstr "Taɣessa n tesqamt"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -591,12 +591,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
-msgstr ""
+msgstr "Tasqamt s usrag"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 msgid "Costing Information"
-msgstr ""
+msgstr "Talɣut ɣef tesqamt"
 
 #. module: mrp
 #: field:change.production.qty,create_uid:0 field:mrp.bom,create_uid:0
@@ -654,7 +654,7 @@ msgstr "Ass s wass"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
-msgstr "Default Unit of Measure"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
@@ -815,7 +815,7 @@ msgstr "Amiḍan Usrig"
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
-msgstr ""
+msgstr "tasqamt n usrag"
 
 #. module: mrp
 #: field:change.production.qty,id:0 field:mrp.bom,id:0 field:mrp.bom.line,id:0
@@ -878,14 +878,14 @@ msgstr "Tamsisɣelt tagensant"
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Invalid Action!"
-msgstr "Tigawt urtameɣtut!"
+msgstr "Tigawt mačči tameɣtut!"
 
 #. module: mrp
 #: field:mrp.bom,message_is_follower:0
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr "D amagaz"
+msgstr "D amelteɣ"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -934,7 +934,7 @@ msgstr "Aleqqem aneggaru di"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Late"
-msgstr "Yeɛṭel"
+msgstr "Iɛeṭṭel"
 
 #. module: mrp
 #: field:stock.move.consume,location_id:0
@@ -960,7 +960,7 @@ msgstr "Aqeţţun"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr "Sefrek ibardan"
+msgstr "Sefrek tiseddaṛin"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
@@ -970,7 +970,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_routings:0
 msgid "Manage routings and work orders "
-msgstr "Sekrek ibardan d tludna n umahil "
+msgstr "Sekrek tiseddaṛin d tludna n umahil "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1094,12 +1094,12 @@ msgstr "Iznan"
 #: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
-msgstr "Amazray n iznan  d  tiywalin"
+msgstr "Amazray n iznan  d  teywalin"
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
 msgid "Mode"
-msgstr "Tarrayt"
+msgstr "Askar"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
@@ -1123,7 +1123,7 @@ msgstr "Amaynut"
 #: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr "Afaris agi, ulac ɣuṛes tagrawalt!"
+msgstr "ulac tagrawalt i wefaris agi!"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1261,7 +1261,7 @@ msgstr "Asɣiwes"
 #: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Please provide proper quantity."
-msgstr "MA ulac aɣilif mud-ed tanecta iwatan."
+msgstr "Ma ulac aɣilif mudd-ed tanecta iwatan."
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1272,7 +1272,7 @@ msgstr "Siggez"
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
 msgid "Print Cost Structure of Product."
-msgstr ""
+msgstr "Siggez taɣessa n tesqamt n ufaris"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1287,12 +1287,12 @@ msgstr "Tazwart"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr "Asikrer"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Alugen n usikrer"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1310,7 +1310,7 @@ msgstr "Fares deqs n ifarisen seg yiwet n tladna n ufares"
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
-msgstr ""
+msgstr "Ifarisen yemden"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1328,7 +1328,7 @@ msgstr "Afaris"
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
 msgid "Product Cost Structure"
-msgstr ""
+msgstr "Taɣessa n tseqamt n ufaris"
 
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
@@ -1338,17 +1338,17 @@ msgstr "Amussu n ufaris"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
 msgid "Product Price"
-msgstr "Azal n ufaris"
+msgstr "Ssuma n ufaris"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr "Afres n ifarisen"
+msgstr "Afares n ifarisen"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Izirigen n usuder n ufares n ufaris"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -1473,7 +1473,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Asfari n ufaris"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1524,12 +1524,12 @@ msgstr "Ifarisen a yeţufaresen"
 #: view:mrp.property:mrp.mrp_property_tree_view
 #: field:procurement.order,property_ids:0
 msgid "Properties"
-msgstr ""
+msgstr "Tulmisin"
 
 #. module: mrp
 #: view:mrp.property.group:mrp.mrp_property_group_form_view
 msgid "Properties categories"
-msgstr ""
+msgstr "Taggayin n tulimisin"
 
 #. module: mrp
 #: field:mrp.property,composition:0
@@ -1539,20 +1539,20 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
 msgid "Property"
-msgstr ""
+msgstr "Tulmist"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
 #: view:mrp.property:mrp.view_mrp_property_search
 #: field:mrp.property,group_id:0 field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr ""
+msgstr "Tagrumma n tulmist"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
-msgstr ""
+msgstr "Tigrumma n tulmist"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
@@ -1713,7 +1713,7 @@ msgstr "Ifarisen iɣiwsen"
 #. module: mrp
 #: field:mrp.production,product_lines:0
 msgid "Scheduled goods"
-msgstr ""
+msgstr "Isufar iɣiwsen"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1850,7 +1850,7 @@ msgstr "Agzul"
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
-msgstr ""
+msgstr "Ssuma n useǧǧaw s uferdis n usɣel"
 
 #. module: mrp
 #: help:stock.move,consumed_for:0
@@ -1863,7 +1863,7 @@ msgstr "Urti atiknikan i ţuseqedcen i weḍfaṛ n ifarisen ifursen "
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "Taggayt n uferdis n useɣel n ufaris i tferneḍ temgarad ed tin yellan di tfelwit n ufaris."
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -1911,12 +1911,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
-msgstr ""
+msgstr "Akud deffir n ufares"
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
-msgstr ""
+msgstr "Akud send afaris"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1936,7 +1936,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
-msgstr ""
+msgstr "Akud n usenker s yesragen "
 
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
@@ -1954,7 +1954,7 @@ msgstr ""
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
-msgstr ""
+msgstr "Tasqamt tasemdayt n %s %s"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
@@ -2216,13 +2216,13 @@ msgstr ""
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
-msgstr ""
+msgstr "Tasqamt n umahil"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
-msgstr ""
+msgstr "Tasqamt n umahil n %s %s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
