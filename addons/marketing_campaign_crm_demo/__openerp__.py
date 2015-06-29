@@ -8,7 +8,7 @@
     'depends': ['marketing_campaign',
                  'crm',
     ],
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'category': 'Marketing',
     'description': """
 Demo data for the module marketing_campaign.
@@ -17,8 +17,6 @@ Demo data for the module marketing_campaign.
 Creates demo data like leads, campaigns and segments for the module marketing_campaign.
     """,
     'website': 'https://www.odoo.com/page/lead-automation',
-    'data': [],
     'demo': ['demo/marketing_campaign_demo.xml'],
     'installable': True,
-    'auto_install': False,
 }
