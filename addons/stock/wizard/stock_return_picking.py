@@ -15,7 +15,6 @@ class stock_return_picking_line(osv.osv_memory):
         'quantity': fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'wizard_id': fields.many2one('stock.return.picking', string="Wizard"),
         'move_id': fields.many2one('stock.move', "Move"),
-        'lot_id': fields.many2one('stock.production.lot', 'Serial Number', help="Used to choose the lot/serial number of the product returned"),
     }
 
 
@@ -25,6 +24,10 @@ class stock_return_picking(osv.osv_memory):
     _columns = {
         'product_return_moves': fields.one2many('stock.return.picking.line', 'wizard_id', 'Moves'),
         'move_dest_exists': fields.boolean('Chained Move Exists', readonly=True, help="Technical field used to hide help tooltip if not needed"),
+        'original_location_id': fields.many2one('stock.location'),
+        'parent_location_id': fields.many2one('stock.location'),
+        'location_id': fields.many2one('stock.location', 'Return Location',
+            domain="['|', ('id', '=', original_location_id), '&', ('return_location', '=', True), ('id', 'child_of', parent_location_id)]")
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -72,6 +75,12 @@ class stock_return_picking(osv.osv_memory):
                 res.update({'product_return_moves': result1})
             if 'move_dest_exists' in fields:
                 res.update({'move_dest_exists': chained_move_exist})
+            if 'parent_location_id' in fields and pick.location_id.usage == 'internal':
+                res.update({'parent_location_id':pick.picking_type_id.warehouse_id and pick.picking_type_id.warehouse_id.view_location_id.id or pick.location_id.location_id.id})
+            if 'original_location_id' in fields:
+                res.update({'original_location_id': pick.location_id.id})
+            if 'location_id' in fields:
+                res.update({'location_id': pick.location_id.id})
         return res
 
     def _create_returns(self, cr, uid, ids, context=None):
@@ -111,7 +120,7 @@ class stock_return_picking(osv.osv_memory):
             'state': 'draft',
             'origin': pick.name,
             'location_id': pick.location_dest_id.id,
-            'location_dest_id': pick.location_id.id,
+            'location_dest_id': data['location_id'] and data['location_id'][0] or pick.location_id.id,
         }, context=context)
 
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
@@ -127,6 +136,7 @@ class stock_return_picking(osv.osv_memory):
                     move_dest_id = False
 
                 returned_lines += 1
+                location_id = data['location_id'] and data['location_id'][0] or move.location_id.id
                 move_obj.copy(cr, uid, move.id, {
                     'product_id': data_get.product_id.id,
                     'product_uom_qty': new_qty,
@@ -134,33 +144,29 @@ class stock_return_picking(osv.osv_memory):
                     'picking_id': new_picking,
                     'state': 'draft',
                     'location_id': move.location_dest_id.id,
-                    'location_dest_id': move.location_id.id,
+                    'location_dest_id': location_id,
                     'picking_type_id': pick_type_id,
                     'warehouse_id': pick.picking_type_id.warehouse_id.id,
                     'origin_returned_move_id': move.id,
                     'procure_method': 'make_to_stock',
-                    'restrict_lot_id': data_get.lot_id.id,
                     'move_dest_id': move_dest_id,
                 })
 
         if not returned_lines:
             raise UserError(_("Please specify at least one non-zero quantity."))
 
+        pick_obj.action_confirm(cr, uid, [new_picking], context=context)
+        pick_obj.action_assign(cr, uid, [new_picking], context=context)
         return new_picking, pick_type_id
 
     def create_returns(self, cr, uid, ids, context=None):
         """
-         Creates return picking.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param ids: List of ids selected
-         @param context: A standard dictionary
-         @return: A dictionary which of fields with values.
+         Creates return picking and returns act_window to new picking
         """
         new_picking_id, pick_type_id = self._create_returns(cr, uid, ids, context=context)
         # Override the context to disable all the potential filters that could have been set previously
-        ctx = {
+        ctx = context.copy()
+        ctx.update({
             'search_default_picking_type_id': pick_type_id,
             'search_default_draft': False,
             'search_default_assigned': False,
@@ -168,13 +174,13 @@ class stock_return_picking(osv.osv_memory):
             'search_default_ready': False,
             'search_default_late': False,
             'search_default_available': False,
-        }
+        })
         return {
-            'domain': "[('id', 'in', [" + str(new_picking_id) + "])]",
             'name': _('Returned Picking'),
             'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'form,tree,calendar',
             'res_model': 'stock.picking',
+            'res_id': new_picking_id,
             'type': 'ir.actions.act_window',
             'context': ctx,
         }
