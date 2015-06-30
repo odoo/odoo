@@ -42,11 +42,11 @@
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
-                <div class="col-xs-12 o_kanban_primary_bottom" t-if="record.invoiced_target.raw_value">
-                    <field name="invoiced_forecast" widget="progress" options="{'title': 'Forecast', 'current_value': 'invoiced_forecast', 'max_value': 'invoiced_target', 'editable': true, 'on_change': 'action_forecast'}"/>
+                <div t-if="record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
+                    <field name="invoiced_forecast" widget="progress" options="{'title': 'Invoicing', 'current_value': 'invoiced_forecast', 'max_value': 'invoiced_target', 'editable': true, 'on_change': 'action_forecast'}"/>
                 </div>
-                <div t-if="!record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
-                    Define an invoicing target in the sales team settings to see the period's achievement and forecast at a glance.
+                <div t-if="!record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom text-center">
+                    Click <a href="#" class="sales_team_target_definition o_inline_link">here</a> to define an invoicing target
                 </div>
             </xpath>
 
