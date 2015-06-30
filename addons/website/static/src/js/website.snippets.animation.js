@@ -72,18 +72,6 @@ $(document).ready(function () {
     start_animation();
 });
 
-// FAQ Roller snippet function
-$(document).ready(function () {
-    $('.s_faq_default').find('.s_faq_body').slideUp(1);
-    $('button[data-action=edit]').on("click", function(){
-        $('.s_faq_default').find('.s_faq_body').attr('style','display:block');
-    });
-    $('.s_faq_heading').on('click', function(e){
-        $('.s_faq_body').slideUp(300);
-        var $toggle = $('.s_faq_body', $(this).parent().parent());
-        if (!$toggle.is(":visible"))$toggle.slideDown(300);
-    });
-});
 
 
 var Animation = core.Class.extend({
