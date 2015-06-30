@@ -1956,6 +1956,12 @@ class stock_move(osv.osv):
         """ This will create a procurement order """
         return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context), context=context)
 
+    def _create_procurements(self, cr, uid, moves, context=None):
+        res = []
+        for move in moves:
+            res.append(self._create_procurement(cr, uid, move, context=context))
+        return res
+
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
@@ -2197,13 +2203,11 @@ class stock_move(osv.osv):
                 if key not in to_assign:
                     to_assign[key] = []
                 to_assign[key].append(move.id)
-        proc_ids = []
-        for move in self.browse(cr, uid, states['confirmed'], context=context):
-            if move.procure_method == 'make_to_order':
-                proc_ids.append(self._create_procurement(cr, uid, move, context=dict(context, procurement_autorun_defer=True)))
-                states['waiting'].append(move.id)
-                states['confirmed'].remove(move.id)
-        self.pool['procurement.order'].run(cr, uid, proc_ids, context=context)
+        moves = [move for move in self.browse(cr, uid, states['confirmed'], context=context) if move.procure_method == 'make_to_order']
+        self._create_procurements(cr, uid, moves, context=context)
+        for move in moves:
+            states['waiting'].append(move.id)
+            states['confirmed'].remove(move.id)
 
         for state, write_ids in states.items():
             if len(write_ids):
