@@ -2195,12 +2195,13 @@ class stock_move(osv.osv):
                 if key not in to_assign:
                     to_assign[key] = []
                 to_assign[key].append(move.id)
-
+        proc_ids = []
         for move in self.browse(cr, uid, states['confirmed'], context=context):
             if move.procure_method == 'make_to_order':
-                self._create_procurement(cr, uid, move, context=context)
+                proc_ids.append(self._create_procurement(cr, uid, move, context=dict(context, procurement_autorun_defer=True)))
                 states['waiting'].append(move.id)
                 states['confirmed'].remove(move.id)
+        self.pool['procurement.order'].run(cr, uid, proc_ids, context=context)
 
         for state, write_ids in states.items():
             if len(write_ids):
