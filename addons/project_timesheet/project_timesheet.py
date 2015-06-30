@@ -116,7 +116,21 @@ class project_project(osv.osv):
 
     _defaults = {
         'invoice_on_timesheets': True,
+        'is_contract': True
     }
+
+    def open_contract(self, cr, uid, ids, context=None):
+        """ open contract view """
+        project = self.browse(cr, uid, ids[0], context=context)
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'account_analytic_analysis', 'action_account_analytic_overdue_all')
+        result['context'] = {
+            'search_default_analytic_account_id': [project.analytic_account_id.id],
+            'default_analytic_account_id': project.analytic_account_id.id,
+        }
+        result['domain'] = [('id', '=', project.analytic_account_id.id)]
+        result['res_id'] = project and project.analytic_account_id.id or False
+        result['views'] = [(False, 'form')]
+        return result
 
     def open_timesheets(self, cr, uid, ids, context=None):
         """ open Timesheets view """

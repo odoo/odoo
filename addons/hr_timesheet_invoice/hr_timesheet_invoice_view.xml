@@ -38,7 +38,7 @@
                         </group>
                     </xpath>
                     <field name="account_id" position="attributes">
-                        <attribute name="domain">[('type','in',['normal','contract']),('state', '!=', 'close'),('invoice_on_timesheets','=',1)]</attribute>
+                        <attribute name="domain">['|',('type','=', 'normal'), ('is_contract','=', True),('state', '!=', 'close'),('invoice_on_timesheets','=',1)]</attribute>
                         <attribute name="on_change">on_change_account_id(account_id, user_id, is_timesheet, context)</attribute>
                         <attribute name="context">{'default_invoice_on_timesheets': 1}</attribute>
                     </field>
@@ -55,7 +55,7 @@
                         <field name="invoice_id" readonly="1"/>
                     </field>
                     <field name="account_id" position="attributes">
-                        <attribute name="domain">[('type','in',['normal','contract']),('state', '!=', 'close'),('invoice_on_timesheets','=',1)]</attribute>
+                        <attribute name="domain">['|',('type','=', 'normal'), ('is_contract','=', True),('state', '!=', 'close'),('invoice_on_timesheets','=',1)]</attribute>
                         <attribute name="on_change">on_change_account_id(account_id, user_id, is_timesheet, context)</attribute>
                         <attribute name="context">{'default_invoice_on_timesheets': 1}</attribute>
                     </field>

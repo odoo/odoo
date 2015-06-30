@@ -25,14 +25,13 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
                 <xpath expr='//div[@name="options_active"]' position='inside'>
-                    <field name="invoice_on_timesheets" class="oe_inline"/>
-                    <label for="invoice_on_timesheets"/>
+                    <field name="is_contract" class="oe_inline"/>
+                    <label for="is_contract"/>
+                    <field name="invoice_on_timesheets" attrs="{'invisible': [('is_contract', '=', False)]}" class="oe_inline"/>
+                    <label for="invoice_on_timesheets" attrs="{'invisible': [('is_contract', '=', False)]}"/>
                 </xpath>
-                <xpath expr='//group[@name="group_alias"]' position='before'>
-                    <p attrs="{'invisible': [('analytic_account_id','=',False)]}">
-                        To invoice or setup invoicing and renewal options, go to the related contract:
-                        <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
-                    </p>
+                <xpath expr='//field[@name="partner_id"]' position="attributes">
+                    <attribute name="attrs">{'required': [('is_contract', '=', True),('invoice_on_timesheets','=',True)]}</attribute>
                 </xpath>
                 <field name="privacy_visibility" position="after">
                     <field name="planned_hours" widget="float_time"
@@ -41,7 +40,8 @@
                             groups="project.group_time_work_estimation_tasks"/>
                 </field>
                 <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('invoice_on_timesheets','=',False)]}"
+                    <button class="oe_inline oe_stat_button" name="open_contract" type="object" attrs="{'invisible':[('is_contract', '=', False)]}" icon="fa-book" string="Contract"/>
+                    <button class="oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':['|',('is_contract', '=', False), ('invoice_on_timesheets','=',False)]}"
                         icon="fa-calendar" string="Timesheets"/>
                 </div>
                 <xpath expr='//field[@name="partner_id"]' position='after'>

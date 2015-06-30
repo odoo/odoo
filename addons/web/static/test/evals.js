@@ -528,7 +528,7 @@ odoo.define_section('eval.edc.nonliterals', ['web.pyeval', 'web.session'], funct
 
         var result = pyeval.sync_eval_domains_and_contexts({
             domains: [
-                [['type', '=', 'contract']],
+                [['is_contract', '=', 1]],
                 { "__domains": [["|"], [["state", "in", ["open", "draft"]]], [["state", "=", "pending"]]],
                   "__eval_context": null,
                   "__ref": "compound_domain"
@@ -543,7 +543,7 @@ odoo.define_section('eval.edc.nonliterals', ['web.pyeval', 'web.session'], funct
         var today = _.str.sprintf("%04d-%02d-%02d",
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
         assert.deepEqual(result.domain, [
-            ["type", "=", "contract"],
+            ["is_contract", "=", 1],
             "|", ["state", "in", ["open", "draft"]],
                  ["state", "=", "pending"],
             "|",
