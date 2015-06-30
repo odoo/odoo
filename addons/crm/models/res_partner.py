@@ -16,7 +16,7 @@ class ResPartner(models.Model):
                     operator = 'child_of'
                 else:
                     operator = '='
-                opp_ids = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('type', '=', 'opportunity'), ('probability', '<', '100')])
+                opp_ids = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('lead_type', '=', 'opportunity'), ('probability', '<', '100')])
                 partner.opportunity_count = opp_ids
                 partner.meeting_count = len(partner.meeting_ids)
         except:
@@ -26,7 +26,7 @@ class ResPartner(models.Model):
 
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id')
     opportunity_ids = fields.One2many('crm.lead', 'partner_id',\
-        string='Opportunities', domain=[('type', '=', 'opportunity')])
+        string='Opportunities', domain=[('lead_type', '=', 'opportunity')])
     meeting_ids = fields.Many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id', 'calendar_event_id', string='Meetings')
     phonecall_ids = fields.One2many('crm.phonecall', 'partner_id',\
         string='Phonecalls')

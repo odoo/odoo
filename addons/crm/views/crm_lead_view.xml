@@ -112,7 +112,7 @@
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
-                            domain="['&amp;', '|', ('case_default', '=', True), ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
+                            domain="['&amp;', '|', ('case_default', '=', True), ('team_ids', '=', team_id), '|', ('type', '=', lead_type), ('type', '=', 'both')]"
                             options="{'fold_field': 'fold'}"
                             />
                 </header>
@@ -167,7 +167,7 @@
                                         type="object" class="oe_link"
                                         attrs="{'invisible': ['|', ('team_id','=',False), ('probability', '=', 100)]}"/>
                             </div>
-                            <field name="type" invisible="1"/>
+                            <field name="lead_type" invisible="1"/>
                         </group>
                         <group>
                             <field name="tag_ids" widget="many2many_tags"/>
@@ -397,7 +397,7 @@
                         <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
-                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
+                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', lead_type), ('type', '=', 'both')]"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -505,7 +505,7 @@
                                     <field name="day_open" groups="base.group_no_one"/>
                                     <field name="day_close" groups="base.group_no_one"/>
                                     <field name="referred"/>
-                                    <field name="type" invisible="1"/>
+                                    <field name="lead_type" invisible="1"/>
                                 </group>
                                 <group name="references" string="References">
                                     <field name="ref"/>

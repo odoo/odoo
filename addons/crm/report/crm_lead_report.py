@@ -36,8 +36,8 @@ class CrmLeadReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     priority = fields.Selection(crm.AVAILABLE_PRIORITIES)
     lead_type = fields.Selection([
-        ('lead', 'Lead'),
-        ('opportunity', 'Opportunity'),
+        ('lead','Lead'),
+        ('opportunity','Opportunity'),
     ], help="Type is used to separate Leads and Opportunities", oldname="type", string="Lead Type")
 
     def init(self, cr):
@@ -62,7 +62,7 @@ class CrmLeadReport(models.Model):
                     c.user_id,
                     c.probability,
                     c.stage_id,
-                    c.type,
+                    c.lead_type,
                     c.company_id,
                     c.priority,
                     c.team_id,

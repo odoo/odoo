@@ -22,7 +22,7 @@
             <field name="model_id" eval="ref('crm.model_crm_lead')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_create_date')" />
             <!-- lead AND opportunity as don't want to be penalised for lead converted to opportunity -->
-            <field name="domain">[('user_id','=',user.id), '|', ('type', '=', 'lead'), ('type', '=', 'opportunity')]</field>
+            <field name="domain">[('user_id','=',user.id), '|', ('lead_type', '=', 'lead'), ('lead_type', '=', 'opportunity')]</field>
         </record>
 
         <record model="gamification.goal.definition" id="definition_crm_lead_delay_open">
@@ -34,7 +34,7 @@
             <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
             <field name="field_id" eval="ref('crm.field_crm_lead_report_delay_close')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_report_date_closed')" />
-            <field name="domain">[('user_id','=',user.id),('type', '=', 'lead')]</field>
+            <field name="domain">[('user_id','=',user.id),('lead_type', '=', 'lead')]</field>
         </record> 
 
         <record model="gamification.goal.definition" id="definition_crm_lead_delay_close">
@@ -67,7 +67,7 @@
             <field name="suffix">opportunities</field>
             <field name="model_id" eval="ref('crm.model_crm_lead')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_date_open')" />
-            <field name="domain">[('user_id','=',user.id),('type','=','opportunity')]</field>
+            <field name="domain">[('user_id','=',user.id),('lead_type','=','opportunity')]</field>
         </record>
 
         <record model="gamification.goal.definition" id="definition_crm_nbr_sale_order_created">
