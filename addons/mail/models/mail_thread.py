@@ -795,12 +795,12 @@ class MailThread(models.AbstractModel):
     @api.model
     def message_capable_models(self):
         """ Used by the plugin addon, based for plugin_outlook and others. """
-        ret_dict = {}
-        for model_name in self.pool.obj_list():
-            model = self.pool[model_name]
-            if hasattr(model, "message_process") and hasattr(model, "message_post"):
-                ret_dict[model_name] = model._description
-        return ret_dict
+        return {
+            name: model._description
+            for name, model in self.pool.iteritems()
+            if hasattr(model, 'message_process')
+            if hasattr(model, 'message_post')
+        }
 
     def _message_find_partners(self, message, header_fields=['From']):
         """ Find partners related to some header fields of the message.
