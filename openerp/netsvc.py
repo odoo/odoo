@@ -36,6 +36,12 @@ import openerp
 
 _logger = logging.getLogger(__name__)
 
+def memory_info(process):
+    """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
+    get_memory_info """
+    return (getattr(process, 'memory_info', None) or process.get_memory_info)()
+
+
 def LocalService(name):
     """
     The openerp.netsvc.LocalService() function is deprecated. It still works
@@ -221,7 +227,7 @@ def dispatch_rpc(service_name, method, params):
         if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
             start_rss, start_vms = 0, 0
-            start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+            start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
             if rpc_request and rpc_response_flag:
                 log(rpc_request,logging.DEBUG,'%s.%s'%(service_name,method), replace_request_password(params))
 
@@ -242,7 +248,7 @@ def dispatch_rpc(service_name, method, params):
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
             end_rss, end_vms = 0, 0
-            end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+            end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
             logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
                 log(rpc_response,logging.DEBUG, logline, result)
