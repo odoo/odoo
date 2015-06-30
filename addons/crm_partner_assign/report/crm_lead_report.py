@@ -34,7 +34,7 @@ class crm_lead_report_assign(osv.osv):
         'nbr': fields.integer('# of Cases', readonly=True),  # TDE FIXME master: rename into nbr_cases
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type':fields.selection([
+        'lead_type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity')
         ],'Type', help="Type is used to separate Leads and Opportunities"),
@@ -57,7 +57,7 @@ class crm_lead_report_assign(osv.osv):
                     c.probability,
                     c.probability as probability_max,
                     c.stage_id,
-                    c.type,
+                    c.lead_type,
                     c.company_id,
                     c.priority,
                     c.team_id,

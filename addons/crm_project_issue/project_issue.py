@@ -8,7 +8,7 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
     _inherit = 'crm.partner.binding'
 
     _columns = {
-        "lead_id": fields.many2one("crm.lead", "Lead", domain=[("type", "=", "lead")]),
+        "lead_id": fields.many2one("crm.lead", "Lead", domain=[("lead_type", "=", "lead")]),
         "project_id": fields.many2one("project.project", "Project", domain=[("use_issues", "=", True)])
     }
 

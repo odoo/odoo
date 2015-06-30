@@ -32,21 +32,21 @@
         <record id="filter_opportunity_opportunities_cohort" model="ir.filters">
             <field name="name">Opportunities Cohort</field>
             <field name="model_id">crm.opportunity.report</field>
-            <field name="domain">[('type','=','opportunity'), ('probability', '=', 100), ('stage_id.on_change', '=', 1)]</field>
+            <field name="domain">[('lead_type','=','opportunity'), ('probability', '=', 100), ('stage_id.on_change', '=', 1)]</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['date_closed:month'],'col_group_by': ['create_date:month'], 'measures': ['nbr_cases']}</field>
         </record>
         <record id="filter_opportunity_opportunities_won_per_team" model="ir.filters">
             <field name="name">Opportunities Won Per Team</field>
             <field name="model_id">crm.opportunity.report</field>
-            <field name="domain">[('type','=','opportunity'), ('probability', '=', 100), ('stage_id.on_change', '=', 1)]</field>
+            <field name="domain">[('lead_type','=','opportunity'), ('probability', '=', 100), ('stage_id.on_change', '=', 1)]</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['team_id'], 'col_group_by': ['date_last_stage_update:month'], 'measures': ['nbr_cases', 'delay_close']}</field>
         </record>
         <record id="filter_opportunity_top_opportunities" model="ir.filters">
             <field name="name">Top Opportunities</field>
             <field name="model_id">crm.opportunity.report</field>
-            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="domain">[('lead_type','=','opportunity')]</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['partner_id'], 'col_group_by': ['date_deadline:month'], 'measures': ['nbr_cases','probability','total_revenue']}</field>
         </record>
@@ -69,8 +69,8 @@
             <field name="model">crm.opportunity.report</field>
             <field name="arch" type="xml">
                 <search string="Opportunities Analysis">
-                    <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
-                    <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <filter name="lead" string="Lead" domain="[('lead_type','=', 'lead')]" help="Show only lead"/>
+                    <filter name="opportunity" string="Opportunity" domain="[('lead_type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>

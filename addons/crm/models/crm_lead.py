@@ -3,7 +3,7 @@
 
 from operator import itemgetter
 
-from openerp import api, fields, models, SUPERUSER_ID, tools, _
+from openerp import api, fields, models, tools, _
 from openerp.tools import email_re, email_split
 from openerp.exceptions import UserError, AccessError
 
@@ -78,11 +78,11 @@ class CrmLead(format_address, models.Model):
     opt_out = fields.Boolean(string='Opt-Out', oldname='optout',
         help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                 "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing.")
-    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, help="Type is used to separate Leads and Opportunities", default='lead')
+    lead_type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, help="Type is used to separate Leads and Opportunities", default='lead', oldname="type", string="Lead Type")
     priority = fields.Selection(crm.AVAILABLE_PRIORITIES, index=True, default=lambda *a: crm.AVAILABLE_PRIORITIES[0][0])
     date_closed = fields.Datetime(string='Closed', readonly=True, copy=False)
     stage_id = fields.Many2one('crm.stage', string='Stage', track_visibility='onchange', index=True,
-                    domain="['&', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]", default=lambda self: self._default_get_stage_id())
+                    domain="['&', ('team_ids', '=', team_id), '|', ('type', '=', lead_type), ('type', '=', 'both')]", default=lambda self: self._default_get_stage_id())
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     referred = fields.Char(string='Referred By')
     date_open = fields.Datetime(string='Assigned', readonly=True)
@@ -220,10 +220,10 @@ class CrmLead(format_address, models.Model):
 
     @api.model
     def create(self, vals):
-        type = vals.get('type')
+        lead_type = vals.get('lead_type')
         ctx = dict(self.env.context)
-        if type and not ctx.get('default_type'):
-            ctx['default_type'] = type
+        if lead_type and not ctx.get('default_lead_type'):
+            ctx['default_lead_type'] = lead_type
         if vals.get('team_id') and not ctx.get('default_team_id'):
             ctx['default_team_id'] = vals.get('team_id')
         if vals.get('user_id'):
@@ -246,11 +246,11 @@ class CrmLead(format_address, models.Model):
     @api.one
     def copy(self, default=None):
         if default is None: default = {}
-        if self.type == 'opportunity':
+        if self.lead_type == 'opportunity':
             default['date_open'] = fields.Datetime.now()
         else:
             default['date_open'] = False
-        return super(CrmLead, self.with_context(default_type=self.type, default_team_id=self.team_id.id)).copy(default=default)
+        return super(CrmLead, self.with_context(default_lead_type=self.lead_type, default_team_id=self.team_id.id)).copy(default=default)
 
     @api.multi
     def redirect_opportunity_view(self):
@@ -263,14 +263,14 @@ class CrmLead(format_address, models.Model):
             'view_type': 'form',
             'view_mode': 'tree, form',
             'res_model': 'crm.lead',
-            'domain': [('type', '=', 'opportunity')],
+            'domain': [('lead_type', '=', 'opportunity')],
             'res_id': self.id,
             'view_id': False,
             'views': [(form_view.id, 'form'),
                       (tree_view.id, 'tree'), (False, 'kanban'),
                       (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
-            'context': {'default_type': 'opportunity'}
+            'context': {'default_lead_type': 'opportunity'}
         }
 
     @api.multi
@@ -284,7 +284,7 @@ class CrmLead(format_address, models.Model):
             'view_type': 'form',
             'view_mode': 'tree, form',
             'res_model': 'crm.lead',
-            'domain': [('type', '=', 'lead')],
+            'domain': [('lead_type', '=', 'lead')],
             'res_id': self.id,
             'view_id': False,
             'views': [(form_view.id, 'form'),
@@ -305,8 +305,8 @@ class CrmLead(format_address, models.Model):
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
         res['context'] = {
-            'search_default_opportunity_id': self.type == 'opportunity' and self.id,
-            'default_opportunity_id': self.type == 'opportunity' and self.id,
+            'search_default_opportunity_id': self.lead_type == 'opportunity' and self.id,
+            'default_opportunity_id': self.lead_type == 'opportunity' and self.id,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
             'default_team_id': self.team_id.id,
@@ -340,7 +340,7 @@ class CrmLead(format_address, models.Model):
 
     @api.one
     def get_formview_id(self):
-        if self.type == 'opportunity':
+        if self.lead_type == 'opportunity':
             view_id = self.env.ref('crm.crm_case_form_view_oppor').id
         else:
             view_id = super(CrmLead, self).get_formview_id()
@@ -371,7 +371,7 @@ class CrmLead(format_address, models.Model):
         author_id = msg.get('author_id', False)
         priority = msg.get('priority')
         defaults = {
-            'name':  msg.get('subject') or _("No Subject"),
+            'name': msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': author_id,
@@ -397,9 +397,9 @@ class CrmLead(format_address, models.Model):
         if priority in dict(crm.AVAILABLE_PRIORITIES):
             update_vals['priority'] = priority
         maps = {
-            'cost':'planned_cost',
+            'cost': 'planned_cost',
             'revenue': 'planned_revenue',
-            'probability':'probability',
+            'probability': 'probability',
         }
         for line in msg.get('body', '').split('\n'):
             line = line.strip()
@@ -436,7 +436,7 @@ class CrmLead(format_address, models.Model):
     @api.model
     def get_empty_list_help(self, help):
         ctx = dict(self.env.context)
-        if ctx.get('default_type') == 'lead':
+        if ctx.get('default_lead_type') == 'lead':
             ctx['empty_list_help_document_name'] = _("lead")
         else:
             ctx['empty_list_help_document_name'] = _("opportunity")
@@ -457,7 +457,7 @@ class CrmLead(format_address, models.Model):
         # collect all team_ids
         team_ids = set()
         types = ['both']
-        default_type = self.env.context.get('default_type')
+        default_type = self.env.context.get('default_lead_type')
         if default_type:
             ctx_type = default_type
             types += [ctx_type]
@@ -466,8 +466,8 @@ class CrmLead(format_address, models.Model):
         for lead in self:
             if lead.team_id:
                 team_ids.add(lead.team_id.id)
-            if lead.type not in types:
-                types.append(lead.type)
+            if lead.lead_type not in types:
+                types.append(lead.lead_type)
         # OR all team_ids and OR with case_default
         search_domain = []
         if team_ids:
@@ -571,7 +571,7 @@ class CrmLead(format_address, models.Model):
             sequence = -1
             if opportunity.stage_id and opportunity.stage_id.on_change:
                 sequence = opportunity.stage_id.sequence
-            sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity.id))
+            sequenced_opps.append(((int(sequence != -1 and opportunity.lead_type == 'opportunity'), sequence, -opportunity.id), opportunity.id))
         sequenced_opps.sort(reverse=True)
         opportunities = map(itemgetter(1), sequenced_opps)
         opportunities = self.browse(opportunities)
@@ -590,7 +590,7 @@ class CrmLead(format_address, models.Model):
         highest.merge_dependences(tail_opportunities)
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            stage = self.env['crm.stage'].search([('team_ids', 'in', merged_data['team_id']), ('type', '=', merged_data.get('type'))], order='sequence')
+            stage = self.env['crm.stage'].search([('team_ids', 'in', merged_data['team_id']), ('type', '=', merged_data.get('lead_type'))], order='sequence')
             if merged_data.get('stage_id') not in stage.ids:
                 merged_data['stage_id'] = stage and stage[0].id
         # Write merged data into first opportunity
@@ -707,7 +707,7 @@ class CrmLead(format_address, models.Model):
             else:
                 data[field_name] = _get_first_not_null(field_name)  #not lost
         # Define the resulting type ('lead' or 'opportunity')
-        data['type'] = self._merge_get_result_type()
+        data['lead_type'] = self._merge_get_result_type()
         return data
 
     def _get_duplicated_leads_by_emails(self, partner_id, email, include_lost=False):
@@ -732,7 +732,7 @@ class CrmLead(format_address, models.Model):
         """ Returns the type (lead or opportunity) from the type context
             key. Returns None if it cannot be resolved.
         """
-        return self.env.context.get('default_type')
+        return self.env.context.get('default_lead_type')
 
     @api.multi
     def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
@@ -754,9 +754,9 @@ class CrmLead(format_address, models.Model):
         else:
             search_domain += ['|', ('id', 'in', self.ids), ('case_default', '=', True)]
         # retrieve type from the context (if set: choose 'type' or 'both')
-        type = self._resolve_type_from_context()
-        if type:
-            search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
+        lead_type = self._resolve_type_from_context()
+        if lead_type:
+            search_domain += ['|', ('type', '=', lead_type), ('type', '=', 'both')]
         # perform search
         stage_ids = CrmStage._search(search_domain, order=order, access_rights_uid=access_rights_uid)
         stage_rec = CrmStage.browse(stage_ids)
@@ -770,8 +770,8 @@ class CrmLead(format_address, models.Model):
         return result, fold
 
     _group_by_full = {
-       'stage_id': _read_group_stage_ids
-   }
+        'stage_id': _read_group_stage_ids
+        }
 
     def _merge_get_result_type(self):
         """
@@ -786,10 +786,9 @@ class CrmLead(format_address, models.Model):
         :return string type: the type of the final element
         """
         for opp in self:
-            if (opp.type == 'opportunity'):
+            if (opp.lead_type == 'opportunity'):
                 return 'opportunity'
         return 'lead'
-
 
     def _mail_body(self, fields, title=False):
         body = []
@@ -835,7 +834,7 @@ class CrmLead(format_address, models.Model):
         subject = [merge_message]
         for opportunity in opportunities:
             subject.append(opportunity.name)
-            title = "%s : %s" % (opportunity.type == 'opportunity' and _('Merged opportunity') or _('Merged lead'), opportunity.name)
+            title = "%s : %s" % (opportunity.lead_type == 'opportunity' and _('Merged opportunity') or _('Merged lead'), opportunity.name)
             fields = list(CRM_LEAD_FIELDS_TO_MERGE)
             details.append(opportunity._mail_body(fields, title=title))
 
@@ -937,7 +936,7 @@ class CrmLead(format_address, models.Model):
             'probability': self.probability,
             'name': self.name,
             'partner_id': customer and customer.id or False,
-            'type': 'opportunity',
+            'lead_type': 'opportunity',
             'date_action': fields.Datetime.now(),
             'date_open': fields.Datetime.now(),
             'email_from': customer and customer.email or self.email_from,

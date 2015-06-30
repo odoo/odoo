@@ -7,7 +7,7 @@ class CalendarEvent(models.Model):
     """ Model for Calendar Event """
     _inherit = 'calendar.event'
     phonecall_id = fields.Many2one('crm.phonecall', string='Phonecall')
-    opportunity_id = fields.Many2one('crm.lead', string='Opportunity', domain="[('type', '=', 'opportunity')]")
+    opportunity_id = fields.Many2one('crm.lead', string='Opportunity', domain="[('lead_type', '=', 'opportunity')]")
 
     @api.model
     def create(self, vals):

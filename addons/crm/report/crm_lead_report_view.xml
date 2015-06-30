@@ -76,8 +76,8 @@
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
-                    <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <filter name="lead" string="Lead" domain="[('lead_type','=', 'lead')]" help="Show only lead"/>
+                    <filter name="opportunity" string="Opportunity" domain="[('lead_type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>

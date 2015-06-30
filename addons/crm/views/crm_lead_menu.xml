@@ -5,11 +5,11 @@
         <field name="name">Leads</field>
         <field name="res_model">crm.lead</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
+        <field name="domain">['|', ('lead_type','=','lead'), ('lead_type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
         <field name="context">{
-                'default_type':'lead',
+                'default_lead_type':'lead',
                 'stage_type':'lead',
                 'needaction_menu_ref': 'crm.menu_crm_opportunities',
                 'search_default_to_process':1,
@@ -32,10 +32,10 @@
         <field name="name">Opportunities</field>
         <field name="res_model">crm.lead</field>
         <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
-        <field name="domain">[('type','=','opportunity')]</field>
+        <field name="domain">[('lead_type','=','opportunity')]</field>
         <field name="context">{
                 'stage_type': 'opportunity',
-                'default_type': 'opportunity',
+                'default_lead_type': 'opportunity',
                 'default_user_id': uid
             }
         </field>

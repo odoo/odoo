@@ -27,37 +27,37 @@
     uid: 'crm_res_users_salesman'
 -
   !record {model: crm.lead, id: test_crm_lead_01}:
-    type: 'lead'
+    lead_type: 'lead'
     name: 'Test lead 1'
     email_from: 'Raoul Grosbedon <raoul@grosbedon.fr>'
     stage_id: stage_lead1
 -
   !record {model: crm.lead, id: test_crm_lead_02}:
-    type: 'lead'
+    lead_type: 'lead'
     name: 'Test lead 2'
     email_from: 'Raoul Grosbedon <raoul@grosbedon.fr>'
     stage_id: stage_lead1
 -
   !record {model: crm.lead, id: test_crm_lead_03}:
-    type: 'lead'
+    lead_type: 'lead'
     name: 'Test lead 3'
     email_from: 'Raoul Grosbedon <raoul@grosbedon.fr>'
     stage_id: stage_lead1
 -
   !record {model: crm.lead, id: test_crm_lead_04}:
-    type: 'lead'
+    lead_type: 'lead'
     name: 'Test lead 4'
     contact_name: 'Fabrice Lepoilu'
     stage_id: stage_lead1
 -
   !record {model: crm.lead, id: test_crm_lead_05}:
-    type: 'lead'
+    lead_type: 'lead'
     name: 'Test lead 5'
     contact_name: 'Fabrice Lepoilu'
     stage_id: stage_lead1
 -
   !record {model: crm.lead, id: test_crm_lead_06}:
-    type: 'lead'
+    lead_type: 'lead'
     name: 'Test lead 6'
     partner_name: 'Agrolait SuperSeed SA'
     stage_id: stage_lead1
@@ -76,6 +76,6 @@
     salesmen_ids = [ref('test_res_user_01'), ref('test_res_user_02'), ref('test_res_user_03'), ref('test_res_user_04')]
     i = 0
     for opp in opps:
-      assert opp.type == 'opportunity', 'Type mismatch: this should be an opp, not a lead'
+      assert opp.lead_type == 'opportunity', 'Type mismatch: this should be an opp, not a lead'
       assert opp.user_id.id == salesmen_ids[i], 'Salesman mismatch: expected salesman %r, got %r' % (salesmen_ids[i], opp.user_id.id)
       i = i+1 if (i < len(salesmen_ids) - 1) else 0

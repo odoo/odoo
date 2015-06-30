@@ -35,10 +35,10 @@ class CrmOpportunityReport(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     priority = fields.Selection(crm.AVAILABLE_PRIORITIES)
-    type = fields.Selection([
+    lead_type = fields.Selection([
         ('lead','Lead'),
         ('opportunity','Opportunity'),
-    ], help="Type is used to separate Leads and Opportunities")
+    ], help="Type is used to separate Leads and Opportunities", oldname="type", string="Lead Type")
     lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', readonly=True)
     date_conversion = fields.Datetime(string='Conversion Date', readonly=True)
 
@@ -59,7 +59,7 @@ class CrmOpportunityReport(models.Model):
                     c.user_id,
                     c.probability,
                     c.stage_id,
-                    c.type,
+                    c.lead_type,
                     c.company_id,
                     c.priority,
                     c.team_id,

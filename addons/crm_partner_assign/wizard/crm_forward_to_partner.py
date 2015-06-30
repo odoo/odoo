@@ -26,7 +26,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 'lead_location': ", ".join(lead_location),
                 'partner_assigned_id': partner and partner.id or False,
                 'partner_location': ", ".join(partner_location),
-                'lead_link': self.get_lead_portal_url(cr, uid, lead.id, lead.type, context=context),
+                'lead_link': self.get_lead_portal_url(cr, uid, lead.id, lead.lead_type, context=context),
                 }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -97,7 +97,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 else:
                     partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
         stage_id = False
-        if record.assignation_lines and record.assignation_lines[0].lead_id.type == 'lead':
+        if record.assignation_lines and record.assignation_lines[0].lead_id.lead_type == 'lead':
             try:
                 stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'stage_portal_lead_assigned')[1]
             except ValueError:

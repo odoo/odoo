@@ -61,7 +61,7 @@ class CrmMergeOpportunity(models.TransientModel):
         #TODO: why is this passed through the context ?
         merge_result = self.with_context(lead_ids = [opportunity2merge_ids[0].id]).opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id)
         # The newly created lead might be a lead or an opp: redirect toward the right view
-        if merge_result.type == 'opportunity':
+        if merge_result.lead_type == 'opportunity':
             return merge_result.redirect_opportunity_view()
         else:
             return merge_result.redirect_lead_view()

@@ -186,7 +186,7 @@ class CrmPhoneCall(models.Model):
                             'team_id': call.team_id.id,
                             'description': call.description,
                             'priority': call.priority,
-                            'type': 'opportunity',
+                            'lead_type': 'opportunity',
                             'phone': call.partner_phone,
                             'email_from': default_contact and default_contact.email or False
                             })

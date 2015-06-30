@@ -22,7 +22,7 @@ class CrmTeam(models.Model):
         team = super(CrmTeam, self.with_context(
             alias_model_name='crm.lead', alias_parent_model_name=self._name)).create(vals)
         team.alias_id.write(
-            {'alias_parent_thread_id': team.id, 'alias_defaults': {'team_id': team.id, 'type': 'lead'}})
+            {'alias_parent_thread_id': team.id, 'alias_defaults': {'team_id': team.id, 'lead_type': 'lead'}})
         return team
 
     @api.multi

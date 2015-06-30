@@ -79,7 +79,7 @@ class CrmLead2OpportunityPartner(models.TransientModel):
             vals['partner_id'] = self.partner_id
         if self.name == 'merge':
             lead = self.opportunity_ids.merge_opportunity()
-            if lead.type == "lead":
+            if lead.lead_type == "lead":
                 vals.update({'lead_ids': lead, 'user_ids': [self.user_id.id]})
                 self.with_context(active_ids=[lead.id])._convert_opportunity(vals)
             elif not context.get('no_force_assignation') or not lead.user_id:
