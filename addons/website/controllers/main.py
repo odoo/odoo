@@ -257,12 +257,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
 
-    @http.route(['/website/seo_suggest/<keywords>'], type='http', auth="public", website=True)
-    def seo_suggest(self, keywords):
+    @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
+    def seo_suggest(self, keywords=None, lang=None):
+        language = lang.split("_")
         url = "http://google.com/complete/search"
         try:
             req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode({
-                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords})))
+                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords, 'hl': language[0], 'gl': language[1]})))
             request = urllib2.urlopen(req)
         except (urllib2.HTTPError, urllib2.URLError):
             return []
