@@ -1102,5 +1102,16 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </t>
 </template>
 
+<template id="website_search_box" name="Website Searchbox">
+    <div class="input-group">
+        <div class="oe_search">
+            <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search" />
+            <span class="fa fa-remove fa-lg oe_search_clear"></span>
+        </div>
+        <span class="input-group-btn">
+           <button type="submit" class="btn btn-default oe_search_button"><i class="fa fa-search"/></button>
+        </span>
+    </div>
+</template>
      </data>
 </openerp>

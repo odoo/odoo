@@ -33,7 +33,7 @@ class WebsiteMembership(http.Controller):
         country_obj = request.registry['res.country']
         membership_line_obj = request.registry['membership.membership_line']
         partner_obj = request.registry['res.partner']
-        post_name = post.get('name', '')
+        post_name = post.get('search') or post.get('name', '')
         current_country = None
 
         # base domain for groupby / searches

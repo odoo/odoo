@@ -87,12 +87,7 @@
                         </li>
                         <li>
                             <form class="navbar-form" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
-                                <div class="input-group">
-                                    <input type="search" class="form-control" name="search" t-att-value="search or ''"/>
-                                    <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-default">Search</button>
-                                    </span>
-                                </div>
+                                <t t-call="website.website_search_box"/>
                                 <span class="dropdown" groups="base.group_erp_manager">
                                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                         <i class="fa fa-cog"/>

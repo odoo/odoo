@@ -278,6 +278,14 @@ $(document).ready(function () {
     dom_ready.resolve();
     // fix for ie
     if($.fn.placeholder) $('input, textarea').placeholder();
+    $(".oe_search_box").on('input', function() {
+        $(this).next('span').toggle(!!$(this).val());
+    });
+    $(".oe_search_clear").on('click', function() {
+        $(this).prev('input').val('').focus();
+        $(".oe_search_button").trigger("click");
+    });
+    $(".oe_search_clear").toggle(!!$('.oe_search_box').val());
 });
 
 /**

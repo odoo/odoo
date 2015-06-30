@@ -43,13 +43,7 @@
         <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
       </t>
     </t>
-    <div class="input-group">
-      <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
-      <span class="input-group-btn">
-        <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
-      </span>
-  </div>
-
+    <t t-call="website.website_search_box"/>
   </form>
 </template>
 
