@@ -1202,13 +1202,4 @@ def resetlocale():
             continue
 
 def load_language(cr, lang):
-    """Loads a translation terms for a language.
-    Used mainly to automate language loading at db initialization.
-
-    :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
-    :type lang: str
-    """
-    registry = openerp.registry(cr.dbname)
-    language_installer = registry['base.language.install']
-    oid = language_installer.create(cr, SUPERUSER_ID, {'lang': lang})
-    language_installer.lang_install(cr, SUPERUSER_ID, [oid], context=None)
+    openerp.registry(cr.dbname).load_language(cr, lang)

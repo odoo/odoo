@@ -18,7 +18,7 @@ import openerp
 from .. import SUPERUSER_ID
 from ..tools import assertion_report, classproperty, config, \
                     lazy_property, topological_sort, OrderedSet,\
-                    load_language, convert_file
+                    convert_file
 from ..tools.lru import LRU
 
 from . import migration
@@ -333,7 +333,7 @@ class Registry(Mapping):
 
             if load_lang:
                 for lang in load_lang.split(','):
-                    load_language(cr, lang)
+                    self.load_language(cr, lang)
 
             # STEP 2: Mark other modules to be loaded/updated
             if update_module:
@@ -683,6 +683,19 @@ class Registry(Mapping):
                 cr.execute("SELECT name FROM ir_module_module")
                 incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
                 _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
+
+    def load_language(self, cr, lang):
+        """Loads a translation terms for a language.
+
+        Used mainly to automate language loading at db initialization.
+
+        :param str lang: language ISO code with optional _underscore_ and l10n
+                         flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
+        """
+        language_installer = self['base.language.install']
+        oid = language_installer.create(cr, SUPERUSER_ID, {'lang': lang})
+        language_installer.lang_install(cr, SUPERUSER_ID, [oid])
+
 
 class DummyRLock(object):
     """ Dummy reentrant lock, to be used while running rpc and js tests """
