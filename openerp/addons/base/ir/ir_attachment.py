@@ -312,7 +312,21 @@ class ir_attachment(osv.osv):
 
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
-        return len(result) if count else list(result)
+        result = len(result) if count else list(result)
+
+        # if we got a limit and some ids were removed, search again
+        if limit and (len(result) < len(orig_ids) or not orig_ids):
+            # make sure we don't try to search more records than exist
+            if not orig_ids and offset > self.search(
+                    cr, uid, args, order=order, context=context, count=True):
+                return result
+            # search again with adapted offset+limit
+            return result + self._search(
+                cr, uid, args, offset=offset+len(orig_ids),
+                limit=limit-len(result), order=order, context=context,
+                count=count, access_rights_uid=access_rights_uid)
+
+        return result
 
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
         if isinstance(ids, (int, long)):
