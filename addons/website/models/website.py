@@ -206,8 +206,8 @@ class website(osv.osv):
 
         # find a free xmlid
         inc = 0
-        dom = [('key', '=', page_xmlid), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
-        while view.search(cr, openerp.SUPERUSER_ID, dom, context=dict(context or {}, active_test=False)):
+        dom = [('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
+        while view.search(cr, openerp.SUPERUSER_ID, [('key', '=', page_xmlid), '|'] + dom, context=dict(context or {}, active_test=False)):
             inc += 1
             page_xmlid = "%s.%s" % (template_module, page_name + (inc and "-%s" % inc or ""))
         page_name += (inc and "-%s" % inc or "")
