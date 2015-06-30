@@ -200,7 +200,7 @@ class stock_picking(osv.osv):
     def __get_picking_move(self, cr, uid, ids, context={}):
         res = []
         for move in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
-            if move.picking_id:
+            if move.picking_id and move.invoice_state != move.picking_id.invoice_state:
                 res.append(move.picking_id.id)
         return res
 

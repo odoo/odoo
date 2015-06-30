@@ -380,7 +380,7 @@ openerp.point_of_sale.load_db = function load_db(instance, module){
         search_product_in_category: function(category_id, query){
             try {
                 query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
-                query = query.replace(' ','.+');
+                query = query.replace(/ /g,'.+');
                 var re = RegExp("([0-9]+):.*?"+query,"gi");
             }catch(e){
                 return [];

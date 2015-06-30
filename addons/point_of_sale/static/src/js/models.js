@@ -1176,6 +1176,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 taxtotal += tax.amount;
                 taxdetail[tax.id] = tax.amount;
             });
+            totalNoTax = round_pr(totalNoTax, this.pos.currency.rounding);
 
             return {
                 "priceWithTax": totalTax,
@@ -1651,9 +1652,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             }), 0), this.pos.currency.rounding);
         },
         get_total_with_tax: function() {
-            return round_pr(this.orderlines.reduce((function(sum, orderLine) {
-                return sum + orderLine.get_price_with_tax();
-            }), 0), this.pos.currency.rounding);
+            return this.get_total_without_tax() + this.get_total_tax();
         },
         get_total_without_tax: function() {
             return round_pr(this.orderlines.reduce((function(sum, orderLine) {

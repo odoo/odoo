@@ -863,6 +863,7 @@ class purchase_order(osv.osv):
             }
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
+        return picking_id
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
@@ -1704,7 +1705,8 @@ class account_invoice(osv.Model):
                     not all(picking.invoice_state in ['invoiced'] for picking in order.picking_ids)):
                 shipped = False
             for po_line in order.order_line:
-                if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
+                if (po_line.invoice_lines and 
+                        all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
                     invoiced.append(po_line.id)
             if invoiced and shipped:
                 self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})

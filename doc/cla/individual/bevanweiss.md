@@ -1,4 +1,4 @@
-France, 2015-02-09,
+Australia, 17 May 2015
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Nicolas Piganeau npi@m4x.org https://github.com/npiganeau
+Bevan Weiss bevan.weiss@gmail.com https://github.com/bevanweiss

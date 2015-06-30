@@ -1591,6 +1591,8 @@ class sparse(function):
         """
 
         if self._type == 'many2many':
+            if not value:
+                return []
             assert value[0][0] == 6, 'Unsupported m2m value for sparse field: %s' % value
             return value[0][2]
 
