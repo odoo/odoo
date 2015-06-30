@@ -204,7 +204,9 @@ class sale_order(osv.osv):
                 False, fiscal_position, True, context)
             data = res.get('value', {})
             if pricelist_id:
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=context)[pricelist_id]
+                uom_context = context.copy()
+                uom_context['uom'] = line.product_uom_id.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=uom_context)[pricelist_id]
             else:
                 price = line.price_unit
 
