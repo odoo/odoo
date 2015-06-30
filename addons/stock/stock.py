@@ -756,6 +756,13 @@ class stock_picking(osv.osv):
                 res.add(move.picking_id.id)
         return list(res)
 
+    def _get_pickings_dates_priority(self, cr, uid, ids, context=None):
+        res = set()
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.picking_id and (not (move.picking_id.min_date < move.date_expected < move.picking_id.max_date) or move.priority > move.picking_id.priority):
+                res.add(move.picking_id.id)
+        return list(res)
+
     def _get_pack_operation_exist(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for pick in self.browse(cr, uid, ids, context=context):
@@ -816,12 +823,12 @@ class stock_picking(osv.osv):
                 * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
         'priority': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_priority, type='selection', selection=procurement.PROCUREMENT_PRIORITIES, string='Priority',
-                                    store={'stock.move': (_get_pickings, ['priority', 'picking_id'], 20)}, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, select=1, help="Priority for this picking. Setting manually a value here would set it as priority for all the moves",
+                                    store={'stock.move': (_get_pickings_dates_priority, ['priority', 'picking_id'], 20)}, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, select=1, help="Priority for this picking. Setting manually a value here would set it as priority for all the moves",
                                     track_visibility='onchange', required=True),
         'min_date': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_min_date,
-                 store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
+                 store={'stock.move': (_get_pickings_dates_priority, ['date_expected', 'picking_id'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
-                 store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
+                 store={'stock.move': (_get_pickings_dates_priority, ['date_expected', 'picking_id'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
         'date': fields.datetime('Creation Date', help="Creation Date, usually the time of the order", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=True),
@@ -1741,7 +1748,9 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
-        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store=True, string='Quantity',
+        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store={
+            _name: (lambda self, cr, uid, ids, c={}: ids, ['product_id', 'product_uom', 'product_uom_qty'], 10),
+        }, string='Quantity',
             help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True, states={'done': [('readonly', True)]},
@@ -1948,6 +1957,12 @@ class stock_move(osv.osv):
     def _create_procurement(self, cr, uid, move, context=None):
         """ This will create a procurement order """
         return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context), context=context)
+
+    def _create_procurements(self, cr, uid, moves, context=None):
+        res = []
+        for move in moves:
+            res.append(self._create_procurement(cr, uid, move, context=context))
+        return res
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
@@ -2161,6 +2176,8 @@ class stock_move(osv.osv):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         @return: List of ids.
         """
+        if not context:
+            context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         states = {
@@ -2188,12 +2205,11 @@ class stock_move(osv.osv):
                 if key not in to_assign:
                     to_assign[key] = []
                 to_assign[key].append(move.id)
-
-        for move in self.browse(cr, uid, states['confirmed'], context=context):
-            if move.procure_method == 'make_to_order':
-                self._create_procurement(cr, uid, move, context=context)
-                states['waiting'].append(move.id)
-                states['confirmed'].remove(move.id)
+        moves = [move for move in self.browse(cr, uid, states['confirmed'], context=context) if move.procure_method == 'make_to_order']
+        self._create_procurements(cr, uid, moves, context=context)
+        for move in moves:
+            states['waiting'].append(move.id)
+            states['confirmed'].remove(move.id)
 
         for state, write_ids in states.items():
             if len(write_ids):

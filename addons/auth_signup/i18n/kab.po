@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-11 14:12+0000\n"
+"PO-Revision-Date: 2015-06-24 18:48+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n\n<p>\n${object.name},\n</p>\n<p>\nAqlak teţwaɛreḍ-eḍ ɣeṛ tuqqna ɣeṛ \"${object.company_id.name}\" iwakken ad tkecmeḍ ɣer isemliyen inek di Odoo.\n</p>\n<p>\nIwakken ad tqebleḍ anaɛruḍ, Senned ɣef useɣwen agi:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Qbel anaɛruḍ ɣeṛ \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nThanks,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -70,7 +70,7 @@ msgstr "${object.company_id.name} tinubga n tuqqna ɣer Odoo"
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
-msgstr "Awennez n wawal uffir iţusuter-ed i weseqdac agi. Email igebren aseɣwen iţwaceggaɛ:"
+msgstr "Awennez n wawal uffir iţusuter-ed i weseqdac agi. Imayl igebren aseɣwen iţwaceggaɛ:"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -86,7 +86,7 @@ msgstr "Sireg tuqqna n iseqdacen izɣaṛayen "
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr "Email igebren aseɣwen iţwaceggaɛ i wuwennez n wawal uffir"
+msgstr "Imayl igebren aseɣwen, iţwaceggaɛ i uwennez n wawal uffir"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
