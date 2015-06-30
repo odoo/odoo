@@ -300,15 +300,19 @@
             }
         }
         .o_progressbar {
+
+            .o-flex-display();
+
             .o_progressbar_title {
-                width: 20%;
+                .o-flex(0, 0, auto);
             }
             .o_progress {
-                width: 60%;
-                height: 15px;
+                margin-top: 3px;
+                .o-flex(1, 1, auto);
             }
             .o_progressbar_value {
-                width: 20%;
+                .o-flex(0, 0, auto);
+                width: auto;
                 text-align: right;
             }
         }
