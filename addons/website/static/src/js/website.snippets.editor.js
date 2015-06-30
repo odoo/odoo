@@ -1170,23 +1170,15 @@ options.colorpicker = Option.extend({
 });
 
 options.slider = Option.extend({
-    unique_id: function () {
-        var id = 0;
-        $(".carousel").each(function () {
-            var cid = 1 + parseInt($(this).attr("id").replace(/[^0123456789]/g, ''),10);
-            if (id < cid) id = cid;
-        });
-        return "myCarousel" + id;
-    },
     drop_and_build_snippet: function() {
-        this.id = this.unique_id();
+        this.id = "myCarousel" + new Date().getTime();
         this.$target.attr("id", this.id);
         this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
         this.$target.find("[data-target]").attr("data-target", "#" + this.id);
         this.rebind_event();
     },
     on_clone: function ($clone) {
-        var id = this.unique_id();
+        this.id = "myCarousel" + new Date().getTime();
         $clone.attr("id", id);
         $clone.find("[data-slide]").attr("href", "#" + id);
         $clone.find("[data-slide-to]").attr("data-target", "#" + id);
@@ -1846,6 +1838,49 @@ options.ul = Option.extend({
         this.$target.data("snippet-view", new animation.registry.ul(this.$target, true));
     }
 });
+
+
+options.collapse = Option.extend({
+    start: function () {
+        var self = this;
+        this._super();
+        this.$target.next('[role="tabpanel"]').on('shown.bs.collapse hidden.bs.collapse', function () {
+            self.BuildingBlock.cover_target(self.$overlay, self.$target);
+        });
+    },
+    create_ids: function ($target) {
+        var time = new Date().getTime();
+
+        var $parent = $target.closest('.panel-group[role="tablist"]');
+        var parent_id = $parent.attr("id");
+        if (!parent_id) {
+            parent_id = "myCollapse" + time;
+            $parent.attr("id", parent_id);
+        }
+        $target.attr('data-parent', "#"+parent_id);
+
+        var $panel = $target.next('[role="tabpanel"]');
+        var panel_id = $panel.attr("id");
+        if (!panel_id) {
+            while($('#'+(panel_id = "myCollapseTab" + time)).length) {
+                time++;
+            }
+            $panel.attr("id", panel_id);
+        }
+        $target.attr('data-target', "#"+panel_id);
+    },
+    drop_and_build_snippet: function () {
+        this._super();
+        this.create_ids(this.$target);
+        this.$target.find('[data-toggle="collapse"]').collapse();
+    },
+    on_clone: function ($clone) {
+        this._super();
+        this.create_ids($clone);
+        $clone.find('[data-toggle="collapse"]').collapse();
+    }
+});
+
 
 var SnippetEditor = Class.extend({
     init: function (BuildingBlock, dom) {
