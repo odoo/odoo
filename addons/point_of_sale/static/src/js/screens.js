@@ -671,25 +671,17 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
 
         this.el = el_node;
 
-        var hasimages = false;  //if none of the subcategories have images, we don't display buttons with icons
-        /*
-        for(var i = 0; i < this.subcategories.length; i++){
-            if(this.subcategories[i].image){
-                hasimages = true;
-                break;
-            }
-        }
-        */
+        var withpics = this.pos.config.iface_display_categ_images;
 
         var list_container = el_node.querySelector('.category-list');
         if (list_container) { 
-            if (!hasimages) {
+            if (!withpics) {
                 list_container.classList.add('simple');
             } else {
                 list_container.classList.remove('simple');
             }
             for(var i = 0, len = this.subcategories.length; i < len; i++){
-                list_container.appendChild(this.render_category(this.subcategories[i],hasimages));
+                list_container.appendChild(this.render_category(this.subcategories[i],withpics));
             }
         }
 
