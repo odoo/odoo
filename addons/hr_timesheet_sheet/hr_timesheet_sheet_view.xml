@@ -260,12 +260,12 @@
                         <field name="timesheet_range"/>
                         <field name="timesheet_max_difference"/>
                         <div>
-                            <label for="timesheet_range" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)]}"/>
-                            <field name="timesheet_range" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}" class="oe_inline"/>
+                            <label for="timesheet_range"/>
+                            <field name="timesheet_range" required="1" class="oe_inline"/>
                         </div>
                         <div>
-                            <label for="timesheet_max_difference" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)]}"/>
-                            <field name="timesheet_max_difference" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}" class="oe_inline"/>
+                            <label for="timesheet_max_difference"/>
+                            <field name="timesheet_max_difference" required="1" class="oe_inline"/>
                         </div>
                     </group>
                 </xpath>
