@@ -3589,6 +3589,7 @@
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
             <field ref="a44" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_fournisseurs4'))]"/>
         </record>
         <record id="a446" model="account.account.template">
             <field name="name">Acomptes reçus</field>
@@ -3596,6 +3597,7 @@
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
             <field ref="a44" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_fournisseurs4'))]"/>
         </record>
         <record id="a448" model="account.account.template">
             <field name="name">Compensations fournisseurs</field>
@@ -3603,6 +3605,7 @@
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
             <field ref="a44" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_fournisseurs4'))]"/>
         </record>
         <record id="a45" model="account.account.template">
             <field name="name">DETTES FISCALES, SALARIALES ET SOCIALES</field>
