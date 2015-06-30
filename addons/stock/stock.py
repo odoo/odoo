@@ -2168,6 +2168,8 @@ class stock_move(osv.osv):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         @return: List of ids.
         """
+        if not context:
+            context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         states = {
