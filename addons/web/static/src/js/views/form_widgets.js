@@ -711,6 +711,7 @@ var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin
 
         this.progressbar = new ProgressBar(this, {
             readonly: this.get('effective_readonly'),
+            edit_on_click: true,
             value: this.get('value') || 0,
         });
 
@@ -719,8 +720,8 @@ var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin
             self.progressbar.$el.addClass(self.$el.attr('class'));
             self.replaceElement(self.progressbar.$el);
 
-            self.progressbar.on('change:value', self, function() {
-                self.set('value', self.progressbar.get('value'));
+            self.progressbar.on('update', self, function(update) {
+                self.set('value', update.changed_value);
             });
         });
     }

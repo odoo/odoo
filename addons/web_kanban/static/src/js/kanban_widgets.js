@@ -204,8 +204,8 @@ var KanbanProgressBar = AbstractField.extend({
         return $.when(this._super(), def).then(function() {
             if(!self.readonly) {
                 var parent = self.getParent();
-                self.progressbar.on('change:value change:max_value', self, function(e) {
-                    var value = this.progressbar.get(this.progressbar.edit_max_value ? 'max_value' : 'value') || 0;
+                self.progressbar.on('update', self, function(update) {
+                    var value = update.changed_value;
                     if(!isNaN(value)) {
                         var data = {
                             method: this.on_change,

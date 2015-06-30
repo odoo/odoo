@@ -21,12 +21,11 @@ var ProgressBar = Widget.extend({
     events: {
         'change input': 'on_change_input',
         'input input': 'on_change_input',
-        'click .o_progress': function(e) {
-            if(!this.readonly && this.edit_on_click) {
-                var $target = $(e.currentTarget);
-                this.set('value', Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * this.get('max_value')));
+        'keyup input': function(e) {
+            if(e.which === $.ui.keyCode.ENTER) {
+                this.on_change_input(e);
             }
-        }
+        },
     },
 
     init: function (parent, options) {
@@ -43,17 +42,31 @@ var ProgressBar = Widget.extend({
 
         this.readonly = options.readonly;
         this.edit_on_click = options.edit_on_click;
-        this.set('value', options.value);
-        this.set('max_value', options.max_value);
+        this.value = options.value;
+        this.max_value = options.max_value;
         this.title = options.title;
         this.edit_max_value = options.edit_max_value;
-
-        this.on('change:value', this, this._render_value);
-        this.on('change:max_value', this, this._render_value);
     },
 
     start: function() {
         this._render_value();
+
+        if(!this.readonly) {
+            if(this.edit_on_click) {
+                var self = this;
+                this.$el.on('click', '.o_progress', function(e) {
+                    var $target = $(e.currentTarget);
+                    self.value = Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * self.max_value);
+                    self._render_value();
+                    self.trigger('update', {value: self.value, max_value: self.max_value, changed_value: self.value});
+                });
+            } else {
+                this.$el.on('blur', 'input', _.bind(this.on_change_input, this));
+            }
+
+            this.$('.o_progressbar_value').focus().select()
+        }
+
         return this._super();
     },
 
@@ -68,14 +81,21 @@ var ProgressBar = Widget.extend({
                     $input.select();
                 }
             } else {
-                this.set(this.edit_max_value ? 'max_value' : 'value', $(e.target).val());
+                if(this.edit_max_value) {
+                    this.max_value = $(e.target).val();
+                } else {
+                    this.value = $(e.target).val();
+                }
+
+                this._render_value();
+                this.trigger('update', {value: this.value, max_value: this.max_value, changed_value: (this.edit_max_value)? this.max_value : this.value});
             }
         }
     },
 
     _render_value: function(v) {
-        var value = this.get('value');
-        var max_value = this.get('max_value');
+        var value = this.value;
+        var max_value = this.max_value;
         if(!isNaN(v)) {
             if(this.edit_max_value) {
                 max_value = v;
