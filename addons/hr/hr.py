@@ -316,10 +316,11 @@ class hr_employee(osv.osv):
         return {'value': value}
 
     def onchange_user(self, cr, uid, ids, user_id, context=None):
-        work_email = False
         if user_id:
-            work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).email
-        return {'value': {'work_email': work_email}}
+            user_obj = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+            return {'value': {'name': user_obj.name, 'work_email': user_obj.email, 'image_medium': user_obj.image_medium}}
+
+        return {'value': {}}
 
     def action_follow(self, cr, uid, ids, context=None):
         """ Wrapper because message_subscribe_users take a user_ids=None
