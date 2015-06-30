@@ -160,12 +160,12 @@ class stock_location(osv.osv):
     def _default_removal_strategy(self, cr, uid, context=None):
         return 'fifo'
 
-    def get_removal_strategy(self, cr, uid, location, product, context=None):
-        ''' Returns the removal strategy to consider for the given product and location.
-            :param location: browse record (stock.location)
-            :param product: browse record (product.product)
+    def get_removal_strategy(self, cr, uid, qty, move, ops=False, context=None):
+        ''' Returns the removal strategy to consider for the given move/ops
             :rtype: char
         '''
+        product = move.product_id
+        location = move.location_id
         if product.categ_id.removal_strategy_id:
             return product.categ_id.removal_strategy_id.method
         loc = location
@@ -174,7 +174,6 @@ class stock_location(osv.osv):
                 return loc.removal_strategy_id.method
             loc = loc.location_id
         return self._default_removal_strategy(cr, uid, context=context)
-
 
     def get_warehouse(self, cr, uid, location, context=None):
         """
@@ -420,47 +419,70 @@ class stock_quant(osv.osv):
             vals.update({'package_id': dest_package_id})
         self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
 
-    def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain_list=[], restrict_lot_id=False, restrict_partner_id=False, context=None):
-        ''' This function tries to find quants in the given location for the given domain, by trying to first limit
-            the choice on the quants that match the first item of prefered_domain_list as well. But if the qty requested is not reached
-            it tries to find the remaining quantity by looping on the prefered_domain_list (tries with the second item and so on).
-            Make sure the quants aren't found twice => all the domains of prefered_domain_list should be orthogonal
+    def quants_get_preferred_domain(self, cr, uid, qty, move, ops=False, domain=None, preferred_domain_list=[], context=None):
+        ''' This function tries to find quants for the given domain and move/ops, by trying to first limit
+            the choice on the quants that match the first item of preferred_domain_list as well. But if the qty requested is not reached
+            it tries to find the remaining quantity by looping on the preferred_domain_list (tries with the second item and so on).
+            Make sure the quants aren't found twice => all the domains of preferred_domain_list should be orthogonal
         '''
-        if domain is None:
-            domain = []
+        context = context or {}
+        domain = domain or [('qty', '>', 0.0)]
         quants = [(None, qty)]
+        if ops:
+            restrict_lot_id = ops.lot_id.id
+            location = ops.location_id
+            domain += [('owner_id', '=', ops.owner_id.id)]
+            if ops.package_id and not ops.product_id:
+                domain += [('package_id', 'child_of', ops.package_id.id)]
+            else:
+                domain += [('package_id', '=', ops.package_id.id)]
+            domain += [('location_id', '=', ops.location_id.id)]
+        else:
+            restrict_lot_id = move.restrict_lot_id.id
+            location = move.location_id
+            domain += [('owner_id', '=', move.restrict_partner_id.id)]
+            domain += [('location_id', 'child_of', move.location_id.id)]
+        if context.get('force_company'): 
+            domain += [('company_id', '=', context.get('force_company'))]
+        else:
+            domain += [('company_id', '=', move.company_id.id)]
+        removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, qty, move, ops=ops, context=context)
+        product = move.product_id
+        domain += [('product_id', '=', move.product_id.id)]
+
         #don't look for quants in location that are of type production, supplier or inventory.
         if location.usage in ['inventory', 'production', 'supplier']:
             return quants
         res_qty = qty
         if restrict_lot_id:
-            if not prefered_domain_list:
-                prefered_domain_list = [[('lot_id', '=', restrict_lot_id)],[('lot_id', '=', False)]]
+            if not preferred_domain_list:
+                preferred_domain_list = [[('lot_id', '=', restrict_lot_id)], [('lot_id', '=', False)]]
             else:
                 lot_list = []
                 no_lot_list = []
-                for pref_domain in prefered_domain_list:
+                for pref_domain in preferred_domain_list:
                     pref_lot_domain = pref_domain + [('lot_id', '=', restrict_lot_id)]
                     pref_no_lot_domain = pref_domain + [('lot_id', '=', False)]
                     lot_list.append(pref_lot_domain)
                     no_lot_list.append(pref_no_lot_domain)
-                prefered_domain_list = lot_list + no_lot_list
+                preferred_domain_list = lot_list + no_lot_list
 
-        if not prefered_domain_list:
-            return self.quants_get(cr, uid, location, product, qty, domain=domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
-        for prefered_domain in prefered_domain_list:
+        if not preferred_domain_list:
+            return self.quants_get(cr, uid, qty, move, ops=ops, domain=domain, removal_strategy=removal_strategy, context=context)
+        for preferred_domain in preferred_domain_list:
             res_qty_cmp = float_compare(res_qty, 0, precision_rounding=product.uom_id.rounding)
             if res_qty_cmp > 0:
-                #try to replace the last tuple (None, res_qty) with something that wasn't chosen at first because of the prefered order
+                #try to replace the last tuple (None, res_qty) with something that wasn't chosen at first because of the preferred order
                 quants.pop()
-                tmp_quants = self.quants_get(cr, uid, location, product, res_qty, domain=domain + prefered_domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
+                tmp_quants = self.quants_get(cr, uid, res_qty, move, ops=ops, domain=domain + preferred_domain,
+                                             removal_strategy=removal_strategy, context=context)
                 for quant in tmp_quants:
                     if quant[0]:
                         res_qty -= quant[1]
                 quants += tmp_quants
         return quants
 
-    def quants_get(self, cr, uid, location, product, qty, domain=None, restrict_lot_id=False, restrict_partner_id=False, context=None):
+    def quants_get(self, cr, uid, qty, move, ops=False, domain=None, removal_strategy='fifo', context=None):
         """
         Use the removal strategies of product to search for the correct quants
         If you inherit, put the super at the end of your method.
@@ -469,24 +491,16 @@ class stock_quant(osv.osv):
         :product: browse record of the product to find
         :qty in UoM of product
         """
-        result = []
         domain = domain or [('qty', '>', 0.0)]
-        if restrict_partner_id:
-            domain += [('owner_id', '=', restrict_partner_id)]
-        if restrict_lot_id:
-            domain += ['|', ('lot_id', '=', restrict_lot_id), ('lot_id', '=', False)]
-        if location:
-            removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context)
-            result += self.apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
-        return result
+        return self.apply_removal_strategy(cr, uid, qty, move, ops=ops, domain=domain, removal_strategy=removal_strategy, context=context)
 
-    def apply_removal_strategy(self, cr, uid, location, product, quantity, domain, removal_strategy, context=None):
+    def apply_removal_strategy(self, cr, uid, quantity, move, ops=False, domain=None, removal_strategy='fifo', context=None):
         if removal_strategy == 'fifo':
             order = 'in_date, id'
-            return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
+            return self._quants_get_order(cr, uid, quantity, move, ops=ops, domain=domain, orderby=order, context=context)
         elif removal_strategy == 'lifo':
             order = 'in_date desc, id desc'
-            return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
+            return self._quants_get_order(cr, uid, quantity, move, ops=ops, domain=domain, orderby=order, context=context)
         raise UserError(_('Removal strategy %s not implemented.' % (removal_strategy,)))
 
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False,
@@ -566,19 +580,44 @@ class stock_quant(osv.osv):
             path.append((4, move.id))
         self.write(cr, SUPERUSER_ID, solved_quant_ids, {'history_ids': path}, context=context)
 
+    def _search_quants_to_reconcile(self, cr, uid, quant, context=None):
+        """
+            Searches negative quants to reconcile for where the quant to reconcile is put
+        """
+        dom = [('qty', '<', 0)]
+        order = 'in_date'
+        dom += [('location_id', 'child_of', quant.location_id.id), ('product_id', '=', quant.product_id.id),
+                ('owner_id', '=', quant.owner_id.id)]
+        if quant.package_id.id:
+            dom += [('package_id', '=', quant.package_id.id)]
+        if quant.lot_id:
+            dom += ['|', ('lot_id', '=', False), ('lot_id', '=', quant.lot_id.id)]
+            order = 'lot_id, in_date'
+        # Do not let the quant eat itself, or it will kill its history (e.g. returns / Stock -> Stock)
+        dom += [('id', '!=', quant.propagated_from_id.id)]
+        quants_search = self.search(cr, uid, dom, order=order, context=context)
+        product = quant.product_id
+        quants = []
+        quantity = quant.qty
+        for quant in self.browse(cr, uid, quants_search, context=context):
+            rounding = product.uom_id.rounding
+            if float_compare(quantity, abs(quant.qty), precision_rounding=rounding) >= 0:
+                quants += [(quant, abs(quant.qty))]
+                quantity -= abs(quant.qty)
+            elif float_compare(quantity, 0.0, precision_rounding=rounding) != 0:
+                quants += [(quant, quantity)]
+                quantity = 0
+                break
+        return quants
+
     def _quant_reconcile_negative(self, cr, uid, quant, move, context=None):
         """
             When new quant arrive in a location, try to reconcile it with
             negative quants. If it's possible, apply the cost of the new
-            quant to the conter-part of the negative quant.
+            quant to the counterpart of the negative quant.
         """
         solving_quant = quant
-        dom = [('qty', '<', 0)]
-        if quant.package_id.id:
-            dom += [('package_id', '=', quant.package_id.id)]
-        dom += [('id', '!=', quant.propagated_from_id.id)]
-        quants = self.quants_get_prefered_domain(cr, uid, quant.location_id, quant.product_id, quant.qty, dom,
-                                                 restrict_lot_id=quant.lot_id.id, restrict_partner_id=quant.owner_id.id, context=context)
+        quants = self._search_quants_to_reconcile(cr, uid, quant, context=context)
         product_uom_rounding = quant.product_id.uom_id.rounding
         for quant_neg, qty in quants:
             if not quant_neg or not solving_quant:
@@ -624,18 +663,13 @@ class stock_quant(osv.osv):
                 self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
             self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False}, context=context)
 
-    def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
+    def _quants_get_order(self, cr, uid, quantity, move, ops=False, domain=[], orderby='in_date', context=None):
         ''' Implementation of removal strategies
             If it can not reserve, it will return a tuple (None, qty)
         '''
         if context is None:
             context = {}
-        domain += location and [('location_id', 'child_of', location.id)] or []
-        domain += [('product_id', '=', product.id)]
-        if context.get('force_company'):
-            domain += [('company_id', '=', context.get('force_company'))]
-        else:
-            domain += [('company_id', '=', self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)]
+        product = move.product_id
         res = []
         offset = 0
         while float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) > 0:
@@ -1774,7 +1808,7 @@ class stock_move(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
         'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
 
-        'product_packaging': fields.many2one('product.packaging', 'Prefered Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
+        'product_packaging': fields.many2one('product.packaging', 'preferred Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True, auto_join=True,
                                        states={'done': [('readonly', True)]}, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
@@ -2289,10 +2323,10 @@ class stock_move(osv.osv):
             for record in ops.linked_move_operation_ids:
                 move = record.move_id
                 if move.id in main_domain:
-                    domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                     qty = record.qty
+                    domain = main_domain[move.id]
                     if qty:
-                        quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                        quants = quant_obj.quants_get_preferred_domain(cr, uid, qty, move, ops=ops, domain=domain, preferred_domain_list=[], context=context)
                         quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
         for move in todo_moves:
             if move.linked_move_operation_ids:
@@ -2301,7 +2335,7 @@ class stock_move(osv.osv):
             if move.state != 'assigned':
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                quants = quant_obj.quants_get_preferred_domain(cr, uid, qty, move, domain=main_domain[move.id], preferred_domain_list=[], context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
         #force assignation of consumable products and incoming from supplier/inventory/production
@@ -2408,13 +2442,13 @@ class stock_move(osv.osv):
             for record in ops.linked_move_operation_ids:
                 move = record.move_id
                 self.check_tracking(cr, uid, move, not ops.product_id and ops.package_id.id or ops.lot_id.id, context=context)
-                prefered_domain = [('reservation_id', '=', move.id)]
+                preferred_domain = [('reservation_id', '=', move.id)]
                 fallback_domain = [('reservation_id', '=', False)]
                 fallback_domain2 = ['&', ('reservation_id', '!=', move.id), ('reservation_id', '!=', False)]
-                prefered_domain_list = [prefered_domain] + [fallback_domain] + [fallback_domain2]
-                dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain_list=prefered_domain_list,
-                                                          restrict_lot_id=ops.lot_id.id, restrict_partner_id=ops.owner_id.id, context=context)
+                preferred_domain_list = [preferred_domain] + [fallback_domain] + [fallback_domain2]
+                dom = main_domain
+                quants = quant_obj.quants_get_preferred_domain(cr, uid, record.qty, move, ops=ops, domain=dom,
+                                                               preferred_domain_list=preferred_domain_list, context=context)
                 if ops.product_id:
                     #If a product is given, the result is always put immediately in the result package (if it is False, they are without package)
                     quant_dest_package_id  = ops.result_package_id.id
@@ -2438,13 +2472,13 @@ class stock_move(osv.osv):
             move_qty_cmp = float_compare(move_qty[move.id], 0, precision_rounding=move.product_id.uom_id.rounding)
             if move_qty_cmp > 0:  # (=In case no pack operations in picking)
                 main_domain = [('qty', '>', 0)]
-                prefered_domain = [('reservation_id', '=', move.id)]
+                preferred_domain = [('reservation_id', '=', move.id)]
                 fallback_domain = [('reservation_id', '=', False)]
                 fallback_domain2 = ['&', ('reservation_id', '!=', move.id), ('reservation_id', '!=', False)]
-                prefered_domain_list = [prefered_domain] + [fallback_domain] + [fallback_domain2]
+                preferred_domain_list = [preferred_domain] + [fallback_domain] + [fallback_domain2]
                 self.check_tracking(cr, uid, move, move.restrict_lot_id.id, context=context)
                 qty = move_qty[move.id]
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain_list=prefered_domain_list, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                quants = quant_obj.quants_get_preferred_domain(cr, uid, qty, move, domain=main_domain, preferred_domain_list=preferred_domain_list, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, move.location_dest_id, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
 
             # If the move has a destination, add it to the list to reserve
@@ -2528,13 +2562,13 @@ class stock_move(osv.osv):
             # We "flag" the quant from which we want to scrap the products. To do so:
             #    - we select the quants related to the move we scrap from
             #    - we reserve the quants with the scrapped move
-            # See self.action_done, et particularly how is defined the "prefered_domain" for clarification
+            # See self.action_done, et particularly how is defined the "preferred_domain" for clarification
             scrap_move = self.browse(cr, uid, new_move, context=context)
             if move.state == 'done' and scrap_move.location_id.usage not in ('supplier', 'inventory', 'production'):
                 domain = [('qty', '>', 0), ('history_ids', 'in', [move.id])]
                 # We use scrap_move data since a reservation makes sense for a move not already done
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, scrap_move.location_id,
-                        scrap_move.product_id, quantity, domain=domain, prefered_domain_list=[],
+                quants = quant_obj.quants_get_preferred_domain(cr, uid, scrap_move.location_id,
+                        scrap_move.product_id, quantity, domain=domain, preferred_domain_list=[],
                         restrict_lot_id=scrap_move.restrict_lot_id.id, restrict_partner_id=scrap_move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, scrap_move, context=context)
         self.action_done(cr, uid, res, context=context)
@@ -2971,7 +3005,7 @@ class stock_inventory_line(osv.osv):
         if diff > 0:
             domain = [('qty', '>', 0.0), ('package_id', '=', inventory_line.package_id.id), ('lot_id', '=', inventory_line.prod_lot_id.id), ('location_id', '=', inventory_line.location_id.id)]
             preferred_domain_list = [[('reservation_id', '=', False)], [('reservation_id.inventory_id', '!=', inventory_line.inventory_id.id)]]
-            quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, move.product_qty, domain=domain, prefered_domain_list=preferred_domain_list, restrict_partner_id=move.restrict_partner_id.id, context=context)
+            quants = quant_obj.quants_get_preferred_domain(cr, uid, move.product_qty, move, domain=domain, preferred_domain_list=preferred_domain_list)
             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
         elif inventory_line.package_id:
             stock_move_obj.action_done(cr, uid, move_id, context=context)
@@ -4230,30 +4264,6 @@ class stock_move_operation_link(osv.osv):
         'reserved_quant_id': fields.many2one('stock.quant', 'Reserved Quant', help="Technical field containing the quant that created this link between an operation and a stock move. Used at the stock_move_obj.action_done() time to avoid seeking a matching quant again"),
     }
 
-    def get_specific_domain(self, cr, uid, record, context=None):
-        '''Returns the specific domain to consider for quant selection in action_assign() or action_done() of stock.move,
-        having the record given as parameter making the link between the stock move and a pack operation'''
-
-        op = record.operation_id
-        domain = []
-        if op.package_id and op.product_id:
-            #if removing a product from a box, we restrict the choice of quants to this box
-            domain.append(('package_id', '=', op.package_id.id))
-        elif op.package_id:
-            #if moving a box, we allow to take everything from inside boxes as well
-            domain.append(('package_id', 'child_of', [op.package_id.id]))
-        else:
-            #if not given any information about package, we don't open boxes
-            domain.append(('package_id', '=', False))
-        #if lot info is given, we restrict choice to this lot otherwise we can take any
-        #if op.lot_id:
-        #    domain.append(('lot_id', '=', op.lot_id.id))
-        #if owner info is given, we restrict to this owner otherwise we restrict to no owner
-        if op.owner_id:
-            domain.append(('owner_id', '=', op.owner_id.id))
-        else:
-            domain.append(('owner_id', '=', False))
-        return domain
 
 class stock_warehouse_orderpoint(osv.osv):
     """
