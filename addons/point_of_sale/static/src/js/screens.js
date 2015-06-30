@@ -661,14 +661,13 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.el = el_node;
 
             var hasimages = false;  //if none of the subcategories have images, we don't display buttons with icons
-            /*
+
             for(var i = 0; i < this.subcategories.length; i++){
                 if(this.subcategories[i].image){
                     hasimages = true;
                     break;
                 }
             }
-            */
 
             var list_container = el_node.querySelector('.category-list');
             if (list_container) { 
