@@ -36,6 +36,6 @@ class CrmStage(models.Model):
     fold = fields.Boolean(string='Folded in Kanban View',
                            help='This stage is folded in the kanban view when'
                            'there are no records in that stage to display.')
-    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ('both', 'Both')],
+    stage_type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ('both', 'Both')],
                              required=True,
                              help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types.", default='both', oldname="type", string="Stage Type")

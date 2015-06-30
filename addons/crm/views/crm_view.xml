@@ -63,7 +63,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="probability"/>
-                    <field name="type"/>
+                    <field name="stage_type"/>
                 </tree>
             </field>
         </record>
@@ -78,7 +78,7 @@
                         <group>
                             <field name="name"/>
                             <field name="sequence"/>
-                            <field name="type"/>
+                            <field name="stage_type"/>
                             <field name="on_change"/>
                             <label for="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
                             <div attrs="{'invisible': [('on_change', '=', False)]}">
