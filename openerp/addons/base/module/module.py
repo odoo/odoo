@@ -788,18 +788,19 @@ class module(osv.osv):
             cat_id = create_categories(cr, categs)
             mod_browse.write({'category_id': cat_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
+    @api.multi
+    def update_translations(self, filter_lang=None):
         if not filter_lang:
-            res_lang = self.pool.get('res.lang')
-            lang_ids = res_lang.search(cr, uid, [('translatable', '=', True)])
-            filter_lang = [lang.code for lang in res_lang.browse(cr, uid, lang_ids)]
+            filter_lang = self.env['res.lang'].search([('translatable', '=', True)]).mapped('code')
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
-        modules = [m.name for m in self.browse(cr, uid, ids) if m.state in ('installed', 'to install', 'to upgrade')]
-        self.pool.get('ir.translation').load_module_terms(cr, modules, filter_lang, context=context)
 
-    def check(self, cr, uid, ids, context=None):
-        for mod in self.browse(cr, uid, ids, context=context):
+        modules = [m.name for m in self if m.state == 'installed']
+        self.env['ir.translation'].load_module_terms(modules, filter_lang)
+
+    @api.multi
+    def check(self):
+        for mod in self:
             if not mod.description:
                 _logger.warning('module %s: description is empty !', mod.name)
 

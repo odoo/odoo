@@ -446,7 +446,7 @@ class Registry(Mapping):
             if update_module:
                 Views = self['ir.ui.view']
                 custom_view_test = True
-                for model in self.models.keys():
+                for model in self.models:
                     if not Views._validate_custom_views(cr, SUPERUSER_ID, model):
                         custom_view_test = False
                         _logger.error('invalid custom view(s) for model %s',
@@ -605,25 +605,28 @@ class Registry(Mapping):
             if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
                 # Can't put this line out of the loop: ir.module.module will be
                 # registered by init_models() above.
-                modobj = self['ir.module.module']
+                modobj = self['ir.module.module'].browse(cr, SUPERUSER_ID, module_id, {
+                    'overwrite': config["overwrite_existing_translations"]
+                })
 
                 if perform_checks:
-                    modobj.check(cr, SUPERUSER_ID, [module_id])
+                    modobj.check()
 
                 if package.state=='to upgrade':
                     # upgrading the module information
-                    modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
+                    modobj.write(modobj.get_values_from_terp(package.data))
+
                 _load_data(cr, module_name, idref, mode, kind='data')
                 has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
                 if has_demo:
                     _load_data(cr, module_name, idref, mode, kind='demo')
                     cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
-                    modobj.invalidate_cache(cr, SUPERUSER_ID, ['demo'], [module_id])
+                    modobj.invalidate_cache(['demo'], [module_id])
 
                 migrations.migrate_module(package, 'post')
 
                 # Update translations for all installed languages
-                modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
+                modobj.update_translations(None)
 
                 self._init_modules.add(package.name)
 
@@ -652,7 +655,7 @@ class Registry(Mapping):
 
                 ver = adapt_version(package.data['version'])
                 # Set new modules and dependencies
-                modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
+                modobj.write({'state': 'installed', 'latest_version': ver})
 
                 package.state = 'installed'
                 for kind in ('init', 'demo', 'update'):
