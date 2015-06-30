@@ -448,7 +448,7 @@ var KanbanView = View.extend({
             });
         }
         if (this.options.confirm_on_delete) {
-            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), do_it);
+            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), { confirm_callback: do_it });
         } else {
             do_it();
         }
