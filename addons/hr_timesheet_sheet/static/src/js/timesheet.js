@@ -232,7 +232,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
             });
         });
         self.display_totals();
-        self.$(".oe_timesheet_weekly_adding button").click(_.bind(this.init_add_account, this));
+        self.$(".oe_timesheet_button_add").click(_.bind(this.init_add_account, this));
     },
     init_add_account: function() {
         var self = this;
@@ -263,7 +263,9 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 modifiers: '{"required": true}',
             },
         });
-        self.account_m2o.prependTo(self.$(".oe_timesheet_weekly_add_row td"));
+        self.account_m2o.prependTo(self.$(".oe_timesheet_weekly_add_row td")).then(function() {
+            self.account_m2o.$el.addClass('oe_inline');
+        });
         self.$(".oe_timesheet_weekly_add_row button").click(function() {
             var id = self.account_m2o.get_value();
             if (id === false) {
