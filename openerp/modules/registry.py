@@ -4,6 +4,8 @@
 """ Models registries.
 
 """
+import collections
+import contextlib
 import itertools
 import logging
 import os
@@ -11,24 +13,18 @@ import sys
 import threading
 import time
 
-from collections import Mapping, defaultdict
-from contextlib import closing
-
 import openerp
 from .. import SUPERUSER_ID
 from ..tools import assertion_report, classproperty, config, \
                     lazy_property, topological_sort, OrderedSet,\
-                    convert_file
-from ..tools.lru import LRU
+                    convert_file, lru
 
-from . import migration
-from .module import initialize_sys_path, runs_post_install, run_unit_tests, \
-    load_openerp_module, init_models, adapt_version
+from . import db, graph as graphmod, migration, module
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
-class Registry(Mapping):
+class Registry(collections.Mapping):
     """ Model registry for a particular database.
 
     The registry is essentially a mapping between model names and model
@@ -67,13 +63,13 @@ class Registry(Mapping):
         self.base_registry_signaling_sequence = None
         self.base_cache_signaling_sequence = None
 
-        self.cache = LRU(8192)
+        self.cache = lru.LRU(8192)
         # Flag indicating if at least one model cache has been cleared.
         # Useful only in a multi-process context.
         self._any_cache_cleared = False
 
         with self.cursor() as cr:
-            has_unaccent = openerp.modules.db.has_unaccent(cr)
+            has_unaccent = db.has_unaccent(cr)
             if config['unaccent'] and not has_unaccent:
                 _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
             self.has_unaccent = config['unaccent'] and has_unaccent
@@ -153,7 +149,7 @@ class Registry(Mapping):
         """ Return the manual fields (as a dict) for the given model. """
         if self._fields_by_model is None:
             # Query manual fields for all models at once
-            self._fields_by_model = dic = defaultdict(dict)
+            self._fields_by_model = dic = collections.defaultdict(dict)
             cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
             for field in cr.dictfetchall():
                 dic[field['model']][field['name']] = field
@@ -295,16 +291,16 @@ class Registry(Mapping):
         RegistryManager.leave_test_mode()
 
     def load_modules(self, force_demo=False, status=None, update_module=False):
-        initialize_sys_path()
+        module.initialize_sys_path()
 
         force = []
         if force_demo:
             force.append('demo')
 
         with self.cursor() as cr:
-            if not openerp.modules.db.is_initialized(cr):
+            if not db.is_initialized(cr):
                 _logger.info("init db")
-                openerp.modules.db.initialize(cr)
+                db.initialize(cr)
                 update_module = True # process auto-installed modules
                 config["init"]["all"] = 1
                 config['update']['all'] = 1
@@ -315,7 +311,7 @@ class Registry(Mapping):
                 cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
             # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
-            graph = openerp.modules.graph.Graph()
+            graph = graphmod.Graph()
             graph.add_module(cr, 'base', force)
             if not graph:
                 _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
@@ -463,15 +459,15 @@ class Registry(Mapping):
             for model in self.models.values():
                 model._register_hook(cr)
 
-        with closing(self.cursor()) as cr:
-            # STEP 8: Run the post-install tests
+        with contextlib.closing(self.cursor()) as cr:
+            # STEP 9: Run the post-install tests
             t0 = time.time()
             t0_sql = openerp.sql_db.sql_counter
             if config['test_enable']:
                 cr.execute(
                     "SELECT name FROM ir_module_module WHERE state='installed'")
                 for module_name in cr.fetchall():
-                    self._assertion_report.record_result(run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
+                    self._assertion_report.record_result(module.run_unit_tests(module_name[0], cr.dbname, position=module.runs_post_install))
                 _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
     def load_marked_modules(self, cr, graph, states, force, report, loaded_modules, perform_checks):
@@ -492,6 +488,68 @@ class Registry(Mapping):
                 break
         return processed_modules
 
+    def _load_test(self, cr, package, idref, mode, report):
+        cr.commit()
+        try:
+            self._load_data(cr, package, idref, mode=mode, kind='test', report=report)
+            return True
+        except Exception:
+            _test_logger.exception(
+                'module %s: an exception occurred in a test', package.name)
+            return False
+        finally:
+            cr.rollback()
+            # avoid keeping stale xml_id, etc. in cache
+            self.clear_caches()
+
+    def _get_files_of_kind(self, kind, package):
+        if kind == 'demo':
+            kind = ['demo_xml', 'demo']
+        elif kind == 'data':
+            kind = ['init_xml', 'update_xml', 'data']
+        if isinstance(kind, str):
+            kind = [kind]
+        files = []
+        for k in kind:
+            for f in package.data[k]:
+                files.append(f)
+                if not k.endswith('_xml'):
+                    continue
+
+                if k == 'init_xml' and not f.endswith('.xml'):
+                    continue
+
+                # init_xml, update_xml and demo_xml are deprecated except
+                # for the case of init_xml with yaml, csv and sql files as
+                # we can't specify noupdate for those file.
+                correct_key = 'demo' if 'demo' in k else 'data'
+                _logger.warning(
+                    "module %s: key '%s' is deprecated in favor of '%s' for file '%s'.",
+                    package.name, k, correct_key, f
+                )
+        return files
+
+    def _load_data(self, cr, package, idref, mode, kind, report):
+        """
+
+        kind: data, demo, test, init_xml, update_xml, demo_xml.
+
+        noupdate is False, unless it is demo data or it is csv data in
+        init mode.
+
+        """
+        if kind in ('demo', 'test'):
+            threading.currentThread().testing = True
+        try:
+            for filename in self._get_files_of_kind(kind, package):
+                _logger.info("loading %s/%s", package.name, filename)
+                noupdate = False
+                if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+                    noupdate = True
+                convert_file(cr, package.name, filename, idref, mode, noupdate, kind, report)
+        finally:
+            if kind in ('demo', 'test'):
+                threading.currentThread().testing = False
 
     def load_module_graph(self, cr, graph, perform_checks=True, skip_modules=None, report=None):
         """Migrates+Updates or Installs all module nodes from ``graph``
@@ -501,64 +559,6 @@ class Registry(Mapping):
            :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
            :return: list of modules that were installed or updated
         """
-        def load_test(module_name, idref, mode):
-            cr.commit()
-            try:
-                _load_data(cr, module_name, idref, mode, 'test')
-                return True
-            except Exception:
-                _test_logger.exception(
-                    'module %s: an exception occurred in a test', module_name)
-                return False
-            finally:
-                cr.rollback()
-                # avoid keeping stale xml_id, etc. in cache
-                self.clear_caches()
-
-
-        def _get_files_of_kind(kind):
-            if kind == 'demo':
-                kind = ['demo_xml', 'demo']
-            elif kind == 'data':
-                kind = ['init_xml', 'update_xml', 'data']
-            if isinstance(kind, str):
-                kind = [kind]
-            files = []
-            for k in kind:
-                for f in package.data[k]:
-                    files.append(f)
-                    if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
-                        # init_xml, update_xml and demo_xml are deprecated except
-                        # for the case of init_xml with yaml, csv and sql files as
-                        # we can't specify noupdate for those file.
-                        correct_key = 'demo' if k.count('demo') else 'data'
-                        _logger.warning(
-                            "module %s: key '%s' is deprecated in favor of '%s' for file '%s'.",
-                            package.name, k, correct_key, f
-                        )
-            return files
-
-        def _load_data(cr, module_name, idref, mode, kind):
-            """
-
-            kind: data, demo, test, init_xml, update_xml, demo_xml.
-
-            noupdate is False, unless it is demo data or it is csv data in
-            init mode.
-
-            """
-            try:
-                if kind in ('demo', 'test'):
-                    threading.currentThread().testing = True
-                for filename in _get_files_of_kind(kind):
-                    _logger.info("loading %s/%s", module_name, filename)
-                    noupdate = False
-                    if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
-                        noupdate = True
-                    convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
-            finally:
-                if kind in ('demo', 'test'):
-                    threading.currentThread().testing = False
 
         processed_modules = []
         loaded_modules = []
@@ -572,19 +572,16 @@ class Registry(Mapping):
         t0_sql = openerp.sql_db.sql_counter
 
         for index, package in enumerate(graph):
-            module_name = package.name
-            module_id = package.id
-
-            if skip_modules and module_name in skip_modules:
+            if skip_modules and package.name in skip_modules:
                 continue
 
             migrations.migrate_module(package, 'pre')
-            load_openerp_module(package.name)
+            module.load_openerp_module(package.name)
 
             new_install = package.state == 'to install'
             py_module = None
             if new_install:
-                py_module = sys.modules['openerp.addons.%s' % (module_name,)]
+                py_module = sys.modules['openerp.addons.%s' % (package.name,)]
                 pre_init = package.info.get('pre_init_hook')
                 if pre_init:
                     getattr(py_module, pre_init)(cr)
@@ -594,7 +591,7 @@ class Registry(Mapping):
             loaded_modules.append(package.name)
             if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
                 self.setup_models(cr, partial=True)
-                init_models(models, cr, {'module': package.name})
+                module.init_models(models, cr, {'module': package.name})
 
             idref = {}
 
@@ -605,7 +602,7 @@ class Registry(Mapping):
             if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
                 # Can't put this line out of the loop: ir.module.module will be
                 # registered by init_models() above.
-                modobj = self['ir.module.module'].browse(cr, SUPERUSER_ID, module_id, {
+                modobj = self['ir.module.module'].browse(cr, SUPERUSER_ID, package.id, {
                     'overwrite': config["overwrite_existing_translations"]
                 })
 
@@ -616,12 +613,11 @@ class Registry(Mapping):
                     # upgrading the module information
                     modobj.write(modobj.get_values_from_terp(package.data))
 
-                _load_data(cr, module_name, idref, mode, kind='data')
+                self._load_data(cr, package, idref, mode, kind='data', report=report)
                 has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
                 if has_demo:
-                    _load_data(cr, module_name, idref, mode, kind='demo')
-                    cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
-                    modobj.invalidate_cache(['demo'], [module_id])
+                    self._load_data(cr, package, idref, mode, kind='demo', report=report)
+                    modobj.write({'demo': True})
 
                 migrations.migrate_module(package, 'post')
 
@@ -636,24 +632,23 @@ class Registry(Mapping):
                         getattr(py_module, post_init)(cr, self)
 
                 # validate all the views at a whole
-                self['ir.ui.view']._validate_module_views(
-                    cr, SUPERUSER_ID, module_name)
+                self['ir.ui.view']._validate_module_views(cr, SUPERUSER_ID, package.name)
 
-                if has_demo:
-                    # launch tests only in demo mode, allowing tests to use demo data.
-                    if config.options['test_enable']:
-                        # Yamel test
-                        report.record_result(load_test(module_name, idref, mode))
-                        # Python tests
-                        ir_http = self['ir.http']
-                        if hasattr(ir_http, '_routing_map'):
-                            # Force routing map to be rebuilt between each module test suite
-                            del ir_http._routing_map
-                        report.record_result(run_unit_tests(module_name, cr.dbname))
+                # launch tests only in demo mode, allowing tests to use demo data.
+                if has_demo and config.options['test_enable']:
+                    # YAML (&XML) tests
+                    report.record_result(self._load_test(cr, package, idref, mode, report))
+
+                    # Python tests
+                    ir_http = self['ir.http']
+                    if hasattr(ir_http, '_routing_map'):
+                        # Force routing map to be rebuilt between each module test suite
+                        del ir_http._routing_map
+                    report.record_result(module.run_unit_tests(package.name, cr.dbname))
 
                 processed_modules.append(package.name)
 
-                ver = adapt_version(package.data['version'])
+                ver = module.adapt_version(package.data['version'])
                 # Set new modules and dependencies
                 modobj.write({'state': 'installed', 'latest_version': ver})
 
@@ -738,7 +733,7 @@ class RegistryManager(object):
                     avgsz = 15 * 1024 * 1024
                     size = int(config['limit_memory_soft'] / avgsz)
 
-            cls._registries = LRU(size)
+            cls._registries = lru.LRU(size)
         return cls._registries
 
     @classproperty
@@ -746,7 +741,7 @@ class RegistryManager(object):
         """ A cache for model classes, indexed by their base classes. """
         if cls._model_cache is None:
             # we cache 256 classes per registry on average
-            cls._model_cache = LRU(cls.registries.count * 256)
+            cls._model_cache = lru.LRU(cls.registries.count * 256)
         return cls._model_cache
 
     @classmethod
@@ -781,14 +776,12 @@ class RegistryManager(object):
                 threading.current_thread().dbname = db_name
 
     @classmethod
-    def new(cls, db_name, force_demo=False, status=None,
-            update_module=False):
+    def new(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Create and return a new registry for a given database name.
 
         The (possibly) previous registry for that database name is discarded.
 
         """
-        import openerp.modules
         with cls.lock(), openerp.api.Environment.manage():
             # remove existing registry if any
             cls.delete(db_name)
@@ -861,7 +854,7 @@ class RegistryManager(object):
         changed = False
         if openerp.multi_process and db_name in cls.registries:
             registry = cls.get(db_name)
-            with closing(registry.cursor()) as cr:
+            with contextlib.closing(registry.cursor()) as cr:
                 cr.execute("""
                     SELECT base_registry_signaling.last_value,
                            base_cache_signaling.last_value
@@ -897,7 +890,7 @@ class RegistryManager(object):
             registry = cls.get(db_name)
             if registry.any_cache_cleared():
                 _logger.info("At least one model cache has been cleared, signaling through the database.")
-                with closing(registry.cursor()) as cr:
+                with contextlib.closing(registry.cursor()) as cr:
                     cr.execute("select nextval('base_cache_signaling')")
                     r = cr.fetchone()[0]
                 registry.base_cache_signaling_sequence = r
@@ -911,7 +904,7 @@ class RegistryManager(object):
             # cursor-as-context-manager will commit the cursor implicitly,
             # here we don't want or need to pay for a commit. Closing will
             # just call close() and rollback the txn
-            with closing(registry.cursor()) as cr:
+            with contextlib.closing(registry.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
                 r = cr.fetchone()[0]
             registry.base_registry_signaling_sequence = r

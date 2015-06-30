@@ -46,7 +46,7 @@ def _initialize_db(id, db_name, demo, lang, user_password):
             cr.commit()
 
         registry = openerp.modules.registry.RegistryManager.new(
-            db_name, demo, None, update_module=True)
+            db_name, force_demo=demo, update_module=True)
 
         with closing(db.cursor()) as cr:
             if lang:
