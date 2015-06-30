@@ -82,7 +82,7 @@ class CrmLead(format_address, models.Model):
     priority = fields.Selection(crm.AVAILABLE_PRIORITIES, index=True, default=lambda *a: crm.AVAILABLE_PRIORITIES[0][0])
     date_closed = fields.Datetime(string='Closed', readonly=True, copy=False)
     stage_id = fields.Many2one('crm.stage', string='Stage', track_visibility='onchange', index=True,
-                    domain="['&', ('team_ids', '=', team_id), '|', ('type', '=', lead_type), ('type', '=', 'both')]", default=lambda self: self._default_get_stage_id())
+                    domain="['&', ('team_ids', '=', team_id), '|', ('stage_type', '=', lead_type), ('stage_type', '=', 'both')]", default=lambda self: self._default_get_stage_id())
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     referred = fields.Char(string='Referred By')
     date_open = fields.Datetime(string='Assigned', readonly=True)
@@ -453,7 +453,7 @@ class CrmLead(format_address, models.Model):
               be a default stage; if not set, stages must be default
               stages
         """
-        avoid_add_type_term = any([term for term in domain if len(term) == 3 if term[0] == 'type'])
+        avoid_add_type_term = any([term for term in domain if len(term) == 3 if term[0] == 'stage_type'])
         # collect all team_ids
         team_ids = set()
         types = ['both']
@@ -477,7 +477,7 @@ class CrmLead(format_address, models.Model):
         search_domain.append(('case_default', '=', True))
         # AND with cases types
         if not avoid_add_type_term:
-            search_domain.append(('type', 'in', types))
+            search_domain.append(('stage_type', 'in', types))
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
@@ -590,7 +590,7 @@ class CrmLead(format_address, models.Model):
         highest.merge_dependences(tail_opportunities)
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            stage = self.env['crm.stage'].search([('team_ids', 'in', merged_data['team_id']), ('type', '=', merged_data.get('lead_type'))], order='sequence')
+            stage = self.env['crm.stage'].search([('team_ids', 'in', merged_data['team_id']), ('stage_type', '=', merged_data.get('lead_type'))], order='sequence')
             if merged_data.get('stage_id') not in stage.ids:
                 merged_data['stage_id'] = stage and stage[0].id
         # Write merged data into first opportunity
@@ -756,7 +756,7 @@ class CrmLead(format_address, models.Model):
         # retrieve type from the context (if set: choose 'type' or 'both')
         lead_type = self._resolve_type_from_context()
         if lead_type:
-            search_domain += ['|', ('type', '=', lead_type), ('type', '=', 'both')]
+            search_domain += ['|', ('stage_type', '=', lead_type), ('stage_type', '=', 'both')]
         # perform search
         stage_ids = CrmStage._search(search_domain, order=order, access_rights_uid=access_rights_uid)
         stage_rec = CrmStage.browse(stage_ids)
