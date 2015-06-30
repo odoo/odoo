@@ -365,24 +365,22 @@ def load_openerp_module(module_name):
     This is also used to load server-wide module (i.e. it is also used
     when there is no model to register).
     """
-    global loaded
     if module_name in loaded:
         return
 
     initialize_sys_path()
     try:
-        mod_path = get_module_path(module_name)
-        __import__('openerp.addons.' + module_name)
+        mod = importlib.import_module('openerp.addons.' + module_name)
 
         # Call the module's post-load hook. This can done before any model or
         # data has been initialized. This is ok as the post-load hook is for
         # server-wide (instead of registry-specific) functionalities.
         info = load_information_from_description_file(module_name)
         if info['post_load']:
-            getattr(sys.modules['openerp.addons.' + module_name], info['post_load'])()
+            getattr(mod, info['post_load'])()
 
     except Exception, e:
-        msg = "Couldn't load module %s" % (module_name)
+        msg = "Couldn't load module %s" % module_name
         _logger.critical(msg)
         _logger.critical(e)
         raise
