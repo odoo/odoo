@@ -267,21 +267,22 @@ var ActionManager = Widget.extend({
         return $.Deferred().reject();
     },
     select_action: function(action, index) {
-        if (this.webclient.has_uncommitted_changes()) {
+        var self = this;
+        return this.webclient.clear_uncommitted_changes().then(function() {
+            // Set the new inner_widget and clear the action_stack
+            self.inner_widget = action.widget;
+            var action_index = self.action_stack.indexOf(action);
+            self.clear_action_stack(self.action_stack.splice(action_index + 1));
+
+            // Hide the ControlPanel if the widget doesn't use it
+            if (!self.inner_widget.need_control_panel) {
+                self.main_control_panel.do_hide();
+            }
+
+            return action.restore(index);
+        }).fail(function() {
             return $.Deferred().reject();
-        }
-
-        // Set the new inner_widget and clear the action_stack
-        this.inner_widget = action.widget;
-        var action_index = this.action_stack.indexOf(action);
-        this.clear_action_stack(this.action_stack.splice(action_index + 1));
-
-        // Hide the ControlPanel if the widget doesn't use it
-        if (!this.inner_widget.need_control_panel) {
-            this.main_control_panel.do_hide();
-        }
-
-        return action.restore(index);
+        });
     },
     clear_action_stack: function(action_stack) {
         _.map(action_stack || this.action_stack, function(action) {
@@ -580,11 +581,15 @@ var ActionManager = Widget.extend({
             
             return this.dialog_widget.appendTo(this.dialog.$el);
         }
-        if (this.inner_widget && this.webclient.has_uncommitted_changes()) {
+        // Clear uncommitted changes on the current inner widget if there is one
+        var self = this;
+        var def = (this.inner_widget && this.webclient.clear_uncommitted_changes()) || $.when();
+        return def.then(function() {
+            self.dialog_stop(executor.action);
+            return self.push_action(executor.widget(), executor.action, options);
+        }).fail(function() {
             return $.Deferred().reject();
-        }
-        this.dialog_stop(executor.action);
-        return this.push_action(executor.widget(), executor.action, options);
+        });
     },
     ir_actions_act_window: function (action, options) {
         var self = this;

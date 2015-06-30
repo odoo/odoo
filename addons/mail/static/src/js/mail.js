@@ -4,6 +4,7 @@ odoo.define('mail.mail', function (require) {
 var mail_utils = require('mail.utils');
 var core = require('web.core');
 var data = require('web.data');
+var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
@@ -1047,14 +1048,25 @@ var ComposeMessage = Attachment.extend ({
         this.view = parent.view;
         this.session = session;
 
-        core.bus.on('clear_uncommitted_changes', this, function (e) {
-            if (this.show_composer && !e.isDefaultPrevented()) {
-                if (!confirm(_t("You are currently composing a message, your message will be discarded.\n\nAre you sure you want to leave this page ?"))) {
-                    e.preventDefault();
-                }
-                else {
-                    this.on_cancel();
-                }
+        core.bus.on('clear_uncommitted_changes', this, function (chain_callbacks) {
+            if (this.show_composer) {
+                chain_callbacks(function() {
+                    var def = $.Deferred();
+                    var message = _t("You are currently composing a message, your message will be discarded. Are you sure you want to leave this page ?");
+                    var options = {
+                        title: _t("Warning"),
+                        confirm_callback: function() {
+                            def.resolve();
+                        },
+                        cancel_callback: function() {
+                            def.reject();
+                        },
+                    };
+                    Dialog.confirm(this, message, options);
+                    return def;
+                });
+            } else {
+                this.on_cancel();
             }
         });
     },

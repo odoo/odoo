@@ -5,6 +5,7 @@ var ActionManager = require('web.ActionManager');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
+var framework = require('web.framework');
 var Loading = require('web.Loading');
 var Menu = require('web.Menu');
 var Model = require('web.Model');
@@ -100,12 +101,11 @@ var WebClient = Widget.extend({
             this.set_content_full_screen(full_screen);
         });
     },
-    on_logo_click: function(ev){
-        if (!this.has_uncommitted_changes()) {
-            return;
-        } else {
-            ev.preventDefault();
-        }
+    on_logo_click: function(ev) {
+        ev.preventDefault();
+        return this.clear_uncommitted_changes().then(function() {
+            framework.redirect("/web" + (core.debug ? "?debug" : ""));
+        });
     },
     show_common: function() {
         var self = this;
@@ -133,10 +133,12 @@ var WebClient = Widget.extend({
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);
     },
-    has_uncommitted_changes: function() {
-        var $e = $.Event('clear_uncommitted_changes');
-        core.bus.trigger('clear_uncommitted_changes', $e);
-        return $e.isDefaultPrevented();
+    clear_uncommitted_changes: function() {
+        var def = $.Deferred().resolve();
+        core.bus.trigger('clear_uncommitted_changes', function chain_callbacks(callback) {
+            def = def.then(callback);
+        });
+        return def;
     },
     /**
         Sets the first part of the title of the window, dedicated to the current action.
@@ -258,9 +260,9 @@ var WebClient = Widget.extend({
     },
     on_logout: function() {
         var self = this;
-        if (!this.has_uncommitted_changes()) {
+        this.clear_uncommitted_changes().then(function() {
             self.action_manager.do_action('logout');
-        }
+        });
     },
     bind_hashchange: function() {
         var self = this;

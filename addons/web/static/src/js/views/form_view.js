@@ -89,10 +89,17 @@ var FormView = View.extend(common.FieldManagerMixin, {
             self.on("change:actual_mode", self, self.do_update_pager);
         });
         self.on("load_record", self, self.load_record);
-        core.bus.on('clear_uncommitted_changes', this, function(e) {
-            if (!this.can_be_discarded()) {
-                e.preventDefault();
-            }
+        core.bus.on('clear_uncommitted_changes', this, function(chain_callbacks) {
+            var self = this;
+            chain_callbacks(function() {
+                var def = $.Deferred();
+                self.can_be_discarded().then(function() {
+                    def.resolve();
+                }).fail(function() {
+                    def.reject();
+                });
+                return def;
+            });
         });
     },
     view_loading: function(r) {
@@ -402,26 +409,25 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.$el.addClass('oe_form_dirty');
     },
     execute_pager_action: function(action) {
-        if (this.can_be_discarded()) {
+        var self = this;
+        return this.can_be_discarded().then(function() {
             switch (action) {
                 case 'first':
-                    this.dataset.index = 0;
+                    self.dataset.index = 0;
                     break;
                 case 'previous':
-                    this.dataset.previous();
+                    self.dataset.previous();
                     break;
                 case 'next':
-                    this.dataset.next();
+                    self.dataset.next();
                     break;
                 case 'last':
-                    this.dataset.index = this.dataset.ids.length - 1;
+                    self.dataset.index = self.dataset.ids.length - 1;
                     break;
             }
-            var def = this.reload();
-            this.trigger('pager_action_executed');
-            return def;
-        }
-        return $.when();
+            self.trigger('pager_action_executed');
+            return self.reload();
+        });
     },
     do_update_pager: function(hide_index) {
         if (this.$pager) {
@@ -727,16 +733,16 @@ var FormView = View.extend(common.FieldManagerMixin, {
     },
     on_button_cancel: function(event) {
         var self = this;
-        if (this.can_be_discarded()) {
-            if (this.get('actual_mode') === 'create') {
-                this.trigger('history_back');
+        this.can_be_discarded().then(function() {
+            if (self.get('actual_mode') === 'create') {
+                self.trigger('history_back');
             } else {
-                this.to_view_mode();
-                $.when.apply(null, this.render_value_defs).then(function(){
+                self.to_view_mode();
+                $.when.apply(null, self.render_value_defs).then(function(){
                     self.trigger('load_record', self.datarecord);
                 });
             }
-        }
+        });
         this.trigger('on_button_cancel');
         return false;
     },
@@ -744,9 +750,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
         var self = this;
         this.to_edit_mode();
         return $.when(this.has_been_loaded).then(function() {
-            if (self.can_be_discarded()) {
+            return self.can_be_discarded().then(function() {
                 return self.load_defaults();
-            }
+            });
         });
     },
     on_button_edit: function() {
@@ -787,13 +793,25 @@ var FormView = View.extend(common.FieldManagerMixin, {
         return def.promise();
     },
     can_be_discarded: function() {
-        if (this.$el.is('.oe_form_dirty')) {
-            if (!confirm(_t("Warning, the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?"))) {
-                return false;
-            }
-            this.$el.removeClass('oe_form_dirty');
+        if (!this.$el.is('.oe_form_dirty')) {
+            return $.Deferred().resolve();
         }
-        return true;
+
+        var self = this;
+        var def = $.Deferred();
+        var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to leave this page ?");
+        var options = {
+            title: _t("Warning"),
+            confirm_callback: function() {
+                self.$el.removeClass('oe_form_dirty');
+                def.resolve();
+            },
+            cancel_callback: function() {
+                def.reject();
+            },
+        };
+        Dialog.confirm(this, message, options);
+        return def;
     },
     /**
      * Triggers saving the form's record. Chooses between creating a new
