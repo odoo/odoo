@@ -73,7 +73,7 @@ class hr_timesheet_report(osv.osv):
                         htss.state"""
 
     def _from(self):
-        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id) join totals as t on (t.sheet_id = hat.sheet_id and t.date = aal.date)"
+        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id) left join totals as t on (t.sheet_id = hat.sheet_id and t.date = aal.date)"
 
     def _group_by(self):
         return super(hr_timesheet_report, self)._group_by() + """,
