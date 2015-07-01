@@ -1850,6 +1850,67 @@ options.ul = Option.extend({
     }
 });
 
+
+options.collapse = Option.extend(preventParentEmpty).extend({
+    start: function () {
+        var self = this;
+        this._super();
+        this.$target.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
+            self.BuildingBlock.cover_target(self.$overlay, self.$target);
+        });
+    },
+    create_ids: function ($target) {
+        var time = new Date().getTime();
+        var $tab = $target.find('[data-toggle="collapse"]');
+
+        // link to the parent group
+
+        var $tablist = $target.closest('.panel-group');
+        var tablist_id = $tablist.attr("id");
+        if (!tablist_id) {
+            tablist_id = "myCollapse" + time;
+            $tablist.attr("id", tablist_id);
+        }
+        $tab.attr('data-parent', "#"+tablist_id);
+        $tab.data('parent', "#"+tablist_id);
+
+        // link to the collapse
+
+        var $panel = $target.find('.panel-collapse');
+        var panel_id = $panel.attr("id");
+        if (!panel_id) {
+            while($('#'+(panel_id = "myCollapseTab" + time)).length) {
+                time++;
+            }
+            $panel.attr("id", panel_id);
+        }
+        $tab.attr('data-target', "#"+panel_id);
+        $tab.data('target', "#"+panel_id);
+    },
+    drop_and_build_snippet: function () {
+        this._super();
+        this.create_ids(this.$target);
+    },
+    on_clone: function ($clone) {
+        this._super();
+        this.create_ids($clone);
+    },
+    on_move: function () {
+        this._super();
+        this.create_ids(this.$target);
+        var $panel = this.$target.find('.panel-collapse').removeData('bs.collapse');
+        if ($panel.attr('aria-expanded') === 'true') {
+            $panel.closest('.panel-group').find('.panel-collapse[aria-expanded="true"]')
+                .filter(function () {return this !== $panel[0];})
+                .collapse('hide')
+                .one('hidden.bs.collapse', function () {
+                    $panel.trigger('shown.bs.collapse');
+                });
+        }
+    }
+});
+
+
 var SnippetEditor = Class.extend({
     init: function (BuildingBlock, dom) {
         this.BuildingBlock = BuildingBlock;

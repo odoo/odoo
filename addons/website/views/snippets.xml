@@ -507,6 +507,68 @@
     </section>
 </template>
 
+<template id="s_faq_collapse" name="FAQ Roller">
+    <section class="s_faq_collapse">
+        <div class="container">
+            <h2 class="page-header">Point of Sale Questions <small>v7</small></h2>
+            <div class="panel-group" role="tablist">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" data-toggle="collapse">
+                        <h4 class="panel-title">
+                            Which hardware does Odoo POS support?
+                        </h4>
+                    </div>
+                    <div class="panel-collapse collapse" role="tabpanel">
+                        <div class="panel-body">
+                            <p>
+                                Odoo's POS is a web application that can run on any device that
+                                can display websites with little to no setup required.
+                            </p>
+                            <p>
+                                The Point of Sale works perfectly on any kind of touch enabled
+                                device, whether it's multi-touch tablets like an iPad or
+                                keyboardless resistive touchscreen terminals.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" data-toggle="collapse">
+                        <h4 class="panel-title">
+                            Does it works offline?
+                        </h4>
+                    </div>
+                    <div class="panel-collapse collapse" role="tabpanel">
+                        <div class="panel-body">
+                            <p>
+                                Deploy new stores with just an internet connection: no
+                                installation, no specific hardware required. It works with any
+                                iPad, Tablet PC, laptop or industrial POS machine.
+                            </p>
+                            <p>
+                                While an internet connection is required to start the Point of
+                                Sale, it will stay operational even after a complete disconnection.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" data-toggle="collapse">
+                        <h4 class="panel-title">
+                            Can I use it to manage projects based on agile methodologies?
+                        </h4>
+                    </div>
+                    <div class="panel-collapse collapse" role="tabpanel">
+                        <div class="panel-body">
+                            <p>Yes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <template id="s_references" name="References">
     <section class="s_references">
         <div class="container">
@@ -804,8 +866,9 @@
         <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
         <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
         <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
-        <t t-snippet="website.s_faq" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
         <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
+        <t t-snippet="website.s_faq" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
+        <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
         <t t-snippet="website.s_quotes_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
         <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
     </div>
@@ -1054,6 +1117,11 @@
     <div data-js='ul'
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
         <li data-toggle_class="o_ul_folded"> <a href="#">Folded list</a> </li>
+    </div>
+
+    <div data-js='collapse'
+         data-selector='.panel-group > .panel:has(> .panel-collapse)'
+         data-drop-in='.panel-group:has(> .panel > .panel-collapse)'>
     </div>
 
     <!-- t-field -->
