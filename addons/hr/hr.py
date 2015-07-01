@@ -249,7 +249,9 @@ class hr_employee(osv.osv):
     def onchange_user(self, cr, uid, ids, user_id, context=None):
         if user_id:
             user = self.pool['res.users'].browse(cr, uid, user_id, context=context)
-            return {'value': {'name': user.name, 'work_email': user.email, 'image_medium': user.image_medium}}
+            return {'value': {'name': user.name,
+                              'work_email': user.email,
+                              'image': user.image}}
 
         return {}
 
