@@ -1199,11 +1199,8 @@ class BaseModel(object):
             type = 'warning' if isinstance(exception, Warning) else 'error'
             # logs the logical (not human-readable) field name for automated
             # processing of response, but injects human readable in message
-            # Before applying string substitution, we need to escape all '%'
-            # characters that are not part of substitutable reference.
-            regex = '%%(?!\((%s)\)s)' % '|'.join(base.keys())
-            message = unicode(re.sub(regex, '%%', exception.args[0])) % base
-            record = dict(base, type=type, field=field, message=message)
+            record = dict(base, type=type, field=field,
+                          message=unicode(exception.args[0]) % base)
             if len(exception.args) > 1 and exception.args[1]:
                 record.update(exception.args[1])
             log(record)
