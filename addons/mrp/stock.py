@@ -84,11 +84,13 @@ class StockMove(osv.osv):
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
                 if product.type != 'service':
+                    product_aligned_qty = uom_obj._compute_qty(cr, SUPERUSER_ID, line['product_uom'], line['product_qty'], product.uom_id.id)
+
                     valdef = {
                         'picking_id': move.picking_id.id if move.picking_id else False,
                         'product_id': line['product_id'],
-                        'product_uom': line['product_uom'],
-                        'product_uom_qty': line['product_qty'],
+                        'product_uom': product.uom_id.id,
+                        'product_uom_qty': product_aligned_qty,
                         'product_uos': line['product_uos'],
                         'product_uos_qty': line['product_uos_qty'],
                         'state': 'draft',  #will be confirmed below
