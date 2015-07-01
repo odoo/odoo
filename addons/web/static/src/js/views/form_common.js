@@ -841,8 +841,8 @@ var FormViewDialog = ViewDialog.extend({
     init: function(parent, options) {
         var self = this;
 
-        var multi_select = options.res_id === null && ! options.disable_multiple_selection;
-        var readonly = options.res_id !== null && options.readonly;
+        var multi_select = !_.isNumber(options.res_id) && !options.disable_multiple_selection;
+        var readonly = _.isNumber(options.res_id) && options.readonly;
 
         if(!options || !options.buttons) {
             options = options || {};

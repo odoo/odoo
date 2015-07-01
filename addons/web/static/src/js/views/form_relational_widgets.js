@@ -1654,13 +1654,11 @@ odoo.define('web_kanban.Many2ManyKanbanView', function (require) {
             var self = this;
             new common.FormViewDialog(this, {
                 res_model: self.x2m.field.relation,
-                res_id: null,
                 domain: self.x2m.build_domain(),
                 context: self.x2m.build_context(),
                 title: _t("Create: ") + self.x2m.string,
                 initial_view: "form",
                 alternative_form_view: self.x2m.field.views ? self.x2m.field.views.form : undefined,
-                disable_multiple_selection: false,
                 create_function: function(data, options) {
                     return self.x2m.data_create(data, options);
                 },
