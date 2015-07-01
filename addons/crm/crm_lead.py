@@ -1072,6 +1072,11 @@ class crm_lead_tag(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
+        'active': fields.boolean('Active'),
+    }
+
+    _defaults = {
+        'active': True,
     }
 
 
