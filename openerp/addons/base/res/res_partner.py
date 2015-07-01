@@ -622,6 +622,20 @@ class res_partner(osv.osv, format_address):
         return super(res_partner, self)._search(cr, user, args, offset=offset, limit=limit, order=order, context=context,
                                                 count=count, access_rights_uid=access_rights_uid)
 
+    def _get_display_name(self, unaccent):
+        # TODO: simplify this in trunk with `display_name`, once it is stored
+        # Perf note: a CTE expression (WITH ...) seems to have an even higher cost
+        #            than this query with duplicated CASE expressions. The bulk of
+        #            the cost is the ORDER BY, and it is inevitable if we want
+        #            relevant results for the next step, otherwise we'd return
+        #            a random selection of `limit` results.
+
+        return """CASE WHEN company.id IS NULL OR res_partner.is_company
+                       THEN {partner_name}
+                       ELSE {company_name} || ', ' || {partner_name}
+                  END""".format(partner_name=unaccent('res_partner.name'),
+                                company_name=unaccent('company.name'))
+
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
@@ -642,18 +656,7 @@ class res_partner(osv.osv, format_address):
 
             unaccent = get_unaccent_wrapper(cr)
 
-            # TODO: simplify this in trunk with `display_name`, once it is stored
-            # Perf note: a CTE expression (WITH ...) seems to have an even higher cost
-            #            than this query with duplicated CASE expressions. The bulk of
-            #            the cost is the ORDER BY, and it is inevitable if we want
-            #            relevant results for the next step, otherwise we'd return
-            #            a random selection of `limit` results.
-
-            display_name = """CASE WHEN company.id IS NULL OR res_partner.is_company
-                                   THEN {partner_name}
-                                   ELSE {company_name} || ', ' || {partner_name}
-                               END""".format(partner_name=unaccent('res_partner.name'),
-                                             company_name=unaccent('company.name'))
+            display_name = self._get_display_name(unaccent)
 
             query = """SELECT res_partner.id
                          FROM res_partner
