@@ -19,7 +19,7 @@ from ..tools import assertion_report, classproperty, config, \
                     lazy_property, topological_sort, OrderedSet,\
                     convert_file, lru
 
-from . import db, graph as graphmod, migration, module
+from . import db, graph, migration, module
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
@@ -42,6 +42,8 @@ class Registry(collections.Mapping):
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
+
+        self.graph = graph.Graph()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -169,7 +171,7 @@ class Registry(collections.Mapping):
         """ Add or replace a model in the registry."""
         self.models[model_name] = model
 
-    def load(self, cr, module):
+    def load(self, cr, package):
         """ Load a given module in the registry.
 
         At the Python level, the modules are already loaded, but not yet on a
@@ -177,6 +179,7 @@ class Registry(collections.Mapping):
         modules, i.e. it instanciates all the classes of a the given module
         and registers them in the registry.
 
+        :type package: graph.Node
         """
         from .. import models
 
@@ -191,7 +194,7 @@ class Registry(collections.Mapping):
 
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
-        for cls in models.MetaModel.module_to_models.get(module.name, []):
+        for cls in models.MetaModel.module_to_models.get(package.name, []):
             # models register themselves in self.models
             model = cls._build_model(self, cr)
             mark_loaded(model)
@@ -311,16 +314,15 @@ class Registry(collections.Mapping):
                 cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
             # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
-            graph = graphmod.Graph()
-            graph.add_module(cr, 'base', force)
-            if not graph:
+            self.graph.add_module(cr, 'base', force)
+            if not self.graph:
                 _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
                 raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
 
             # processed_modules: for cleanup step after install
             # loaded_modules: to avoid double loading
             loaded_modules, processed_modules = self.load_module_graph(
-                cr, graph, perform_checks=update_module, report=self._assertion_report)
+                cr, perform_checks=update_module)
 
             load_lang = config.pop('load_language')
             if load_lang or update_module:
@@ -375,12 +377,12 @@ class Registry(collections.Mapping):
             while previously_processed < len(processed_modules):
                 previously_processed = len(processed_modules)
                 processed_modules += self.load_marked_modules(
-                    cr, graph, ['installed', 'to upgrade', 'to remove'],
-                    force, self._assertion_report, loaded_modules, update_module)
+                    cr, ['installed', 'to upgrade', 'to remove'],
+                    force, loaded_modules, update_module)
                 if update_module:
                     processed_modules += self.load_marked_modules(
-                        cr, graph, ['to install'], force,
-                        self._assertion_report, loaded_modules, update_module)
+                        cr, ['to install'], force,
+                        loaded_modules, update_module)
 
             self.setup_models(cr)
 
@@ -422,7 +424,7 @@ class Registry(collections.Mapping):
                 cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
                 modules_to_remove = dict(cr.fetchall())
                 if modules_to_remove:
-                    pkgs = reversed([p for p in graph if p.name in modules_to_remove])
+                    pkgs = reversed([p for p in self.graph if p.name in modules_to_remove])
                     for pkg in pkgs:
                         uninstall_hook = pkg.info.get('uninstall_hook')
                         if uninstall_hook:
@@ -470,28 +472,28 @@ class Registry(collections.Mapping):
                     self._assertion_report.record_result(module.run_unit_tests(module_name[0], cr.dbname, position=module.runs_post_install))
                 _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
-    def load_marked_modules(self, cr, graph, states, force, report, loaded_modules, perform_checks):
+    def load_marked_modules(self, cr, states, force, loaded_modules, perform_checks):
         """Loads modules marked with ``states``, adding them to ``graph`` and
            ``loaded_modules`` and returns a list of installed/upgraded modules."""
         processed_modules = []
         while True:
             cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(states),))
-            module_list = [name for (name,) in cr.fetchall() if name not in graph]
+            module_list = [name for (name,) in cr.fetchall() if name not in self.graph]
             if not module_list:
                 break
-            graph.add_modules(cr, module_list, force)
+            self.graph.add_modules(cr, module_list, force)
             _logger.debug('Updating graph with %d more modules', len(module_list))
-            loaded, processed = self.load_module_graph(cr, graph, report=report, skip_modules=loaded_modules, perform_checks=perform_checks)
+            loaded, processed = self.load_module_graph(cr, skip_modules=loaded_modules, perform_checks=perform_checks)
             processed_modules.extend(processed)
             loaded_modules.extend(loaded)
             if not processed:
                 break
         return processed_modules
 
-    def _load_test(self, cr, package, idref, mode, report):
+    def _load_test(self, cr, package, idref, mode):
         cr.commit()
         try:
-            self._load_data(cr, package, idref, mode=mode, kind='test', report=report)
+            self._load_data(cr, package, idref, mode=mode, kind='test')
             return True
         except Exception:
             _test_logger.exception(
@@ -529,14 +531,13 @@ class Registry(collections.Mapping):
                 )
         return files
 
-    def _load_data(self, cr, package, idref, mode, kind, report):
+    def _load_data(self, cr, package, idref, mode, kind):
         """
 
         kind: data, demo, test, init_xml, update_xml, demo_xml.
 
         noupdate is False, unless it is demo data or it is csv data in
         init mode.
-
         """
         if kind in ('demo', 'test'):
             threading.currentThread().testing = True
@@ -546,24 +547,22 @@ class Registry(collections.Mapping):
                 noupdate = False
                 if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
                     noupdate = True
-                convert_file(cr, package.name, filename, idref, mode, noupdate, kind, report)
+                convert_file(cr, package.name, filename, idref, mode, noupdate, kind, self._assertion_report)
         finally:
             if kind in ('demo', 'test'):
                 threading.currentThread().testing = False
 
-    def load_module_graph(self, cr, graph, perform_checks=True, skip_modules=None, report=None):
+    def load_module_graph(self, cr, perform_checks=True, skip_modules=None):
         """Migrates+Updates or Installs all module nodes from ``graph``
-           :param graph: graph of module nodes to load
            :param perform_checks: whether module descriptors should be checked for validity (prints warnings
                                   for same cases)
            :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
            :return: list of modules that were installed or updated
         """
-
         processed_modules = []
         loaded_modules = []
-        migrations = migration.MigrationManager(cr, graph)
-        _logger.info('loading %d modules...', len(graph))
+        migrations = migration.MigrationManager(cr, self.graph)
+        _logger.info('loading %d modules...', len(self.graph))
 
         self.clear_manual_fields()
 
@@ -571,7 +570,8 @@ class Registry(collections.Mapping):
         t0 = time.time()
         t0_sql = openerp.sql_db.sql_counter
 
-        for index, package in enumerate(graph):
+        for index, package in enumerate(self.graph):
+            assert isinstance(package, graph.Node)
             if skip_modules and package.name in skip_modules:
                 continue
 
@@ -602,21 +602,22 @@ class Registry(collections.Mapping):
             if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
                 # Can't put this line out of the loop: ir.module.module will be
                 # registered by init_models() above.
-                modobj = self['ir.module.module'].browse(cr, SUPERUSER_ID, package.id, {
+                modobj = self['ir.module.module'].browse(
+                    cr, SUPERUSER_ID, package.id, {
                     'overwrite': config["overwrite_existing_translations"]
                 })
 
                 if perform_checks:
                     modobj.check()
 
-                if package.state=='to upgrade':
+                if package.state == 'to upgrade':
                     # upgrading the module information
                     modobj.write(modobj.get_values_from_terp(package.data))
 
-                self._load_data(cr, package, idref, mode, kind='data', report=report)
+                self._load_data(cr, package, idref, mode, kind='data')
                 has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
                 if has_demo:
-                    self._load_data(cr, package, idref, mode, kind='demo', report=report)
+                    self._load_data(cr, package, idref, mode, kind='demo')
                     modobj.write({'demo': True})
 
                 migrations.migrate_module(package, 'post')
@@ -632,19 +633,20 @@ class Registry(collections.Mapping):
                         getattr(py_module, post_init)(cr, self)
 
                 # validate all the views at a whole
-                self['ir.ui.view']._validate_module_views(cr, SUPERUSER_ID, package.name)
+                self['ir.ui.view']._validate_module_views(
+                    cr, SUPERUSER_ID, package.name)
 
                 # launch tests only in demo mode, allowing tests to use demo data.
                 if has_demo and config.options['test_enable']:
                     # YAML (&XML) tests
-                    report.record_result(self._load_test(cr, package, idref, mode, report))
+                    self._assertion_report.record_result(self._load_test(cr, package, idref, mode))
 
                     # Python tests
                     ir_http = self['ir.http']
                     if hasattr(ir_http, '_routing_map'):
                         # Force routing map to be rebuilt between each module test suite
                         del ir_http._routing_map
-                    report.record_result(module.run_unit_tests(package.name, cr.dbname))
+                    self._assertion_report.record_result(module.run_unit_tests(package.name, cr.dbname))
 
                 processed_modules.append(package.name)
 
@@ -660,7 +662,7 @@ class Registry(collections.Mapping):
             self._init_modules.add(package.name)
             cr.commit()
 
-        _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
+        _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(self.graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
         self.clear_manual_fields()
 

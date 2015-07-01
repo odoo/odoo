@@ -11,12 +11,12 @@ def _check_module_names(cr, module_names):
 
 def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_modules, perform_checks):
     return openerp.registry(cr.dbname).load_marked_modules(
-        cr, graph, states, force=force, report=report,
-        loaded_modules=loaded_modules, perform_checks=perform_checks)
+        cr, states, force=force, loaded_modules=loaded_modules,
+        perform_checks=perform_checks)
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
     return openerp.registry(cr.dbname).load_module_graph(
-        cr, graph, perform_checks=perform_checks, skip_modules=skip_modules, report=report)
+        cr, perform_checks=perform_checks, skip_modules=skip_modules)
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
     openerp.registry(db).load_modules(force_demo=force_demo, update_module=update_module)
