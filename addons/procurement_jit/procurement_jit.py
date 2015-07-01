@@ -42,3 +42,11 @@ class procurement_order(osv.osv):
         if procurement_ids:
             return self.run(cr, uid, procurement_ids, context=context)
         return res
+
+class stock_move(osv.osv):
+    _inherit = "stock.move"
+
+    def _create_procurements(self, cr, uid, moves, context=None):
+        res = super(stock_move, self)._create_procurements(cr, uid, moves, context=dict(context or {}, procurement_autorun_defer=True))
+        self.pool['procurement.order'].run(cr, uid, res, context=context)
+        return res
