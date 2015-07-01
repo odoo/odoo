@@ -43,6 +43,11 @@ class res_partner(osv.Model):
         'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers, select=1),
     }
 
+    # Re-define from "base" module to use new display name, in order to improve performance
+    def _get_display_name(self, unaccent):
+        return unaccent('res_partner.display_name')
+
+
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
