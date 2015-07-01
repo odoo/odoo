@@ -126,6 +126,10 @@ class account_payment(models.Model):
             return self.do_print_checks()
 
     @api.multi
+    def unmark_sent(self):
+        self.write({'state': 'posted'})
+
+    @api.multi
     def do_print_checks(self):
         """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
         raise UserError(_("There is no check layout configured.\nMake sure the proper check printing module is installed"
