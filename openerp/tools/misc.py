@@ -37,7 +37,7 @@ import threading
 import time
 import werkzeug.utils
 import zipfile
-from collections import defaultdict, Mapping
+from collections import defaultdict, Mapping, OrderedDict
 from datetime import datetime
 from itertools import islice, izip, groupby
 from lxml import etree
@@ -1270,6 +1270,17 @@ class frozendict(dict):
         raise NotImplementedError("'setdefault' not supported on frozendict")
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
+
+class OrderedSet(OrderedDict):
+    """ A simple collection that remembers the elements insertion order. """
+    def __init__(self, seq=()):
+        super(OrderedSet, self).__init__([(x, None) for x in seq])
+
+    def add(self, elem):
+        self[elem] = None
+
+    def discard(self, elem):
+        self.pop(elem, None)
 
 @contextmanager
 def ignore(*exc):
