@@ -52,7 +52,8 @@ class AccountConfigSettings(models.TransientModel):
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default purchase tax', oldname="purchase_tax")
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
-    bank_account_code_char = fields.Char(string='Bank Accounts Code', related='company_id.bank_account_code_char', help='Define the code for the bank account')
+    bank_account_code_prefix = fields.Char(string='Bank Accounts Prefix', related='company_id.bank_account_code_prefix', help='Define the code prefix for the bank accounts', oldname'bank_account_code_char')
+    cash_account_code_prefix = fields.Char(string='Cash Accounts Prefix', related='company_id.cash_account_code_prefix', help='Define the code prefix for the cash accounts')
     template_transfer_account_id = fields.Many2one('account.account.template', help="Intermediary account used when moving money from a liquidity account to another")
     transfer_account_id = fields.Many2one('account.account',
         related='company_id.transfer_account_id',
@@ -132,7 +133,8 @@ class AccountConfigSettings(models.TransientModel):
             self.paypal_account = company.paypal_account
             self.company_footer = company.rml_footer
             self.tax_calculation_rounding_method = company.tax_calculation_rounding_method
-            self.bank_account_code_char = company.bank_account_code_char
+            self.bank_account_code_prefix = company.bank_account_code_prefix
+            self.cash_account_code_prefix = company.cash_account_code_prefix
             self.code_digits = company.accounts_code_digits
 
             # update taxes
@@ -166,8 +168,10 @@ class AccountConfigSettings(models.TransientModel):
                 self.code_digits = self.chart_template_id.code_digits
             if self.chart_template_id.transfer_account_id:
                 self.template_transfer_account_id = self.chart_template_id.transfer_account_id.id
-            if self.chart_template_id.bank_account_code_char:
-                self.bank_account_code_char = self.chart_template_id.bank_account_code_char
+            if self.chart_template_id.bank_account_code_prefix:
+                self.bank_account_code_prefix = self.chart_template_id.bank_account_code_prefix
+            if self.chart_template_id.cash_account_code_prefix:
+                self.cash_account_code_prefix = self.chart_template_id.cash_account_code_prefix
         return {}
 
     @api.onchange('sale_tax_rate')
@@ -224,7 +228,8 @@ class AccountConfigSettings(models.TransientModel):
                 'purchase_tax_rate': self.purchase_tax_rate,
                 'complete_tax_set': self.complete_tax_set,
                 'currency_id': self.currency_id.id,
-                'bank_account_code_char': self.bank_account_code_char,
+                'bank_account_code_prefix': self.bank_account_code_prefix,
+                'cash_account_code_prefix': self.cash_account_code_prefix,
             })
             wizard.execute()
 

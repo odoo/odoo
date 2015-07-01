@@ -1466,7 +1466,8 @@
                         <field name="name"/>
                         <field name="company_id"/>
                         <field name="parent_id" />
-                        <field name="bank_account_code_char"/>
+                        <field name="bank_account_code_prefix"/>
+                        <field name="cash_account_code_prefix"/>
                         <field name="code_digits" />
                         <field name="visible" />
                         <field name="complete_tax_set" />
@@ -1492,9 +1493,9 @@
             <field name="arch" type="xml">
                 <search string="Search Chart of Account Templates">
                     <field name="name" string="Account Template"/>
-                    <field name="bank_account_code_char"/>
+                    <field name="bank_account_code_prefix"/>
+                    <field name="cash_account_code_prefix"/>
                     <group expand="0" string="Group By">
-                        <filter string="Bank Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'bank_account_code_char'}"/>
                         <filter string="Receivable Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
                         <filter string="Payable Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
                         <filter string="Income Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_income_categ_id'}"/>
@@ -1510,7 +1511,6 @@
                 <tree string="Chart of Accounts Template">
                     <field name="name"/>
                     <field name="company_id"/>
-                    <field name="bank_account_code_char"/>
                     <field name="property_account_receivable_id" invisible="1"/>
                     <field name="property_account_payable_id" invisible="1"/>
                     <field name="property_account_expense_categ_id" invisible="1"/>
@@ -1650,7 +1650,8 @@
                         </group>
                         <group groups="account.group_account_user" invisible="1">
                             <field name="code_digits"/>
-                            <field name="bank_account_code_char"/>
+                            <field name="bank_account_code_prefix"/>
+                            <field name="cash_account_code_prefix"/>
                         </group>
                     </group>
                 </group>

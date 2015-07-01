@@ -10,7 +10,8 @@
                     <field name="anglo_saxon_accounting"/>
                 </field>
                 <xpath expr="//group[@name='account_grp']" position="inside">
-                    <field name="bank_account_code_char" groups="base.group_no_one"/>
+                    <field name="bank_account_code_prefix" groups="base.group_no_one"/>
+                    <field name="cash_account_code_prefix" groups="base.group_no_one"/>
                     <field name="accounts_code_digits" groups="base.group_no_one"/>
                 </xpath>
             </field>

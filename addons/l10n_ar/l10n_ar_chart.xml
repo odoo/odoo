@@ -10,8 +10,8 @@
     </record>
 
     <record id="transfer_account_id" model="account.account.template">
-        <field name="name">cuenta de Transferencia</field>
-        <field name="code">1</field>
+        <field name="name">Cuenta de Transferencia</field>
+        <field name="code">13</field>
         <field name="reconcile" eval="True"/>
         <field ref="account.data_account_type_current_assets" name="user_type_id"/>
     </record>
@@ -19,7 +19,8 @@
     <record id="ar_chart_template" model="account.chart.template">
       <field name="name">Argentina - Plan de Cuentas</field>
       <field name="code_digits">6</field>
-       <field name="bank_account_code_char">11</field>
+      <field name="bank_account_code_prefix">11</field>
+      <field name="cash_account_code_prefix">12</field>
       <field name="currency_id" ref="base.ARS"/>
       <field name="transfer_account_id" ref="transfer_account_id"/>
     </record>   

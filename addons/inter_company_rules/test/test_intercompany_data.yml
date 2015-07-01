@@ -117,7 +117,7 @@
         'transfer_account_id': ref("account.transfer_account_id"),
         'code_digits': 6,
         'purchase_tax_id': False,
-        'bank_account_code_char': 'COMP_A',
+        'bank_account_code_prefix': 'COMP_A',
         'sale_tax_id': False})
     self.execute(cr, uid, [wiz_comp_a])
     wiz_comp_b = self.create(cr, uid, {
@@ -127,7 +127,7 @@
         'transfer_account_id': ref("account.transfer_account_id"),
         'code_digits': 6,
         'purchase_tax_id': False,
-        'bank_account_code_char': 'COMP_B',
+        'bank_account_code_prefix': 'COMP_B',
         'sale_tax_id': False})
     self.execute(cr, uid, [wiz_comp_b])
 -

@@ -8,7 +8,6 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     #TODO check all the options/fields are in the views (settings + company form view)
-    #TODO: add a cash_register_code_char for allowing cash journals' accounts having a different numbering than bank journals' accounts.
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12, required=True)
     period_lock_date = fields.Date(help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
@@ -17,7 +16,8 @@ class ResCompany(models.Model):
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)], string="Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
-    bank_account_code_char = fields.Char(string='Code of the main bank account')
+    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
+    cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     accounts_code_digits = fields.Integer(string='Number of digits in an account code')
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round per Line'),
@@ -53,22 +53,26 @@ class ResCompany(models.Model):
         date_from = date_from.replace(year=date_from.year - 1)
         return {'date_from': date_from, 'date_to': date_to}
 
-    def get_new_account_code(self, code, old_prefix, new_prefix, digits):
+    def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
         new_prefix_length = len(new_prefix)
-        number = str(int(code[len(old_prefix):]))
-        code = new_prefix + str('0' * (digits - new_prefix_length - len(number))) + number
-        return code
+        number = current_code[len(old_prefix):]
+        return new_prefix + '0' * (digits - new_prefix_length - len(number)) + number
+
+    def reflect_code_prefix_change(self, old_code, new_code, digits):
+        accounts = self.env['account.account'].search([('code', 'like', old_code), ('internal_type', '=', 'liquidity'),
+            ('company_id', '=', self.id)], order='code asc')
+        for account in accounts:
+            if account.code.startswith(old_code):
+                account.write({'code': self.get_new_account_code(account.code, old_code, new_code, digits)})
 
     @api.multi
     def write(self, values):
-        # Repercute the change on accounts
-        if values.get('bank_account_code_char', False) or values.get('accounts_code_digits', False):
-            bank_code = values.get('bank_account_code_char', False) or self.bank_account_code_char
-            digits = values.get('accounts_code_digits', False) or self.accounts_code_digits
-
-            accounts = self.env['account.account'].search([('code', 'like', self.bank_account_code_char), ('internal_type', '=', 'liquidity'), 
-                ('company_id', '=', self.id)], order='code asc')
-            for account in accounts:
-                if account.code.startswith(self.bank_account_code_char):
-                    account.write({'code': self.get_new_account_code(account.code, self.bank_account_code_char, bank_code, digits)})
+        # Reflect the change on accounts
+        digits = values.get('accounts_code_digits') or self.accounts_code_digits
+        if values.get('bank_account_code_prefix') or values.get('accounts_code_digits'):
+            new_bank_code = values.get('bank_account_code_prefix') or self.bank_account_code_prefix
+            self.reflect_code_prefix_change(self.bank_account_code_prefix, new_bank_code, digits)
+        if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
+            new_cash_code = values.get('cash_account_code_prefix') or self.cash_account_code_prefix
+            self.reflect_code_prefix_change(self.cash_account_code_prefix, new_cash_code, digits)
         return super(ResCompany, self).write(values)

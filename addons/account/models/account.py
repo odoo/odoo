@@ -314,23 +314,27 @@ class AccountJournal(models.Model):
         return self.env['ir.sequence'].create(seq)
 
     @api.model
-    def _prepare_bank_account(self, name, company, currency_id):
+    def _prepare_liquidity_account(self, name, company, currency_id, type):
         '''
         This function prepares the value to use for the creation of the default debit and credit accounts of a
-        bank journal (created through the wizard of generating COA from templates for example).
+        liquidity journal (created through the wizard of generating COA from templates for example).
 
         :param name: name of the bank account
         :param company: company for which the wizard is running
         :param currency_id: ID of the currency in wich is the bank account
+        :param type: either 'cash' or 'bank'
         :return: mapping of field names and values
         :rtype: dict
         '''
 
         # Seek the next available number for the account code
         code_digits = company.accounts_code_digits or 0
-        bank_account_code_char = company.bank_account_code_char or ''
+        if type == 'bank':
+            account_code_prefix = company.bank_account_code_prefix or ''
+        else:
+            account_code_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
         for num in xrange(1, 100):
-            new_code = str(bank_account_code_char.ljust(code_digits - 1, '0')) + str(num)
+            new_code = str(account_code_prefix.ljust(code_digits - 1, '0')) + str(num)
             rec = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
             if not rec:
                 break
@@ -387,7 +391,7 @@ class AccountJournal(models.Model):
             default_account = vals.get('default_debit_account_id') or vals.get('default_credit_account_id')
             if not default_account:
                 company = self.env['res.company'].browse(vals['company_id'])
-                account_vals = self._prepare_bank_account(vals.get('name'), company, vals.get('currency_id'))
+                account_vals = self._prepare_liquidity_account(vals.get('name'), company, vals.get('currency_id'), vals.get('type'))
                 default_account = self.env['account.account'].create(account_vals)
                 vals['default_debit_account_id'] = default_account.id
                 vals['default_credit_account_id'] = default_account.id

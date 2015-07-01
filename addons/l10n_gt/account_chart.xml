@@ -2,15 +2,16 @@
 <openerp>
     <data noupdate="1">
         <record id="transfer_account_id" model="account.account.template">
-            <field name="code">550</field>
-            <field name="name">cuenta de Transferencia</field>
+            <field name="code">1.0.03.01</field>
+            <field name="name">Cuenta de Transferencia</field>
             <field name="reconcile" eval='True'/>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
 
         <record id="cuentas_plantilla" model="account.chart.template">
             <field name="name">Plantilla de cuentas de Guatemala (sencilla)</field>
-            <field name="bank_account_code_char">550</field>
+            <field name="bank_account_code_prefix">1.0.01.0</field>
+            <field name="cash_account_code_prefix">1.0.02.0</field>
             <field name="code_digits">6</field>
             <field name="currency_id" ref="base.QTQ"/>
             <field name="transfer_account_id" ref="transfer_account_id"/>
