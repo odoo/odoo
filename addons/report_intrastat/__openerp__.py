@@ -16,6 +16,7 @@ European Union.""",
     'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
     'data': [
         'security/ir.model.access.csv',
+        'security/report_intrastat_security.xml',
         'report_intrastat_view.xml',
         'intrastat_report.xml',
         'report_intrastat_data.xml',
