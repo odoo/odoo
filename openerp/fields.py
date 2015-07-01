@@ -29,6 +29,7 @@ from types import NoneType
 import logging
 import pytz
 import xmlrpclib
+from collections import OrderedDict
 
 from openerp.tools import float_round, frozendict, html_sanitize, ustr
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
@@ -1611,6 +1612,9 @@ class _RelationalMulti(_Relational):
             result = record[self.name]
             # modify result with the commands;
             # beware to not introduce duplicates in result
+            if all(isinstance(command, int) for command in value):
+                return result.browse(list(OrderedDict.fromkeys(value)))
+
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
