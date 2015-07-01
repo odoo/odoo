@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import base64
-from collections import OrderedDict
 import datetime
 import dateutil
 import email
@@ -20,7 +19,7 @@ from email.message import Message
 from email.utils import formataddr
 from urllib import urlencode
 
-from openerp import _, api, fields, models, SUPERUSER_ID
+from openerp import _, api, fields, models
 from openerp import exceptions
 from openerp import tools
 from openerp.addons.mail.models.mail_message import decode
@@ -349,57 +348,6 @@ class MailThread(models.AbstractModel):
                     options['internal_subtypes'] = internal_subtypes
                 node.set('options', json.dumps(options))
             res['arch'] = etree.tostring(doc)
-        return res
-
-    @api.model
-    def read_followers_data(self, follower_ids):
-        # TDE NOTE: move as controller ? (used in mail_followers.js)$
-        # TDE NOTE2: usefull anyway ?
-        result = []
-        is_editable = self.env.user.has_group('base.group_no_one')
-        for follower in self.env['res.partner'].browse(follower_ids):
-            is_uid = self.env.user.partner_id.id in follower.ids
-            data = (follower.id,
-                    follower.name,
-                    {'is_editable': is_editable, 'is_uid': is_uid},
-                    )
-            result.append(data)
-        return result
-
-    @api.multi
-    def _get_subscription_data(self, user_pid=None):
-        # TDE NOTE: move as controller ? (used in mail_followers.js)
-        """ Computes:
-            - message_subtype_data: data about document subtypes: which are
-                available, which are followed if any """
-        res = dict((id, dict(message_subtype_data='')) for id in self.ids)
-        if user_pid is None:
-            user_pid = self.env.user.partner_id.id
-
-        # find current model subtypes, add them to a dictionary
-        subtypes = self.env['mail.message.subtype'].search(['&', ('hidden', '=', False), '|', ('res_model', '=', self._name), ('res_model', '=', False)])
-        subtype_dict = OrderedDict(
-            (subtype.name, {
-                'default': subtype.default,
-                'followed': False,
-                'parent_model': subtype.parent_id and subtype.parent_id.res_model or self._name,
-                'id': subtype.id
-            }) for subtype in subtypes)
-        for res_id in self.ids:
-            res[res_id]['message_subtype_data'] = subtype_dict.copy()
-
-        # find the document followers, update the data
-        followers = self.env['mail.followers'].search([
-            ('partner_id', '=', user_pid),
-            ('res_id', 'in', self.ids),
-            ('res_model', '=', self._name),
-        ])
-        for fol in followers:
-            thread_subtype_dict = res[fol.res_id]['message_subtype_data']
-            for subtype in [st for st in fol.subtype_ids if st.name in thread_subtype_dict]:
-                thread_subtype_dict[subtype.name]['followed'] = True
-            res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
-
         return res
 
     # ------------------------------------------------------

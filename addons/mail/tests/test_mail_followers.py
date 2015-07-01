@@ -85,11 +85,3 @@ class TestMailFollowers(TestMail):
             ('partner_id', '=', self.user_employee.partner_id.id)])
         self.assertEqual(len(follower), 1)
         self.assertEqual(follower.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
-
-    def test_subscription_data(self):
-        self.group_pigs.message_subscribe_users(user_ids=[self.user_employee.id])
-        subtype_data = self.group_pigs.sudo(self.user_employee)._get_subscription_data()[self.group_pigs.id]['message_subtype_data']
-        self.assertEqual(set(subtype_data.keys()), set(['Discussions', 'Note', 'mt_mg_def', 'mt_al_def', 'mt_mg_nodef', 'mt_al_nodef']), 'mail.group available subtypes incorrect')
-        self.assertTrue(subtype_data['Discussions']['followed'])
-        self.assertFalse(subtype_data['mt_mg_nodef']['followed'])
-        self.assertFalse(subtype_data['mt_al_nodef']['followed'])

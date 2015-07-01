@@ -1,6 +1,7 @@
 odoo.define('mail.mail_followers', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var mail_utils = require('mail.utils');
 var core = require('web.core');
 var data = require('web.data');
@@ -191,7 +192,7 @@ var Followers = form_common.AbstractField.extend({
 
     fetch_followers: function (value_) {
         this.value = value_ || [];
-        return this.ds_model.call('read_followers_data', [this.value])
+        ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.value})
             .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
             .then(this.proxy('display_buttons'))
             .then(this.proxy('fetch_subtypes'));
@@ -202,7 +203,6 @@ var Followers = form_common.AbstractField.extend({
         - then display a generic message about followers */
     fetch_generic: function (error, event) {
         var self = this;
-        event.preventDefault();
 
         return this.ds_users.call('read', [[session.uid], ['partner_id']])
             .then(function (results) {
@@ -233,24 +233,24 @@ var Followers = form_common.AbstractField.extend({
     /** Display the followers */
     display_followers: function (records) {
         var self = this;
-        this.message_is_follower = false;
         this.followers = records || this.followers;
 
         // clean and display title
         var node_user_list = this.$('.o_timeline_follower_list').empty();
         this.$('.o_timeline_follower_title').html(this._format_followers(this.followers.length));
-
+        var user_follower = _.filter(this.followers, function (rec) { return rec['is_uid'];});
+        this.message_is_follower = user_follower.length >= 1;
+        this.follower_id = this.message_is_follower ? user_follower[0]['id'] : undefined;
         $(qweb.render('mail_followers_add_more', {'widget': self})).appendTo(node_user_list);
 
-        self.message_is_follower = _.indexOf(this.followers.map(function(rec) {return rec[2]['is_uid']}), true) != -1;
         // truncate number of displayed followers
         _(this.followers).each(function (record) {
             var partner = {
-                'id': record[0],
-                'name': record[1],
-                'is_uid': record[2]['is_uid'],
-                'is_editable': record[2]['is_editable'],
-                'avatar_url': mail_utils.get_image(session, 'res.partner', 'image_small', record[0]),
+                'id': record['id'],
+                'name': record['name'],
+                'is_uid': record['is_uid'],
+                'is_editable': record['is_editable'],
+                'avatar_url': mail_utils.get_image(session, 'res.partner', 'image_small', record['id']),
             }
 
             $(qweb.render('mail_followers_partner', {'record': partner, 'widget': self}))
@@ -302,14 +302,16 @@ var Followers = form_common.AbstractField.extend({
                 this.$('.o_timeline_subtype_list > .dropdown-toggle').attr('disabled', false);
             }
         }
-        var id = this.view.datarecord.id;
-        this.ds_model.call('message_get_subscription_data', 
-                           [[id], user_pid, new data.CompoundContext(this.build_context(), {})])
-            .then(function (data) {self.display_subtypes(data, id, dialog);});
+        if (this.follower_id) {
+            return ajax.jsonRpc('/mail/read_subscription_data', 'call', {'res_model': this.view.model, 'res_id': this.view.datarecord.id})
+                .then(function (data) { self.display_subtypes(data, dialog); });
+        } else  {
+            return $.Deferred().resolve();
+        }
     },
 
     /** Display subtypes: {'name': default, followed} */
-    display_subtypes:function (data, id, dialog) {
+    display_subtypes:function (data, dialog) {
         var self = this;
         var $list = this.$('.o_timeline_subtype_list ul');
     
@@ -320,26 +322,21 @@ var Followers = form_common.AbstractField.extend({
                 $list = this.$dialog.$el;
             }
 
-            var old_model = '';
-            var records = data[id].message_subtype_data;
-            this.records_length = $.map(records, function(value, index) { return index; }).length;
+            var old_parent_model = undefined;
+            this.records_length = $.map(data, function(value, index) { return index; }).length;
 
             if (this.records_length > 1) {
                 self.display_followers();
             }
 
-            _.each(records, function (record, record_name) {
-                if (old_model != record.parent_model) {
-                    if (old_model != '') {
-                        var $last_separator = $list.find('.oe_subtype').last();
-                        if ($last_separator) {
-                            $last_separator.addClass('oe_subtype_border');
-                        }
+            _.each(data, function (record) {
+                if (old_parent_model !== record.parent_model && old_parent_model !== undefined) {
+                    var $last_separator = $list.find('.oe_subtype').last();
+                    if ($last_separator) {
+                        $last_separator.addClass('oe_subtype_border');
                     }
-                    old_model = record.parent_model;
                 }
-
-                record.name = record_name;
+                old_parent_model = record.parent_model;
                 record.followed = record.followed || undefined;
                 $(qweb.render('mail_followers_subtype', {'record': record, 
                                                          'dialog': dialog}))

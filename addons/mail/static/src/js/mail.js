@@ -1,6 +1,7 @@
 odoo.define('mail.mail', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var mail_utils = require('mail.utils');
 var core = require('web.core');
 var data = require('web.data');
@@ -786,10 +787,10 @@ var MailThread = Attachment.extend ({
         }
         else {
             var ds_model = new data.DataSetSearch(this, this.model, this.context);
-            ds_model.call('read_followers_data', [this.follower_ids.slice(0, this.options.followers_limit)]).then(function (records) {
+            ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.follower_ids.slice(0, this.options.followers_limit)}).then(function (records) {
                 self.followers_data = [];
                 _.each(records, function(f) {
-                    self.followers_data.push(f[1] + '</br>');
+                    self.followers_data.push(f.name + '</br>');
                 });
                 if (self.nb_followers - self.followers_limit > 0) {
                     self.followers_data.push('and ' + self.nb_followers - self.followers_limit + 'more ... </br>');
