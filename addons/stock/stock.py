@@ -94,7 +94,7 @@ class stock_location(osv.osv):
                         ('view', 'View'),
                         ('internal', 'Internal Location'),
                         ('customer', 'Customer Location'),
-                        ('inventory', 'Inventory'),
+                        ('inventory', 'Inventory Loss'),
                         ('procurement', 'Procurement'),
                         ('production', 'Production'),
                         ('transit', 'Transit Location')],
@@ -103,7 +103,7 @@ class stock_location(osv.osv):
                        \n* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products
                        \n* Internal Location: Physical locations inside your own warehouses,
                        \n* Customer Location: Virtual location representing the destination location for products sent to your customers
-                       \n* Inventory: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)
+                       \n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)
                        \n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (supplier or production) is not known yet. This location should be empty when the procurement scheduler has finished running.
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                        \n* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations
