@@ -310,8 +310,8 @@ openerp.pos_loyalty = function(instance){
             var client = this.get_client();
             if ( client ) {
                 client.loyalty_points = this.get_new_total_points();
+                this.pos.gui.screen_instances.clientlist.partner_cache.clear_node(client.id);
             }
-            this.pos.gui.screen_instances.clientlist.partner_cache.clear_node(client.id);
             _super.prototype.finalize.apply(this,arguments);
         },
 
