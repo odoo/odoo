@@ -1,7 +1,7 @@
 :orphan: true
 
 ==========
-external id
+Glossary
 ==========
 
 .. glossary::
