@@ -3751,6 +3751,7 @@ class stock_location_path(osv.osv):
     def _prepare_push_apply(self, cr, uid, rule, move, context=None):
         newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {
+                'origin': move.origin or move.picking_id.name or "/",
                 'location_id': move.location_dest_id.id,
                 'location_dest_id': rule.location_dest_id.id,
                 'date': newdate,
