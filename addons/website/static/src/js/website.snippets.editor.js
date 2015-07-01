@@ -933,6 +933,9 @@ var Option = Class.extend({
     on_clone: function () {
     },
 
+    on_move: function () {
+    },
+
     on_remove: function () {
     },
 
@@ -1950,6 +1953,10 @@ var SnippetEditor = Class.extend({
                 this.$target.insertBefore(next);
             } else {
                 $parent.prepend(this.$target);
+            }
+
+            for (var i in this.styles){
+                this.styles[i].on_move();
             }
         }
 
