@@ -1060,6 +1060,26 @@ var Option = Class.extend({
     clean_for_save: dummy
 });
 
+
+var preventParentEmpty = {
+    hide_remove_button: function() {
+        this.$overlay.find('.oe_snippet_remove, .oe_snippet_move').toggleClass("hidden", !this.$target.siblings().length);
+    },
+    on_focus : function () {
+        this._super();
+        this.hide_remove_button();
+    },
+    on_clone: function ($clone) {
+        this._super($clone);
+        this.hide_remove_button();
+    },
+    on_remove: function () {
+        this._super();
+        this.hide_remove_button();
+    },
+};
+
+
 options.background = Option.extend({
     start: function ($change_target) {
         this.$bg = $change_target || this.$target;
@@ -1525,7 +1545,7 @@ options["margin-y"] = options.marginAndResize.extend({
     },
 });
 
-options["margin-x"] = options.marginAndResize.extend({
+options["margin-x"] = options.marginAndResize.extend(preventParentEmpty).extend({
     getSize: function () {
         this.grid = this._super();
         var width = this.$target.parents(".row:first").first().outerWidth();
@@ -1566,22 +1586,10 @@ options["margin-x"] = options.marginAndResize.extend({
         this.$target.addClass("col-md-offset-" + this.$target.prevAll(".oe_drop_to_remove").length);
         this._super();
     },
-    hide_remove_button: function() {
-        this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
-    },
-    on_focus : function () {
-        this._super();
-        this.hide_remove_button();
-    },
     on_clone: function ($clone) {
         var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
         $clone.attr("class", _class);
-        this.hide_remove_button();
         return false;
-    },
-    on_remove: function () {
-        this._super();
-        this.hide_remove_button();
     },
     on_resize: function (compass, beginClass, current) {
         if (compass === 'w') {
