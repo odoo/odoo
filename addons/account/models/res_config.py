@@ -52,7 +52,7 @@ class AccountConfigSettings(models.TransientModel):
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default purchase tax', oldname="purchase_tax")
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
-    bank_account_code_prefix = fields.Char(string='Bank Accounts Prefix', related='company_id.bank_account_code_prefix', help='Define the code prefix for the bank accounts', oldname'bank_account_code_char')
+    bank_account_code_prefix = fields.Char(string='Bank Accounts Prefix', related='company_id.bank_account_code_prefix', help='Define the code prefix for the bank accounts', oldname='bank_account_code_char')
     cash_account_code_prefix = fields.Char(string='Cash Accounts Prefix', related='company_id.cash_account_code_prefix', help='Define the code prefix for the cash accounts')
     template_transfer_account_id = fields.Many2one('account.account.template', help="Intermediary account used when moving money from a liquidity account to another")
     transfer_account_id = fields.Many2one('account.account',
