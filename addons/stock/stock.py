@@ -2243,6 +2243,17 @@ class stock_move(osv.osv):
         """
         self.check_tracking_product(cr, uid, move.product_id, lot_id, move.location_id, move.location_dest_id, context=context)
         
+    def _is_unreserved_MTO_move_changed_to_MTS(self, cr, uid, move, ancestor_ids=None, context=None):
+        # has ancestors => must be an MTO / chained MTS
+        # all ancestors done, but still waiting => must've been unreserved (after being assigned)
+        if ancestor_ids is None:
+            ancestor_ids = self.find_move_ancestors(cr, uid, move, context=context)
+        is_MTO_or_chained_MTS = bool(ancestor_ids)
+        ancestors = self.read(cr, uid, ancestor_ids, ['state'])
+        all_ancestors_done = all(ancestor['state'] in ('done', 'cancel') for ancestor in ancestors)
+        still_waiting = move.state == 'waiting'
+        manually_changed_from_MTO_to_MTS = move.procure_method == 'make_to_stock'
+        return is_MTO_or_chained_MTS and all_ancestors_done and still_waiting and manually_changed_from_MTO_to_MTS
 
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
@@ -2275,7 +2286,8 @@ class stock_move(osv.osv):
                 if move.state == 'waiting' and not ancestors:
                     #if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
                     main_domain[move.id] += [('id', '=', False)]
-                elif ancestors:
+                elif ancestors and not self._is_unreserved_MTO_move_changed_to_MTS(cr, uid, move, ancestors):
+                    #only restrict quants to history if it is not an unreserved MTO move (all ancestors done, but still waiting)
                     main_domain[move.id] += [('history_ids', 'in', ancestors)]
 
                 #if the move is returned from another, restrict the choice of quants to the ones that follow the returned move

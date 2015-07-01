@@ -258,6 +258,10 @@ class procurement_order(osv.osv):
         result['domain'] = "[('group_id','in',[" + ','.join(map(str, list(group_ids))) + "])]"
         return result
 
+    def _unreserved_MTO_changed_to_MTS(self, cr, uid, move_obj, context):
+        waiting_ids = move_obj.search(cr, uid, [('state', '=', 'waiting')], limit=None, order='priority desc, date_expected asc', context=context)
+        return [move.id for move in move_obj.browse(cr, uid, waiting_ids) if move_obj._is_unreserved_MTO_move_changed_to_MTS(cr, uid, move)]
+
     def run_scheduler(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
         Call the scheduler in order to check the running procurements (super method), to check the minimum stock rules
@@ -289,6 +293,13 @@ class procurement_order(osv.osv):
             confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc', context=context)
             for x in xrange(0, len(confirmed_ids), 100):
                 move_obj.action_assign(cr, uid, confirmed_ids[x:x + 100], context=context)
+                if use_new_cursor:
+                    cr.commit()
+
+            #Search all unreserved MTO stock_moves changed to MTS and try to assign them
+            waiting_ids = self._unreserved_MTO_changed_to_MTS(cr, uid, move_obj, context)
+            for x in xrange(0, len(waiting_ids), 100):
+                move_obj.action_assign(cr, uid, waiting_ids[x:x + 100], context=context)
                 if use_new_cursor:
                     cr.commit()
 
