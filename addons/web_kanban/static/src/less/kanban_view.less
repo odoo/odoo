@@ -336,21 +336,6 @@
             visibility: hidden;
         }
 
-        .oe_kanban_status {
-            display: inline-block;
-            height: 12px;
-            width: 12px;
-            border-radius: 6px;
-
-            background-color: @odoo-brand-secondary;
-
-            &.oe_kanban_status_green {
-                background-color: @brand-success;
-            }
-            &.oe_kanban_status_red {
-                background-color: @brand-danger;
-            }
-        }
     }
 
     .o_kanban_group {
@@ -531,6 +516,20 @@
     }
 }
 
+// necessary outside kanban views (for example, edit column form in task kanban view)
+// ideally, it should be made generic (.o_status, .o_status_green, ...)
+.oe_kanban_status {
+    display: inline-block;
+    height: 12px;
+    width: 12px;
+    border-radius: 6px;
 
+    background-color: @odoo-brand-secondary;
 
-
+    &.oe_kanban_status_green {
+        background-color: @brand-success;
+    }
+    &.oe_kanban_status_red {
+        background-color: @brand-danger;
+    }
+}

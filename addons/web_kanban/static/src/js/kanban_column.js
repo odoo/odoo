@@ -58,6 +58,11 @@ var KanbanColumn = Widget.extend({
         this.record_options = _.extend(_.clone(record_options), {
             group_info: this.values,
         });
+
+        var self = this;
+        this.tooltip_info = _.map(group_data.options.group_by_tooltip, function (key, value, list) {
+            return (self.values && self.values[value] && "<div>" +key + "<br>" + self.values[value] + "</div>") || '';
+        }).join('');
     },
 
     start: function() {
@@ -157,7 +162,8 @@ var KanbanColumn = Widget.extend({
         } else {
             tooltip = this.records.length + _t(' records');
         }
-        this.$header.tooltip().attr('data-original-title', tooltip);
+        tooltip = '<p>' + tooltip + '</p>' + this.tooltip_info;
+        this.$header.tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();
         } else {

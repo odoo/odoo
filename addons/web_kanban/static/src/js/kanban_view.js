@@ -171,9 +171,11 @@ var KanbanView = View.extend({
             // legends for kanban state management (states_legend) are fetched in
             // one call.
             var group_by_fields_to_read = [];
+            var group_options = {};
             var recurse = function(node) {
-                if (node.tag === "field" && node.attrs && node.attrs.options) {
+                if (node.tag === "field" && node.attrs && node.attrs.options && node.attrs.name === group_by_field) {
                     var options = pyeval.py_eval(node.attrs.options);
+                    group_options = options;
                     var states_fields_to_read = _.map(
                         options && options.states_legend || {},
                         function (value, key, list) { return value; });
@@ -184,6 +186,7 @@ var KanbanView = View.extend({
                         group_by_fields_to_read,
                         states_fields_to_read,
                         tooltip_fields_to_read);
+                    return;
                 }
                 _.each(node.children, function(child) {
                     recurse(child);
@@ -203,6 +206,7 @@ var KanbanView = View.extend({
                             group.title = result ? result.display_name : _t("Undefined");
                             group.values = result;
                             group.id = group_id;
+                            group.options = group_options;
                         });
                         return groups;
                     });

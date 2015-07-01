@@ -12,7 +12,7 @@
 
 <t t-name="KanbanView.Group">
     <div class="o_kanban_group" t-att-data-id="widget.id">
-        <div class="o_kanban_header" t-att-title="widget.data_records.length + ' records'">
+        <div class="o_kanban_header" t-att-title="widget.data_records.length + ' records'" data-delay="500">
             <span class="o_column_title"><t t-esc="widget.title"/></span>
             <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
             <span class="o_kanban_config dropdown">
