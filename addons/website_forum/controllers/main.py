@@ -3,6 +3,7 @@ from datetime import datetime
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
+import re
 import simplejson
 import lxml
 from urllib2 import urlopen, URLError
@@ -109,7 +110,67 @@ class WebsiteForum(http.Controller):
 
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')]
         if search:
-            domain += ['|', ('name', 'ilike', search), ('content', 'ilike', search)]
+            Tag = request.env['forum.tag']
+            search_options = {}
+            search_data_match = [match_obj.groupdict() for match_obj in re.finditer(r'''(?P<tag>(?:or\s|-)?\[.*?\])|(?P<word_phrase>".*?")|(?P<options>[a-z]+:\-?\w*)|(?P<other>\S+)''', search)]
+            # filter search_options value and combine same key's value
+            # like {'word_phrase': ["CMS replacement"], 'other': [configure, how], 'tag': [[action], [contract]], 'options': [score:1]}
+            for search_dict in search_data_match:
+                for search_dict_key, search_dict_value in search_dict.items():
+                    if search_dict_value:
+                        search_options.setdefault(search_dict_key, []).append(search_dict_value)
+            sub_domain = []
+            search = {'search': search, 'display_tag': [], 'display_options': []}
+            for search_option_key, search_option_value in search_options.items():
+                if search_option_key == 'tag':
+                    for tag_name in search_option_value:
+                        tag_match = re.search(r'''((?!\[)[\w\-\s{1}]+(?=\]))''', tag_name)
+                        if tag_match:
+                            # add domain for negative_tag(excluded tag), to filter posts(remove negative_tag's post)
+                            if '-' in tag_name.split('['):
+                                search['display_tag'].append("not")
+                                negative_tag_ids = Tag.search([('name', 'ilike', tag_match.group().strip())]).ids
+                                if negative_tag_ids:
+                                    sub_domain.append(('tag_ids', 'not in', negative_tag_ids))
+                            else:
+                                sub_domain.insert(0, ('tag_ids.name', 'ilike', tag_match.group().strip()))
+                                if 'or' in tag_name.split(' '):
+                                    search['display_tag'].append("or")
+                                    sub_domain.insert(0, '|')
+                            search['display_tag'].append(tag_match.group().strip())
+                elif search_option_key == 'word_phrase':
+                    for word_phrase in search_option_value:
+                        word_phrase_match = re.findall(r'''"([^"]*)"''', word_phrase)
+                        if word_phrase_match:
+                            sub_domain.extend(['|', ('name', 'ilike', word_phrase_match[0]), ('content', 'ilike', word_phrase_match[0])])
+                elif search_option_key == 'options':
+                    for options in search_option_value:
+                        try:
+                            options_list = options.split(':')
+                            if len(options_list) == 2 and options_list[1]:
+                                option_value = int(options_list[1])
+                                operand = '>=' if option_value else '='
+                                if 'user' in options_list:
+                                    operand = ' '
+                                    sub_domain.append(('create_uid', '=', option_value))
+                                if 'score' in options_list:
+                                    sub_domain.append(('vote_count', operand, option_value))
+                                if 'views' in options_list:
+                                    sub_domain.append(('views', operand, option_value))
+                                if 'answers' in options_list:
+                                    sub_domain.append(('child_count', operand, option_value))
+                                if any(key in options_list for key in ['user', 'score', 'views', 'answers']):
+                                    search['display_options'].append(options_list[0] + operand + options_list[1])
+                        except ValueError:
+                            pass
+                elif search_option_key == 'other':
+                    for other in search_option_value:
+                        sub_domain.extend(['|', ('name', 'ilike', other), ('content', 'ilike', other)])
+            search['display_search'] = ' '.join(search_options.get('other', []))
+            if search_options.get('word_phrase', False) and search_options.get('other', False):
+                search['display_search'] += ' or '
+            search['display_search'] += ' '.join(search_options.get('word_phrase', []))
+            domain.extend(sub_domain)
         if tag:
             domain += [('tag_ids', 'in', tag.id)]
         if filters == 'unanswered':
@@ -168,6 +229,11 @@ class WebsiteForum(http.Controller):
     def forum_faq(self, forum, **post):
         values = self._prepare_forum_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
         return request.website.render("website_forum.faq", values)
+
+    @http.route(['/forum/<model("forum.forum"):forum>/search_help'], type='http', auth="public", website=True)
+    def forum_search_help(self, forum, **post):
+        values = self._prepare_forum_values(forum=forum, searches=dict(), **post)
+        return request.website.render("website_forum.search_help", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True)
     def tag_read(self, q='', l=25, **post):
