@@ -46,6 +46,9 @@ class purchase_report(osv.osv):
         'fiscal_position_id': fields.many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position', readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
+        'currency_rate': fields.float('Currency Rate', readonly=True),
+        'currency_amount': fields.float('Amount in Currency', readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Purchase Order Currency', readonly=True),
     }
     _order = 'date desc, price_total desc'
     def init(self, cr):
@@ -71,17 +74,20 @@ class purchase_report(osv.osv):
                     t.categ_id as category_id,
                     t.uom_id as product_uom,
                     s.location_id as location_id,
+                    s.currency_id as currency_id,
                     sum(l.product_qty/u.factor*u2.factor) as quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    sum(l.price_unit*l.product_qty)::decimal(16,2) as price_total,
+                    sum(l.price_unit*l.product_qty)::decimal(16,2) as currency_amount,
+                    sum((l.price_unit*l.product_qty) / coalesce(cr.rate,1))::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
                     sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
-                    (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
-                    analytic_account.id as account_analytic_id
+                    analytic_account.id as account_analytic_id,
+                    ((sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0)) / coalesce(cr.rate,1))::decimal(16,2) as price_average,
+                    coalesce(cr.rate,1) as currency_rate
                 from purchase_order_line l
                     join purchase_order s on (l.order_id=s.id)
                     join res_partner partner on s.partner_id = partner.id
@@ -92,6 +98,13 @@ class purchase_report(osv.osv):
                     left join product_uom u2 on (u2.id=t.uom_id)
                     left join stock_picking_type spt on (spt.id=s.picking_type_id)
                     left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
+                    left join res_currency_rate cr on (s.currency_id = cr.currency_id
+                    and
+                        cr.id IN (SELECT id FROM res_currency_rate cr2
+                            WHERE (cr2.currency_id = s.currency_id)
+                                AND ((s.date_order IS NOT NULL AND cr2.name <= s.date_order)
+                                OR (s.date_order IS NULL AND cr2.name <= NOW()))
+                                ORDER BY name DESC LIMIT 1))
                 group by
                     s.company_id,
                     s.create_uid,
@@ -113,6 +126,7 @@ class purchase_report(osv.osv):
                     s.date_order,
                     l.state,
                     spt.warehouse_id,
+                    s.currency_id,
                     u.uom_type,
                     u.category_id,
                     t.uom_id,
@@ -120,6 +134,7 @@ class purchase_report(osv.osv):
                     u2.factor,
                     partner.country_id,
                     partner.commercial_partner_id,
-                    analytic_account.id
+                    analytic_account.id,
+                    cr.rate
             )
         """)
