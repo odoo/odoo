@@ -4,7 +4,8 @@
 
 
 .jumbotron {
-  padding: @jumbotron-padding;
+  padding-top:    @jumbotron-padding;
+  padding-bottom: @jumbotron-padding;
   margin-bottom: @jumbotron-padding;
   color: @jumbotron-color;
   background-color: @jumbotron-bg;
@@ -13,6 +14,7 @@
   .h1 {
     color: @jumbotron-heading-color;
   }
+
   p {
     margin-bottom: (@jumbotron-padding / 2);
     font-size: @jumbotron-font-size;
@@ -23,7 +25,8 @@
     border-top-color: darken(@jumbotron-bg, 10%);
   }
 
-  .container & {
+  .container &,
+  .container-fluid & {
     border-radius: @border-radius-large; // Only round corners at higher resolutions if contained in a container
   }
 
@@ -35,14 +38,15 @@
     padding-top:    (@jumbotron-padding * 1.6);
     padding-bottom: (@jumbotron-padding * 1.6);
 
-    .container & {
+    .container &,
+    .container-fluid & {
       padding-left:  (@jumbotron-padding * 2);
       padding-right: (@jumbotron-padding * 2);
     }
 
     h1,
     .h1 {
-      font-size: (@font-size-base * 4.5);
+      font-size: @jumbotron-heading-font-size;
     }
   }
 }

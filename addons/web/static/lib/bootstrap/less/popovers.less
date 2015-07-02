@@ -11,16 +11,17 @@
   display: none;
   max-width: @popover-max-width;
   padding: 1px;
-  text-align: left; // Reset given new insertion method
+  // Our parent element can be arbitrary since popovers are by default inserted as a sibling of their target element.
+  // So reset our font and text properties to avoid inheriting weird values.
+  .reset-text();
+  font-size: @font-size-base;
+
   background-color: @popover-bg;
   background-clip: padding-box;
   border: 1px solid @popover-fallback-border-color;
   border: 1px solid @popover-border-color;
   border-radius: @border-radius-large;
   .box-shadow(0 5px 10px rgba(0,0,0,.2));
-
-  // Overrides for proper insertion
-  white-space: normal;
 
   // Offset the popover to account for the popover arrow
   &.top     { margin-top: -@popover-arrow-width; }
@@ -33,8 +34,6 @@
   margin: 0; // reset heading margin
   padding: 8px 14px;
   font-size: @font-size-base;
-  font-weight: normal;
-  line-height: 18px;
   background-color: @popover-title-bg;
   border-bottom: 1px solid darken(@popover-title-bg, 5%);
   border-radius: (@border-radius-large - 1) (@border-radius-large - 1) 0 0;
@@ -129,5 +128,4 @@
       bottom: -@popover-arrow-width;
     }
   }
-
 }

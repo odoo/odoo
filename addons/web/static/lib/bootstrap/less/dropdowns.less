@@ -10,12 +10,14 @@
   height: 0;
   margin-left: 2px;
   vertical-align: middle;
-  border-top:   @caret-width-base solid;
+  border-top:   @caret-width-base dashed;
+  border-top:   @caret-width-base solid ~"\9"; // IE8
   border-right: @caret-width-base solid transparent;
   border-left:  @caret-width-base solid transparent;
 }
 
 // The dropdown wrapper (div)
+.dropup,
 .dropdown {
   position: relative;
 }
@@ -103,16 +105,15 @@
   &:focus {
     color: @dropdown-link-disabled-color;
   }
-}
-// Nuke hover/focus effects
-.dropdown-menu > .disabled > a {
+
+  // Nuke hover/focus effects
   &:hover,
   &:focus {
     text-decoration: none;
     background-color: transparent;
     background-image: none; // Remove CSS gradient
     .reset-filter();
-    cursor: not-allowed;
+    cursor: @cursor-disabled;
   }
 }
 
@@ -184,14 +185,15 @@
   // Reverse the caret
   .caret {
     border-top: 0;
-    border-bottom: @caret-width-base solid;
+    border-bottom: @caret-width-base dashed;
+    border-bottom: @caret-width-base solid ~"\9"; // IE8
     content: "";
   }
   // Different positioning for bottom up menu
   .dropdown-menu {
     top: auto;
     bottom: 100%;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
   }
 }
 
@@ -212,4 +214,3 @@
     }
   }
 }
-
