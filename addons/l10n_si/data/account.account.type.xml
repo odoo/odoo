@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="account.data_account_type_income" model="account.account.type">
+            <field name="code">uspeh.prihodki</field>
+            <field name="note"></field>
+            <field name="name">Uspeh - prihodki</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
+        </record>
+        <record id="account.data_account_type_expense" model="account.account.type">
+            <field name="code">uspeh.odhodki</field>
+            <field name="note"></field>
+            <field name="name">Uspeh - odhodki</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="account.data_account_type_stroski" model="account.account.type">
+            <field name="code">stroški</field>
+            <field name="note"></field>
+            <field name="name">Stroški</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="account.data_account_type_receivable" model="account.account.type">
+            <field name="code">sredstva.terjatve</field>
+            <field name="note"></field>
+            <field name="name">Sredstva - terjatve</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="account.data_account_type_asset" model="account.account.type">
+            <field name="code">sredstva</field>
+            <field name="note"></field>
+            <field name="name">Sredstva</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="account.data_account_type_view" model="account.account.type">
+            <field name="code">ostalo</field>
+            <field name="note"></field>
+            <field name="name">Ostalo</field>
+            <field name="close_method">none</field>
+            <field name="report_type">none</field>
+        </record>
+        <record id="account.data_account_type_payable" model="account.account.type">
+            <field name="code">obveznosti.obveznosti</field>
+            <field name="name">Obveznosti do virov sredstev - obveznosti</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="account.data_account_type_liability" model="account.account.type">
+            <field name="code">obveznosti</field>
+            <field name="name">Obveznosti do virov sredstev</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="account.data_account_type_cash" model="account.account.type">
+            <field name="code">gotovina</field>
+            <field name="name">Gotovina</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="account.data_account_type_bank" model="account.account.type">
+            <field name="code">banka</field>
+            <field name="name">Banka</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+    </data>
+</openerp>

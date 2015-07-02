@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="fiscal_position_home" model="account.fiscal.position.template">
+            <field name="name">Domači partner</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="fiscal_position_eu" model="account.fiscal.position.template">
+            <field name="name">Partner EU</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+        <record id="fiscal_position_noeu" model="account.fiscal.position.template">
+            <field name="name">Partner izven EU / EU brez DŠ</field>
+            <field name="chart_template_id" ref="account_chart_si_gd"/>
+        </record>
+    </data>
+</openerp>
