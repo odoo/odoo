@@ -94,12 +94,12 @@ class TestCostJournal(TransactionCase):
                         {'active_model': 'stock.picking',
                          'active_id': pick_id,
                          'active_ids': [pick_id]})
-        invo_id = self.stock_invoice.create(cr, uid, value,
-                                            {'active_model': 'stock.picking',
-                                             'active_id': pick_id,
-                                             'active_ids': [pick_id]})
+        wiz_id = self.stock_invoice.create(cr, uid, value,
+                                           {'active_model': 'stock.picking',
+                                            'active_id': pick_id,
+                                            'active_ids': [pick_id]})
         invoice_ids = self.stock_invoice.\
-            create_invoice(cr, uid, [invo_id],
+            create_invoice(cr, uid, [wiz_id],
                            {'active_model': 'stock.picking',
                             'active_id': pick_id,
                             'active_ids': [pick_id]})
@@ -108,8 +108,7 @@ class TestCostJournal(TransactionCase):
                         'The invoice was not created')
         # Validating the invoice
         self.invoice.signal_workflow(cr, uid, invoice_ids, 'invoice_open')
-        for invo in invoice_ids:
-            invo_brw = self.invoice.browse(cr, uid, invo)
+        for invo_brw in self.invoice.browse(cr, uid, invoice_ids):
             # Checking if the invoices were validated
             self.assertTrue(invo_brw.state == 'open',
                             'The invoice {invo} was not '
@@ -119,6 +118,10 @@ class TestCostJournal(TransactionCase):
                                            [('ref', '=', pick_brw.name),
                                             ('product_id', '=',
                                              self.product_id.id)])
+        self.assertTrue(p_move_ids,
+                        'There are not move lines '
+                        'related with the picking '
+                        '{pick}'.format(pick=pick_brw.name))
         # Get the account rounding to compare results
         prec = self.decimal.precision_get(cr, uid, 'Account')
         for line in self.move_line.browse(cr, uid, p_move_ids):
