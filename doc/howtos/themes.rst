@@ -44,12 +44,17 @@ Create a new file :file:`odoo/addons/theme_dummy/views/pages.xml` and open it.
 In odoo, a page means a new template. You don't need special skills, simply
 copy paste the lines::
 
-  <template id="website.hello" name="Homepage" page="True">
-      <t t-call="website.layout">
-          <div id="wrap" class="oe_structure oe_empty">
-          </div>
-      </t>
-  </template>
+    <?xml version="1.0" encoding="utf-8"?>
+    <openerp>
+        <data>
+            <template id="website.hello" name="Homepage" page="True">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+                    </div>
+                </t>
+            </template>
+        </data>
+    </openerp>
 
 Comment the lines about ``options.xml`` and ``pages.xml`` in ``__openerp__.py``.
 
