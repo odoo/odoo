@@ -55,8 +55,11 @@
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
-                <sheet string="Sales Receipt" >
-                    <h1><label for="number" string="Sales Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
+                <sheet string="Sales Receipt">
+                    <label for="number" string="Sales Receipt"/>
+                    <h1>
+                        <field name="number" class="oe_inline" readonly="1"/>
+                    </h1>
                     <group>
                         <group>
                             <field name="voucher_type" invisible="True"/>
@@ -169,8 +172,10 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet string="Supplier Voucher">
-                    <h1><label for="number" string="Purchase Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
-
+                    <label for="number" string="Purchase Receipt"/>
+                    <h1>
+                        <field name="number" class="oe_inline" readonly="1"/>
+                    </h1>
                     <field name="voucher_type" invisible="True"/>
                     <group>
                         <group>
