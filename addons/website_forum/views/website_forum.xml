@@ -80,7 +80,7 @@
                         </li>
                         <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or '' ">
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}">
-                                <span t-field="user.name"/> (k: <t t-esc="user.karma"/>)
+                                <span t-field="user_id.name"/> (k: <t t-esc="user_id.karma"/>)
                             </a>
                         </li>
                     </ul>
