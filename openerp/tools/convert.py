@@ -871,8 +871,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         quote: "
         delimiter: ,
         encoding: utf-8'''
-    if not idref:
-        idref={}
     model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
     #remove folder path from model
     head, model = os.path.split(model)
