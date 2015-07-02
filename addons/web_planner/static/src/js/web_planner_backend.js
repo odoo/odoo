@@ -1,10 +1,12 @@
 odoo.define('web.planner', function (require) {
 "use strict";
 
+var core = require('web.core');
 var Model = require('web.Model');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 var planner = require('web.planner.common');
+var WebClient = require('web.WebClient');
 
 var PlannerDialog = planner.PlannerDialog;
 
@@ -52,26 +54,32 @@ var PlannerLauncher = Widget.extend({
             this.setup(this.planner_apps[menu_id]);
             this.need_reflow = true;
         } else {
-            if (this.$el.is(":visible")) {
-                this.$el.hide();
-                this.need_reflow = true;
-            }
+            this.$el.hide();
+            this.hide_dialog();
+            this.need_reflow = true;
         }
         if (this.need_reflow) {
-            this.webclient.menu.reflow();
+            core.bus.trigger('resize');
             this.need_reflow = false;
         }
     },
     setup: function(planner){
         var self = this;
+        var webclient = this.findAncestor(function (a) {
+            return a instanceof WebClient;
+        });
+
         this.planner = planner;
-        this.dialog && this.dialog.destroy();
+        if (this.dialog) {
+            this.dialog.destroy();
+        }
         this.dialog = new PlannerDialog(this, planner);
+        this.dialog.$el.remove();
+        this.dialog.appendTo(webclient.$el);
         this.$(".o_planner_progress").tooltip({html: true, title: this.planner.tooltip_planner, placement: 'bottom', delay: {'show': 500}});
         this.dialog.on("planner_progress_changed", this, function(percent){
             self.update_parent_progress_bar(percent);
         });
-        this.dialog.appendTo(document.body);
     },
     // event
     update_parent_progress_bar: function(percent) {
@@ -83,8 +91,13 @@ var PlannerLauncher = Widget.extend({
         this.$el.show();
         this.$(".progress-bar").css('width', percent+"%");
     },
+    hide_dialog: function() {
+        if (this.dialog) {
+            this.dialog.$el.hide();
+        }
+    },
     toggle_dialog: function() {
-        this.dialog.$('#PlannerModal').modal('toggle');
+        this.dialog.$el.toggle();
     }
 });
 
@@ -99,4 +112,3 @@ return {
 };
 
 });
-

@@ -48,7 +48,7 @@ planner.WebsitePlannerLauncher = Widget.extend({
         this.$(".progress-bar").css('width', percent+"%");
     },
     toggle_dialog: function() {
-        this.dialog.$('#PlannerModal').modal('toggle');
+        this.dialog.$el.toggle();
     },
 });
 

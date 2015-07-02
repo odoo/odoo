@@ -9,23 +9,51 @@ var utils = require('web.utils');
 var QWeb = core.qweb;
 var bus = core.bus;
 
+var Page = core.Class.extend({
+    init: function (dom, page_index) {
+        var $dom = $(dom);
+        this.dom = dom;
+        this.hide_from_menu = $dom.attr('hide-from-menu');
+        this.hide_mark_as_done = $dom.attr('hide-mark-as-done');
+        this.done = false;
+        this.menu_item = null;
+        this.title = $dom.find('[data-menutitle]').data('menutitle');
+
+        var page_id = this.title.replace(/\s/g, '') + page_index;
+        this.set_page_id(page_id);
+    },
+    set_page_id: function (id) {
+        this.id = id;
+        $(this.dom).attr('id', id);
+    },
+    toggle_done: function () {
+        this.done = ! this.done;
+    },
+    get_category_name: function (category_selector) {
+        var $page = $(this.dom);
+
+        return $page.parents(category_selector).attr('menu-category-id');
+    },
+});
+
 /*
-    Widget implementing the Modal of the planner (with all form, menu items, mark buttons, pages, ...). The content (the view_id) is fetched by
-    calling the 'render' method (server side), then footer are appended to every pages (client side). Data are saved when a 'mark button' is clicked.
-    Some element of the template MUST respect naming convention :
-        * Input elements (select, textarea, radio, ...) MUST HAVE an 'id' as 'input_element_#####', where ##### is a string.
-        * Page div MUST HAVE the class "o_planner_page" and an 'id' as 'planner_page#', where # is ideally a
-          number. !!! The declaration order of the page are important. The 'id' number is NOT the sequence order.
-        * Menu item MUST HAVE an href attribute containing the id of the page they are referencing.
+ Template rules:
+ Input elements (select, textarea, radio, ...) MUST HAVE an 'id' as 'input_element_#####', where ##### is a string.
+ Page div MUST HAVE the class "o_planner_page" and an 'id' as 'planner_page#', where # is ideally a
+ number. The declaration order of the page are important. The 'id' number is NOT the sequence order.
+ Menu item MUST HAVE an href attribute containing the id of the page they are referencing.
 */
 var PlannerDialog = Widget.extend({
     template: "PlannerDialog",
+    pages: [],
+    menu_items: [],
+    currently_shown_page: null,
+    currently_active_menu_item: null,
+    category_selector: 'div[menu-category-id]',
     events: {
-        'click .o_planner div[id^="planner_page"] a[href^="#planner_page"]': 'change_page',
-        'click .o_planner li a[href^="#planner_page"]': 'change_page',
-        'click .o_planner div[id^="planner_page"] button[data-pageid^="planner_page"]': 'mark_as_done',
-        'hidden.bs.modal': 'on_modal_hide',
-        'shown.bs.modal': 'on_modal_show',
+        'click li a[href^="#"]': 'change_page',
+        'click button.mark_as_done': 'click_on_done',
+        'click a.btn-next': 'change_to_next_page',
     },
     init: function(parent, planner) {
         this._super(parent);
@@ -33,11 +61,45 @@ var PlannerDialog = Widget.extend({
         this.planner = planner;
         this.cookie_name = this.planner['planner_application'] + '_last_page';
         this.set('progress', 0);
+        this.pages = [];
+        this.menu_items = [];
     },
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this._setup_view().then(function(){
+        self.$el.hide();
+        return (new Model('web.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]).then(function(res) {
+            var $res = $(res);
+            $res.find('.o_planner_page').each(function(index, dom_page) {
+                var page = new Page(dom_page, index);
+
+                self.pages.push(page);
+            });
+
+            var $menu = self.render_menu($res);
+            self.$('.o_planner_menu ul').html($menu);
+            self.menu_items = self.$('.o_planner_menu li');
+
+            self.pages.forEach(function(page) {
+                page.menu_item = self._find_menu_item_by_page_id(page.id);
+            });
+
+            self.$('.o_content_page').html($res);
+
+            // update the planner_data with the new inputs of the view
+            var actual_vals = self._get_values();
+            self.planner.data = _.defaults(self.planner.data, actual_vals);
+            // set the default value
+            self._set_values(self.planner.data);
+            // show last opened page
+            self._show_last_open_page();
+
+            self.$el.on('keyup', "textarea", function() {
+                if (this.scrollHeight != this.clientHeight) {
+                    this.style.height = this.scrollHeight + "px";
+                }
+            });
+        }).then(function() {
             self.prepare_planner_event();
         });
     },
@@ -49,83 +111,185 @@ var PlannerDialog = Widget.extend({
         });
         this.on('planner_progress_changed', this, this.update_ui_progress_bar);
         this.set('progress', this.planner.progress); // init progress to trigger ui update
-
-        $(window).on('resize', function() {
-            self.resize_dialog();
-        });
     },
-    // ui
-    _setup_view: function(){
-        var self = this;
-        return (new Model('web.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]).then(function(res) {
-            self.$('.content_page').html(res);
-            // add footer to each page
-            self.add_pages_footer();
-            // update the planner_data with the new inputs of the view
-            var actual_vals = self._get_values();
-            self.planner.data = _.defaults(self.planner.data, actual_vals);
-            // set the default value
-            self._set_values(self.planner.data);
-            // show last opened page
-            var last_open_page = (utils.get_cookie(self.cookie_name)) ? utils.get_cookie(self.cookie_name) : self.planner.data['last_open_page'] || false;
-            if (last_open_page) {
-                self._switch_page(last_open_page);
-            }
-            // Call resize function at the beginning
-            self.resize_dialog();
-            self.$el.on('keyup', "textarea", function() {
-                if (this.scrollHeight != this.clientHeight) {
-                    this.style.height = this.scrollHeight + "px";
-                }
-            });
-        });
+    _render_done_page: function (page) {
+        var mark_as_done_button = this.$('.mark_as_done');
+        var next_button = this.$('a.btn-next');
+        var active_menu = $(page.menu_item).find('span');
+        if (page.done) {
+            active_menu.addClass('fa-check');
+            mark_as_done_button.removeClass('fa-square-o btn-primary');
+            mark_as_done_button.addClass('fa-check-square-o btn-default');
+            next_button.removeClass('btn-default');
+            next_button.addClass('btn-primary');
+
+            // page checked animation
+            $(page.dom).addClass('marked');
+            setTimeout(function() {
+                $(page.dom).removeClass('marked');
+            }, 1000);
+        } else {
+            active_menu.removeClass('fa-check');
+            mark_as_done_button.removeClass('fa-check-square-o btn-default');
+            mark_as_done_button.addClass('fa-square-o btn-primary');
+            next_button.removeClass('btn-primary');
+            next_button.addClass('btn-default');
+        }
+    },
+    _show_last_open_page: function () {
+        var last_open_page = utils.get_cookie(this.cookie_name);
+
+        if (! last_open_page) {
+            last_open_page = this.planner.data['last_open_page'] || false;
+        }
+
+        if (last_open_page) {
+            this._display_page(last_open_page);
+        } else {
+            this._display_page(this.pages[0].id);
+        }
     },
     update_ui_progress_bar: function(percent) {
         this.$(".progress-bar").css('width', percent+"%");
-        this.$(".o_planner_progress_col").find('.o_planner_progress_counter').text(percent+"%");
     },
-    add_pages_footer: function() {
+    create_menu_item: function(page, menu_items, menu_item_page_map) {
+        var $page = $(page.dom);
+        var $menu_item_element = $page.find('h1[data-menutitle]');
+        var menu_title = $menu_item_element.data('menutitle') || $menu_item_element.text();
+
+        menu_items.push(menu_title);
+        menu_item_page_map[menu_title] = page.id;
+    },
+    render_menu: function($res) {
         var self = this;
-        //find all the pages and append footer to each pages
-        _.each(self.$('.o_planner div[id^="planner_page"]'), function(element) {
-            var $el = $(element);
-            var next_page_name = self.$(".o_planner .o_planner_sidebar li a[href='#"+$el.next().attr('id')+"']").text() || ' Finished!';
-            var footer_template = QWeb.render("PlannerFooter", {
-                'next_page_name': next_page_name,
-                'next_page_id': $el.next().attr('id'),
-                'current_page_id': $el.attr('id'),
-                'start': $el.prev().length ? false: true,
-                'end': $el.next().length ? false: true
-            });
-            $el.append(footer_template);
+        var orphan_pages = [];
+        var menu_categories = [];
+        var menu_item_page_map = {};
+
+        // pages with no category
+        self.pages.forEach(function(page) {
+            var $page = $(page.dom);
+            if (! page.hide_from_menu && ! page.get_category_name(self.category_selector)) {
+                self.create_menu_item(page, orphan_pages, menu_item_page_map);
+            }
         });
+
+        // pages with a category
+        $res.find(self.category_selector).each(function(index, menu_category) {
+            var $menu_category = $(menu_category);
+            var menu_category_item = {
+                name: $menu_category.attr('menu-category-id'),
+                classes: $menu_category.attr('menu-classes'),
+                menu_items: [],
+            };
+
+            self.pages.forEach(function(page) {
+                if (! page.hide_from_menu && page.get_category_name(self.category_selector) === menu_category_item.name) {
+                    self.create_menu_item(page, menu_category_item.menu_items, menu_item_page_map);
+                }
+            });
+
+            menu_categories.push(menu_category_item);
+        });
+
+        var menu = QWeb.render('PlannerMenu', {
+            'orphan_pages': orphan_pages,
+            'menu_categories': menu_categories,
+            'menu_item_page_map': menu_item_page_map
+        });
+
+        return menu;
     },
-    resize_dialog: function() {
-        var winH  = $(window).height();
-        var $modal = this.$('.o_planner_dialog');
-        $modal.height(winH/1.1);
-        this.$('.o_planner_pages').height($modal.height() - 60);
-        this.$('.o_planner_sidebar').height($modal.height() - 75);
+    get_next_page_id: function() {
+        var self = this;
+        var current_page_found = false;
+        var next_page_id = null;
+        self.pages.every(function(page) {
+            if (current_page_found) {
+                next_page_id = page.id;
+                return false;
+            }
+
+            if (page.id === self.currently_shown_page.id) {
+                current_page_found = true;
+            }
+
+            return true;
+        });
+
+        return next_page_id;
     },
-    // page switching
+    change_to_next_page: function(ev) {
+        var next_page_id = this.get_next_page_id();
+
+        ev.preventDefault();
+
+        if (next_page_id) {
+            this._display_page(next_page_id);
+        }
+    },
     change_page: function(ev) {
         ev.preventDefault();
         var page_id = $(ev.currentTarget).attr('href').replace('#', '');
-        this._switch_page(page_id);
+        this._display_page(page_id);
     },
-    _switch_page: function(page_id) {
-        this.$(".o_planner li a[href^='#planner_page']").parent().removeClass('active');
-        this.$(".o_planner li a[href=#"+page_id+"]").parent().addClass('active');
-        this.$(".o_planner div[id^='planner_page']").removeClass('show');
-        this.$(".o_planner div[id="+page_id+"]").addClass('show');
-        this.$(".o_planner .o_planner_pages").scrollTop("0");
+    _find_page_by_id: function (id) {
+        var result = _.find(this.pages, function (page) {
+            return page.id === id;
+        });
+
+        return result;
+    },
+    _find_menu_item_by_page_id: function (page_id) {
+        var result = _.find(this.menu_items, function (menu_item) {
+            var $menu_item = $(menu_item);
+            return $($menu_item.find('a')).attr('href') === '#' + page_id;
+        });
+
+        return result;
+    },
+    _display_page: function(page_id) {
+        var mark_as_done_button = this.$('button.mark_as_done');
+        var next_button = this.$('a.btn-next');
+        var page = this._find_page_by_id(page_id);
+        if (this.currently_active_menu_item) {
+            $(this.currently_active_menu_item).removeClass('active');
+        }
+
+        var menu_item = this._find_menu_item_by_page_id(page_id);
+        $(menu_item).addClass('active');
+        this.currently_active_menu_item = menu_item;
+
+        if (this.currently_shown_page) {
+            $(this.currently_shown_page.dom).removeClass('show');
+        }
+
+        $(page.dom).addClass('show');
+        this.currently_shown_page = page;
+
+        if (! this.get_next_page_id()) {
+            next_button.hide();
+        } else {
+            next_button.show();
+        }
+
+        if (page.hide_mark_as_done) {
+            mark_as_done_button.hide();
+        } else {
+            mark_as_done_button.show();
+        }
+
+        this.$('.o_planner_title').text(this.currently_shown_page.title);
+        this._render_done_page(this.currently_shown_page);
+
         this.planner.data['last_open_page'] = page_id;
         utils.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
+        this.$(".o_content_page").scrollTop("0");
     },
     // planner data functions
-    _get_values: function(page_id){
+    _get_values: function(page){
         // if no page_id, take the complete planner
-        var base_elem = page_id ? this.$(".o_planner div[id="+page_id+"]") : this.$(".o_planner div[id^='planner_page']");
+        var base_elem = page ? $(page.dom) : this.$(".o_planner_page");
         var values = {};
         // get the selector for all the input and mark_button
         // only INPUT (select, textearea, input, checkbox and radio), and BUTTON (.mark_button#) are observed
@@ -152,16 +316,20 @@ var PlannerDialog = Widget.extend({
                 }
             }
         });
+
+        this.pages.forEach(function(page) {
+            values[page.id] = page.done;
+        });
         return values;
     },
     _set_values: function(values){
         var self = this;
         _.each(values, function(val, id){
-            var $elem = self.$('#'+id);
+            var $elem = self.$('[id="'+id+'"]');
             if ($elem.prop("tagName") == 'BUTTON'){
                 if(val == 'marked'){
                     $elem.addClass('fa-check-square-o btn-default').removeClass('fa-square-o btn-primary');
-                    self.$(".o_planner li a[href=#"+$elem.data('pageid')+"] span").addClass('fa-check');
+                    self.$("li a[href=#"+$elem.data('pageid')+"] span").addClass('fa-check');
                 }
             }
             if ($elem.prop("tagName") == 'INPUT' || $elem.prop("tagName") == 'TEXTAREA'){
@@ -175,15 +343,31 @@ var PlannerDialog = Widget.extend({
                 }
             }
         });
+
+        this.pages.forEach(function(page) {
+            page.done = values[page.id];
+            self._render_done_page(page);
+        });
     },
-    update_planner: function(page_id){
+    update_planner: function(){
         // update the planner.data with the inputs
-        var vals = this._get_values(page_id);
+        var vals = this._get_values(this.currently_shown_page);
         this.planner.data = _.extend(this.planner.data, vals);
+
         // re compute the progress percentage
-        var mark_btn = this.$(".o_planner button[id^='mark_button']");
-        var marked_btn = this.$(".o_planner button[id^='mark_button'].fa-check-square-o");
-        var percent = parseInt((marked_btn.length+1) / (mark_btn.length+1) * 100);
+        var total_pages = 0;
+        var done_pages = 0;
+
+        this.pages.forEach(function(page) {
+            if (! page.hide_mark_as_done) {
+                total_pages++;
+            }
+            if (page.done) {
+                done_pages++;
+            }
+        });
+
+        var percent = parseInt((done_pages / total_pages) * 100, 10);
         this.set('progress', percent);
         this.planner.progress = percent;
         // save data and progress in database
@@ -193,39 +377,13 @@ var PlannerDialog = Widget.extend({
         return (new Model('web.planner')).call('write', [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}]);
     },
     // user actions
-    mark_as_done: function(ev) {
-        var self = this;
-        var btn = $(ev.currentTarget);
-        var page_id = btn.attr('data-pageid');
-        var active_menu = self.$(".o_planner li a[href=#"+page_id+"] span");
-        var active_page = self.$(".o_planner div[id^='planner_page'].o_planner_page.show");
-
-        var next_button = self.$(".o_planner a[data-parent="+page_id+"]");
-        if (!btn.hasClass('fa-check-square-o')) {
-            active_menu.addClass('fa-check');
-            btn.addClass('fa-check-square-o btn-default').removeClass('fa-square-o btn-primary');
-            next_button.addClass('btn-primary').removeClass('btn-default');
-            // page checked animation
-            active_page.addClass('marked');
-            setTimeout(function() { active_page.removeClass('marked'); }, 1000);
-        } else {
-            btn.removeClass('fa-check-square-o btn-default').addClass('fa-square-o btn-primary');
-            next_button.addClass('btn-default').removeClass('btn-primary');
-            active_menu.removeClass('fa-check');
-        }
-        self.update_planner(page_id);
-    },
-    on_modal_show : function(e) {
-        bus.on('action', this, _.bind(this.on_webclient_action, this));
-        $(window).on("unload", this, _.bind(this.on_webclient_action, this)); // bind the action of quitting the window
-    },
-    on_modal_hide : function(e) {
-        bus.off('action', this, _.bind(this.on_webclient_action, this));
-        $(window).off("unload", this, _.bind(this.on_webclient_action, this)); // unbind the action of quitting the window
-        this.update_planner(); // explicit call to save data
+    click_on_done: function(ev) {
+        this.currently_shown_page.toggle_done();
+        this._render_done_page(this.currently_shown_page);
+        this.update_planner();
     },
     on_webclient_action: function(e) {
-        this.$('#PlannerModal').modal('hide');
+        this.$('#PlannerDialog').hide();
     },
 });
 return {
@@ -233,4 +391,3 @@ return {
 };
 
 });
-
