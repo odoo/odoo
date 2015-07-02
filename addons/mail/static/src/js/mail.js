@@ -1051,13 +1051,17 @@ var ComposeMessage = Attachment.extend ({
 
         core.bus.on('clear_uncommitted_changes', this, function (chain_callbacks) {
             if (this.show_composer) {
+                var self = this;
                 chain_callbacks(function() {
                     var def = $.Deferred();
                     var message = _t("You are currently composing a message, your message will be discarded. Are you sure you want to leave this page ?");
                     var options = {
                         title: _t("Warning"),
                         confirm_callback: function() {
-                            def.resolve();
+                            self.on_cancel();
+                            this.on('closed', null, function() { // 'this' is the dialog widget
+                                def.resolve();
+                            });
                         },
                         cancel_callback: function() {
                             def.reject();
@@ -1066,8 +1070,6 @@ var ComposeMessage = Attachment.extend ({
                     Dialog.confirm(this, message, options);
                     return def;
                 });
-            } else {
-                this.on_cancel();
             }
         });
     },
