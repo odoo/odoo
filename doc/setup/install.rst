@@ -237,6 +237,7 @@ Source installation requires manually installing dependencies:
 * Python 2.7.
 
   - on Linux and OS X, included by default
+  - on FreeBSD, install python27 from packages or ports
   - on Windows, use `the official Python 2.7.9 installer
     <https://www.python.org/downloads/windows/>`_.
 
@@ -265,6 +266,33 @@ Source installation requires manually installing dependencies:
   - on OS X, `postgres.app <http://postgresapp.com>`_ is the simplest way to
     get started, then create a postgres user as on Linux
 
+  - on FreeBSD, install from packages, then configure it to autostart and
+    initialize it, add an user named like your login (used 'odoo' as an 
+    example) and finally set its default enconding to UTF-8:
+
+    .. code-block: console
+
+        # pkg install postgresql94-server postgresql94-client postgresql94-contrib
+		# echo 'postgresql_enable="YES"' >> /etc/rc.conf
+		# echo 'postgresql="-D /usr/local/pgsql/data"' >> /etc/rc.conf
+		# su pgsql
+		$ initdb /usr/local/pgsql/data
+		$ exit
+		# service postgresql start
+		# su pgsql
+		$ createuser -s odoo
+		$ createdb pgsql
+		$ psql
+		$> update pg_database set datallowconn = TRUE where datname = 'template0';
+		$> \c template0
+		$> update pg_database set datistemplate = FALSE where datname = 'template1';
+		$> drop database template1;
+		$> create database template1 with template = template0 encoding = 'UTF8';
+		$> update pg_database set datistemplate = TRUE where datname = 'template1';
+		$> \c template1
+		$> update pg_database set datallowconn = FALSE where datname = 'template0';
+		$> \q
+
   - on Windows, use `PostgreSQL for windows`_ then
 
     - add PostgreSQL's ``bin`` directory (default:
@@ -289,7 +317,11 @@ Source installation requires manually installing dependencies:
     ldap) it may be necessary to install development tools and native
     dependencies before pip is able to install the dependencies themselves.
     These are available in ``-dev`` or ``-devel`` packages for Python,
+<<<<<<< HEAD
+    Postgres, libxml2, libxslt, libevent and libsasl2. Then the Python
+=======
     Postgres, libxml2, libxslt, libevent, libsasl2 and libldap2. Then the Python
+>>>>>>> 25d365ee69c60e9a1778c1ff036b014398a1dbad
     dependecies can themselves be installed:
 
     .. code-block:: console
@@ -304,6 +336,18 @@ Source installation requires manually installing dependencies:
     .. code-block:: console
 
         $ pip install -r requirements.txt
+
+	as also on FreeBSD, but first you need to install from packages:
+
+	.. code-block: console
+
+		# pkg install py27-Pillow py27-lxml py27-greenlet py27-gevent py27-psycopg2 py27-ldap2 cyrus-sasl
+		# setenv CPATH /usr/local/include/
+		# cp /usr/local/include/sasl/* /usr/local/include/
+		# pip install -r requirements.txt
+	
+	if you the package manager removes postgresql, you need to reinstall it.
+
 
   - on Windows you need to install some of the dependencies manually, tweak the
     requirements.txt file, then run pip to install the remaning ones.
@@ -356,6 +400,12 @@ Source installation requires manually installing dependencies:
     .. code-block:: console
 
         $ sudo npm install -g less less-plugin-clean-css
+
+  - on FreeBSD, install nodejs via the package manager and then simply
+    use npm to install less and less-plugin-clean-css:
+		
+		# pkg install node www/npm
+		# npm install -g less less-plugin-clean-css
 
   - on OS X, install nodejs via your preferred package manager (homebrew_,
     macports_) then install less and less-plugin-clean-css:
