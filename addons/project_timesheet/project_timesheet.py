@@ -100,6 +100,9 @@ class project_work(osv.osv):
         res['product_uom_id'] = emp.product_id.uom_id.id
         return res
 
+    def _timesheet_account(self, cr, uid, task, context=None):
+        return task.project_id and task.project_id.analytic_account_id.id
+
     def _create_analytic_entries(self, cr, uid, vals, context):
         """Create the hr analytic timesheet from project task work"""
         timesheet_obj = self.pool['hr.analytic.timesheet']
@@ -129,7 +132,7 @@ class project_work(osv.osv):
         default_uom = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.project_time_mode_id.id
         if result['product_uom_id'] != default_uom:
             vals_line['unit_amount'] = self.pool['product.uom']._compute_qty(cr, uid, default_uom, vals_line['unit_amount'], result['product_uom_id'])
-        acc_id = task_obj.project_id and task_obj.project_id.analytic_account_id.id or acc_id
+        acc_id = self._timesheet_account(cr, uid, task_obj, context=context)
         if acc_id:
             vals_line['account_id'] = acc_id
             res = timesheet_obj.on_change_account_id(cr, uid, False, acc_id)
