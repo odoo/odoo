@@ -97,7 +97,7 @@ class procurement_order(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
-        'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
+        'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null', select=True),
         'close_move': fields.boolean('Close Move at end'),
         'location_id': fields.many2one('stock.location', 'Location', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
