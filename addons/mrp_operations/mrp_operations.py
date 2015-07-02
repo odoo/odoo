@@ -295,18 +295,21 @@ class mrp_production(osv.osv):
                 if l.state in ('done','cancel','draft'):
                     continue
                 todo += l.move_dest_id_lines
-                if l.production_id and (l.production_id.date_finished > dt):
-                    if l.production_id.state not in ('done','cancel'):
-                        for wc in l.production_id.workcenter_lines:
-                            i = self.pool.get('resource.calendar').interval_min_get(
-                                cr,
-                                uid,
-                                wc.workcenter_id.calendar_id.id or False,
-                                dt, wc.hour or 0.0
-                            )
-                            dt = i[0][0]
-                        if l.production_id.date_start > dt.strftime('%Y-%m-%d %H:%M:%S'):
-                            self.write(cr, uid, [l.production_id.id], {'date_start':dt.strftime('%Y-%m-%d %H:%M:%S')}, mini=True)
+                if l.production_id and l.production_id.date_finished:
+                    date_end = l.production_id.date_finished
+                    d_end = datetime.strptime(date_end, '%Y-%m-%d %H:%M:%S')
+                    if d_end > dt:
+                        if l.production_id.state not in ('done','cancel'):
+                            for wc in l.production_id.workcenter_lines:
+                                i = self.pool.get('resource.calendar').interval_min_get(
+                                    cr,
+                                    uid,
+                                    wc.workcenter_id.calendar_id.id or False,
+                                    dt, wc.hour or 0.0
+                                )
+                                dt = i[0][0]
+                            if l.production_id.date_start > dt.strftime('%Y-%m-%d %H:%M:%S'):
+                                self.write(cr, uid, [l.production_id.id], {'date_start':dt.strftime('%Y-%m-%d %H:%M:%S')}, mini=True)
         return True
 
     def _move_futur(self, cr, uid, ids, context=None):
