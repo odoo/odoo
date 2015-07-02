@@ -3,7 +3,6 @@
 from datetime import datetime
 from dateutil import relativedelta
 import random
-import re
 
 from openerp import tools
 from openerp import models, api, _
@@ -13,8 +12,6 @@ from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import ustr
 from openerp.osv import osv, fields
-
-URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
 
 
 class MassMailingTag(osv.Model):
@@ -830,24 +827,3 @@ class MassMailing(osv.Model):
                 self.send_mail(cr, uid, [mass_mailing_id], context=context)
             else:
                 self.write(cr, uid, [mass_mailing_id], {'state': 'done'}, context=context)
-
-
-class MailMail(models.Model):
-    _inherit = ['mail.mail']
-
-    @api.multi
-    def send_get_mail_body(self, partner=None):
-        """Override to add Statistic_id in shorted urls """
-        links_blacklist = ['/unsubscribe_from_list']
-
-        if self.mailing_id and self.body_html and self.statistics_ids:
-            for match in re.findall(URL_REGEX, self.body_html):
-
-                href = match[0]
-                url = match[1]
-
-                if not [s for s in links_blacklist if s in href]:
-                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
-                    self.body_html = self.body_html.replace(href, new_href)
-
-        return super(MailMail, self).send_get_mail_body(partner=partner)
