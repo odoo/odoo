@@ -32,10 +32,10 @@ and the Lempira currency.""",
     'website': 'http://trigluu.com',
     'depends': ['base', 'account'],
     'data': [
-        'account_types.xml',
         'account_chart.xml',
         'l10n_hn_base.xml',
+        'account_chart_template.yml',
     ],
     'demo': [],
-    'installable': False,
+    'installable': True,
 }
