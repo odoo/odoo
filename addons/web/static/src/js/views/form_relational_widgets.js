@@ -481,7 +481,7 @@ var AbstractManyField = common.AbstractField.extend({
             return this.send_commands(ids);
         }
         this.dataset.reset_ids(ids);
-        this.set({'value': ids});
+        this._super(ids);
     },
 
     internal_set_value: function(ids) {
@@ -834,7 +834,7 @@ var FieldX2Many = AbstractManyField.extend({
     set_value: function(value_) {
         this._super(value_);
         if (this.is_started && !this.no_rerender) {
-            this.reload_current_view();
+            return this.reload_current_view();
         }
     },
     commit_value: function() {
