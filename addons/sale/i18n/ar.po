@@ -4,13 +4,16 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Hesham ELMAHDY, 2015
+# hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-05 16:43+0000\n"
+"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +103,7 @@ msgstr ""
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "عدد المبيعات"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -122,14 +125,14 @@ msgstr "عدد طلبات البيع"
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'عرض سعر' or 'أمر بيع'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -284,7 +287,7 @@ msgstr "حصة الشريك"
 #. module: sale
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "يسمح لك باختيار عناوين مختلفة لإرسال الفواتير والمنتجات"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -299,7 +302,7 @@ msgstr "تسمح بتكوين تنبيهات من قبل العملاء أو ا�
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
 msgid "Allow online quotations and templates"
-msgstr ""
+msgstr "السماح بعروض السعر وقوالبها عبر الموقع"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -312,12 +315,12 @@ msgid ""
 "Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
+msgstr "يسمح لك بضبط تنبيهات على المنتج يتم عرضها عندما يقوم المستخدم ببيع منتج ما، أو بالبيع لعميل ما.\nمثال: المنتج: لم نستمر في بيع هذا المنتج، لا تشتري منه أكثر من 5 قطع.\nالمورد: لا تنسى أن تطلب الشحن السريع."
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measure"
-msgstr ""
+msgstr "السماح باستخدام وحدات قياس مختلفة"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -325,7 +328,7 @@ msgid ""
 "Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
 "You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr ""
+msgstr "السماح بتعريف شروط متنوعة في عقود العملاء: طريقة إصدار الفواتير (سعر ثابت، وفقاً للأعمال المنجزة، السداد مقدماً)، السعر بالضبط (650 جنيه/اليوم للمبرمج)، مدة العقد (عقد دعم فني لمدة سنة).\nستكون قادراً على متابعة التقدم في العقد وإصدار الفواتير تلقائياً.\n- سيثبت هذا الموديول account_analytic_analysis."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -339,7 +342,7 @@ msgstr "يسمح للإدارة أسعار مختلفة على أساس القو
 msgid ""
 "Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "-This installs the module sale_stock."
-msgstr ""
+msgstr "السماح بإنشاء عروض السعر وأوامر البيع باستخدام سياسات طلب مختلفة، وإدارة مستويات المخزون ذات الصلة.\n- سيثبت هذا الموديول sale_stock."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -351,7 +354,7 @@ msgstr "تسمح بإضافة خصم على سطور اوامر المبيعات
 msgid ""
 "Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
-msgstr ""
+msgstr "يسمح لك بتصنيف المبيعات والتسليم (قوائم الاستلام) بين دفاتر يومية مختلفة، وإجراء عمليات جماعية على دفاتر اليومية.\n- سيثبت هذا الموديول sale_journal."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -359,7 +362,7 @@ msgid ""
 "Allows you to define what is the default function of a specific user on a given account.\n"
 "This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.\n"
 "-This installs the module analytic_user_function."
-msgstr ""
+msgstr "السماح بتعريف المهام الافتراضية لمستخدم معين في حساب ما.\nعادة ام سيتدخم هذا عندما يقوم المستخدم بتسجيل الأنشطة والأعمال التي أنجزها. يتم جلب القيم تلقائياً وتعبئة الحقول المناسبة بها؛ ولكنك ستبقى قادراً على تغيير هذا القيم يدوياً.\n- سيثبت هذا الموديول analytic_user_function."
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
@@ -377,7 +380,7 @@ msgstr "يسمح لك بتحديد الحساب التحليلي على أوام
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
+msgstr "السماح باختيار عنوان لإرسال المنتجات يختلف عن عنوان إرسال الفواتير في أمر البيع."
 
 #. module: sale
 #: field:sale.report,analytic_account_id:0
@@ -420,7 +423,7 @@ msgstr "برجل البيع"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "حسب فريق المبيعات"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -484,22 +487,22 @@ msgstr "اختر لتجميع الفواتير حسب العميل"
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "حدد هذا الاختيار لإدارة عروض السعر في فريق المبيعات هذا."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "انقر لعرض تحليلات المبيعات."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of invoices."
-msgstr ""
+msgstr "انقر لعرض تحليلات تفصيلية على الفواتير."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis."
-msgstr ""
+msgstr "انقر لعرض تحليل تفصيلي."
 
 #. module: sale
 #: field:sale.report,delay:0
@@ -647,7 +650,7 @@ msgstr "ترتيب التواريخ"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "تاريخ الطلب:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
@@ -672,24 +675,24 @@ msgstr "الخيارات الإفتراضية"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "الشروط والأحكام الافتراضية"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "الشروط والأحكام الافتراضية..."
 
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr ""
+msgstr "الشروط والأحكام الافتراضية لعروض السعر."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
-msgstr ""
+msgstr "حدد المبلغ المطلوب تحقيقه في إعدادات فريق المبيعات لعرض معدل إنجاز الفريق في الشهر والتوقعات بنظرة واحدة."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -791,7 +794,7 @@ msgstr "استثناء"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "الفلاتر التفصيلية"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -829,7 +832,7 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "التوقعات"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -925,7 +928,7 @@ msgstr "قيد التقدم"
 #: code:addons/sale/sale.py:274
 #, python-format
 msgid "In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgstr "لتتمكن من حذف أمر بيع مؤكد، ينبغي عليك أن تقوم بإلغاءه أولاً!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:105
@@ -966,7 +969,7 @@ msgstr "خلل في الفاتورة"
 #. module: sale
 #: field:crm.case.section,invoiced_forecast:0
 msgid "Invoice Forecast"
-msgstr ""
+msgstr "توقعات الفواتير"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -986,7 +989,7 @@ msgstr "فاتورة أمر بيع"
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "المبلغ المستهدف"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -996,12 +999,12 @@ msgstr "عنوان الفاتورة لأمر البيع الحالي"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "عنوان الفواتير:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "عنوان الشحن والفواتير:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1016,7 +1019,7 @@ msgstr "لا يمكن إنشاء فاتورة لسطر أمر المبيعات �
 #: code:addons/sale/wizard/sale_line_invoice.py:102
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "أنشأت الفاتورة"
 
 #. module: sale
 #: code:addons/sale/sale.py:1224
@@ -1137,13 +1140,13 @@ msgstr "نسخة جديدة من عرض السعر"
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "بريد جديد"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "لم يتم تحديد عميل!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1132
@@ -1162,7 +1165,7 @@ msgstr "أي خط للائحة أسعار صالحة موجود!"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "عدد الأيام بين تأكيد أمر البيع وبدء شحن المنتجات إلى العميل"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1195,7 +1198,7 @@ msgstr "موظف واحد يمكن أن يكون له أدوار مختلفة ل
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "فتح قائمة المبيعات"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1217,7 +1220,7 @@ msgstr "خطوط الأوامر للفاتورة"
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "شهر الأمر"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
@@ -1277,7 +1280,7 @@ msgstr "أجل السداد"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "شرط السداد:"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
@@ -1314,7 +1317,7 @@ msgstr "السعر"
 #. module: sale
 #: field:sale.order.line,price_reduce:0
 msgid "Price Reduce"
-msgstr ""
+msgstr "تخفيض السعر"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
@@ -1345,7 +1348,7 @@ msgstr "التحصيل"
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "مجموعة التوريدات"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
@@ -1432,7 +1435,7 @@ msgstr "رقم عرض السعر"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "إرسال العرض"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1484,12 +1487,12 @@ msgstr "معدل إنشاء عروض الأسعار بالمدة"
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
 msgid "Rate of sent invoices per duration"
-msgstr ""
+msgstr "نسبة الفواتير المرسلة للفترة"
 
 #. module: sale
 #: field:crm.case.section,monthly_confirmed:0
 msgid "Rate of validate sales orders per duration"
-msgstr ""
+msgstr "نسبة تأكيد أوامر البيع للفترة"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1509,7 +1512,7 @@ msgstr "مرجع/وصف"
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of confirmed sales orders per month."
-msgstr ""
+msgstr "الأرباح من أوامر البيع المؤكدة بالشهر."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1519,12 +1522,12 @@ msgstr "العائد من عروض الأسعار بالشهر"
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of sent invoices per month."
-msgstr ""
+msgstr "نسبة الأرباح من الفواتير المرسلة بالشهر."
 
 #. module: sale
 #: field:procurement.order,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "بند أمر البيع"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
@@ -1564,7 +1567,7 @@ msgstr "تحليل المبيعات"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "مراحل البيع"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -1696,7 +1699,7 @@ msgstr "موظف مبيعات"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "مسئول المبيعات:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1747,7 +1750,7 @@ msgstr "خلل شحن"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "عنوان الشحن:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1788,7 +1791,7 @@ msgstr "ملخص"
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the sales \n"
 "team estimates to be able to invoice this month."
-msgstr ""
+msgstr "مبلغ الأرباح المستهدف للشهر الجاري. هذا المبلغ هو ما\nيرى فريق المبيعات أنه قادر على تحقيقه هذا الشهر."
 
 #. module: sale
 #: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
@@ -1799,12 +1802,12 @@ msgstr "الضرائب"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "الشروط والأحكام"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "الشروط والأحكام..."
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
@@ -1854,7 +1857,7 @@ msgstr "ليس هناك تعريف للوضع المالي أو حساب لفئ�
 #: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr ""
+msgstr "لا توجد مؤسسة افتراضية للمستخدم الحالي!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
@@ -2080,12 +2083,12 @@ msgstr "تحذير!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "رسائل الموقع الإلكتروني"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "سجل التواصل بالموقع الإلكتروني"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0

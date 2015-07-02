@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Argentina, 2015-06-03 
+=======
+Argentina, 2015-06-03
+>>>>>>> 25d365ee69c60e9a1778c1ff036b014398a1dbad
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.

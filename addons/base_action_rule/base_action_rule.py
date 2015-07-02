@@ -181,7 +181,7 @@ class base_action_rule(osv.osv):
                 action_model = self.pool.get('base.action.rule')
                 action_dom = [('model', '=', self._name),
                               ('kind', 'in', ['on_create', 'on_create_or_write'])]
-                action_ids = action_model.search(cr, uid, action_dom, context=context)
+                action_ids = action_model.search(cr, uid, action_dom, context=dict(context, active_test=True))
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in action_model.browse(cr, uid, action_ids, context=context):
@@ -295,7 +295,7 @@ class base_action_rule(osv.osv):
         context = context or {}
         # retrieve all the action rules to run based on a timed condition
         action_dom = [('kind', '=', 'on_time')]
-        action_ids = self.search(cr, uid, action_dom, context=context)
+        action_ids = self.search(cr, uid, action_dom, context=dict(context, active_test=True))
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()
             if action.last_run:

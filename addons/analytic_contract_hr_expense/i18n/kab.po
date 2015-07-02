@@ -3,14 +3,15 @@
 # * analytic_contract_hr_expense
 # 
 # Translators:
+# Belkacem Mohammed <belkacem77@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-23 22:22+0000\n"
+"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +78,7 @@ msgstr "arussin"
 msgid ""
 "{'invisible': "
 "[('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
@@ -86,14 +87,14 @@ msgid ""
 "['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)], "
 "'invisible':[('invoice_on_timesheets','=',False), "
 "('charge_expenses','=',False)]}"
-msgstr ""
+msgstr "{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)], 'invisible':[('invoice_on_timesheets','=',False), ('charge_expenses','=',False)]}"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid ""
 "{'required': "
 "['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
-msgstr ""
+msgstr "{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form

@@ -24,76 +24,75 @@ from openerp.addons.mail.tests.common import TestMail
 
 class TestProjectBase(TestMail):
 
-    def setUp(self):
-        super(TestProjectBase, self).setUp()
-        cr, uid = self.cr, self.uid
+    @classmethod
+    def setUpClass(cls):
+        super(TestProjectBase, cls).setUpClass()
+        cr, uid = cls.cr, cls.uid
 
         # Usefull models
-        self.project_project = self.registry('project.project')
-        self.project_task = self.registry('project.task')
-        self.project_task_delegate = self.registry('project.task.delegate')
+        cls.project_project = cls.registry('project.project')
+        cls.project_task = cls.registry('project.task')
+        cls.project_task_delegate = cls.registry('project.task.delegate')
 
         # Find Project User group
-        group_project_user_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'project', 'group_project_user')
-        self.group_project_user_id = group_project_user_ref and group_project_user_ref[1] or False
+        cls.group_project_user_id = cls.env.ref('project.group_project_user').id or False
 
         # Find Project Manager group
-        group_project_manager_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'project', 'group_project_manager')
-        self.group_project_manager_id = group_project_manager_ref and group_project_manager_ref[1] or False
+        cls.group_project_manager_id = cls.env.ref('project.group_project_manager').id or False
 
         # Test partners to use through the various tests
-        self.project_partner_id = self.res_partner.create(cr, uid, {
+        cls.project_partner_id = cls.res_partner.create(cr, uid, {
             'name': 'Gertrude AgrolaitPartner',
             'email': 'gertrude.partner@agrolait.com',
         })
-        self.email_partner_id = self.res_partner.create(cr, uid, {
+        cls.email_partner_id = cls.res_partner.create(cr, uid, {
             'name': 'Patrick Ratatouille',
             'email': 'patrick.ratatouille@agrolait.com',
         })
 
         # Test users to use through the various tests
-        self.user_projectuser_id = self.res_users.create(cr, uid, {
+        cls.user_projectuser_id = cls.res_users.create(cr, uid, {
             'name': 'Armande ProjectUser',
             'login': 'Armande',
             'alias_name': 'armande',
             'email': 'armande.projectuser@example.com',
-            'groups_id': [(6, 0, [self.group_employee_id, self.group_project_user_id])]
-        })
-        self.user_projectmanager_id = self.res_users.create(cr, uid, {
+            'groups_id': [(6, 0, [cls.group_employee_id, cls.group_project_user_id])]
+        }, {'no_reset_password': True})
+        cls.user_projectmanager_id = cls.res_users.create(cr, uid, {
             'name': 'Bastien ProjectManager',
             'login': 'bastien',
             'alias_name': 'bastien',
             'email': 'bastien.projectmanager@example.com',
-            'groups_id': [(6, 0, [self.group_employee_id, self.group_project_manager_id])]
-        })
-        self.user_none_id = self.res_users.create(cr, uid, {
+            'groups_id': [(6, 0, [cls.group_employee_id, cls.group_project_manager_id])]
+        }, {'no_reset_password': True})
+        cls.user_none_id = cls.res_users.create(cr, uid, {
             'name': 'Charlie Avotbonkeur',
             'login': 'charlie',
             'alias_name': 'charlie',
             'email': 'charlie.noone@example.com',
             'groups_id': [(6, 0, [])]
-        })
-        self.user_projectuser = self.res_users.browse(cr, uid, self.user_projectuser_id)
-        self.user_projectmanager = self.res_users.browse(cr, uid, self.user_projectmanager_id)
-        self.partner_projectuser_id = self.user_projectuser.partner_id.id
-        self.partner_projectmanager_id = self.user_projectmanager.partner_id.id
+        }, {'no_reset_password': True})
+        cls.user_projectuser = cls.res_users.browse(cr, uid, cls.user_projectuser_id)
+        cls.user_projectmanager = cls.res_users.browse(cr, uid, cls.user_projectmanager_id)
+        cls.partner_projectuser_id = cls.user_projectuser.partner_id.id
+        cls.partner_projectmanager_id = cls.user_projectmanager.partner_id.id
 
         # Test 'Pigs' project
-        self.project_pigs_id = self.project_project.create(cr, uid, {
+        cls.project_pigs_id = cls.project_project.create(cr, uid, {
             'name': 'Pigs',
             'privacy_visibility': 'public',
             'alias_name': 'project+pigs',
-            'partner_id': self.partner_raoul_id,
+            'partner_id': cls.partner_raoul_id,
         }, {'mail_create_nolog': True})
 
         # Already-existing tasks in Pigs
-        self.task_1_id = self.project_task.create(cr, uid, {
+        cls.task_1_id = cls.project_task.create(cr, uid, {
             'name': 'Pigs UserTask',
-            'user_id': self.user_projectuser_id,
-            'project_id': self.project_pigs_id,
+            'user_id': cls.user_projectuser_id,
+            'project_id': cls.project_pigs_id,
         }, {'mail_create_nolog': True})
-        self.task_2_id = self.project_task.create(cr, uid, {
+        cls.task_2_id = cls.project_task.create(cr, uid, {
             'name': 'Pigs ManagerTask',
-            'user_id': self.user_projectmanager_id,
-            'project_id': self.project_pigs_id,
+            'user_id': cls.user_projectmanager_id,
+            'project_id': cls.project_pigs_id,
         }, {'mail_create_nolog': True})

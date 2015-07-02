@@ -264,7 +264,7 @@ class res_users(osv.Model):
         if not user_ids:
             user_ids = self.search(cr, uid, [('email', '=', login)], context=context)
         if len(user_ids) != 1:
-            raise Exception('Reset password: invalid username or email')
+            raise Exception(_('Reset password: invalid username or email'))
         return self.action_reset_password(cr, uid, user_ids, context=context)
 
     def action_reset_password(self, cr, uid, ids, context=None):

@@ -60,11 +60,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         return super(account_balance, self).set_context(objects, data, new_ids, report_type=report_type)
 
-    def _get_account(self, data):
-        if data['model']=='account.account':
-            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
-        return super(account_balance ,self)._get_account(data)
-
     def lines(self, form, ids=None, done=None):
         def _process_child(accounts, disp_acc, parent):
                 account_rec = [acct for acct in accounts if acct['id']==parent][0]

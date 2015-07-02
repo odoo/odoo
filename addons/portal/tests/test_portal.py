@@ -27,26 +27,31 @@ from openerp.tools.misc import mute_logger
 
 class test_portal(TestMail):
 
-    def setUp(self):
-        super(test_portal, self).setUp()
-        cr, uid = self.cr, self.uid
+    @classmethod
+    def setUpClass(cls):
+        super(test_portal, cls).setUpClass()
+        cr, uid = cls.cr, cls.uid
 
         # Find Portal group
-        group_portal = self.registry('ir.model.data').get_object(cr, uid, 'base', 'group_portal')
-        self.group_portal_id = group_portal.id
+        cls.group_portal_id = cls.env.ref('base.group_portal').id
 
         # Create Chell (portal user)
-        self.user_chell_id = self.res_users.create(cr, uid, {'name': 'Chell Gladys', 'login': 'chell', 'email': 'chell@gladys.portal', 'groups_id': [(6, 0, [self.group_portal_id])]})
-        self.user_chell = self.res_users.browse(cr, uid, self.user_chell_id)
-        self.partner_chell_id = self.user_chell.partner_id.id
+        cls.user_chell_id = cls.res_users.create(cr, uid, {
+            'name': 'Chell Gladys',
+            'login': 'chell',
+            'email': 'chell@gladys.portal',
+            'groups_id': [(6, 0, [cls.group_portal_id])]
+        }, {'no_reset_password': True})
+        cls.user_chell = cls.res_users.browse(cr, uid, cls.user_chell_id)
+        cls.partner_chell_id = cls.user_chell.partner_id.id
 
         # Create a PigsPortal group
-        self.group_port_id = self.mail_group.create(cr, uid,
-                        {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id},
+        cls.group_port_id = cls.mail_group.create(cr, uid,
+                        {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': cls.group_portal_id},
                         {'mail_create_nolog': True})
 
         # Set an email address for the user running the tests, used as Sender for outgoing mails
-        self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
+        cls.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_mail_access_rights(self):

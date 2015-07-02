@@ -109,7 +109,7 @@
                         </page>
                         <page string="Details">
                             <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
-                                <tree editable="top" string="Timesheet Activities">
+                                <tree editable="bottom" string="Timesheet Activities">
                                     <field name="date"/>
                                     <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
                                     <field name="name"/>

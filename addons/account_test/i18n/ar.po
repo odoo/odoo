@@ -4,13 +4,14 @@
 # 
 # Translators:
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:11+0000\n"
-"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,87 +26,87 @@ msgid ""
 "                Click to create Accounting Test.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء اختبار محاسبي جديد.\n</p>"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "الاختبارات المحاسبية"
 
 #. module: account_test
 #: view:website:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "الاختبارات المحاسبية في"
 
 #. module: account_test
 #: field:accounting.assert.test,active:0
 msgid "Active"
-msgstr "نشِط"
+msgstr "نشط"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
+msgstr "فحص ما إذا كانت كافة بنود الحركات موزونة وتنتمي لنفس التاريخ والفترة المالية"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
 msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
-msgstr ""
+msgstr "فحص ما إذا كان الرصيد الافتتاحي للسنة المالية الجديدة مطابق للرصيد الاختتامي للسنة السابقة."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_04
 msgid "Check if the totally reconciled movements are balanced"
-msgstr ""
+msgstr "فحص ما إذا كانت كافة الحركات المسواة موزونة"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr ""
+msgstr "فحص ما إذا كانت رصيد الإقفال لكشوفات الحسابات البنكية = الرصيد الافتتاحي + مجموع بنود الكشف"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
 msgid "Check that general accounts and partners on account moves are active"
-msgstr ""
+msgstr "فحص ما إذا كان قد تم تحديد حساب وشريك في كافة الحركات المحاسبية"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
+msgstr "فحص ما إذا كانت الفواتير المدفوعة/المسواة ليست في حالة \"مفتوحة\""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr ""
+msgstr "فحص ما إذا كانت الحركات المسواة - والتي تنتمي لحسابات دائنة أو مدينة - تنتمي إلى فواتير تم تسويتها أيضاً."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr ""
+msgstr "فحص ما إذا كانت فواتير المبيعات/المشتريات المسواة قد تم تسوية قيودها في الحسابات الدائنة والمدينة."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
 msgid "Check that there's no move for any account with « View » account type"
-msgstr ""
+msgstr "فحص أنه لا يوجد أي قيود مسجلة في حساب من النوع \"عرض\""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "فحص أن الأرصدة تطابق القاعدة: مجموعة الدائن = مجموع المدين"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "إرشادات الكود"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
@@ -130,17 +131,17 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr ""
+msgstr "يجب أن يحدد الكود دائماً متغير اسمه result يكون هو النتيجة المطلوبة من الاختبار، وقد يكون قائمة List أو قائمة أزواج Dictionary.\n\nإذا كان المتغير result قائمة فارغة، فذلك يعني أن نتيجة الاختبار كانت إيجابية ولا توجد أخطاء في الحسابات.\nإذا لم تكن تلك هي الحالة، فسيحاول النظام ترجمة وطباعة نتائج المتغير result.\n\nإذا كانت نتيجة الاختبار قائمة أزواج Dictionary، فيمكنك تعيين متغير اسمه column_order لتحديد الترتيب الذي سيتم طباعة نتيجة الاختبار بناء عليه.\n\nإن تطلب الأمر، يمكنك استخدام المتغيرات:\ncr لتحديد موضع المؤشر في قاعدة البيانات\nuid لتحديد معرف المستخدم الحالي.\n\nفي كافة الأحوال، يجب أن يكون الكود البرمجي كوداً سليماً بلغة بايثون Python مع استخدام الإزاحة السليمة Indentation (متى تطلب الأمر ذلك).\n\nمثال:\nsql = '''SELECT id, name, ref, date\nFROM account_move_line\nWHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\ncr.execute(sql)\nresult = cr.dictfetchall()"
 
 #. module: account_test
 #: field:accounting.assert.test,create_uid:0
 msgid "Created by"
-msgstr "أُنشئ بواسطة"
+msgstr "أنشئ بواسطة"
 
 #. module: account_test
 #: field:accounting.assert.test,create_date:0
 msgid "Created on"
-msgstr "إنشاؤه في"
+msgstr "أنشئ في"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
@@ -155,13 +156,13 @@ msgstr "الوصف:"
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 msgid "Expression"
-msgstr "صيغة"
+msgstr "التعبير"
 
 #. module: account_test
 #: field:accounting.assert.test,id:0
 #: field:report.account_test.report_accounttest,id:0
 msgid "ID"
-msgstr "المعرّف"
+msgstr "المعرف"
 
 #. module: account_test
 #: field:accounting.assert.test,write_uid:0
@@ -171,7 +172,7 @@ msgstr "آخر تحديث بواسطة"
 #. module: account_test
 #: field:accounting.assert.test,write_date:0
 msgid "Last Updated on"
-msgstr "آخر تحديث فى"
+msgstr "آخر تحديث في"
 
 #. module: account_test
 #: view:website:account_test.report_accounttest
@@ -191,77 +192,77 @@ msgstr "كود بايثون"
 #. module: account_test
 #: field:accounting.assert.test,sequence:0
 msgid "Sequence"
-msgstr "مسلسل"
+msgstr "المسلسل"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "الاختبار 1: الرصيد  العام"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
 msgid "Test 2: Opening a fiscal year"
-msgstr ""
+msgstr "الاختبار 2: فتح سنة مالية"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "الاختبار 3: بنود الحركة"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
 msgid "Test 4: Totally reconciled mouvements"
-msgstr ""
+msgstr "الاختبار 4: الحركات المسواة بالكامل"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
+msgstr "الاختبار 5.1: البنود الدائنة والمدينة في الفواتير المسواة"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "الاختبار 5.2: الفواتير المسواة والحسابات الدائنة/المدينة"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "الاختبار 6: حالة الفواتير"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
 msgid "Test 7: « View  » account type"
-msgstr ""
+msgstr "الاختبار 7: الحسابات من نوع \"عرض\""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 8 : Closing balance on bank statements"
-msgstr ""
+msgstr "الاختبار 8: رصيد الإقفال في كشوفات الحسابات البنكية"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_08
 msgid "Test 9 : Accounts and partners on account moves"
-msgstr ""
+msgstr "الاختبار 9: الحسابات والشركاء في حركات الحساب"
 
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr ""
+msgstr "وصف الاختبار "
 
 #. module: account_test
 #: field:accounting.assert.test,name:0
 msgid "Test Name"
-msgstr ""
+msgstr "اسم الاختبار "
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 #: view:accounting.assert.test:account_test.account_assert_tree
 msgid "Tests"
-msgstr "إختبارات"
+msgstr "الاختبارات"
 
 #. module: account_test
 #: code:addons/account_test/report/account_test_report.py:78
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "تم اجتياز الاختبار بنجاح"

@@ -452,7 +452,7 @@ class TestTemplating(ViewCase):
     def setUp(self):
         import openerp.modules
         super(TestTemplating, self).setUp()
-        self._pool = openerp.modules.registry.RegistryManager.get(common.DB)
+        self._pool = openerp.modules.registry.RegistryManager.get(common.get_db_name())
         self._init = self._pool._init
         # fuck off
         self._pool._init = False

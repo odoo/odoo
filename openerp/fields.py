@@ -30,7 +30,7 @@ import logging
 import pytz
 import xmlrpclib
 
-from openerp.tools import float_round, frozendict, html_sanitize, ustr
+from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
@@ -176,11 +176,11 @@ class Field(object):
             @api.depends('name')
             def _compute_upper(self):
                 for rec in self:
-                    self.upper = self.name.upper() if self.name else False
+                    rec.upper = rec.name.upper() if rec.name else False
 
             def _inverse_upper(self):
                 for rec in self:
-                    self.name = self.upper.lower() if self.upper else False
+                    rec.name = rec.upper.lower() if rec.upper else False
 
             def _search_upper(self, operator, value):
                 if operator == 'like':
@@ -1606,34 +1606,33 @@ class _RelationalMulti(_Relational):
                 return value.with_env(record.env)
         elif isinstance(value, list):
             # value is a list of record ids or commands
-            if not record.id:
-                record = record.browse()        # new record has no value
-            result = record[self.name]
-            # modify result with the commands;
-            # beware to not introduce duplicates in result
+            comodel = record.env[self.comodel_name]
+            ids = OrderedSet(record[self.name].ids)
+            # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
-                        result += result.new(command[2])
+                        ids.add(comodel.new(command[2]).id)
                     elif command[0] == 1:
-                        result.browse(command[1]).update(command[2])
-                        result += result.browse(command[1]) - result
+                        comodel.browse(command[1]).update(command[2])
+                        ids.add(command[1])
                     elif command[0] == 2:
                         # note: the record will be deleted by write()
-                        result -= result.browse(command[1])
+                        ids.discard(command[1])
                     elif command[0] == 3:
-                        result -= result.browse(command[1])
+                        ids.discard(command[1])
                     elif command[0] == 4:
-                        result += result.browse(command[1]) - result
+                        ids.add(command[1])
                     elif command[0] == 5:
-                        result = result.browse()
+                        ids.clear()
                     elif command[0] == 6:
-                        result = result.browse(command[2])
+                        ids = OrderedSet(command[2])
                 elif isinstance(command, dict):
-                    result += result.new(command)
+                    ids.add(comodel.new(command).id)
                 else:
-                    result += result.browse(command) - result
-            return result
+                    ids.add(command)
+            # return result as a recordset
+            return comodel.browse(list(ids))
         elif not value:
             return self.null(record.env)
         raise ValueError("Wrong value for %s: %s" % (self, value))

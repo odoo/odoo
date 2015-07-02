@@ -3,14 +3,15 @@
 # * purchase
 # 
 # Translators:
+# Belkacem Mohammed <belkacem77@gmail.com>, 2015
 # FIRST AUTHOR Belkacem Mohammed <belkacem77@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:32+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-28 23:51+0000\n"
+"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +83,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n<p>Azul ${object.partner_id.name},</p>\n\n<p>Ad ttafeḍ dagi ${object.state in ('draft', 'sent') and 'Asuter n ssuma' or 'Taladna'} si ${object.company_id.name}: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>Timsisɣal</strong><br />\n&nbsp;&nbsp;Uṭṭun n tladna: <strong>${object.name}</strong><br />\n&nbsp;&nbsp;Asemday n tladna: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n&nbsp;&nbsp;Azemz n tladna: ${object.date_order}<br />\n% if object.origin:\n&nbsp;&nbsp;Tamsisɣelt n tladna: ${object.origin}<br />\n% endif\n% if object.partner_ref:\n&nbsp;&nbsp;Tamsisɣelt yinek: ${object.partner_ref}<br />\n% endif\n% if object.validator:\n&nbsp;&nbsp;Anermis-ik: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n% endif\n</p>\n\n<br/>\n<p>Tzemreḍ aɣ-d-nermeseḍ ma ɣuṛ-ek istiqsiyen.</p>\n<p>Tanemirt-ik!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n% if object.company_id.street:\n${object.company_id.street}<br/>\n% endif\n% if object.company_id.street2:\n${object.company_id.street2}<br/>\n% endif\n% if object.company_id.city or object.company_id.zip:\n${object.company_id.zip} ${object.company_id.city}<br/>\n% endif\n% if object.company_id.country_id:\n${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n% endif\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nTiliɣri:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nAsmel Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
@@ -147,14 +148,14 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n<p>Azul ${object.partner_id.name},</p>\n\n<p>Ad ttafeḍ dagi ${object.state in ('draft', 'sent') and 'Asuter n ssuma' or 'Taladna'} from ${object.company_id.name}: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>Timsisɣal</strong><br />\n&nbsp;&nbsp;Uṭṭun n tladna: <strong>${object.name}</strong><br />\n&nbsp;&nbsp;Azemz n tladna: ${object.date_order}<br />\n% if object.origin:\n&nbsp;&nbsp;Tamsisɣelt n usuter: ${object.origin}<br />\n% endif\n% if object.partner_ref:\n&nbsp;&nbsp;Tamsisɣelt yinek: ${object.partner_ref}<br />\n% endif\n% if object.validator:\n&nbsp;&nbsp;Anermis-ik: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n% endif\n</p>\n\n<br/>\n<p>Tzemreḍ aɣ-d-nermeseḍ ma ɣuṛ-ek istiqsiyen.</p>\n<p>Tanemirt ik!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n% if object.company_id.street:\n${object.company_id.street}<br/>\n% endif\n% if object.company_id.street2:\n${object.company_id.street2}<br/>\n% endif\n% if object.company_id.city or object.company_id.zip:\n${object.company_id.zip} ${object.company_id.city}<br/>\n% endif\n% if object.company_id.country_id:\n${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n% endif\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nTiliɣri:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nAsmel Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
 
 #. module: purchase
 #: help:purchase.config.settings,module_stock_dropshipping:0
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\nCrée la route \"Expédition directe\" et ajoute des tests  complexes  -ceci installe le module stock_dropshipping."
+msgstr "\nAd isilel abrid \"Asiweḍ usrid\" u w-ad yernu ikayaden complexes  - Ayagi ad isebded azegrir stock_dropshipping."
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -163,7 +164,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
 "* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
 "* The 'Cancelled' status is set automatically when user cancel purchase order."
-msgstr " * L'état 'Brouillon' est défini automatiquement quand un bon de commande est en brouillon.\n* L'état 'Confirmée' est défini automatiquement quand un bon de commande est confirmé.\n* L'état 'Terminée' est défini automatiquement quand le bon de commande est terminé.\n* L'état 'Annulée' est défini automatiquement quand un utilisateur annule le bon de commande."
+msgstr "* Addad 'Arewway' ad ittunefk ticki taladna tella deg addad 'Arewway'.\n* Addad 'Intem' ad ittunefk ticki taladna tella deg addad 'Intem'.\n* Addad 'Immed' ad ittunefk ticki taladna tella deg addad 'Immed'. \n* Addad 'Isfex' ad ittunefk ticki taladna tella deg addad 'Ifsex'. "
 
 #. module: purchase
 #: code:addons/purchase/stock.py:198
@@ -219,7 +220,7 @@ msgid ""
 "                    document in Odoo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned dagi iwakken ad ternuḍ tafaturt n useǧǧaw.\n</p><p>\nTifaturin n useǧǧaw zemrent ad lalent si\ntludna neɣ seg irmasen n ifarisen. Ayen ak yeǧǧen ad tseneqdeḍ tifaturin \ni ked-ceggiɛen issaǧǧawen d tfaturin tirewwayin yellan di Odoo.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -232,7 +233,7 @@ msgid ""
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nAseǧǧaw agi ur ɣuṛes ara tiludna n tiɣin. Senned iwakken ad tarnuḍ asuter amaynut.\n</p><p>\nAsuter n ssuma d asurif amenzu ɣer usuddem n tiɣin. Ticki\nasuter yuɣal ttaladna, tzemreḍ ad tesneqdeḍ irmasen\nn ifarisen d tfaturt n useǧǧawof .\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -246,7 +247,7 @@ msgid ""
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Cliquez pour ajouter une version de la liste de prix.\n              </p><p>\n                Une liste de prix peut avoir plusieurs versions, chacune étant\n                valable pour une certaine durée. Il peut y avoir par exemple des\n                versions : \"Prix de base\", \"Prix 2010\", \"Prix 2011\", \"Ventes d'été\", etc.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned i tmerna n lqem n tebdart n ssuma.\n</p><p>\nTabdart n ssuma tezmer aţesɛu deqs ileqman, \nyal yiwen n lqem ad yeddu deg yiwet n tengazt. \nImedyaten: \"Ssuma tadasilt\", \"Ssuma n 2010\", \"Azal n 2011\", \"Ssuma n unebdu\", atg.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree_picking_to_invoice
@@ -260,7 +261,7 @@ msgid ""
 "                You can generate a supplier invoice based on those receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned iwakken ad ternuḍ armas n ifarisen amaynut.\n</p><p> \nDagi, attḍefreḍ akkw irmasen n ifarisen n tludna n tiɣin \nanda tarrayt n ufeter d \"Akken llan irmasen\",\nu wanda tifaturin n tiɣin ur d-ebḍent ara yakan.\ntzemreḍ ad sireweḍ tafaturt n useǧǧaw n yal armas.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -274,7 +275,7 @@ msgid ""
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Cliquez pour créer un devis qui sera converti en bon de commande. \n              </p><p>\n                Utiliser ce menu pour chercher vos bons de commande par\n                références, fournisseurs, produits, etc. Pour chaque bon de commande,\n                vous pouvez suivre la discussion avec le fournisseur, \n                contrôler les produits reçus et contrôler les factures fournisseur.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned i tmerna n usuter n ssuma a yuɣalen d taladna n uznuzu. \n</p><p>\nSeqdec umuɣ agi i wenadi n tludna yinek s \ntemsisɣelt, aseǧǧaw, afaris, atg. I yal taladna,\nTzemreḍ a ţḍefreḍ adiwenni d useǧǧaw, a ţneqdeḍ \nifarisen iremsen d tfaturin n useǧǧaw.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -290,7 +291,7 @@ msgid ""
 "                by Odoo based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned i tmerna n usuter n ssuma.\n</p><p>\nAsuter n ssuma igber amazray n udiwenni/tastag \ni d-yeḍran d useǧǧaw inek. Ticki intem, asuter\nn ssuma ad yuɣal d taladna n tiɣin.\n</p><p>\nTugett n tludna n tiɣin ttlalent s webridd awurman\nsɣuṛ Odoo ticki tenɣeṣ tnecta n ifarisen deg uselɣas.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -306,7 +307,7 @@ msgid ""
 "            draft invoice and validate it.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned iwakken ad ternuḍ tafaturt tarewwayt.\n</p><p>\nSeqdec umuɣ agi i wesenqed n tfaturin ad remseḍ sɣuṛ\naseǧǧaw. Odoo isaraw tifaturin tirewwayin si tludna-ik\nn tiɣin, neɣ irmasen ɣef akken tella twila.\n</p><p>\nTicki tebbwḍed t faturt n useǧǧaw, tzemreḍ\naţeqneḍ ɣer tfaturt tarewwayt ara tɣebleḍ.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -323,7 +324,7 @@ msgid ""
 "            available suppliers, etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSenned i tmerna n ufaris amaynut.\n</p><p>\nIssefk ad tarnuḍ afaris i yieldal taɣawsa ad aɣeḍ,ama\nd afaris aɣaran, neɣ audran, beɣ tanfa ad aɣeḍor.\n</p><p>\nTafelwit n ufaris tegber talɣut i wessileɣ n ukala n tiɣin,:\nssumat, aloggistik n taǧǧawt, isefka n tsiḍent,\niseǧǧawen yellan, atg.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -335,7 +336,7 @@ msgid ""
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                Ici vous pouvez suivre toutes les lignes de bons de commandes où\n                la facturation est \"basée sur les lignes de commandes\", et pour\n                lesquelles vous n'avez pas encore reçu la facture. Vous pouvez\n                générer une facture 'Brouillon' basée sur les lignes de cette liste.\n              </p>\n            "
+msgstr "<p>\nDagi, tzemreḍ a ţḍefreḍ akkw izirigen n tludna anda\nafeter d \"Akken llan izirigen n tladna\", u w-anda \ntafaturt ur d-ebbwiḍ ara yakan. Tzemreḍ Ad sireweḍ\nTafaturt tarewwayt n izirigen si tebdart agi.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
@@ -378,7 +379,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
 msgid "Allows you to compute product cost price based on average cost."
-msgstr "Permet de calculer le prix de revient de l'article en fonction du prix moyen."
+msgstr "Ad isiḍen tasqamt n ufaris s ssuma talemmast."
 
 #. module: purchase
 #: help:purchase.config.settings,group_uom:0
@@ -437,12 +438,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "Amenḍar alemmas n usiweḍ "
 
 #. module: purchase
 #: field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr "Azal alemmas"
+msgstr "Ssuma talemmast"
 
 #. module: purchase
 #: field:stock.warehouse,buy_pull_id:0
@@ -465,7 +466,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on generated draft invoice"
-msgstr "Akken tella tfaturt tarewwayt d ilulen"
+msgstr "Akken tella tfaturt tarewwayt d yernan"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
@@ -482,17 +483,17 @@ msgstr "Akken llan izrigen n tladna"
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr "Bid Received"
+msgstr "Asumer yebḍ-ed"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr "Bid Received On"
+msgstr "Asumer yebḍ-ed di"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr "Bid Valid Until"
+msgstr "Asumer teɣbel arma"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
@@ -662,7 +663,7 @@ msgstr "Azemz n useɣbel"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Date Req."
-msgstr "Date Req."
+msgstr "Azemz n usutar."
 
 #. module: purchase
 #: help:purchase.order,message_last_post:0
@@ -702,17 +703,17 @@ msgstr "Amenḍaṛ n useɣbel"
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr "Default Purchase Pricelist"
+msgstr ""
 
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr "Default Purchase Pricelist Version"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
 msgid "Default invoicing control method"
-msgstr "Default invoicing control method"
+msgstr "Tarrayt n usenqed n ufeter s uwennez n tazwara"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:555
@@ -793,7 +794,7 @@ msgstr "Taladna tarewwayt tlul"
 #: code:addons/purchase/edi/purchase_order.py:132
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr "Tabdart n wazal EDI (%s)"
+msgstr "Tabdart n ssuma EDI (%s)"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_email_templates
@@ -851,7 +852,7 @@ msgstr "Imagazen"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr "Force two levels of approvals"
+msgstr "Ḥeţem sin iswiren n useɣbel "
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -864,7 +865,7 @@ msgstr "Sdukel s"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr "Ffer izrigen ifesxen"
+msgstr "Ffer izirigen ifesxen"
 
 #. module: purchase
 #: help:purchase.order,message_summary:0
@@ -883,12 +884,12 @@ msgstr "Asulay"
 #. module: purchase
 #: help:purchase.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_2_stock_picking
 msgid "In Shipments"
-msgstr ""
+msgstr "Ɣef irmasen"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:337
@@ -927,14 +928,14 @@ msgstr "Irmasen n ifarisen i wefeter"
 #. module: purchase
 #: field:purchase.order,incoterm_id:0
 msgid "Incoterm"
-msgstr "Incoterm"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,incoterm_id:0
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "International Commercial Terms are a series of predefined commercial terms used in international transactions."
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:337 code:addons/purchase/purchase.py:1016
@@ -960,7 +961,7 @@ msgstr "Incident de facturation"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Izrig n tfaturt"
+msgstr "Izirig n tfaturt"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -976,7 +977,7 @@ msgstr "Tafaturt turmist"
 #: code:addons/purchase/purchase.py:1500
 #, python-format
 msgid "Invoice paid"
-msgstr "Invoice paid"
+msgstr "Tafturt tefra"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1480
@@ -1013,7 +1014,7 @@ msgstr "Tifaturin iqnen ɣer tladna"
 #. module: purchase
 #: field:purchase.order,invoice_method:0
 msgid "Invoicing Control"
-msgstr "Aɣḍal n ufeter"
+msgstr "Asenqed n ufeter"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -1028,12 +1029,12 @@ msgstr "Tawila n ufeter"
 #. module: purchase
 #: field:purchase.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr "D amagaz"
+msgstr "D amelteɣ"
 
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr "It indicates that a picking has been done"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
@@ -1095,7 +1096,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.config.settings,group_purchase_pricelist:0
 msgid "Manage pricelist per supplier"
-msgstr "Sefrik tibdarin n wazal s useǧǧaw"
+msgstr "Sefrik tibdarin n ssuma s useǧǧaw"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1148,7 +1149,7 @@ msgstr ""
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Net Price"
-msgstr "Azal amsari"
+msgstr "Ssuma tamsarit"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -1165,7 +1166,7 @@ msgstr "Ulac tansa d iţunefken i wemsaɣ"
 #: code:addons/purchase/purchase.py:1220
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr "No default supplier defined for this product"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1218
@@ -1334,29 +1335,29 @@ msgstr "Tafaturt ad lal akken llant tiludna n tiɣin"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
 msgid "Price Per Supplier"
-msgstr "Azal s useǧǧaw"
+msgstr "Ssuma s useǧǧaw"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
 msgid "Price Types"
-msgstr "Tiwsatin n wazal"
+msgstr "Tiwsatin n ssuma"
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
-msgstr "Tabdart n wazal"
+msgstr "Tabdart n ssuma"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_pricelist_version_action
 msgid "Pricelist Versions"
-msgstr "Ileqman n tebdart n wazal"
+msgstr "Ileqman n tebdart n ssuma"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr "Tibdarin n wazal"
+msgstr "Tibdarin n ssuma"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1366,7 +1367,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
@@ -1519,7 +1520,7 @@ msgstr "Tiddadanin ɣef tludna n tiɣin"
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
-msgstr "Tabdart n wazal n tiɣin"
+msgstr "Tabdart n ssuma n tiɣin"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1386
@@ -1540,7 +1541,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr "Prix standard d'achat"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -1562,7 +1563,7 @@ msgstr "Tiludna n tiɣin"
 msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr "Put an address if you want to deliver directly from the supplier to the customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1632,12 +1633,12 @@ msgstr "Isutar n ssuma d tiludniwin tiɣin"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr ""
+msgstr "Siggez Asuter itikelt nniḍen"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr "Re-Send RFQ by Email"
+msgstr "Azen Asuter i tikelt nniḍen"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1669,14 +1670,14 @@ msgstr "Tamsisɣelt"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
-msgstr "Aferdis n usɣeln n temsisɣelt"
+msgstr "Aferdis n usɣel n temsisɣelt"
 
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
-msgstr "Reference of the document that generated this purchase order request; a sales order or an internal procurement request."
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -1684,12 +1685,12 @@ msgid ""
 "Reference of the sales order or bid sent by your supplier. It's mainly used "
 "to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
-msgstr "Reference of the sales order or bid sent by your supplier. It's mainly used to do the matching when you receive the products as this reference is usually written on the delivery order sent by your supplier."
+msgstr ""
 
 #. module: purchase
 #: view:website:purchase.report_purchasequotation_document
 msgid "Regards,"
-msgstr "Regards,"
+msgstr "Ar tufat,"
 
 #. module: purchase
 #: field:purchase.order,related_location_id:0
@@ -1755,7 +1756,7 @@ msgstr "Fren taladna n tiɣin illin."
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure."
-msgstr "Selected Unit of Measure does not belong to the same category as the product Unit of Measure."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1765,7 +1766,7 @@ msgstr "Azen taladna n tiɣin s Email"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "Azen asuter n ssuma s email"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1775,7 +1776,7 @@ msgstr "Rrit d arewway"
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
-msgstr "Shipping Exception"
+msgstr "Asuref n warmas"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1835,7 +1836,7 @@ msgstr "Aseǧǧaw"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Supplier Features"
-msgstr "Supplier Features"
+msgstr ""
 
 #. module: purchase
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
@@ -1875,14 +1876,14 @@ msgstr "Tiwtilin timatutin..."
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr "The amount without tax"
+msgstr "Azal war tazendit"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
 msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
-msgstr "The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1231
@@ -1890,7 +1891,7 @@ msgstr "The pricelist sets the currency used for this purchase order. It also co
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
-msgstr "The product \"%s\" has been defined with your company as reseller which seems to be a configuration error!"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1134
@@ -1898,7 +1899,7 @@ msgstr "The product \"%s\" has been defined with your company as reseller which 
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
-msgstr "The selected supplier has a minimal quantity set to %s %s, you should not purchase less."
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1130
@@ -1939,21 +1940,21 @@ msgstr "Ulac aseǧǧaw iqnen ɣar ufaris %s"
 msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
-msgstr "This is computed as the minimum scheduled date of all purchase order lines' products."
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of receipts that have been generated for this purchase "
 "order."
-msgstr "This is the list of receipts that have been generated for this purchase order."
+msgstr "Tagi d tabdart n irmasen i d-yeţusirewen si tladna yagi n tiɣin."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
 msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr "This pricelist will be used, instead of the default one, for purchases from the current partner"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
@@ -1974,12 +1975,12 @@ msgstr "Azal asemday"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
 msgid "Total Untaxed amount"
-msgstr "Montant total hors taxe"
+msgstr "Azal asemday war tazendit"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Total Without Taxes"
-msgstr "Total hors-taxe"
+msgstr "Asemday war tazendit"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
@@ -2003,7 +2004,7 @@ msgstr "D awezɣri asefsax n tladna agi"
 msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
-msgstr "Unique number of the purchase order, computed automatically when the purchase order is created."
+msgstr "Uṭṭun asuf n tladna n tiɣin, iţusiḍen s webdrid awurman deg usirew n tladna n tiɣin."
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0
@@ -2014,7 +2015,7 @@ msgstr "Azzal n yiwen"
 #. module: purchase
 #: field:purchase.report,quantity:0
 msgid "Unit Quantity"
-msgstr "Unit Quantity"
+msgstr "Tanecta n uferdis"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
@@ -2035,7 +2036,7 @@ msgstr "Iznan ur neţwaɣer-ara"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
 msgid "Untaxed"
-msgstr "Untaxed"
+msgstr "War tazendit"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -2045,7 +2046,7 @@ msgstr "Untaxed Amount"
 #. module: purchase
 #: field:purchase.config.settings,group_costing_method:0
 msgid "Use 'Real Price' or 'Average' costing methods."
-msgstr ""
+msgstr "Seqdec tarrayin n tesqamt 'Azal ilaw' neɣ 'Talemmast'"
 
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
@@ -2066,7 +2067,7 @@ msgstr "Aseqdac"
 #: view:website:purchase.report_purchaseorder_document
 #: view:website:purchase.report_purchasequotation_document
 msgid "VAT:"
-msgstr "VAT:"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.report,validator:0
@@ -2120,7 +2121,7 @@ msgstr "Amazray n Taywalt n usmel  Web"
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "When products are bought, they can be delivered to this warehouse"
+msgstr "Ticki tuɣeḍ-d ifarisen, tzemreḍ aten tremṣed deg ugadir agi"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:538

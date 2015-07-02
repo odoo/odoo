@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:11+0000\n"
-"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: crm_claim
 #: field:res.partner,claim_count:0
 msgid "# Claims"
-msgstr ""
+msgstr "عدد الشكاوى"
 
 #. module: crm_claim
 #: field:crm.claim.report,email:0
@@ -32,7 +33,7 @@ msgstr "عدد الرسائل"
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
 msgid "# of Claims"
-msgstr ""
+msgstr "عدد الشكاوى"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:167
@@ -47,7 +48,7 @@ msgid ""
 "                    Record and track your customers' claims. Claims may be linked to a sales order or a lot.You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on).Claims may automatically be linked to an email address using the mail gateway module.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nسجل وتابع شكاوى عملائك. يمكن ربط الشكوى بأمر بيع أو بلوط في المخازن. يمكنك إرسال رسائل البريد الإلكتروني بمرفقات والاحتفاظ بسجل كامل عن كل شكوى (الرسائل الصادرة، نوع التدخل، وهكذا دواليك). يمكن إنشاء الشكاوى آلياً من المراسلات الواردة إلى عنوان بريد إلكتروني معين تحدده أنت.\n</p>"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
@@ -60,7 +61,7 @@ msgid ""
 "                corrective action.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء فئة شكاوى.\n</p><p>\nقم بإنشائ فئات للشكاو لإدارة وتصنيف أسهل للشكاوى.\nمن الأمثلة على الفئات: إجراءات وقائية، إجراءات تصحيحية.\n</p>"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
@@ -73,12 +74,12 @@ msgid ""
 "                required for the resolution of a claim.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء مرحلة جديدة في معالجة الشكاوى.\n</p><p>\nيمكنك إنشاء مراحل الشكاوى لتصنيفها حسب حالة\nكل شكوى يتم تسجيلها في النظام. تعرف تلك المراحل\nكافة الخطوات اللازمة لحل الشكوى.\n</p>"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Action Description..."
-msgstr ""
+msgstr "وصف الإجراء..."
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0 field:crm.claim.report,type_action:0
@@ -88,7 +89,7 @@ msgstr "نوع الإجراء"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Actions"
-msgstr "إجراءات"
+msgstr "الإجراءات"
 
 #. module: crm_claim
 #: field:crm.claim,active:0
@@ -98,7 +99,7 @@ msgstr "نشط"
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_report
 msgid "CRM Claim Report"
-msgstr "تقرير شكوى ادارة العلاقات للعملاء"
+msgstr "تقرير الشكاوى"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claim-act
@@ -110,14 +111,14 @@ msgstr "الفئات"
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,categ_id:0
 msgid "Category"
-msgstr "فئة"
+msgstr "الفئة"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
-msgstr "شكوى"
+msgstr "الشكوى"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -132,28 +133,28 @@ msgstr "تاريخ الشكوى"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Claim Date by Month"
-msgstr ""
+msgstr "تاريخ الشكوى بالشهر"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Claim Description"
-msgstr "شرح الشكوى"
+msgstr "وصف الشكوى"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Claim Month"
-msgstr ""
+msgstr "شهر الشكوى"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Claim Reporter"
-msgstr "مراسل تقرير الشكوى"
+msgstr "المبلغ بالشكوى"
 
 #. module: crm_claim
 #: view:crm.claim.stage:crm_claim.crm_claim_stage_form
 msgid "Claim Stage"
-msgstr ""
+msgstr "مرحلة الشكوى"
 
 #. module: crm_claim
 #: view:crm.claim.stage:crm_claim.crm_claim_stage_tree
@@ -169,12 +170,12 @@ msgstr "موضوع الشكوى"
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_stage
 msgid "Claim stages"
-msgstr ""
+msgstr "مراحل الشكاوى"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Claim/Action Description"
-msgstr "وصف الاجراء/الشكوى"
+msgstr "وصف الشكوى/الإجراء"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_calendar_view
@@ -186,7 +187,7 @@ msgstr "وصف الاجراء/الشكوى"
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 #: view:res.partner:crm_claim.view_claim_res_partner_info_form
 msgid "Claims"
-msgstr "الشكاوي"
+msgstr "الشكاوى"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
@@ -207,44 +208,44 @@ msgstr "مغلق"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Closure"
-msgstr "إغلاق"
+msgstr "الإغلاق"
 
 #. module: crm_claim
 #: field:crm.claim.stage,case_default:0
 msgid "Common to All Teams"
-msgstr ""
+msgstr "مشترك مع كل الفرق"
 
 #. module: crm_claim
 #: field:crm.claim,company_id:0
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,company_id:0
 msgid "Company"
-msgstr "شركة"
+msgstr "المؤسسة"
 
 #. module: crm_claim
 #: model:crm.tracking.campaign,name:crm_claim.claim_source1
 msgid "Corrective"
-msgstr "تصحيح"
+msgstr "تصحيحي"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0 selection:crm.claim.report,type_action:0
 msgid "Corrective Action"
-msgstr "تصحيح الاجراء"
+msgstr "إجراء تصحيحي"
 
 #. module: crm_claim
 #: field:crm.claim.report,create_date:0
 msgid "Create Date"
-msgstr "إنشاء تاريخ"
+msgstr "تاريخ الإنشاء"
 
 #. module: crm_claim
 #: field:crm.claim,create_uid:0 field:crm.claim.stage,create_uid:0
 msgid "Created by"
-msgstr "أُنشئ بواسطة"
+msgstr "أنشئ بواسطة"
 
 #. module: crm_claim
 #: field:crm.claim.stage,create_date:0
 msgid "Created on"
-msgstr "إنشاؤه في"
+msgstr "أنشئ في"
 
 #. module: crm_claim
 #: field:crm.claim,create_date:0
@@ -259,12 +260,12 @@ msgstr "تاريخ الإغلاق"
 #. module: crm_claim
 #: help:crm.claim,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "تاريخ آخر رسالة نُشرت لهذا البند"
+msgstr "تاريخ أخر رسالة في هذا السجل"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Dates"
-msgstr "تواريخ"
+msgstr "التواريخ"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
@@ -280,22 +281,22 @@ msgstr "تأخير الإغلاق"
 #. module: crm_claim
 #: field:crm.claim,description:0
 msgid "Description"
-msgstr "وصف"
+msgstr "الوصف"
 
 #. module: crm_claim
 #: help:crm.claim,email_from:0
 msgid "Destination email for email gateway."
-msgstr ""
+msgstr "البريد الهدف لبوابة البريد الإلكتروني"
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
 msgid "Email"
-msgstr "بريد إلكتروني"
+msgstr "البريد الإلكتروني"
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Extended Filters..."
-msgstr "مرشحات مفصلة..."
+msgstr "فلاتر تفصيلية..."
 
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim1
@@ -305,7 +306,7 @@ msgstr "الشكاوي الواقعية"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Follow Up"
-msgstr "متابعة"
+msgstr "المتابعة"
 
 #. module: crm_claim
 #: field:crm.claim,message_follower_ids:0
@@ -323,7 +324,7 @@ msgstr "تجميع حسب"
 msgid ""
 "Have a general overview of all claims processed in the system by sorting "
 "them with specific criteria."
-msgstr "يوجد لمحة عامة لكل الشكاوي المقدمة في هذا النظام بترتيبهم بمعايير محددة."
+msgstr "احصل على نظرة عامة على كافة الشكاوى التي تم معالجتها في النظام عبر ترتيبهم وفرزهم وفق اشتراطات معينة."
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
@@ -335,24 +336,24 @@ msgstr "مرتفع"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل إدراجها في عروض كانبان."
+msgstr "يحتفظ بسجل المحادثات (عدد الرسائل،...). هذا الملخص معروض بصيغة HTML لتتمكن من إدراجها في واجهات كانبان."
 
 #. module: crm_claim
 #: field:crm.claim,id:0 field:crm.claim.report,id:0 field:crm.claim.stage,id:0
 msgid "ID"
-msgstr "معرّف"
+msgstr "المعرف"
 
 #. module: crm_claim
 #: help:crm.claim,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "عند التفعيل، يجب الانتباه الى الرسائل الجديدة"
+msgstr "إذا حددته، فستتطلب الرسائل الجديدة انتباهك."
 
 #. module: crm_claim
 #: help:crm.claim.stage,case_default:0
 msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
-msgstr "إذا قمت بتحديد هذا الحقل، سيتم اقتراح هذه المرحلة بشكل افتراضي على كل فريق المبيعات. ولن يتم تعيين هذه المرحلة للفرق الموجودة."
+msgstr "إذا حددت هذا الحقل، سيتم اقتراح هذه المرحلة بشكل افتراضي في كافة فرق المبيعات. لن يتم إضافة هذه المرحلة للفرق القائمة الآن."
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim5
@@ -377,14 +378,14 @@ msgstr "آخر تحديث بواسطة"
 #. module: crm_claim
 #: field:crm.claim.stage,write_date:0
 msgid "Last Updated on"
-msgstr "آخر تحديث فى"
+msgstr "آخر تحديث في"
 
 #. module: crm_claim
 #: help:crm.claim.stage,section_ids:0
 msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
-msgstr ""
+msgstr "الربط بين المراحل وفرق المبيعات. عندما تضبطها، فستقتصر المرحلة الحالية على فرق المبيعات المحددة فقط."
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
@@ -394,7 +395,7 @@ msgstr "منخفض"
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
 msgid "Messages"
-msgstr "رسائل"
+msgstr "الرسائل"
 
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
@@ -404,7 +405,7 @@ msgstr "الرسائل و سجل التواصل"
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Month of claim"
-msgstr ""
+msgstr "شهر الشكوى"
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
@@ -414,12 +415,12 @@ msgstr "حالاتي"
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "My Company"
-msgstr ""
+msgstr "مؤسستي"
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "My Sales Team(s)"
-msgstr "فريقي للمبيعات"
+msgstr "فر(يـ)ـقي"
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
@@ -434,13 +435,13 @@ msgstr "الإجراء التالي"
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
-msgstr "تاريخ الحدث التالي"
+msgstr "تاريخ الإجراء التالي"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:183
 #, python-format
 msgid "No Subject"
-msgstr "بدون موضوع"
+msgstr "بلا موضوع"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
@@ -455,7 +456,7 @@ msgstr "عدد الأيام لغلق الحالة"
 #. module: crm_claim
 #: field:crm.claim.report,delay_expected:0
 msgid "Overpassed Deadline"
-msgstr "تخطي الموعد النهائي"
+msgstr "المواعيد المتجاوزة"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -465,7 +466,7 @@ msgstr "تخطي الموعد النهائي"
 #: field:crm.claim.report,partner_id:0
 #: model:ir.model,name:crm_claim.model_res_partner
 msgid "Partner"
-msgstr "شريك"
+msgstr "الشريك"
 
 #. module: crm_claim
 #: field:crm.claim,partner_phone:0
@@ -475,27 +476,27 @@ msgstr "الهاتف"
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim3
 msgid "Policy Claims"
-msgstr "سياسة الشكاوي"
+msgstr "سياسة الشكاوى"
 
 #. module: crm_claim
 #: model:crm.tracking.campaign,name:crm_claim.claim_source2
 msgid "Preventive"
-msgstr "المنع"
+msgstr "وقائية"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0 selection:crm.claim.report,type_action:0
 msgid "Preventive Action"
-msgstr "اجراء المنع"
+msgstr "الإجراء الوقائي"
 
 #. module: crm_claim
 #: field:crm.claim,priority:0 field:crm.claim.report,priority:0
 msgid "Priority"
-msgstr "أولوية"
+msgstr "الأولوية"
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
 msgid "Reference"
-msgstr "مرجع"
+msgstr "الإشارة"
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim3
@@ -505,7 +506,7 @@ msgstr "مرفوض"
 #. module: crm_claim
 #: field:crm.claim,resolution:0
 msgid "Resolution"
-msgstr "القرار"
+msgstr "الحل"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -515,35 +516,35 @@ msgstr "اجراءات الحل"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Responsibilities"
-msgstr "المسؤوليات"
+msgstr "المسئوليات"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 #: field:crm.claim,user_id:0
 msgid "Responsible"
-msgstr "مسؤول"
+msgstr "المسئول"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Responsible User"
-msgstr "المستخدم المسؤول"
+msgstr "المستخدم المسئول"
 
 #. module: crm_claim
 #: help:crm.claim,section_id:0
 msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
-msgstr ""
+msgstr "فريق المبيعات المسئول. حدد المستخدم المسئول وحساب البريد الإلكتروني لبوابة البريد."
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
 msgid "Root Cause"
-msgstr "سبب جذري"
+msgstr "السبب الأساسي"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Root Causes"
-msgstr "الأسباب الجذرية"
+msgstr "الأسباب الأساسية"
 
 #. module: crm_claim
 #: field:crm.claim,section_id:0
@@ -554,7 +555,7 @@ msgstr "فريق المبيعات"
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Salesperson"
-msgstr "موظف مبيعات"
+msgstr "مسئول المبيعات"
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
@@ -564,27 +565,27 @@ msgstr "بحث"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Search Claims"
-msgstr "ابحث عن الشكاوي"
+msgstr "بحث الشكاوى"
 
 #. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
-msgstr "قسم"
+msgstr "القسم"
 
 #. module: crm_claim
 #: field:crm.claim.stage,section_ids:0
 msgid "Sections"
-msgstr "الاقسام"
+msgstr "الأقسام"
 
 #. module: crm_claim
 #: field:crm.claim.stage,sequence:0
 msgid "Sequence"
-msgstr "مسلسل"
+msgstr "المسلسل"
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
 msgid "Settled"
-msgstr ""
+msgstr "مسوى"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
@@ -592,7 +593,7 @@ msgstr ""
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,stage_id:0
 msgid "Stage"
-msgstr "مرحلة"
+msgstr "المرحلة"
 
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
@@ -602,12 +603,12 @@ msgstr "اسم المرحلة"
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
 msgid "Stages"
-msgstr "مراحل"
+msgstr "المراحل"
 
 #. module: crm_claim
 #: field:crm.claim,message_summary:0
 msgid "Summary"
-msgstr "ملخّص"
+msgstr "الملخص"
 
 #. module: crm_claim
 #: help:crm.claim,email_cc:0
@@ -615,23 +616,23 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr "سيتم اضافة عناوين البريد الالكتروني الى حقل CC لكل الايميلات الواردة والصادرة لهذا التسجيل قبل ان يرسل. افصل بين عناوين البريد الالكتروني المتعددة بفاصلة"
+msgstr "سيتم إضافة عناوين البريد الإلكتروني هذه إلى حقل النسخة الكربونية CC لكافة المراسلات الصادرة والواردة لهذا السجل. افصل بين عناوين البريد الإلكتروني بالفاصلة الإنجليزية."
 
 #. module: crm_claim
 #: field:crm.claim,user_fault:0
 msgid "Trouble Responsible"
-msgstr "مشكلة المسؤولين"
+msgstr "مسئول الشكوى"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_tree_view
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Type"
-msgstr "نوع"
+msgstr "النوع"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Unassigned Claims"
-msgstr ""
+msgstr "الشكاوى غير المسندة"
 
 #. module: crm_claim
 #: field:crm.claim,message_unread:0
@@ -646,34 +647,34 @@ msgstr "تاريخ التحديث"
 #. module: crm_claim
 #: help:crm.claim.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr "تستخدم لترتيب المراحل. الأقل أفضل."
+msgstr "يستخدم في ترتيب المراحل، العدد الأقل له الأسبقية."
 
 #. module: crm_claim
 #: field:crm.claim.report,user_id:0
 msgid "User"
-msgstr "مستخدِم"
+msgstr "المستخدم"
 
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim2
 msgid "Value Claims"
-msgstr "قيمة الشكاوي"
+msgstr "شكاوى عن القيمة"
 
 #. module: crm_claim
 #: field:crm.claim,email_cc:0
 msgid "Watchers Emails"
-msgstr "مراقبو رسائل البريد الالكتروني"
+msgstr "مراقبو البريد الإلكتروني"
 
 #. module: crm_claim
 #: field:crm.claim,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "رسائل الموقع"
 
 #. module: crm_claim
 #: help:crm.claim,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "سجل تواصل الموقع"
 
 #. module: crm_claim
 #: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload
 msgid "Workload"
-msgstr ""
+msgstr "عبء العمل"

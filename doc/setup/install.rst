@@ -289,7 +289,7 @@ Source installation requires manually installing dependencies:
     ldap) it may be necessary to install development tools and native
     dependencies before pip is able to install the dependencies themselves.
     These are available in ``-dev`` or ``-devel`` packages for Python,
-    Postgres, libxml2, libxslt, libevent and libsasl2. Then the Python
+    Postgres, libxml2, libxslt, libevent, libsasl2 and libldap2. Then the Python
     dependecies can themselves be installed:
 
     .. code-block:: console

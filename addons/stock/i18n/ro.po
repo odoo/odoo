@@ -3,14 +3,15 @@
 # * stock
 # 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 12:59+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-29 02:49+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgid ""
 "                * Transferred: has been processed, can't be modified or cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr "\n                * Ciornă: neconfirmată încă și nu va fi planificată până la confirmare\n\n                * Așteaptă altă operație: așteaptă altă mișcare să fie efectuată înainte de a deveni stocul în mod automat disponibil (ex. în fluxul La Comandă)\n\n                * Așteaptă disponibilitatea: așteaptă disponibilitatea produselor\n\n                * Disponibil parțial: o parte din produse sunt disponibile și rezervate\n\n                * Gata de transfer: produsele sunt rezervate și mișcarea așteaptă să fie confirmată\n\n                * Transferat: Transferul a fost efectuat, mișcarea nu se poate modifica sau anula\n\n                * Anulat: Mișcare a fost anulată, nu se mai pot face modificări"
+msgstr "\n * Ciornă: neconfirmată încă și nu va fi planificată până la confirmare\n\n * Așteaptă altă operație: așteaptă altă mișcare să fie efectuată înainte de a deveni stocul în mod automat disponibil (ex. în fluxul La Comandă)\n\n* Așteaptă disponibilitatea: așteaptă disponibilitatea produselor\n\n* Disponibil parțial: o parte din produse sunt disponibile și rezervate\n\n* Gata de transfer: produsele sunt rezervate și mișcarea așteaptă să fie confirmată\n\n* Transferat: Transferul a fost efectuat, mișcarea nu se poate modifica sau anula\n\n* Anulat: Mișcare a fost anulată, nu se mai pot face modificări"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_dropshipping:0
@@ -129,7 +130,7 @@ msgid ""
 "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
-msgstr "* Nou: Atunci când mișcarea este creata și nu este încă confirmată.\n* În așteptarea altei mișcări: Aceasta stare poate fi văzuta atunci când o mișcare este în așteptarea alteia, de exemplu într-un flux în lanț.\n* În așteptarea disponibilității: Aceasta stare este atinsă atunci când rezoluția de aprovizionare nu este imediată. Poate este nevoie ca programatorul să ruleze planificarea sau ca o componentă să fie fabricată...\n* Disponibil: Atunci când produsele sunt rezervate, starea este setata pe 'Disponibil'.\n* Efectuat: Atunci când transportul este procesat, starea este 'Efectuat'."
+msgstr "* Nou: Atunci când mișcarea este creata și nu este încă confirmată.\n* În așteptarea altei mișcări: Aceasta stare poate fi văzuta atunci când o mișcare este în așteptarea alteia, de exemplu într-un flux înlănțuit.\n* În așteptarea disponibilității: Aceasta stare este atinsă atunci când rezoluția de aprovizionare nu este imediată. Poate este nevoie ca programatorul să ruleze planificarea sau ca o componentă să fie fabricată...\n* Disponibil: Atunci când produsele sunt rezervate, starea este setata pe 'Disponibil'.\n* Efectuat: Atunci când transportul este procesat, starea este 'Efectuat'."
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -258,7 +259,7 @@ msgid ""
 "                to see all the past or future movements for the product.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a crea o miscare a stocului.\n              </p><p>\n                Acest meniu va ofera o trasabilitate completa a operatiunilor de\n                inventariere a unui anumit produs. Puteti filtra produsul\n                pentru a vedea toate miscarile trecute sau viitoare ale produsului.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClic pentru a crea o mișcare de stoc.\n</p><p>\nAcest meniu vă oferă o trasabilitate completă a operațiunilor de\nstoc a unui anumit produs. Puteți filtra produsul pentru a vedea toate mișcările trecute sau viitoare ale produsului. </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree
@@ -2192,7 +2193,7 @@ msgstr "Operații asociate"
 #. module: stock
 #: field:stock.quant,propagated_from_id:0
 msgid "Linked Quant"
-msgstr "Quant atribuit"
+msgstr ""
 
 #. module: stock
 #: view:stock.location:stock.view_location_form
@@ -2358,7 +2359,7 @@ msgstr "Gestionare Loturi / Numere seriale"
 #. module: stock
 #: model:res.groups,name:stock.group_locations
 msgid "Manage Multiple Locations and Warehouses"
-msgstr "Gestionati Locatii si Depozite Multiple"
+msgstr "Gestionați Locații și Depozite Multiple"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
@@ -2516,7 +2517,7 @@ msgstr "Metodă aprovizionare"
 msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
-msgstr "Data miscarii: data programata pana cand miscarea este efectuata, apoi data procesarii miscarii respective"
+msgstr "Data mișcarii: data programată până când mișcarea va fi efectuată, apoi data procesării mișcarii respective"
 
 #. module: stock
 #: help:procurement.order,move_dest_id:0
@@ -2526,7 +2527,7 @@ msgstr "Mișcarea ce a determinat această aprovizionare."
 #. module: stock
 #: field:stock.move,quant_ids:0
 msgid "Moved Quants"
-msgstr "Quant-uri mutate"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -2564,7 +2565,7 @@ msgstr ""
 #. module: stock
 #: help:stock.quant,history_ids:0
 msgid "Moves that operate(d) on this quant"
-msgstr "Mișcări operate în acest quant"
+msgstr "Mișcări operate în acestă poziție de stoc"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
@@ -2620,7 +2621,7 @@ msgstr ""
 #: code:addons/stock/static/src/js/widgets.js:649
 #, python-format
 msgid "No Picking Available"
-msgstr "Ridicări indisponibile"
+msgstr "Nu sunt ridicări disponibile"
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
@@ -2798,7 +2799,7 @@ msgstr ""
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr "Optional: urmatoarea miscare a stocului cand se face inlantuirea"
+msgstr "Opțional: următoarea mișcare a stocului când se face înlănțuirea"
 
 #. module: stock
 #: help:stock.move,move_orig_ids:0
@@ -2896,7 +2897,7 @@ msgstr ""
 #: help:stock.pack.operation,owner_id:0
 #: help:stock.transfer_details_items,owner_id:0
 msgid "Owner of the quants"
-msgstr ""
+msgstr "Proprietarul pozițiilor de stoc"
 
 #. module: stock
 #: code:addons/stock/product.py:270
@@ -3551,12 +3552,12 @@ msgstr "Locație Control Calitate"
 #. module: stock
 #: view:stock.quant:stock.view_stock_quant_form
 msgid "Quant History"
-msgstr "Istoric quant"
+msgstr "Istoric poziție de stoc"
 
 #. module: stock
 #: field:stock.picking,quant_reserved_exist:0
 msgid "Quant already reserved ?"
-msgstr "Quant deja rezervat?"
+msgstr "Poziție de stoc deja rezervată?"
 
 #. module: stock
 #: code:addons/stock/stock.py:1916
@@ -3674,7 +3675,7 @@ msgstr ""
 #: view:stock.quant:stock.view_stock_quant_tree
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Quants"
-msgstr "Quant-uri"
+msgstr ""
 
 #. module: stock
 #. openerp-web
@@ -3884,13 +3885,13 @@ msgstr "Caută reguli reaprovizionare"
 #. module: stock
 #: field:stock.move.operation.link,reserved_quant_id:0
 msgid "Reserved Quant"
-msgstr "Quant rezervat"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form
 msgid "Reserved Quants"
-msgstr "Quanturi rezervate"
+msgstr ""
 
 #. module: stock
 #: field:stock.quant,reservation_id:0
@@ -3900,7 +3901,7 @@ msgstr "Rezervat pentru mișcarea"
 #. module: stock
 #: field:stock.move,reserved_quant_ids:0
 msgid "Reserved quants"
-msgstr "Quanturi rezervate"
+msgstr ""
 
 #. module: stock
 #: field:stock.warehouse,resupply_from_wh:0
@@ -5437,7 +5438,7 @@ msgstr "_Aplică"
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "_Cancel"
-msgstr "_Anuleaza"
+msgstr "_Anulează"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit

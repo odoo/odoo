@@ -84,8 +84,8 @@ class SyncEvent(object):
 
     def compute_OP(self, modeFull=True):
         #If event are already in Gmail and in OpenERP
-        is_owner = self.OE.event.env.user.id == self.OE.event.user_id.id
         if self.OE.found and self.GG.found:
+            is_owner = self.OE.event.env.user.id == self.OE.event.user_id.id
             #If the event has been deleted from one side, we delete on other side !
             if self.OE.status != self.GG.status and is_owner:
                 self.OP = Delete((self.OE.status and "OE") or (self.GG.status and "GG"),
@@ -202,6 +202,8 @@ class google_calendar(osv.AbstractModel):
     _name = 'google.%s' % STR_SERVICE
 
     def generate_data(self, cr, uid, event, isCreating=False, context=None):
+        if not context:
+            context = {}
         if event.allday:
             start_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context).isoformat('T').split('T')[0]
             final_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.start, tools.DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=event.duration) + timedelta(days=isCreating and 1 or 0), context=context).isoformat('T').split('T')[0]
@@ -226,19 +228,18 @@ class google_calendar(osv.AbstractModel):
                 "method": "email" if alarm.type == "email" else "popup",
                 "minutes": alarm.duration_minutes
             })
-
         data = {
             "summary": event.name or '',
             "description": event.description or '',
             "start": {
                 type: start_date,
                 vstype: None,
-                'timeZone': 'UTC'
+                'timeZone': context.get('tz', 'UTC'),
             },
             "end": {
                 type: final_date,
                 vstype: None,
-                'timeZone': 'UTC'
+                'timeZone': context.get('tz', 'UTC'),
             },
             "attendees": attendee_list,
             "reminders": {
@@ -365,7 +366,7 @@ class google_calendar(osv.AbstractModel):
 
         url = "/calendar/v3/calendars/%s/events/%s?fields=%s&access_token=%s" % ('primary', google_event['id'], 'id,updated', self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        data = self.generate_data(cr, uid, oe_event, context)
+        data = self.generate_data(cr, uid, oe_event, context=context)
         data['sequence'] = google_event.get('sequence', 0)
         data_json = simplejson.dumps(data)
 

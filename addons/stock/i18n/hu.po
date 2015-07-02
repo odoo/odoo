@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# krnkris, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-04 07:40+0000\n"
+"Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,14 +36,14 @@ msgid ""
 "                * Transferred: has been processed, can't be modified or cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr "\n                * Tervezet: még nincs jóváhagyva és addig nem ütemezett amíg nincs jóváhagyva\n\n                * Másik műveletre vár: másik mozgás műveletre vár mielőtt automatikusan elérhetővé válik (pl. megrendelésre-készítve folyamatokban)\n\n                * Elérhetőségre vár: még mindig a termékek elérhetőségére vár\n\n                * Részlegesen elérhető: egyes termékeke elérhetők és le vannak foglalva\n\n                * Továbbításra készen áll: termék lefoglalva, egyszerűen csak jóváhagyásra vár.\n\n                * Továbbított: végrehajtva, nem lehet többé módosítani vagy visszavonni\n\n                * Visszavont: vissza lett vonva, nem lehet többé jóváhagyni"
+msgstr "\n            * Terv: még nem visszaigazolt és nem lesz ütemezve amíg nem visszaigazolt\n\n            * Másik műveletre várakozás: másik műveletre várás mielőtt automatikusan elérhető lesz (pl. Megrendeléshez-Létrehozni\n               folyamatok)\n\n            * Elérhetőségre vár: még mindig vár a termék elérhetőségére\n\n            * Átszállításra kész: termékek foglalva, egyszerűen csak visszaigazolásra vár.\n\n            * Átszállított: végrehajtva, nem törölhető vagy megszakítható többé\n\n            * Megszakított: megszakítva, nem visszaigazolható többé"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_dropshipping:0
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\nLétrehozza a dropship /viszonteladás közvetlenül a gyártótól a vevőhöz/ útvonalat és jóval részletesebb leírások ad hozzá-Ez a stock_dropshipping modult telepíti."
+msgstr "\nLétrehozza a dropship /viszonteladás közvetlenül a gyártótól a vevőhöz/ útvonalat és jóval részletesebb leírásokat ad hozzá-Ez a stock_dropshipping modult telepíti."
 
 #. module: stock
 #: code:addons/stock/stock.py:1662
@@ -113,7 +114,7 @@ msgstr "%s %s %s el lett <b>távolítva a</b> szemétbe."
 #: code:addons/stock/stock.py:2930
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr "%s: Pótolja a terméket iinen %s"
+msgstr "%s: Pótolja a terméket innen %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:43
@@ -150,7 +151,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr "* Beszállítói hely: Virtuális hely, mely a beszállítóktól beérkező termékek forrás helyét képviseli\n                       \n* Nézet: Virtuális hely, általában a raktárépületének rangsor felépítésére használja, összeállítva az alárendelt heyleket ; nem tartalmaz termékeket\n                       \n* Belső hely: Fizikai helyek a saját raktárépületein belül,\n                       \n* Vásárlói helyek: Virtuális hely, mely a vásárlókhoz kiküldött termékek cél helyét képviseli\n                       \n* Készlet: Virtuális hely, a készlet tételek mennyiségi szintjeinek kijavításához használja (fizikai készlet) a raktár műveleteknél másolati példányként szolgál\n                       \n* Beszerzés: Virtuális hely, beszerzési műveletekhez  ideiglenes másolati példányként szolgál, ha a forrás (beszállító vagy gyártás) még jelenleg nem ismert. Ennek a helynek üresnek kell lennie ha a beszerzési időzítő lefutott.\n                       \n* Gyártás: Virtuális másolati példány a gyártási műveletekhez: ez a hely fogyasztja a nyersanyagot és hozza létre a kész termékeket\n                       \n* Átszállítási cím: Másolati példány hely, melyet amit a belső-vállalatok vagy belső-raktárépületek műveleteinél kell használni\n                      "
+msgstr "* Beszállítói hely: Virtuális hely, mely a beszállítóktól beérkező termékek forrás helyét képviseli\n                       \n* Nézet: Virtuális hely, általában a raktárépületének rangsor felépítésére használja, összeállítva az alárendelt helyeket ; nem tartalmazhat termékeket\n                       \n* Belső hely: Fizikai helyek a saját raktárépületein belül,\n                       \n* Vásárlói helyek: Virtuális hely, amely kifejezi a vevőkhöz kiszállított termék célállomás helyét\n                       \n* Készlet: Virtuális hely, hasonló hely, melyet a raktár szintek javításához használnak a készlet gazdálkodás működésénak alkalmazásához (Fizikai készletek)\n                       \n* Beszerzés: Virtuális hely, mely ideiglenes alkalmazásként működik a beszerzés működéséhez, ha a forrás (beszállító vagy termelés) most még nem ismert. Ennak a helynek üresnek kell lennie ha a beszerzés ütemező befelyezte a futását.\n                       \n* Gyártás: Virtuális hasonló hely a termelés működéséhez: ez a hely használja fel a nyersanyagot és hozza létre a végtermékeket\n                       \n* Átszállítási cím: Hasonlati hely, melyet a belső-vállalatok vagy belső-raktárépületek műveleteinél kell használni\n                      "
 
 #. module: stock
 #. openerp-web
