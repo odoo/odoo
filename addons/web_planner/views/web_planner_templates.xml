@@ -12,4 +12,23 @@
             <script type="text/javascript" src="/web_planner/static/src/js/web_planner_common.js"></script>
         </xpath>
     </template>
+
+    <template id="pages">
+        <div class ="row">
+            <t t-raw="0"/>
+        </div>
+    </template>
+
+    <template id="category">
+      <div t-att-menu-category-id="menu_categorytitle" t-att-menu-classes="menu_categoryclasses">
+        <t t-raw="0"/>
+      </div>
+    </template>
+
+    <template id="page">
+      <div t-att-id="page_id" t-att-title="page_title" t-att-hide-from-menu="hide_from_menu" t-att-hide-mark-as-done="hide_mark_as_done" class="o_planner_page">
+        <h1 t-esc="page_title" t-att-data-menutitle="page_menutitle or page_title"/>
+        <t t-raw="0"/>
+      </div>
+    </template>
 </odoo>
