@@ -96,8 +96,8 @@ class AccountAccount(models.Model):
                 raise ValueError(_('You cannot have a receivable/payable account that is not reconciliable. (account code: %s)') % account.code)
 
     name = fields.Char(required=True, index=True)
-    currency_id = fields.Many2one('res.currency', string='Secondary Currency',
-        help="Forces all moves for this account to have this secondary currency.")
+    currency_id = fields.Many2one('res.currency', string='Account Currency',
+        help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type", 

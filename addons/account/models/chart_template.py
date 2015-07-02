@@ -22,7 +22,7 @@ class AccountAccountTemplate(models.Model):
     _order = "code"
 
     name = fields.Char(required=True, index=True)
-    currency_id = fields.Many2one('res.currency', string='Secondary Currency', help="Forces all moves for this account to have this secondary currency.")
+    currency_id = fields.Many2one('res.currency', string='Account Currency', help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True, index=True)
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
@@ -801,6 +801,6 @@ class AccountBankAccountsWizard(models.TransientModel):
 
     acc_name = fields.Char(string='Account Name.', required=True)
     bank_account_id = fields.Many2one('wizard.multi.charts.accounts', string='Bank Account', required=True, ondelete='cascade')
-    currency_id = fields.Many2one('res.currency', string='Secondary Currency',
+    currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this secondary currency.")
     account_type = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')])
