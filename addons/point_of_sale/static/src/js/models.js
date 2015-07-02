@@ -360,7 +360,14 @@ exports.PosModel = Backbone.Model.extend({
             }
 
             self.cashregisters = self.cashregisters.sort(function(a,b){ 
-                return a.journal.sequence - b.journal.sequence; 
+		// prefer cashregisters to be first in the list
+		if (a.journal.type == "cash" && b.journal.type != "cash") {
+		    return -1;
+		} else if (a.journal.type != "cash" && b.journal.type == "cash") {
+		    return 1;
+		} else {
+                    return a.journal.sequence - b.journal.sequence;
+		}
             });
 
         },
@@ -1357,7 +1364,7 @@ var OrderlineCollection = Backbone.Collection.extend({
 });
 
 // Every Paymentline contains a cashregister and an amount of money.
-var Paymentline = Backbone.Model.extend({
+exports.Paymentline = Backbone.Model.extend({
     initialize: function(attributes, options) {
         this.pos = options.pos;
         this.order = options.order;
@@ -1419,7 +1426,7 @@ var Paymentline = Backbone.Model.extend({
 });
 
 var PaymentlineCollection = Backbone.Collection.extend({
-    model: Paymentline,
+    model: exports.Paymentline,
 });
 
 // An order more or less represents the content of a client's shopping cart (the OrderLines) 
@@ -1501,7 +1508,7 @@ exports.Order = Backbone.Model.extend({
         var paymentlines = json.statement_ids;
         for (var i = 0; i < paymentlines.length; i++) {
             var paymentline = paymentlines[i][2];
-            var newpaymentline = new Paymentline({},{pos: this.pos, order: this, json: paymentline});
+            var newpaymentline = new exports.Paymentline({},{pos: this.pos, order: this, json: paymentline});
             this.paymentlines.add(newpaymentline);
 
             if (i === paymentlines.length - 1) {
@@ -1770,7 +1777,7 @@ exports.Order = Backbone.Model.extend({
     /* ---- Payment Lines --- */
     add_paymentline: function(cashregister) {
         this.assert_editable();
-        var newPaymentline = new Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
+        var newPaymentline = new exports.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
         if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
             newPaymentline.set_amount( Math.max(this.get_due(),0) );
         }

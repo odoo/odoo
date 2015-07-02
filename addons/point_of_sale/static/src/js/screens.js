@@ -59,12 +59,12 @@ var ScreenWidget = PosBaseWidget.extend({
     // it will add the product to the order and go to barcode_product_screen. 
     barcode_product_action: function(code){
         var self = this;
-        if(self.pos.scan_product(code)){
-            if(self.barcode_product_screen){ 
+        if (self.pos.scan_product(code)) {
+            if (self.barcode_product_screen) {
                 self.gui.show_screen(self.barcode_product_screen);
             }
-        }else{
-            self.gui.show_popup('error-barcode',code.code);
+        } else {
+            this.barcode_error_action(code);
         }
     },
 
@@ -81,7 +81,7 @@ var ScreenWidget = PosBaseWidget.extend({
                 return true;
             }
         }
-        this.gui.show_popup('error-barcode',code.code);
+        this.barcode_error_action(code);
         return false;
     },
     
@@ -95,7 +95,7 @@ var ScreenWidget = PosBaseWidget.extend({
             this.pos.get_order().set_client(partner);
             return true;
         }
-        this.gui.show_popup('error-barcode',code.code);
+        this.barcode_error_action(code);
         return false;
     },
     
@@ -108,8 +108,14 @@ var ScreenWidget = PosBaseWidget.extend({
         }
     },
     // What happens when an invalid barcode is scanned : shows an error popup.
-    barcode_error_action: function(code){
-        this.gui.show_popup('error-barcode',code.code);
+    barcode_error_action: function(code) {
+        var show_code;
+        if (code.code.length > 32) {
+            show_code = code.code.substring(0,29)+'...';
+        } else {
+            show_code = code.code;
+        }
+        this.gui.show_popup('error-barcode',show_code);
     },
 
     // this method shows the screen and sets up all the widget related to this screen. Extend this method
@@ -123,11 +129,11 @@ var ScreenWidget = PosBaseWidget.extend({
         }
 
         this.pos.barcode_reader.set_action_callback({
-            'cashier': self.barcode_cashier_action ? function(code){ self.barcode_cashier_action(code); } : undefined ,
-            'product': self.barcode_product_action ? function(code){ self.barcode_product_action(code); } : undefined ,
-            'client' : self.barcode_client_action ?  function(code){ self.barcode_client_action(code);  } : undefined ,
-            'discount': self.barcode_discount_action ? function(code){ self.barcode_discount_action(code); } : undefined,
-            'error'   : self.barcode_error_action ?  function(code){ self.barcode_error_action(code);   } : undefined,
+            'cashier': _.bind(self.barcode_cashier_action, self),
+            'product': _.bind(self.barcode_product_action, self),
+            'client' : _.bind(self.barcode_client_action, self),
+            'discount': _.bind(self.barcode_discount_action, self),
+            'error'   : _.bind(self.barcode_error_action, self),
         });
     },
 
@@ -257,7 +263,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
             }
         };
 
-        $('body').on('keyup',this.hotkey_handler);
+        $('body').on('keypress',this.hotkey_handler);
 
         this.$('.back').click(function(){
             self.gui.show_screen(self.previous_screen);
@@ -315,7 +321,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
     },
     close: function(){
         this._super();
-        $('body').off('keyup',this.hotkey_handler);
+        $('body').off('keypress',this.hotkey_handler);
 
         this.pos.proxy_queue.clear();
     },
@@ -693,7 +699,7 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
         var products = this.pos.db.get_product_by_category(this.category.id); 
         this.product_list_widget.set_product_list(products); // FIXME: this should be moved elsewhere ... 
 
-        this.el.querySelector('.searchbox input').addEventListener('keyup',this.search_handler);
+        this.el.querySelector('.searchbox input').addEventListener('keypress',this.search_handler);
 
         this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
 
@@ -992,7 +998,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.chrome.widget.keyboard.connect(this.$('.searchbox input'));
         }
 
-        this.$('.searchbox input').on('keyup',function(event){
+        this.$('.searchbox input').on('keypress',function(event){
             clearTimeout(search_timeout);
 
             var query = this.value;
@@ -1370,6 +1376,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             pos:     this.pos,
             order:   this.pos.get_order(),
             receipt: this.pos.get_order().export_for_printing(),
+            paymentlines: this.pos.get_order().get_paymentlines()
         };
         var receipt = QWeb.render('XmlReceipt',env);
 
@@ -1476,33 +1483,46 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.decimal_point = _t.database.parameters.decimal_point;
         
         // This is a keydown handler that prevents backspace from
-        // doing a back navigation
-        this.keyboard_no_backnav = function(event){
-            if (event.keyCode === 8) {  // Backspace
+        // doing a back navigation. It also makes sure that keys that
+        // do not generate a keypress in Chrom{e,ium} (eg. delete,
+        // backspace, ...) get passed to the keypress handler.
+        this.keyboard_keydown_handler = function(event){
+            if (event.keyCode === 8 || event.keyCode === 46) { // Backspace and Delete
                 event.preventDefault();
+
+                // These do not generate keypress events in
+                // Chrom{e,ium}. Even if they did, we just called
+                // preventDefault which will cancel any keypress that
+                // would normally follow. So we call keyboard_handler
+                // explicitly with this keydown event.
+                self.keyboard_handler(event);
             }
         };
         
-        // This keyboard handler is on keyup to prevent keypress repeats
-        // but it thus cannot prevent the back navigation
+        // This keyboard handler listens for keypress events. It is
+        // also called explicitly to handle some keydown events that
+        // do not generate keypress events.
         this.keyboard_handler = function(event){
             var key = '';
-            if ( event.keyCode === 13 ) {         // Enter
-                self.validate_order();
-            } else if ( event.keyCode === 190 ) { // Dot
-                key = '.';
-            } else if ( event.keyCode === 46 ) {  // Delete
-                key = 'CLEAR';
-            } else if ( event.keyCode === 8 ) {   // Backspace 
-                key = 'BACKSPACE';
-            } else if ( event.keyCode >= 48 && event.keyCode <= 57 ){       // Numbers
-                key = '' + (event.keyCode - 48);
-            } else if ( event.keyCode >= 96 && event.keyCode <= 105 ){      // Numpad Numbers
-                key = '' + (event.keyCode - 96);
-            } else if ( event.keyCode === 189 || event.keyCode === 109 ) {  // Minus
-                key = '-';
-            } else if ( event.keyCode === 107 ) { // Plus
-                key = '+';
+
+            if (event.type === "keypress") {
+                if (event.keyCode === 13) { // Enter
+                    self.validate_order();
+                } else if (event.keyCode === 46) { // Period
+                    key = '.';
+                } else if (event.keyCode >= 48 && event.keyCode <= 57) { // Numbers
+                    key = '' + (event.keyCode - 48);
+                } else if (event.keyCode === 45) { // Minus
+                    key = '-';
+                } else if (event.keyCode === 43) { // Plus
+                    key = '+';
+                }
+            } else { // keyup/keydown
+                if (event.keyCode === 46) { // Delete
+                    key = 'CLEAR';
+                } else if (event.keyCode === 8) { // Backspace
+                    key = 'BACKSPACE';
+                }
             }
 
             self.payment_input(key);
@@ -1548,10 +1568,20 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
     },
     click_numpad: function(button) {
-            if (!this.pos.get_order().get_paymentlines().length) {
-                this.pos.get_order().add_paymentline( this.pos.cashregisters[0]);
-                this.render_paymentlines();
-            }
+	var paymentlines = this.pos.get_order().get_paymentlines();
+	var open_paymentline = false;
+
+	for (var i = 0; i < paymentlines.length; i++) {
+	    if (! paymentlines[i].paid) {
+		open_paymentline = true;
+	    }
+	}
+
+	if (! open_paymentline) {
+            this.pos.get_order().add_paymentline( this.pos.cashregisters[0]);
+            this.render_paymentlines();
+        }
+
         this.payment_input(button.data('action'));
     },
     render_numpad: function() {
@@ -1718,13 +1748,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.reset_input();
         this.render_paymentlines();
         this.order_changes();
-        window.document.body.addEventListener('keyup',this.keyboard_handler);
-        window.document.body.addEventListener('keydown',this.keyboard_no_backnav);
+        window.document.body.addEventListener('keypress',this.keyboard_handler);
+        window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
-        window.document.body.removeEventListener('keyup',this.keyboard_handler);
-        window.document.body.removeEventListener('keydown',this.keyboard_no_backnav);
+        window.document.body.removeEventListener('keypress',this.keyboard_handler);
+        window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     // sets up listeners to watch for order changes
@@ -1876,6 +1906,7 @@ return {
     ActionButtonWidget: ActionButtonWidget,
     define_action_button: define_action_button,
     ScreenWidget: ScreenWidget,
+    PaymentScreenWidget: PaymentScreenWidget,
     OrderWidget: OrderWidget,
 };
 

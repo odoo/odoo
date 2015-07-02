@@ -243,4 +243,5 @@ var OrderImportPopupWidget = PopupWidget.extend({
 });
 gui.define_popup({name:'orderimport', widget: OrderImportPopupWidget});
 
+return PopupWidget;
 });

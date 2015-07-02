@@ -161,9 +161,6 @@ var BarcodeParser = Class.extend({
         if (base_pattern[0] !== '^') {
             base_pattern = "^" + base_pattern;
         }
-        if (base_pattern[base_pattern.length -1] !== '$') {
-            base_pattern = base_pattern + ".*$";
-        }
         match.match = match.base_code.match(base_pattern);
 
         return match;
