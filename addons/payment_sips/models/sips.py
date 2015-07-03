@@ -161,8 +161,7 @@ class TxSips(models.Model):
             custom = json.loads(data.pop('returnContext', False) or '{}')
             reference = custom.get('reference')
 
-        payment_tx = self.env['payment.transaction'].search([
-            ('reference', '=', reference)])
+        payment_tx = self.search([('reference', '=', reference)])
         if not payment_tx or len(payment_tx) > 1:
             error_msg = 'Sips: received data for reference %s' % reference
             if not payment_tx:
