@@ -316,14 +316,10 @@ class ModelConverter(ir.ir_http.ModelConverter):
         domain = eval( self.domain, (args or {}).copy())
         if query:
             #For removing integer values, something like blog/our-blog-1 or blog/our-blog 1,do not add search term like "our blog 1" instead only search for "our blog, hyphens should be replaced with space and integer value which is actually stand for record ID should be removed"
-            split_by_space = query.split(" ")
-            if (split_by_space[-1]).isdigit():
-                split_by_space = split_by_space[:-1]
-            query = " ".join(split_by_space)
-            splitted_by_hyphen = query.split("-")
-            if (splitted_by_hyphen[-1]).isdigit():
-                splitted_by_hyphen = splitted_by_hyphen[:-1]
-            query = " ".join(splitted_by_hyphen)
+            splitted_queries = re.split("-| ", query)
+            if (splitted_queries[-1]).isdigit():
+                splitted_queries = splitted_queries[:-1]
+            query = " ".join(splitted_queries)
             domain.append((obj._rec_name, 'ilike', '%'+query.strip()+'%'))
         for record in obj.search_read(cr, uid, domain=domain, fields=['write_date',obj._rec_name], context=context):
             if record.get(obj._rec_name, False):
