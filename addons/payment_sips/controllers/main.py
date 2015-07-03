@@ -30,7 +30,6 @@ class SipsController(http.Controller):
 
     def sips_validate_data(self, **post):
         res = False
-        # cr, uid, context = request.cr, request.uid, request.context
         env = request.env
         tx_obj = env['payment.transaction']
         acquirer_obj = env['payment.acquirer']
